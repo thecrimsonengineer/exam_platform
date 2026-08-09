@@ -1,0 +1,301 @@
+{
+  "id": "domain_07_01",
+  "domainId": "domain_07",
+  "competencyId": "domain_07_01",
+  "competencyNumber": 1,
+  "title": "Needs Assessment",
+  "status": "draft",
+  "version": 1,
+
+  "subtopics": [
+    {
+      "id": "domain_07_01_01",
+      "title": "Training Needs Analysis",
+
+      "learningObjectives": [
+        "Explain the purpose of a training needs analysis.",
+        "Identify factors that can indicate a need for worker training.",
+        "Distinguish training needs from problems that require other controls."
+      ],
+
+      "mainContent": [
+        {
+          "id": "topic_001",
+          "title": "What is Training Needs Analysis?",
+
+          "blocks": [
+            {
+              "id": "block_001",
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "text": "Definition"
+              }
+            },
+            {
+              "id": "block_002",
+              "type": "text",
+              "data": {
+                "content": "Training needs analysis is a systematic process used to identify gaps between the knowledge, skills, competencies, and qualifications required for safe and effective work and those currently demonstrated by workers."
+              }
+            },
+            {
+              "id": "block_003",
+              "type": "text",
+              "data": {
+                "content": "The results help determine whether training is required and what type of training should be provided."
+              }
+            }
+          ],
+
+          "quizzes": [
+            {
+              "quizId": "d07_topic_001_quiz"
+            }
+          ]
+        },
+
+        {
+          "id": "topic_002",
+          "title": "Why Training Needs Analysis is Important",
+
+          "blocks": [
+            {
+              "id": "block_004",
+              "type": "text",
+              "data": {
+                "content": "A structured assessment helps an organization identify actual competence requirements instead of assuming that a worker needs training."
+              }
+            },
+            {
+              "id": "block_005",
+              "type": "examTip",
+              "data": {
+                "content": "Training should address an identified competence or performance need. Not every performance problem is solved by training."
+              }
+            }
+          ],
+
+          "quizzes": [
+            {
+              "quizId": "d07_topic_002_quiz"
+            }
+          ]
+        },
+
+        {
+          "id": "topic_003",
+          "title": "Example of a Training Need",
+
+          "blocks": [
+            {
+              "id": "block_006",
+              "type": "example",
+              "data": {
+                "title": "Workplace Example",
+                "content": "An assessment identifies that workers are required to perform a task involving a specific operating procedure, but several workers cannot demonstrate the required procedure correctly. The competence gap may indicate a need for additional training and assessment."
+              }
+            }
+          ],
+
+          "quizzes": [
+            {
+              "quizId": "d07_topic_003_quiz"
+            }
+          ]
+        },
+
+        {
+          "id": "topic_004",
+          "title": "Using Performance Information",
+
+          "blocks": [
+            {
+              "id": "block_007",
+              "type": "text",
+              "data": {
+                "content": "Incident trends, audit findings, observations, assessment results, changes in work processes, and supervisor feedback can provide information that helps identify potential training needs."
+              }
+            },
+            {
+              "id": "block_008",
+              "type": "table",
+              "data": {
+                "title": "Potential Sources of Training Needs",
+                "columns": [
+                  "Source",
+                  "What it may indicate"
+                ],
+                "rows": [
+                  [
+                    "Incident information",
+                    "Knowledge or competence gaps"
+                  ],
+                  [
+                    "Audit findings",
+                    "Failure to meet required standards"
+                  ],
+                  [
+                    "Performance observations",
+                    "Incorrect task performance"
+                  ],
+                  [
+                    "Assessment results",
+                    "Competence gaps"
+                  ]
+                ]
+              }
+            }
+          ],
+
+          "quizzes": [
+            {
+              "quizId": "d07_topic_004_quiz"
+            }
+          ]
+        },
+
+        {
+          "id": "topic_005",
+          "title": "When Training May Not Be the Correct Solution",
+
+          "blocks": [
+            {
+              "id": "block_009",
+              "type": "warning",
+              "data": {
+                "title": "Important",
+                "content": "A performance problem does not automatically mean that training is required. The underlying cause should be identified before selecting training as a control."
+              }
+            },
+            {
+              "id": "block_010",
+              "type": "remember",
+              "data": {
+                "content": "Identify the cause of the performance gap before deciding that training is the solution."
+              }
+            }
+          ],
+
+          "quizzes": [
+            {
+              "quizId": "d07_topic_005_quiz"
+            }
+          ]
+        }
+      ],
+
+      "keyPoints": [
+        {
+          "id": "key_point_001",
+          "title": "Key Point 1",
+          "content": "Training needs should be identified systematically."
+        },
+        {
+          "id": "key_point_002",
+          "title": "Key Point 2",
+          "content": "Competence requirements should be clearly understood."
+        },
+        {
+          "id": "key_point_003",
+          "title": "Key Point 3",
+          "content": "Performance information can help identify potential training needs."
+        },
+        {
+          "id": "key_point_004",
+          "title": "Key Point 4",
+          "content": "Training should not automatically be selected as the solution to every performance problem."
+        }
+      ],
+
+      "examples": [
+        {
+          "id": "example_001",
+          "title": "Competence Gap",
+          "blocks": [
+            {
+              "id": "example_block_001",
+              "type": "text",
+              "data": {
+                "content": "A worker is unable to demonstrate a required safety procedure during an assessment. Further training may be required before the worker is considered competent."
+              }
+            }
+          ]
+        }
+      ],
+
+      "caseStudies": [
+        {
+          "id": "case_001",
+          "title": "Identifying the Real Training Need",
+          "blocks": [
+            {
+              "id": "case_block_001",
+              "type": "text",
+              "data": {
+                "content": "A company observes repeated errors during a routine task. Before arranging additional training, the organization investigates whether the problem is related to worker knowledge and skills, unclear procedures, equipment limitations, supervision, or another underlying factor."
+              }
+            },
+            {
+              "id": "case_block_002",
+              "type": "remember",
+              "data": {
+                "content": "A proper needs assessment helps determine whether training is actually required."
+              }
+            }
+          ]
+        }
+      ],
+
+      "formulas": [],
+
+      "references": [
+        {
+          "id": "reference_001",
+          "title": "Reference Example",
+          "source": "Reference source to be added during content development.",
+          "url": "",
+          "blocks": []
+        }
+      ],
+
+      "examTips": [
+        {
+          "id": "exam_tip_001",
+          "title": "Training is not always the solution",
+          "content": "When a question describes a performance problem, consider whether the underlying cause has been identified before selecting training as the solution.",
+          "blocks": []
+        }
+      ],
+
+      "commonMistakes": [
+        {
+          "id": "mistake_001",
+          "title": "Assuming training is always required",
+          "content": "Assuming that every performance problem is caused by a lack of training.",
+          "blocks": []
+        }
+      ],
+
+      "keyTakeaways": [
+        {
+          "id": "takeaway_001",
+          "title": "Takeaway 1",
+          "content": "Training needs analysis identifies gaps between required and demonstrated competence."
+        },
+        {
+          "id": "takeaway_002",
+          "title": "Takeaway 2",
+          "content": "Evidence should be used to identify potential training needs."
+        },
+        {
+          "id": "takeaway_003",
+          "title": "Takeaway 3",
+          "content": "The underlying cause of a performance problem should be considered before selecting training."
+        }
+      ],
+
+      "quizzes": []
+    }
+  ]
+}

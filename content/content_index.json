@@ -1,0 +1,54 @@
+{
+  "domains": [
+    {
+      "id": "domain_07",
+      "number": 7,
+      "title": "Training",
+      "weight": 10,
+      "competencies": [
+        {
+          "id": "domain_07_01",
+          "number": 1,
+          "title": "Needs Assessment",
+          "blueprintStatement": "Describe the needs assessment process to determine worker training, competencies, and qualifications.",
+          "file": "content/domain_07/competencies/01_needs_assessment.json"
+        },
+        {
+          "id": "domain_07_02",
+          "number": 2,
+          "title": "Training Program Development",
+          "blueprintStatement": "Develop training programs with training materials to address various learning styles (e.g., presentation methods and tools).",
+          "file": "content/domain_07/competencies/02_training_program_development.json"
+        },
+        {
+          "id": "domain_07_03",
+          "number": 3,
+          "title": "Continuous Improvement",
+          "blueprintStatement": "Describe how to implement training programs utilizing the Continuous Improvement model.",
+          "file": "content/domain_07/competencies/03_continuous_improvement.json"
+        },
+        {
+          "id": "domain_07_04",
+          "number": 4,
+          "title": "Training Effectiveness",
+          "blueprintStatement": "Determine the effectiveness of training programs (e.g., surveys, on-the-job compliance, feedback, assessments, demonstrations, quizzes).",
+          "file": "content/domain_07/competencies/04_training_effectiveness.json"
+        },
+        {
+          "id": "domain_07_05",
+          "number": 5,
+          "title": "Training Methods and Techniques",
+          "blueprintStatement": "Demonstrate working knowledge of education and training methods and techniques (e.g., classroom, online, simulation, computer-based, Artificial Intelligence, coaching, on-the-job training).",
+          "file": "content/domain_07/competencies/05_training_methods_and_techniques.json"
+        },
+        {
+          "id": "domain_07_06",
+          "number": 6,
+          "title": "Adult Learning Principles",
+          "blueprintStatement": "Understand adult learning principles (e.g., visual, auditory, reading and writing, kinesthetic).",
+          "file": "content/domain_07/competencies/06_adult_learning_principles.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/home/home_screen.dart';
+
+import 'app/theme.dart';
+import 'screens/courses/csp/content_test_screen.dart';
 
 void main() {
   runApp(const ExamPlatformApp());
@@ -13,11 +15,8 @@ class ExamPlatformApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Exam Platform',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0)),
-      ),
-      home: const HomeScreen(),
+      theme: AppTheme.lightTheme,
+      home: const ContentTestScreen(),
     );
   }
 }
