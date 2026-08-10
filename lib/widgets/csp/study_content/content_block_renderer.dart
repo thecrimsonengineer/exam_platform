@@ -1,58 +1,63 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
+import '../../../theme/study/study_colors.dart';
+import '../../../theme/study/study_icons.dart';
+import '../../../theme/study/study_radius.dart';
+import '../../../theme/study/study_shadows.dart';
+import '../../../theme/study/study_typography.dart';
+import 'study_icon_badge.dart';
 
-/// Central renderer for all CSP study-content blocks.
+/// Premium renderer for all CSP Study Content blocks.
 ///
-/// The renderer is intentionally tolerant of missing or incomplete data.
-/// Unknown block types are ignored rather than causing the student screen
-/// to fail.
+/// The underlying ContentBlock model remains unchanged.
+/// Each supported block type receives its own visual treatment.
 class ContentBlockRenderer extends StatelessWidget {
   final ContentBlock block;
 
-  const ContentBlockRenderer({
-    super.key,
-    required this.block,
-  });
+  const ContentBlockRenderer({super.key, required this.block});
 
   @override
   Widget build(BuildContext context) {
     switch (block.type) {
       case 'text':
-        return _buildText(context);
+        return _buildText();
 
       case 'heading':
-        return _buildHeading(context);
+        return _buildHeading();
 
       case 'image':
-        return _buildImage(context);
+        return _buildImage();
 
       case 'table':
-        return _buildTable(context);
+        return _buildTable();
 
       case 'formula':
-        return _buildFormula(context);
+        return _buildFormula();
+
+      case 'example':
+        return _buildExample();
 
       case 'caseStudy':
-        return _buildCaseStudy(context);
+        return _buildCaseStudy();
 
       case 'reference':
-        return _buildReference(context);
+        return _buildReference();
 
       case 'warning':
-        return _buildWarning(context);
+        return _buildWarning();
 
       case 'examTip':
-        return _buildExamTip(context);
+        return _buildExamTip();
 
       case 'remember':
-        return _buildRemember(context);
+        return _buildRemember();
 
       case 'checklist':
-        return _buildChecklist(context);
+        return _buildChecklist();
 
       case 'quote':
-        return _buildQuote(context);
+        return _buildQuote();
 
       default:
         return const SizedBox.shrink();
@@ -60,10 +65,10 @@ class ContentBlockRenderer extends StatelessWidget {
   }
 
   // ==========================================================
-  // Text
+  // TEXT
   // ==========================================================
 
-  Widget _buildText(BuildContext context) {
+  Widget _buildText() {
     final text = block.content.trim();
 
     if (text.isEmpty) {
@@ -71,109 +76,177 @@ class ContentBlockRenderer extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 16,
-          height: 1.6,
-        ),
-      ),
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(text, style: StudyTypography.bodyLarge),
     );
   }
 
   // ==========================================================
-  // Heading
+  // HEADING
   // ==========================================================
 
-  Widget _buildHeading(BuildContext context) {
+  Widget _buildHeading() {
     final text = block.text.trim();
 
     if (text.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final int level = block.level.clamp(1, 6);
+    final level = block.level.clamp(1, 6);
 
     double fontSize;
+    Color accent;
+    IconData icon;
 
     switch (level) {
       case 1:
-        fontSize = 26;
+        fontSize = 27;
+        accent = StudyColors.primary;
+        icon = StudyIcons.heading;
         break;
+
       case 2:
-        fontSize = 22;
+        fontSize = 23;
+        accent = StudyColors.primary;
+        icon = StudyIcons.topic;
         break;
+
       case 3:
         fontSize = 20;
+        accent = StudyColors.accent;
+        icon = StudyIcons.topic;
         break;
+
       case 4:
         fontSize = 18;
+        accent = StudyColors.textSecondary;
+        icon = StudyIcons.text;
         break;
+
       case 5:
         fontSize = 17;
+        accent = StudyColors.textSecondary;
+        icon = StudyIcons.text;
         break;
+
       default:
         fontSize = 16;
+        accent = StudyColors.textSecondary;
+        icon = StudyIcons.text;
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 10,
-        bottom: 10,
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 12, bottom: 14),
+      padding: const EdgeInsets.only(left: 14, top: 8, bottom: 8),
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: accent, width: 4)),
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-          height: 1.3,
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          StudyIconBadge(
+            icon: icon,
+            color: accent,
+            backgroundColor: accent.withValues(alpha: 0.08),
+            size: level <= 2 ? 38 : 34,
+            iconSize: level <= 2 ? 19 : 17,
+            showShadow: false,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w700,
+                  height: 1.3,
+                  color: StudyColors.textPrimary,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   // ==========================================================
-  // Image
+  // IMAGE
   // ==========================================================
 
-  Widget _buildImage(BuildContext context) {
+  Widget _buildImage() {
     final imagePath = block.image;
 
-    // If no image has been added, nothing is displayed.
     if (imagePath == null || imagePath.trim().isEmpty) {
       return const SizedBox.shrink();
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 8,
-        bottom: 18,
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
+      decoration: BoxDecoration(
+        color: StudyColors.surfaceSoft,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Image.asset(
-          imagePath,
-          width: double.infinity,
-          fit: BoxFit.contain,
-          errorBuilder: (
-            BuildContext context,
-            Object error,
-            StackTrace? stackTrace,
-          ) {
-            // A missing image must never break the study screen.
-            return const SizedBox.shrink();
-          },
+        borderRadius: StudyRadius.large,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          color: StudyColors.surfaceSoft,
+          child: Image.asset(
+            imagePath,
+            width: double.infinity,
+            fit: BoxFit.contain,
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+                  return _buildImageError();
+                },
+          ),
         ),
       ),
     );
   }
 
+  Widget _buildImageError() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 20),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.medium,
+      ),
+      child: Column(
+        children: [
+          const StudyIconBadge(
+            icon: StudyIcons.image,
+            color: StudyColors.textMuted,
+            backgroundColor: StudyColors.surfaceSoft,
+            size: 52,
+            iconSize: 27,
+            showShadow: false,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Image unavailable',
+            style: StudyTypography.bodySecondary.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ==========================================================
-  // Table
+  // TABLE
   // ==========================================================
 
-  Widget _buildTable(BuildContext context) {
+  Widget _buildTable() {
     final columns = block.columns;
     final rows = block.rows;
 
@@ -183,82 +256,86 @@ class ContentBlockRenderer extends StatelessWidget {
 
     final title = block.title.trim();
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 8,
-        bottom: 18,
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (title.isNotEmpty) ...[
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
+      child: ClipRRect(
+        borderRadius: StudyRadius.large,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (title.isNotEmpty)
+              _buildBlockHeader(
+                icon: StudyIcons.table,
+                eyebrow: 'DATA & COMPARISON',
+                title: title,
+                accent: StudyColors.primary,
+                background: StudyColors.primaryLight,
               ),
-            ),
-            const SizedBox(height: 10),
-          ],
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columnSpacing: 28,
-              headingRowHeight: 48,
-              dataRowMinHeight: 48,
-              dataRowMaxHeight: 100,
-              columns: columns
-                  .map(
-                    (column) => DataColumn(
-                      label: Text(
-                        column,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.all(14),
+              child: DataTable(
+                columnSpacing: 28,
+                headingRowHeight: 48,
+                dataRowMinHeight: 48,
+                dataRowMaxHeight: 110,
+                horizontalMargin: 10,
+                dividerThickness: 0.6,
+                headingRowColor: WidgetStateProperty.all(
+                  StudyColors.primaryLight,
+                ),
+                columns: columns.map((column) {
+                  return DataColumn(
+                    label: Text(
+                      column,
+                      style: StudyTypography.label.copyWith(
+                        color: StudyColors.primary,
                       ),
                     ),
-                  )
-                  .toList(),
-              rows: rows.map((row) {
-                final cells = List<String>.generate(
-                  columns.length,
-                  (index) {
+                  );
+                }).toList(),
+                rows: rows.map((row) {
+                  final cells = List<String>.generate(columns.length, (index) {
                     if (index < row.length) {
                       return row[index];
                     }
 
                     return '';
-                  },
-                );
+                  });
 
-                return DataRow(
-                  cells: cells
-                      .map(
-                        (cell) => DataCell(
-                          Text(
-                            cell,
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
+                  return DataRow(
+                    cells: cells.map((cell) {
+                      return DataCell(
+                        Text(
+                          cell,
+                          style: StudyTypography.bodySecondary.copyWith(
+                            color: StudyColors.textPrimary,
                           ),
                         ),
-                      )
-                      .toList(),
-                );
-              }).toList(),
+                      );
+                    }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   // ==========================================================
-  // Formula
+  // FORMULA
   // ==========================================================
 
-  Widget _buildFormula(BuildContext context) {
+  Widget _buildFormula() {
     final formula = block.content.trim();
 
     if (formula.isEmpty) {
@@ -269,39 +346,66 @@ class ContentBlockRenderer extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(
-        top: 8,
-        bottom: 18,
-      ),
-      padding: const EdgeInsets.all(18),
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.grey.shade100,
-        border: Border.all(
-          color: Colors.grey.shade300,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [StudyColors.primaryLight, StudyColors.surface],
         ),
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.primary.withValues(alpha: 0.15)),
+        boxShadow: StudyShadows.soft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (title.isNotEmpty) ...[
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+          Row(
+            children: [
+              const StudyIconBadge(
+                icon: StudyIcons.formula,
+                color: StudyColors.primary,
+                backgroundColor: StudyColors.primaryLight,
               ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'CALCULATION',
+                      style: StudyTypography.eyebrow.copyWith(
+                        color: StudyColors.primary,
+                      ),
+                    ),
+                    if (title.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(title, style: StudyTypography.cardTitle),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
+            decoration: BoxDecoration(
+              color: StudyColors.surface,
+              borderRadius: StudyRadius.medium,
+              border: Border.all(color: StudyColors.border),
             ),
-            const SizedBox(height: 10),
-          ],
-          Center(
-            child: Text(
+            child: SelectableText(
               formula,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 18,
                 fontFamily: 'monospace',
-                height: 1.5,
+                height: 1.6,
+                fontWeight: FontWeight.w600,
+                color: StudyColors.textPrimary,
               ),
             ),
           ),
@@ -311,91 +415,107 @@ class ContentBlockRenderer extends StatelessWidget {
   }
 
   // ==========================================================
-  // Case Study
+  // EXAMPLE
   // ==========================================================
 
-  Widget _buildCaseStudy(BuildContext context) {
+  Widget _buildExample() {
     return _buildInformationCard(
-      context,
-      title: block.title,
+      title: block.title.isEmpty ? 'Example' : block.title,
       content: block.content,
-      icon: Icons.business_center_outlined,
+      icon: StudyIcons.topic,
+      eyebrow: 'EXAMPLE',
+      accent: StudyColors.accent,
+      background: StudyColors.accentLight,
     );
   }
 
   // ==========================================================
-  // Reference
+  // CASE STUDY
   // ==========================================================
 
-  Widget _buildReference(BuildContext context) {
-    // Reference-specific information is stored in the flexible
-    // ContentBlock.data map rather than as direct ContentBlock fields.
+  Widget _buildCaseStudy() {
+    return _buildInformationCard(
+      title: block.title.isEmpty ? 'Case Study' : block.title,
+      content: block.content,
+      icon: StudyIcons.caseStudy,
+      eyebrow: 'CASE STUDY',
+      accent: StudyColors.caseStudy,
+      background: StudyColors.caseStudyLight,
+    );
+  }
+
+  // ==========================================================
+  // REFERENCE
+  // ==========================================================
+
+  Widget _buildReference() {
     final source = block.data['source']?.toString().trim() ?? '';
     final url = block.data['url']?.toString().trim() ?? '';
+
     final title = block.title.trim();
     final content = block.content.trim();
 
-    if (source.isEmpty &&
-        url.isEmpty &&
-        title.isEmpty &&
-        content.isEmpty) {
+    if (source.isEmpty && url.isEmpty && title.isEmpty && content.isEmpty) {
       return const SizedBox.shrink();
     }
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(
-        top: 8,
-        bottom: 18,
-      ),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.grey.shade100,
+        color: StudyColors.referenceLight,
+        borderRadius: StudyRadius.large,
         border: Border.all(
-          color: Colors.grey.shade300,
+          color: StudyColors.reference.withValues(alpha: 0.16),
         ),
+        boxShadow: StudyShadows.soft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.menu_book_outlined),
-              SizedBox(width: 8),
-              Text(
-                'Reference',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              const StudyIconBadge(
+                icon: StudyIcons.reference,
+                color: StudyColors.reference,
+                backgroundColor: StudyColors.surface,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'REFERENCE',
+                      style: StudyTypography.eyebrow.copyWith(
+                        color: StudyColors.reference,
+                      ),
+                    ),
+                    if (title.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(title, style: StudyTypography.cardTitle),
+                    ],
+                  ],
                 ),
               ),
             ],
           ),
-          if (title.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
           if (source.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Text(source),
+            const SizedBox(height: 15),
+            _buildReferenceRow(label: 'SOURCE', value: source),
           ],
           if (content.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Text(content),
+            const SizedBox(height: 10),
+            _buildReferenceRow(label: 'DETAIL', value: content),
           ],
           if (url.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Text(
-              url,
-              style: TextStyle(
-                color: Colors.blue.shade700,
-              ),
+            const SizedBox(height: 10),
+            _buildReferenceRow(
+              label: 'LINK',
+              value: url,
+              valueColor: StudyColors.accent,
             ),
           ],
         ],
@@ -403,50 +523,91 @@ class ContentBlockRenderer extends StatelessWidget {
     );
   }
 
+  Widget _buildReferenceRow({
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: StudyColors.surface.withValues(alpha: 0.75),
+        borderRadius: StudyRadius.small,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: StudyTypography.eyebrow.copyWith(
+              fontSize: 9,
+              color: StudyColors.textMuted,
+            ),
+          ),
+          const SizedBox(height: 4),
+          SelectableText(
+            value,
+            style: StudyTypography.bodySecondary.copyWith(
+              color: valueColor ?? StudyColors.textPrimary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ==========================================================
-  // Warning
+  // WARNING
   // ==========================================================
 
-  Widget _buildWarning(BuildContext context) {
+  Widget _buildWarning() {
     return _buildInformationCard(
-      context,
       title: block.title.isEmpty ? 'Important' : block.title,
       content: block.content,
-      icon: Icons.warning_amber_rounded,
+      icon: StudyIcons.warning,
+      eyebrow: 'IMPORTANT',
+      accent: StudyColors.warning,
+      background: StudyColors.warningLight,
     );
   }
 
   // ==========================================================
-  // Exam Tip
+  // EXAM TIP
   // ==========================================================
 
-  Widget _buildExamTip(BuildContext context) {
+  Widget _buildExamTip() {
     return _buildInformationCard(
-      context,
       title: block.title.isEmpty ? 'Exam Tip' : block.title,
       content: block.content,
-      icon: Icons.lightbulb_outline,
+      icon: StudyIcons.examTip,
+      eyebrow: 'EXAM FOCUS',
+      accent: StudyColors.examTip,
+      background: StudyColors.examTipLight,
     );
   }
 
   // ==========================================================
-  // Remember
+  // REMEMBER
   // ==========================================================
 
-  Widget _buildRemember(BuildContext context) {
+  Widget _buildRemember() {
     return _buildInformationCard(
-      context,
       title: block.title.isEmpty ? 'Remember' : block.title,
       content: block.content,
-      icon: Icons.bookmark_outline,
+      icon: StudyIcons.remember,
+      eyebrow: 'REMEMBER',
+      accent: StudyColors.remember,
+      background: StudyColors.rememberLight,
     );
   }
 
   // ==========================================================
-  // Checklist
+  // CHECKLIST
   // ==========================================================
 
-  Widget _buildChecklist(BuildContext context) {
+  Widget _buildChecklist() {
     final title = block.title.trim();
     final content = block.content.trim();
 
@@ -466,64 +627,94 @@ class ContentBlockRenderer extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(
-        top: 8,
-        bottom: 18,
-      ),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey.shade300,
-        ),
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.success.withValues(alpha: 0.18)),
+        boxShadow: StudyShadows.soft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (title.isNotEmpty) ...[
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const StudyIconBadge(
+                icon: StudyIcons.checklist,
+                color: StudyColors.success,
+                backgroundColor: StudyColors.successLight,
               ),
-            ),
-            const SizedBox(height: 10),
-          ],
-          ...items.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.check_box_outlined,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      item,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        height: 1.4,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'CHECKLIST',
+                      style: StudyTypography.eyebrow.copyWith(
+                        color: StudyColors.success,
                       ),
                     ),
-                  ),
-                ],
+                    if (title.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(title, style: StudyTypography.cardTitle),
+                    ],
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
+          const SizedBox(height: 16),
+          ...items.asMap().entries.map((entry) {
+            final index = entry.key;
+            final item = entry.value;
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: index == items.length - 1 ? 0 : 10,
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 13,
+                  vertical: 11,
+                ),
+                decoration: BoxDecoration(
+                  color: StudyColors.successLight.withValues(alpha: 0.55),
+                  borderRadius: StudyRadius.small,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      StudyIcons.completed,
+                      size: 19,
+                      color: StudyColors.success,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        item,
+                        style: StudyTypography.body.copyWith(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 
   // ==========================================================
-  // Quote
+  // QUOTE
   // ==========================================================
 
-  Widget _buildQuote(BuildContext context) {
+  Widget _buildQuote() {
     final quote = block.content.trim();
 
     if (quote.isEmpty) {
@@ -534,39 +725,46 @@ class ContentBlockRenderer extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(
-        top: 8,
-        bottom: 18,
-      ),
-      padding: const EdgeInsets.fromLTRB(
-        18,
-        16,
-        18,
-        16,
-      ),
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.grey.shade100,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [StudyColors.surfaceSoft, StudyColors.surface],
+        ),
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (title.isNotEmpty) ...[
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-          Text(
-            '“$quote”',
-            style: const TextStyle(
-              fontSize: 16,
-              height: 1.5,
-              fontStyle: FontStyle.italic,
+          const StudyIconBadge(
+            icon: StudyIcons.quote,
+            color: StudyColors.primary,
+            backgroundColor: StudyColors.primaryLight,
+            size: 44,
+            iconSize: 22,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (title.isNotEmpty) ...[
+                  Text(title, style: StudyTypography.cardTitle),
+                  const SizedBox(height: 8),
+                ],
+                Text(
+                  '“$quote”',
+                  style: StudyTypography.bodyLarge.copyWith(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 16,
+                    color: StudyColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -575,14 +773,16 @@ class ContentBlockRenderer extends StatelessWidget {
   }
 
   // ==========================================================
-  // Shared Information Card
+  // SHARED INFORMATION CARD
   // ==========================================================
 
-  Widget _buildInformationCard(
-    BuildContext context, {
+  Widget _buildInformationCard({
     required String title,
     required String content,
     required IconData icon,
+    required String eyebrow,
+    required Color accent,
+    required Color background,
   }) {
     final cleanTitle = title.trim();
     final cleanContent = content.trim();
@@ -593,51 +793,105 @@ class ContentBlockRenderer extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(
-        top: 8,
-        bottom: 18,
-      ),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey.shade300,
-        ),
+        color: background,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: accent.withValues(alpha: 0.18)),
+        boxShadow: StudyShadows.soft,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (cleanTitle.isNotEmpty)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  icon,
-                  size: 21,
+      child: ClipRRect(
+        borderRadius: StudyRadius.large,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.06),
+                border: Border(
+                  bottom: BorderSide(color: accent.withValues(alpha: 0.10)),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    cleanTitle,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  StudyIconBadge(
+                    icon: icon,
+                    color: accent,
+                    backgroundColor: StudyColors.surface,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          eyebrow,
+                          style: StudyTypography.eyebrow.copyWith(
+                            color: accent,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(cleanTitle, style: StudyTypography.cardTitle),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          if (cleanContent.isNotEmpty) ...[
-            if (cleanTitle.isNotEmpty)
-              const SizedBox(height: 10),
-            Text(
-              cleanContent,
-              style: const TextStyle(
-                fontSize: 15,
-                height: 1.5,
+                ],
               ),
             ),
+            if (cleanContent.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(18),
+                child: Text(
+                  cleanContent,
+                  style: StudyTypography.body.copyWith(fontSize: 15),
+                ),
+              ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================
+  // BLOCK HEADER
+  // ==========================================================
+
+  Widget _buildBlockHeader({
+    required IconData icon,
+    required String eyebrow,
+    required String title,
+    required Color accent,
+    required Color background,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      color: background,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          StudyIconBadge(
+            icon: icon,
+            color: accent,
+            backgroundColor: StudyColors.surface,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  eyebrow,
+                  style: StudyTypography.eyebrow.copyWith(color: accent),
+                ),
+                const SizedBox(height: 3),
+                Text(title, style: StudyTypography.cardTitle),
+              ],
+            ),
+          ),
         ],
       ),
     );

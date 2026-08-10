@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app/theme.dart';
-import 'screens/courses/csp/content_test_screen.dart';
+import 'screens/admin/study_content/study_content_studio_screen.dart';
 
 void main() {
   runApp(const ExamPlatformApp());
@@ -16,7 +16,7 @@ class ExamPlatformApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Exam Platform',
       theme: AppTheme.lightTheme,
-      home: const ContentTestScreen(),
+      home: const StudyContentStudioScreen(),
     );
   }
 }
