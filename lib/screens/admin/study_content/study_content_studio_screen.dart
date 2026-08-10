@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../services/study_content/content_import_service.dart';
+import '../../../services/study_content/content_validator.dart';
 
 import '../../../models/study_content.dart';
 import '../../../services/study_content/local_study_content_repository.dart';
@@ -13,6 +15,7 @@ import '../../../widgets/admin/study_content/content_validation_panel.dart';
 import '../../../widgets/admin/study_content/editor/subtopic/subtopic_editor_panel.dart';
 import '../../../widgets/admin/study_content/editor/main_content/main_content_editor_panel.dart';
 import '../../../widgets/admin/study_content/structure/content_structure_panel.dart';
+import '../../courses/csp/content_test_screen.dart';
 
 class StudyContentStudioScreen extends StatefulWidget {
   const StudyContentStudioScreen({super.key});
@@ -33,7 +36,30 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   int? _selectedMainContentIndex;
 
   List<StudyContent> _savedDrafts = <StudyContent>[];
+  List<StudyContent> _publishedContent = <StudyContent>[];
   bool _loadingDrafts = false;
+  bool _loadingPublished = false;
+
+  String get _contentStatus =>
+      _importedContent?.status.toLowerCase() ?? 'draft';
+
+  bool get _isDraft => _contentStatus == 'draft';
+
+  bool get _isReview => _contentStatus == 'review';
+
+  bool get _isValidationReady {
+    final content = _importedContent;
+
+    if (content == null) {
+      return false;
+    }
+
+    final issues = const ContentValidator().validate(content);
+
+    return !issues.any(
+      (issue) => issue.severity == ContentImportIssueSeverity.error,
+    );
+  }
 
   final List<_StudioSection> _sections = const [
     _StudioSection(
@@ -81,11 +107,19 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDrafts();
+    _loadRepositoryContent();
   }
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 700;
+
+    if (isMobile) {
+      return _buildMobileScaffold();
+    }
+
+    // Desktop layout is intentionally unchanged.
     return Scaffold(
       backgroundColor: StudyColors.background,
       body: SafeArea(
@@ -96,6 +130,171 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildMobileScaffold() {
+    return Scaffold(
+      backgroundColor: StudyColors.background,
+      drawer: Drawer(
+        width: MediaQuery.sizeOf(context).width > 360 ? 320 : 292,
+        backgroundColor: StudyColors.surface,
+        child: SafeArea(
+          child: _buildSidebar(),
+        ),
+      ),
+      appBar: _buildMobileAppBar(),
+      body: SafeArea(
+        top: false,
+        child: _buildEditorArea(),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildMobileAppBar() {
+    final imported = _importedContent != null;
+    final section = _sections[_selectedSection];
+
+    return AppBar(
+      elevation: 0,
+      scrolledUnderElevation: 1,
+      backgroundColor: StudyColors.surface,
+      foregroundColor: StudyColors.textPrimary,
+      surfaceTintColor: Colors.transparent,
+      titleSpacing: 4,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Study Content Studio',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+              height: 1.1,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            section.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 10.5,
+              fontWeight: FontWeight.w500,
+              color: StudyColors.textSecondary,
+              height: 1.1,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        if (imported)
+          Padding(
+            padding: const EdgeInsets.only(right: 2),
+            child: Center(child: _buildCompactMobileStatus()),
+          ),
+        _buildMobileActionMenu(imported),
+      ],
+    );
+  }
+
+  Widget _buildCompactMobileStatus() {
+    final status = _contentStatus;
+    final isPublished = status == 'published';
+    final color = isPublished ? StudyColors.success : StudyColors.primary;
+
+    return Container(
+      width: 9,
+      height: 9,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.25),
+            blurRadius: 5,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMobileActionMenu(bool imported) {
+    return PopupMenuButton<String>(
+      tooltip: 'Studio actions',
+      icon: const Icon(Icons.more_vert_rounded),
+      onSelected: (value) {
+        switch (value) {
+          case 'student':
+            _openStudentPortal();
+            break;
+          case 'preview':
+            _openPreview();
+            break;
+          case 'save':
+            _saveDraft();
+            break;
+          case 'review':
+            _sendToReview();
+            break;
+          case 'publish':
+            _publishContent();
+            break;
+        }
+      },
+      itemBuilder: (context) {
+        return [
+          const PopupMenuItem<String>(
+            value: 'student',
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.school_rounded),
+              title: Text('Student Portal'),
+            ),
+          ),
+          PopupMenuItem<String>(
+            value: 'preview',
+            enabled: imported,
+            child: const ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.visibility_rounded),
+              title: Text('Preview'),
+            ),
+          ),
+          if (imported && _isDraft) ...[
+            const PopupMenuItem<String>(
+              value: 'save',
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.save_rounded),
+                title: Text('Save Draft'),
+              ),
+            ),
+            const PopupMenuItem<String>(
+              value: 'review',
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.rate_review_rounded),
+                title: Text('Send to Review'),
+              ),
+            ),
+          ],
+          if (imported && _isReview)
+            PopupMenuItem<String>(
+              value: 'publish',
+              enabled: _isValidationReady,
+              child: const ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.publish_rounded),
+                title: Text('Publish'),
+              ),
+            ),
+        ];
+      },
     );
   }
 
@@ -180,6 +379,12 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           setState(() {
             _selectedSection = index;
           });
+
+          // On Android, selecting a section also closes the navigation drawer.
+          if (MediaQuery.sizeOf(context).width < 700 &&
+              Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
         },
         borderRadius: StudyRadius.medium,
         child: AnimatedContainer(
@@ -337,41 +542,128 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           _buildStatusBadge(imported),
           const SizedBox(width: 10),
           OutlinedButton.icon(
+            onPressed: _openStudentPortal,
+            icon: const Icon(Icons.school_rounded, size: 17),
+            label: const Text('Student Portal'),
+          ),
+          const SizedBox(width: 8),
+          OutlinedButton.icon(
             onPressed: imported ? _openPreview : null,
             icon: const Icon(Icons.visibility_rounded, size: 17),
             label: const Text('Preview'),
           ),
-          const SizedBox(width: 10),
-          FilledButton.icon(
-            onPressed: imported ? _saveDraft : null,
-            icon: const Icon(Icons.save_rounded, size: 17),
-            label: const Text('Save Draft'),
-          ),
+          if (imported && _isDraft) ...[
+            const SizedBox(width: 8),
+            FilledButton.icon(
+              onPressed: imported ? _saveDraft : null,
+              icon: const Icon(Icons.save_rounded, size: 17),
+              label: const Text('Save Draft'),
+            ),
+            const SizedBox(width: 8),
+            OutlinedButton.icon(
+              onPressed: imported ? _sendToReview : null,
+              icon: const Icon(Icons.rate_review_rounded, size: 17),
+              label: const Text('Send to Review'),
+            ),
+          ],
+          if (imported && _isReview) ...[
+            const SizedBox(width: 8),
+            FilledButton.icon(
+              onPressed: _isValidationReady ? _publishContent : null,
+              icon: const Icon(Icons.publish_rounded, size: 17),
+              label: const Text('Publish'),
+            ),
+          ],
         ],
       ),
     );
   }
 
   Widget _buildStatusBadge(bool imported) {
-    final color = imported ? StudyColors.success : StudyColors.warning;
+    if (!imported) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+        decoration: BoxDecoration(
+          color: StudyColors.warningLight,
+          borderRadius: StudyRadius.pillRadius,
+          border: Border.all(
+            color: StudyColors.warning.withValues(alpha: 0.15),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.circle,
+              size: 8,
+              color: StudyColors.warning,
+            ),
+            const SizedBox(width: 7),
+            Text(
+              'NO CONTENT',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: StudyColors.warning,
+                letterSpacing: 0.7,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
-    final background = imported
-        ? StudyColors.successLight
-        : StudyColors.warningLight;
+    final status = _contentStatus;
 
-    final text = imported ? 'IMPORTED' : 'DRAFT';
+    late final Color color;
+    late final Color background;
+    late final String text;
+    late final IconData icon;
+
+    switch (status) {
+      case 'review':
+        color = StudyColors.warning;
+        background = StudyColors.warningLight;
+        text = 'REVIEW';
+        icon = Icons.rate_review_rounded;
+        break;
+
+      case 'published':
+        color = StudyColors.success;
+        background = StudyColors.successLight;
+        text = 'PUBLISHED';
+        icon = Icons.verified_rounded;
+        break;
+
+      case 'archived':
+        color = StudyColors.textSecondary;
+        background = StudyColors.surfaceSoft;
+        text = 'ARCHIVED';
+        icon = Icons.archive_rounded;
+        break;
+
+      case 'draft':
+      default:
+        color = StudyColors.primary;
+        background = StudyColors.primaryLight;
+        text = 'DRAFT';
+        icon = Icons.edit_note_rounded;
+        break;
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
       decoration: BoxDecoration(
         color: background,
         borderRadius: StudyRadius.pillRadius,
-        border: Border.all(color: color.withValues(alpha: 0.15)),
+        border: Border.all(
+          color: color.withValues(alpha: 0.15),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.circle, size: 8, color: color),
+          Icon(icon, size: 13, color: color),
           const SizedBox(width: 7),
           Text(
             text,
@@ -403,8 +695,19 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       );
     }
 
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 700;
+    final horizontalPadding = isMobile
+        ? 14.0
+        : StudySpacing.pageHorizontalDesktop;
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(StudySpacing.pageHorizontalDesktop),
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        isMobile ? 14 : StudySpacing.pageHorizontalDesktop,
+        horizontalPadding,
+        isMobile ? 24 : StudySpacing.pageHorizontalDesktop,
+      ),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1160),
@@ -1509,6 +1812,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         const SizedBox(height: 20),
         _buildSavedDraftsCard(),
         const SizedBox(height: 20),
+        _buildPublishedContentCard(),
+        const SizedBox(height: 20),
         if (content != null)
           _buildStructureSnapshot(content)
         else
@@ -2263,10 +2568,38 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   // ACTIONS
   // ==========================================================
 
+  void _openStudentPortal() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const ContentTestScreen(),
+      ),
+    );
+  }
+
   void _openPreview() {
     setState(() {
       _selectedSection = 7;
     });
+  }
+
+  Future<void> _loadRepositoryContent() async {
+    await Future.wait([
+      _loadDrafts(),
+      _loadPublishedContent(),
+    ]);
+
+    if (!mounted || _importedContent != null) {
+      return;
+    }
+
+    if (_savedDrafts.isNotEmpty) {
+      await _openDraft(_savedDrafts.first, showMessage: false);
+      return;
+    }
+
+    if (_publishedContent.isNotEmpty) {
+      await _openPublished(_publishedContent.first, showMessage: false);
+    }
   }
 
   Future<void> _loadDrafts() async {
@@ -2300,14 +2633,82 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Unable to load drafts.\n$error')));
+      ).showSnackBar(
+        SnackBar(
+          content: Text('Unable to load drafts.\n$error'),
+        ),
+      );
     }
+  }
+
+  Future<void> _loadPublishedContent() async {
+    if (_loadingPublished) {
+      return;
+    }
+
+    setState(() {
+      _loadingPublished = true;
+    });
+
+    try {
+      final published = await _repository.loadPublished();
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _publishedContent = published;
+        _loadingPublished = false;
+      });
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _loadingPublished = false;
+      });
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        SnackBar(
+          content: Text('Unable to load published content.\n$error'),
+        ),
+      );
+    }
+  }
+
+  StudyContent _withStatus(
+    StudyContent content,
+    String status,
+  ) {
+    final json = Map<String, dynamic>.from(
+      content.toJson(),
+    );
+
+    json['status'] = status;
+
+    return StudyContent.fromJson(json);
   }
 
   Future<void> _saveDraft() async {
     final content = _importedContent;
 
     if (content == null) {
+      return;
+    }
+
+    if (!_isDraft) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Only Draft content can be saved using Save Draft.',
+          ),
+        ),
+      );
+
       return;
     }
 
@@ -2329,11 +2730,151 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Unable to save draft.\n$error')));
+      ).showSnackBar(SnackBar(content: Text('Unable to save draft.\\n$error')));
     }
   }
 
-  Future<void> _openDraft(StudyContent draft) async {
+  Future<void> _sendToReview() async {
+    final content = _importedContent;
+
+    if (content == null || !_isDraft) {
+      return;
+    }
+
+    final reviewedContent = _withStatus(
+      content,
+      'review',
+    );
+
+    try {
+      await _repository.saveDraft(reviewedContent);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _importedContent = reviewedContent;
+      });
+
+      await _loadDrafts();
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Content moved to Review successfully.'),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to move content to Review.\\n$error'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _publishContent() async {
+    final content = _importedContent;
+
+    if (content == null || !_isReview) {
+      return;
+    }
+
+    if (!_isValidationReady) {
+      setState(() {
+        _selectedSection = 6;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Publishing is blocked. Resolve all validation errors first.',
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Publish content?'),
+          content: Text(
+            'Publish "${content.title}" to the student-facing repository?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.of(context).pop(true),
+              icon: const Icon(Icons.publish_rounded),
+              label: const Text('Publish'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    try {
+      await _repository.publish(content);
+
+      final publishedContent = _withStatus(
+        content,
+        'published',
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _importedContent = publishedContent;
+      });
+
+      await _loadPublishedContent();
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Content published successfully.'),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to publish content.\\n$error'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _openDraft(
+    StudyContent draft, {
+    bool showMessage = true,
+  }) async {
     setState(() {
       _importedContent = draft;
       _selectedSubtopicIndex = draft.subtopics.isEmpty ? null : 0;
@@ -2345,9 +2886,88 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       _selectedSection = 0;
     });
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Draft loaded: ${draft.title}')));
+    if (showMessage) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        SnackBar(content: Text('Draft loaded: ${draft.title}')),
+      );
+    }
+  }
+
+  Future<void> _openPublished(
+    StudyContent content, {
+    bool showMessage = true,
+  }) async {
+    final published = _withStatus(content, 'published');
+
+    setState(() {
+      _importedContent = published;
+      _selectedSubtopicIndex =
+          published.subtopics.isEmpty ? null : 0;
+      _selectedMainContentIndex =
+          published.subtopics.isNotEmpty &&
+                  published.subtopics.first.mainContent.isNotEmpty
+              ? 0
+              : null;
+      _selectedSection = 0;
+    });
+
+    if (showMessage) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        SnackBar(content: Text('Published content loaded: ${content.title}')),
+      );
+    }
+  }
+
+  Future<void> _createRevision(StudyContent published) async {
+    final revision = _withStatus(
+      published,
+      'draft',
+    );
+
+    final revisionJson = Map<String, dynamic>.from(
+      revision.toJson(),
+    );
+
+    revisionJson['version'] = published.version + 1;
+
+    final draftRevision = StudyContent.fromJson(revisionJson);
+
+    try {
+      await _repository.saveDraft(draftRevision);
+      await _loadDrafts();
+
+      if (!mounted) {
+        return;
+      }
+
+      await _openDraft(draftRevision, showMessage: false);
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Revision created: ${draftRevision.title} v${draftRevision.version}',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to create revision.\n$error'),
+        ),
+      );
+    }
   }
 
   Future<void> _deleteDraft(StudyContent draft) async {
@@ -2467,6 +3087,181 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   _buildSavedDraftRow(_savedDrafts[index], index),
               ],
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPublishedContentCard() {
+    return _buildEditorCard(
+      title: 'Published Content',
+      icon: Icons.cloud_done_rounded,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Content currently available in the published repository',
+                  style: StudyTypography.bodySecondary,
+                ),
+              ),
+              IconButton(
+                tooltip: 'Refresh published content',
+                onPressed: _loadingPublished ? null : _loadPublishedContent,
+                icon: _loadingPublished
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.refresh_rounded),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (_loadingPublished && _publishedContent.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(24),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (_publishedContent.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: StudyColors.surfaceSoft,
+                borderRadius: StudyRadius.medium,
+                border: Border.all(color: StudyColors.border),
+              ),
+              child: const Column(
+                children: [
+                  Icon(
+                    Icons.cloud_off_rounded,
+                    size: 36,
+                    color: StudyColors.textSecondary,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'No published content',
+                    style: StudyTypography.cardTitle,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'Published competencies will appear here after they are released.',
+                    textAlign: TextAlign.center,
+                    style: StudyTypography.bodySecondary,
+                  ),
+                ],
+              ),
+            )
+          else
+            Column(
+              children: [
+                for (
+                  var index = 0;
+                  index < _publishedContent.length;
+                  index++
+                )
+                  _buildPublishedContentRow(
+                    _publishedContent[index],
+                    index,
+                  ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPublishedContentRow(
+    StudyContent content,
+    int index,
+  ) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(
+        bottom: index == _publishedContent.length - 1 ? 0 : 10,
+      ),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: StudyColors.surfaceSoft,
+        borderRadius: StudyRadius.medium,
+        border: Border.all(color: StudyColors.border),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: StudyColors.successLight,
+              borderRadius: StudyRadius.small,
+            ),
+            child: const Icon(
+              Icons.verified_rounded,
+              color: StudyColors.success,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  content.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: StudyTypography.label.copyWith(fontSize: 12.5),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Competency ${content.competencyNumber}  •  '
+                  '${content.competencyId}  •  v${content.version}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: StudyTypography.bodySecondary.copyWith(
+                    fontSize: 10.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 9,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: StudyColors.successLight,
+              borderRadius: StudyRadius.pillRadius,
+            ),
+            child: const Text(
+              'PUBLISHED',
+              style: TextStyle(
+                color: StudyColors.success,
+                fontSize: 9,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.6,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          OutlinedButton.icon(
+            onPressed: () => _openPublished(content),
+            icon: const Icon(Icons.visibility_rounded, size: 16),
+            label: const Text('Open'),
+          ),
+          const SizedBox(width: 6),
+          IconButton(
+            tooltip: 'Create revision',
+            onPressed: () => _createRevision(content),
+            icon: const Icon(Icons.edit_note_rounded),
+          ),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app/theme.dart';
-import 'screens/admin/study_content/study_content_studio_screen.dart';
+import 'screens/admin/admin_home_screen.dart';
 
 void main() {
   runApp(const ExamPlatformApp());
@@ -14,9 +14,9 @@ class ExamPlatformApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Exam Platform',
+      title: 'CSP11 Admin Console',
       theme: AppTheme.lightTheme,
-      home: const StudyContentStudioScreen(),
+      home: AdminHomeScreen(),
     );
   }
 }

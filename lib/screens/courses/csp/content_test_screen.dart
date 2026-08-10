@@ -9,7 +9,7 @@ class ContentTestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const StudyContentScreen(
       domainId: 'domain_07',
-      competencyId: 'domain_07_01',
+      competencyId: 'domain_07_99',
       loadingTitle: 'CSP11 Study Content',
     );
   }

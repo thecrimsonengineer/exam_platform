@@ -1,11 +1,8 @@
 name: exam_platform
 description: "A new Flutter project."
 
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none'
 
-# The following defines the version and build number for your application.
 version: 1.0.0+1
 
 environment:
@@ -18,6 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^8.2.1
   flutter_svg: ^2.2.0
+  file_selector: ^1.1.0
   shared_preferences: ^2.5.5
 
 dev_dependencies:

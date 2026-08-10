@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
+import '../../admin/study_content/study_content_studio_screen.dart';
 import '../../../services/study_content_loader.dart';
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
@@ -104,6 +105,20 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
       foregroundColor: StudyColors.textPrimary,
       centerTitle: false,
       titleSpacing: StudySpacing.pageHorizontal,
+      leading: IconButton(
+        tooltip: 'Back to Admin',
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => const StudyContentStudioScreen(),
+            ),
+          );
+        },
+        icon: const Icon(
+          Icons.arrow_back_rounded,
+          size: 21,
+        ),
+      ),
       title: Row(
         children: [
           Container(
@@ -125,20 +140,20 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
               future: _contentFuture,
               builder:
                   (BuildContext context, AsyncSnapshot<StudyContent> snapshot) {
-                    final title = snapshot.hasData
-                        ? snapshot.data!.title
-                        : widget.loadingTitle ?? 'Study Content';
+                final title = snapshot.hasData
+                    ? snapshot.data!.title
+                    : widget.loadingTitle ?? 'Study Content';
 
-                    return Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: StudyTypography.cardTitle.copyWith(
-                        color: StudyColors.textPrimary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    );
-                  },
+                return Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: StudyTypography.cardTitle.copyWith(
+                    color: StudyColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                );
+              },
             ),
           ),
         ],

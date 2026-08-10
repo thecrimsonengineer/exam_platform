@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
@@ -23,11 +26,86 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
 
   ContentImportResult? _result;
   bool _isImporting = false;
+  bool _isPickingFile = false;
+  String? _selectedFileName;
+  int? _selectedFileSize;
 
   @override
   void dispose() {
     _jsonController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickJsonFile() async {
+    FocusScope.of(context).unfocus();
+
+    setState(() {
+      _isPickingFile = true;
+    });
+
+    try {
+      const jsonTypeGroup = XTypeGroup(
+        label: 'JSON files',
+        extensions: <String>['json'],
+        mimeTypes: <String>['application/json'],
+      );
+
+      final XFile? file = await openFile(
+        acceptedTypeGroups: <XTypeGroup>[jsonTypeGroup],
+      );
+
+      if (!mounted || file == null) {
+        return;
+      }
+
+      final bytes = await file.readAsBytes();
+      final jsonText = utf8.decode(bytes, allowMalformed: false);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _jsonController.text = jsonText;
+        _selectedFileName = file.name;
+        _selectedFileSize = bytes.length;
+        _result = null;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Loaded ${file.name}. Ready to validate and import.',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } on FormatException {
+      _showFileError(
+        'The selected file is not valid UTF-8 JSON text.',
+      );
+    } catch (error) {
+      _showFileError('Unable to load the JSON file.\n$error');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPickingFile = false;
+        });
+      }
+    }
+  }
+
+  void _showFileError(String message) {
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   void _importContent() {
@@ -55,6 +133,8 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
 
     setState(() {
       _result = null;
+      _selectedFileName = null;
+      _selectedFileSize = null;
     });
   }
 
@@ -225,36 +305,163 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
         borderRadius: StudyRadius.medium,
         border: Border.all(color: StudyColors.info.withValues(alpha: 0.15)),
       ),
-      child: const Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.info_outline_rounded, size: 20, color: StudyColors.info),
-          SizedBox(width: 11),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'How this works',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: StudyColors.textPrimary,
-                  ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.info_outline_rounded,
+                size: 20,
+                color: StudyColors.info,
+              ),
+              const SizedBox(width: 11),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Import a complete CSP11 package',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: StudyColors.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Paste JSON directly or upload a .json file. Both paths use the same deterministic importer and validation pipeline.',
+                      style: StudyTypography.bodySecondary,
+                    ),
+                  ],
                 ),
-                SizedBox(height: 5),
-                Text(
-                  'Paste a complete StudyContent JSON package below. '
-                  'The importer converts it into the existing StudyContent '
-                  'model without creating a second content architecture.',
-                  style: StudyTypography.bodySecondary,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
+          const SizedBox(height: 14),
+          _buildFileUploadArea(),
         ],
       ),
     );
+  }
+
+  Widget _buildFileUploadArea() {
+    final hasFile = _selectedFileName != null;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.medium,
+        border: Border.all(
+          color: hasFile
+              ? StudyColors.success.withValues(alpha: 0.35)
+              : StudyColors.border,
+        ),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < 620;
+
+          final fileInfo = Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: hasFile
+                      ? StudyColors.successLight
+                      : StudyColors.primaryLight,
+                  borderRadius: StudyRadius.medium,
+                ),
+                child: Icon(
+                  hasFile
+                      ? Icons.check_circle_rounded
+                      : Icons.upload_file_rounded,
+                  color: hasFile
+                      ? StudyColors.success
+                      : StudyColors.primary,
+                  size: 19,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      hasFile ? _selectedFileName! : 'JSON file upload',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: StudyColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      hasFile
+                          ? '${_formatFileSize(_selectedFileSize ?? 0)} • Ready to import'
+                          : 'Choose a .json file from this device or computer',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: StudyTypography.bodySecondary.copyWith(
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+
+          final button = OutlinedButton.icon(
+            onPressed: _isPickingFile ? null : _pickJsonFile,
+            icon: _isPickingFile
+                ? const SizedBox(
+                    width: 15,
+                    height: 15,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.folder_open_rounded, size: 16),
+            label: Text(_isPickingFile ? 'Opening...' : 'Choose JSON File'),
+          );
+
+          if (compact) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                fileInfo,
+                const SizedBox(height: 10),
+                button,
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              Expanded(child: fileInfo),
+              const SizedBox(width: 14),
+              button,
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  String _formatFileSize(int bytes) {
+    if (bytes < 1024) {
+      return '$bytes B';
+    }
+    if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    }
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
   }
 
   Widget _buildJsonEditor() {
