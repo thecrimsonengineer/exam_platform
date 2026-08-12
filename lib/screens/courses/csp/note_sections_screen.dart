@@ -70,6 +70,8 @@ class NoteSectionsScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   section.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -78,11 +80,15 @@ class NoteSectionsScreen extends StatelessWidget {
                                 const SizedBox(height: 6),
                                 Text(
                                   section.description,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: Colors.grey.shade700),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   '${section.noteCount} Topics',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.grey.shade600,
                                     fontWeight: FontWeight.w500,

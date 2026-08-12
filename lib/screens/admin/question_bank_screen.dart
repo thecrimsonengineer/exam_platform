@@ -6,9 +6,12 @@ import '../../../services/complete_question_paste_parser.dart';
 import '../../../services/question_bank_service.dart';
 import '../../../services/question_quality_validator.dart';
 import '../../../services/study_content/local_study_content_repository.dart';
+import 'study_content/study_content_studio_screen.dart';
 
 class QuestionBankScreen extends StatefulWidget {
-  const QuestionBankScreen({super.key});
+  final int? initialQuestionId;
+
+  const QuestionBankScreen({super.key, this.initialQuestionId});
 
   @override
   State<QuestionBankScreen> createState() => _QuestionBankScreenState();
@@ -34,6 +37,8 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
   bool _loading = true;
 
   bool _answerLengthCheckEnabled = true;
+
+  int? _focusedQuestionId;
 
   @override
   void initState() {
@@ -72,23 +77,105 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
       return;
     }
 
+    final initialQuestionId = widget.initialQuestionId;
+    Question? initialQuestion;
+
+    if (initialQuestionId != null) {
+      for (final question in _questionService.allManagedQuestions()) {
+        if (question.id == initialQuestionId) {
+          initialQuestion = question;
+          break;
+        }
+      }
+    }
+
+    StudyContent? initialContent;
+    int? initialSubtopicIndex;
+
+    final resolvedInitialQuestion = initialQuestion;
+
+    if (resolvedInitialQuestion != null) {
+      for (final item in items) {
+        final packageMatches =
+            resolvedInitialQuestion.contentPackageId.trim().isNotEmpty &&
+            item.id == resolvedInitialQuestion.contentPackageId;
+
+        if (packageMatches ||
+            item.competencyId == resolvedInitialQuestion.competencyId) {
+          final subtopicIndex = item.subtopics.indexWhere(
+            (subtopic) => subtopic.id == resolvedInitialQuestion.subtopicId,
+          );
+
+          if (subtopicIndex >= 0) {
+            initialContent = item;
+            initialSubtopicIndex = subtopicIndex;
+            break;
+          }
+        }
+      }
+    }
+
     setState(() {
       _content = items;
-
-      _selectedContent = items.isEmpty ? null : items.first;
-
-      _selectedSubtopicIndex = items.isEmpty || items.first.subtopics.isEmpty
-          ? null
-          : 0;
-
+      _selectedContent = initialContent ?? (items.isEmpty ? null : items.first);
+      final selectedContent = _selectedContent;
+      _selectedSubtopicIndex =
+          initialSubtopicIndex ??
+          (selectedContent == null || selectedContent.subtopics.isEmpty
+              ? null
+              : 0);
+      _focusedQuestionId = initialQuestion?.id;
       _loading = false;
     });
 
     _refreshQuestions();
+
+    if (initialQuestion != null) {
+      _scheduleFocusQuestion(initialQuestion.id);
+    }
   }
 
   String _quizId(StudyContent content, StudySubtopic subtopic) {
     return '${content.id}_${subtopic.id}_quiz';
+  }
+
+  void _scheduleFocusQuestion(int questionId) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      final targetContext = _questionCardKeys[questionId]?.currentContext;
+
+      if (targetContext != null) {
+        Scrollable.ensureVisible(
+          targetContext,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+          alignment: 0.12,
+        );
+      }
+    });
+  }
+
+  final Map<int, GlobalKey> _questionCardKeys = <int, GlobalKey>{};
+
+  void _openQuestionInPracticeQuestions(Question question) {
+    final content = _selectedContent;
+
+    if (content == null) {
+      _showError('Unable to locate the Study Content package for this question.');
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => StudyContentStudioScreen(
+          initialContent: content,
+          initialQuestionId: question.id,
+        ),
+      ),
+    );
   }
 
   void _refreshQuestions() {
@@ -173,7 +260,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
       return;
     }
 
-    if (_questions.length >= 5) {
+    if (_questions.isEmpty) {
       _showError(
         'This subtopic already contains '
         '5 questions.',
@@ -466,6 +553,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
               onChanged: (value) {
                 setState(() {
                   _selectedSubtopicIndex = value;
+                  _focusedQuestionId = null;
                 });
 
                 _refreshQuestions();
@@ -523,59 +611,73 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
     final quizId = _quizId(content, subtopic);
 
-    final ready = _questions.length == 5 && publishedCount == 5;
+    final ready = _questions.length >= 5 && publishedCount >= 5;
 
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      subtopic.title,
-                      style: const TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.w800,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        subtopic.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Quiz ID: $quizId',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF64748B),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Quiz ID: $quizId',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF64748B),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              OutlinedButton.icon(
-                onPressed: _questions.length >= 5 ? null : _openCompletePaste,
-                icon: const Icon(Icons.content_paste_rounded),
-                label: const Text('Paste Complete Question'),
-              ),
-              const SizedBox(width: 10),
-              FilledButton.icon(
-                onPressed: _questions.length >= 5 ? null : () => _openEditor(),
-                icon: const Icon(Icons.add_rounded),
-                label: const Text('Create Question'),
-              ),
-            ],
+                const SizedBox(width: 12),
+                OutlinedButton.icon(
+                  onPressed: _openCompletePaste,
+                  icon: const Icon(Icons.content_paste_rounded),
+                  label: const Text('Paste Complete Question'),
+                ),
+                const SizedBox(width: 10),
+                FilledButton.icon(
+                  onPressed: () => _openEditor(),
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('Create Question'),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              _metric('Questions', '${_questions.length}/5'),
-              const SizedBox(width: 10),
-              _metric('Published', '$publishedCount/5'),
-              const SizedBox(width: 10),
-              _metric('Status', ready ? 'READY' : 'BUILDING'),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _metric('Questions', '${_questions.length}/5'),
+                const SizedBox(width: 10),
+                _metric('Published', '$publishedCount/5'),
+                const SizedBox(width: 10),
+                _metric('Status', ready ? 'READY' : 'BUILDING'),
+              ],
+            ),
           ),
           const SizedBox(height: 18),
           Expanded(
@@ -645,7 +747,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
             ),
             SizedBox(height: 14),
             Text(
-              'Build the five-question set',
+              'Build the question set',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 8),
@@ -668,40 +770,52 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
     final valid = issues.isEmpty;
 
-    return Card(
-      elevation: 0,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Color(0xFFE2E8F0)),
-      ),
+    final cardKey = _questionCardKeys.putIfAbsent(
+      question.id,
+      () => GlobalKey(),
+    );
+    final focused = _focusedQuestionId == question.id;
+
+    return KeyedSubtree(
+      key: cardKey,
+      child: Card(
+        elevation: 0,
+        color: focused ? const Color(0xFFEFF6FF) : Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(
-                  'Q${index + 1}',
-                  style: const TextStyle(fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(width: 10),
-                Chip(label: Text(question.difficulty)),
-                const SizedBox(width: 6),
-                Chip(label: Text(question.cognitiveLevel.toUpperCase())),
-                const Spacer(),
-                Text(
-                  published ? 'PUBLISHED' : 'DRAFT',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    color: published
-                        ? Colors.green.shade700
-                        : Colors.orange.shade700,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Q${index + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.w900),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 10),
+                  Chip(label: Text(question.difficulty)),
+                  const SizedBox(width: 6),
+                  Chip(label: Text(question.cognitiveLevel.toUpperCase())),
+                  const SizedBox(width: 12),
+                  Text(
+                    published ? 'PUBLISHED' : 'DRAFT',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: published
+                          ? Colors.green.shade700
+                          : Colors.orange.shade700,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 10),
             Text(
@@ -769,38 +883,48 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
             ],
 
             const SizedBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  valid
-                      ? 'Quality gate: PASS'
-                      : 'Quality gate: '
-                            '${issues.length} issue(s)',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: valid ? Colors.green.shade700 : Colors.red.shade700,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    valid
+                        ? 'Quality gate: PASS'
+                        : 'Quality gate: '
+                              '${issues.length} issue(s)',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: valid ? Colors.green.shade700 : Colors.red.shade700,
+                    ),
                   ),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () => _openEditor(question: question),
-                  child: const Text('Edit'),
-                ),
-                if (!published)
-                  FilledButton.tonal(
-                    onPressed: valid && _questions.length == 5
-                        ? () => _publishQuestion(question)
-                        : null,
-                    child: const Text('Publish'),
+                  const SizedBox(width: 12),
+                  TextButton(
+                    onPressed: () => _openEditor(question: question),
+                    child: const Text('Edit'),
                   ),
-                IconButton(
-                  onPressed: () => _deleteQuestion(question),
-                  icon: const Icon(Icons.delete_outline_rounded),
-                ),
-              ],
+                  TextButton.icon(
+                    onPressed: () => _openQuestionInPracticeQuestions(question),
+                    icon: const Icon(Icons.open_in_new_rounded, size: 17),
+                    label: const Text('Open in Practice'),
+                  ),
+                  if (!published)
+                    FilledButton.tonal(
+                      onPressed: valid
+                          ? () => _publishQuestion(question)
+                          : null,
+                      child: const Text('Publish'),
+                    ),
+                  IconButton(
+                    onPressed: () => _deleteQuestion(question),
+                    icon: const Icon(Icons.delete_outline_rounded),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -821,10 +945,10 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
     final quizId = _quizId(content, subtopic);
 
-    if (_questions.length != 5 ||
-        !_questions.every((q) => q.status.toLowerCase() == 'published')) {
+    if (_questions.length < 5 ||
+        _questions.where((q) => q.status.toLowerCase() == 'published').length < 5) {
       _showError(
-        'The subtopic must have exactly 5 published questions before the quiz can be linked.',
+        'The subtopic must have at least 5 published questions before the quiz can be linked.',
       );
 
       return;
@@ -1102,17 +1226,26 @@ training needs analysis, competency assessment, CSP11''',
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        OutlinedButton.icon(
-          onPressed: _parsing ? null : _parse,
-          icon: const Icon(Icons.preview_rounded),
-          label: Text(_parsing ? 'Parsing...' : 'Parse & Preview'),
-        ),
-        FilledButton.icon(
-          onPressed: question == null || hasErrors
-              ? null
-              : () => Navigator.pop(context, question),
-          icon: const Icon(Icons.save_rounded),
-          label: const Text('Import as Draft'),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              OutlinedButton.icon(
+                onPressed: _parsing ? null : _parse,
+                icon: const Icon(Icons.preview_rounded),
+                label: Text(_parsing ? 'Parsing...' : 'Parse & Preview'),
+              ),
+              const SizedBox(width: 8),
+              FilledButton.icon(
+                onPressed: question == null || hasErrors
+                    ? null
+                    : () => Navigator.pop(context, question),
+                icon: const Icon(Icons.save_rounded),
+                label: const Text('Import as Draft'),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -1150,28 +1283,32 @@ training needs analysis, competency assessment, CSP11''',
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const Text(
-                  'PREVIEW',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'PREVIEW',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.2,
+                    ),
                   ),
-                ),
-                const Spacer(),
-                Text(
-                  qualityPassed ? 'QUALITY PASS' : '${issues.length} ISSUE(S)',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    color: qualityPassed
-                        ? Colors.green.shade700
-                        : Colors.red.shade700,
+                  const SizedBox(width: 12),
+                  Text(
+                    qualityPassed ? 'QUALITY PASS' : '${issues.length} ISSUE(S)',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: qualityPassed
+                          ? Colors.green.shade700
+                          : Colors.red.shade700,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 14),
             Text(

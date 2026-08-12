@@ -69,6 +69,8 @@ class StudyNotesScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     domain.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -77,6 +79,8 @@ class StudyNotesScreen extends StatelessWidget {
                                   const SizedBox(height: 6),
                                   Text(
                                     domain.description,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.grey.shade700,
                                     ),
@@ -84,6 +88,8 @@ class StudyNotesScreen extends StatelessWidget {
                                   const SizedBox(height: 8),
                                   Text(
                                     '${domain.sectionCount} Sections • ${domain.noteCount} Topics',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
                                       fontWeight: FontWeight.w500,

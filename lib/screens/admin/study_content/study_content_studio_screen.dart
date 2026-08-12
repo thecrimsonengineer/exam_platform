@@ -18,11 +18,17 @@ import '../../../widgets/admin/study_content/editor/subtopic/subtopic_editor_pan
 import '../../../widgets/admin/study_content/editor/main_content/main_content_editor_panel.dart';
 import '../../../widgets/admin/study_content/structure/content_structure_panel.dart';
 import '../../courses/csp/content_test_screen.dart';
+import '../question_bank_screen.dart';
 
 class StudyContentStudioScreen extends StatefulWidget {
   final StudyContent? initialContent;
+  final int? initialQuestionId;
 
-  const StudyContentStudioScreen({super.key, this.initialContent});
+  const StudyContentStudioScreen({
+    super.key,
+    this.initialContent,
+    this.initialQuestionId,
+  });
 
   @override
   State<StudyContentStudioScreen> createState() =>
@@ -40,6 +46,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   List<Question> _practiceQuestions = <Question>[];
   bool _loadingPracticeQuestions = false;
   String? _resolvedPracticeQuizId;
+  int? _focusedPracticeQuestionId;
 
   int _overviewQuestionCount = 0;
   int _overviewPublishedCount = 0;
@@ -128,10 +135,16 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
     if (initial != null) {
       _importedContent = initial;
-      _selectedSubtopicIndex = initial.subtopics.isEmpty ? null : 0;
+
+      final initialQuestionId = widget.initialQuestionId;
+      final selectedIndex = initial.subtopics.isEmpty ? null : 0;
+
+      _selectedSection = initialQuestionId == null ? 0 : 5;
+      _selectedSubtopicIndex = selectedIndex;
+      _focusedPracticeQuestionId = initialQuestionId;
       _selectedMainContentIndex =
-          initial.subtopics.isNotEmpty &&
-              initial.subtopics.first.mainContent.isNotEmpty
+          selectedIndex != null &&
+              initial.subtopics[selectedIndex].mainContent.isNotEmpty
           ? 0
           : null;
     }
@@ -143,6 +156,31 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Future<void> _initializeQuestionService() async {
     try {
       await _questionService.initialize();
+
+      final initialQuestionId = widget.initialQuestionId;
+      final content = _importedContent;
+
+      if (initialQuestionId != null && content != null) {
+        final targetQuestion = _questionService.allManagedQuestions().cast<Question?>().firstWhere(
+          (question) => question?.id == initialQuestionId,
+          orElse: () => null,
+        );
+
+        if (targetQuestion != null) {
+          final targetSubtopicIndex = content.subtopics.indexWhere(
+            (subtopic) => subtopic.id == targetQuestion.subtopicId,
+          );
+
+          if (targetSubtopicIndex >= 0 && mounted) {
+            setState(() {
+              _selectedSection = 5;
+              _selectedSubtopicIndex = targetSubtopicIndex;
+              _focusedPracticeQuestionId = targetQuestion.id;
+            });
+          }
+        }
+      }
+
       await _refreshPracticeQuestions();
     } catch (error) {
       if (!mounted) {
@@ -585,75 +623,85 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         border: Border(bottom: BorderSide(color: StudyColors.border)),
         boxShadow: StudyShadows.soft,
       ),
-      child: Row(
-        children: [
-          const Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Study Content Studio',
-                  style: StudyTypography.sectionTitle,
-                ),
-                SizedBox(height: 3),
-                Text(
-                  'Create and publish CSP11 learning content',
-                  style: StudyTypography.bodySecondary,
-                ),
-              ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 400,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Study Content Studio',
+                    style: StudyTypography.sectionTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 3),
+                  const Text(
+                    'Create and publish CSP11 learning content',
+                    style: StudyTypography.bodySecondary,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-          ),
-          _buildStatusBadge(imported),
-          const SizedBox(width: 10),
-          OutlinedButton.icon(
-            onPressed: _returnToAdminHome,
-            icon: const Icon(Icons.home_rounded, size: 17),
-            label: const Text('Admin Home'),
-          ),
-          const SizedBox(width: 8),
-          OutlinedButton.icon(
-            onPressed: _openStudentPortal,
-            icon: const Icon(Icons.school_rounded, size: 17),
-            label: const Text('Student Portal'),
-          ),
-          const SizedBox(width: 8),
-          OutlinedButton.icon(
-            onPressed: imported ? _openPreview : null,
-            icon: const Icon(Icons.visibility_rounded, size: 17),
-            label: const Text('Preview'),
-          ),
-          if (imported && _isDraft) ...[
-            const SizedBox(width: 8),
-            FilledButton.icon(
-              onPressed: imported ? _saveDraft : null,
-              icon: const Icon(Icons.save_rounded, size: 17),
-              label: const Text('Save Draft'),
+            const SizedBox(width: 12),
+            _buildStatusBadge(imported),
+            const SizedBox(width: 10),
+            OutlinedButton.icon(
+              onPressed: _returnToAdminHome,
+              icon: const Icon(Icons.home_rounded, size: 17),
+              label: const Text('Admin Home'),
             ),
             const SizedBox(width: 8),
             OutlinedButton.icon(
-              onPressed: imported ? _sendToReview : null,
-              icon: const Icon(Icons.rate_review_rounded, size: 17),
-              label: const Text('Send to Review'),
+              onPressed: _openStudentPortal,
+              icon: const Icon(Icons.school_rounded, size: 17),
+              label: const Text('Student Portal'),
             ),
-          ],
-          if (imported && _isReview) ...[
             const SizedBox(width: 8),
             OutlinedButton.icon(
-              onPressed: _validateContent,
-              icon: const Icon(Icons.verified_rounded, size: 17),
-              label: const Text('Validate'),
+              onPressed: imported ? _openPreview : null,
+              icon: const Icon(Icons.visibility_rounded, size: 17),
+              label: const Text('Preview'),
             ),
+            if (imported && _isDraft) ...[
+              const SizedBox(width: 8),
+              FilledButton.icon(
+                onPressed: imported ? _saveDraft : null,
+                icon: const Icon(Icons.save_rounded, size: 17),
+                label: const Text('Save Draft'),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed: imported ? _sendToReview : null,
+                icon: const Icon(Icons.rate_review_rounded, size: 17),
+                label: const Text('Send to Review'),
+              ),
+            ],
+            if (imported && _isReview) ...[
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed: _validateContent,
+                icon: const Icon(Icons.verified_rounded, size: 17),
+                label: const Text('Validate'),
+              ),
+            ],
+            if (imported && _isValidated) ...[
+              const SizedBox(width: 8),
+              FilledButton.icon(
+                onPressed: _isValidationReady ? _publishContent : null,
+                icon: const Icon(Icons.publish_rounded, size: 17),
+                label: const Text('Publish'),
+              ),
+            ],
           ],
-          if (imported && _isValidated) ...[
-            const SizedBox(width: 8),
-            FilledButton.icon(
-              onPressed: _isValidationReady ? _publishContent : null,
-              icon: const Icon(Icons.publish_rounded, size: 17),
-              label: const Text('Publish'),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
@@ -920,7 +968,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             eyebrow: 'ASSESSMENT',
             title: 'Practice Questions',
             description:
-                'Each dedicated subtopic quiz requires exactly five '
+                'A dedicated subtopic quiz requires at least five '
                 'published questions.',
           ),
           const SizedBox(height: 24),
@@ -949,7 +997,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           title: 'Practice Questions',
           description:
               'Connect the managed CSP11 question bank to the selected '
-              'subtopic. A dedicated subtopic quiz requires exactly five '
+              'subtopic. A dedicated subtopic quiz requires at least five '
               'published questions.',
         ),
         const SizedBox(height: 22),
@@ -993,6 +1041,35 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
 
     return '${content.id}_${subtopic.id}_quiz';
+  }
+
+  void _scheduleFocusPracticeQuestion(int questionId) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      final targetContext = _practiceQuestionKeys[questionId]?.currentContext;
+
+      if (targetContext != null) {
+        Scrollable.ensureVisible(
+          targetContext,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+          alignment: 0.12,
+        );
+      }
+    });
+  }
+
+  final Map<int, GlobalKey> _practiceQuestionKeys = <int, GlobalKey>{};
+
+  void _openQuestionInQuestionBank(Question question) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => QuestionBankScreen(initialQuestionId: question.id),
+      ),
+    );
   }
 
   Future<void> _refreshPracticeQuestions() async {
@@ -1083,6 +1160,12 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         _overviewExpectedQuestionCount = overviewStats.expectedQuestionCount;
         _overviewQuizReady = overviewStats.ready;
       });
+
+      final focusedQuestionId = _focusedPracticeQuestionId;
+      if (focusedQuestionId != null &&
+          questions.any((question) => question.id == focusedQuestionId)) {
+        _scheduleFocusPracticeQuestion(focusedQuestionId);
+      }
     } catch (error) {
       if (!mounted) {
         return;
@@ -1156,6 +1239,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                 _selectedSubtopicIndex = value;
                 _selectedMainContentIndex = 0;
                 _resolvedPracticeQuizId = null;
+                _focusedPracticeQuestionId = null;
               });
 
               _refreshPracticeQuestions();
@@ -1450,14 +1534,22 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     final published = question.status.toLowerCase() == 'published';
     final statusColor = published ? StudyColors.success : StudyColors.warning;
 
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(
-        bottom: index == _practiceQuestions.length - 1 ? 0 : 10,
-      ),
+    final rowKey = _practiceQuestionKeys.putIfAbsent(
+      question.id,
+      () => GlobalKey(),
+    );
+    final focused = _focusedPracticeQuestionId == question.id;
+
+    return KeyedSubtree(
+      key: rowKey,
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(
+          bottom: index == _practiceQuestions.length - 1 ? 0 : 10,
+        ),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: StudyColors.surfaceSoft,
+        color: focused ? StudyColors.primaryLight : StudyColors.surfaceSoft,
         borderRadius: StudyRadius.medium,
         border: Border.all(color: StudyColors.border),
       ),
@@ -1493,6 +1585,23 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   'Question ID ${question.id}',
                   style: StudyTypography.bodySecondary.copyWith(fontSize: 10),
                 ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () => _openQuestionInQuestionBank(question),
+                    icon: const Icon(Icons.open_in_new_rounded, size: 16),
+                    label: const Text('Open in Question Bank'),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -1514,6 +1623,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -1570,11 +1680,11 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           'in Draft. Create or open a draft version before linking.';
     } else if (!ready) {
       message =
-          'Complete the dedicated quiz requirement first: exactly five '
-          'questions, all five Published.';
+          'Complete the dedicated quiz requirement first: at least five '
+          'published questions are required.';
     } else {
       message =
-          'Link this five-question quiz to the selected subtopic. '
+          'Link this quiz to the selected subtopic. '
           'The questions remain in the central question repository.';
     }
 
@@ -1621,33 +1731,38 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  quizId,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.body.copyWith(
-                    color: StudyColors.textSecondary,
-                    fontWeight: FontWeight.w600,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 300),
+                  child: Text(
+                    quizId,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: StudyTypography.body.copyWith(
+                      color: StudyColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              if (!isLinked)
-                FilledButton.icon(
-                  onPressed: canLink ? _linkPracticeQuiz : null,
-                  icon: const Icon(Icons.link_rounded, size: 17),
-                  label: const Text('Link Quiz'),
-                )
-              else
-                OutlinedButton.icon(
-                  onPressed: null,
-                  icon: const Icon(Icons.check_rounded, size: 17),
-                  label: const Text('Already Linked'),
-                ),
-            ],
+                const SizedBox(width: 12),
+                if (!isLinked)
+                  FilledButton.icon(
+                    onPressed: canLink ? _linkPracticeQuiz : null,
+                    icon: const Icon(Icons.link_rounded, size: 17),
+                    label: const Text('Link Quiz'),
+                  )
+                else
+                  OutlinedButton.icon(
+                    onPressed: null,
+                    icon: const Icon(Icons.check_rounded, size: 17),
+                    label: const Text('Already Linked'),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
@@ -2967,14 +3082,18 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              _buildHeroMeta('CONTENT ID', content.id),
-              const SizedBox(width: 24),
-              _buildHeroMeta('VERSION', 'v${content.version}'),
-              const SizedBox(width: 24),
-              _buildHeroMeta('COMPETENCY', '${content.competencyNumber}'),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeroMeta('CONTENT ID', content.id),
+                const SizedBox(width: 24),
+                _buildHeroMeta('VERSION', 'v${content.version}'),
+                const SizedBox(width: 24),
+                _buildHeroMeta('COMPETENCY', '${content.competencyNumber}'),
+              ],
+            ),
           ),
         ],
       ),
@@ -4388,74 +4507,79 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         borderRadius: StudyRadius.medium,
         border: Border.all(color: StudyColors.border),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: StudyColors.successLight,
-              borderRadius: StudyRadius.small,
-            ),
-            child: const Icon(
-              Icons.verified_rounded,
-              color: StudyColors.success,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  content.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.label.copyWith(fontSize: 12.5),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Competency ${content.competencyNumber}  •  '
-                  '${content.competencyId}  •  v${content.version}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
-            decoration: BoxDecoration(
-              color: StudyColors.successLight,
-              borderRadius: StudyRadius.pillRadius,
-            ),
-            child: const Text(
-              'PUBLISHED',
-              style: TextStyle(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: StudyColors.successLight,
+                borderRadius: StudyRadius.small,
+              ),
+              child: const Icon(
+                Icons.verified_rounded,
                 color: StudyColors.success,
-                fontSize: 9,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.6,
+                size: 20,
               ),
             ),
-          ),
-          const SizedBox(width: 8),
-          OutlinedButton.icon(
-            onPressed: () => _openPublished(content),
-            icon: const Icon(Icons.visibility_rounded, size: 16),
-            label: const Text('Open'),
-          ),
-          const SizedBox(width: 6),
-          IconButton(
-            tooltip: 'Create revision',
-            onPressed: () => _createRevision(content),
-            icon: const Icon(Icons.edit_note_rounded),
-          ),
-        ],
+            const SizedBox(width: 12),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 220),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    content.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: StudyTypography.label.copyWith(fontSize: 12.5),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Competency ${content.competencyNumber}  •  '
+                    '${content.competencyId}  •  v${content.version}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+              decoration: BoxDecoration(
+                color: StudyColors.successLight,
+                borderRadius: StudyRadius.pillRadius,
+              ),
+              child: const Text(
+                'PUBLISHED',
+                style: TextStyle(
+                  color: StudyColors.success,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.6,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            OutlinedButton.icon(
+              onPressed: () => _openPublished(content),
+              icon: const Icon(Icons.visibility_rounded, size: 16),
+              label: const Text('Open'),
+            ),
+            const SizedBox(width: 6),
+            IconButton(
+              tooltip: 'Create revision',
+              onPressed: () => _createRevision(content),
+              icon: const Icon(Icons.edit_note_rounded),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -4472,56 +4596,61 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         borderRadius: StudyRadius.medium,
         border: Border.all(color: StudyColors.border),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: StudyColors.primaryLight,
-              borderRadius: StudyRadius.small,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: StudyColors.primaryLight,
+                borderRadius: StudyRadius.small,
+              ),
+              child: const Icon(
+                Icons.description_rounded,
+                color: StudyColors.primary,
+                size: 20,
+              ),
             ),
-            child: const Icon(
-              Icons.description_rounded,
-              color: StudyColors.primary,
-              size: 20,
+            const SizedBox(width: 12),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 220),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    draft.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: StudyTypography.label.copyWith(fontSize: 12.5),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Competency ${draft.competencyNumber}  •  ${draft.competencyId}  •  v${draft.version}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  draft.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.label.copyWith(fontSize: 12.5),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Competency ${draft.competencyNumber}  •  ${draft.competencyId}  •  v${draft.version}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
-                ),
-              ],
+            const SizedBox(width: 10),
+            OutlinedButton.icon(
+              onPressed: () => _openDraft(draft),
+              icon: const Icon(Icons.folder_open_rounded, size: 16),
+              label: const Text('Open'),
             ),
-          ),
-          const SizedBox(width: 10),
-          OutlinedButton.icon(
-            onPressed: () => _openDraft(draft),
-            icon: const Icon(Icons.folder_open_rounded, size: 16),
-            label: const Text('Open'),
-          ),
-          const SizedBox(width: 6),
-          IconButton(
-            tooltip: 'Delete draft',
-            onPressed: () => _deleteDraft(draft),
-            icon: const Icon(Icons.delete_outline_rounded),
-          ),
-        ],
+            const SizedBox(width: 6),
+            IconButton(
+              tooltip: 'Delete draft',
+              onPressed: () => _deleteDraft(draft),
+              icon: const Icon(Icons.delete_outline_rounded),
+            ),
+          ],
+        ),
       ),
     );
   }

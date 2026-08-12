@@ -23,6 +23,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -30,3 +31,15 @@ flutter:
   assets:
     - content/
     - content/domain_07/competencies/
+
+flutter_launcher_icons:
+  android: true
+  web:
+    generate: true
+    image_path: assets/icon/csp11_logo.png
+    background_color: "#0B0F17"
+    theme_color: "#0B0F17"
+  image_path: assets/icon/csp11_logo.png
+  adaptive_icon_background: "#0B0F17"
+  adaptive_icon_foreground: assets/icon/csp11_logo.png
+  min_sdk_android: 21

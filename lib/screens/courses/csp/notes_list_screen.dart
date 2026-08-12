@@ -70,6 +70,8 @@ class NotesListScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   note.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -78,6 +80,8 @@ class NotesListScreen extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   '${note.learningObjectives.length} Learning Objectives',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: Colors.grey.shade700),
                                 ),
                               ],
