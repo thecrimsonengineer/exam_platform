@@ -8,7 +8,7 @@ import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography.dart';
-import '../../../widgets/csp/study_content/study_content_renderer.dart';
+import 'package:exam_platform/widgets/csp/study_content/study_content_renderer.dart';
 
 /// Production student-facing screen for CSP Study Content.
 ///
@@ -109,15 +109,10 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
         tooltip: 'Back to Admin',
         onPressed: () {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => const StudyContentStudioScreen(),
-            ),
+            MaterialPageRoute(builder: (_) => const StudyContentStudioScreen()),
           );
         },
-        icon: const Icon(
-          Icons.arrow_back_rounded,
-          size: 21,
-        ),
+        icon: const Icon(Icons.arrow_back_rounded, size: 21),
       ),
       title: Row(
         children: [
@@ -140,20 +135,20 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
               future: _contentFuture,
               builder:
                   (BuildContext context, AsyncSnapshot<StudyContent> snapshot) {
-                final title = snapshot.hasData
-                    ? snapshot.data!.title
-                    : widget.loadingTitle ?? 'Study Content';
+                    final title = snapshot.hasData
+                        ? snapshot.data!.title
+                        : widget.loadingTitle ?? 'Study Content';
 
-                return Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.cardTitle.copyWith(
-                    color: StudyColors.textPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                );
-              },
+                    return Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: StudyTypography.cardTitle.copyWith(
+                        color: StudyColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    );
+                  },
             ),
           ),
         ],

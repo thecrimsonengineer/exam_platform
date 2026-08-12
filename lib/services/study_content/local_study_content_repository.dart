@@ -55,6 +55,29 @@ class LocalStudyContentRepository {
     );
   }
 
+
+  /// Updates the lifecycle status of an item that is still in authoring
+  /// storage. The content itself is preserved unchanged.
+  Future<void> updateDraftStatus(
+    String contentId,
+    String status,
+  ) async {
+    final content = await loadDraft(contentId);
+
+    if (content == null) {
+      throw StateError('Draft "$contentId" was not found.');
+    }
+
+    final json = Map<String, dynamic>.from(content.toJson())
+      ..['status'] = status;
+
+    await _saveContent(
+      storageKey: _draftStorageKey,
+      content: StudyContent.fromJson(json),
+      storageLabel: 'draft',
+    );
+  }
+
   /// Deletes one draft by Content ID.
   Future<void> deleteDraft(String contentId) async {
     await _deleteContent(
@@ -111,6 +134,32 @@ class LocalStudyContentRepository {
     await _saveContent(
       storageKey: _publishedStorageKey,
       content: publishedContent,
+      storageLabel: 'published',
+    );
+  }
+
+
+  /// Updates the lifecycle status of a published version without deleting
+  /// the historical record.
+  ///
+  /// The student loader already filters for status == published, so archived
+  /// versions remain retained for repository history but are not student-live.
+  Future<void> updatePublishedStatus(
+    String contentId,
+    String status,
+  ) async {
+    final content = await loadPublishedContent(contentId);
+
+    if (content == null) {
+      throw StateError('Published content "$contentId" was not found.');
+    }
+
+    final json = Map<String, dynamic>.from(content.toJson())
+      ..['status'] = status;
+
+    await _saveContent(
+      storageKey: _publishedStorageKey,
+      content: StudyContent.fromJson(json),
       storageLabel: 'published',
     );
   }

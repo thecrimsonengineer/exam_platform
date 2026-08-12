@@ -1,0 +1,1475 @@
+{
+  "id": "domain_07_01-v2",
+  "domainId": "domain_07",
+  "competencyId": "domain_07_01",
+  "competencyNumber": 1,
+  "title": "Needs Assessment",
+  "status": "draft",
+  "version": 2,
+  "subtopics": [
+    {
+      "id": "domain_07_01_01",
+      "title": "Foundations of Training Needs Assessment",
+      "learningObjectives": [
+        "Define training needs assessment and explain its purpose.",
+        "Distinguish a genuine training need from a general organizational problem.",
+        "Explain how needs assessment connects organizational needs, worker performance, competencies, and training decisions."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_001",
+          "title": "What Is a Training Needs Assessment?",
+          "blocks": [
+            {
+              "id": "block_001",
+              "type": "heading",
+              "data": {
+                "title": "Definition",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_002",
+              "type": "text",
+              "data": {
+                "content": "A training needs assessment is a systematic process of collecting and analyzing information about an organizational or performance need to determine whether training can appropriately address it. The process focuses on the difference between what is required and what currently exists."
+              }
+            },
+            {
+              "id": "block_003",
+              "type": "text",
+              "data": {
+                "content": "The assessment should connect the organizational need to worker knowledge, skills, abilities, behavior, performance requirements, competency expectations, and qualification requirements where applicable."
+              }
+            },
+            {
+              "id": "block_004",
+              "type": "remember",
+              "data": {
+                "content": "Needs assessment comes before training design. The question is not simply what training can be delivered, but what performance or capability needs to change and whether training is an appropriate response."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_002",
+          "title": "Why Needs Assessment Matters",
+          "blocks": [
+            {
+              "id": "block_005",
+              "type": "heading",
+              "data": {
+                "title": "Purpose",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_006",
+              "type": "text",
+              "data": {
+                "content": "A needs assessment helps prevent resources from being spent on training when the underlying problem is caused by equipment, procedures, supervision, work conditions, staffing, incentives, or other non-training factors."
+              }
+            },
+            {
+              "id": "block_007",
+              "type": "text",
+              "data": {
+                "content": "It also helps identify what workers need to know, what they need to be able to do, what performance is expected, and where the meaningful gaps are."
+              }
+            },
+            {
+              "id": "block_008",
+              "type": "caseStudy",
+              "data": {
+                "title": "The False Training Solution",
+                "content": "A department experiences repeated errors. Management immediately requests refresher training. The needs assessment finds that the procedure was changed but the workers were given an outdated version of the procedure. Updating the controlled procedure and communication process addresses the root cause more directly than repeating the old training."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_003",
+          "title": "Training Need Versus Organizational Need",
+          "blocks": [
+            {
+              "id": "block_009",
+              "type": "heading",
+              "data": {
+                "title": "Two Different Questions",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_010",
+              "type": "text",
+              "data": {
+                "content": "An organizational problem may be expressed as poor quality, increased incidents, reduced productivity, noncompliance, or failure to meet a target. A training needs assessment investigates the cause rather than assuming lack of training."
+              }
+            },
+            {
+              "id": "block_011",
+              "type": "text",
+              "data": {
+                "content": "The key decision is whether a knowledge, skill, ability, or behavior gap exists and whether training can reasonably reduce that gap."
+              }
+            },
+            {
+              "id": "block_012",
+              "type": "warning",
+              "data": {
+                "content": "Do not treat every performance problem as a training problem. Training is one possible intervention, not the default answer."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_004",
+          "title": "The Needs Assessment Logic",
+          "blocks": [
+            {
+              "id": "block_013",
+              "type": "heading",
+              "data": {
+                "title": "From Problem to Decision",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_014",
+              "type": "checklist",
+              "data": {
+                "items": [
+                  "Define the organizational or performance concern.",
+                  "Identify the required performance and competency level.",
+                  "Determine current worker knowledge, skills, abilities, behavior, and performance.",
+                  "Identify the gap and investigate its causes.",
+                  "Determine whether training can address the cause.",
+                  "Identify the population affected and the required training scope.",
+                  "Document the resulting training or non-training recommendation."
+                ]
+              }
+            },
+            {
+              "id": "block_015",
+              "type": "examTip",
+              "data": {
+                "content": "For CSP-style questions, look for the answer that diagnoses the cause before recommending training."
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [
+        {
+          "id": "ex_001",
+          "title": "Incident trend",
+          "content": "A rise in near misses is a signal for investigation, not automatic proof that workers need refresher training."
+        }
+      ],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_001",
+          "title": "Training Needs Assessment",
+          "content": "Needs assessment is presented as a process for collecting information about an expressed or implied organizational need that may be addressed through training.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_002",
+          "title": "CSP11 Blueprint",
+          "content": "Domain 7, Training, includes Competency 1: Describe the needs assessment process to determine worker training, competencies, and qualifications.",
+          "source": "Board of Certified Safety Professionals, CSP11 Examination Blueprint",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_001",
+          "title": "Start with the problem",
+          "content": "Define the performance or organizational need before selecting a training topic."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_001",
+          "title": "Training as the default solution",
+          "content": "Assuming every performance problem is caused by inadequate training."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_001",
+          "title": "Core principle",
+          "content": "Assess the need first, then decide whether training is justified."
+        }
+      ],
+      "quizzes": []
+    },
+    {
+      "id": "domain_07_01_02",
+      "title": "Organizational and Context Analysis",
+      "learningObjectives": [
+        "Explain how organizational goals, business needs, regulatory requirements, and internal standards influence training needs.",
+        "Identify information that should be collected during a context analysis.",
+        "Use organizational context to determine why training is being considered and what outcome is expected."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_005",
+          "title": "Organizational Drivers",
+          "blocks": [
+            {
+              "id": "block_016",
+              "type": "heading",
+              "data": {
+                "title": "What Drives the Need?",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_017",
+              "type": "text",
+              "data": {
+                "content": "Training needs may arise from performance improvement goals, new equipment or processes, changes in work methods, regulatory obligations, internal policy requirements, organizational changes, or identified deficiencies."
+              }
+            },
+            {
+              "id": "block_018",
+              "type": "text",
+              "data": {
+                "content": "The assessment should establish the business or operational reason for the proposed training and the outcome that stakeholders expect."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_006",
+          "title": "Context Analysis",
+          "blocks": [
+            {
+              "id": "block_019",
+              "type": "heading",
+              "data": {
+                "title": "Context Analysis",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_020",
+              "type": "text",
+              "data": {
+                "content": "Context analysis examines the organizational situation surrounding the proposed training. It asks why training is being considered, who requested or authorized it, what organizational need it is intended to address, and what previous training history exists."
+              }
+            },
+            {
+              "id": "block_021",
+              "type": "text",
+              "data": {
+                "content": "The analysis should consider whether organizational conditions support successful transfer of learning. A training program cannot fully compensate for unsuitable equipment, unclear procedures, or conflicting work expectations."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_007",
+          "title": "Regulatory Requirements and Internal Policies",
+          "blocks": [
+            {
+              "id": "block_022",
+              "type": "heading",
+              "data": {
+                "title": "Requirements Hierarchy",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_023",
+              "type": "text",
+              "data": {
+                "content": "Applicable regulatory requirements and internal policies should be reviewed to identify the required level of worker knowledge, skill, behavior, or qualification."
+              }
+            },
+            {
+              "id": "block_024",
+              "type": "text",
+              "data": {
+                "content": "Where actual work practices differ from requirements, the reason for the difference should be investigated. A valid reason may indicate that the procedure or policy needs improvement, while an invalid deviation may indicate a training need."
+              }
+            },
+            {
+              "id": "block_025",
+              "type": "examTip",
+              "data": {
+                "content": "Do not assume that a policy deviation automatically proves a training deficiency. First establish why the deviation occurred."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_008",
+          "title": "Business and Operational Consequences",
+          "blocks": [
+            {
+              "id": "block_026",
+              "type": "heading",
+              "data": {
+                "title": "Why Prioritize?",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_027",
+              "type": "text",
+              "data": {
+                "content": "Needs should be prioritized according to the significance of the performance problem, the number and type of workers affected, regulatory or qualification implications, operational consequences, and the potential value of corrective action."
+              }
+            },
+            {
+              "id": "block_028",
+              "type": "text",
+              "data": {
+                "content": "The assessment should produce a clear reason for the proposed training rather than a generic statement that workers need more awareness."
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_003",
+          "title": "Needs Analysis Scope",
+          "content": "Training needs analysis can examine an organization, department, or functional unit to determine how training can improve effectiveness and efficiency and support regulatory or internal requirements.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_004",
+          "title": "Context Analysis",
+          "content": "Context analysis focuses on organizational training needs, why training is recommended, who decided training should occur, and the organization's training history.",
+          "source": "W. David Yates, Safety Professional's Reference and Study Guide, 3rd Edition",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_002",
+          "title": "Read the context",
+          "content": "When a question provides organizational history, regulatory drivers, or business objectives, use those facts before choosing a training intervention."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_002",
+          "title": "Ignoring the organization",
+          "content": "Looking only at individual workers without considering organizational requirements and conditions."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_002",
+          "title": "Context controls the question",
+          "content": "A good needs assessment connects training to a defined organizational or operational need."
+        }
+      ],
+      "quizzes": []
+    },
+    {
+      "id": "domain_07_01_03",
+      "title": "Worker, User, and Stakeholder Analysis",
+      "learningObjectives": [
+        "Identify the stakeholders and worker groups who should contribute to a needs assessment.",
+        "Determine relevant characteristics of the target audience.",
+        "Assess existing worker knowledge, skills, abilities, experience, and performance."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_009",
+          "title": "Stakeholder Identification",
+          "blocks": [
+            {
+              "id": "block_029",
+              "type": "heading",
+              "data": {
+                "title": "Who Provides the Information?",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_030",
+              "type": "text",
+              "data": {
+                "content": "A useful needs assessment may involve management, supervisors, frontline workers, subject-matter experts, human resources, safety professionals, and worker representatives where applicable."
+              }
+            },
+            {
+              "id": "block_031",
+              "type": "text",
+              "data": {
+                "content": "Different stakeholders see different parts of the problem. Management can describe organizational expectations, while supervisors and frontline workers can provide information about actual work conditions and performance."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_010",
+          "title": "User Analysis",
+          "blocks": [
+            {
+              "id": "block_032",
+              "type": "heading",
+              "data": {
+                "title": "The Target Population",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_033",
+              "type": "text",
+              "data": {
+                "content": "User analysis identifies who will receive the training, what they already know, what experience they have, and what characteristics may affect learning or training delivery."
+              }
+            },
+            {
+              "id": "block_034",
+              "type": "text",
+              "data": {
+                "content": "Relevant characteristics may include job function, experience, prerequisites, language needs, work schedule, education background, and accommodation needs."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_011",
+          "title": "Current Knowledge and Skill Level",
+          "blocks": [
+            {
+              "id": "block_035",
+              "type": "heading",
+              "data": {
+                "title": "Establish the Starting Point",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_036",
+              "type": "text",
+              "data": {
+                "content": "The assessment should determine what workers currently know and can do, rather than relying only on whether they previously attended a course."
+              }
+            },
+            {
+              "id": "block_037",
+              "type": "text",
+              "data": {
+                "content": "Completion of previous training does not automatically demonstrate competence. Current performance evidence should be considered when determining the actual gap."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_012",
+          "title": "Stakeholder Interviewing and Surveys",
+          "blocks": [
+            {
+              "id": "block_038",
+              "type": "heading",
+              "data": {
+                "title": "Collecting Reliable Information",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_039",
+              "type": "text",
+              "data": {
+                "content": "Interviews, questionnaires, surveys, and discussions can be used to collect information. Questions should focus on work tasks, requirements, barriers, and actual performance rather than simply asking whether workers want training."
+              }
+            },
+            {
+              "id": "block_040",
+              "type": "checklist",
+              "data": {
+                "items": [
+                  "Ask what workers are expected to do.",
+                  "Ask what actually happens during the task.",
+                  "Ask what makes correct performance difficult.",
+                  "Compare stakeholder views with objective evidence.",
+                  "Check whether reported needs are supported by performance data."
+                ]
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_005",
+          "title": "Stakeholder Perspectives",
+          "content": "Training needs analysis should involve relevant managers, supervisors, frontline employees, and other applicable stakeholders because their perspectives on job requirements and performance may differ.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_006",
+          "title": "User Analysis",
+          "content": "User analysis considers prospective learners and instructors, including existing knowledge and characteristics relevant to the training.",
+          "source": "W. David Yates, Safety Professional's Reference and Study Guide, 3rd Edition",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_003",
+          "title": "Attendance is not competence",
+          "content": "A prior training record proves exposure to training, not necessarily successful knowledge transfer or job performance."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_003",
+          "title": "Ask only about training",
+          "content": "Asking workers whether they want training can produce a stated preference rather than evidence of a training need."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_003",
+          "title": "Triangulate",
+          "content": "Use worker input together with observation, records, requirements, and performance evidence."
+        }
+      ],
+      "quizzes": []
+    },
+    {
+      "id": "domain_07_01_04",
+      "title": "Job, Work, and Task Analysis",
+      "learningObjectives": [
+        "Differentiate job analysis, work analysis, and task analysis.",
+        "Identify the information needed to define required task performance.",
+        "Explain how task analysis supports competency assessment and later training design."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_013",
+          "title": "Job Analysis and KSAOs",
+          "blocks": [
+            {
+              "id": "block_041",
+              "type": "heading",
+              "data": {
+                "title": "Job Requirements",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_042",
+              "type": "text",
+              "data": {
+                "content": "Job analysis identifies the knowledge, skills, abilities, and other characteristics required to perform a job and can help establish the expected level of competence."
+              }
+            },
+            {
+              "id": "block_043",
+              "type": "text",
+              "data": {
+                "content": "Comparing job requirements with incumbent capability helps identify where a competency gap may exist."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_014",
+          "title": "Work and Task Analysis",
+          "blocks": [
+            {
+              "id": "block_044",
+              "type": "heading",
+              "data": {
+                "title": "From Job to Task",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_045",
+              "type": "text",
+              "data": {
+                "content": "Work or task analysis focuses on the specific activities workers must perform and the standards they must meet. It provides more operational detail than a general job description."
+              }
+            },
+            {
+              "id": "block_046",
+              "type": "text",
+              "data": {
+                "content": "A task analysis can identify prerequisites, equipment, procedures, environmental constraints, task steps, and criteria for successful performance."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_015",
+          "title": "Procedural Task Analysis",
+          "blocks": [
+            {
+              "id": "block_047",
+              "type": "heading",
+              "data": {
+                "title": "Typical Process",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_048",
+              "type": "checklist",
+              "data": {
+                "items": [
+                  "Identify prerequisites from the job requirements.",
+                  "Review applicable standard operating procedures.",
+                  "Identify equipment, materials, and manufacturer instructions.",
+                  "Observe or perform the task.",
+                  "List the steps in the correct sequence.",
+                  "Validate the task inventory.",
+                  "Compare actual performance with the required standard."
+                ]
+              }
+            },
+            {
+              "id": "block_049",
+              "type": "text",
+              "data": {
+                "content": "The resulting task information can later support learning objectives, instructional methods, training media, the training environment, and competency assessment."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_016",
+          "title": "Performance Standards",
+          "blocks": [
+            {
+              "id": "block_050",
+              "type": "heading",
+              "data": {
+                "title": "What Does Good Look Like?",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_051",
+              "type": "text",
+              "data": {
+                "content": "A performance standard should describe the required result or behavior clearly enough to distinguish acceptable from unacceptable performance."
+              }
+            },
+            {
+              "id": "block_052",
+              "type": "text",
+              "data": {
+                "content": "Where the job requires demonstration of a skill, the assessment should consider observable performance and the criteria used to judge competence."
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_007",
+          "title": "Task Analysis",
+          "content": "Task analysis examines a work activity to define what trainees should learn and the criteria for successful learning.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_008",
+          "title": "Procedural Task Analysis",
+          "content": "Procedural task analysis identifies task steps, prerequisite skills, supplies, equipment, environmental constraints, and comparison of actual performance with the standard.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_009",
+          "title": "Work Analysis",
+          "content": "Work analysis focuses on desired skill and performance requirements and may also be called task or job analysis.",
+          "source": "W. David Yates, Safety Professional's Reference and Study Guide, 3rd Edition",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_004",
+          "title": "Job analysis versus task analysis",
+          "content": "Job analysis describes job requirements; task analysis goes deeper into how specific work activities must be performed."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_004",
+          "title": "Stop at the job description",
+          "content": "A job description may not contain the procedural detail needed to define training and competency requirements."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_004",
+          "title": "Define the work",
+          "content": "You cannot reliably determine training content until the required work and performance standards are understood."
+        }
+      ],
+      "quizzes": []
+    },
+    {
+      "id": "domain_07_01_05",
+      "title": "Competencies and Qualifications",
+      "learningObjectives": [
+        "Identify how competency requirements are established from job and task requirements.",
+        "Distinguish knowledge, skill, ability, performance, competency, and qualification considerations.",
+        "Determine what evidence is needed to establish that a worker is qualified for a task or role."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_017",
+          "title": "Competency Requirements",
+          "blocks": [
+            {
+              "id": "block_053",
+              "type": "heading",
+              "data": {
+                "title": "Required Capability",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_054",
+              "type": "text",
+              "data": {
+                "content": "Competency requirements describe the capability a worker must demonstrate to perform assigned work safely and effectively. They should be linked to actual job duties, task requirements, applicable procedures, and required standards."
+              }
+            },
+            {
+              "id": "block_055",
+              "type": "text",
+              "data": {
+                "content": "The assessment compares the required capability with the worker's current capability to identify gaps that may require training, coaching, practice, supervision, or another control."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_018",
+          "title": "Knowledge, Skills, Abilities, and Other Characteristics",
+          "blocks": [
+            {
+              "id": "block_056",
+              "type": "heading",
+              "data": {
+                "title": "KSAOs",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_057",
+              "type": "text",
+              "data": {
+                "content": "Knowledge concerns what a worker understands. Skills concern the ability to perform learned actions. Abilities refer to capabilities that support performance. Other characteristics can include relevant attributes or prerequisites associated with successful job performance."
+              }
+            },
+            {
+              "id": "block_058",
+              "type": "text",
+              "data": {
+                "content": "A needs assessment should identify which of these are actually required for the job instead of assuming that all performance gaps are knowledge gaps."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_019",
+          "title": "Qualification Requirements",
+          "blocks": [
+            {
+              "id": "block_059",
+              "type": "heading",
+              "data": {
+                "title": "Qualification Is More Than Attendance",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_060",
+              "type": "text",
+              "data": {
+                "content": "Where a role or task has defined qualification requirements, the assessment should identify the prerequisites, required training, experience, demonstration, testing, authorization, certification, or other evidence specified by the applicable requirement."
+              }
+            },
+            {
+              "id": "block_061",
+              "type": "text",
+              "data": {
+                "content": "The exact qualification criteria depend on the job, organization, and applicable requirements. The needs assessment should identify the governing source rather than inventing a qualification standard."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_020",
+          "title": "Determining Competency Evidence",
+          "blocks": [
+            {
+              "id": "block_062",
+              "type": "heading",
+              "data": {
+                "title": "Evidence of Capability",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_063",
+              "type": "checklist",
+              "data": {
+                "items": [
+                  "Identify the required competency.",
+                  "Define the expected performance standard.",
+                  "Determine current worker capability.",
+                  "Identify the evidence needed to demonstrate competence.",
+                  "Identify any prerequisite qualification or authorization.",
+                  "Determine whether a gap can be closed through training or requires another action."
+                ]
+              }
+            },
+            {
+              "id": "block_064",
+              "type": "examTip",
+              "data": {
+                "content": "When a question asks about competency or qualification, look for evidence of actual capability rather than evidence that a worker merely attended training."
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_010",
+          "title": "KSAOs and Competence",
+          "content": "Job analysis specifies knowledge, skills, abilities, and other characteristics needed to perform a job and the level of competence required.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_011",
+          "title": "Course Completion Criteria",
+          "content": "Training planning should identify what trainees must achieve to be considered successful or to reach the expected level of competency.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 3",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_005",
+          "title": "Look for evidence",
+          "content": "Qualification and competency decisions should be tied to defined requirements and evidence of capability."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_005",
+          "title": "Equating training with qualification",
+          "content": "Treating course attendance alone as proof that all competency or qualification requirements have been met."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_005",
+          "title": "Requirements first",
+          "content": "Identify the governing job, task, regulatory, or organizational requirement before deciding what evidence is sufficient."
+        }
+      ],
+      "quizzes": []
+    },
+    {
+      "id": "domain_07_01_06",
+      "title": "Performance Gap and Root-Cause Analysis",
+      "learningObjectives": [
+        "Compare actual performance with desired performance.",
+        "Identify possible causes of performance gaps.",
+        "Determine whether training is an appropriate corrective action."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_021",
+          "title": "Actual Versus Desired Performance",
+          "blocks": [
+            {
+              "id": "block_065",
+              "type": "heading",
+              "data": {
+                "title": "The Performance Gap",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_066",
+              "type": "text",
+              "data": {
+                "content": "The performance gap is the difference between the level of performance required and the level currently demonstrated."
+              }
+            },
+            {
+              "id": "block_067",
+              "type": "text",
+              "data": {
+                "content": "The gap should be described using observable evidence where possible, such as task performance, quality results, inspection findings, assessment results, errors, incident data, or other relevant records."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_022",
+          "title": "Root Causes of Performance Problems",
+          "blocks": [
+            {
+              "id": "block_068",
+              "type": "heading",
+              "data": {
+                "title": "Look Beyond Training",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_069",
+              "type": "text",
+              "data": {
+                "content": "Potential causes include inadequate knowledge or skill, unclear procedures, unsuitable equipment, poor work conditions, insufficient resources, conflicting priorities, weak supervision, inadequate feedback, staffing problems, or other organizational factors."
+              }
+            },
+            {
+              "id": "block_070",
+              "type": "text",
+              "data": {
+                "content": "The assessment should identify the cause that is relevant to the observed gap rather than selecting training because it is familiar or easy to arrange."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_023",
+          "title": "When Training Is Appropriate",
+          "blocks": [
+            {
+              "id": "block_071",
+              "type": "heading",
+              "data": {
+                "title": "Training-Suitable Conditions",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_072",
+              "type": "text",
+              "data": {
+                "content": "Training is appropriate when the gap is meaningfully related to knowledge, skill, or behavior that can be improved through instruction, practice, feedback, coaching, or related learning intervention."
+              }
+            },
+            {
+              "id": "block_073",
+              "type": "text",
+              "data": {
+                "content": "Training may also be required because of a regulatory or internal policy requirement, even when no current performance deficiency has been observed."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_024",
+          "title": "When Training Is Not the Best Solution",
+          "blocks": [
+            {
+              "id": "block_074",
+              "type": "heading",
+              "data": {
+                "title": "Non-Training Causes",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_075",
+              "type": "text",
+              "data": {
+                "content": "Training is unlikely to correct a problem caused primarily by defective equipment, inadequate staffing, incompatible procedures, poor system design, unavailable resources, or other conditions outside the learner's control."
+              }
+            },
+            {
+              "id": "block_076",
+              "type": "caseStudy",
+              "data": {
+                "title": "Equipment Problem Disguised as a Training Problem",
+                "content": "Workers repeatedly make errors while using an interface that differs from the procedure they were trained on. The needs assessment should examine the interface, procedure, and work process before prescribing refresher training."
+              }
+            },
+            {
+              "id": "block_077",
+              "type": "warning",
+              "data": {
+                "content": "Do not use a training program to compensate for a known system defect when the system defect is the primary cause of poor performance."
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_012",
+          "title": "Performance Gap",
+          "content": "Training needs analysis compares what employees know and how they perform with what they should know and how they should perform, then examines why the discrepancy exists.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_013",
+          "title": "Training Suitability Analysis",
+          "content": "Training suitability analysis examines whether training is the desired or appropriate solution to a performance problem.",
+          "source": "W. David Yates, Safety Professional's Reference and Study Guide, 3rd Edition",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_006",
+          "title": "Find the cause",
+          "content": "The best answer usually identifies the cause of the performance gap before selecting the intervention."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_006",
+          "title": "Confusing correlation with cause",
+          "content": "A poor performance result occurring after a training event does not prove that more training is the correct remedy."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_006",
+          "title": "Cause before course",
+          "content": "Identify why performance is below standard before deciding what intervention is needed."
+        }
+      ],
+      "quizzes": []
+    },
+    {
+      "id": "domain_07_01_07",
+      "title": "Needs Assessment Data Collection and Analysis",
+      "learningObjectives": [
+        "Select suitable methods for collecting needs assessment information.",
+        "Use multiple evidence sources to improve confidence in the findings.",
+        "Analyze records, observations, interviews, tests, and other evidence to identify a defensible training need."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_025",
+          "title": "Observation",
+          "blocks": [
+            {
+              "id": "block_078",
+              "type": "heading",
+              "data": {
+                "title": "Direct Observation",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_079",
+              "type": "text",
+              "data": {
+                "content": "Direct observation allows the assessor to compare actual work behavior with the required procedure or performance standard."
+              }
+            },
+            {
+              "id": "block_080",
+              "type": "text",
+              "data": {
+                "content": "Observation is especially useful when the gap involves practical task performance, sequencing, equipment use, or behavior that workers may not accurately describe in a questionnaire."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_026",
+          "title": "Interviews, Questionnaires, and Focus Groups",
+          "blocks": [
+            {
+              "id": "block_081",
+              "type": "heading",
+              "data": {
+                "title": "Worker and Stakeholder Input",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_082",
+              "type": "text",
+              "data": {
+                "content": "Interviews and focus groups can provide detailed information about job difficulties, barriers, expectations, and prior training. Questionnaires can collect information from larger groups but may be more vulnerable to response bias."
+              }
+            },
+            {
+              "id": "block_083",
+              "type": "text",
+              "data": {
+                "content": "Questions should focus on the work and its requirements. Asking whether someone has attended training is less informative than determining whether the worker can perform the required task."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_027",
+          "title": "Records and Performance Data",
+          "blocks": [
+            {
+              "id": "block_084",
+              "type": "heading",
+              "data": {
+                "title": "Objective Evidence",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_085",
+              "type": "text",
+              "data": {
+                "content": "Useful records may include training histories, quality data, inspection findings, audit results, incident or near-miss information, tests, reports, and other performance measures relevant to the problem."
+              }
+            },
+            {
+              "id": "block_086",
+              "type": "text",
+              "data": {
+                "content": "Previous training records can also show what was taught and how it was delivered. If the same gap remains after previous training, the assessor should investigate whether the training strategy was ineffective or whether the original cause was different."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_028",
+          "title": "Triangulating Evidence",
+          "blocks": [
+            {
+              "id": "block_087",
+              "type": "heading",
+              "data": {
+                "title": "Use More Than One Lens",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_088",
+              "type": "text",
+              "data": {
+                "content": "Triangulation means comparing information from different sources before reaching the training decision. For example, worker interviews can be compared with observations, job requirements, records, and performance results."
+              }
+            },
+            {
+              "id": "block_089",
+              "type": "checklist",
+              "data": {
+                "items": [
+                  "Collect requirement evidence.",
+                  "Collect current-performance evidence.",
+                  "Collect worker and supervisor perspectives.",
+                  "Review previous training and qualification records.",
+                  "Compare evidence for consistency.",
+                  "Investigate contradictions before deciding."
+                ]
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_014",
+          "title": "Needs Analysis Techniques",
+          "content": "Useful techniques include direct observation, questionnaires, consultation with knowledgeable employees, document review, interviews, focus groups, tests, records and reports, and representative behavior samples.",
+          "source": "W. David Yates, Safety Professional's Reference and Study Guide, 3rd Edition",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_015",
+          "title": "Evidence Collection",
+          "content": "Training needs analysis can use facility observation, interviews or surveys, regulatory and policy review, job analysis, training records, and performance-gap analysis.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_007",
+          "title": "Prefer evidence",
+          "content": "When a question gives objective performance data and opinions, give greater weight to verified evidence when diagnosing the gap."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_007",
+          "title": "Single-source diagnosis",
+          "content": "Making a major training decision from one unverified opinion or one isolated data point."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_007",
+          "title": "Triangulate findings",
+          "content": "Strong needs assessments compare requirements, performance, worker input, and records."
+        }
+      ],
+      "quizzes": []
+    },
+    {
+      "id": "domain_07_01_08",
+      "title": "From Needs Assessment to Training Decision",
+      "learningObjectives": [
+        "Summarize needs assessment findings in a way that supports a training decision.",
+        "Identify broad training topics without prematurely designing the course.",
+        "Translate identified needs into clear recommendations for the next phase."
+      ],
+      "mainContent": [
+        {
+          "id": "topic_029",
+          "title": "Define the Training Population",
+          "blocks": [
+            {
+              "id": "block_090",
+              "type": "heading",
+              "data": {
+                "title": "Who Needs the Intervention?",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_091",
+              "type": "text",
+              "data": {
+                "content": "The assessment should identify which workers or job functions are affected. Not every employee in an organization necessarily has the same need."
+              }
+            },
+            {
+              "id": "block_092",
+              "type": "text",
+              "data": {
+                "content": "Relevant distinctions can include job function, role, experience, shift, prerequisites, existing capability, and specific qualification requirements."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_030",
+          "title": "Determine Broad Training Topics",
+          "blocks": [
+            {
+              "id": "block_093",
+              "type": "heading",
+              "data": {
+                "title": "Macro-Level Output",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_094",
+              "type": "text",
+              "data": {
+                "content": "Training needs analysis is a macro analysis. It can identify broad training topics, but detailed instructional content, sequencing, methods, and learning activities are normally refined during later task analysis and training design."
+              }
+            },
+            {
+              "id": "block_095",
+              "type": "text",
+              "data": {
+                "content": "For example, the needs assessment may establish that workers require training in a particular competency, while task analysis determines exactly what tasks, steps, and performance standards must be taught."
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_031",
+          "title": "Document the Recommendation",
+          "blocks": [
+            {
+              "id": "block_096",
+              "type": "heading",
+              "data": {
+                "title": "A Defensible Output",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_097",
+              "type": "checklist",
+              "data": {
+                "items": [
+                  "State the organizational or performance need.",
+                  "State the required performance or competency.",
+                  "Summarize the current performance evidence.",
+                  "Describe the identified gap and its cause.",
+                  "Identify affected workers or roles.",
+                  "Identify applicable qualification or regulatory requirements.",
+                  "State whether training is required, appropriate, unnecessary, or only part of the solution.",
+                  "Identify broad training topics or other recommended actions."
+                ]
+              }
+            }
+          ],
+          "quizzes": []
+        },
+        {
+          "id": "topic_032",
+          "title": "Handoff to Training Design",
+          "blocks": [
+            {
+              "id": "block_098",
+              "type": "heading",
+              "data": {
+                "title": "The Next Phase",
+                "level": 2
+              }
+            },
+            {
+              "id": "block_099",
+              "type": "text",
+              "data": {
+                "content": "Once the needs assessment confirms that training is appropriate, the findings become inputs to training design. The next phase can develop performance objectives, detailed content, delivery methods, learning activities, materials, and assessment methods."
+              }
+            },
+            {
+              "id": "block_100",
+              "type": "text",
+              "data": {
+                "content": "The needs assessment should not prematurely prescribe instructional details that have not yet been supported by task analysis or audience analysis."
+              }
+            },
+            {
+              "id": "block_101",
+              "type": "examTip",
+              "data": {
+                "content": "If an answer jumps directly from a vague problem to a detailed training course without diagnosing the need, it is usually skipping the needs assessment step."
+              }
+            }
+          ],
+          "quizzes": []
+        }
+      ],
+      "keyPoints": [],
+      "examples": [],
+      "caseStudies": [],
+      "formulas": [],
+      "references": [
+        {
+          "id": "ref_016",
+          "title": "Macro Analysis",
+          "content": "The final needs-analysis step identifies broad training topics; exact learning content and delivery decisions are resolved after further task analysis.",
+          "source": "Margaret Wan, Incidental Trainer, Chapter 2",
+          "url": "",
+          "blocks": []
+        },
+        {
+          "id": "ref_017",
+          "title": "Training Development Sequence",
+          "content": "Training program development follows needs analysis and includes performance objectives, content outline, delivery method, materials, and testing/evaluation.",
+          "source": "W. David Yates, Safety Professional's Reference and Study Guide, 3rd Edition",
+          "url": "",
+          "blocks": []
+        }
+      ],
+      "examTips": [
+        {
+          "id": "tip_008",
+          "title": "Do not jump phases",
+          "content": "Needs assessment establishes what is needed and why. Training design determines how the need will be addressed."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "id": "mistake_008",
+          "title": "Over-designing too early",
+          "content": "Choosing detailed course content and delivery methods before the need, audience, and task requirements are established."
+        }
+      ],
+      "keyTakeaways": [
+        {
+          "id": "take_008",
+          "title": "Clear handoff",
+          "content": "A good needs assessment ends with a defensible recommendation that can guide the next phase of training development."
+        }
+      ],
+      "quizzes": []
+    }
+  ]
+}

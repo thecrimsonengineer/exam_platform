@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'app/theme.dart';
 import 'screens/admin/admin_home_screen.dart';
+import 'services/local_question_repository.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalQuestionRepository.instance.initialize();
   runApp(const ExamPlatformApp());
 }
 

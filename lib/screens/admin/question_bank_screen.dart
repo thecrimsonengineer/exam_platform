@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../models/question.dart';
-import '../../models/study_content.dart';
-import '../../services/question_bank_service.dart';
-import '../../services/study_content/local_study_content_repository.dart';
+import '../../../models/question.dart';
+import '../../../models/study_content.dart';
+import '../../../services/complete_question_paste_parser.dart';
+import '../../../services/question_bank_service.dart';
+import '../../../services/question_quality_validator.dart';
+import '../../../services/study_content/local_study_content_repository.dart';
 
 class QuestionBankScreen extends StatefulWidget {
   const QuestionBankScreen({super.key});
@@ -18,15 +20,27 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
   final QuestionBankService _questionService = QuestionBankService();
 
+  final CompleteQuestionPasteParser _pasteParser =
+      const CompleteQuestionPasteParser();
+
   List<StudyContent> _content = <StudyContent>[];
+
   StudyContent? _selectedContent;
+
   int? _selectedSubtopicIndex;
+
   List<Question> _questions = <Question>[];
+
   bool _loading = true;
+
+  bool _answerLengthCheckEnabled = true;
 
   @override
   void initState() {
     super.initState();
+
+    _questionService.answerLengthCheckEnabled = true;
+
     _load();
   }
 
@@ -34,6 +48,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
     await _questionService.initialize();
 
     final drafts = await _contentRepository.loadDrafts();
+
     final published = await _contentRepository.loadPublished();
 
     final byId = <String, StudyContent>{};
@@ -59,10 +74,13 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
     setState(() {
       _content = items;
+
       _selectedContent = items.isEmpty ? null : items.first;
+
       _selectedSubtopicIndex = items.isEmpty || items.first.subtopics.isEmpty
           ? null
           : 0;
+
       _loading = false;
     });
 
@@ -75,6 +93,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
   void _refreshQuestions() {
     final content = _selectedContent;
+
     final index = _selectedSubtopicIndex;
 
     if (content == null ||
@@ -86,10 +105,12 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
           _questions = <Question>[];
         });
       }
+
       return;
     }
 
     final subtopic = content.subtopics[index];
+
     final quizId = _quizId(content, subtopic);
 
     final questions = _questionService.byQuizId(quizId)
@@ -106,6 +127,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
   Future<void> _openEditor({Question? question}) async {
     final content = _selectedContent;
+
     final index = _selectedSubtopicIndex;
 
     if (content == null ||
@@ -133,7 +155,62 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
     }
 
     await _questionService.saveDraft(result);
+
     _refreshQuestions();
+  }
+
+  Future<void> _openCompletePaste() async {
+    final content = _selectedContent;
+
+    final index = _selectedSubtopicIndex;
+
+    if (content == null ||
+        index == null ||
+        index < 0 ||
+        index >= content.subtopics.length) {
+      _showError('Select a competency and subtopic first.');
+
+      return;
+    }
+
+    if (_questions.length >= 5) {
+      _showError(
+        'This subtopic already contains '
+        '5 questions.',
+      );
+
+      return;
+    }
+
+    final result = await showDialog<Question>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return _CompleteQuestionPasteDialog(
+          parser: _pasteParser,
+          questionService: _questionService,
+          content: content,
+          subtopic: content.subtopics[index],
+          answerLengthCheckEnabled: _answerLengthCheckEnabled,
+        );
+      },
+    );
+
+    if (result == null) {
+      return;
+    }
+
+    await _questionService.saveDraft(result);
+
+    _refreshQuestions();
+
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Complete question imported as Draft.')),
+    );
   }
 
   Future<void> _publishQuestion(Question question) async {
@@ -159,91 +236,16 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
   Future<void> _deleteQuestion(Question question) async {
     await _questionService.delete(question.id);
+
     _refreshQuestions();
   }
 
-  Future<void> _attachQuizToContent() async {
-    final content = _selectedContent;
-    final index = _selectedSubtopicIndex;
+  void _setAnswerLengthCheck(bool enabled) {
+    setState(() {
+      _answerLengthCheckEnabled = enabled;
+    });
 
-    if (content == null ||
-        index == null ||
-        index < 0 ||
-        index >= content.subtopics.length) {
-      return;
-    }
-
-    final subtopic = content.subtopics[index];
-    final quizId = _quizId(content, subtopic);
-
-    if (_questions.length != 5 ||
-        !_questions.every((q) => q.status.toLowerCase() == 'published')) {
-      _showError(
-        'The subtopic must have exactly 5 published questions '
-        'before the quiz can be linked.',
-      );
-      return;
-    }
-
-    if (subtopic.quizzes.any((quiz) => quiz.quizId == quizId)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('This quiz is already linked to the subtopic.'),
-        ),
-      );
-      return;
-    }
-
-    final updatedSubtopic = StudySubtopic(
-      id: subtopic.id,
-      title: subtopic.title,
-      learningObjectives: subtopic.learningObjectives,
-      mainContent: subtopic.mainContent,
-      keyPoints: subtopic.keyPoints,
-      examples: subtopic.examples,
-      caseStudies: subtopic.caseStudies,
-      formulas: subtopic.formulas,
-      references: subtopic.references,
-      examTips: subtopic.examTips,
-      commonMistakes: subtopic.commonMistakes,
-      keyTakeaways: subtopic.keyTakeaways,
-      quizzes: [
-        ...subtopic.quizzes,
-        QuizReference(quizId: quizId),
-      ],
-    );
-
-    final updatedSubtopics = List<StudySubtopic>.from(content.subtopics);
-
-    updatedSubtopics[index] = updatedSubtopic;
-
-    final updatedContent = StudyContent(
-      id: content.id,
-      domainId: content.domainId,
-      competencyId: content.competencyId,
-      competencyNumber: content.competencyNumber,
-      title: content.title,
-      status: content.status,
-      version: content.version,
-      subtopics: updatedSubtopics,
-    );
-
-    if (content.status.toLowerCase() == 'published') {
-      _showError(
-        'Link the quiz to the draft version first. '
-        'Publish the content version after linking.',
-      );
-      return;
-    }
-
-    await _contentRepository.saveDraft(updatedContent);
-
-    await _load();
-
-    _showSuccess(
-      'Quiz linked to the subtopic. '
-      'Publish the content version to make it student-visible.',
-    );
+    _questionService.answerLengthCheckEnabled = enabled;
   }
 
   void _showError(String message) {
@@ -255,12 +257,6 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
     );
   }
 
-  void _showSuccess(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -268,6 +264,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
     }
 
     final content = _selectedContent;
+
     final index = _selectedSubtopicIndex;
 
     final subtopic =
@@ -339,6 +336,54 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
           _ruleChip('5 questions / subtopic'),
           _ruleChip('Hard • Application / Analysis'),
           _ruleChip('4 options • 1 BEST answer'),
+          _buildAnswerLengthControl(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerLengthControl() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: _answerLengthCheckEnabled
+            ? const Color(0xFFEFF6FF)
+            : const Color(0xFFFFF7ED),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: _answerLengthCheckEnabled
+              ? const Color(0xFFBFDBFE)
+              : const Color(0xFFFED7AA),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Answer Length Check',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              color: _answerLengthCheckEnabled
+                  ? const Color(0xFF1E40AF)
+                  : const Color(0xFF9A3412),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Switch(
+            value: _answerLengthCheckEnabled,
+            onChanged: _setAnswerLengthCheck,
+          ),
+          Text(
+            _answerLengthCheckEnabled ? 'ON' : 'OFF',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w900,
+              color: _answerLengthCheckEnabled
+                  ? Colors.green.shade700
+                  : Colors.orange.shade800,
+            ),
+          ),
         ],
       ),
     );
@@ -389,6 +434,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
             onChanged: (value) {
               setState(() {
                 _selectedContent = value;
+
                 _selectedSubtopicIndex =
                     value == null || value.subtopics.isEmpty ? null : 0;
               });
@@ -440,10 +486,27 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
           const SizedBox(height: 10),
           const _RuleRow('Scenario-based', 'Application / Analysis'),
           const _RuleRow('Options', 'Exactly 4'),
-          const _RuleRow('Best answer', 'Not longest'),
+          const _RuleRow('Best answer', 'Exactly 1'),
+          _RuleRow(
+            'Answer length',
+            _answerLengthCheckEnabled ? 'Checked' : 'Disabled',
+          ),
           const _RuleRow('Explanation', 'Required'),
           const _RuleRow('Reference', 'Required'),
           const _RuleRow('Subtopic quota', 'Exactly 5'),
+          if (!_answerLengthCheckEnabled)
+            const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                'Answer Length Check disabled. '
+                'All other quality checks remain active.',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF9A3412),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -491,6 +554,12 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
                   ],
                 ),
               ),
+              OutlinedButton.icon(
+                onPressed: _questions.length >= 5 ? null : _openCompletePaste,
+                icon: const Icon(Icons.content_paste_rounded),
+                label: const Text('Paste Complete Question'),
+              ),
+              const SizedBox(width: 10),
               FilledButton.icon(
                 onPressed: _questions.length >= 5 ? null : () => _openEditor(),
                 icon: const Icon(Icons.add_rounded),
@@ -514,16 +583,14 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
                 ? _emptyState()
                 : ListView.separated(
                     itemCount: _questions.length,
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 10);
-                    },
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       return _questionCard(_questions[index], index);
                     },
                   ),
           ),
-          if (ready) ...[
-            const SizedBox(height: 12),
+          if (ready)
             Align(
               alignment: Alignment.centerRight,
               child: FilledButton.icon(
@@ -532,7 +599,6 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
                 label: const Text('Link Quiz to Student Content'),
               ),
             ),
-          ],
         ],
       ),
     );
@@ -562,7 +628,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
   Widget _emptyState() {
     return Center(
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 520),
+        constraints: const BoxConstraints(maxWidth: 560),
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -573,7 +639,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.psychology_alt_rounded,
+              Icons.content_paste_rounded,
               size: 44,
               color: Color(0xFF64748B),
             ),
@@ -584,8 +650,8 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
             ),
             SizedBox(height: 8),
             Text(
-              'Each question must pass the CSP quality gate '
-              'before it can be published.',
+              'Use Paste Complete Question to '
+              'populate an entire question in one operation.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Color(0xFF64748B)),
             ),
@@ -648,8 +714,10 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
             ),
             const SizedBox(height: 12),
             ...question.options.asMap().entries.map((entry) {
-              final i = entry.key;
-              final isBest = i == question.correctAnswer;
+              final optionIndex = entry.key;
+
+              final isBest = optionIndex == question.correctAnswer;
+
               return Padding(
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Row(
@@ -658,7 +726,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
                     SizedBox(
                       width: 24,
                       child: Text(
-                        String.fromCharCode(65 + i),
+                        String.fromCharCode(65 + optionIndex),
                         style: const TextStyle(fontWeight: FontWeight.w800),
                       ),
                     ),
@@ -672,6 +740,34 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
                 ),
               );
             }),
+
+            if (question.tags.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              const Text(
+                'TAGS',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF64748B),
+                  letterSpacing: 0.8,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: question.tags
+                    .map(
+                      (tag) => Chip(
+                        label: Text(tag),
+                        visualDensity: VisualDensity.compact,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+
             const SizedBox(height: 10),
             Row(
               children: [
@@ -708,6 +804,92 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
       ),
     );
   }
+
+  Future<void> _attachQuizToContent() async {
+    final content = _selectedContent;
+
+    final index = _selectedSubtopicIndex;
+
+    if (content == null ||
+        index == null ||
+        index < 0 ||
+        index >= content.subtopics.length) {
+      return;
+    }
+
+    final subtopic = content.subtopics[index];
+
+    final quizId = _quizId(content, subtopic);
+
+    if (_questions.length != 5 ||
+        !_questions.every((q) => q.status.toLowerCase() == 'published')) {
+      _showError(
+        'The subtopic must have exactly 5 published questions before the quiz can be linked.',
+      );
+
+      return;
+    }
+
+    if (subtopic.quizzes.any((quiz) => quiz.quizId == quizId)) {
+      _showError('This quiz is already linked to the subtopic.');
+
+      return;
+    }
+
+    final updatedSubtopic = StudySubtopic(
+      id: subtopic.id,
+      title: subtopic.title,
+      learningObjectives: subtopic.learningObjectives,
+      mainContent: subtopic.mainContent,
+      keyPoints: subtopic.keyPoints,
+      examples: subtopic.examples,
+      caseStudies: subtopic.caseStudies,
+      formulas: subtopic.formulas,
+      references: subtopic.references,
+      examTips: subtopic.examTips,
+      commonMistakes: subtopic.commonMistakes,
+      keyTakeaways: subtopic.keyTakeaways,
+      quizzes: [
+        ...subtopic.quizzes,
+        QuizReference(quizId: quizId),
+      ],
+    );
+
+    final updatedSubtopics = List<StudySubtopic>.from(content.subtopics);
+
+    updatedSubtopics[index] = updatedSubtopic;
+
+    final updatedContent = StudyContent(
+      id: content.id,
+      domainId: content.domainId,
+      competencyId: content.competencyId,
+      competencyNumber: content.competencyNumber,
+      title: content.title,
+      status: content.status,
+      version: content.version,
+      subtopics: updatedSubtopics,
+    );
+
+    if (content.status.toLowerCase() == 'published') {
+      _showError(
+        'Link the quiz to the draft version first. Publish the content version after linking.',
+      );
+
+      return;
+    }
+
+    await _contentRepository.saveDraft(updatedContent);
+
+    await _load();
+
+    _showSuccess('Quiz linked to the subtopic.');
+  }
+
+  void _showSuccess(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 }
 
 class _RuleRow extends StatelessWidget {
@@ -737,6 +919,390 @@ class _RuleRow extends StatelessWidget {
   }
 }
 
+class _CompleteQuestionPasteDialog extends StatefulWidget {
+  final CompleteQuestionPasteParser parser;
+  final QuestionBankService questionService;
+  final StudyContent content;
+  final StudySubtopic subtopic;
+  final bool answerLengthCheckEnabled;
+
+  const _CompleteQuestionPasteDialog({
+    required this.parser,
+    required this.questionService,
+    required this.content,
+    required this.subtopic,
+    required this.answerLengthCheckEnabled,
+  });
+
+  @override
+  State<_CompleteQuestionPasteDialog> createState() =>
+      _CompleteQuestionPasteDialogState();
+}
+
+class _CompleteQuestionPasteDialogState
+    extends State<_CompleteQuestionPasteDialog> {
+  final TextEditingController _pasteController = TextEditingController();
+
+  Question? _previewQuestion;
+
+  String? _parseError;
+
+  bool _parsing = false;
+
+  @override
+  void dispose() {
+    _pasteController.dispose();
+    super.dispose();
+  }
+
+  void _parse() {
+    setState(() {
+      _parsing = true;
+      _parseError = null;
+      _previewQuestion = null;
+    });
+
+    try {
+      final parsed = widget.parser.parse(_pasteController.text);
+
+      final baseQuestion = parsed.toQuestion(
+        id: widget.questionService.nextQuestionId(),
+        domain: _domainNumber(widget.content.domainId),
+        competencyId: widget.content.competencyId,
+        subtopicId: widget.subtopic.id,
+        topicId: widget.subtopic.mainContent.isEmpty
+            ? ''
+            : widget.subtopic.mainContent.first.id,
+        quizId: '${widget.content.id}_${widget.subtopic.id}_quiz',
+        contentPackageId: widget.content.id,
+      );
+
+      // Preserve the tags parsed from the complete paste.
+      // The Question model supports JSON serialization, so rebuild the
+      // Question with the parsed tags explicitly attached.
+      final question = Question.fromJson({
+        ...baseQuestion.toJson(),
+        'tags': List<String>.from(parsed.tags),
+      });
+
+      setState(() {
+        _previewQuestion = question;
+        _parsing = false;
+      });
+    } catch (error) {
+      setState(() {
+        _parseError = error.toString().replaceFirst('FormatException: ', '');
+        _parsing = false;
+      });
+    }
+  }
+
+  int _domainNumber(String domainId) {
+    final match = RegExp(r'\d+').firstMatch(domainId);
+
+    return int.tryParse(match?.group(0) ?? '') ?? 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final question = _previewQuestion;
+
+    final issues = question == null
+        ? <QuestionQualityIssue>[]
+        : widget.questionService.validate(question);
+
+    final hasErrors = issues.any((issue) => issue.isError);
+
+    return AlertDialog(
+      title: const Text('Paste Complete Question'),
+      content: SizedBox(
+        width: 900,
+        height: 650,
+        child: Column(
+          children: [
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Paste the complete question below. '
+                'The current repository context will be attached automatically.',
+                style: TextStyle(color: Color(0xFF64748B)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _pasteController,
+                      expands: true,
+                      maxLines: null,
+                      minLines: null,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: const InputDecoration(
+                        hintText: '''QUESTION:
+Describe the question here.
+
+OPTION A:
+First answer.
+
+OPTION B:
+Second answer.
+
+OPTION C:
+Third answer.
+
+OPTION D:
+Fourth answer.
+
+BEST ANSWER:
+C
+
+EXPLANATION:
+Explain why the BEST answer is correct.
+
+REFERENCE:
+BCSP CSP11 Examination Blueprint
+
+TAGS:
+training needs analysis, competency assessment, CSP11''',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildPreview(question, issues)),
+                ],
+              ),
+            ),
+            if (_parseError != null)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 12),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF2F2),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFFFECACA)),
+                ),
+                child: Text(
+                  _parseError!,
+                  style: const TextStyle(
+                    color: Color(0xFF991B1B),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        OutlinedButton.icon(
+          onPressed: _parsing ? null : _parse,
+          icon: const Icon(Icons.preview_rounded),
+          label: Text(_parsing ? 'Parsing...' : 'Parse & Preview'),
+        ),
+        FilledButton.icon(
+          onPressed: question == null || hasErrors
+              ? null
+              : () => Navigator.pop(context, question),
+          icon: const Icon(Icons.save_rounded),
+          label: const Text('Import as Draft'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPreview(Question? question, List<QuestionQualityIssue> issues) {
+    if (question == null) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+        ),
+        child: const Center(
+          child: Text(
+            'Preview will appear here after parsing.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Color(0xFF64748B)),
+          ),
+        ),
+      );
+    }
+
+    final qualityPassed = issues.isEmpty;
+
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'PREVIEW',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  qualityPassed ? 'QUALITY PASS' : '${issues.length} ISSUE(S)',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    color: qualityPassed
+                        ? Colors.green.shade700
+                        : Colors.red.shade700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Text(
+              question.question,
+              style: const TextStyle(fontWeight: FontWeight.w700, height: 1.4),
+            ),
+            const SizedBox(height: 14),
+            ...question.options.asMap().entries.map((entry) {
+              final isBest = entry.key == question.correctAnswer;
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 22,
+                      child: Text(
+                        String.fromCharCode(65 + entry.key),
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                    Expanded(child: Text(entry.value)),
+                    if (isBest)
+                      const Padding(
+                        padding: EdgeInsets.only(left: 6),
+                        child: Chip(label: Text('BEST')),
+                      ),
+                  ],
+                ),
+              );
+            }),
+            const Divider(height: 24),
+            const Text(
+              'EXPLANATION',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(question.explanation),
+            const SizedBox(height: 14),
+            const Text(
+              'REFERENCE',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(question.reference),
+            const SizedBox(height: 14),
+            const Text(
+              'TAGS',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(question.tags.join(', ')),
+            const SizedBox(height: 14),
+            if (issues.isNotEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF2F2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'QUALITY CHECK',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF991B1B),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    ...issues.map(
+                      (issue) => Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          '• ${issue.message}',
+                          style: const TextStyle(color: Color(0xFF991B1B)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0FDF4),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text(
+                  '✓ Question passes the current quality gate.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF166534),
+                  ),
+                ),
+              ),
+            if (!widget.answerLengthCheckEnabled)
+              const Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  '⚠ Answer Length Check disabled.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF9A3412),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _QuestionEditorDialog extends StatefulWidget {
   final StudyContent content;
   final StudySubtopic subtopic;
@@ -756,13 +1322,19 @@ class _QuestionEditorDialog extends StatefulWidget {
 
 class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
   late final TextEditingController _stem;
+
   late final List<TextEditingController> _options;
+
   late final TextEditingController _explanation;
+
   late final TextEditingController _rationale;
+
   late final TextEditingController _reference;
+
   late final TextEditingController _tags;
 
   int _correct = 0;
+
   String _cognitive = 'analysis';
 
   @override
@@ -784,11 +1356,10 @@ class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
 
     _reference = TextEditingController(text: q?.reference ?? '');
 
-    _tags = TextEditingController(
-      text: q?.tags.join(', ') ?? 'Needs Assessment, CSP11',
-    );
+    _tags = TextEditingController(text: q?.tags.join(', ') ?? 'CSP11');
 
     _correct = q?.correctAnswer ?? 0;
+
     _cognitive = q?.cognitiveLevel ?? 'analysis';
   }
 
@@ -837,17 +1408,6 @@ class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
           .toList(),
     );
 
-    final issues = widget.questionService.validate(q);
-
-    if (issues.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(issues.map((e) => e.message).join('\n')),
-          duration: const Duration(seconds: 5),
-        ),
-      );
-    }
-
     Navigator.of(context).pop(q);
   }
 
@@ -869,24 +1429,12 @@ class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'SCENARIO + DECISION',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.4,
-                  color: Color(0xFF64748B),
-                ),
-              ),
-              const SizedBox(height: 8),
               TextField(
                 controller: _stem,
                 minLines: 6,
                 maxLines: 10,
                 decoration: const InputDecoration(
                   labelText: 'Question stem',
-                  hintText:
-                      'Describe the workplace situation, evidence, constraints, and ask for the BEST action/conclusion.',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -930,9 +1478,6 @@ class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       IconButton(
-                        tooltip: selected
-                            ? 'Best answer'
-                            : 'Mark as best answer',
                         onPressed: () {
                           setState(() {
                             _correct = i;
@@ -960,16 +1505,14 @@ class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
                   ),
                 );
               }),
-              const SizedBox(height: 4),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               TextField(
                 controller: _rationale,
                 minLines: 3,
                 maxLines: 5,
                 decoration: const InputDecoration(
                   labelText: 'Why is this the BEST answer?',
-                  helperText:
-                      'Explain why this option is the BEST answer based on the scenario.',
+                  helperText: 'Optional authoring rationale.',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -999,12 +1542,6 @@ class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
                   helperText: 'Comma separated',
                   border: OutlineInputBorder(),
                 ),
-              ),
-              const SizedBox(height: 14),
-              const Text(
-                'Authoring rules are checked before publication. '
-                'Drafts can be saved while you work.',
-                style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
               ),
             ],
           ),

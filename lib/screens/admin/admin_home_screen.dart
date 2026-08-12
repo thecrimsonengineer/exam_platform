@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../data/csp11_blueprint.dart';
+
+import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
+import 'question_bank_screen.dart';
+import '../courses/courses_screen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -24,56 +29,21 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   static const double expandedWidth = 270;
 
   final List<_NavItem> navigation = const [
-    _NavItem(
-      Icons.grid_view_rounded,
-      'Command Center',
-      'OVERVIEW',
-    ),
-    _NavItem(
-      Icons.auto_awesome_rounded,
-      'Content Studio',
-      'CONTENT',
-    ),
-    _NavItem(
-      Icons.storage_rounded,
-      'Repository',
-      'CONTENT',
-    ),
-    _NavItem(
-      Icons.publish_rounded,
-      'Publishing',
-      'CONTENT',
-    ),
-    _NavItem(
-      Icons.quiz_rounded,
-      'Question Bank',
-      'ASSESSMENT',
-      enabled: false,
-    ),
+    _NavItem(Icons.grid_view_rounded, 'Command Center', 'OVERVIEW'),
+    _NavItem(Icons.school_rounded, 'Courses', 'LEARNING'),
+    _NavItem(Icons.auto_awesome_rounded, 'Content Studio', 'CONTENT'),
+    _NavItem(Icons.storage_rounded, 'Repository', 'CONTENT'),
+    _NavItem(Icons.publish_rounded, 'Publishing', 'CONTENT'),
+    _NavItem(Icons.quiz_rounded, 'Question Bank', 'ASSESSMENT'),
     _NavItem(
       Icons.assignment_rounded,
       'Practice Exams',
       'ASSESSMENT',
       enabled: false,
     ),
-    _NavItem(
-      Icons.people_alt_rounded,
-      'Learners',
-      'LEARNERS',
-      enabled: false,
-    ),
-    _NavItem(
-      Icons.analytics_rounded,
-      'Analytics',
-      'INSIGHTS',
-      enabled: false,
-    ),
-    _NavItem(
-      Icons.settings_rounded,
-      'Settings',
-      'SYSTEM',
-      enabled: false,
-    ),
+    _NavItem(Icons.people_alt_rounded, 'Learners', 'LEARNERS', enabled: false),
+    _NavItem(Icons.analytics_rounded, 'Analytics', 'INSIGHTS', enabled: false),
+    _NavItem(Icons.settings_rounded, 'Settings', 'SYSTEM', enabled: false),
   ];
 
   @override
@@ -98,7 +68,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     _sidebarController.dispose();
     super.dispose();
   }
-  
+
   void _openDesktopSidebar() {
     if (!_sidebarPinned) {
       _sidebarHovered = true;
@@ -139,9 +109,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
   void _openStudio() {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const StudyContentStudioScreen(),
-      ),
+      MaterialPageRoute<void>(builder: (_) => const StudyContentStudioScreen()),
+    );
+  }
+
+  void _openRepository() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const ContentRepositoryScreen()),
     );
   }
 
@@ -151,9 +125,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         content: Text('$feature is coming in the next platform stage.'),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
   }
@@ -172,7 +144,17 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     });
 
     if (index == 1) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (_) => const CoursesScreen()));
+    } else if (index == 2) {
       _openStudio();
+    } else if (index == 3) {
+      _openRepository();
+    } else if (index == 5) {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const QuestionBankScreen()),
+      );
     }
   }
 
@@ -203,9 +185,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       body: Row(
         children: [
           _buildDesktopSidebar(),
-          Expanded(
-            child: _buildDesktopDashboard(),
-          ),
+          Expanded(child: _buildDesktopDashboard()),
         ],
       ),
     );
@@ -215,9 +195,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     return AnimatedBuilder(
       animation: _sidebarAnimation,
       builder: (context, child) {
-        final width = collapsedWidth +
-            ((expandedWidth - collapsedWidth) *
-                _sidebarAnimation.value);
+        final width =
+            collapsedWidth +
+            ((expandedWidth - collapsedWidth) * _sidebarAnimation.value);
 
         return MouseRegion(
           onEnter: (_) => _openDesktopSidebar(),
@@ -242,7 +222,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                     ),
                   ],
                 ),
-                child: _buildDesktopSidebarContent(),
+                child: OverflowBox(
+                  alignment: Alignment.topLeft,
+                  minWidth: expandedWidth,
+                  maxWidth: expandedWidth,
+                  child: _buildDesktopSidebarContent(),
+                ),
               ),
             ),
           ),
@@ -257,79 +242,71 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       builder: (context, child) {
         final t = _sidebarAnimation.value;
 
-        return Column(
-          children: [
-            SizedBox(
-              height: 82,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Opacity(
-                    opacity: 1 - t,
-                    child: _brandIcon(),
-                  ),
-                  Positioned(
-                    left: 20,
-                    right: 15,
-                    child: Opacity(
-                      opacity: t,
-                      child: Row(
-                        children: [
-                          _brandIcon(),
-                          const SizedBox(width: 12),
-                          const Expanded(
-                            child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'CSP11',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.8,
-                                  ),
+        return SizedBox(
+          width: expandedWidth,
+          height: double.infinity,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 82,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 13, 0),
+                  child: Row(
+                    children: [
+                      _brandIcon(),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Opacity(
+                          opacity: t,
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'CSP11',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.8,
                                 ),
-                                SizedBox(height: 3),
-                                Text(
-                                  'ADMIN CONSOLE',
-                                  style: TextStyle(
-                                    color: Color(0xFF8994AA),
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 1.3,
-                                  ),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                'ADMIN CONSOLE',
+                                style: TextStyle(
+                                  color: Color(0xFF8994AA),
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 1.3,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  if (t > .01)
-                    Positioned(
-                      right: 13,
-                      top: 25,
-                      child: Opacity(
+                      const SizedBox(width: 8),
+                      Opacity(
                         opacity: t,
-                        child: _pinButton(),
+                        child: IgnorePointer(
+                          ignoring: t < .5,
+                          child: _pinButton(),
+                        ),
                       ),
-                    ),
-                ],
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 13),
-                child: _desktopNavigation(t),
+              const SizedBox(height: 10),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: _desktopNavigation(t),
+                ),
               ),
-            ),
-            _desktopProfile(t),
-          ],
+              _desktopProfile(t),
+            ],
+          ),
         );
       },
     );
@@ -375,23 +352,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         lastSection = item.section;
       }
 
-      children.add(
-        _desktopNavButton(
-          i,
-          item,
-          t,
-        ),
-      );
+      children.add(_desktopNavButton(i, item, t));
     }
 
     return Column(children: children);
   }
 
-  Widget _desktopNavButton(
-    int index,
-    _NavItem item,
-    double t,
-  ) {
+  Widget _desktopNavButton(int index, _NavItem item, double t) {
     final selected = _selectedNav == index;
 
     return Padding(
@@ -413,12 +380,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 borderRadius: BorderRadius.circular(12),
                 border: selected
                     ? Border.all(
-                        color: _AdminColors.primary
-                            .withValues(alpha: .22),
+                        color: _AdminColors.primary.withValues(alpha: .22),
                       )
                     : null,
               ),
               child: Stack(
+                clipBehavior: Clip.hardEdge,
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
@@ -430,11 +397,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                         decoration: BoxDecoration(
                           color: selected
                               ? _AdminColors.primary
-                              : Colors.white.withValues(
-                                  alpha: .045,
-                                ),
-                          borderRadius:
-                              BorderRadius.circular(9),
+                              : Colors.white.withValues(alpha: .045),
+                          borderRadius: BorderRadius.circular(9),
                         ),
                         child: Icon(
                           item.icon,
@@ -442,46 +406,52 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                           color: selected
                               ? Colors.white
                               : item.enabled
-                                  ? const Color(0xFF9AA5B8)
-                                  : const Color(0xFF596477),
+                              ? const Color(0xFF9AA5B8)
+                              : const Color(0xFF596477),
                         ),
                       ),
                     ),
                   ),
+
+                  // Fixed-width expanded content prevents RenderFlex
+                  // from receiving a tiny width while the sidebar animates.
                   Positioned(
                     left: 53,
-                    right: 8,
                     top: 0,
-                    bottom: 0,
-                    child: Opacity(
-                      opacity: t,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              item.label,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: selected
-                                    ? Colors.white
-                                    : item.enabled
-                                        ? const Color(0xFFB1BAC9)
-                                        : const Color(0xFF596477),
-                                fontSize: 12,
-                                fontWeight: selected
-                                    ? FontWeight.w800
-                                    : FontWeight.w600,
+                    width: expandedWidth - 61,
+                    height: 52,
+                    child: IgnorePointer(
+                      ignoring: t < .01,
+                      child: Opacity(
+                        opacity: t,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                item.label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: selected
+                                      ? Colors.white
+                                      : item.enabled
+                                      ? const Color(0xFFB1BAC9)
+                                      : const Color(0xFF596477),
+                                  fontSize: 12,
+                                  fontWeight: selected
+                                      ? FontWeight.w800
+                                      : FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ),
-                          if (!item.enabled)
-                            const Icon(
-                              Icons.lock_outline_rounded,
-                              size: 12,
-                              color: Color(0xFF596477),
-                            ),
-                        ],
+                            if (!item.enabled)
+                              const Icon(
+                                Icons.lock_outline_rounded,
+                                size: 12,
+                                color: Color(0xFF596477),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -497,93 +467,97 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   Widget _desktopProfile(double t) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(13, 8, 13, 15),
-      child: Container(
+      child: SizedBox(
+        width: expandedWidth - 26,
         height: 58,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: .045),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: .06),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: .045),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.white.withValues(alpha: .06)),
           ),
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Opacity(
-              opacity: 1 - t,
-              child: _adminIcon(),
-            ),
-            Opacity(
-              opacity: t,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
-                  children: [
-                    _adminIcon(),
-                    const SizedBox(width: 9),
-                    const Expanded(
-                      child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Administrator',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                            ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                _adminIcon(),
+                const SizedBox(width: 9),
+                Expanded(
+                  child: Opacity(
+                    opacity: t,
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Administrator',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
                           ),
-                          SizedBox(height: 2),
-                          Text(
-                            'Platform Control',
-                            style: TextStyle(
-                              color: Color(0xFF707C91),
-                              fontSize: 9,
-                            ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Platform Control',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Color(0xFF707C91),
+                            fontSize: 9,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const Icon(
-                      Icons.more_horiz_rounded,
-                      color: Color(0xFF68748A),
-                      size: 17,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Opacity(
+                  opacity: t,
+                  child: const Icon(
+                    Icons.more_horiz_rounded,
+                    color: Color(0xFF68748A),
+                    size: 17,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _pinButton() {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: _togglePin,
-        borderRadius: BorderRadius.circular(9),
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            color: _sidebarPinned
-                ? _AdminColors.primary.withValues(alpha: .20)
-                : Colors.white.withValues(alpha: .055),
-            borderRadius: BorderRadius.circular(9),
-          ),
-          child: Icon(
-            Icons.push_pin_rounded,
-            size: 15,
-            color: _sidebarPinned
-                ? const Color(0xFFA9C2F0)
-                : const Color(0xFF8995A9),
+    return Tooltip(
+      message: _sidebarPinned ? 'Unpin sidebar' : 'Pin sidebar',
+      preferBelow: false,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _togglePin,
+          borderRadius: BorderRadius.circular(9),
+          child: Container(
+            width: 30,
+            height: 30,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _sidebarPinned
+                  ? _AdminColors.primary.withValues(alpha: .24)
+                  : Colors.white.withValues(alpha: .075),
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                color: _sidebarPinned
+                    ? _AdminColors.primary.withValues(alpha: .35)
+                    : Colors.white.withValues(alpha: .10),
+              ),
+            ),
+            child: Icon(
+              _sidebarPinned ? Icons.push_pin_rounded : Icons.push_pin_outlined,
+              size: 16,
+              color: _sidebarPinned
+                  ? const Color(0xFFA9C2F0)
+                  : const Color(0xFF9AA6BA),
+            ),
           ),
         ),
       ),
@@ -636,15 +610,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             child: Column(
               children: [
                 _mobileAppBar(),
-                Expanded(
-                  child: _mobileContent(),
-                ),
+                Expanded(child: _mobileContent()),
               ],
             ),
           ),
 
-          if (_mobileDrawerOpen)
-            _mobileDrawerOverlay(),
+          if (_mobileDrawerOpen) _mobileDrawerOverlay(),
         ],
       ),
     );
@@ -654,9 +625,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     return Container(
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      decoration: const BoxDecoration(
-        color: _AdminColors.sidebar,
-      ),
+      decoration: const BoxDecoration(color: _AdminColors.sidebar),
       child: Row(
         children: [
           Material(
@@ -725,18 +694,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       child: const Stack(
         alignment: Alignment.center,
         children: [
-          Icon(
-            Icons.notifications_none_rounded,
-            color: Colors.white,
-            size: 20,
-          ),
+          Icon(Icons.notifications_none_rounded, color: Colors.white, size: 20),
           Positioned(
             right: 9,
             top: 8,
-            child: CircleAvatar(
-              radius: 3,
-              backgroundColor: Color(0xFFEF5B68),
-            ),
+            child: CircleAvatar(radius: 3, backgroundColor: Color(0xFFEF5B68)),
           ),
         ],
       ),
@@ -746,9 +708,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   Widget _mobileContent() {
     return RefreshIndicator(
       onRefresh: () async {
-        await Future<void>.delayed(
-          const Duration(milliseconds: 350),
-        );
+        await Future<void>.delayed(const Duration(milliseconds: 350));
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -814,18 +774,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [
-            Color(0xFF101D36),
-            Color(0xFF203B6B),
-          ],
+          colors: [Color(0xFF101D36), Color(0xFF203B6B)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF152A50)
-                .withValues(alpha: .18),
+            color: const Color(0xFF152A50).withValues(alpha: .18),
             blurRadius: 25,
             offset: const Offset(0, 12),
           ),
@@ -835,10 +791,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 5,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: .08),
               borderRadius: BorderRadius.circular(7),
@@ -878,10 +831,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: _openStudio,
-              icon: const Icon(
-                Icons.auto_awesome_rounded,
-                size: 16,
-              ),
+              icon: const Icon(Icons.auto_awesome_rounded, size: 16),
               label: const Text(
                 'OPEN CONTENT STUDIO',
                 style: TextStyle(
@@ -894,8 +844,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 backgroundColor: Colors.white,
                 foregroundColor: const Color(0xFF172A4C),
                 elevation: 0,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 13),
+                padding: const EdgeInsets.symmetric(vertical: 13),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -910,16 +859,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   Widget _mobileSystemStatus() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 12,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFFEAF8F1),
         borderRadius: BorderRadius.circular(13),
-        border: Border.all(
-          color: const Color(0xFFC8ECDD),
-        ),
+        border: Border.all(color: const Color(0xFFC8ECDD)),
       ),
       child: const Row(
         children: [
@@ -936,11 +880,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
               ),
             ),
           ),
-          Icon(
-            Icons.check_circle_rounded,
-            color: Color(0xFF219A6B),
-            size: 17,
-          ),
+          Icon(Icons.check_circle_rounded, color: Color(0xFF219A6B), size: 17),
         ],
       ),
     );
@@ -997,9 +937,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: _AdminColors.border,
-        ),
+        border: Border.all(color: _AdminColors.border),
       ),
       child: Row(
         children: [
@@ -1010,17 +948,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
               color: color.withValues(alpha: .09),
               borderRadius: BorderRadius.circular(11),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 19,
-            ),
+            child: Icon(icon, color: color, size: 19),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -1093,9 +1026,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             'Manage versions and published content',
             Icons.storage_rounded,
             const Color(0xFFB77B2A),
-            () => _showComingSoon(
-              'Repository Management',
-            ),
+            () => _showComingSoon('Repository Management'),
           ),
         ],
       ),
@@ -1119,9 +1050,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           decoration: BoxDecoration(
             color: const Color(0xFFFAFBFD),
             borderRadius: BorderRadius.circular(11),
-            border: Border.all(
-              color: _AdminColors.border,
-            ),
+            border: Border.all(color: _AdminColors.border),
           ),
           child: Row(
             children: [
@@ -1132,17 +1061,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                   color: color.withValues(alpha: .09),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 18,
-                ),
+                child: Icon(icon, color: color, size: 18),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -1179,57 +1103,30 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
   Widget _mobileCoverage() {
     return _mobilePanel(
-      title: 'CSP11 Content Coverage',
-      subtitle: 'Development across examination domains',
+      title: 'CSP11 Examination Domains',
+      subtitle: 'Official domain structure and examination weight',
       icon: Icons.account_tree_rounded,
       child: Column(
-        children: [
-          _mobileCoverageRow(
-            'DOMAIN 01',
-            'Foundation & General Knowledge',
-            .82,
-          ),
-          _mobileCoverageRow(
-            'DOMAIN 02',
-            'Risk Management',
-            .64,
-          ),
-          _mobileCoverageRow(
-            'DOMAIN 03',
-            'Emergency Preparedness',
-            .47,
-          ),
-          _mobileCoverageRow(
-            'DOMAIN 04',
-            'Environmental Management',
-            .31,
-          ),
-          _mobileCoverageRow(
-            'DOMAIN 05',
-            'Occupational Health',
-            .22,
-          ),
-        ],
+        children: csp11Domains
+            .map((domain) => _mobileCoverageRow(domain))
+            .toList(),
       ),
     );
   }
 
-  Widget _mobileCoverageRow(
-    String domain,
-    String title,
-    double progress,
-  ) {
+  Widget _mobileCoverageRow(Csp11Domain domain) {
+    final relativeWeight = domain.weightPercent / 25;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(
                 child: Text(
-                  domain,
+                  'DOMAIN ${domain.number.toString().padLeft(2, '0')}',
                   style: const TextStyle(
                     color: _AdminColors.primary,
                     fontSize: 8,
@@ -1239,7 +1136,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 ),
               ),
               Text(
-                '${(progress * 100).round()}%',
+                '${domain.weightPercent}%',
                 style: const TextStyle(
                   color: _AdminColors.text,
                   fontSize: 9,
@@ -1250,8 +1147,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           ),
           const SizedBox(height: 4),
           Text(
-            title,
-            maxLines: 1,
+            domain.title,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: _AdminColors.text,
@@ -1263,16 +1160,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
-              value: progress,
+              value: relativeWeight,
               minHeight: 6,
               backgroundColor: const Color(0xFFE9EDF3),
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(
-                Color.lerp(
-                  const Color(0xFFE2A340),
-                  _AdminColors.primary,
-                  progress,
-                )!,
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                _AdminColors.primary,
               ),
             ),
           ),
@@ -1303,9 +1195,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             'Repository management',
             'Published storage is the next milestone.',
             'NEXT',
-            () => _showComingSoon(
-              'Repository Management',
-            ),
+            () => _showComingSoon('Repository Management'),
           ),
           const SizedBox(height: 9),
           _mobileAttentionItem(
@@ -1339,9 +1229,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           decoration: BoxDecoration(
             color: const Color(0xFFFAFBFD),
             borderRadius: BorderRadius.circular(11),
-            border: Border.all(
-              color: _AdminColors.border,
-            ),
+            border: Border.all(color: _AdminColors.border),
           ),
           child: Row(
             children: [
@@ -1352,17 +1240,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                   color: color.withValues(alpha: .09),
                   borderRadius: BorderRadius.circular(9),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 17,
-                ),
+                child: Icon(icon, color: color, size: 17),
               ),
               const SizedBox(width: 9),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -1457,17 +1340,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
               color: color.withValues(alpha: .08),
               borderRadius: BorderRadius.circular(9),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 16,
-            ),
+            child: Icon(icon, color: color, size: 16),
           ),
           const SizedBox(width: 9),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -1507,13 +1385,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: _AdminColors.border,
-        ),
+        border: Border.all(color: _AdminColors.border),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -1521,21 +1396,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 width: 34,
                 height: 34,
                 decoration: BoxDecoration(
-                  color: _AdminColors.primary
-                      .withValues(alpha: .08),
+                  color: _AdminColors.primary.withValues(alpha: .08),
                   borderRadius: BorderRadius.circular(9),
                 ),
-                child: Icon(
-                  icon,
-                  color: _AdminColors.primary,
-                  size: 17,
-                ),
+                child: Icon(icon, color: _AdminColors.primary, size: 17),
               ),
               const SizedBox(width: 9),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -1579,9 +1448,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         children: [
           GestureDetector(
             onTap: _closeMobileDrawer,
-            child: Container(
-              color: Colors.black.withValues(alpha: .42),
-            ),
+            child: Container(color: Colors.black.withValues(alpha: .42)),
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -1601,13 +1468,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                     _mobileDrawerHeader(),
                     Expanded(
                       child: SingleChildScrollView(
-                        padding:
-                            const EdgeInsets.fromLTRB(
-                          13,
-                          8,
-                          13,
-                          20,
-                        ),
+                        padding: const EdgeInsets.fromLTRB(13, 8, 13, 20),
                         child: _mobileNavigation(),
                       ),
                     ),
@@ -1631,8 +1492,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           const SizedBox(width: 12),
           const Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'CSP11',
@@ -1691,10 +1551,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
         widgets.add(
           Padding(
-            padding: const EdgeInsets.only(
-              left: 12,
-              bottom: 6,
-            ),
+            padding: const EdgeInsets.only(left: 12, bottom: 6),
             child: Text(
               item.section,
               style: const TextStyle(
@@ -1710,22 +1567,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         lastSection = item.section;
       }
 
-      widgets.add(
-        _mobileNavButton(i, item),
-      );
+      widgets.add(_mobileNavButton(i, item));
     }
 
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: widgets,
     );
   }
 
-  Widget _mobileNavButton(
-    int index,
-    _NavItem item,
-  ) {
+  Widget _mobileNavButton(int index, _NavItem item) {
     final selected = _selectedNav == index;
 
     return Padding(
@@ -1737,13 +1588,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           borderRadius: BorderRadius.circular(12),
           child: Container(
             height: 51,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 9,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 9),
             decoration: BoxDecoration(
               color: selected
-                  ? _AdminColors.primary
-                      .withValues(alpha: .16)
+                  ? _AdminColors.primary.withValues(alpha: .16)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1755,10 +1603,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                   decoration: BoxDecoration(
                     color: selected
                         ? _AdminColors.primary
-                        : Colors.white
-                            .withValues(alpha: .045),
-                    borderRadius:
-                        BorderRadius.circular(9),
+                        : Colors.white.withValues(alpha: .045),
+                    borderRadius: BorderRadius.circular(9),
                   ),
                   child: Icon(
                     item.icon,
@@ -1766,8 +1612,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                     color: selected
                         ? Colors.white
                         : item.enabled
-                            ? const Color(0xFF9AA5B8)
-                            : const Color(0xFF596477),
+                        ? const Color(0xFF9AA5B8)
+                        : const Color(0xFF596477),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -1780,12 +1626,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                       color: selected
                           ? Colors.white
                           : item.enabled
-                              ? const Color(0xFFB1BAC9)
-                              : const Color(0xFF596477),
+                          ? const Color(0xFFB1BAC9)
+                          : const Color(0xFF596477),
                       fontSize: 12,
-                      fontWeight: selected
-                          ? FontWeight.w800
-                          : FontWeight.w600,
+                      fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                     ),
                   ),
                 ),
@@ -1808,15 +1652,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       padding: const EdgeInsets.fromLTRB(13, 8, 13, 18),
       child: Container(
         height: 58,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: .045),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: .06),
-          ),
+          border: Border.all(color: Colors.white.withValues(alpha: .06)),
         ),
         child: Row(
           children: [
@@ -1824,10 +1664,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             const SizedBox(width: 9),
             const Expanded(
               child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center,
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Administrator',
@@ -1840,10 +1678,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                   SizedBox(height: 2),
                   Text(
                     'Platform Control',
-                    style: TextStyle(
-                      color: Color(0xFF707C91),
-                      fontSize: 9,
-                    ),
+                    style: TextStyle(color: Color(0xFF707C91), fontSize: 9),
                   ),
                 ],
               ),
@@ -1863,8 +1698,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       children: [
         const Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'COMMAND CENTER',
@@ -1889,13 +1723,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         ),
         _systemIndicator(),
         const SizedBox(width: 12),
-        _desktopIconButton(
-          Icons.notifications_none_rounded,
-        ),
+        _desktopIconButton(Icons.notifications_none_rounded),
         const SizedBox(width: 8),
-        _desktopIconButton(
-          Icons.help_outline_rounded,
-        ),
+        _desktopIconButton(Icons.help_outline_rounded),
       ],
     );
   }
@@ -1906,11 +1736,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [
-            Color(0xFF101D36),
-            Color(0xFF172A4C),
-            Color(0xFF203B6B),
-          ],
+          colors: [Color(0xFF101D36), Color(0xFF172A4C), Color(0xFF203B6B)],
         ),
         borderRadius: BorderRadius.circular(22),
       ),
@@ -1919,8 +1745,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           Expanded(
             flex: 3,
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'CSP11 PLATFORM',
@@ -1953,21 +1778,14 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                 const SizedBox(height: 18),
                 ElevatedButton.icon(
                   onPressed: _openStudio,
-                  icon: const Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 14,
-                  ),
-                  label: const Text(
-                    'Open Content Studio',
-                  ),
+                  icon: const Icon(Icons.arrow_forward_rounded, size: 14),
+                  label: const Text('Open Content Studio'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor:
-                        const Color(0xFF172A4C),
+                    foregroundColor: const Color(0xFF172A4C),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
@@ -1975,10 +1793,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             ),
           ),
           const SizedBox(width: 25),
-          Expanded(
-            flex: 2,
-            child: _pipeline(),
-          ),
+          Expanded(flex: 2, child: _pipeline()),
         ],
       ),
     );
@@ -1999,8 +1814,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'CONTENT PIPELINE',
@@ -2014,8 +1828,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           const SizedBox(height: 17),
           ...items.map(
             (item) => Padding(
-              padding:
-                  const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 children: [
                   Container(
@@ -2025,11 +1838,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                       color: Color(0xFF3157A4),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      item.$2,
-                      color: Colors.white,
-                      size: 14,
-                    ),
+                    child: Icon(item.$2, color: Colors.white, size: 14),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -2098,20 +1907,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
-  Widget _desktopStat(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _desktopStat(String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: _AdminColors.border,
-        ),
+        border: Border.all(color: _AdminColors.border),
       ),
       child: Row(
         children: [
@@ -2122,17 +1924,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
               color: color.withValues(alpha: .09),
               borderRadius: BorderRadius.circular(11),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 20,
-            ),
+            child: Icon(icon, color: color, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -2165,62 +1962,27 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 6,
-          child: _desktopCoverage(),
-        ),
+        Expanded(flex: 6, child: _desktopCoverage()),
         const SizedBox(width: 16),
-        Expanded(
-          flex: 4,
-          child: _desktopAttention(),
-        ),
+        Expanded(flex: 4, child: _desktopAttention()),
       ],
     );
   }
 
   Widget _desktopCoverage() {
     return _desktopPanel(
-      title: 'CSP11 Content Coverage',
-      subtitle:
-          'Content development across examination domains',
+      title: 'CSP11 Examination Domains',
+      subtitle: 'Official domain structure and examination weight',
       icon: Icons.account_tree_rounded,
       child: Column(
-        children: [
-          _coverage(
-            'DOMAIN 01',
-            'Foundation & General Knowledge',
-            .82,
-          ),
-          _coverage(
-            'DOMAIN 02',
-            'Risk Management',
-            .64,
-          ),
-          _coverage(
-            'DOMAIN 03',
-            'Emergency Preparedness',
-            .47,
-          ),
-          _coverage(
-            'DOMAIN 04',
-            'Environmental Management',
-            .31,
-          ),
-          _coverage(
-            'DOMAIN 05',
-            'Occupational Health',
-            .22,
-          ),
-        ],
+        children: csp11Domains.map((domain) => _coverage(domain)).toList(),
       ),
     );
   }
 
-  Widget _coverage(
-    String domain,
-    String title,
-    double value,
-  ) {
+  Widget _coverage(Csp11Domain domain) {
+    final relativeWeight = domain.weightPercent / 25;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Row(
@@ -2228,7 +1990,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           SizedBox(
             width: 75,
             child: Text(
-              domain,
+              'DOMAIN ${domain.number.toString().padLeft(2, '0')}',
               style: const TextStyle(
                 color: _AdminColors.primary,
                 fontSize: 8,
@@ -2238,7 +2000,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           ),
           Expanded(
             child: Text(
-              title,
+              domain.title,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: _AdminColors.text,
@@ -2251,23 +2014,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           SizedBox(
             width: 120,
             child: LinearProgressIndicator(
-              value: value,
+              value: relativeWeight,
               minHeight: 6,
-              backgroundColor:
-                  const Color(0xFFE9EDF3),
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(
+              backgroundColor: const Color(0xFFE9EDF3),
+              valueColor: const AlwaysStoppedAnimation<Color>(
                 _AdminColors.primary,
               ),
             ),
           ),
           const SizedBox(width: 9),
           Text(
-            '${(value * 100).round()}%',
-            style: const TextStyle(
-              fontSize: 9,
-              fontWeight: FontWeight.w800,
-            ),
+            '${domain.weightPercent}%',
+            style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800),
           ),
         ],
       ),
@@ -2277,8 +2035,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   Widget _desktopAttention() {
     return _desktopPanel(
       title: 'Attention Required',
-      subtitle:
-          'Items requiring administrator action',
+      subtitle: 'Items requiring administrator action',
       icon: Icons.notifications_active_outlined,
       child: Column(
         children: [
@@ -2296,9 +2053,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             'Repository management',
             'Published storage is the next milestone.',
             'NEXT',
-            () => _showComingSoon(
-              'Repository Management',
-            ),
+            () => _showComingSoon('Repository Management'),
           ),
           _attention(
             Icons.quiz_outlined,
@@ -2333,22 +2088,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             decoration: BoxDecoration(
               color: const Color(0xFFFAFBFD),
               borderRadius: BorderRadius.circular(11),
-              border: Border.all(
-                color: _AdminColors.border,
-              ),
+              border: Border.all(color: _AdminColors.border),
             ),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  color: color,
-                  size: 18,
-                ),
+                Icon(icon, color: color, size: 18),
                 const SizedBox(width: 9),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
@@ -2396,26 +2144,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(17),
-        border: Border.all(
-          color: _AdminColors.border,
-        ),
+        border: Border.all(color: _AdminColors.border),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                icon,
-                color: _AdminColors.primary,
-                size: 18,
-              ),
+              Icon(icon, color: _AdminColors.primary, size: 18),
               const SizedBox(width: 9),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -2447,8 +2187,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   Widget _desktopQuickActions() {
     return _desktopPanel(
       title: 'Quick Actions',
-      subtitle:
-          'Common administration operations',
+      subtitle: 'Common administration operations',
       icon: Icons.bolt_rounded,
       child: Row(
         children: [
@@ -2484,9 +2223,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
               'Repository',
               Icons.storage_rounded,
               const Color(0xFFB77B2A),
-              () => _showComingSoon(
-                'Repository Management',
-              ),
+              () => _showComingSoon('Repository Management'),
             ),
           ),
         ],
@@ -2510,17 +2247,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           decoration: BoxDecoration(
             color: const Color(0xFFFAFBFD),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: _AdminColors.border,
-            ),
+            border: Border.all(color: _AdminColors.border),
           ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: color,
-                size: 18,
-              ),
+              Icon(icon, color: color, size: 18),
               const SizedBox(width: 9),
               Expanded(
                 child: Text(
@@ -2586,11 +2317,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 17,
-          ),
+          Icon(icon, color: color, size: 17),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -2619,28 +2346,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       height: size,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [
-            _AdminColors.primary,
-            _AdminColors.primaryLight,
-          ],
+          colors: [_AdminColors.primary, _AdminColors.primaryLight],
         ),
-        borderRadius: BorderRadius.circular(
-          size * .29,
-        ),
+        borderRadius: BorderRadius.circular(size * .29),
         boxShadow: [
           BoxShadow(
-            color: _AdminColors.primary
-                .withValues(alpha: .28),
+            color: _AdminColors.primary.withValues(alpha: .28),
             blurRadius: 18,
             offset: const Offset(0, 7),
           ),
         ],
       ),
-      child: Icon(
-        Icons.shield_rounded,
-        color: Colors.white,
-        size: size * .52,
-      ),
+      child: Icon(Icons.shield_rounded, color: Colors.white, size: size * .52),
     );
   }
 
@@ -2662,10 +2379,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
   Widget _systemIndicator() {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 8,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: const Color(0xFFEAF8F1),
         borderRadius: BorderRadius.circular(20),
@@ -2695,15 +2409,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(11),
-        border: Border.all(
-          color: _AdminColors.border,
-        ),
+        border: Border.all(color: _AdminColors.border),
       ),
-      child: Icon(
-        icon,
-        size: 19,
-        color: _AdminColors.muted,
-      ),
+      child: Icon(icon, size: 19, color: _AdminColors.muted),
     );
   }
 }
@@ -2718,12 +2426,7 @@ class _NavItem {
   final String section;
   final bool enabled;
 
-  const _NavItem(
-    this.icon,
-    this.label,
-    this.section, {
-    this.enabled = true,
-  });
+  const _NavItem(this.icon, this.label, this.section, {this.enabled = true});
 }
 
 // =============================================================================
@@ -2761,7 +2464,7 @@ class _PulseDotState extends State<_PulseDot>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
-      builder: (_, __) {
+      builder: (_, _) {
         final size = 7 + controller.value * 2;
 
         return Container(

@@ -11,7 +11,7 @@ import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_typography.dart';
 
 class ContentImportPanel extends StatefulWidget {
-  final ValueChanged<StudyContent>? onImported;
+  final ValueChanged<ContentImportResult>? onImported;
 
   const ContentImportPanel({super.key, this.onImported});
 
@@ -74,16 +74,12 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Loaded ${file.name}. Ready to validate and import.',
-          ),
+          content: Text('Loaded ${file.name}. Ready to validate and import.'),
           behavior: SnackBarBehavior.floating,
         ),
       );
     } on FormatException {
-      _showFileError(
-        'The selected file is not valid UTF-8 JSON text.',
-      );
+      _showFileError('The selected file is not valid UTF-8 JSON text.');
     } catch (error) {
       _showFileError('Unable to load the JSON file.\n$error');
     } finally {
@@ -101,10 +97,7 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-      ),
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
     );
   }
 
@@ -124,7 +117,7 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
     });
 
     if (result.isSuccessful && result.content != null) {
-      widget.onImported?.call(result.content!);
+      widget.onImported?.call(result);
     }
   }
 
@@ -381,9 +374,7 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
                   hasFile
                       ? Icons.check_circle_rounded
                       : Icons.upload_file_rounded,
-                  color: hasFile
-                      ? StudyColors.success
-                      : StudyColors.primary,
+                  color: hasFile ? StudyColors.success : StudyColors.primary,
                   size: 19,
                 ),
               ),
@@ -434,11 +425,7 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
           if (compact) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                fileInfo,
-                const SizedBox(height: 10),
-                button,
-              ],
+              children: [fileInfo, const SizedBox(height: 10), button],
             );
           }
 

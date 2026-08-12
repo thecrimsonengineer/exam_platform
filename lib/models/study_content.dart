@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:exam_platform/models/question.dart';
 
 /// Represents one CSP study competency.
 ///
@@ -34,9 +35,9 @@ class StudyContent {
       title: json['title']?.toString() ?? '',
       status: json['status']?.toString() ?? 'draft',
       version: _toInt(json['version'], defaultValue: 1),
-      subtopics: _mapList(json['subtopics'])
-          .map(StudySubtopic.fromJson)
-          .toList(),
+      subtopics: _mapList(
+        json['subtopics'],
+      ).map(StudySubtopic.fromJson).toList(),
     );
   }
 
@@ -65,10 +66,6 @@ class StudyContent {
     return int.tryParse(value?.toString() ?? '') ?? defaultValue;
   }
 
-  static List<dynamic> _toList(dynamic value) {
-    return value is List ? value : <dynamic>[];
-  }
-
   static List<Map<String, dynamic>> _mapList(dynamic value) {
     if (value is! List) {
       return <Map<String, dynamic>>[];
@@ -87,6 +84,16 @@ class StudySubtopic {
   final String title;
   final List<String> learningObjectives;
   final List<MainContentTopic> mainContent;
+
+  /// Questions supplied by the Complete Content JSON.
+  ///
+  /// A subtopic can contain five or more questions.
+  /// There is no upper limit.
+  ///
+  /// These questions will subsequently be imported into the
+  /// central Question Repository.
+  final List<Question> questions;
+
   final List<ContentEntry> keyPoints;
   final List<ContentEntry> examples;
   final List<ContentEntry> caseStudies;
@@ -104,6 +111,7 @@ class StudySubtopic {
     required this.title,
     required this.learningObjectives,
     required this.mainContent,
+    this.questions = const [],
     required this.keyPoints,
     required this.examples,
     required this.caseStudies,
@@ -120,36 +128,40 @@ class StudySubtopic {
       id: json['id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
       learningObjectives: _stringList(json['learningObjectives']),
-      mainContent: _mapList(json['mainContent'])
-          .map(MainContentTopic.fromJson)
-          .toList(),
-      keyPoints: _mapList(json['keyPoints'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      examples: _mapList(json['examples'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      caseStudies: _mapList(json['caseStudies'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      formulas: _mapList(json['formulas'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      references: _mapList(json['references'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      examTips: _mapList(json['examTips'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      commonMistakes: _mapList(json['commonMistakes'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      keyTakeaways: _mapList(json['keyTakeaways'])
-          .map(ContentEntry.fromJson)
-          .toList(),
-      quizzes: _mapList(json['quizzes'])
-          .map(QuizReference.fromJson)
-          .toList(),
+
+      questions: _questionList(json['questions']),
+
+      mainContent: _mapList(
+        json['mainContent'],
+      ).map(MainContentTopic.fromJson).toList(),
+
+      keyPoints: _mapList(
+        json['keyPoints'],
+      ).map(ContentEntry.fromJson).toList(),
+
+      examples: _mapList(json['examples']).map(ContentEntry.fromJson).toList(),
+
+      caseStudies: _mapList(
+        json['caseStudies'],
+      ).map(ContentEntry.fromJson).toList(),
+
+      formulas: _mapList(json['formulas']).map(ContentEntry.fromJson).toList(),
+
+      references: _mapList(
+        json['references'],
+      ).map(ContentEntry.fromJson).toList(),
+
+      examTips: _mapList(json['examTips']).map(ContentEntry.fromJson).toList(),
+
+      commonMistakes: _mapList(
+        json['commonMistakes'],
+      ).map(ContentEntry.fromJson).toList(),
+
+      keyTakeaways: _mapList(
+        json['keyTakeaways'],
+      ).map(ContentEntry.fromJson).toList(),
+
+      quizzes: _mapList(json['quizzes']).map(QuizReference.fromJson).toList(),
     );
   }
 
@@ -158,18 +170,40 @@ class StudySubtopic {
       'id': id,
       'title': title,
       'learningObjectives': learningObjectives,
+
+      'questions': questions.map((question) => question.toJson()).toList(),
+
       'mainContent': mainContent.map((item) => item.toJson()).toList(),
+
       'keyPoints': keyPoints.map((item) => item.toJson()).toList(),
+
       'examples': examples.map((item) => item.toJson()).toList(),
+
       'caseStudies': caseStudies.map((item) => item.toJson()).toList(),
+
       'formulas': formulas.map((item) => item.toJson()).toList(),
+
       'references': references.map((item) => item.toJson()).toList(),
+
       'examTips': examTips.map((item) => item.toJson()).toList(),
-      'commonMistakes':
-          commonMistakes.map((item) => item.toJson()).toList(),
+
+      'commonMistakes': commonMistakes.map((item) => item.toJson()).toList(),
+
       'keyTakeaways': keyTakeaways.map((item) => item.toJson()).toList(),
+
       'quizzes': quizzes.map((item) => item.toJson()).toList(),
     };
+  }
+
+  static List<Question> _questionList(dynamic value) {
+    if (value is! List) {
+      return <Question>[];
+    }
+
+    return value
+        .whereType<Map>()
+        .map((item) => Question.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
   }
 
   static List<String> _stringList(dynamic value) {
@@ -238,11 +272,7 @@ class MainContentTopic {
 
     return value
         .whereType<Map>()
-        .map(
-          (item) => ContentBlock.fromJson(
-            Map<String, dynamic>.from(item),
-          ),
-        )
+        .map((item) => ContentBlock.fromJson(Map<String, dynamic>.from(item)))
         .toList();
   }
 
@@ -253,11 +283,7 @@ class MainContentTopic {
 
     return value
         .whereType<Map>()
-        .map(
-          (item) => QuizReference.fromJson(
-            Map<String, dynamic>.from(item),
-          ),
-        )
+        .map((item) => QuizReference.fromJson(Map<String, dynamic>.from(item)))
         .where((quiz) => quiz.quizId.isNotEmpty)
         .toList();
   }
@@ -303,11 +329,7 @@ class ContentBlock {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'type': type,
-      'data': data,
-    };
+    return {'id': id, 'type': type, 'data': data};
   }
 
   String get content {
@@ -371,9 +393,7 @@ class ContentBlock {
 
     return value
         .whereType<List>()
-        .map(
-          (row) => row.map((cell) => cell.toString()).toList(),
-        )
+        .map((row) => row.map((cell) => cell.toString()).toList())
         .toList();
   }
 }
@@ -418,13 +438,12 @@ class ContentEntry {
       url: json['url']?.toString() ?? '',
       blocks: rawBlocks is List
           ? rawBlocks
-              .whereType<Map>()
-              .map(
-                (item) => ContentBlock.fromJson(
-                  Map<String, dynamic>.from(item),
-                ),
-              )
-              .toList()
+                .whereType<Map>()
+                .map(
+                  (item) =>
+                      ContentBlock.fromJson(Map<String, dynamic>.from(item)),
+                )
+                .toList()
           : <ContentBlock>[],
     );
   }
@@ -441,33 +460,21 @@ class ContentEntry {
   }
 }
 
-/// References an existing quiz from the legacy quiz system.
+/// References an existing quiz.
 ///
-/// The study-content system stores only the quiz ID.
-/// The actual questions remain owned by the legacy quiz system.
-///
-/// Example:
-///
-/// {
-///   "quizId": "d07_01_tna_001"
-/// }
+/// The quiz ID remains available for compatibility with the
+/// current quiz-linking architecture.
 class QuizReference {
   final String quizId;
 
-  const QuizReference({
-    required this.quizId,
-  });
+  const QuizReference({required this.quizId});
 
   factory QuizReference.fromJson(Map<String, dynamic> json) {
-    return QuizReference(
-      quizId: json['quizId']?.toString() ?? '',
-    );
+    return QuizReference(quizId: json['quizId']?.toString() ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'quizId': quizId,
-    };
+    return {'quizId': quizId};
   }
 }
 
@@ -481,9 +488,7 @@ StudyContent studyContentFromJson(String source) {
     );
   }
 
-  return StudyContent.fromJson(
-    Map<String, dynamic>.from(decoded),
-  );
+  return StudyContent.fromJson(Map<String, dynamic>.from(decoded));
 }
 
 /// Utility for encoding StudyContent as a JSON string.

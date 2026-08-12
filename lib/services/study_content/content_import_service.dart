@@ -1,12 +1,18 @@
 import 'dart:convert';
 
+import '../../models/question.dart';
 import '../../models/study_content.dart';
 
 class ContentImportResult {
   final StudyContent? content;
   final List<ContentImportIssue> issues;
+  final List<Question> questions;
 
-  const ContentImportResult({required this.content, required this.issues});
+  const ContentImportResult({
+    required this.content,
+    required this.issues,
+    this.questions = const <Question>[],
+  });
 
   bool get hasErrors {
     return issues.any(
@@ -109,6 +115,9 @@ class ContentImportService {
 
     final root = Map<String, dynamic>.from(decoded);
 
+    final questionIssues = <ContentImportIssue>[];
+    final questions = _parseQuestions(root['questions'], questionIssues);
+
     StudyContent content;
 
     try {
@@ -126,7 +135,7 @@ class ContentImportService {
       );
     }
 
-    final issues = <ContentImportIssue>[];
+    final issues = <ContentImportIssue>[...questionIssues];
 
     _validateRoot(content, root, issues);
 
@@ -135,7 +144,125 @@ class ContentImportService {
     return ContentImportResult(
       content: content,
       issues: List.unmodifiable(issues),
+      questions: List.unmodifiable(questions),
     );
+  }
+
+  List<Question> _parseQuestions(
+    dynamic rawQuestions,
+    List<ContentImportIssue> issues,
+  ) {
+    if (rawQuestions == null) {
+      return <Question>[];
+    }
+
+    if (rawQuestions is! List) {
+      issues.add(
+        const ContentImportIssue(
+          severity: ContentImportIssueSeverity.error,
+          message: 'The questions field must be an array.',
+          path: 'questions',
+        ),
+      );
+      return <Question>[];
+    }
+
+    final questions = <Question>[];
+
+    for (var index = 0; index < rawQuestions.length; index++) {
+      final path = 'questions[$index]';
+      final rawQuestion = rawQuestions[index];
+
+      if (rawQuestion is! Map) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.error,
+            message: 'Each question must be a JSON object.',
+            path: path,
+          ),
+        );
+        continue;
+      }
+
+      try {
+        final question = Question.fromJson(
+          Map<String, dynamic>.from(rawQuestion),
+        );
+
+        if (question.id <= 0) {
+          issues.add(
+            ContentImportIssue(
+              severity: ContentImportIssueSeverity.error,
+              message: 'Question ID is required and must be greater than zero.',
+              path: '$path.id',
+            ),
+          );
+        }
+
+        if (question.quizId.trim().isEmpty) {
+          issues.add(
+            ContentImportIssue(
+              severity: ContentImportIssueSeverity.error,
+              message: 'Question quiz ID is required.',
+              path: '$path.quizId',
+            ),
+          );
+        }
+
+        if (question.subtopicId.trim().isEmpty) {
+          issues.add(
+            ContentImportIssue(
+              severity: ContentImportIssueSeverity.error,
+              message: 'Question subtopic ID is required.',
+              path: '$path.subtopicId',
+            ),
+          );
+        }
+
+        if (question.question.trim().isEmpty) {
+          issues.add(
+            ContentImportIssue(
+              severity: ContentImportIssueSeverity.error,
+              message: 'Question text is required.',
+              path: '$path.question',
+            ),
+          );
+        }
+
+        if (question.options.length != 4) {
+          issues.add(
+            ContentImportIssue(
+              severity: ContentImportIssueSeverity.error,
+              message: 'Each question must contain exactly 4 options.',
+              path: '$path.options',
+            ),
+          );
+        }
+
+        if (question.correctAnswer < 0 ||
+            question.correctAnswer >= question.options.length) {
+          issues.add(
+            ContentImportIssue(
+              severity: ContentImportIssueSeverity.error,
+              message: 'Question must contain exactly one valid BEST answer.',
+              path: '$path.correctAnswer',
+            ),
+          );
+        }
+
+        questions.add(question);
+      } catch (error) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.error,
+            message: 'Unable to parse question: $error',
+            path: path,
+          ),
+        );
+      }
+    }
+
+    return questions;
   }
 
   void _validateRoot(

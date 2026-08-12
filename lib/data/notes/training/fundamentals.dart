@@ -90,7 +90,7 @@ const List<Note> fundamentalsNotes = [
       'The effectiveness of training is determined by improvements in workplace performance and safe work behaviors, not simply by course completion or attendance.',
     ],
 
-    relatedQuestionIds: const [],
+    relatedQuestionIds: [],
 
     estimatedReadTime: 5,
 
@@ -189,7 +189,7 @@ const List<Note> fundamentalsNotes = [
       'The ultimate measure of training success is improved workplace performance, safer work practices, and achievement of organizational goals.',
     ],
 
-    relatedQuestionIds: const [],
+    relatedQuestionIds: [],
 
     estimatedReadTime: 6,
 

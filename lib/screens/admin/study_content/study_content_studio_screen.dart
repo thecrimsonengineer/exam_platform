@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../models/question.dart';
+import '../../../services/question_bank_service.dart';
 import '../../../services/study_content/content_import_service.dart';
 import '../../../services/study_content/content_validator.dart';
 
@@ -18,7 +20,9 @@ import '../../../widgets/admin/study_content/structure/content_structure_panel.d
 import '../../courses/csp/content_test_screen.dart';
 
 class StudyContentStudioScreen extends StatefulWidget {
-  const StudyContentStudioScreen({super.key});
+  final StudyContent? initialContent;
+
+  const StudyContentStudioScreen({super.key, this.initialContent});
 
   @override
   State<StudyContentStudioScreen> createState() =>
@@ -29,8 +33,18 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   int _selectedSection = 0;
 
   final LocalStudyContentRepository _repository = LocalStudyContentRepository();
+  final QuestionBankService _questionService = QuestionBankService();
 
   StudyContent? _importedContent;
+
+  List<Question> _practiceQuestions = <Question>[];
+  bool _loadingPracticeQuestions = false;
+  String? _resolvedPracticeQuizId;
+
+  int _overviewQuestionCount = 0;
+  int _overviewPublishedCount = 0;
+  int _overviewExpectedQuestionCount = 0;
+  bool _overviewQuizReady = false;
 
   int? _selectedSubtopicIndex;
   int? _selectedMainContentIndex;
@@ -46,6 +60,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   bool get _isDraft => _contentStatus == 'draft';
 
   bool get _isReview => _contentStatus == 'review';
+
+  bool get _isValidated => _contentStatus == 'validated';
 
   bool get _isValidationReady {
     final content = _importedContent;
@@ -107,7 +123,38 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   @override
   void initState() {
     super.initState();
+
+    final initial = widget.initialContent;
+
+    if (initial != null) {
+      _importedContent = initial;
+      _selectedSubtopicIndex = initial.subtopics.isEmpty ? null : 0;
+      _selectedMainContentIndex =
+          initial.subtopics.isNotEmpty &&
+              initial.subtopics.first.mainContent.isNotEmpty
+          ? 0
+          : null;
+    }
+
+    _initializeQuestionService();
     _loadRepositoryContent();
+  }
+
+  Future<void> _initializeQuestionService() async {
+    try {
+      await _questionService.initialize();
+      await _refreshPracticeQuestions();
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to initialize Practice Questions.\n$error'),
+        ),
+      );
+    }
   }
 
   @override
@@ -139,15 +186,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       drawer: Drawer(
         width: MediaQuery.sizeOf(context).width > 360 ? 320 : 292,
         backgroundColor: StudyColors.surface,
-        child: SafeArea(
-          child: _buildSidebar(),
-        ),
+        child: SafeArea(child: _buildSidebar()),
       ),
       appBar: _buildMobileAppBar(),
-      body: SafeArea(
-        top: false,
-        child: _buildEditorArea(),
-      ),
+      body: SafeArea(top: false, child: _buildEditorArea()),
     );
   }
 
@@ -229,6 +271,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       icon: const Icon(Icons.more_vert_rounded),
       onSelected: (value) {
         switch (value) {
+          case 'home':
+            _returnToAdminHome();
+            break;
           case 'student':
             _openStudentPortal();
             break;
@@ -241,6 +286,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           case 'review':
             _sendToReview();
             break;
+          case 'validate':
+            _validateContent();
+            break;
           case 'publish':
             _publishContent();
             break;
@@ -248,6 +296,14 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       },
       itemBuilder: (context) {
         return [
+          const PopupMenuItem<String>(
+            value: 'home',
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.home_rounded),
+              title: Text('Admin Home'),
+            ),
+          ),
           const PopupMenuItem<String>(
             value: 'student',
             child: ListTile(
@@ -284,6 +340,15 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             ),
           ],
           if (imported && _isReview)
+            const PopupMenuItem<String>(
+              value: 'validate',
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(Icons.verified_rounded),
+                title: Text('Validate'),
+              ),
+            ),
+          if (imported && _isValidated)
             PopupMenuItem<String>(
               value: 'publish',
               enabled: _isValidationReady,
@@ -542,6 +607,12 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           _buildStatusBadge(imported),
           const SizedBox(width: 10),
           OutlinedButton.icon(
+            onPressed: _returnToAdminHome,
+            icon: const Icon(Icons.home_rounded, size: 17),
+            label: const Text('Admin Home'),
+          ),
+          const SizedBox(width: 8),
+          OutlinedButton.icon(
             onPressed: _openStudentPortal,
             icon: const Icon(Icons.school_rounded, size: 17),
             label: const Text('Student Portal'),
@@ -568,6 +639,14 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           ],
           if (imported && _isReview) ...[
             const SizedBox(width: 8),
+            OutlinedButton.icon(
+              onPressed: _validateContent,
+              icon: const Icon(Icons.verified_rounded, size: 17),
+              label: const Text('Validate'),
+            ),
+          ],
+          if (imported && _isValidated) ...[
+            const SizedBox(width: 8),
             FilledButton.icon(
               onPressed: _isValidationReady ? _publishContent : null,
               icon: const Icon(Icons.publish_rounded, size: 17),
@@ -593,11 +672,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.circle,
-              size: 8,
-              color: StudyColors.warning,
-            ),
+            const Icon(Icons.circle, size: 8, color: StudyColors.warning),
             const SizedBox(width: 7),
             Text(
               'NO CONTENT',
@@ -656,9 +731,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       decoration: BoxDecoration(
         color: background,
         borderRadius: StudyRadius.pillRadius,
-        border: Border.all(
-          color: color.withValues(alpha: 0.15),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.15)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -723,14 +796,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         return _buildOverviewEditor();
 
       case 1:
-        return ContentImportPanel(
-          onImported: (content) {
-            setState(() {
-              _importedContent = content;
-              _selectedSubtopicIndex = content.subtopics.isEmpty ? null : 0;
-            });
-          },
-        );
+        return ContentImportPanel(onImported: _handleCompleteContentImport);
 
       case 2:
         return _buildSubtopicsWorkspace();
@@ -746,11 +812,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         );
 
       case 5:
-        return _buildPlaceholderEditor(
-          'Practice Questions',
-          'Connect practice quizzes to the learning content.',
-          Icons.quiz_rounded,
-        );
+        return _buildPracticeQuestionsWorkspace();
 
       case 6:
         return ContentValidationPanel(content: _importedContent);
@@ -768,6 +830,1010 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       default:
         return _buildOverviewEditor();
     }
+  }
+
+  Future<void> _handleCompleteContentImport(ContentImportResult result) async {
+    final content = result.content;
+
+    if (content == null) {
+      return;
+    }
+
+    try {
+      await _questionService.initialize();
+
+      for (final question in result.questions) {
+        await _questionService.saveDraft(question);
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _importedContent = content;
+        _selectedSubtopicIndex = content.subtopics.isEmpty ? null : 0;
+        _selectedMainContentIndex =
+            content.subtopics.isNotEmpty &&
+                content.subtopics.first.mainContent.isNotEmpty
+            ? 0
+            : null;
+        _resolvedPracticeQuizId = null;
+      });
+
+      await _refreshPracticeQuestions();
+
+      if (!mounted) {
+        return;
+      }
+
+      final questionCount = result.questions.length;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            questionCount == 0
+                ? 'Content imported successfully. No questions were supplied.'
+                : 'Content imported successfully. $questionCount question${questionCount == 1 ? '' : 's'} added to the Question Bank.',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to save imported questions.\n$error')),
+      );
+    }
+  }
+
+  // ==========================================================
+  // PRACTICE QUESTIONS WORKSPACE
+  // ==========================================================
+
+  Widget _buildPracticeQuestionsWorkspace() {
+    final content = _importedContent;
+
+    if (content == null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildPageHeading(
+            eyebrow: 'ASSESSMENT',
+            title: 'Practice Questions',
+            description:
+                'Connect the managed CSP11 question bank to the selected '
+                'subtopic.',
+          ),
+          const SizedBox(height: 24),
+          _buildNoImportedPracticeQuestionsState(),
+        ],
+      );
+    }
+
+    if (content.subtopics.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildPageHeading(
+            eyebrow: 'ASSESSMENT',
+            title: 'Practice Questions',
+            description:
+                'Each dedicated subtopic quiz requires exactly five '
+                'published questions.',
+          ),
+          const SizedBox(height: 24),
+          _buildNoPracticeSubtopicsState(),
+        ],
+      );
+    }
+
+    _ensureSelectedSubtopicIsValid();
+
+    final selectedIndex = _selectedSubtopicIndex ?? 0;
+    final subtopic = content.subtopics[selectedIndex];
+    final quizId = _practiceQuizId(content, subtopic);
+    final isLinked = subtopic.quizzes.any((quiz) => quiz.quizId == quizId);
+    final questionCount = _practiceQuestions.length;
+    final publishedCount = _practiceQuestions
+        .where((question) => question.status.toLowerCase() == 'published')
+        .length;
+    final ready = questionCount >= 5 && publishedCount >= 5;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildPageHeading(
+          eyebrow: 'ASSESSMENT',
+          title: 'Practice Questions',
+          description:
+              'Connect the managed CSP11 question bank to the selected '
+              'subtopic. A dedicated subtopic quiz requires exactly five '
+              'published questions.',
+        ),
+        const SizedBox(height: 22),
+        _buildPracticeSubtopicSelector(),
+        const SizedBox(height: 22),
+        _buildPracticeQuizSummary(
+          subtopic: subtopic,
+          quizId: quizId,
+          questionCount: questionCount,
+          publishedCount: publishedCount,
+          isLinked: isLinked,
+          ready: ready,
+        ),
+        const SizedBox(height: 22),
+        _buildPracticeQuestionList(
+          questions: _practiceQuestions,
+          quizId: quizId,
+        ),
+        const SizedBox(height: 22),
+        _buildPracticeLinkCard(
+          quizId: quizId,
+          ready: ready,
+          isLinked: isLinked,
+        ),
+      ],
+    );
+  }
+
+  String _practiceQuizId(StudyContent content, StudySubtopic subtopic) {
+    final linkedQuizId = subtopic.quizzes
+        .map((quiz) => quiz.quizId.trim())
+        .firstWhere((quizId) => quizId.isNotEmpty, orElse: () => '');
+
+    if (linkedQuizId.isNotEmpty) {
+      return linkedQuizId;
+    }
+
+    final resolvedQuizId = _resolvedPracticeQuizId?.trim() ?? '';
+    if (resolvedQuizId.isNotEmpty) {
+      return resolvedQuizId;
+    }
+
+    return '${content.id}_${subtopic.id}_quiz';
+  }
+
+  Future<void> _refreshPracticeQuestions() async {
+    final content = _importedContent;
+    final index = _selectedSubtopicIndex;
+
+    if (content == null ||
+        index == null ||
+        index < 0 ||
+        index >= content.subtopics.length) {
+      if (mounted) {
+        setState(() {
+          _practiceQuestions = <Question>[];
+        });
+      }
+      return;
+    }
+
+    if (mounted) {
+      setState(() {
+        _loadingPracticeQuestions = true;
+      });
+    }
+
+    try {
+      await _questionService.initialize();
+
+      final subtopic = content.subtopics[index];
+
+      final linkedQuizId = subtopic.quizzes
+          .map((quiz) => quiz.quizId.trim())
+          .firstWhere((quizId) => quizId.isNotEmpty, orElse: () => '');
+
+      String resolvedQuizId = linkedQuizId;
+
+      if (resolvedQuizId.isEmpty) {
+        final candidates = _questionService
+            .allManagedQuestions()
+            .where(
+              (question) =>
+                  question.subtopicId == subtopic.id &&
+                  question.status.toLowerCase() == 'published',
+            )
+            .toList();
+
+        if (candidates.isNotEmpty) {
+          final counts = <String, int>{};
+          for (final question in candidates) {
+            final candidateQuizId = question.quizId.trim();
+            if (candidateQuizId.isNotEmpty) {
+              counts[candidateQuizId] = (counts[candidateQuizId] ?? 0) + 1;
+            }
+          }
+
+          if (counts.isNotEmpty) {
+            final sortedQuizIds = counts.entries.toList()
+              ..sort((a, b) {
+                final countComparison = b.value.compareTo(a.value);
+                if (countComparison != 0) {
+                  return countComparison;
+                }
+                return a.key.compareTo(b.key);
+              });
+            resolvedQuizId = sortedQuizIds.first.key;
+          }
+        }
+      }
+
+      if (resolvedQuizId.isEmpty) {
+        resolvedQuizId = '${content.id}_${subtopic.id}_quiz';
+      }
+
+      final questions = _questionService.byQuizId(resolvedQuizId)
+        ..sort((a, b) => a.id.compareTo(b.id));
+
+      final overviewStats = _calculateOverviewQuizStatistics(content);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _resolvedPracticeQuizId = resolvedQuizId;
+        _practiceQuestions = questions;
+        _loadingPracticeQuestions = false;
+        _overviewQuestionCount = overviewStats.questionCount;
+        _overviewPublishedCount = overviewStats.publishedCount;
+        _overviewExpectedQuestionCount = overviewStats.expectedQuestionCount;
+        _overviewQuizReady = overviewStats.ready;
+      });
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _practiceQuestions = <Question>[];
+        _loadingPracticeQuestions = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to load Practice Questions.\n$error')),
+      );
+    }
+  }
+
+  Widget _buildPracticeSubtopicSelector() {
+    final content = _importedContent!;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < 720;
+
+          final selector = DropdownButtonFormField<int>(
+            initialValue: _selectedSubtopicIndex,
+            isExpanded: true,
+            decoration: InputDecoration(
+              labelText: 'Select Subtopic',
+              prefixIcon: const Icon(Icons.account_tree_rounded),
+              filled: true,
+              fillColor: StudyColors.surfaceSoft,
+              border: OutlineInputBorder(
+                borderRadius: StudyRadius.medium,
+                borderSide: BorderSide(color: StudyColors.border),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: StudyRadius.medium,
+                borderSide: BorderSide(color: StudyColors.border),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: StudyRadius.medium,
+                borderSide: BorderSide(color: StudyColors.primary, width: 1.3),
+              ),
+            ),
+            items: List.generate(content.subtopics.length, (index) {
+              final subtopic = content.subtopics[index];
+
+              return DropdownMenuItem<int>(
+                value: index,
+                child: Text(
+                  '${index + 1}. ${subtopic.title}',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            }),
+            onChanged: (value) {
+              if (value == null) {
+                return;
+              }
+
+              setState(() {
+                _selectedSubtopicIndex = value;
+                _selectedMainContentIndex = 0;
+                _resolvedPracticeQuizId = null;
+              });
+
+              _refreshPracticeQuestions();
+            },
+          );
+
+          final count = Container(
+            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+            decoration: BoxDecoration(
+              color: StudyColors.primary.withValues(alpha: 0.07),
+              borderRadius: StudyRadius.pillRadius,
+            ),
+            child: Text(
+              '${content.subtopics.length} subtopics',
+              style: StudyTypography.label.copyWith(
+                color: StudyColors.primary,
+                fontSize: 11,
+              ),
+            ),
+          );
+
+          if (compact) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Choose the subtopic to configure',
+                        style: StudyTypography.subSectionTitle,
+                      ),
+                    ),
+                    count,
+                  ],
+                ),
+                const SizedBox(height: 14),
+                selector,
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Choose the subtopic to configure',
+                      style: StudyTypography.subSectionTitle,
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      'The quiz reference will be stored on this subtopic.',
+                      style: StudyTypography.bodySecondary,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 14),
+              SizedBox(width: 360, child: selector),
+              const SizedBox(width: 10),
+              count,
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPracticeQuizSummary({
+    required StudySubtopic subtopic,
+    required String quizId,
+    required int questionCount,
+    required int publishedCount,
+    required bool isLinked,
+    required bool ready,
+  }) {
+    return _buildEditorCard(
+      title: 'Quiz Readiness',
+      icon: Icons.quiz_rounded,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 900
+                  ? 4
+                  : constraints.maxWidth >= 560
+                  ? 2
+                  : 1;
+
+              final metrics = [
+                _PracticeMetric(
+                  value: '$questionCount / 5',
+                  label: 'Questions',
+                  icon: Icons.help_outline_rounded,
+                  color: questionCount == 5
+                      ? StudyColors.success
+                      : StudyColors.warning,
+                ),
+                _PracticeMetric(
+                  value: '$publishedCount / 5',
+                  label: 'Published',
+                  icon: Icons.verified_rounded,
+                  color: publishedCount == 5
+                      ? StudyColors.success
+                      : StudyColors.warning,
+                ),
+                _PracticeMetric(
+                  value: isLinked ? 'LINKED' : 'NOT LINKED',
+                  label: 'Content Link',
+                  icon: isLinked ? Icons.link_rounded : Icons.link_off_rounded,
+                  color: isLinked
+                      ? StudyColors.success
+                      : StudyColors.textSecondary,
+                ),
+                _PracticeMetric(
+                  value: ready ? 'READY' : 'INCOMPLETE',
+                  label: 'Quiz Status',
+                  icon: ready
+                      ? Icons.check_circle_rounded
+                      : Icons.pending_rounded,
+                  color: ready ? StudyColors.success : StudyColors.warning,
+                ),
+              ];
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: metrics.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: columns == 1 ? 5.5 : 2.3,
+                ),
+                itemBuilder: (context, index) {
+                  return _buildPracticeMetric(metrics[index]);
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 18),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: StudyColors.surfaceSoft,
+              borderRadius: StudyRadius.medium,
+              border: Border.all(color: StudyColors.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SELECTED SUBTOPIC',
+                  style: StudyTypography.eyebrow.copyWith(fontSize: 9),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  subtopic.title,
+                  style: StudyTypography.cardTitle.copyWith(fontSize: 14),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'QUIZ ID',
+                  style: StudyTypography.eyebrow.copyWith(fontSize: 9),
+                ),
+                const SizedBox(height: 4),
+                SelectableText(
+                  quizId,
+                  style: StudyTypography.body.copyWith(
+                    color: StudyColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPracticeMetric(_PracticeMetric metric) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: StudyColors.surfaceSoft,
+        borderRadius: StudyRadius.medium,
+        border: Border.all(color: StudyColors.border),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: metric.color.withValues(alpha: 0.09),
+              borderRadius: StudyRadius.small,
+            ),
+            child: Icon(metric.icon, size: 18, color: metric.color),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  metric.value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: StudyTypography.cardTitle.copyWith(
+                    fontSize: 15,
+                    color: metric.color,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  metric.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: StudyTypography.bodySecondary.copyWith(fontSize: 10),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPracticeQuestionList({
+    required List<Question> questions,
+    required String quizId,
+  }) {
+    return _buildEditorCard(
+      title: 'Managed Question Set',
+      icon: Icons.library_books_rounded,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Questions assigned to this quiz are read from the '
+                  'central QuestionBankService.',
+                  style: StudyTypography.bodySecondary,
+                ),
+              ),
+              IconButton(
+                tooltip: 'Refresh questions',
+                onPressed: _loadingPracticeQuestions
+                    ? null
+                    : _refreshPracticeQuestions,
+                icon: _loadingPracticeQuestions
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.refresh_rounded),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          if (_loadingPracticeQuestions && questions.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(28),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (questions.isEmpty)
+            _buildPracticeEmptyQuestionsState(quizId)
+          else
+            Column(
+              children: [
+                for (var index = 0; index < questions.length; index++)
+                  _buildPracticeQuestionRow(questions[index], index),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPracticeQuestionRow(Question question, int index) {
+    final published = question.status.toLowerCase() == 'published';
+    final statusColor = published ? StudyColors.success : StudyColors.warning;
+
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(
+        bottom: index == _practiceQuestions.length - 1 ? 0 : 10,
+      ),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: StudyColors.surfaceSoft,
+        borderRadius: StudyRadius.medium,
+        border: Border.all(color: StudyColors.border),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: StudyColors.primaryLight,
+              borderRadius: StudyRadius.small,
+            ),
+            child: Text(
+              '${index + 1}',
+              style: StudyTypography.label.copyWith(color: StudyColors.primary),
+            ),
+          ),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  question.question,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: StudyTypography.label.copyWith(fontSize: 12.5),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Question ID ${question.id}',
+                  style: StudyTypography.bodySecondary.copyWith(fontSize: 10),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.09),
+              borderRadius: StudyRadius.pillRadius,
+            ),
+            child: Text(
+              published ? 'PUBLISHED' : 'DRAFT',
+              style: TextStyle(
+                color: statusColor,
+                fontSize: 9,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.6,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPracticeEmptyQuestionsState(String quizId) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: StudyColors.surfaceSoft,
+        borderRadius: StudyRadius.medium,
+        border: Border.all(color: StudyColors.border),
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.quiz_outlined,
+            size: 42,
+            color: StudyColors.textSecondary,
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'No managed questions found',
+            style: StudyTypography.cardTitle,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'The Question Bank does not currently contain questions for '
+            '$quizId.',
+            textAlign: TextAlign.center,
+            style: StudyTypography.bodySecondary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPracticeLinkCard({
+    required String quizId,
+    required bool ready,
+    required bool isLinked,
+  }) {
+    final canLink = ready && !isLinked && _isDraft;
+
+    String message;
+
+    if (isLinked) {
+      message =
+          'This quiz is already linked to the selected subtopic. '
+          'The reference is stored in StudyContent as a QuizReference.';
+    } else if (!_isDraft) {
+      message =
+          'Quiz linking is available only while the content version is '
+          'in Draft. Create or open a draft version before linking.';
+    } else if (!ready) {
+      message =
+          'Complete the dedicated quiz requirement first: exactly five '
+          'questions, all five Published.';
+    } else {
+      message =
+          'Link this five-question quiz to the selected subtopic. '
+          'The questions remain in the central question repository.';
+    }
+
+    return _buildEditorCard(
+      title: isLinked ? 'Quiz Linked' : 'Link Practice Quiz',
+      icon: isLinked ? Icons.link_rounded : Icons.add_link_rounded,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: isLinked
+                  ? StudyColors.successLight
+                  : StudyColors.surfaceSoft,
+              borderRadius: StudyRadius.medium,
+              border: Border.all(
+                color: isLinked
+                    ? StudyColors.success.withValues(alpha: 0.18)
+                    : StudyColors.border,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  isLinked
+                      ? Icons.check_circle_rounded
+                      : ready
+                      ? Icons.info_outline_rounded
+                      : Icons.warning_amber_rounded,
+                  color: isLinked
+                      ? StudyColors.success
+                      : ready
+                      ? StudyColors.primary
+                      : StudyColors.warning,
+                ),
+                const SizedBox(width: 11),
+                Expanded(
+                  child: Text(message, style: StudyTypography.bodySecondary),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  quizId,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: StudyTypography.body.copyWith(
+                    color: StudyColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              if (!isLinked)
+                FilledButton.icon(
+                  onPressed: canLink ? _linkPracticeQuiz : null,
+                  icon: const Icon(Icons.link_rounded, size: 17),
+                  label: const Text('Link Quiz'),
+                )
+              else
+                OutlinedButton.icon(
+                  onPressed: null,
+                  icon: const Icon(Icons.check_rounded, size: 17),
+                  label: const Text('Already Linked'),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _linkPracticeQuiz() async {
+    final content = _importedContent;
+    final index = _selectedSubtopicIndex;
+
+    if (content == null ||
+        index == null ||
+        index < 0 ||
+        index >= content.subtopics.length) {
+      return;
+    }
+
+    if (!_isDraft) {
+      _showPracticeMessage(
+        'Open a Draft content version before linking a practice quiz.',
+      );
+      return;
+    }
+
+    final subtopic = content.subtopics[index];
+    final quizId = _practiceQuizId(content, subtopic);
+
+    final publishedCount = _practiceQuestions
+        .where((question) => question.status.toLowerCase() == 'published')
+        .length;
+
+    if (_practiceQuestions.length < 5 || publishedCount < 5) {
+      _showPracticeMessage(
+        'The subtopic must have at least 5 published questions '
+        'before the quiz can be linked.',
+      );
+      return;
+    }
+
+    if (subtopic.quizzes.any((quiz) => quiz.quizId == quizId)) {
+      _showPracticeMessage('This quiz is already linked to the subtopic.');
+      return;
+    }
+
+    final updatedSubtopic = StudySubtopic(
+      id: subtopic.id,
+      title: subtopic.title,
+      learningObjectives: List<String>.from(subtopic.learningObjectives),
+      mainContent: List<MainContentTopic>.from(subtopic.mainContent),
+      keyPoints: List<ContentEntry>.from(subtopic.keyPoints),
+      examples: List<ContentEntry>.from(subtopic.examples),
+      caseStudies: List<ContentEntry>.from(subtopic.caseStudies),
+      formulas: List<ContentEntry>.from(subtopic.formulas),
+      references: List<ContentEntry>.from(subtopic.references),
+      examTips: List<ContentEntry>.from(subtopic.examTips),
+      commonMistakes: List<ContentEntry>.from(subtopic.commonMistakes),
+      keyTakeaways: List<ContentEntry>.from(subtopic.keyTakeaways),
+      quizzes: [
+        ...subtopic.quizzes,
+        QuizReference(quizId: quizId),
+      ],
+    );
+
+    final updatedSubtopics = List<StudySubtopic>.from(content.subtopics);
+    updatedSubtopics[index] = updatedSubtopic;
+
+    final updatedContent = StudyContent(
+      id: content.id,
+      domainId: content.domainId,
+      competencyId: content.competencyId,
+      competencyNumber: content.competencyNumber,
+      title: content.title,
+      status: content.status,
+      version: content.version,
+      subtopics: updatedSubtopics,
+    );
+
+    try {
+      await _repository.saveDraft(updatedContent);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _importedContent = updatedContent;
+      });
+
+      await _loadDrafts();
+      await _refreshPracticeQuestions();
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Practice quiz linked successfully. '
+            'Continue through the normal review and validation workflow.',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to link practice quiz.\n$error')),
+      );
+    }
+  }
+
+  void _showPracticeMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Widget _buildNoImportedPracticeQuestionsState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(34),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
+      ),
+      child: Column(
+        children: [
+          const Icon(Icons.quiz_outlined, size: 44, color: StudyColors.primary),
+          const SizedBox(height: 14),
+          const Text('No content imported', style: StudyTypography.cardTitle),
+          const SizedBox(height: 7),
+          const Text(
+            'Import or open a CSP11 competency before connecting its '
+            'subtopic practice quizzes.',
+            textAlign: TextAlign.center,
+            style: StudyTypography.bodySecondary,
+          ),
+          const SizedBox(height: 18),
+          FilledButton.icon(
+            onPressed: () {
+              setState(() {
+                _selectedSection = 1;
+              });
+            },
+            icon: const Icon(Icons.file_download_rounded, size: 17),
+            label: const Text('Import Content'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoPracticeSubtopicsState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(34),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
+      ),
+      child: const Column(
+        children: [
+          Icon(
+            Icons.account_tree_outlined,
+            size: 44,
+            color: StudyColors.textSecondary,
+          ),
+          SizedBox(height: 14),
+          Text('No subtopics found', style: StudyTypography.cardTitle),
+          SizedBox(height: 7),
+          Text(
+            'Create or import a subtopic before configuring its '
+            'practice quiz.',
+            textAlign: TextAlign.center,
+            style: StudyTypography.bodySecondary,
+          ),
+        ],
+      ),
+    );
   }
 
   // ==========================================================
@@ -903,7 +1969,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               setState(() {
                 _selectedSubtopicIndex = value;
                 _selectedMainContentIndex = 0;
+                _resolvedPracticeQuizId = null;
               });
+              _refreshPracticeQuestions();
             },
           );
 
@@ -1116,6 +2184,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               setState(() {
                 _selectedSubtopicIndex = value;
                 _selectedMainContentIndex = 0;
+                _resolvedPracticeQuizId = null;
               });
             },
           );
@@ -2028,36 +3097,53 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
     final metrics = [
       _OverviewMetric(
-        value: statistics.subtopics,
+        value: '${statistics.subtopics}',
         label: 'Subtopics',
         icon: Icons.account_tree_rounded,
       ),
       _OverviewMetric(
-        value: statistics.mainTopics,
+        value: '${statistics.mainTopics}',
         label: 'Main Topics',
         icon: Icons.menu_book_rounded,
       ),
       _OverviewMetric(
-        value: statistics.blocks,
+        value: '${statistics.blocks}',
         label: 'Content Blocks',
         icon: Icons.view_agenda_rounded,
       ),
       _OverviewMetric(
-        value: statistics.learningObjectives,
+        value: '${statistics.learningObjectives}',
         label: 'Objectives',
         icon: Icons.flag_rounded,
       ),
       _OverviewMetric(
-        value: statistics.quizReferences,
+        value: '${statistics.quizReferences}',
         label: 'Quiz Links',
         icon: Icons.quiz_rounded,
+      ),
+      _OverviewMetric(
+        value: '$_overviewQuestionCount/$_overviewExpectedQuestionCount',
+        label: 'Questions',
+        icon: Icons.help_outline_rounded,
+      ),
+      _OverviewMetric(
+        value: '$_overviewPublishedCount/$_overviewExpectedQuestionCount',
+        label: 'Published',
+        icon: Icons.publish_rounded,
+      ),
+      _OverviewMetric(
+        value: _overviewQuizReady ? 'READY' : 'INCOMPLETE',
+        label: 'Quiz Status',
+        icon: _overviewQuizReady
+            ? Icons.check_circle_rounded
+            : Icons.warning_amber_rounded,
       ),
     ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final columns = constraints.maxWidth >= 1000
-            ? 5
+            ? 4
             : constraints.maxWidth >= 720
             ? 3
             : 2;
@@ -2078,6 +3164,100 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         );
       },
     );
+  }
+
+  _OverviewQuizStatistics _calculateOverviewQuizStatistics(
+    StudyContent content,
+  ) {
+    var questionCount = 0;
+    var publishedCount = 0;
+    var expectedQuestionCount = 0;
+    var ready = content.subtopics.isNotEmpty;
+
+    for (final subtopic in content.subtopics) {
+      expectedQuestionCount += 5;
+
+      final quizId = _resolveExistingQuizIdForOverview(content, subtopic);
+
+      if (quizId.isEmpty) {
+        ready = false;
+        continue;
+      }
+
+      final questions = _questionService.byQuizId(quizId);
+      final subtopicQuestionCount = questions.length;
+      final subtopicPublishedCount = questions
+          .where((question) => question.status.toLowerCase() == 'published')
+          .length;
+
+      questionCount += subtopicQuestionCount;
+      publishedCount += subtopicPublishedCount;
+
+      if (subtopicQuestionCount != 5 || subtopicPublishedCount != 5) {
+        ready = false;
+      }
+    }
+
+    return _OverviewQuizStatistics(
+      questionCount: questionCount,
+      publishedCount: publishedCount,
+      expectedQuestionCount: expectedQuestionCount,
+      ready: ready,
+    );
+  }
+
+  String _resolveExistingQuizIdForOverview(
+    StudyContent content,
+    StudySubtopic subtopic,
+  ) {
+    final linkedQuizId = subtopic.quizzes
+        .map((quiz) => quiz.quizId.trim())
+        .firstWhere((quizId) => quizId.isNotEmpty, orElse: () => '');
+
+    if (linkedQuizId.isNotEmpty) {
+      return linkedQuizId;
+    }
+
+    final resolvedQuizId = _resolvedPracticeQuizId?.trim() ?? '';
+    if (resolvedQuizId.isNotEmpty &&
+        _questionService
+            .byQuizId(resolvedQuizId)
+            .any((question) => question.subtopicId == subtopic.id)) {
+      return resolvedQuizId;
+    }
+
+    final candidates = _questionService
+        .allManagedQuestions()
+        .where(
+          (question) =>
+              question.subtopicId == subtopic.id &&
+              question.status.toLowerCase() == 'published',
+        )
+        .toList();
+
+    if (candidates.isNotEmpty) {
+      final counts = <String, int>{};
+      for (final question in candidates) {
+        final candidateQuizId = question.quizId.trim();
+        if (candidateQuizId.isNotEmpty) {
+          counts[candidateQuizId] = (counts[candidateQuizId] ?? 0) + 1;
+        }
+      }
+
+      if (counts.isNotEmpty) {
+        final sortedQuizIds = counts.entries.toList()
+          ..sort((a, b) {
+            final countComparison = b.value.compareTo(a.value);
+            if (countComparison != 0) {
+              return countComparison;
+            }
+            return a.key.compareTo(b.key);
+          });
+        return sortedQuizIds.first.key;
+      }
+    }
+
+    return '${content.id}_${subtopic.id}_quiz';
   }
 
   Widget _buildOverviewMetric(_OverviewMetric metric) {
@@ -2108,7 +3288,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${metric.value}',
+                  metric.value,
                   style: StudyTypography.cardTitle.copyWith(fontSize: 20),
                 ),
                 const SizedBox(height: 2),
@@ -2568,12 +3748,16 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   // ACTIONS
   // ==========================================================
 
+  void _returnToAdminHome() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  }
+
   void _openStudentPortal() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const ContentTestScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const ContentTestScreen()));
   }
 
   void _openPreview() {
@@ -2583,10 +3767,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   }
 
   Future<void> _loadRepositoryContent() async {
-    await Future.wait([
-      _loadDrafts(),
-      _loadPublishedContent(),
-    ]);
+    await Future.wait([_loadDrafts(), _loadPublishedContent()]);
 
     if (!mounted || _importedContent != null) {
       return;
@@ -2633,11 +3814,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(
-        SnackBar(
-          content: Text('Unable to load drafts.\n$error'),
-        ),
-      );
+      ).showSnackBar(SnackBar(content: Text('Unable to load drafts.\n$error')));
     }
   }
 
@@ -2670,23 +3847,14 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         _loadingPublished = false;
       });
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
-        SnackBar(
-          content: Text('Unable to load published content.\n$error'),
-        ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to load published content.\n$error')),
       );
     }
   }
 
-  StudyContent _withStatus(
-    StudyContent content,
-    String status,
-  ) {
-    final json = Map<String, dynamic>.from(
-      content.toJson(),
-    );
+  StudyContent _withStatus(StudyContent content, String status) {
+    final json = Map<String, dynamic>.from(content.toJson());
 
     json['status'] = status;
 
@@ -2703,9 +3871,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     if (!_isDraft) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            'Only Draft content can be saved using Save Draft.',
-          ),
+          content: Text('Only Draft content can be saved using Save Draft.'),
         ),
       );
 
@@ -2741,10 +3907,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       return;
     }
 
-    final reviewedContent = _withStatus(
-      content,
-      'review',
-    );
+    final reviewedContent = _withStatus(content, 'review');
 
     try {
       await _repository.saveDraft(reviewedContent);
@@ -2764,9 +3927,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Content moved to Review successfully.'),
-        ),
+        const SnackBar(content: Text('Content moved to Review successfully.')),
       );
     } catch (error) {
       if (!mounted) {
@@ -2774,9 +3935,64 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to move content to Review.\\n$error'),
+        SnackBar(content: Text('Unable to move content to Review.\\n$error')),
+      );
+    }
+  }
+
+  Future<void> _validateContent() async {
+    final content = _importedContent;
+
+    if (content == null || !_isReview) {
+      return;
+    }
+
+    final issues = const ContentValidator().validate(content);
+    final hasErrors = issues.any(
+      (issue) => issue.severity == ContentImportIssueSeverity.error,
+    );
+
+    if (hasErrors) {
+      setState(() {
+        _selectedSection = 6;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Validation failed. Resolve all validation errors first.',
+          ),
         ),
+      );
+
+      return;
+    }
+
+    try {
+      await _repository.updateDraftStatus(content.id, 'validated');
+
+      final validated = _withStatus(content, 'validated');
+
+      if (!mounted) return;
+
+      setState(() {
+        _importedContent = validated;
+      });
+
+      await _loadDrafts();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Validation passed. Content is now VALIDATED.'),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to validate content.\\n$error')),
       );
     }
   }
@@ -2784,7 +4000,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Future<void> _publishContent() async {
     final content = _importedContent;
 
-    if (content == null || !_isReview) {
+    if (content == null || !_isValidated) {
       return;
     }
 
@@ -2834,10 +4050,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     try {
       await _repository.publish(content);
 
-      final publishedContent = _withStatus(
-        content,
-        'published',
-      );
+      final publishedContent = _withStatus(content, 'published');
 
       if (!mounted) {
         return;
@@ -2854,9 +4067,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Content published successfully.'),
-        ),
+        const SnackBar(content: Text('Content published successfully.')),
       );
     } catch (error) {
       if (!mounted) {
@@ -2864,17 +4075,12 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to publish content.\\n$error'),
-        ),
+        SnackBar(content: Text('Unable to publish content.\\n$error')),
       );
     }
   }
 
-  Future<void> _openDraft(
-    StudyContent draft, {
-    bool showMessage = true,
-  }) async {
+  Future<void> _openDraft(StudyContent draft, {bool showMessage = true}) async {
     setState(() {
       _importedContent = draft;
       _selectedSubtopicIndex = draft.subtopics.isEmpty ? null : 0;
@@ -2884,14 +4090,19 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           ? 0
           : null;
       _selectedSection = 0;
+      _resolvedPracticeQuizId = null;
     });
+
+    await _refreshPracticeQuestions();
+
+    if (!mounted) {
+      return;
+    }
 
     if (showMessage) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(
-        SnackBar(content: Text('Draft loaded: ${draft.title}')),
-      );
+      ).showSnackBar(SnackBar(content: Text('Draft loaded: ${draft.title}')));
     }
   }
 
@@ -2903,34 +4114,33 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
     setState(() {
       _importedContent = published;
-      _selectedSubtopicIndex =
-          published.subtopics.isEmpty ? null : 0;
+      _selectedSubtopicIndex = published.subtopics.isEmpty ? null : 0;
       _selectedMainContentIndex =
           published.subtopics.isNotEmpty &&
-                  published.subtopics.first.mainContent.isNotEmpty
-              ? 0
-              : null;
+              published.subtopics.first.mainContent.isNotEmpty
+          ? 0
+          : null;
       _selectedSection = 0;
+      _resolvedPracticeQuizId = null;
     });
 
+    await _refreshPracticeQuestions();
+
+    if (!mounted) {
+      return;
+    }
+
     if (showMessage) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Published content loaded: ${content.title}')),
       );
     }
   }
 
   Future<void> _createRevision(StudyContent published) async {
-    final revision = _withStatus(
-      published,
-      'draft',
-    );
+    final revision = _withStatus(published, 'draft');
 
-    final revisionJson = Map<String, dynamic>.from(
-      revision.toJson(),
-    );
+    final revisionJson = Map<String, dynamic>.from(revision.toJson());
 
     revisionJson['version'] = published.version + 1;
 
@@ -2963,9 +4173,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to create revision.\n$error'),
-        ),
+        SnackBar(content: Text('Unable to create revision.\n$error')),
       );
     }
   }
@@ -3159,15 +4367,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           else
             Column(
               children: [
-                for (
-                  var index = 0;
-                  index < _publishedContent.length;
-                  index++
-                )
-                  _buildPublishedContentRow(
-                    _publishedContent[index],
-                    index,
-                  ),
+                for (var index = 0; index < _publishedContent.length; index++)
+                  _buildPublishedContentRow(_publishedContent[index], index),
               ],
             ),
         ],
@@ -3175,10 +4376,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     );
   }
 
-  Widget _buildPublishedContentRow(
-    StudyContent content,
-    int index,
-  ) {
+  Widget _buildPublishedContentRow(StudyContent content, int index) {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(
@@ -3223,19 +4421,14 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   '${content.competencyId}  •  v${content.version}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.bodySecondary.copyWith(
-                    fontSize: 10.5,
-                  ),
+                  style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 10),
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 9,
-              vertical: 6,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
             decoration: BoxDecoration(
               color: StudyColors.successLight,
               borderRadius: StudyRadius.pillRadius,
@@ -3350,8 +4543,22 @@ class _StudioSection {
   });
 }
 
+class _OverviewQuizStatistics {
+  final int questionCount;
+  final int publishedCount;
+  final int expectedQuestionCount;
+  final bool ready;
+
+  const _OverviewQuizStatistics({
+    required this.questionCount,
+    required this.publishedCount,
+    required this.expectedQuestionCount,
+    required this.ready,
+  });
+}
+
 class _OverviewMetric {
-  final int value;
+  final String value;
   final String label;
   final IconData icon;
 
@@ -3371,6 +4578,20 @@ class _InfoField {
     required this.label,
     required this.value,
     required this.hint,
+  });
+}
+
+class _PracticeMetric {
+  final String value;
+  final String label;
+  final IconData icon;
+  final Color color;
+
+  const _PracticeMetric({
+    required this.value,
+    required this.label,
+    required this.icon,
+    required this.color,
   });
 }
 

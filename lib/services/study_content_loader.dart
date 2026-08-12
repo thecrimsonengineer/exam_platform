@@ -8,6 +8,9 @@ import 'study_content/local_study_content_repository.dart';
 /// Student content is loaded only from the Published Repository.
 ///
 /// Draft, Review, and other authoring states are never exposed here.
+///
+/// When multiple published versions exist for the same competency,
+/// the student portal uses only the highest published version.
 class StudyContentLoader {
   const StudyContentLoader();
 
@@ -17,31 +20,53 @@ class StudyContentLoader {
 
   Future<List<StudyContent>> loadPublishedContent() async {
     final repository = LocalStudyContentRepository();
-    return repository.loadPublished();
+
+    final published = await repository.loadPublished();
+
+    return _latestPublishedVersions(published);
+  }
+
+  /// Returns the latest published version of each competency.
+  ///
+  /// Published repository history is preserved, but the student portal
+  /// must display only one live version per competency.
+  List<StudyContent> _latestPublishedVersions(List<StudyContent> published) {
+    final latestByCompetency = <String, StudyContent>{};
+
+    for (final content in published) {
+      if (content.status.toLowerCase() != 'published') {
+        continue;
+      }
+
+      final existing = latestByCompetency[content.competencyId];
+
+      if (existing == null || content.version > existing.version) {
+        latestByCompetency[content.competencyId] = content;
+      }
+    }
+
+    return latestByCompetency.values.toList();
   }
 
   /// Loads one published competency by Content ID.
-  Future<StudyContent> loadPublishedByContentId(
-    String contentId,
-  ) async {
+  Future<StudyContent> loadPublishedByContentId(String contentId) async {
     final repository = LocalStudyContentRepository();
 
     final content = await repository.loadPublishedContent(contentId);
 
     if (content == null) {
-      throw StateError(
-        'Published content "$contentId" was not found.',
-      );
+      throw StateError('Published content "$contentId" was not found.');
+    }
+
+    if (content.status.toLowerCase() != 'published') {
+      throw StateError('Content "$contentId" is not published.');
     }
 
     return content;
   }
 
-  /// Loads a published competency using Domain ID and Competency ID.
-  ///
-  /// The published repository stores the complete StudyContent object,
-  /// so the student portal searches the published collection rather
-  /// than reading bundled JSON assets.
+  /// Loads the latest published competency using Domain ID
+  /// and Competency ID.
   Future<StudyContent> loadStudyContent({
     required String domainId,
     required String competencyId,
@@ -49,17 +74,22 @@ class StudyContentLoader {
     final repository = LocalStudyContentRepository();
     final published = await repository.loadPublished();
 
-    for (final content in published) {
-      if (content.domainId == domainId &&
-          content.competencyId == competencyId) {
-        if (content.status.toLowerCase() != 'published') {
-          throw StateError(
-            'Content "$competencyId" is not published.',
-          );
-        }
+    StudyContent? latest;
 
-        return content;
+    for (final content in published) {
+      if (content.domainId != domainId ||
+          content.competencyId != competencyId ||
+          content.status.toLowerCase() != 'published') {
+        continue;
       }
+
+      if (latest == null || content.version > latest.version) {
+        latest = content;
+      }
+    }
+
+    if (latest != null) {
+      return latest;
     }
 
     throw StateError(
@@ -92,10 +122,9 @@ class StudyContentLoader {
   // Published Competencies
   // ==========================================================
 
-  /// Returns all published competencies belonging to a domain.
-  Future<List<Map<String, dynamic>>> loadCompetencies(
-    String domainId,
-  ) async {
+  /// Returns the latest published version of each competency
+  /// belonging to a domain.
+  Future<List<Map<String, dynamic>>> loadCompetencies(String domainId) async {
     final published = await loadPublishedContent();
 
     return published
@@ -136,7 +165,7 @@ class StudyContentLoader {
   // ==========================================================
   // Legacy Asset Methods
   // ==========================================================
-  //
+
   // These methods are intentionally no longer used for student
   // content delivery. They remain unavailable here so the
   // Student Portal cannot accidentally fall back to bundled
