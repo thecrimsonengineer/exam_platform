@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/question.dart';
 import '../../../services/question_bank_service.dart';
 import '../../../services/study_content/content_import_service.dart';
+import '../../../services/study_content/content_repository_service.dart';
 import '../../../services/study_content/content_validator.dart';
 
 import '../../../models/study_content.dart';
@@ -39,6 +40,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   int _selectedSection = 0;
 
   final LocalStudyContentRepository _repository = LocalStudyContentRepository();
+  final ContentRepositoryService _contentRepositoryService =
+      ContentRepositoryService();
   final QuestionBankService _questionService = QuestionBankService();
 
   StudyContent? _importedContent;
@@ -161,10 +164,13 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       final content = _importedContent;
 
       if (initialQuestionId != null && content != null) {
-        final targetQuestion = _questionService.allManagedQuestions().cast<Question?>().firstWhere(
-          (question) => question?.id == initialQuestionId,
-          orElse: () => null,
-        );
+        final targetQuestion = _questionService
+            .allManagedQuestions()
+            .cast<Question?>()
+            .firstWhere(
+              (question) => question?.id == initialQuestionId,
+              orElse: () => null,
+            );
 
         if (targetQuestion != null) {
           final targetSubtopicIndex = content.subtopics.indexWhere(
@@ -1547,83 +1553,85 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         margin: EdgeInsets.only(
           bottom: index == _practiceQuestions.length - 1 ? 0 : 10,
         ),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: focused ? StudyColors.primaryLight : StudyColors.surfaceSoft,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(color: StudyColors.border),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 34,
-            height: 34,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: StudyColors.primaryLight,
-              borderRadius: StudyRadius.small,
-            ),
-            child: Text(
-              '${index + 1}',
-              style: StudyTypography.label.copyWith(color: StudyColors.primary),
-            ),
-          ),
-          const SizedBox(width: 11),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  question.question,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.label.copyWith(fontSize: 12.5),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: focused ? StudyColors.primaryLight : StudyColors.surfaceSoft,
+          borderRadius: StudyRadius.medium,
+          border: Border.all(color: StudyColors.border),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: StudyColors.primaryLight,
+                borderRadius: StudyRadius.small,
+              ),
+              child: Text(
+                '${index + 1}',
+                style: StudyTypography.label.copyWith(
+                  color: StudyColors.primary,
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  'Question ID ${question.id}',
-                  style: StudyTypography.bodySecondary.copyWith(fontSize: 10),
-                ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    onPressed: () => _openQuestionInQuestionBank(question),
-                    icon: const Icon(Icons.open_in_new_rounded, size: 16),
-                    label: const Text('Open in Question Bank'),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
-            decoration: BoxDecoration(
-              color: statusColor.withValues(alpha: 0.09),
-              borderRadius: StudyRadius.pillRadius,
-            ),
-            child: Text(
-              published ? 'PUBLISHED' : 'DRAFT',
-              style: TextStyle(
-                color: statusColor,
-                fontSize: 9,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.6,
               ),
             ),
-          ),
-        ],
-      ),
+            const SizedBox(width: 11),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    question.question,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: StudyTypography.label.copyWith(fontSize: 12.5),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Question ID ${question.id}',
+                    style: StudyTypography.bodySecondary.copyWith(fontSize: 10),
+                  ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => _openQuestionInQuestionBank(question),
+                      icon: const Icon(Icons.open_in_new_rounded, size: 16),
+                      label: const Text('Open in Question Bank'),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.09),
+                borderRadius: StudyRadius.pillRadius,
+              ),
+              child: Text(
+                published ? 'PUBLISHED' : 'DRAFT',
+                style: TextStyle(
+                  color: statusColor,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.6,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -3987,6 +3995,18 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       return;
     }
 
+    if (content.status.toLowerCase() == 'published' ||
+        content.status.toLowerCase() == 'archived') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Published and archived versions cannot be edited directly.',
+          ),
+        ),
+      );
+      return;
+    }
+
     if (!_isDraft) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -4257,16 +4277,15 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   }
 
   Future<void> _createRevision(StudyContent published) async {
-    final revision = _withStatus(published, 'draft');
-
-    final revisionJson = Map<String, dynamic>.from(revision.toJson());
-
-    revisionJson['version'] = published.version + 1;
-
-    final draftRevision = StudyContent.fromJson(revisionJson);
+    if (published.status.toLowerCase() != 'published') {
+      return;
+    }
 
     try {
-      await _repository.saveDraft(draftRevision);
+      final draftRevision = await _contentRepositoryService.createRevision(
+        published,
+      );
+
       await _loadDrafts();
 
       if (!mounted) {
@@ -4282,7 +4301,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Revision created: ${draftRevision.title} v${draftRevision.version}',
+            'Revision created: '
+            '${draftRevision.title} v${draftRevision.version}',
           ),
         ),
       );
@@ -4544,7 +4564,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                     '${content.competencyId}  •  v${content.version}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
+                    style: StudyTypography.bodySecondary.copyWith(
+                      fontSize: 10.5,
+                    ),
                   ),
                 ],
               ),
@@ -4632,7 +4654,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                     'Competency ${draft.competencyNumber}  •  ${draft.competencyId}  •  v${draft.version}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
+                    style: StudyTypography.bodySecondary.copyWith(
+                      fontSize: 10.5,
+                    ),
                   ),
                 ],
               ),

@@ -40,13 +40,13 @@ const List<Csp11Domain> csp11Domains = <Csp11Domain>[
     id: 'domain_04',
     number: 4,
     title: 'Emergency Management',
-    weightPercent: 9,
+    weightPercent: 10,
   ),
   Csp11Domain(
     id: 'domain_05',
     number: 5,
     title: 'Environmental Management',
-    weightPercent: 6,
+    weightPercent: 10,
   ),
   Csp11Domain(
     id: 'domain_06',
@@ -54,7 +54,7 @@ const List<Csp11Domain> csp11Domains = <Csp11Domain>[
     title: 'Occupational Health and Applied Science',
     weightPercent: 10,
   ),
-  Csp11Domain(id: 'domain_07', number: 7, title: 'Training', weightPercent: 10),
+  Csp11Domain(id: 'domain_07', number: 7, title: 'Training', weightPercent: 5),
 ];
 
 Csp11Domain? domainForId(String id) {

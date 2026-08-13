@@ -5,7 +5,7 @@ import '../../data/csp11_blueprint.dart';
 import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import 'question_bank_screen.dart';
-import '../courses/courses_screen.dart';
+import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -30,7 +30,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
   final List<_NavItem> navigation = const [
     _NavItem(Icons.grid_view_rounded, 'Command Center', 'OVERVIEW'),
-    _NavItem(Icons.school_rounded, 'Courses', 'LEARNING'),
+    _NavItem(Icons.school_rounded, 'Student Portal', 'LEARNING'),
     _NavItem(Icons.auto_awesome_rounded, 'Content Studio', 'CONTENT'),
     _NavItem(Icons.storage_rounded, 'Repository', 'CONTENT'),
     _NavItem(Icons.publish_rounded, 'Publishing', 'CONTENT'),
@@ -144,9 +144,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     });
 
     if (index == 1) {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const CoursesScreen()));
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const BottomNavigationScreen()),
+      );
     } else if (index == 2) {
       _openStudio();
     } else if (index == 3) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
+import '../../../models/student_learning_progress.dart';
+import '../../../services/student_learning_progress_service.dart';
 import '../../../screens/courses/csp/study_subtopic_screen.dart';
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_gradients.dart';
@@ -12,18 +14,76 @@ import '../../../theme/study/study_typography.dart';
 
 /// Premium student-facing renderer for a CSP competency index.
 ///
-/// The competency screen is intentionally an overview and subtopic launcher.
-/// Each subtopic opens on its own screen so long competencies remain easy to
-/// navigate and study.
-class StudyContentRenderer extends StatelessWidget {
+/// The competency screen remains an overview and subtopic launcher.
+///
+/// When [initialSubtopicId] is supplied, the saved subtopic is opened
+/// automatically. Otherwise the normal competency overview is shown.
+class StudyContentRenderer extends StatefulWidget {
   final StudyContent content;
 
-  const StudyContentRenderer({super.key, required this.content});
+  final String? initialSubtopicId;
+  final String? domainTitle;
+
+  const StudyContentRenderer({
+    super.key,
+    required this.content,
+    this.initialSubtopicId,
+    this.domainTitle,
+  });
+
+  @override
+  State<StudyContentRenderer> createState() => _StudyContentRendererState();
+}
+
+class _StudyContentRendererState extends State<StudyContentRenderer> {
+  bool _resumeHandled = false;
+
+  final StudentLearningProgressService _progressService =
+      const StudentLearningProgressService();
+
+  Map<String, StudentSubtopicProgress> _progressBySubtopicId =
+      <String, StudentSubtopicProgress>{};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProgress();
+  }
+
+  @override
+  void didUpdateWidget(covariant StudyContentRenderer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.content.id != widget.content.id ||
+        oldWidget.content.version != widget.content.version) {
+      _loadProgress();
+    }
+  }
+
+  Future<void> _loadProgress() async {
+    final progress = await _progressService.loadAllProgress();
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _progressBySubtopicId = progress;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _openSavedSubtopicIfRequired();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final domain = _getDomainNumber(content.domainId);
-    final subtopics = content.subtopics;
+    final domain = _getDomainNumber(widget.content.domainId);
+
+    final subtopics = widget.content.subtopics;
 
     return Container(
       color: StudyColors.background,
@@ -82,6 +142,60 @@ class StudyContentRenderer extends StatelessWidget {
     );
   }
 
+  Future<void> _openSavedSubtopicIfRequired() async {
+    if (_resumeHandled) {
+      return;
+    }
+
+    final savedId = widget.initialSubtopicId;
+
+    if (savedId == null || savedId.trim().isEmpty) {
+      _resumeHandled = true;
+      return;
+    }
+
+    final subtopics = widget.content.subtopics;
+
+    final index = subtopics.indexWhere(
+      (subtopic) => _subtopicId(subtopic) == savedId,
+    );
+
+    _resumeHandled = true;
+
+    if (index < 0) {
+      return;
+    }
+
+    await Future<void>.delayed(Duration.zero);
+
+    if (!mounted) {
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            StudySubtopicScreen(
+            content: widget.content,
+            subtopicIndex: index,
+            domainTitle: widget.domainTitle,
+          ),
+      ),
+    );
+  }
+
+  String? _subtopicId(StudySubtopic subtopic) {
+    try {
+      final dynamic value = subtopic.id;
+
+      if (value is String && value.trim().isNotEmpty) {
+        return value;
+      }
+    } catch (_) {}
+
+    return null;
+  }
+
   Widget _buildHero(int domain) {
     return Container(
       width: double.infinity,
@@ -109,7 +223,7 @@ class StudyContentRenderer extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  content.title,
+                  widget.content.title,
                   style: StudyTypography.heroTitle.copyWith(
                     color: Colors.white,
                     fontSize: 40,
@@ -117,7 +231,7 @@ class StudyContentRenderer extends StatelessWidget {
                 ),
                 const SizedBox(height: 9),
                 Text(
-                  'Competency ${content.competencyNumber} • Choose a subtopic to begin studying',
+                  'Competency ${widget.content.competencyNumber} • Choose a subtopic to begin studying',
                   style: StudyTypography.bodyLarge.copyWith(
                     color: Colors.white.withValues(alpha: 0.78),
                   ),
@@ -130,7 +244,7 @@ class StudyContentRenderer extends StatelessWidget {
                     _buildHeroStat(
                       icon: StudyIcons.subtopic,
                       label: 'SUBTOPICS',
-                      value: '${content.subtopics.length}',
+                      value: '${widget.content.subtopics.length}',
                     ),
                     _buildHeroStat(
                       icon: StudyIcons.book,
@@ -268,10 +382,7 @@ class StudyContentRenderer extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
-                'Choose a subtopic',
-                style: StudyTypography.sectionTitle,
-              ),
+              Text('Choose a subtopic', style: StudyTypography.sectionTitle),
             ],
           ),
         ),
@@ -301,21 +412,28 @@ class StudyContentRenderer extends StatelessWidget {
     required int total,
   }) {
     final topicCount = subtopic.mainContent.length;
+
     final objectiveCount = subtopic.learningObjectives.length;
+
     final quizCount = _subtopicQuizCount(subtopic);
 
     return Material(
       color: StudyColors.surface,
       borderRadius: StudyRadius.large,
       child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => StudySubtopicScreen(
-              content: content,
-              subtopicIndex: index,
+        onTap: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => StudySubtopicScreen(
+                content: widget.content,
+                subtopicIndex: index,
+                domainTitle: widget.domainTitle,
+              ),
             ),
-          ),
-        ),
+          );
+
+          await _loadProgress();
+        },
         borderRadius: StudyRadius.large,
         child: Container(
           width: double.infinity,
@@ -370,8 +488,9 @@ class StudyContentRenderer extends StatelessWidget {
                       children: [
                         _buildMetaChip('$topicCount topics'),
                         _buildMetaChip('$objectiveCount objectives'),
-                        if (quizCount > 0)
+                          if (quizCount > 0)
                           _buildMetaChip('$quizCount practice links'),
+                        _buildProgressStatus(subtopic.id),
                       ],
                     ),
                   ],
@@ -399,6 +518,69 @@ class StudyContentRenderer extends StatelessWidget {
     );
   }
 
+  Widget _buildProgressStatus(String subtopicId) {
+    final state = _progressBySubtopicId[subtopicId]?.state ??
+        StudentLearningState.notStarted;
+
+    switch (state) {
+      case StudentLearningState.completed:
+        return _buildStatusChip(
+          label: 'Completed',
+          icon: Icons.check_circle_rounded,
+          foreground: const Color(0xFF1F8A4C),
+          background: const Color(0xFFEAF8F0),
+          border: const Color(0xFFB9E7CA),
+        );
+      case StudentLearningState.inProgress:
+        return _buildStatusChip(
+          label: 'In Progress',
+          icon: Icons.play_circle_outline_rounded,
+          foreground: StudyColors.primary,
+          background: StudyColors.primaryLight,
+          border: StudyColors.primary.withValues(alpha: 0.16),
+        );
+      case StudentLearningState.notStarted:
+        return _buildStatusChip(
+          label: 'Not Started',
+          icon: Icons.radio_button_unchecked_rounded,
+          foreground: StudyColors.textSecondary,
+          background: StudyColors.surfaceSoft,
+          border: StudyColors.border,
+        );
+    }
+  }
+
+  Widget _buildStatusChip({
+    required String label,
+    required IconData icon,
+    required Color foreground,
+    required Color background,
+    required Color border,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: StudyRadius.pillRadius,
+        border: Border.all(color: border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: foreground),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: StudyTypography.caption.copyWith(
+              color: foreground,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildMetaChip(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
@@ -418,14 +600,14 @@ class StudyContentRenderer extends StatelessWidget {
   }
 
   int _topicCount() {
-    return content.subtopics.fold<int>(
+    return widget.content.subtopics.fold<int>(
       0,
       (sum, subtopic) => sum + subtopic.mainContent.length,
     );
   }
 
   int _quizCount() {
-    return content.subtopics.fold<int>(
+    return widget.content.subtopics.fold<int>(
       0,
       (sum, subtopic) => sum + _subtopicQuizCount(subtopic),
     );
@@ -441,6 +623,7 @@ class StudyContentRenderer extends StatelessWidget {
 
   int _getDomainNumber(String domainId) {
     final match = RegExp(r'\d+').firstMatch(domainId);
+
     if (match == null) {
       return 0;
     }

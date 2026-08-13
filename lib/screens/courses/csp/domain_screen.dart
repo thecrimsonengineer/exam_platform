@@ -6,7 +6,7 @@ import '../../../app/app_radius.dart';
 import '../../../app/app_spacing.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../services/study_content_loader.dart';
-import 'study_content_screen.dart';
+import 'competency_screen.dart';
 import 'quiz/quiz_screen.dart';
 
 class DomainScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class _DomainScreenState extends State<DomainScreen> {
     );
   }
 
-  void _openStudyContent({
+  void _openCompetency({
     required String domainId,
     required String competencyId,
     required String title,
@@ -65,10 +65,12 @@ class _DomainScreenState extends State<DomainScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => StudyContentScreen(
+        builder: (_) => CompetencyScreen(
           domainId: domainId,
+          domainNumber: widget.domainNumber,
+          domainTitle: _domain.title,
           competencyId: competencyId,
-          loadingTitle: title,
+          title: title,
         ),
       ),
     );
@@ -180,11 +182,7 @@ class _DomainScreenState extends State<DomainScreen> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF102A56),
-            Color(0xFF1E4C91),
-            Color(0xFF5B36A8),
-          ],
+          colors: [Color(0xFF102A56), Color(0xFF1E4C91), Color(0xFF5B36A8)],
           stops: [0.0, 0.58, 1.0],
         ),
         boxShadow: [
@@ -336,9 +334,7 @@ class _DomainScreenState extends State<DomainScreen> {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.14),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -373,9 +369,7 @@ class _DomainScreenState extends State<DomainScreen> {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.10),
             borderRadius: BorderRadius.circular(11),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.10),
-            ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.10)),
           ),
           child: Icon(
             icon,
@@ -434,57 +428,41 @@ class _DomainScreenState extends State<DomainScreen> {
           builder: (context, constraints) {
             final compact = constraints.maxWidth < 680;
 
+            final studyCard = _premiumActionCard(
+              icon: Icons.menu_book_rounded,
+              title: 'Study Materials',
+              subtitle: 'LEARN',
+              description:
+                  'Explore published competencies and continue through the learning path.',
+              color: const Color(0xFF2563EB),
+              onTap: _scrollToLearningAreas,
+            );
+
+            final quizCard = _premiumActionCard(
+              icon: Icons.quiz_rounded,
+              title: 'Practice Quiz',
+              subtitle: 'PRACTICE',
+              description:
+                  'Challenge your knowledge with domain-specific exam questions.',
+              color: const Color(0xFF7C3AED),
+              onTap: _openPracticeQuiz,
+            );
+
             if (compact) {
               return Column(
                 children: [
-                  _premiumActionCard(
-                    icon: Icons.menu_book_rounded,
-                    title: 'Study Materials',
-                    subtitle: 'LEARN',
-                    description:
-                        'Explore the published learning path and build your understanding.',
-                    color: const Color(0xFF2563EB),
-                    onTap: _scrollToLearningAreas,
-                  ),
+                  studyCard,
                   const SizedBox(height: AppSpacing.md),
-                  _premiumActionCard(
-                    icon: Icons.quiz_rounded,
-                    title: 'Practice Quiz',
-                    subtitle: 'PRACTICE',
-                    description:
-                        'Challenge your knowledge with domain-specific exam questions.',
-                    color: const Color(0xFF7C3AED),
-                    onTap: _openPracticeQuiz,
-                  ),
+                  quizCard,
                 ],
               );
             }
 
             return Row(
               children: [
-                Expanded(
-                  child: _premiumActionCard(
-                    icon: Icons.menu_book_rounded,
-                    title: 'Study Materials',
-                    subtitle: 'LEARN',
-                    description:
-                        'Explore the published learning path and build your understanding.',
-                    color: const Color(0xFF2563EB),
-                    onTap: _scrollToLearningAreas,
-                  ),
-                ),
+                Expanded(child: studyCard),
                 const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: _premiumActionCard(
-                    icon: Icons.quiz_rounded,
-                    title: 'Practice Quiz',
-                    subtitle: 'PRACTICE',
-                    description:
-                        'Challenge your knowledge with domain-specific exam questions.',
-                    color: const Color(0xFF7C3AED),
-                    onTap: _openPracticeQuiz,
-                  ),
-                ),
+                Expanded(child: quizCard),
               ],
             );
           },
@@ -523,9 +501,7 @@ class _DomainScreenState extends State<DomainScreen> {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            style: AppTextStyles.body.copyWith(
-              color: Colors.grey.shade600,
-            ),
+            style: AppTextStyles.body.copyWith(color: Colors.grey.shade600),
           ),
         ],
       ),
@@ -549,9 +525,7 @@ class _DomainScreenState extends State<DomainScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(AppRadius.card),
-            border: Border.all(
-              color: color.withValues(alpha: 0.10),
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.10)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.035),
@@ -577,9 +551,7 @@ class _DomainScreenState extends State<DomainScreen> {
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: color.withValues(alpha: 0.12),
-                    ),
+                    border: Border.all(color: color.withValues(alpha: 0.12)),
                   ),
                   child: Icon(icon, color: color, size: 25),
                 ),
@@ -647,8 +619,8 @@ class _DomainScreenState extends State<DomainScreen> {
       children: [
         _sectionHeader(
           eyebrow: 'LEARNING PATH',
-          title: 'Learning Materials',
-          subtitle: 'Work through the published content for this domain.',
+          title: 'Learning Areas',
+          subtitle: 'Choose a competency to open its published learning path.',
         ),
         const SizedBox(height: AppSpacing.md),
         FutureBuilder<List<dynamic>>(
@@ -675,7 +647,7 @@ class _DomainScreenState extends State<DomainScreen> {
                 icon: Icons.auto_stories_outlined,
                 title: 'Content Coming Soon',
                 message:
-                    'Published learning content for this domain will appear here when it is available.',
+                    'Published learning areas for this domain will appear here when available.',
                 color: Colors.orange,
               );
             }
@@ -684,9 +656,7 @@ class _DomainScreenState extends State<DomainScreen> {
               children: List.generate(
                 content.length,
                 (index) => Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: AppSpacing.md,
-                  ),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   child: _premiumContentCard(content[index], index),
                 ),
               ),
@@ -703,7 +673,7 @@ class _DomainScreenState extends State<DomainScreen> {
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.card),
         onTap: () {
-          _openStudyContent(
+          _openCompetency(
             domainId: content.domainId,
             competencyId: content.competencyId,
             title: content.title,
@@ -779,12 +749,13 @@ class _DomainScreenState extends State<DomainScreen> {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color:
-                                    AppColors.primary.withValues(alpha: 0.07),
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.07,
+                                ),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: const Text(
-                                'LEARNING AREA',
+                                'COMPETENCY',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -849,9 +820,7 @@ class _DomainScreenState extends State<DomainScreen> {
             const Color(0xFF7C3AED).withValues(alpha: 0.035),
           ],
         ),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.10),
-        ),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.10)),
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withValues(alpha: 0.06),
@@ -946,9 +915,7 @@ class _DomainScreenState extends State<DomainScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.card),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.07),
-        ),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.07)),
       ),
       child: Row(
         children: [
@@ -973,11 +940,8 @@ class _DomainScreenState extends State<DomainScreen> {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  'Fetching published learning materials...',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 12,
-                  ),
+                  'Fetching published learning areas...',
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
               ],
             ),
@@ -998,9 +962,7 @@ class _DomainScreenState extends State<DomainScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.card),
-        border: Border.all(
-          color: color.withValues(alpha: 0.12),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.12)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

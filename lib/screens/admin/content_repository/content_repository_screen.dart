@@ -8,6 +8,8 @@ import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_typography.dart';
 import '../study_content/study_content_studio_screen.dart';
+import 'repository_detail_screen.dart';
+import 'repository_history_screen.dart';
 
 class ContentRepositoryScreen extends StatefulWidget {
   const ContentRepositoryScreen({super.key});
@@ -208,6 +210,16 @@ class _ContentRepositoryScreenState extends State<ContentRepositoryScreen> {
   }
 
   Future<void> _openStudio(ContentPackageSummary package) async {
+    final status = package.status.toLowerCase();
+
+    if (status == 'published' || status == 'archived') {
+      _showMessage(
+        'Published and archived versions are read-only. '
+        'Create a new revision before editing.',
+      );
+      return;
+    }
+
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) =>
@@ -1372,21 +1384,63 @@ class _ContentRepositoryScreenState extends State<ContentRepositoryScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         FilledButton.icon(
-          onPressed: () => _openStudio(package),
-          icon: const Icon(Icons.edit_note_rounded),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => RepositoryDetailScreen(
+                  package: package,
+                  allPackages: _packages,
+                ),
+              ),
+            );
+          },
+          icon: const Icon(Icons.dashboard_customize_rounded),
+          label: const Text('Open Repository Details'),
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => RepositoryHistoryScreen(
+                  package: package,
+                  allPackages: _packages,
+                ),
+              ),
+            );
+          },
+          icon: const Icon(Icons.history_rounded),
+          label: const Text('Version History'),
+        ),
+        const SizedBox(height: 8),
+        FilledButton.icon(
+          onPressed: () {
+            if (package.status == 'published') {
+              _createRevision(package);
+              return;
+            }
+
+            if (package.status == 'archived') {
+              _showMessage('Archived versions cannot be edited directly.');
+              return;
+            }
+
+            _openStudio(package);
+          },
+          icon: Icon(
+            package.status == 'published'
+                ? Icons.fork_right_rounded
+                : Icons.edit_note_rounded,
+          ),
           label: Text(
-            status == 'published' || status == 'archived'
-                ? 'Open Version in Studio'
+            package.status == 'published'
+                ? 'Create Revision & Edit'
+                : package.status == 'archived'
+                ? 'Archived Version'
                 : 'Open in Content Studio',
           ),
         ),
         if (status == 'published') ...[
-          const SizedBox(height: 8),
-          OutlinedButton.icon(
-            onPressed: () => _createRevision(package),
-            icon: const Icon(Icons.fork_right_rounded),
-            label: const Text('Create New Revision'),
-          ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
             onPressed: () => _archive(package),

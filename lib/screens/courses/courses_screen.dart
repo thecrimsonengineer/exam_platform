@@ -2,57 +2,108 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_colors.dart';
 import '../../app/app_text_styles.dart';
+import '../../services/student_learning_position_service.dart';
 import 'csp/csp_overview_screen.dart';
+import 'csp/competency_screen.dart';
+import 'csp/domain_screen.dart';
 
-class CoursesScreen extends StatelessWidget {
+class CoursesScreen extends StatefulWidget {
   const CoursesScreen({super.key});
 
   static const double _overallProgress = 0.72;
 
+  @override
+  State<CoursesScreen> createState() => _CoursesScreenState();
+}
+
+class _CoursesScreenState extends State<CoursesScreen> {
+  final StudentLearningPositionService _positionService =
+      const StudentLearningPositionService();
+
+  late Future<StudentLearningPosition?> _positionFuture;
+
   static const _domains = <_DomainData>[
     _DomainData(
       number: '01',
-      title: 'Foundation & General Knowledge',
+      title: 'Advanced Application of Safety Principles',
       progress: .82,
       color: Color(0xFF3157A4),
     ),
     _DomainData(
       number: '02',
-      title: 'Risk Management',
+      title: 'Program Management',
       progress: .64,
       color: Color(0xFF4C73B8),
     ),
     _DomainData(
       number: '03',
-      title: 'Emergency Preparedness',
+      title: 'Risk Management',
       progress: .47,
       color: Color(0xFF667EB0),
     ),
     _DomainData(
       number: '04',
-      title: 'Environmental Management',
+      title: 'Emergency Management',
       progress: .31,
       color: Color(0xFF7D62B4),
     ),
     _DomainData(
       number: '05',
-      title: 'Occupational Health',
+      title: 'Environmental Management',
       progress: .22,
       color: Color(0xFFC7862E),
     ),
     _DomainData(
       number: '06',
-      title: 'Training & Education',
+      title: 'Occupational Health and Applied Science',
       progress: .14,
       color: Color(0xFF6F7D92),
     ),
     _DomainData(
       number: '07',
-      title: 'Safety & Health Program Management',
+      title: 'Training',
       progress: .08,
       color: Color(0xFF65748A),
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _positionFuture = _positionService.loadPosition();
+  }
+
+  Future<void> _continueFromSavedPosition() async {
+    final position = await _positionService.loadPosition();
+
+    if (!mounted) {
+      return;
+    }
+
+    if (position == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const DomainScreen(domainNumber: 1)),
+      );
+
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CompetencyScreen(
+          domainId: position.domainId,
+          domainNumber: position.domainNumber,
+          domainTitle: position.domainTitle,
+          competencyId: position.competencyId,
+          title: position.competencyTitle,
+          initialSubtopicId: position.subtopicId,
+          initialSubtopicTitle: position.subtopicTitle,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,20 +139,16 @@ class CoursesScreen extends StatelessWidget {
           final width = constraints.maxWidth;
           final wide = width >= 1200;
           final tablet = width >= 760 && width < 1200;
+
           final horizontal = wide
               ? 34.0
               : tablet
-                  ? 24.0
-                  : 16.0;
+              ? 24.0
+              : 16.0;
 
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(
-              horizontal,
-              10,
-              horizontal,
-              44,
-            ),
+            padding: EdgeInsets.fromLTRB(horizontal, 10, horizontal, 44),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1480),
@@ -172,10 +219,7 @@ class CoursesScreen extends StatelessWidget {
             ],
           ),
         ),
-        if (wide) ...[
-          const SizedBox(width: 20),
-          _topBadge(),
-        ],
+        if (wide) ...[const SizedBox(width: 20), _topBadge()],
       ],
     );
   }
@@ -239,11 +283,7 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _hero(
-    BuildContext context,
-    double width,
-    bool wide,
-  ) {
+  Widget _hero(BuildContext context, double width, bool wide) {
     final desktop = width >= 1050;
 
     return Container(
@@ -254,11 +294,7 @@ class CoursesScreen extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF0D1A31),
-            Color(0xFF173E76),
-            Color(0xFF2B5FB0),
-          ],
+          colors: [Color(0xFF0D1A31), Color(0xFF173E76), Color(0xFF2B5FB0)],
         ),
         boxShadow: const [
           BoxShadow(
@@ -273,31 +309,20 @@ class CoursesScreen extends StatelessWidget {
           Positioned(
             right: -55,
             top: -75,
-            child: _decorCircle(
-              230,
-              const Color(0x4498B9FF),
-            ),
+            child: _decorCircle(230, const Color(0x4498B9FF)),
           ),
           Positioned(
             right: 120,
             bottom: -105,
-            child: _decorCircle(
-              210,
-              const Color(0x227E5DFF),
-            ),
+            child: _decorCircle(210, const Color(0x227E5DFF)),
           ),
           if (desktop)
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _heroCopy(context),
-                ),
+                Expanded(child: _heroCopy(context)),
                 const SizedBox(width: 24),
-                SizedBox(
-                  width: 370,
-                  child: _heroProgress(),
-                ),
+                SizedBox(width: 370, child: _heroProgress()),
               ],
             )
           else
@@ -314,10 +339,7 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _decorCircle(
-    double size,
-    Color color,
-  ) {
+  Widget _decorCircle(double size, Color color) {
     return IgnorePointer(
       child: Container(
         width: size,
@@ -385,18 +407,8 @@ class CoursesScreen extends StatelessWidget {
           runSpacing: 9,
           children: [
             FilledButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CSPOverviewScreen(),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.arrow_forward_rounded,
-                size: 16,
-              ),
+              onPressed: _continueFromSavedPosition,
+              icon: const Icon(Icons.arrow_forward_rounded, size: 16),
               label: const Text('CONTINUE CSP11'),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -412,16 +424,11 @@ class CoursesScreen extends StatelessWidget {
             ),
             OutlinedButton.icon(
               onPressed: () {},
-              icon: const Icon(
-                Icons.insights_rounded,
-                size: 16,
-              ),
+              icon: const Icon(Icons.insights_rounded, size: 16),
               label: const Text('VIEW PROGRESS'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: .22),
-                ),
+                side: BorderSide(color: Colors.white.withValues(alpha: .22)),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 17,
                   vertical: 13,
@@ -439,16 +446,11 @@ class CoursesScreen extends StatelessWidget {
 
   Widget _heroPill() {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 9,
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .075),
         borderRadius: BorderRadius.circular(9),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: .09),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .09)),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
@@ -479,9 +481,7 @@ class CoursesScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .055),
         borderRadius: BorderRadius.circular(21),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: .09),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .09)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -506,11 +506,10 @@ class CoursesScreen extends StatelessWidget {
                   children: const [
                     SizedBox.expand(
                       child: CircularProgressIndicator(
-                        value: _overallProgress,
+                        value: CoursesScreen._overallProgress,
                         strokeWidth: 9,
                         backgroundColor: Color(0x223E609B),
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(
+                        valueColor: AlwaysStoppedAnimation<Color>(
                           Color(0xFFFFC21A),
                         ),
                       ),
@@ -543,23 +542,13 @@ class CoursesScreen extends StatelessWidget {
               const SizedBox(width: 18),
               const Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _MiniProgress(
-                      label: 'Content',
-                      value: .78,
-                    ),
+                    _MiniProgress(label: 'Content', value: .78),
                     SizedBox(height: 12),
-                    _MiniProgress(
-                      label: 'Practice',
-                      value: .66,
-                    ),
+                    _MiniProgress(label: 'Practice', value: .66),
                     SizedBox(height: 12),
-                    _MiniProgress(
-                      label: 'Readiness',
-                      value: .71,
-                    ),
+                    _MiniProgress(label: 'Readiness', value: .71),
                   ],
                 ),
               ),
@@ -597,10 +586,7 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _learningPulse(
-    bool wide,
-    bool tablet,
-  ) {
+  Widget _learningPulse(bool wide, bool tablet) {
     final stack = !wide || tablet;
 
     return _sectionCard(
@@ -681,49 +667,81 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _continueLearning(
-    BuildContext context,
-    bool wide,
-  ) {
+  Widget _continueLearning(BuildContext context, bool wide) {
     return _sectionCard(
       title: 'CONTINUE LEARNING',
       subtitle: 'Pick up exactly where you stopped.',
       icon: Icons.play_circle_outline_rounded,
-      child: Container(
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF6F8FC),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: const Color(0xFFE4E9F1),
+      child: FutureBuilder<StudentLearningPosition?>(
+        future: _positionFuture,
+        builder: (context, snapshot) {
+          final position = snapshot.data;
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _continueLoading();
+          }
+
+          return Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF6F8FC),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: const Color(0xFFE4E9F1)),
+            ),
+            child: wide
+                ? Row(
+                    children: [
+                      _continueIcon(),
+                      const SizedBox(width: 15),
+                      Expanded(child: _ContinueCopy(position: position)),
+                      const SizedBox(width: 18),
+                      _continueButton(context),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _continueIcon(),
+                      const SizedBox(height: 13),
+                      _ContinueCopy(position: position),
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        width: double.infinity,
+                        child: _continueButton(context),
+                      ),
+                    ],
+                  ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _continueLoading() {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF6F8FC),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE4E9F1)),
+      ),
+      child: const Row(
+        children: [
+          SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2.2),
           ),
-        ),
-        child: wide
-            ? Row(
-                children: [
-                  _continueIcon(),
-                  const SizedBox(width: 15),
-                  const Expanded(
-                    child: _ContinueCopy(),
-                  ),
-                  const SizedBox(width: 18),
-                  _continueButton(context),
-                ],
-              )
-            : Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-                  _continueIcon(),
-                  const SizedBox(height: 13),
-                  const _ContinueCopy(),
-                  const SizedBox(height: 15),
-                  SizedBox(
-                    width: double.infinity,
-                    child: _continueButton(context),
-                  ),
-                ],
-              ),
+          SizedBox(width: 12),
+          Text(
+            'Checking your last study position...',
+            style: TextStyle(
+              color: Color(0xFF737D8D),
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -744,33 +762,18 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _continueButton(
-    BuildContext context,
-  ) {
+  Widget _continueButton(BuildContext context) {
     return SizedBox(
       width: 160,
       child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const CSPOverviewScreen(),
-            ),
-          );
-        },
-        icon: const Icon(
-          Icons.arrow_forward_rounded,
-          size: 15,
-        ),
+        onPressed: _continueFromSavedPosition,
+        icon: const Icon(Icons.arrow_forward_rounded, size: 15),
         label: const Text('CONTINUE'),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 17,
-            vertical: 12,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(11),
           ),
@@ -779,39 +782,30 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _domainJourney(
-    BuildContext context,
-    double width,
-  ) {
+  Widget _domainJourney(BuildContext context, double width) {
     final columns = width >= 1200
         ? 3
         : width >= 700
-            ? 2
-            : 1;
+        ? 2
+        : 1;
 
     return _sectionCard(
       title: 'CSP11 DOMAIN JOURNEY',
-      subtitle:
-          'Seven examination domains, one structured pathway.',
+      subtitle: 'Seven examination domains, one structured pathway.',
       icon: Icons.account_tree_rounded,
       trailing: _sectionBadge(),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: _domains.length,
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: columns,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio:
-              columns == 1 ? 3.0 : 1.7,
+          childAspectRatio: columns == 1 ? 3.0 : 1.7,
         ),
         itemBuilder: (context, index) {
-          return _domainCard(
-            context,
-            _domains[index],
-          );
+          return _domainCard(context, _domains[index]);
         },
       ),
     );
@@ -819,10 +813,7 @@ class CoursesScreen extends StatelessWidget {
 
   Widget _sectionBadge() {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: .06),
         borderRadius: BorderRadius.circular(9),
@@ -830,11 +821,7 @@ class CoursesScreen extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.route_rounded,
-            size: 12,
-            color: AppColors.primary,
-          ),
+          Icon(Icons.route_rounded, size: 12, color: AppColors.primary),
           SizedBox(width: 4),
           Text(
             '7 DOMAINS',
@@ -850,22 +837,21 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _domainCard(
-    BuildContext context,
-    _DomainData domain,
-  ) {
-    final percent =
-        (domain.progress * 100).round();
+  Widget _domainCard(BuildContext context, _DomainData domain) {
+    final percent = (domain.progress * 100).round();
+
     final status = _statusFor(domain.progress);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
+          final domainNumber = int.tryParse(domain.number) ?? 1;
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => const CSPOverviewScreen(),
+              builder: (_) => DomainScreen(domainNumber: domainNumber),
             ),
           );
         },
@@ -875,21 +861,17 @@ class CoursesScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: domain.color.withValues(alpha: .11),
-            ),
+            border: Border.all(color: domain.color.withValues(alpha: .11)),
             boxShadow: [
               BoxShadow(
-                color:
-                    domain.color.withValues(alpha: .05),
+                color: domain.color.withValues(alpha: .05),
                 blurRadius: 18,
                 offset: const Offset(0, 7),
               ),
             ],
           ),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -898,10 +880,8 @@ class CoursesScreen extends StatelessWidget {
                     height: 42,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: domain.color
-                          .withValues(alpha: .09),
-                      borderRadius:
-                          BorderRadius.circular(13),
+                      color: domain.color.withValues(alpha: .09),
+                      borderRadius: BorderRadius.circular(13),
                     ),
                     child: Text(
                       domain.number,
@@ -915,28 +895,26 @@ class CoursesScreen extends StatelessWidget {
                   const SizedBox(width: 11),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'DOMAIN ${domain.number}',
                           style: TextStyle(
                             color: domain.color,
-                            fontSize: 7.5,
+                            fontSize: 9,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1.1,
                           ),
                         ),
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 4),
                         Text(
                           domain.title,
                           maxLines: 2,
-                          overflow:
-                              TextOverflow.ellipsis,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Color(0xFF172033),
-                            fontSize: 10.5,
-                            height: 1.2,
+                            fontSize: 14,
+                            height: 1.25,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -956,27 +934,18 @@ class CoursesScreen extends StatelessWidget {
               ),
               const Spacer(),
               ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(99),
+                borderRadius: BorderRadius.circular(99),
                 child: LinearProgressIndicator(
                   value: domain.progress,
                   minHeight: 6,
-                  backgroundColor:
-                      const Color(0xFFE9EDF3),
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(
-                    domain.color,
-                  ),
+                  backgroundColor: const Color(0xFFE9EDF3),
+                  valueColor: AlwaysStoppedAnimation<Color>(domain.color),
                 ),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(
-                    status.icon,
-                    size: 12,
-                    color: domain.color,
-                  ),
+                  Icon(status.icon, size: 12, color: domain.color),
                   const SizedBox(width: 5),
                   Text(
                     status.label,
@@ -1004,53 +973,38 @@ class CoursesScreen extends StatelessWidget {
 
   _StatusInfo _statusFor(double progress) {
     if (progress >= .75) {
-      return const _StatusInfo(
-        'STRONG',
-        Icons.check_circle_outline_rounded,
-      );
+      return const _StatusInfo('STRONG', Icons.check_circle_outline_rounded);
     }
+
     if (progress >= .50) {
-      return const _StatusInfo(
-        'IN PROGRESS',
-        Icons.timelapse_rounded,
-      );
+      return const _StatusInfo('IN PROGRESS', Icons.timelapse_rounded);
     }
+
     if (progress >= .25) {
-      return const _StatusInfo(
-        'NEEDS FOCUS',
-        Icons.arrow_forward_rounded,
-      );
+      return const _StatusInfo('NEEDS FOCUS', Icons.arrow_forward_rounded);
     }
-    return const _StatusInfo(
-      'NOT STARTED',
-      Icons.lock_outline_rounded,
-    );
+
+    return const _StatusInfo('NOT STARTED', Icons.lock_outline_rounded);
   }
 
-  Widget _learningModes(
-    BuildContext context,
-    double width,
-  ) {
+  Widget _learningModes(BuildContext context, double width) {
     final columns = width >= 1200
         ? 3
         : width >= 760
-            ? 2
-            : 1;
+        ? 2
+        : 1;
 
     return _sectionCard(
       title: 'CHOOSE YOUR MODE',
-      subtitle:
-          'Use the pathway that matches your current goal.',
+      subtitle: 'Use the pathway that matches your current goal.',
       icon: Icons.tune_rounded,
       child: GridView.count(
         shrinkWrap: true,
-        physics:
-            const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: columns,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio:
-            columns == 1 ? 3.0 : 2.0,
+        childAspectRatio: columns == 1 ? 3.0 : 2.0,
         children: [
           _modeCard(
             context,
@@ -1089,11 +1043,19 @@ class CoursesScreen extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
+          if (title == 'STUDY') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const DomainScreen(domainNumber: 1),
+              ),
+            );
+            return;
+          }
+
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => const CSPOverviewScreen(),
-            ),
+            MaterialPageRoute(builder: (_) => const CSPOverviewScreen()),
           );
         },
         borderRadius: BorderRadius.circular(18),
@@ -1102,9 +1064,7 @@ class CoursesScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: color.withValues(alpha: .10),
-            ),
+            border: Border.all(color: color.withValues(alpha: .10)),
           ),
           child: Row(
             children: [
@@ -1112,24 +1072,16 @@ class CoursesScreen extends StatelessWidget {
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color:
-                      color.withValues(alpha: .09),
-                  borderRadius:
-                      BorderRadius.circular(13),
+                  color: color.withValues(alpha: .09),
+                  borderRadius: BorderRadius.circular(13),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 21,
-                ),
+                child: Icon(icon, color: color, size: 21),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -1155,11 +1107,7 @@ class CoursesScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              Icon(
-                Icons.arrow_forward_rounded,
-                color: color,
-                size: 15,
-              ),
+              Icon(Icons.arrow_forward_rounded, color: color, size: 15),
             ],
           ),
         ),
@@ -1172,71 +1120,35 @@ class CoursesScreen extends StatelessWidget {
 
     return _sectionCard(
       title: 'CERTIFICATION READINESS',
-      subtitle:
-          'A high-level view of your current preparation.',
+      subtitle: 'A high-level view of your current preparation.',
       icon: Icons.verified_user_outlined,
       child: desktop
           ? Row(
               children: [
-                SizedBox(
-                  width: 155,
-                  height: 155,
-                  child: _readinessRing(),
-                ),
+                SizedBox(width: 155, height: 155, child: _readinessRing()),
                 const SizedBox(width: 28),
                 Expanded(
                   child: Column(
                     children: [
-                      _readinessRow(
-                        'Content completion',
-                        .72,
-                      ),
-                      _readinessRow(
-                        'Question mastery',
-                        .68,
-                      ),
-                      _readinessRow(
-                        'Domain coverage',
-                        .74,
-                      ),
-                      _readinessRow(
-                        'Mock exam performance',
-                        .81,
-                      ),
+                      _readinessRow('Content completion', .72),
+                      _readinessRow('Question mastery', .68),
+                      _readinessRow('Domain coverage', .74),
+                      _readinessRow('Mock exam performance', .81),
                     ],
                   ),
                 ),
                 const SizedBox(width: 28),
-                SizedBox(
-                  width: 250,
-                  child: _readinessInsight(),
-                ),
+                SizedBox(width: 250, child: _readinessInsight()),
               ],
             )
           : Column(
               children: [
-                SizedBox(
-                  width: 150,
-                  height: 150,
-                  child: _readinessRing(),
-                ),
+                SizedBox(width: 150, height: 150, child: _readinessRing()),
                 const SizedBox(height: 24),
-                _readinessRow(
-                  'Content completion',
-                  .72,
-                ),
-                _readinessRow(
-                  'Question mastery',
-                  .68,
-                ),
-                _readinessRow(
-                  'Domain coverage',
-                  .74,
-                ),
-                _readinessRow(
-                  'Mock exam performance',
-                  .81,
-                ),
+                _readinessRow('Content completion', .72),
+                _readinessRow('Question mastery', .68),
+                _readinessRow('Domain coverage', .74),
+                _readinessRow('Mock exam performance', .81),
                 const SizedBox(height: 6),
                 _readinessInsight(),
               ],
@@ -1252,12 +1164,8 @@ class CoursesScreen extends StatelessWidget {
           child: CircularProgressIndicator(
             value: .74,
             strokeWidth: 11,
-            backgroundColor:
-                Color(0xFFE9EDF3),
-            valueColor:
-                AlwaysStoppedAnimation<Color>(
-              Color(0xFF3157A4),
-            ),
+            backgroundColor: Color(0xFFE9EDF3),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3157A4)),
           ),
         ),
         Column(
@@ -1286,13 +1194,9 @@ class CoursesScreen extends StatelessWidget {
     );
   }
 
-  Widget _readinessRow(
-    String label,
-    double value,
-  ) {
+  Widget _readinessRow(String label, double value) {
     return Padding(
-      padding:
-          const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         children: [
           SizedBox(
@@ -1308,16 +1212,12 @@ class CoursesScreen extends StatelessWidget {
           ),
           Expanded(
             child: ClipRRect(
-              borderRadius:
-                  BorderRadius.circular(99),
+              borderRadius: BorderRadius.circular(99),
               child: LinearProgressIndicator(
                 value: value,
                 minHeight: 7,
-                backgroundColor:
-                    const Color(0xFFE9EDF3),
-                valueColor:
-                    const AlwaysStoppedAnimation<
-                        Color>(
+                backgroundColor: const Color(0xFFE9EDF3),
+                valueColor: const AlwaysStoppedAnimation<Color>(
                   Color(0xFF3157A4),
                 ),
               ),
@@ -1347,13 +1247,10 @@ class CoursesScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF3F6FC),
         borderRadius: BorderRadius.circular(17),
-        border: Border.all(
-          color: const Color(0xFFE1E7F1),
-        ),
+        border: Border.all(color: const Color(0xFFE1E7F1)),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'NEXT BEST ACTION',
@@ -1386,16 +1283,10 @@ class CoursesScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 5,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3157A4)
-                      .withValues(alpha: .08),
-                  borderRadius:
-                      BorderRadius.circular(8),
+                  color: const Color(0xFF3157A4).withValues(alpha: .08),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
                   'RECOMMENDED',
@@ -1424,23 +1315,18 @@ class CoursesScreen extends StatelessWidget {
     const courses = [
       ('ASP', 'Associate Safety Professional'),
       ('NEBOSH IDIP', 'International Diploma'),
-      ('NEBOSH IGC',
-          'International General Certificate'),
-      ('CRSP',
-          'Canadian Registered Safety Professional'),
+      ('NEBOSH IGC', 'International General Certificate'),
+      ('CRSP', 'Canadian Registered Safety Professional'),
       ('IOSH', 'Professional Safety Training'),
       ('OPITO', 'Offshore Safety Training'),
     ];
 
     final compact = width < 720;
-    final cardWidth = compact
-        ? width - 68
-        : 270.0;
+    final cardWidth = compact ? width - 68 : 270.0;
 
     return _sectionCard(
       title: 'EXPANDING THE ACADEMY',
-      subtitle:
-          'Additional certification pathways are being prepared.',
+      subtitle: 'Additional certification pathways are being prepared.',
       icon: Icons.auto_awesome_outlined,
       child: Wrap(
         spacing: 10,
@@ -1449,16 +1335,11 @@ class CoursesScreen extends StatelessWidget {
           return SizedBox(
             width: cardWidth > 270 ? 270 : cardWidth,
             child: Container(
-              padding:
-                  const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color:
-                    const Color(0xFFF8F9FB),
-                borderRadius:
-                    BorderRadius.circular(15),
-                border: Border.all(
-                  color: const Color(0xFFE5E8EF),
-                ),
+                color: const Color(0xFFF8F9FB),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: const Color(0xFFE5E8EF)),
               ),
               child: Row(
                 children: [
@@ -1466,10 +1347,8 @@ class CoursesScreen extends StatelessWidget {
                     width: 34,
                     height: 34,
                     decoration: BoxDecoration(
-                      color:
-                          const Color(0xFFECEFF4),
-                      borderRadius:
-                          BorderRadius.circular(10),
+                      color: const Color(0xFFECEFF4),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
                       Icons.lock_outline_rounded,
@@ -1480,29 +1359,23 @@ class CoursesScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           course.$1,
                           style: const TextStyle(
-                            color:
-                                Color(0xFF273247),
+                            color: Color(0xFF273247),
                             fontSize: 10,
-                            fontWeight:
-                                FontWeight.w900,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                         const SizedBox(height: 3),
                         Text(
                           course.$2,
                           maxLines: 1,
-                          overflow:
-                              TextOverflow.ellipsis,
-                          style:
-                              const TextStyle(
-                            color:
-                                Color(0xFF7A8495),
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Color(0xFF7A8495),
                             fontSize: 8,
                           ),
                         ),
@@ -1531,9 +1404,7 @@ class CoursesScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(21),
-        border: Border.all(
-          color: const Color(0xFFE3E8F0),
-        ),
+        border: Border.all(color: const Color(0xFFE3E8F0)),
         boxShadow: const [
           BoxShadow(
             color: Color(0x06000000),
@@ -1543,8 +1414,7 @@ class CoursesScreen extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -1552,30 +1422,22 @@ class CoursesScreen extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color:
-                      const Color(0xFFEEF3FF),
-                  borderRadius:
-                      BorderRadius.circular(10),
+                  color: const Color(0xFFEEF3FF),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  icon,
-                  color: AppColors.primary,
-                  size: 17,
-                ),
+                child: Icon(icon, color: AppColors.primary, size: 17),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
                       style: const TextStyle(
                         color: Color(0xFF172033),
                         fontSize: 12,
-                        fontWeight:
-                            FontWeight.w900,
+                        fontWeight: FontWeight.w900,
                         letterSpacing: .3,
                       ),
                     ),
@@ -1590,10 +1452,7 @@ class CoursesScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              if (trailing != null) ...[
-                const SizedBox(width: 10),
-                trailing,
-              ],
+              if (trailing != null) ...[const SizedBox(width: 10), trailing],
             ],
           ),
           const SizedBox(height: 17),
@@ -1616,20 +1475,14 @@ class CoursesScreen extends StatelessWidget {
           height: 42,
           decoration: BoxDecoration(
             color: const Color(0xFFEEF3FF),
-            borderRadius:
-                BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            icon,
-            color: AppColors.primary,
-            size: 18,
-          ),
+          child: Icon(icon, color: AppColors.primary, size: 18),
         ),
         const SizedBox(width: 11),
         Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
@@ -1651,10 +1504,7 @@ class CoursesScreen extends StatelessWidget {
               ),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  color: Color(0xFF8993A3),
-                  fontSize: 7.5,
-                ),
+                style: const TextStyle(color: Color(0xFF8993A3), fontSize: 7.5),
               ),
             ],
           ),
@@ -1667,8 +1517,7 @@ class CoursesScreen extends StatelessWidget {
     return Container(
       width: 1,
       height: 48,
-      margin:
-          const EdgeInsets.symmetric(horizontal: 14),
+      margin: const EdgeInsets.symmetric(horizontal: 14),
       color: const Color(0xFFE7EAF0),
     );
   }
@@ -1678,24 +1527,16 @@ class _HeroStat extends StatelessWidget {
   final String label;
   final String value;
 
-  const _HeroStat({
-    required this.label,
-    required this.value,
-  });
+  const _HeroStat({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 8,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .055),
         borderRadius: BorderRadius.circular(9),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: .07),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .07)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1728,16 +1569,12 @@ class _MiniProgress extends StatelessWidget {
   final String label;
   final double value;
 
-  const _MiniProgress({
-    required this.label,
-    required this.value,
-  });
+  const _MiniProgress({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
@@ -1763,18 +1600,12 @@ class _MiniProgress extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         ClipRRect(
-          borderRadius:
-              BorderRadius.circular(99),
+          borderRadius: BorderRadius.circular(99),
           child: LinearProgressIndicator(
             value: value,
             minHeight: 5,
-            backgroundColor:
-                const Color(0x223E609B),
-            valueColor:
-                const AlwaysStoppedAnimation<
-                    Color>(
-              Color(0xFF9DB6E5),
-            ),
+            backgroundColor: const Color(0x223E609B),
+            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF9DB6E5)),
           ),
         ),
       ],
@@ -1783,42 +1614,90 @@ class _MiniProgress extends StatelessWidget {
 }
 
 class _ContinueCopy extends StatelessWidget {
-  const _ContinueCopy();
+  final StudentLearningPosition? position;
+
+  const _ContinueCopy({required this.position});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+    if (position == null) {
+      return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'CSP11 • READY TO BEGIN',
+            style: TextStyle(
+              color: Color(0xFF3157A4),
+              fontSize: 8,
+              fontWeight: FontWeight.w900,
+              letterSpacing: .8,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            'Start your CSP11 learning journey',
+            style: TextStyle(
+              color: Color(0xFF172033),
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'No previous study position has been saved yet.',
+            style: TextStyle(color: Color(0xFF737D8D), fontSize: 9),
+          ),
+        ],
+      );
+    }
+
+    final subtopicText = position!.subtopicTitle;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'DOMAIN 01 • ADVANCED APPLICATIOONS OF SAFETY PRINCIPLES',
-          style: TextStyle(
+          'DOMAIN ${position!.domainNumber.toString().padLeft(2, '0')} • ${position!.domainTitle.toUpperCase()}',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
             color: Color(0xFF3157A4),
             fontSize: 8,
             fontWeight: FontWeight.w900,
             letterSpacing: .8,
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Text(
-          'Continue your current study session',
-          style: TextStyle(
+          position!.competencyTitle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
             color: Color(0xFF172033),
             fontSize: 13,
             fontWeight: FontWeight.w900,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
-          'Last opened: Risk Evaluation Methods • 68% through this section',
-          style: TextStyle(
-            color: Color(0xFF737D8D),
-            fontSize: 9,
-          ),
+          subtopicText != null && subtopicText.trim().isNotEmpty
+              ? 'Last opened: $subtopicText'
+              : 'Last opened: ${_formatDate(position!.lastOpenedAt)}',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(color: Color(0xFF737D8D), fontSize: 9),
         ),
       ],
     );
+  }
+
+  String _formatDate(DateTime date) {
+    final local = date.toLocal();
+
+    final day = local.day.toString().padLeft(2, '0');
+    final month = local.month.toString().padLeft(2, '0');
+
+    return '$day/$month/${local.year}';
   }
 }
 

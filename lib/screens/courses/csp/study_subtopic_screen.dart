@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
+import '../../../models/student_learning_progress.dart';
+import '../../../services/student_learning_progress_service.dart';
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_gradients.dart';
 import '../../../theme/study/study_icons.dart';
@@ -16,33 +18,130 @@ import '../../../widgets/csp/study_content/study_subtopic_renderer.dart';
 /// Each subtopic is presented as its own screen so a competency does not
 /// become one very long document. Previous/next navigation keeps the
 /// learning flow continuous.
-class StudySubtopicScreen extends StatelessWidget {
+class StudySubtopicScreen extends StatefulWidget {
   final StudyContent content;
   final int subtopicIndex;
+  final String? domainTitle;
 
   const StudySubtopicScreen({
     super.key,
     required this.content,
     required this.subtopicIndex,
+    this.domainTitle,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final subtopics = content.subtopics;
+  State<StudySubtopicScreen> createState() => _StudySubtopicScreenState();
+}
+
+class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
+  final StudentLearningProgressService _progressService =
+      const StudentLearningProgressService();
+
+  late Future<StudentSubtopicProgress?> _progressFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _progressFuture = _openAndLoadProgress();
+  }
+
+  @override
+  void didUpdateWidget(covariant StudySubtopicScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.content.id != widget.content.id ||
+        oldWidget.content.version != widget.content.version ||
+        oldWidget.subtopicIndex != widget.subtopicIndex) {
+      setState(() {
+        _progressFuture = _openAndLoadProgress();
+      });
+    }
+  }
+
+  Future<StudentSubtopicProgress?> _openAndLoadProgress() async {
+    final subtopics = widget.content.subtopics;
 
     if (subtopics.isEmpty ||
-        subtopicIndex < 0 ||
-        subtopicIndex >= subtopics.length) {
+        widget.subtopicIndex < 0 ||
+        widget.subtopicIndex >= subtopics.length) {
+      return null;
+    }
+
+    final subtopic = subtopics[widget.subtopicIndex];
+    final domain = _getDomainNumber(widget.content.domainId);
+
+    await _progressService.markInProgress(
+      domainId: widget.content.domainId,
+      domainNumber: domain,
+      domainTitle: widget.domainTitle ?? '',
+      competencyId: widget.content.competencyId,
+      competencyTitle: widget.content.title,
+      subtopicId: subtopic.id,
+      subtopicTitle: subtopic.title,
+      studyContentId: widget.content.id,
+      studyContentVersion: widget.content.version,
+    );
+
+    return _progressService.loadSubtopicProgress(
+      subtopicId: subtopic.id,
+      expectedContentVersion: widget.content.version,
+    );
+  }
+
+  Future<void> _completeSubtopic() async {
+    final subtopics = widget.content.subtopics;
+
+    if (subtopics.isEmpty ||
+        widget.subtopicIndex < 0 ||
+        widget.subtopicIndex >= subtopics.length) {
+      return;
+    }
+
+    final subtopic = subtopics[widget.subtopicIndex];
+    final domain = _getDomainNumber(widget.content.domainId);
+
+    await _progressService.completeSubtopic(
+      domainId: widget.content.domainId,
+      domainNumber: domain,
+      domainTitle: widget.domainTitle ?? '',
+      competencyId: widget.content.competencyId,
+      competencyTitle: widget.content.title,
+      subtopicId: subtopic.id,
+      subtopicTitle: subtopic.title,
+      studyContentId: widget.content.id,
+      studyContentVersion: widget.content.version,
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _progressFuture = _progressService.loadSubtopicProgress(
+        subtopicId: subtopic.id,
+        expectedContentVersion: widget.content.version,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final subtopics = widget.content.subtopics;
+
+    if (subtopics.isEmpty ||
+        widget.subtopicIndex < 0 ||
+        widget.subtopicIndex >= subtopics.length) {
       return const Scaffold(
         body: Center(child: Text('Study subtopic is unavailable.')),
       );
     }
 
-    final subtopic = subtopics[subtopicIndex];
-    final domain = _getDomainNumber(content.domainId);
-    final hasPrevious = subtopicIndex > 0;
-    final hasNext = subtopicIndex < subtopics.length - 1;
-    final progress = (subtopicIndex + 1) / subtopics.length;
+    final subtopic = subtopics[widget.subtopicIndex];
+    final domain = _getDomainNumber(widget.content.domainId);
+    final hasPrevious = widget.subtopicIndex > 0;
+    final hasNext = widget.subtopicIndex < subtopics.length - 1;
+    final progress = (widget.subtopicIndex + 1) / subtopics.length;
 
     return Scaffold(
       backgroundColor: StudyColors.background,
@@ -75,7 +174,7 @@ class StudySubtopicScreen extends StatelessWidget {
                           _buildSubtopicHero(
                             subtopic: subtopic,
                             domain: domain,
-                            index: subtopicIndex,
+                            index: widget.subtopicIndex,
                             total: subtopics.length,
                             isDesktop: isDesktop,
                           ),
@@ -94,6 +193,20 @@ class StudySubtopicScreen extends StatelessWidget {
                               domain: domain,
                             ),
                           ),
+                          const SizedBox(height: 24),
+
+                          // Phase 2: Subtopic completion.
+                          FutureBuilder<StudentSubtopicProgress?>(
+                            future: _progressFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const SizedBox.shrink();
+                              }
+
+                              return _buildCompletionPanel(snapshot.data);
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -109,15 +222,128 @@ class StudySubtopicScreen extends StatelessWidget {
                 : 'Competency Overview',
             nextLabel: hasNext ? 'Next Subtopic' : 'Back to Competency',
             onPrevious: hasPrevious
-                ? () => _openSubtopic(context, subtopicIndex - 1)
+                ? () => _openSubtopic(context, widget.subtopicIndex - 1)
                 : () => Navigator.of(context).pop(),
             onNext: hasNext
-                ? () => _openSubtopic(context, subtopicIndex + 1)
+                ? () => _openSubtopic(context, widget.subtopicIndex + 1)
                 : () => Navigator.of(context).pop(),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildCompletionPanel(StudentSubtopicProgress? progress) {
+    final completed = progress?.state == StudentLearningState.completed;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 640;
+
+        final content = Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 46,
+              height: 46,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: completed
+                    ? const Color(0xFFD2F2DE)
+                    : StudyColors.primaryLight,
+                borderRadius: StudyRadius.medium,
+              ),
+              child: Icon(
+                completed ? Icons.check_circle_rounded : Icons.flag_rounded,
+                color: completed
+                    ? const Color(0xFF1F8A4C)
+                    : StudyColors.primary,
+                size: 23,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    completed ? 'SUBTOPIC COMPLETED' : 'FINISH THIS SUBTOPIC',
+                    style: StudyTypography.eyebrow.copyWith(
+                      color: completed
+                          ? const Color(0xFF1F8A4C)
+                          : StudyColors.primary,
+                      fontSize: 9,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    completed
+                        ? 'This learning section is recorded as completed.'
+                        : 'Mark this subtopic complete after you have finished studying it.',
+                    style: StudyTypography.bodySecondary,
+                  ),
+                  if (completed && progress?.completedAt != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'Completed ${_formatCompletedDate(progress!.completedAt!)}',
+                      style: StudyTypography.caption.copyWith(
+                        color: const Color(0xFF4E6A59),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        );
+
+        final button = SizedBox(
+          width: compact ? double.infinity : null,
+          child: FilledButton.icon(
+            onPressed: _completeSubtopic,
+            icon: const Icon(Icons.check_rounded, size: 18),
+            label: const Text('COMPLETE SUBTOPIC'),
+          ),
+        );
+
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: completed ? const Color(0xFFEAF8F0) : StudyColors.surface,
+            borderRadius: StudyRadius.large,
+            border: Border.all(
+              color: completed ? const Color(0xFFB9E7CA) : StudyColors.border,
+            ),
+            boxShadow: completed ? null : StudyShadows.soft,
+          ),
+          child: compact
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    content,
+                    if (!completed) ...[const SizedBox(height: 16), button],
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(child: content),
+                    if (!completed) ...[const SizedBox(width: 16), button],
+                  ],
+                ),
+        );
+      },
+    );
+  }
+
+  String _formatCompletedDate(DateTime value) {
+    final local = value.toLocal();
+    final day = local.day.toString().padLeft(2, '0');
+    final month = local.month.toString().padLeft(2, '0');
+    final year = local.year.toString();
+
+    return '$day/$month/$year';
   }
 
   PreferredSizeWidget _buildAppBar(
@@ -211,7 +437,7 @@ class StudySubtopicScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 9),
                 Text(
-                  'COMPETENCY ${content.competencyNumber}',
+                  'COMPETENCY ${widget.content.competencyNumber}',
                   style: StudyTypography.eyebrow.copyWith(
                     color: Colors.white.withValues(alpha: 0.68),
                   ),
@@ -261,8 +487,11 @@ class StudySubtopicScreen extends StatelessWidget {
   void _openSubtopic(BuildContext context, int index) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (_) =>
-            StudySubtopicScreen(content: content, subtopicIndex: index),
+        builder: (_) => StudySubtopicScreen(
+          content: widget.content,
+          subtopicIndex: index,
+          domainTitle: widget.domainTitle,
+        ),
       ),
     );
   }

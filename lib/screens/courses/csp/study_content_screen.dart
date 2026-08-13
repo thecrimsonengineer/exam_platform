@@ -1,38 +1,30 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
-import '../../admin/study_content/study_content_studio_screen.dart';
 import '../../../services/study_content_loader.dart';
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography.dart';
-import 'package:exam_platform/widgets/csp/study_content/study_content_renderer.dart';
+import '../../../widgets/csp/study_content/study_content_renderer.dart';
 
-/// Production student-facing screen for CSP Study Content.
-///
-/// Responsibilities:
-/// - Load a competency through StudyContentLoader.
-/// - Handle loading, error, and empty states.
-/// - Provide the student-facing page shell.
-/// - Pass the loaded StudyContent to StudyContentRenderer.
-///
-/// This screen intentionally contains no content-rendering logic.
-/// StudyContentRenderer remains responsible for displaying the
-/// structured learning content.
 class StudyContentScreen extends StatefulWidget {
   final String domainId;
   final String competencyId;
+  final String? domainTitle;
 
-  /// Optional title displayed while the content is loading.
   final String? loadingTitle;
+
+  final String? initialSubtopicId;
 
   const StudyContentScreen({
     super.key,
     required this.domainId,
     required this.competencyId,
+    this.domainTitle,
     this.loadingTitle,
+    this.initialSubtopicId,
   });
 
   @override
@@ -55,7 +47,8 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.domainId != widget.domainId ||
-        oldWidget.competencyId != widget.competencyId) {
+        oldWidget.competencyId != widget.competencyId ||
+        oldWidget.initialSubtopicId != widget.initialSubtopicId) {
       _loadContent();
     }
   }
@@ -106,11 +99,9 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
       centerTitle: false,
       titleSpacing: StudySpacing.pageHorizontal,
       leading: IconButton(
-        tooltip: 'Back to Admin',
+        tooltip: 'Back',
         onPressed: () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const StudyContentStudioScreen()),
-          );
+          Navigator.of(context).pop();
         },
         icon: const Icon(Icons.arrow_back_rounded, size: 21),
       ),
@@ -164,7 +155,11 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
       );
     }
 
-    return StudyContentRenderer(content: content);
+    return StudyContentRenderer(
+      content: content,
+      initialSubtopicId: widget.initialSubtopicId,
+      domainTitle: widget.domainTitle,
+    );
   }
 
   Widget _buildLoadingState(BuildContext context) {
@@ -241,110 +236,61 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
   }
 
   Widget _buildErrorState(BuildContext context, Object? error) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final isDesktop = constraints.maxWidth >= 900;
-
-        return Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: isDesktop
-                  ? StudySpacing.pageHorizontalDesktop
-                  : StudySpacing.pageHorizontal,
-              vertical: StudySpacing.xxxl,
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(StudySpacing.xl),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 680),
+          child: Container(
+            padding: const EdgeInsets.all(StudySpacing.cardPaddingLarge),
+            decoration: BoxDecoration(
+              color: StudyColors.surface,
+              borderRadius: StudyRadius.large,
+              border: Border.all(color: StudyColors.border),
+              boxShadow: StudyShadows.soft,
             ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 680),
-              child: Container(
-                padding: const EdgeInsets.all(StudySpacing.cardPaddingLarge),
-                decoration: BoxDecoration(
-                  color: StudyColors.surface,
-                  borderRadius: StudyRadius.large,
-                  border: Border.all(color: StudyColors.border),
-                  boxShadow: StudyShadows.soft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: StudyColors.dangerLight,
+                    borderRadius: StudyRadius.medium,
+                  ),
+                  child: const Icon(
+                    Icons.cloud_off_rounded,
+                    size: 30,
+                    color: StudyColors.danger,
+                  ),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 64,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: StudyColors.dangerLight,
-                        borderRadius: StudyRadius.medium,
-                      ),
-                      child: const Icon(
-                        Icons.cloud_off_rounded,
-                        size: 30,
-                        color: StudyColors.danger,
-                      ),
-                    ),
-                    const SizedBox(height: StudySpacing.lg),
-                    Text(
-                      'Unable to load study content',
-                      textAlign: TextAlign.center,
-                      style: StudyTypography.cardTitle.copyWith(
-                        color: StudyColors.textPrimary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: StudySpacing.xs),
-                    Text(
-                      'The requested competency could not be loaded. '
-                      'Please try again.',
-                      textAlign: TextAlign.center,
-                      style: StudyTypography.bodySecondary.copyWith(
-                        color: StudyColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: StudySpacing.lg),
-                    _buildErrorDetails(error),
-                    const SizedBox(height: StudySpacing.lg),
-                    FilledButton.icon(
-                      onPressed: _retry,
-                      icon: const Icon(Icons.refresh_rounded, size: 19),
-                      label: const Text('Try Again'),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: StudyColors.primary,
-                        foregroundColor: StudyColors.textOnPrimary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 13,
-                        ),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: StudyRadius.medium,
-                        ),
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: StudySpacing.lg),
+                Text(
+                  'Unable to load study content',
+                  textAlign: TextAlign.center,
+                  style: StudyTypography.cardTitle.copyWith(
+                    color: StudyColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
+                const SizedBox(height: StudySpacing.xs),
+                Text(
+                  'The requested competency could not be loaded. Please try again.',
+                  textAlign: TextAlign.center,
+                  style: StudyTypography.bodySecondary.copyWith(
+                    color: StudyColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: StudySpacing.lg),
+                FilledButton.icon(
+                  onPressed: _retry,
+                  icon: const Icon(Icons.refresh_rounded, size: 19),
+                  label: const Text('Try Again'),
+                ),
+              ],
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildErrorDetails(Object? error) {
-    if (error == null) {
-      return const SizedBox.shrink();
-    }
-
-    final message = error.toString();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(StudySpacing.md),
-      decoration: BoxDecoration(
-        color: StudyColors.surfaceSoft,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(color: StudyColors.border),
-      ),
-      child: SelectableText(
-        message,
-        style: StudyTypography.caption.copyWith(
-          color: StudyColors.textSecondary,
         ),
       ),
     );
@@ -354,68 +300,57 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
     BuildContext context, {
     String message = 'No study content is available.',
   }) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final isDesktop = constraints.maxWidth >= 900;
-
-        return Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: isDesktop
-                  ? StudySpacing.pageHorizontalDesktop
-                  : StudySpacing.pageHorizontal,
-              vertical: StudySpacing.xxxl,
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(StudySpacing.xl),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 620),
+          child: Container(
+            padding: const EdgeInsets.all(StudySpacing.cardPaddingLarge),
+            decoration: BoxDecoration(
+              color: StudyColors.surface,
+              borderRadius: StudyRadius.large,
+              border: Border.all(color: StudyColors.border),
+              boxShadow: StudyShadows.soft,
             ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 620),
-              child: Container(
-                padding: const EdgeInsets.all(StudySpacing.cardPaddingLarge),
-                decoration: BoxDecoration(
-                  color: StudyColors.surface,
-                  borderRadius: StudyRadius.large,
-                  border: Border.all(color: StudyColors.border),
-                  boxShadow: StudyShadows.soft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: StudyColors.surfaceSoft,
+                    borderRadius: StudyRadius.medium,
+                  ),
+                  child: const Icon(
+                    Icons.menu_book_outlined,
+                    size: 30,
+                    color: StudyColors.textMuted,
+                  ),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 64,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: StudyColors.surfaceSoft,
-                        borderRadius: StudyRadius.medium,
-                      ),
-                      child: const Icon(
-                        Icons.menu_book_outlined,
-                        size: 30,
-                        color: StudyColors.textMuted,
-                      ),
-                    ),
-                    const SizedBox(height: StudySpacing.lg),
-                    Text(
-                      'Study content unavailable',
-                      textAlign: TextAlign.center,
-                      style: StudyTypography.cardTitle.copyWith(
-                        color: StudyColors.textPrimary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: StudySpacing.xs),
-                    Text(
-                      message,
-                      textAlign: TextAlign.center,
-                      style: StudyTypography.bodySecondary.copyWith(
-                        color: StudyColors.textSecondary,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: StudySpacing.lg),
+                Text(
+                  'Study content unavailable',
+                  textAlign: TextAlign.center,
+                  style: StudyTypography.cardTitle.copyWith(
+                    color: StudyColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
+                const SizedBox(height: StudySpacing.xs),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: StudyTypography.bodySecondary.copyWith(
+                    color: StudyColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

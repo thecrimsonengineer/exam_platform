@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_colors.dart';
-import '../../app/app_text_styles.dart';
-import '../../widgets/continue_learning_card.dart';
-import '../../widgets/course_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -53,9 +50,7 @@ class HomeScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFFE3E8F0),
-                ),
+                border: Border.all(color: const Color(0xFFE3E8F0)),
               ),
               child: const Icon(
                 Icons.notifications_none_rounded,
@@ -74,17 +69,12 @@ class HomeScreen extends StatelessWidget {
           final horizontal = wide
               ? 34.0
               : tablet
-                  ? 24.0
-                  : 16.0;
+              ? 24.0
+              : 16.0;
 
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(
-              horizontal,
-              12,
-              horizontal,
-              44,
-            ),
+            padding: EdgeInsets.fromLTRB(horizontal, 12, horizontal, 44),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1480),
@@ -123,11 +113,7 @@ class HomeScreen extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF0C1930),
-            Color(0xFF173C73),
-            Color(0xFF2E61B4),
-          ],
+          colors: [Color(0xFF0C1930), Color(0xFF173C73), Color(0xFF2E61B4)],
         ),
         boxShadow: const [
           BoxShadow(
@@ -154,10 +140,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Expanded(child: _heroCopy(context)),
                 const SizedBox(width: 24),
-                SizedBox(
-                  width: 340,
-                  child: _heroStatus(),
-                ),
+                SizedBox(width: 340, child: _heroStatus()),
               ],
             )
           else
@@ -196,16 +179,11 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 9,
-            vertical: 6,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: .07),
             borderRadius: BorderRadius.circular(9),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: .09),
-            ),
+            border: Border.all(color: Colors.white.withValues(alpha: .09)),
           ),
           child: const Text(
             'PROFESSIONAL LEARNING ACADEMY',
@@ -263,9 +241,7 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .055),
         borderRadius: BorderRadius.circular(21),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: .09),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .09)),
       ),
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,27 +258,15 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 14),
           Row(
             children: [
-              _HeroMetric(
-                value: '1,332',
-                label: 'QUESTIONS',
-              ),
+              _HeroMetric(value: '1,332', label: 'QUESTIONS'),
               SizedBox(width: 22),
-              _HeroMetric(
-                value: '74%',
-                label: 'READINESS',
-              ),
+              _HeroMetric(value: '74%', label: 'READINESS'),
             ],
           ),
           SizedBox(height: 16),
-          _HeroBar(
-            label: 'Overall learning',
-            value: .72,
-          ),
+          _HeroBar(label: 'Overall learning', value: .72),
           SizedBox(height: 11),
-          _HeroBar(
-            label: 'Question progress',
-            value: .72,
-          ),
+          _HeroBar(label: 'Question progress', value: .72),
         ],
       ),
     );
@@ -343,35 +307,24 @@ class HomeScreen extends StatelessWidget {
       subtitle: 'A quick view of your current academy activity.',
       icon: Icons.insights_rounded,
       child: stack
-          ? Column(
-              children: _buildStackMetrics(metrics),
-            )
+          ? Column(children: _buildStackMetrics(metrics))
           : Row(
               children: [
                 for (var i = 0; i < metrics.length; i++) ...[
                   if (i > 0) _verticalDivider(),
-                  Expanded(
-                    child: _snapshotMetric(metrics[i]),
-                  ),
+                  Expanded(child: _snapshotMetric(metrics[i])),
                 ],
               ],
             ),
     );
   }
 
-  List<Widget> _buildStackMetrics(
-    List<_SnapshotData> metrics,
-  ) {
+  List<Widget> _buildStackMetrics(List<_SnapshotData> metrics) {
     final widgets = <Widget>[];
 
     for (var i = 0; i < metrics.length; i++) {
       if (i > 0) {
-        widgets.add(
-          const Divider(
-            height: 25,
-            color: Color(0xFFE7EAF0),
-          ),
-        );
+        widgets.add(const Divider(height: 25, color: Color(0xFFE7EAF0)));
       }
       widgets.add(_snapshotMetric(metrics[i]));
     }
@@ -389,11 +342,7 @@ class HomeScreen extends StatelessWidget {
             color: const Color(0xFFEEF3FF),
             borderRadius: BorderRadius.circular(13),
           ),
-          child: Icon(
-            data.icon,
-            color: AppColors.primary,
-            size: 19,
-          ),
+          child: Icon(data.icon, color: AppColors.primary, size: 19),
         ),
         const SizedBox(width: 11),
         Expanded(
@@ -422,10 +371,7 @@ class HomeScreen extends StatelessWidget {
                 data.subtitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Color(0xFF8993A3),
-                  fontSize: 7.5,
-                ),
+                style: const TextStyle(color: Color(0xFF8993A3), fontSize: 7.5),
               ),
             ],
           ),
@@ -434,10 +380,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _continueLearning(
-    BuildContext context,
-    double width,
-  ) {
+  Widget _continueLearning(BuildContext context, double width) {
     final desktop = width >= 900;
 
     return _sectionCard(
@@ -449,9 +392,7 @@ class HomeScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFF5F8FD),
           borderRadius: BorderRadius.circular(19),
-          border: Border.all(
-            color: const Color(0xFFE1E7F0),
-          ),
+          border: Border.all(color: const Color(0xFFE1E7F0)),
         ),
         child: desktop
             ? Row(
@@ -461,19 +402,13 @@ class HomeScreen extends StatelessWidget {
                     const Color(0xFF3157A4),
                   ),
                   const SizedBox(width: 15),
-                  const Expanded(
-                    child: _ContinueCopy(),
-                  ),
+                  const Expanded(child: _ContinueCopy()),
                   const SizedBox(width: 18),
-                  _primaryButton(
-                    context,
-                    'CONTINUE',
-                  ),
+                  _primaryButton(context, 'CONTINUE'),
                 ],
               )
             : Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _courseLogo(
                     Icons.workspace_premium_rounded,
@@ -484,10 +419,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   SizedBox(
                     width: double.infinity,
-                    child: _primaryButton(
-                      context,
-                      'CONTINUE',
-                    ),
+                    child: _primaryButton(context, 'CONTINUE'),
                   ),
                 ],
               ),
@@ -495,10 +427,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _courseLogo(
-    IconData icon,
-    Color color,
-  ) {
+  Widget _courseLogo(IconData icon, Color color) {
     return Container(
       width: 54,
       height: 54,
@@ -506,35 +435,22 @@ class HomeScreen extends StatelessWidget {
         color: color.withValues(alpha: .09),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 27,
-      ),
+      child: Icon(icon, color: color, size: 27),
     );
   }
 
-  Widget _primaryButton(
-    BuildContext context,
-    String label,
-  ) {
+  Widget _primaryButton(BuildContext context, String label) {
     return SizedBox(
       width: 155,
       child: ElevatedButton.icon(
         onPressed: () {},
-        icon: const Icon(
-          Icons.arrow_forward_rounded,
-          size: 15,
-        ),
+        icon: const Icon(Icons.arrow_forward_rounded, size: 15),
         label: Text(label),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(11),
           ),
@@ -543,36 +459,29 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _certifications(
-    BuildContext context,
-    double width,
-  ) {
+  Widget _certifications(BuildContext context, double width) {
     final columns = width >= 1180
         ? 3
         : width >= 720
-            ? 2
-            : 1;
+        ? 2
+        : 1;
 
     return _sectionCard(
       title: 'MY CERTIFICATIONS',
-      subtitle:
-          'Your active professional learning pathways.',
+      subtitle: 'Your active professional learning pathways.',
       icon: Icons.workspace_premium_outlined,
       child: GridView.count(
         shrinkWrap: true,
-        physics:
-            const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: columns,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio:
-            columns == 1 ? 3.0 : 1.85,
+        childAspectRatio: columns == 1 ? 3.0 : 1.85,
         children: [
           _certificationCard(
             context,
             title: 'CSP 11',
-            subtitle:
-                'Certified Safety Professional',
+            subtitle: 'Certified Safety Professional',
             progress: .72,
             completed: '1,332 / 1,850',
             icon: Icons.workspace_premium_rounded,
@@ -582,8 +491,7 @@ class HomeScreen extends StatelessWidget {
           _certificationCard(
             context,
             title: 'NEBOSH IG',
-            subtitle:
-                'International General Certificate',
+            subtitle: 'International General Certificate',
             progress: .43,
             completed: '645 / 1,500',
             icon: Icons.public_rounded,
@@ -592,8 +500,7 @@ class HomeScreen extends StatelessWidget {
           _certificationCard(
             context,
             title: 'ASP',
-            subtitle:
-                'Associate Safety Professional',
+            subtitle: 'Associate Safety Professional',
             progress: .15,
             completed: '165 / 1,100',
             icon: Icons.shield_outlined,
@@ -622,9 +529,7 @@ class HomeScreen extends StatelessWidget {
         child: Ink(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: featured
-                ? const Color(0xFFF7F9FE)
-                : Colors.white,
+            color: featured ? const Color(0xFFF7F9FE) : Colors.white,
             borderRadius: BorderRadius.circular(19),
             border: Border.all(
               color: featured
@@ -641,8 +546,7 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -651,20 +555,14 @@ class HomeScreen extends StatelessWidget {
                     height: 44,
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: .09),
-                      borderRadius:
-                          BorderRadius.circular(13),
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                    child: Icon(
-                      icon,
-                      color: color,
-                      size: 21,
-                    ),
+                    child: Icon(icon, color: color, size: 21),
                   ),
                   const SizedBox(width: 11),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           title,
@@ -678,8 +576,7 @@ class HomeScreen extends StatelessWidget {
                         Text(
                           subtitle,
                           maxLines: 1,
-                          overflow:
-                              TextOverflow.ellipsis,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Color(0xFF7A8495),
                             fontSize: 8,
@@ -690,15 +587,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                   if (featured)
                     Container(
-                      padding:
-                          const EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 7,
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
                         color: color.withValues(alpha: .08),
-                        borderRadius:
-                            BorderRadius.circular(7),
+                        borderRadius: BorderRadius.circular(7),
                       ),
                       child: Text(
                         'ACTIVE',
@@ -726,17 +621,12 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(width: 7),
                   Expanded(
                     child: ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(99),
+                      borderRadius: BorderRadius.circular(99),
                       child: LinearProgressIndicator(
                         value: progress,
                         minHeight: 6,
-                        backgroundColor:
-                            const Color(0xFFE8ECF2),
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(
-                          color,
-                        ),
+                        backgroundColor: const Color(0xFFE8ECF2),
+                        valueColor: AlwaysStoppedAnimation<Color>(color),
                       ),
                     ),
                   ),
@@ -754,11 +644,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    color: color,
-                    size: 14,
-                  ),
+                  Icon(Icons.arrow_forward_rounded, color: color, size: 14),
                 ],
               ),
             ],
@@ -768,30 +654,24 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _quickPractice(
-    BuildContext context,
-    double width,
-  ) {
+  Widget _quickPractice(BuildContext context, double width) {
     final columns = width >= 1000
         ? 3
         : width >= 680
-            ? 2
-            : 1;
+        ? 2
+        : 1;
 
     return _sectionCard(
       title: 'QUICK PRACTICE',
-      subtitle:
-          'Choose the fastest way to sharpen your skills.',
+      subtitle: 'Choose the fastest way to sharpen your skills.',
       icon: Icons.bolt_rounded,
       child: GridView.count(
         shrinkWrap: true,
-        physics:
-            const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: columns,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio:
-            columns == 1 ? 3.0 : 2.05,
+        childAspectRatio: columns == 1 ? 3.0 : 2.05,
         children: [
           _practiceCard(
             'DAILY CHALLENGE',
@@ -832,9 +712,7 @@ class HomeScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: color.withValues(alpha: .10),
-            ),
+            border: Border.all(color: color.withValues(alpha: .10)),
           ),
           child: Row(
             children: [
@@ -843,22 +721,15 @@ class HomeScreen extends StatelessWidget {
                 height: 45,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: .09),
-                  borderRadius:
-                      BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(13),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 20,
-                ),
+                child: Icon(icon, color: color, size: 20),
               ),
               const SizedBox(width: 11),
               Expanded(
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -873,8 +744,7 @@ class HomeScreen extends StatelessWidget {
                     Text(
                       subtitle,
                       maxLines: 2,
-                      overflow:
-                          TextOverflow.ellipsis,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Color(0xFF667083),
                         fontSize: 9,
@@ -885,11 +755,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 7),
-              Icon(
-                Icons.arrow_forward_rounded,
-                color: color,
-                size: 15,
-              ),
+              Icon(Icons.arrow_forward_rounded, color: color, size: 15),
             ],
           ),
         ),
@@ -897,24 +763,16 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _lowerDashboard(
-    BuildContext context,
-    double width,
-  ) {
+  Widget _lowerDashboard(BuildContext context, double width) {
     final sideBySide = width >= 900;
 
     if (sideBySide) {
       return Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: _recentActivity(),
-          ),
+          Expanded(child: _recentActivity()),
           const SizedBox(width: 18),
-          Expanded(
-            child: _professionalMomentum(),
-          ),
+          Expanded(child: _professionalMomentum()),
         ],
       );
     }
@@ -931,8 +789,7 @@ class HomeScreen extends StatelessWidget {
   Widget _recentActivity() {
     return _sectionCard(
       title: 'RECENT ACTIVITY',
-      subtitle:
-          'Your latest learning milestones.',
+      subtitle: 'Your latest learning milestones.',
       icon: Icons.history_rounded,
       child: Column(
         children: const [
@@ -942,20 +799,14 @@ class HomeScreen extends StatelessWidget {
             subtitle: '20 questions • 85% score',
             time: 'Today',
           ),
-          Divider(
-            height: 22,
-            color: Color(0xFFE7EAF0),
-          ),
+          Divider(height: 22, color: Color(0xFFE7EAF0)),
           _ActivityRow(
             icon: Icons.menu_book_rounded,
             title: 'Studied Risk Management',
             subtitle: 'Topic session • 34 minutes',
             time: 'Yesterday',
           ),
-          Divider(
-            height: 22,
-            color: Color(0xFFE7EAF0),
-          ),
+          Divider(height: 22, color: Color(0xFFE7EAF0)),
           _ActivityRow(
             icon: Icons.local_fire_department_outlined,
             title: 'Extended your study streak',
@@ -970,12 +821,10 @@ class HomeScreen extends StatelessWidget {
   Widget _professionalMomentum() {
     return _sectionCard(
       title: 'PROFESSIONAL MOMENTUM',
-      subtitle:
-          'Keep building consistent learning habits.',
+      subtitle: 'Keep building consistent learning habits.',
       icon: Icons.trending_up_rounded,
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
             'THIS WEEK',
@@ -988,8 +837,7 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 7),
           const Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 '6h 42m',
@@ -1015,8 +863,7 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               _bar(0.42, 'M'),
               _bar(0.58, 'T'),
@@ -1035,8 +882,7 @@ class HomeScreen extends StatelessWidget {
   Widget _bar(double value, String label) {
     return Expanded(
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 3),
         child: Column(
           children: [
             Container(
@@ -1048,8 +894,7 @@ class HomeScreen extends StatelessWidget {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: const Color(0xFF3157A4),
-                    borderRadius:
-                        BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
               ),
@@ -1081,9 +926,7 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(21),
-        border: Border.all(
-          color: const Color(0xFFE3E8F0),
-        ),
+        border: Border.all(color: const Color(0xFFE3E8F0)),
         boxShadow: const [
           BoxShadow(
             color: Color(0x06000000),
@@ -1093,8 +936,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -1103,20 +945,14 @@ class HomeScreen extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   color: const Color(0xFFEEF3FF),
-                  borderRadius:
-                      BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  icon,
-                  color: AppColors.primary,
-                  size: 17,
-                ),
+                child: Icon(icon, color: AppColors.primary, size: 17),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -1151,8 +987,7 @@ class HomeScreen extends StatelessWidget {
     return Container(
       width: 1,
       height: 48,
-      margin:
-          const EdgeInsets.symmetric(horizontal: 14),
+      margin: const EdgeInsets.symmetric(horizontal: 14),
       color: const Color(0xFFE7EAF0),
     );
   }
@@ -1162,33 +997,21 @@ class _HeroPill extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const _HeroPill({
-    required this.icon,
-    required this.text,
-  });
+  const _HeroPill({required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 9,
-        vertical: 7,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .055),
         borderRadius: BorderRadius.circular(9),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: .07),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .07)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            color: const Color(0xFFB8C9E9),
-            size: 13,
-          ),
+          Icon(icon, color: const Color(0xFFB8C9E9), size: 13),
           const SizedBox(width: 5),
           Text(
             text,
@@ -1209,16 +1032,12 @@ class _HeroMetric extends StatelessWidget {
   final String value;
   final String label;
 
-  const _HeroMetric({
-    required this.value,
-    required this.label,
-  });
+  const _HeroMetric({required this.value, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           value,
@@ -1247,16 +1066,12 @@ class _HeroBar extends StatelessWidget {
   final String label;
   final double value;
 
-  const _HeroBar({
-    required this.label,
-    required this.value,
-  });
+  const _HeroBar({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
@@ -1282,17 +1097,12 @@ class _HeroBar extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         ClipRRect(
-          borderRadius:
-              BorderRadius.circular(99),
+          borderRadius: BorderRadius.circular(99),
           child: LinearProgressIndicator(
             value: value,
             minHeight: 5,
-            backgroundColor:
-                const Color(0x223E609B),
-            valueColor:
-                const AlwaysStoppedAnimation<Color>(
-              Color(0xFF9DB6E5),
-            ),
+            backgroundColor: const Color(0x223E609B),
+            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF9DB6E5)),
           ),
         ),
       ],
@@ -1306,12 +1116,7 @@ class _SnapshotData {
   final String subtitle;
   final IconData icon;
 
-  const _SnapshotData(
-    this.label,
-    this.value,
-    this.subtitle,
-    this.icon,
-  );
+  const _SnapshotData(this.label, this.value, this.subtitle, this.icon);
 }
 
 class _ContinueCopy extends StatelessWidget {
@@ -1320,8 +1125,7 @@ class _ContinueCopy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'CSP 11 • CERTIFIED SAFETY PROFESSIONAL',
@@ -1344,25 +1148,18 @@ class _ContinueCopy extends StatelessWidget {
         SizedBox(height: 4),
         Text(
           '1,332 of 1,850 questions completed • 72% progress',
-          style: TextStyle(
-            color: Color(0xFF737D8D),
-            fontSize: 9,
-          ),
+          style: TextStyle(color: Color(0xFF737D8D), fontSize: 9),
         ),
         SizedBox(height: 10),
         SizedBox(
           width: 330,
           child: ClipRRect(
-            borderRadius:
-                BorderRadius.all(Radius.circular(99)),
+            borderRadius: BorderRadius.all(Radius.circular(99)),
             child: LinearProgressIndicator(
               value: .72,
               minHeight: 6,
               backgroundColor: Color(0xFFE3E8F0),
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(
-                Color(0xFF3157A4),
-              ),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF3157A4)),
             ),
           ),
         ),
@@ -1395,17 +1192,12 @@ class _ActivityRow extends StatelessWidget {
             color: const Color(0xFFEEF3FF),
             borderRadius: BorderRadius.circular(11),
           ),
-          child: Icon(
-            icon,
-            color: AppColors.primary,
-            size: 17,
-          ),
+          child: Icon(icon, color: AppColors.primary, size: 17),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
@@ -1418,10 +1210,7 @@ class _ActivityRow extends StatelessWidget {
               const SizedBox(height: 3),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  color: Color(0xFF7A8495),
-                  fontSize: 8,
-                ),
+                style: const TextStyle(color: Color(0xFF7A8495), fontSize: 8),
               ),
             ],
           ),

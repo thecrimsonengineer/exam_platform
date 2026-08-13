@@ -5,18 +5,29 @@ import '../../../app/app_radius.dart';
 import '../../../app/app_spacing.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../services/study_content_loader.dart';
+import '../../../services/student_learning_position_service.dart';
 import 'study_content_screen.dart';
 
 class CompetencyScreen extends StatefulWidget {
   final String domainId;
+  final int domainNumber;
+  final String domainTitle;
+
   final String competencyId;
   final String title;
+
+  final String? initialSubtopicId;
+  final String? initialSubtopicTitle;
 
   const CompetencyScreen({
     super.key,
     required this.domainId,
+    required this.domainNumber,
+    required this.domainTitle,
     required this.competencyId,
     required this.title,
+    this.initialSubtopicId,
+    this.initialSubtopicTitle,
   });
 
   @override
@@ -26,12 +37,18 @@ class CompetencyScreen extends StatefulWidget {
 class _CompetencyScreenState extends State<CompetencyScreen> {
   final StudyContentLoader _loader = const StudyContentLoader();
 
+  final StudentLearningPositionService _positionService =
+      const StudentLearningPositionService();
+
   Future<dynamic>? _contentFuture;
 
   @override
   void initState() {
     super.initState();
+
     _contentFuture = _loadContent();
+
+    _saveCompetencyPosition();
   }
 
   Future<dynamic> _loadContent() async {
@@ -41,14 +58,36 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
     );
   }
 
-  void _openStudyContent() {
+  Future<void> _saveCompetencyPosition({
+    String? subtopicId,
+    String? subtopicTitle,
+  }) async {
+    await _positionService.savePosition(
+      domainId: widget.domainId,
+      domainNumber: widget.domainNumber,
+      domainTitle: widget.domainTitle,
+      competencyId: widget.competencyId,
+      competencyTitle: widget.title,
+      subtopicId: subtopicId ?? widget.initialSubtopicId,
+      subtopicTitle: subtopicTitle ?? widget.initialSubtopicTitle,
+    );
+  }
+
+  void _openStudyContent({String? subtopicId, String? subtopicTitle}) {
+    _saveCompetencyPosition(
+      subtopicId: subtopicId,
+      subtopicTitle: subtopicTitle,
+    );
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => StudyContentScreen(
           domainId: widget.domainId,
           competencyId: widget.competencyId,
+          domainTitle: widget.domainTitle,
           loadingTitle: widget.title,
+          initialSubtopicId: subtopicId ?? widget.initialSubtopicId,
         ),
       ),
     );
@@ -128,14 +167,20 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
                               'Published topics for this learning area will appear here when available.',
                         )
                       else
-                        ...subtopics.map<Widget>(
-                          (subtopic) => Padding(
+                        ...subtopics.asMap().entries.map((entry) {
+                          final subtopic = entry.value;
+
+                          final title = _subtopicTitle(subtopic);
+
+                          final id = _subtopicId(subtopic);
+
+                          return Padding(
                             padding: const EdgeInsets.only(
                               bottom: AppSpacing.sm,
                             ),
-                            child: _topicCard(subtopic),
-                          ),
-                        ),
+                            child: _topicCard(subtopic, entry.key, id, title),
+                          );
+                        }),
                     ]),
                   ),
                 ),
@@ -208,9 +253,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
     );
   }
 
-  Widget _topicCard(dynamic subtopic) {
-    final title = _subtopicTitle(subtopic);
-
+  Widget _topicCard(dynamic subtopic, int index, String? id, String title) {
     return Card(
       elevation: 1,
       margin: EdgeInsets.zero,
@@ -219,7 +262,9 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.card),
-        onTap: _openStudyContent,
+        onTap: () {
+          _openStudyContent(subtopicId: id, subtopicTitle: title);
+        },
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.card),
           child: Row(
@@ -256,6 +301,18 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
     } catch (_) {}
 
     return 'Topic';
+  }
+
+  String? _subtopicId(dynamic subtopic) {
+    try {
+      final value = subtopic.id;
+
+      if (value is String && value.trim().isNotEmpty) {
+        return value;
+      }
+    } catch (_) {}
+
+    return null;
   }
 
   Widget _loading() {
