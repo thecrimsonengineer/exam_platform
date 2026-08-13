@@ -1,5 +1,5 @@
 import '../models/content_mapping_candidate.dart';
-import '../models/csp11_blueprint.dart';
+import '../data/csp11_blueprint.dart';
 import '../models/source_structure_node.dart';
 
 class Csp11BlueprintMappingEngine {
@@ -19,7 +19,7 @@ class Csp11BlueprintMappingEngine {
       final haystack =
           '${node.title} ${node.text}'.toLowerCase();
 
-      for (final domain in Csp11Blueprint.domains) {
+      for (final domain in csp11Domains) {
         final domainTerms = domain.title
             .toLowerCase()
             .split(RegExp(r'\s+'))
@@ -45,6 +45,7 @@ class Csp11BlueprintMappingEngine {
               .toList();
 
           final score = terms.where(haystack.contains).length;
+
           if (score > bestScore) {
             bestScore = score;
             bestCompetency = competency;

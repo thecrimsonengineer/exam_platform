@@ -25,6 +25,17 @@ class LocalStudyContentRepository {
   static const String _publishedStorageKey =
       'csp11.study_content.published.v1';
 
+  static const Set<String> _draftLifecycleStatuses = {
+    'draft',
+    'review',
+    'validated',
+  };
+
+  static const Set<String> _publishedLifecycleStatuses = {
+    'published',
+    'archived',
+  };
+
   // ---------------------------------------------------------------------------
   // DRAFTS
   // ---------------------------------------------------------------------------
@@ -48,6 +59,15 @@ class LocalStudyContentRepository {
   /// - Existing ID = replace
   /// - New ID = insert at beginning
   Future<void> saveDraft(StudyContent content) async {
+    final status = content.status.trim().toLowerCase();
+
+    if (!_draftLifecycleStatuses.contains(status)) {
+      throw StateError(
+        'Draft storage only accepts draft, review, or validated content. '
+        'Received: ${content.status}',
+      );
+    }
+
     await _saveContent(
       storageKey: _draftStorageKey,
       content: content,
@@ -55,21 +75,64 @@ class LocalStudyContentRepository {
     );
   }
 
-
   /// Updates the lifecycle status of an item that is still in authoring
   /// storage. The content itself is preserved unchanged.
+  ///
+  /// Allowed transitions:
+  ///
+  /// draft     -> draft, review
+  /// review    -> draft, review, validated
+  /// validated -> review, validated
   Future<void> updateDraftStatus(
     String contentId,
     String status,
   ) async {
+    final normalized = status.trim().toLowerCase();
+
+    if (!_draftLifecycleStatuses.contains(normalized)) {
+      throw StateError(
+        'Unsupported draft lifecycle status: $status',
+      );
+    }
+
     final content = await loadDraft(contentId);
 
     if (content == null) {
-      throw StateError('Draft "$contentId" was not found.');
+      throw StateError(
+        'Draft "$contentId" was not found.',
+      );
+    }
+
+    final currentStatus = content.status.trim().toLowerCase();
+
+    const allowedTransitions = <String, Set<String>>{
+      'draft': {
+        'draft',
+        'review',
+      },
+      'review': {
+        'draft',
+        'review',
+        'validated',
+      },
+      'validated': {
+        'review',
+        'validated',
+      },
+    };
+
+    final allowedNextStatuses = allowedTransitions[currentStatus];
+
+    if (allowedNextStatuses == null ||
+        !allowedNextStatuses.contains(normalized)) {
+      throw StateError(
+        'Invalid lifecycle transition: '
+        '$currentStatus -> $normalized.',
+      );
     }
 
     final json = Map<String, dynamic>.from(content.toJson())
-      ..['status'] = status;
+      ..['status'] = normalized;
 
     await _saveContent(
       storageKey: _draftStorageKey,
@@ -112,15 +175,21 @@ class LocalStudyContentRepository {
     );
   }
 
-  /// Publishes content into the separate Published repository.
-  ///
-  /// This does NOT delete or modify the existing Draft storage.
+  /// Publishes validated content into the separate Published repository.
   ///
   /// The published copy receives:
   ///   status = published
   ///
   /// All other StudyContent data remains unchanged.
   Future<void> publish(StudyContent content) async {
+    final currentStatus = content.status.trim().toLowerCase();
+
+    if (currentStatus != 'validated') {
+      throw StateError(
+        'Only VALIDATED content can be published.',
+      );
+    }
+
     final publishedJson = Map<String, dynamic>.from(
       content.toJson(),
     );
@@ -138,24 +207,60 @@ class LocalStudyContentRepository {
     );
   }
 
-
   /// Updates the lifecycle status of a published version without deleting
   /// the historical record.
   ///
-  /// The student loader already filters for status == published, so archived
-  /// versions remain retained for repository history but are not student-live.
+  /// Allowed transitions:
+  ///
+  /// published -> published, archived
+  /// archived  -> archived
+  ///
+  /// Archived versions remain retained for repository history but are not
+  /// student-live.
   Future<void> updatePublishedStatus(
     String contentId,
     String status,
   ) async {
+    final normalized = status.trim().toLowerCase();
+
+    if (!_publishedLifecycleStatuses.contains(normalized)) {
+      throw StateError(
+        'Unsupported published lifecycle status: $status',
+      );
+    }
+
     final content = await loadPublishedContent(contentId);
 
     if (content == null) {
-      throw StateError('Published content "$contentId" was not found.');
+      throw StateError(
+        'Published content "$contentId" was not found.',
+      );
+    }
+
+    final currentStatus = content.status.trim().toLowerCase();
+
+    const allowedTransitions = <String, Set<String>>{
+      'published': {
+        'published',
+        'archived',
+      },
+      'archived': {
+        'archived',
+      },
+    };
+
+    final allowedNextStatuses = allowedTransitions[currentStatus];
+
+    if (allowedNextStatuses == null ||
+        !allowedNextStatuses.contains(normalized)) {
+      throw StateError(
+        'Invalid lifecycle transition: '
+        '$currentStatus -> $normalized.',
+      );
     }
 
     final json = Map<String, dynamic>.from(content.toJson())
-      ..['status'] = status;
+      ..['status'] = normalized;
 
     await _saveContent(
       storageKey: _publishedStorageKey,

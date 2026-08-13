@@ -1,5 +1,5 @@
 import '../models/ai_classification_result.dart';
-import '../models/csp11_blueprint.dart';
+import '../data/csp11_blueprint.dart';
 import '../models/source_structure_node.dart';
 
 abstract class CompetencyClassifier {

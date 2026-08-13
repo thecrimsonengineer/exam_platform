@@ -1,20 +1,5 @@
 import 'study_content.dart';
 
-/// Frozen top-level CSP11 domain metadata used by the repository.
-class Csp11Domain {
-  final String id;
-  final int number;
-  final String title;
-  final int weightPercent;
-
-  const Csp11Domain({
-    required this.id,
-    required this.number,
-    required this.title,
-    required this.weightPercent,
-  });
-}
-
 /// A repository-facing view of one StudyContent package/version.
 ///
 /// StudyContent remains the source content model. This wrapper keeps
@@ -41,7 +26,8 @@ class ContentPackageSummary {
 
   int get blockCount => content.subtopics.fold<int>(
         0,
-        (sum, subtopic) => sum +
+        (sum, subtopic) =>
+            sum +
             subtopic.mainContent.fold<int>(
               0,
               (topicSum, topic) => topicSum + topic.blocks.length,
@@ -50,7 +36,9 @@ class ContentPackageSummary {
 
   int get questionCount => content.subtopics.fold<int>(
         0,
-        (sum, subtopic) => sum + subtopic.quizzes.length +
+        (sum, subtopic) =>
+            sum +
+            subtopic.quizzes.length +
             subtopic.mainContent.fold<int>(
               0,
               (topicSum, topic) => topicSum + topic.quizzes.length,
