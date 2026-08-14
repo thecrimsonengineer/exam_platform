@@ -18,7 +18,7 @@ import '../../../widgets/admin/study_content/content_validation_panel.dart';
 import '../../../widgets/admin/study_content/editor/subtopic/subtopic_editor_panel.dart';
 import '../../../widgets/admin/study_content/editor/main_content/main_content_editor_panel.dart';
 import '../../../widgets/admin/study_content/structure/content_structure_panel.dart';
-import '../../courses/csp/content_test_screen.dart';
+import '../../courses/csp/study_content_screen.dart';
 import '../question_bank_screen.dart';
 
 class StudyContentStudioScreen extends StatefulWidget {
@@ -3882,9 +3882,35 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   }
 
   void _openStudentPortal() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const ContentTestScreen()));
+    final content = _importedContent;
+
+    if (content == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No competency is currently loaded.')),
+      );
+      return;
+    }
+
+    if (content.status.toLowerCase() != 'published') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Student Portal is available after this competency is published.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => StudyContentScreen(
+          domainId: content.domainId,
+          competencyId: content.competencyId,
+          loadingTitle: content.title,
+        ),
+      ),
+    );
   }
 
   void _openPreview() {
