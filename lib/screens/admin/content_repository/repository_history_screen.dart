@@ -70,6 +70,8 @@ class RepositoryHistoryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(),
+                const SizedBox(height: 12),
+                _buildVersionSummary(history),
                 const SizedBox(height: 18),
                 _buildTimeline(context, history),
               ],
@@ -103,6 +105,84 @@ class RepositoryHistoryScreen extends StatelessWidget {
           Text(
             package.content.competencyId,
             style: StudyTypography.caption.copyWith(fontFamily: 'monospace'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVersionSummary(List<ContentPackageSummary> history) {
+    final published = history
+        .where((item) => item.status == 'published')
+        .toList()
+      ..sort((a, b) => b.content.version.compareTo(a.content.version));
+
+    final latest = history.isEmpty ? null : history.first;
+    final currentPublished = published.isEmpty ? null : published.first;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
+      ),
+      child: Wrap(
+        spacing: 24,
+        runSpacing: 14,
+        children: [
+          _summaryItem(
+            'LATEST VERSION',
+            latest == null ? 'N/A' : 'v${latest.content.version}.0',
+            Icons.layers_rounded,
+          ),
+          _summaryItem(
+            'PUBLISHED VERSION',
+            currentPublished == null
+                ? 'NONE'
+                : 'v${currentPublished.content.version}.0',
+            Icons.publish_rounded,
+          ),
+          _summaryItem(
+            'TOTAL VERSIONS',
+            '${history.length}',
+            Icons.history_rounded,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryItem(String label, String value, IconData icon) {
+    return SizedBox(
+      width: 180,
+      child: Row(
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: StudyColors.primaryLight,
+              borderRadius: StudyRadius.small,
+            ),
+            child: Icon(icon, size: 17, color: StudyColors.primary),
+          ),
+          const SizedBox(width: 9),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: StudyTypography.eyebrow.copyWith(fontSize: 8),
+                ),
+                const SizedBox(height: 2),
+                Text(value, style: StudyTypography.cardTitle),
+              ],
+            ),
           ),
         ],
       ),
