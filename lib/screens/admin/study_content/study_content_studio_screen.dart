@@ -4392,6 +4392,70 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
   }
 
+  Future<void> _deletePublished(StudyContent published) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete published content?'),
+          content: Text(
+            'Delete \"${published.title}\" v${published.version} from the published repository? '
+            'Students will no longer be able to access this published version. This cannot be undone.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    try {
+      await _repository.deletePublished(published.id);
+      await _loadPublishedContent();
+
+      if (!mounted) {
+        return;
+      }
+
+      if (_importedContent?.id == published.id) {
+        setState(() {
+          _importedContent = null;
+          _selectedSubtopicIndex = null;
+          _selectedMainContentIndex = null;
+          _selectedSection = 0;
+          _resolvedPracticeQuizId = null;
+        });
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Published content deleted: ${published.title} v${published.version}',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to delete published content.\n$error')),
+      );
+    }
+  }
+
   Widget _buildSavedDraftsCard() {
     return _buildEditorCard(
       title: 'Saved Drafts',
@@ -4621,10 +4685,16 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               label: const Text('Open'),
             ),
             const SizedBox(width: 6),
-            IconButton(
-              tooltip: 'Create revision',
+            OutlinedButton.icon(
               onPressed: () => _createRevision(content),
-              icon: const Icon(Icons.edit_note_rounded),
+              icon: const Icon(Icons.fork_right_rounded, size: 16),
+              label: const Text('Create Revision'),
+            ),
+            const SizedBox(width: 6),
+            OutlinedButton.icon(
+              onPressed: () => _deletePublished(content),
+              icon: const Icon(Icons.delete_outline_rounded, size: 16),
+              label: const Text('Delete'),
             ),
           ],
         ),
