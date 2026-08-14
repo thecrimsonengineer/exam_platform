@@ -7,6 +7,7 @@ import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_typography.dart';
+import '../../courses/csp/study_content_screen.dart';
 import '../study_content/study_content_studio_screen.dart';
 import 'repository_detail_screen.dart';
 import 'repository_history_screen.dart';
@@ -1412,6 +1413,24 @@ class _ContentRepositoryScreenState extends State<ContentRepositoryScreen> {
           icon: const Icon(Icons.history_rounded),
           label: const Text('Version History'),
         ),
+        if (status == 'published') ...[
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => StudyContentScreen(
+                    domainId: package.content.domainId,
+                    competencyId: package.content.competencyId,
+                    loadingTitle: package.content.title,
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.school_rounded),
+            label: const Text('Open Student Portal'),
+          ),
+        ],
         const SizedBox(height: 8),
         FilledButton.icon(
           onPressed: () {
