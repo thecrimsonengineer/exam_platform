@@ -104,6 +104,12 @@ class ContentRepositoryService {
   }
 
   Future<void> validateAndMark(StudyContent content) async {
+    if (content.status.toLowerCase() != 'review') {
+      throw StateError(
+        'Only REVIEW content can be validated. Submit the package for review first.',
+      );
+    }
+
     final errors = await validatePackage(content);
 
     if (errors.isNotEmpty) {

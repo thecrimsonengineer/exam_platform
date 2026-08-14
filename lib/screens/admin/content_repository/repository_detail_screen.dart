@@ -7,6 +7,7 @@ import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_typography.dart';
 import 'repository_history_screen.dart';
+import '../study_content/study_content_studio_screen.dart';
 import 'repository_version_screen.dart';
 
 class RepositoryDetailScreen extends StatelessWidget {
@@ -449,6 +450,24 @@ class RepositoryDetailScreen extends StatelessWidget {
         spacing: 10,
         runSpacing: 10,
         children: [
+          if (package.status == 'draft' ||
+              package.status == 'review' ||
+              package.status == 'validated') ...[
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => StudyContentStudioScreen(
+                      initialContent: package.content,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.edit_note_rounded),
+              label: const Text('Open in Content Studio'),
+            ),
+            const SizedBox(width: 10),
+          ],
           FilledButton.icon(
             onPressed: () {
               Navigator.of(context).push(
