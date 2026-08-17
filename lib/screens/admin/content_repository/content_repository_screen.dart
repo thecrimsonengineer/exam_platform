@@ -361,6 +361,66 @@ class _ContentRepositoryScreenState extends State<ContentRepositoryScreen> {
     }
   }
 
+  Future<void> _deletePublishedVersion(
+    ContentPackageSummary package,
+  ) async {
+    final status = package.status;
+
+    if (status != 'published' && status != 'archived') return;
+
+    final isArchived = status == 'archived';
+    final actionLabel = isArchived
+        ? 'Delete Permanently'
+        : 'Delete Published Content';
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('$actionLabel?'),
+        content: Text(
+          isArchived
+              ? 'Permanently delete ${package.content.title} v${package.content.version}? This removes the archived version from the repository and cannot be undone.'
+              : 'Delete ${package.content.title} v${package.content.version} from the published repository? Students will no longer be able to access this published version. This cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).pop(true),
+            icon: Icon(
+              isArchived
+                  ? Icons.delete_forever_rounded
+                  : Icons.delete_outline_rounded,
+            ),
+            label: Text(actionLabel),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await _service.deletePublishedVersion(package.content);
+
+      if (_selected?.content.id == package.content.id) {
+        setState(() => _selected = null);
+      }
+
+      _showMessage(
+        isArchived
+            ? 'Archived version deleted permanently.'
+            : 'Published version deleted. It is no longer student-live.',
+      );
+
+      await _load();
+    } catch (error) {
+      _showMessage('Unable to delete the version.\n$error');
+    }
+  }
+
   void _showMessage(String message) {
     if (!mounted) return;
 
@@ -1449,6 +1509,12 @@ class _ContentRepositoryScreenState extends State<ContentRepositoryScreen> {
             icon: const Icon(Icons.archive_outlined),
             label: const Text('Archive Version'),
           ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () => _deletePublishedVersion(package),
+            icon: const Icon(Icons.delete_outline_rounded),
+            label: const Text('Delete Published Content'),
+          ),
         ],
         if (status == 'draft') ...[
           const SizedBox(height: 8),
@@ -1480,6 +1546,12 @@ class _ContentRepositoryScreenState extends State<ContentRepositoryScreen> {
             'This version is retained for history and '
             'is not student-live.',
             style: StudyTypography.caption,
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () => _deletePublishedVersion(package),
+            icon: const Icon(Icons.delete_forever_rounded),
+            label: const Text('Delete Archived Content'),
           ),
         ],
       ],

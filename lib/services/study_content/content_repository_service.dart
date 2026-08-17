@@ -182,6 +182,22 @@ class ContentRepositoryService {
     await _storage.deleteDraft(content.id);
   }
 
+  /// Permanently deletes a PUBLISHED or ARCHIVED repository version.
+  ///
+  /// The selected content ID is removed from the published repository.
+  /// Draft, review, and validated content must use the draft lifecycle.
+  Future<void> deletePublishedVersion(StudyContent content) async {
+    final status = content.status.trim().toLowerCase();
+
+    if (status != 'published' && status != 'archived') {
+      throw StateError(
+        'Only PUBLISHED or ARCHIVED content can be permanently deleted.',
+      );
+    }
+
+    await _storage.deletePublished(content.id);
+  }
+
   Future<void> refreshStatusAsDraft(StudyContent content, String status) async {
     const allowed = <String>{'draft', 'review', 'validated'};
 
