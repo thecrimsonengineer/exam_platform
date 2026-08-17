@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "984608502679",
+    "project_id": "csp11-exam-platform",
+    "storage_bucket": "csp11-exam-platform.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984608502679:android:80cbdc69e27a54e5ca0ad2",
+        "android_client_info": {
+          "package_name": "com.example.exam_platform"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCawHUhwPkeb31XutbaewEA8AeGF89cG_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
