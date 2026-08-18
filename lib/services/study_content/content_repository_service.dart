@@ -121,18 +121,38 @@ class ContentRepositoryService {
   }
 
   Future<void> submitForReview(StudyContent content) async {
+    final current = await _storage.loadDraft(content.id);
+
+    if (current == null) {
+      throw StateError(
+        'The selected package is no longer present in the draft repository.',
+      );
+    }
+
+    if (current.status.toLowerCase() != 'draft') {
+      throw StateError('Only DRAFT content can be submitted for review.');
+    }
+
     await _storage.updateDraftStatus(content.id, 'review');
   }
 
   Future<void> validateAndMark(StudyContent content) async {
-    if (content.status.toLowerCase() != 'review') {
+    final current = await _storage.loadDraft(content.id);
+
+    if (current == null) {
+      throw StateError(
+        'The selected package is no longer present in the draft repository.',
+      );
+    }
+
+    if (current.status.toLowerCase() != 'review') {
       throw StateError(
         'Only REVIEW content can be validated. '
         'Submit the package for review first.',
       );
     }
 
-    final errors = await validatePackage(content);
+    final errors = await validatePackage(current);
 
     if (errors.isNotEmpty) {
       throw StateError(
@@ -145,14 +165,6 @@ class ContentRepositoryService {
   }
 
   Future<void> publish(StudyContent content) async {
-    final errors = await validatePackage(content);
-
-    if (errors.isNotEmpty) {
-      throw StateError(
-        'Publishing is blocked because validation errors remain.',
-      );
-    }
-
     final latest = await _storage.loadDraft(content.id);
 
     if (latest == null) {
@@ -167,6 +179,14 @@ class ContentRepositoryService {
       );
     }
 
+    final errors = await validatePackage(latest);
+
+    if (errors.isNotEmpty) {
+      throw StateError(
+        'Publishing is blocked because validation errors remain.',
+      );
+    }
+
     await _storage.publish(latest);
   }
 
@@ -178,8 +198,22 @@ class ContentRepositoryService {
     await _storage.updatePublishedStatus(content.id, 'archived');
   }
 
+  /// Creates the next repository version for the competency.
+  ///
+  /// The next version is determined from the highest existing draft or
+  /// published version, rather than only from the supplied source version.
+  /// This prevents duplicate version numbers when a revision is created
+  /// from an older source.
   Future<StudyContent> createRevision(StudyContent source) async {
-    final nextVersion = source.version + 1;
+    final history = await loadHistoryForCompetency(source.competencyId);
+
+    final highestVersion = history.fold<int>(
+      source.version,
+      (highest, package) =>
+          package.content.version > highest ? package.content.version : highest,
+    );
+
+    final nextVersion = highestVersion + 1;
     final timestamp = DateTime.now().millisecondsSinceEpoch;
 
     final revisionId = '${source.competencyId.trim()}-v$nextVersion-$timestamp';
