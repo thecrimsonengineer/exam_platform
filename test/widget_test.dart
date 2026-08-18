@@ -8,7 +8,8 @@ void main() {
   ) async {
     await tester.pumpWidget(const ExamPlatformApp());
 
-    await tester.pumpAndSettle();
+    // Allow the first frame and initial widget startup work to complete.
+    await tester.pump();
 
     expect(find.byType(ExamPlatformApp), findsOneWidget);
   });

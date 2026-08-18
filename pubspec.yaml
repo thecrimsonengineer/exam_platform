@@ -21,6 +21,7 @@ dependencies:
   firebase_core: ^4.13.0
 
 dev_dependencies:
+  fake_cloud_firestore: 4.2.0
   flutter_test:
     sdk: flutter
 

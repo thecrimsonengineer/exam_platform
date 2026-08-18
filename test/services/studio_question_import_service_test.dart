@@ -84,4 +84,87 @@ void main() {
     expect(questions.single.correctAnswer, 0);
     expect(questions.single.tags, contains('systems'));
   });
+
+  test(
+    'JSON import supports best_answer_rationale and snake_case metadata',
+    () {
+      final questions = importer.fromJsonText(
+        input: '''{
+        "questions": [
+          {
+            "stem": "A supervisor identifies a recurring weakness in a safety control and must select the strongest response.",
+            "options": ["One", "Two", "Three", "Four"],
+            "correct_answer": "1",
+            "bestAnswerRationale": "The selected response addresses the underlying weakness.",
+            "explanation": "The response targets the underlying control weakness rather than only the immediate symptom.",
+            "source": "CSP11 reference",
+            "cognitive_level": "analysis",
+            "question_type": "scenario_mcq",
+            "tags": ["control", "analysis"]
+          }
+        ]
+      }''',
+        nextId: () => 1003,
+        content: content,
+        subtopic: content.subtopics.first,
+        quizId: 'd07_c03-v1_d07_c03_01_quiz',
+      );
+
+      final question = questions.single;
+
+      expect(question.id, 1003);
+      expect(question.correctAnswer, 1);
+      expect(
+        question.bestAnswerRationale,
+        'The selected response addresses the underlying weakness.',
+      );
+      expect(question.reference, 'CSP11 reference');
+      expect(question.cognitiveLevel, 'analysis');
+      expect(question.questionType, 'scenario_mcq');
+      expect(question.status, 'draft');
+    },
+  );
+
+  test('JSON metadata cannot override the active Studio context', () {
+    final questions = importer.fromJsonText(
+      input: '''{
+        "question": "A manager must choose the strongest action for a recurring safety-system weakness.",
+        "domain": 1,
+        "domainId": "domain_01",
+        "competencyId": "wrong_competency",
+        "subtopicId": "wrong_subtopic",
+        "quizId": "wrong_quiz",
+        "contentPackageId": "wrong_package",
+        "options": ["One", "Two", "Three", "Four"],
+        "correctAnswer": 1,
+        "explanation": "The selected action addresses the underlying weakness.",
+        "tags": ["safety", "controls"]
+      }''',
+      nextId: () => 1004,
+      content: content,
+      subtopic: content.subtopics.first,
+      quizId: 'd07_c03-v1_d07_c03_01_quiz',
+    );
+
+    final question = questions.single;
+
+    expect(question.domain, 7);
+    expect(question.competencyId, 'd07_c03');
+    expect(question.subtopicId, 'd07_c03_01');
+    expect(question.quizId, 'd07_c03-v1_d07_c03_01_quiz');
+    expect(question.contentPackageId, 'd07_c03-v1');
+  });
+
+  test('JSON import rejects an empty question collection', () {
+    expect(
+      () => importer.fromJsonText(
+        input: '{"questions": []}',
+        nextId: () => 1005,
+        content: content,
+        subtopic: content.subtopics.first,
+        quizId: 'd07_c03-v1_d07_c03_01_quiz',
+      ),
+      throwsFormatException,
+    );
+  });
 }
