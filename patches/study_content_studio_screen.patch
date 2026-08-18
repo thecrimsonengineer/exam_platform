@@ -1,0 +1,178 @@
+--- /mnt/data/csp11_step2_fresh/lib/screens/admin/study_content/study_content_studio_screen.dart	2026-08-18 05:09:14.000000000 +0000
++++ lib/screens/admin/study_content/study_content_studio_screen.dart	2026-08-18 05:19:59.149550558 +0000
+@@ -1,7 +1,7 @@
+ import 'package:flutter/material.dart';
+ import '../../../models/question.dart';
+ import '../../../models/studio_question_context.dart';
+-import '../../../services/question_bank_service.dart';
++import '../../../services/studio/studio_question_service.dart';
+ import '../../../services/quiz_service.dart';
+ import '../../../services/study_content/content_import_service.dart';
+ import '../../../services/study_content/content_repository_service.dart';
+@@ -44,7 +44,7 @@
+   final LocalStudyContentRepository _repository = LocalStudyContentRepository();
+   final ContentRepositoryService _contentRepositoryService =
+       ContentRepositoryService();
+-  final QuestionBankService _questionService = QuestionBankService();
++  final StudioQuestionService _questionService = StudioQuestionService();
+ 
+   StudyContent? _importedContent;
+ 
+@@ -1035,17 +1035,11 @@
+   }
+ 
+   String _practiceQuizId(StudyContent content, StudySubtopic subtopic) {
+-    final context = StudioQuestionContext.fromContent(
++    return _questionService.resolveQuizId(
+       content: content,
+       subtopic: subtopic,
++      preferredQuizId: _resolvedPracticeQuizId,
+     );
+-
+-    final resolvedQuizId = _resolvedPracticeQuizId?.trim() ?? '';
+-    if (resolvedQuizId.isNotEmpty) {
+-      return resolvedQuizId;
+-    }
+-
+-    return context.quizId;
+   }
+ 
+   void _scheduleFocusPracticeQuestion(int questionId) {
+@@ -1103,55 +1097,20 @@
+       await _questionService.initialize();
+ 
+       final subtopic = content.subtopics[index];
++      final resolvedQuizId = _questionService.resolveQuizId(
++        content: content,
++        subtopic: subtopic,
++        preferredQuizId: _resolvedPracticeQuizId,
++      );
+ 
+-      final linkedQuizId = subtopic.quizzes
+-          .map((quiz) => quiz.quizId.trim())
+-          .firstWhere((quizId) => quizId.isNotEmpty, orElse: () => '');
+-
+-      String resolvedQuizId = linkedQuizId;
+-
+-      if (resolvedQuizId.isEmpty) {
+-        final candidates = _questionService
+-            .allManagedQuestions()
+-            .where(
+-              (question) =>
+-                  question.subtopicId == subtopic.id &&
+-                  question.status.toLowerCase() == 'published',
+-            )
+-            .toList();
+-
+-        if (candidates.isNotEmpty) {
+-          final counts = <String, int>{};
+-          for (final question in candidates) {
+-            final candidateQuizId = question.quizId.trim();
+-            if (candidateQuizId.isNotEmpty) {
+-              counts[candidateQuizId] = (counts[candidateQuizId] ?? 0) + 1;
+-            }
+-          }
+-
+-          if (counts.isNotEmpty) {
+-            final sortedQuizIds = counts.entries.toList()
+-              ..sort((a, b) {
+-                final countComparison = b.value.compareTo(a.value);
+-                if (countComparison != 0) {
+-                  return countComparison;
+-                }
+-                return a.key.compareTo(b.key);
+-              });
+-            resolvedQuizId = sortedQuizIds.first.key;
+-          }
+-        }
+-      }
+-
+-      if (resolvedQuizId.isEmpty) {
+-        resolvedQuizId = StudioQuestionContext.canonicalQuizId(
+-          content.id,
+-          subtopic.id,
+-        );
+-      }
+-
+-      final questions = _questionService.byQuizId(resolvedQuizId)
+-        ..sort((a, b) => a.id.compareTo(b.id));
++      final context = _questionService.contextFor(
++        content: content,
++        subtopic: subtopic,
++      );
++      final questions = _questionService.questionsForContext(
++        context,
++        quizIdOverride: resolvedQuizId,
++      );
+ 
+       final overviewStats = _calculateOverviewQuizStatistics(content);
+ 
+@@ -3313,7 +3272,7 @@
+         continue;
+       }
+ 
+-      final questions = _questionService.byQuizId(quizId);
++      final questions = _questionService.questionsForQuizId(quizId);
+       final subtopicQuestionCount = questions.length;
+       final subtopicPublishedCount = questions
+           .where((question) => question.status.toLowerCase() == 'published')
+@@ -3339,54 +3298,11 @@
+     StudyContent content,
+     StudySubtopic subtopic,
+   ) {
+-    final linkedQuizId = subtopic.quizzes
+-        .map((quiz) => quiz.quizId.trim())
+-        .firstWhere((quizId) => quizId.isNotEmpty, orElse: () => '');
+-
+-    if (linkedQuizId.isNotEmpty) {
+-      return linkedQuizId;
+-    }
+-
+-    final resolvedQuizId = _resolvedPracticeQuizId?.trim() ?? '';
+-    if (resolvedQuizId.isNotEmpty &&
+-        _questionService
+-            .byQuizId(resolvedQuizId)
+-            .any((question) => question.subtopicId == subtopic.id)) {
+-      return resolvedQuizId;
+-    }
+-
+-    final candidates = _questionService
+-        .allManagedQuestions()
+-        .where(
+-          (question) =>
+-              question.subtopicId == subtopic.id &&
+-              question.status.toLowerCase() == 'published',
+-        )
+-        .toList();
+-
+-    if (candidates.isNotEmpty) {
+-      final counts = <String, int>{};
+-      for (final question in candidates) {
+-        final candidateQuizId = question.quizId.trim();
+-        if (candidateQuizId.isNotEmpty) {
+-          counts[candidateQuizId] = (counts[candidateQuizId] ?? 0) + 1;
+-        }
+-      }
+-
+-      if (counts.isNotEmpty) {
+-        final sortedQuizIds = counts.entries.toList()
+-          ..sort((a, b) {
+-            final countComparison = b.value.compareTo(a.value);
+-            if (countComparison != 0) {
+-              return countComparison;
+-            }
+-            return a.key.compareTo(b.key);
+-          });
+-        return sortedQuizIds.first.key;
+-      }
+-    }
+-
+-    return '${content.id}_${subtopic.id}_quiz';
++    return _questionService.resolveQuizId(
++      content: content,
++      subtopic: subtopic,
++      preferredQuizId: _resolvedPracticeQuizId,
++    );
+   }
+ 
+   Widget _buildOverviewMetric(_OverviewMetric metric) {
