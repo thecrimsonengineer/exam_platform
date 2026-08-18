@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'app/theme.dart';
 import 'firebase_options.dart';
 import 'services/local_question_repository.dart';
-import 'tests/phase_d_test_screen.dart';
+import 'debug/local_repository_inventory_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,7 @@ class ExamPlatformApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CSP11 Learning Platform',
       theme: AppTheme.lightTheme,
-      home: const PhaseDTestScreen(),
+      home: const LocalRepositoryInventoryScreen(),
     );
   }
 }
