@@ -1,20 +1,20 @@
 import '../../data/csp11_blueprint.dart';
 import '../../models/content_repository.dart';
 import '../../models/study_content.dart';
+import 'cloud_content_repository.dart';
 import 'content_import_service.dart';
 import 'content_validator.dart';
-import 'local_study_content_repository.dart';
 
 /// Application service for the Admin Content Repository.
 ///
-/// The service owns repository operations so screens do not need to know
-/// how local persistence is implemented. A future API-backed repository can
-/// replace the local store behind this boundary.
+/// Firebase is now the active persistence layer for Admin operations.
+/// LocalStudyContentRepository remains available for migration/cache work
+/// but is no longer the Admin repository source of truth.
 class ContentRepositoryService {
-  final LocalStudyContentRepository _storage;
+  final CloudContentRepository _storage;
 
-  ContentRepositoryService({LocalStudyContentRepository? storage})
-    : _storage = storage ?? LocalStudyContentRepository();
+  ContentRepositoryService({CloudContentRepository? storage})
+    : _storage = storage ?? CloudContentRepository();
 
   Future<List<ContentPackageSummary>> loadPackages() async {
     final drafts = await _storage.loadDrafts();
@@ -182,10 +182,6 @@ class ContentRepositoryService {
     await _storage.deleteDraft(content.id);
   }
 
-  /// Permanently deletes a PUBLISHED or ARCHIVED repository version.
-  ///
-  /// The selected content ID is removed from the published repository.
-  /// Draft, review, and validated content must use the draft lifecycle.
   Future<void> deletePublishedVersion(StudyContent content) async {
     final status = content.status.trim().toLowerCase();
 
