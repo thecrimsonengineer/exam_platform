@@ -16,11 +16,11 @@ import '../../../theme/study/study_typography.dart';
 import '../../../widgets/admin/study_content/content_import_panel.dart';
 import '../../../widgets/admin/study_content/content_preview_panel.dart';
 import '../../../widgets/admin/study_content/content_validation_panel.dart';
+import '../../../widgets/admin/study_content/studio_question_authoring_widgets.dart';
 import '../../../widgets/admin/study_content/editor/subtopic/subtopic_editor_panel.dart';
 import '../../../widgets/admin/study_content/editor/main_content/main_content_editor_panel.dart';
 import '../../../widgets/admin/study_content/structure/content_structure_panel.dart';
 import '../../courses/csp/study_content_screen.dart';
-import '../question_bank_screen.dart';
 
 class StudyContentStudioScreen extends StatefulWidget {
   final StudyContent? initialContent;
@@ -55,6 +55,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   int _overviewQuestionCount = 0;
   int _overviewPublishedCount = 0;
   bool _overviewQuizReady = false;
+  bool _answerLengthCheckEnabled = true;
 
   int? _selectedSubtopicIndex;
   int? _selectedMainContentIndex;
@@ -115,7 +116,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     ),
     _StudioSection(
       title: 'Practice Questions',
-      subtitle: 'Connect CSP quizzes',
+      subtitle: 'Create, import and manage questions',
       icon: Icons.quiz_rounded,
     ),
     _StudioSection(
@@ -159,6 +160,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Future<void> _initializeQuestionService() async {
     try {
       await _questionService.initialize();
+      _questionService.answerLengthCheckEnabled = _answerLengthCheckEnabled;
 
       final initialQuestionId = widget.initialQuestionId;
       final content = _importedContent;
@@ -927,7 +929,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           content: Text(
             questionCount == 0
                 ? 'Content imported successfully. No questions were supplied.'
-                : 'Content imported successfully. $questionCount question${questionCount == 1 ? '' : 's'} added to the Question Bank.',
+                : 'Content imported successfully. $questionCount question${questionCount == 1 ? '' : 's'} added to Practice Questions.',
           ),
         ),
       );
@@ -1061,12 +1063,123 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
   final Map<int, GlobalKey> _practiceQuestionKeys = <int, GlobalKey>{};
 
-  void _openQuestionInQuestionBank(Question question) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => QuestionBankScreen(initialQuestionId: question.id),
+  Future<void> _openPracticeQuestionEditor({Question? question}) async {
+    final content = _importedContent;
+    final index = _selectedSubtopicIndex;
+    if (content == null || index == null || index < 0 || index >= content.subtopics.length) {
+      _showPracticeMessage('Select a subtopic before authoring a question.');
+      return;
+    }
+
+    final result = await showDialog<Question>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => StudioQuestionEditorDialog(
+        content: content,
+        subtopic: content.subtopics[index],
+        questionService: _questionService,
+        existing: question,
       ),
     );
+
+    if (result == null) return;
+    await _savePracticeQuestionDraft(result);
+  }
+
+  Future<void> _openPracticeCompletePaste() async {
+    final content = _importedContent;
+    final index = _selectedSubtopicIndex;
+    if (content == null || index == null || index < 0 || index >= content.subtopics.length) {
+      _showPracticeMessage('Select a subtopic before importing a question.');
+      return;
+    }
+
+    final result = await showDialog<Question>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => StudioCompleteQuestionPasteDialog(
+        content: content,
+        subtopic: content.subtopics[index],
+        questionService: _questionService,
+      ),
+    );
+
+    if (result == null) return;
+    await _savePracticeQuestionDraft(result);
+  }
+
+  Future<void> _openPracticeJsonImport() async {
+    final content = _importedContent;
+    final index = _selectedSubtopicIndex;
+    if (content == null || index == null || index < 0 || index >= content.subtopics.length) {
+      _showPracticeMessage('Select a subtopic before importing a JSON file.');
+      return;
+    }
+
+    final result = await showDialog<List<Question>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => StudioJsonQuestionImportDialog(
+        content: content,
+        subtopic: content.subtopics[index],
+        questionService: _questionService,
+      ),
+    );
+
+    if (result == null || result.isEmpty) return;
+
+    try {
+      for (final question in result) {
+        await _questionService.saveDraft(question);
+      }
+      await _refreshPracticeQuestions();
+      if (mounted) {
+        _showPracticeMessage('${result.length} question${result.length == 1 ? '' : 's'} imported as Draft.');
+      }
+    } catch (error) {
+      _showPracticeMessage('Unable to import JSON questions.\n$error');
+    }
+  }
+
+  Future<void> _savePracticeQuestionDraft(Question question) async {
+    final issues = _questionService.validate(question);
+    await _questionService.saveDraft(question);
+    await _refreshPracticeQuestions();
+
+    if (!mounted) return;
+    final errors = issues.where((issue) => issue.isError).map((issue) => issue.message).toList();
+    if (errors.isEmpty) {
+      _showPracticeMessage('Question saved as Draft.');
+    } else {
+      _showPracticeMessage('Question saved as Draft with quality issues:\n${errors.join('\n')}');
+    }
+  }
+
+  Future<void> _publishPracticeQuestion(Question question) async {
+    try {
+      await _questionService.publish(question);
+      await _refreshPracticeQuestions();
+      if (mounted) _showPracticeMessage('Question published.');
+    } catch (error) {
+      _showPracticeMessage(error.toString().replaceFirst('Bad state: ', ''));
+    }
+  }
+
+  Future<void> _deletePracticeQuestion(Question question) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete question?'),
+        content: const Text('This removes the question from the managed repository.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await _questionService.delete(question.id);
+    await _refreshPracticeQuestions();
   }
 
   Future<void> _refreshPracticeQuestions() async {
@@ -1382,6 +1495,21 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+                const SizedBox(height: 12),
+                SwitchListTile.adaptive(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Answer Length Check'),
+                  subtitle: const Text(
+                    'Checks BEST-answer length independently of the other quality rules.',
+                  ),
+                  value: _answerLengthCheckEnabled,
+                  onChanged: (enabled) {
+                    setState(() {
+                      _answerLengthCheckEnabled = enabled;
+                    });
+                    _questionService.answerLengthCheckEnabled = enabled;
+                  },
+                ),
               ],
             ),
           ),
@@ -1472,6 +1600,24 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                       )
                     : const Icon(Icons.refresh_rounded),
               ),
+              const SizedBox(width: 6),
+              FilledButton.icon(
+                onPressed: () => _openPracticeQuestionEditor(),
+                icon: const Icon(Icons.add_rounded, size: 17),
+                label: const Text('Create Question'),
+              ),
+              const SizedBox(width: 6),
+              OutlinedButton.icon(
+                onPressed: _openPracticeCompletePaste,
+                icon: const Icon(Icons.content_paste_rounded, size: 17),
+                label: const Text('Paste'),
+              ),
+              const SizedBox(width: 6),
+              OutlinedButton.icon(
+                onPressed: _openPracticeJsonImport,
+                icon: const Icon(Icons.upload_file_rounded, size: 17),
+                label: const Text('Import JSON'),
+              ),
             ],
           ),
           const SizedBox(height: 14),
@@ -1554,18 +1700,26 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   const SizedBox(height: 8),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
-                      onPressed: () => _openQuestionInQuestionBank(question),
-                      icon: const Icon(Icons.open_in_new_rounded, size: 16),
-                      label: const Text('Open in Question Bank'),
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                    child: Wrap(
+                      spacing: 4,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () => _openPracticeQuestionEditor(question: question),
+                          icon: const Icon(Icons.edit_rounded, size: 16),
+                          label: const Text('Edit'),
                         ),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
+                        if (!published)
+                          TextButton.icon(
+                            onPressed: () => _publishPracticeQuestion(question),
+                            icon: const Icon(Icons.publish_rounded, size: 16),
+                            label: const Text('Publish'),
+                          ),
+                        TextButton.icon(
+                          onPressed: () => _deletePracticeQuestion(question),
+                          icon: const Icon(Icons.delete_outline_rounded, size: 16),
+                          label: const Text('Delete'),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -1617,7 +1771,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'The Question Bank does not currently contain questions for '
+            'Practice Questions does not currently contain managed questions for '
             '$quizId.',
             textAlign: TextAlign.center,
             style: StudyTypography.bodySecondary,
@@ -3256,12 +3410,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   ) {
     var questionCount = 0;
     var publishedCount = 0;
-    var expectedQuestionCount = 0;
     var ready = content.subtopics.isNotEmpty;
 
     for (final subtopic in content.subtopics) {
-      expectedQuestionCount += 5;
-
       final quizId = _resolveExistingQuizIdForOverview(content, subtopic);
 
       if (quizId.isEmpty) {
@@ -3286,7 +3437,6 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     return _OverviewQuizStatistics(
       questionCount: questionCount,
       publishedCount: publishedCount,
-      expectedQuestionCount: expectedQuestionCount,
       ready: ready,
     );
   }
@@ -4710,13 +4860,11 @@ class _StudioSection {
 class _OverviewQuizStatistics {
   final int questionCount;
   final int publishedCount;
-  final int expectedQuestionCount;
   final bool ready;
 
   const _OverviewQuizStatistics({
     required this.questionCount,
     required this.publishedCount,
-    required this.expectedQuestionCount,
     required this.ready,
   });
 }
