@@ -164,7 +164,9 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
     final content = _selectedContent;
 
     if (content == null) {
-      _showError('Unable to locate the Study Content package for this question.');
+      _showError(
+        'Unable to locate the Study Content package for this question.',
+      );
       return;
     }
 
@@ -241,7 +243,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
       return;
     }
 
-    await _questionService.saveDraft(result);
+    await _saveDraftWithQualityFeedback(result);
 
     _refreshQuestions();
   }
@@ -256,15 +258,6 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
         index < 0 ||
         index >= content.subtopics.length) {
       _showError('Select a competency and subtopic first.');
-
-      return;
-    }
-
-    if (_questions.isEmpty) {
-      _showError(
-        'This subtopic already contains '
-        '5 questions.',
-      );
 
       return;
     }
@@ -287,17 +280,44 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
       return;
     }
 
-    await _questionService.saveDraft(result);
+    await _saveDraftWithQualityFeedback(
+      result,
+      successMessage: 'Complete question imported as Draft.',
+    );
 
     _refreshQuestions();
+  }
+
+  Future<void> _saveDraftWithQualityFeedback(
+    Question question, {
+    String? successMessage,
+  }) async {
+    final issues = _questionService.validate(question);
+
+    await _questionService.saveDraft(question);
 
     if (!mounted) {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Complete question imported as Draft.')),
-    );
+    final errors = issues
+        .where((issue) => issue.isError)
+        .map((issue) => issue.message)
+        .toList();
+
+    if (errors.isNotEmpty) {
+      _showError(
+        'Question saved as Draft with quality issues:\n\n'
+        '${errors.join('\n')}',
+      );
+      return;
+    }
+
+    if (successMessage != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(successMessage)));
+    }
   }
 
   Future<void> _publishQuestion(Question question) async {
@@ -785,146 +805,150 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: Color(0xFFE2E8F0)),
         ),
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Q${index + 1}',
-                    style: const TextStyle(fontWeight: FontWeight.w900),
-                  ),
-                  const SizedBox(width: 10),
-                  Chip(label: Text(question.difficulty)),
-                  const SizedBox(width: 6),
-                  Chip(label: Text(question.cognitiveLevel.toUpperCase())),
-                  const SizedBox(width: 12),
-                  Text(
-                    published ? 'PUBLISHED' : 'DRAFT',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                      color: published
-                          ? Colors.green.shade700
-                          : Colors.orange.shade700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              question.question,
-              style: const TextStyle(
-                fontSize: 15,
-                height: 1.4,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ...question.options.asMap().entries.map((entry) {
-              final optionIndex = entry.key;
-
-              final isBest = optionIndex == question.correctAnswer;
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 6),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(
-                      width: 24,
-                      child: Text(
-                        String.fromCharCode(65 + optionIndex),
-                        style: const TextStyle(fontWeight: FontWeight.w800),
+                    Text(
+                      'Q${index + 1}',
+                      style: const TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                    const SizedBox(width: 10),
+                    Chip(label: Text(question.difficulty)),
+                    const SizedBox(width: 6),
+                    Chip(label: Text(question.cognitiveLevel.toUpperCase())),
+                    const SizedBox(width: 12),
+                    Text(
+                      published ? 'PUBLISHED' : 'DRAFT',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        color: published
+                            ? Colors.green.shade700
+                            : Colors.orange.shade700,
                       ),
                     ),
-                    Expanded(child: Text(entry.value)),
-                    if (isBest)
-                      const Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: Chip(label: Text('BEST')),
-                      ),
                   ],
                 ),
-              );
-            }),
-
-            if (question.tags.isNotEmpty) ...[
+              ),
               const SizedBox(height: 10),
-              const Text(
-                'TAGS',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF64748B),
-                  letterSpacing: 0.8,
+              Text(
+                question.question,
+                style: const TextStyle(
+                  fontSize: 15,
+                  height: 1.4,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 6),
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: question.tags
-                    .map(
-                      (tag) => Chip(
-                        label: Text(tag),
-                        visualDensity: VisualDensity.compact,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              const SizedBox(height: 12),
+              ...question.options.asMap().entries.map((entry) {
+                final optionIndex = entry.key;
+
+                final isBest = optionIndex == question.correctAnswer;
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 24,
+                        child: Text(
+                          String.fromCharCode(65 + optionIndex),
+                          style: const TextStyle(fontWeight: FontWeight.w800),
+                        ),
                       ),
-                    )
-                    .toList(),
+                      Expanded(child: Text(entry.value)),
+                      if (isBest)
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: Chip(label: Text('BEST')),
+                        ),
+                    ],
+                  ),
+                );
+              }),
+
+              if (question.tags.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                const Text(
+                  'TAGS',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF64748B),
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: question.tags
+                      .map(
+                        (tag) => Chip(
+                          label: Text(tag),
+                          visualDensity: VisualDensity.compact,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+
+              const SizedBox(height: 10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      valid
+                          ? 'Quality gate: PASS'
+                          : 'Quality gate: '
+                                '${issues.length} issue(s)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: valid
+                            ? Colors.green.shade700
+                            : Colors.red.shade700,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    TextButton(
+                      onPressed: () => _openEditor(question: question),
+                      child: const Text('Edit'),
+                    ),
+                    TextButton.icon(
+                      onPressed: () =>
+                          _openQuestionInPracticeQuestions(question),
+                      icon: const Icon(Icons.open_in_new_rounded, size: 17),
+                      label: const Text('Open in Practice'),
+                    ),
+                    if (!published)
+                      FilledButton.tonal(
+                        onPressed: valid
+                            ? () => _publishQuestion(question)
+                            : null,
+                        child: const Text('Publish'),
+                      ),
+                    IconButton(
+                      onPressed: () => _deleteQuestion(question),
+                      icon: const Icon(Icons.delete_outline_rounded),
+                    ),
+                  ],
+                ),
               ),
             ],
-
-            const SizedBox(height: 10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    valid
-                        ? 'Quality gate: PASS'
-                        : 'Quality gate: '
-                              '${issues.length} issue(s)',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: valid ? Colors.green.shade700 : Colors.red.shade700,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  TextButton(
-                    onPressed: () => _openEditor(question: question),
-                    child: const Text('Edit'),
-                  ),
-                  TextButton.icon(
-                    onPressed: () => _openQuestionInPracticeQuestions(question),
-                    icon: const Icon(Icons.open_in_new_rounded, size: 17),
-                    label: const Text('Open in Practice'),
-                  ),
-                  if (!published)
-                    FilledButton.tonal(
-                      onPressed: valid
-                          ? () => _publishQuestion(question)
-                          : null,
-                      child: const Text('Publish'),
-                    ),
-                  IconButton(
-                    onPressed: () => _deleteQuestion(question),
-                    icon: const Icon(Icons.delete_outline_rounded),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -946,7 +970,8 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
     final quizId = _quizId(content, subtopic);
 
     if (_questions.length < 5 ||
-        _questions.where((q) => q.status.toLowerCase() == 'published').length < 5) {
+        _questions.where((q) => q.status.toLowerCase() == 'published').length <
+            5) {
       _showError(
         'The subtopic must have at least 5 published questions before the quiz can be linked.',
       );
@@ -1298,7 +1323,9 @@ training needs analysis, competency assessment, CSP11''',
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    qualityPassed ? 'QUALITY PASS' : '${issues.length} ISSUE(S)',
+                    qualityPassed
+                        ? 'QUALITY PASS'
+                        : '${issues.length} ISSUE(S)',
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w900,

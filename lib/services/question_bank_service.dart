@@ -28,12 +28,24 @@ class QuestionBankService {
 
   List<Question> byQuizId(String quizId) => _repository.byQuizId(quizId);
 
+  /// Runs the complete CSP11 question quality gate.
   List<QuestionQualityIssue> validate(Question question) {
     return _validator.validate(question);
   }
 
-  Future<void> saveDraft(Question question) => _repository.save(question);
+  /// Saves a question as DRAFT.
+  ///
+  /// Validation issues are returned to the caller, but do not prevent
+  /// saving the draft. This allows incomplete questions to remain editable.
+  Future<List<QuestionQualityIssue>> saveDraft(Question question) async {
+    final issues = validate(question);
 
+    await _repository.save(question);
+
+    return issues;
+  }
+
+  /// Publishes a question only when all mandatory quality checks pass.
   Future<void> publish(
     Question question, {
     required int quizQuestionCount,
