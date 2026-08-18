@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'debug/content_migration_screen.dart';
 
 import 'app/theme.dart';
 import 'firebase_options.dart';
 import 'services/local_question_repository.dart';
-import 'debug/local_repository_inventory_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,7 @@ class ExamPlatformApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CSP11 Learning Platform',
       theme: AppTheme.lightTheme,
-      home: const LocalRepositoryInventoryScreen(),
+      home: const ContentMigrationScreen(),
     );
   }
 }

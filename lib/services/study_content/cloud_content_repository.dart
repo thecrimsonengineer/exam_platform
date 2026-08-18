@@ -102,11 +102,81 @@ class CloudContentRepository {
     StudyContent content, {
     required String copyType,
   }) {
+    final encoded = _encodeFirestoreSafe(content.toJson());
     return {
-      ...content.toJson(),
+      ...Map<String, dynamic>.from(encoded as Map),
       'copyType': copyType,
       'updatedAt': FieldValue.serverTimestamp(),
     };
+  }
+
+  /// Firestore does not allow an array to directly contain another array.
+  /// StudyContent can legitimately contain structures such as table rows:
+  /// `rows: [[cell, cell], [cell, cell]]`.
+  ///
+  /// Encode only nested arrays into a reversible marker map. Arrays of maps
+  /// and arrays of scalar values remain normal Firestore arrays.
+  dynamic _encodeFirestoreSafe(dynamic value) {
+    if (value is Map) {
+      return value.map(
+        (key, nestedValue) => MapEntry(
+          key.toString(),
+          _encodeFirestoreSafe(nestedValue),
+        ),
+      );
+    }
+
+    if (value is List) {
+      final encodedItems = value
+          .map(_encodeFirestoreSafe)
+          .toList(growable: false);
+
+      if (value.any((item) => item is List)) {
+        return {
+          'csp11FirestoreNestedListV1': true,
+          'items': <String, dynamic>{
+            for (var i = 0; i < encodedItems.length; i++)
+              '$i': encodedItems[i],
+          },
+        };
+      }
+
+      return encodedItems;
+    }
+
+    return value;
+  }
+
+  dynamic _decodeFirestoreSafe(dynamic value) {
+    if (value is Map) {
+      final marker = value['csp11FirestoreNestedListV1'];
+      final items = value['items'];
+
+      if (marker == true && items is Map) {
+        final entries = items.entries.toList()
+          ..sort((a, b) {
+            final ai = int.tryParse(a.key.toString()) ?? 0;
+            final bi = int.tryParse(b.key.toString()) ?? 0;
+            return ai.compareTo(bi);
+          });
+        return entries
+            .map((entry) => _decodeFirestoreSafe(entry.value))
+            .toList();
+      }
+
+      return value.map(
+        (key, nestedValue) => MapEntry(
+          key.toString(),
+          _decodeFirestoreSafe(nestedValue),
+        ),
+      );
+    }
+
+    if (value is List) {
+      return value.map(_decodeFirestoreSafe).toList();
+    }
+
+    return value;
   }
 
   StudyContent? _fromQueryDocument(
@@ -126,7 +196,8 @@ class CloudContentRepository {
 
   StudyContent? _decode(Map<String, dynamic> source) {
     try {
-      final data = Map<String, dynamic>.from(source)
+      final decoded = _decodeFirestoreSafe(source);
+      final data = Map<String, dynamic>.from(decoded as Map)
         ..remove('copyType')
         ..remove('updatedAt')
         ..remove('createdAt');
@@ -136,3 +207,4 @@ class CloudContentRepository {
     }
   }
 }
+
