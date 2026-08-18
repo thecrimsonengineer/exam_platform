@@ -22,15 +22,18 @@ class ContentRepositoryService {
 
     final byId = <String, ContentPackageSummary>{};
 
+    // Draft and published copies are intentionally stored independently.
+    // The same StudyContent ID may legitimately exist once as a draft
+    // and once as a published copy.
     for (final content in drafts) {
-      byId[content.id] = ContentPackageSummary(
+      byId['draft:${content.id}'] = ContentPackageSummary(
         content: content,
         isPublishedCopy: false,
       );
     }
 
     for (final content in published) {
-      byId[content.id] = ContentPackageSummary(
+      byId['published:${content.id}'] = ContentPackageSummary(
         content: content,
         isPublishedCopy: true,
       );
@@ -62,6 +65,16 @@ class ContentRepositoryService {
         return versionCompare;
       }
 
+      // Keep draft/published copies deterministic when they have the
+      // same content ID and version.
+      final publishedCompare = a.isPublishedCopy.toString().compareTo(
+        b.isPublishedCopy.toString(),
+      );
+
+      if (publishedCompare != 0) {
+        return publishedCompare;
+      }
+
       return a.content.title.compareTo(b.content.title);
     });
 
@@ -82,6 +95,14 @@ class ContentRepositoryService {
 
       if (versionCompare != 0) {
         return versionCompare;
+      }
+
+      final publishedCompare = b.isPublishedCopy.toString().compareTo(
+        a.isPublishedCopy.toString(),
+      );
+
+      if (publishedCompare != 0) {
+        return publishedCompare;
       }
 
       return b.content.id.compareTo(a.content.id);
@@ -106,7 +127,8 @@ class ContentRepositoryService {
   Future<void> validateAndMark(StudyContent content) async {
     if (content.status.toLowerCase() != 'review') {
       throw StateError(
-        'Only REVIEW content can be validated. Submit the package for review first.',
+        'Only REVIEW content can be validated. '
+        'Submit the package for review first.',
       );
     }
 
