@@ -1,16 +1,32 @@
 import 'dart:math';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../models/question.dart';
+import 'cloud_question_repository.dart';
 import 'local_question_repository.dart';
 import 'question_quality_validator.dart';
 
+/// Central managed-question service for CSP11.
+///
+/// Admin authoring is Firebase-backed when the default repository is used.
+/// LocalQuestionRepository remains the local student-consumption cache until
+/// Phase I moves student question loading to Firebase.
 class QuestionBankService {
   QuestionBankService({
     LocalQuestionRepository? repository,
+    CloudQuestionRepository? cloudRepository,
     this.answerLengthCheckEnabled = true,
-  }) : _repository = repository ?? LocalQuestionRepository.instance;
+  })  : _repository = repository ?? LocalQuestionRepository.instance,
+        _cloudRepository =
+            repository == null
+                ? (cloudRepository ?? CloudQuestionRepository())
+                : cloudRepository;
 
   final LocalQuestionRepository _repository;
+  final CloudQuestionRepository? _cloudRepository;
+
+  static const String _cloudSeededKey = 'csp11.question_bank.cloud_seeded.v1';
 
   /// Controls only the answer-length quality criterion.
   ///
@@ -22,7 +38,37 @@ class QuestionBankService {
     answerLengthCheckEnabled: answerLengthCheckEnabled,
   );
 
-  Future<void> initialize() => _repository.initialize();
+  Future<void> initialize() async {
+    await _repository.initialize();
+
+    final cloud = _cloudRepository;
+    if (cloud == null) {
+      return;
+    }
+
+    final preferences = await SharedPreferences.getInstance();
+    final cloudSeeded = preferences.getBool(_cloudSeededKey) ?? false;
+    final cloudQuestions = await cloud.loadAll();
+
+    if (cloudQuestions.isNotEmpty) {
+      await _repository.replaceAll(cloudQuestions);
+      await preferences.setBool(_cloudSeededKey, true);
+      return;
+    }
+
+    if (!cloudSeeded && _repository.questions.isNotEmpty) {
+      for (final question in _repository.questions) {
+        await cloud.save(question);
+      }
+
+      await preferences.setBool(_cloudSeededKey, true);
+      return;
+    }
+
+    if (cloudSeeded) {
+      await _repository.replaceAll(const <Question>[]);
+    }
+  }
 
   List<Question> allManagedQuestions() => _repository.questions;
 
@@ -40,6 +86,11 @@ class QuestionBankService {
   Future<List<QuestionQualityIssue>> saveDraft(Question question) async {
     final issues = validate(question);
 
+    final cloud = _cloudRepository;
+    if (cloud != null) {
+      await cloud.save(question);
+    }
+
     await _repository.save(question);
 
     return issues;
@@ -54,7 +105,6 @@ class QuestionBankService {
   Future<void> publish(Question question) async {
     final issues = validate(question);
 
-
     if (issues.any((issue) => issue.isError)) {
       throw StateError(issues.map((issue) => issue.message).join('\n'));
     }
@@ -63,10 +113,22 @@ class QuestionBankService {
       Question.fromJson({...question.toJson(), 'status': 'published'}),
     );
 
+    final cloud = _cloudRepository;
+    if (cloud != null) {
+      await cloud.save(publishedQuestion);
+    }
+
     await _repository.save(publishedQuestion);
   }
 
-  Future<void> delete(int questionId) => _repository.delete(questionId);
+  Future<void> delete(int questionId) async {
+    final cloud = _cloudRepository;
+    if (cloud != null) {
+      await cloud.delete(questionId);
+    }
+
+    await _repository.delete(questionId);
+  }
 
   int nextQuestionId() {
     final existing = <int>{for (final q in _repository.questions) q.id};

@@ -84,6 +84,16 @@ class LocalQuestionRepository {
     await _persist();
   }
 
+  /// Replaces the managed question cache with the supplied cloud snapshot.
+  ///
+  /// This is used by the Firebase-backed admin repository synchronization.
+  /// Student quiz consumption still reads from this local cache.
+  Future<void> replaceAll(List<Question> questions) async {
+    await initialize();
+    _questions = List<Question>.from(questions);
+    await _persist();
+  }
+
   List<Question> byQuizId(String quizId) {
     return _questions
         .where((question) => question.quizId == quizId)
