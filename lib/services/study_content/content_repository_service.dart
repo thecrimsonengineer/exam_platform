@@ -190,8 +190,23 @@ class ContentRepositoryService {
     await _storage.publish(latest);
   }
 
+  /// Archives the currently stored published copy.
+  ///
+  /// The repository state is authoritative. The supplied [content] object
+  /// is only used to identify the published version. This prevents stale
+  /// or draft objects from incorrectly blocking an archive operation.
   Future<void> archive(StudyContent content) async {
-    if (content.status.toLowerCase() != 'published') {
+    final current = await _storage.loadPublishedContent(content.id);
+
+    if (current == null) {
+      throw StateError(
+        'The selected package is no longer present in the published repository.',
+      );
+    }
+
+    final status = current.status.trim().toLowerCase();
+
+    if (status != 'published') {
       throw StateError('Only PUBLISHED content can be archived.');
     }
 
@@ -231,15 +246,54 @@ class ContentRepositoryService {
   }
 
   Future<void> saveDraft(StudyContent content) async {
+    final status = content.status.trim().toLowerCase();
+
+    // Existing validated/review/published fixtures and repository objects
+    // may legitimately be written directly to the cloud repository during
+    // repository-level testing or migration. Lifecycle transitions themselves
+    // remain enforced by the dedicated lifecycle methods.
+    if (status.isEmpty) {
+      throw StateError('Content lifecycle status cannot be empty.');
+    }
+
     await _storage.saveDraft(content);
   }
 
   Future<void> deleteDraft(StudyContent content) async {
+    final current = await _storage.loadDraft(content.id);
+
+    if (current == null) {
+      throw StateError(
+        'The selected draft is no longer present in the repository.',
+      );
+    }
+
+    final status = current.status.trim().toLowerCase();
+
+    if (status == 'published' || status == 'archived') {
+      throw StateError(
+        'Published lifecycle states cannot be deleted as drafts.',
+      );
+    }
+
     await _storage.deleteDraft(content.id);
   }
 
+  /// Permanently deletes the currently stored published or archived copy.
+  ///
+  /// The stored repository version is authoritative. This prevents a stale
+  /// [content] object from incorrectly determining whether deletion is
+  /// allowed.
   Future<void> deletePublishedVersion(StudyContent content) async {
-    final status = content.status.trim().toLowerCase();
+    final current = await _storage.loadPublishedContent(content.id);
+
+    if (current == null) {
+      throw StateError(
+        'The selected published version is no longer present in the repository.',
+      );
+    }
+
+    final status = current.status.trim().toLowerCase();
 
     if (status != 'published' && status != 'archived') {
       throw StateError(
@@ -250,15 +304,49 @@ class ContentRepositoryService {
     await _storage.deletePublished(content.id);
   }
 
+  /// Changes the status of an existing draft.
+  ///
+  /// G.5 enforces sequential lifecycle transitions:
+  ///
+  /// DRAFT -> REVIEW
+  /// REVIEW -> VALIDATED
+  ///
+  /// A draft cannot jump directly to VALIDATED and a validated package
+  /// cannot be moved backwards through this method.
   Future<void> refreshStatusAsDraft(StudyContent content, String status) async {
+    final requested = status.trim().toLowerCase();
+
     const allowed = <String>{'draft', 'review', 'validated'};
 
-    final normalized = status.toLowerCase();
-
-    if (!allowed.contains(normalized)) {
+    if (!allowed.contains(requested)) {
       throw StateError('Unsupported draft lifecycle status: $status');
     }
 
-    await _storage.updateDraftStatus(content.id, normalized);
+    final current = await _storage.loadDraft(content.id);
+
+    if (current == null) {
+      throw StateError(
+        'The selected package is no longer present in the draft repository.',
+      );
+    }
+
+    final existing = current.status.trim().toLowerCase();
+
+    if (existing == requested) {
+      return;
+    }
+
+    final validTransition =
+        (existing == 'draft' && requested == 'review') ||
+        (existing == 'review' && requested == 'validated');
+
+    if (!validTransition) {
+      throw StateError(
+        'Invalid draft lifecycle transition: '
+        '${existing.toUpperCase()} -> ${requested.toUpperCase()}.',
+      );
+    }
+
+    await _storage.updateDraftStatus(content.id, requested);
   }
 }

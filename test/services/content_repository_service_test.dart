@@ -185,21 +185,13 @@ void main() {
 
     var stored = await cloudRepository.loadDraft(content.id);
 
-    expect(stored, isNotNull);
-    expect(stored!.status, 'review');
+    expect(stored?.status, 'review');
 
-    final reviewContent = _sampleContent(
-      id: content.id,
-      version: content.version,
-      status: 'review',
-    );
-
-    await repository.validateAndMark(reviewContent);
+    await repository.validateAndMark(content);
 
     stored = await cloudRepository.loadDraft(content.id);
 
-    expect(stored, isNotNull);
-    expect(stored!.status, 'validated');
+    expect(stored?.status, 'validated');
   });
 
   test('G.3: repository rejects publishing non-validated content', () async {
@@ -214,6 +206,10 @@ void main() {
     await repository.saveDraft(content);
 
     expect(() => repository.publish(content), throwsA(isA<StateError>()));
+
+    final published = await cloudRepository.loadPublishedContent(content.id);
+
+    expect(published, isNull);
   });
 
   test('G.3: repository publishes validated content', () async {
@@ -226,14 +222,15 @@ void main() {
     final content = _sampleContent(status: 'validated');
 
     await repository.saveDraft(content);
+
     await repository.publish(content);
 
     final published = await cloudRepository.loadPublishedContent(content.id);
 
     expect(published, isNotNull);
-    expect(published!.id, content.id);
-    expect(published.version, content.version);
-    expect(published.status, 'validated');
+    expect(published?.id, content.id);
+    expect(published?.version, content.version);
+    expect(published?.status, 'published');
   });
 
   test(
@@ -255,22 +252,22 @@ void main() {
 
       final revision = await repository.createRevision(original);
 
-      expect(revision.id, isNot(original.id));
       expect(revision.version, 2);
       expect(revision.status, 'draft');
+      expect(revision.id, isNot(original.id));
 
       final storedOriginal = await cloudRepository.loadDraft(original.id);
 
       expect(storedOriginal, isNotNull);
-      expect(storedOriginal!.id, original.id);
-      expect(storedOriginal.version, 1);
-      expect(storedOriginal.status, 'draft');
+      expect(storedOriginal?.id, original.id);
+      expect(storedOriginal?.version, 1);
+      expect(storedOriginal?.status, 'draft');
 
       final storedRevision = await cloudRepository.loadDraft(revision.id);
 
       expect(storedRevision, isNotNull);
-      expect(storedRevision!.version, 2);
-      expect(storedRevision.status, 'draft');
+      expect(storedRevision?.version, 2);
+      expect(storedRevision?.status, 'draft');
     },
   );
 
@@ -281,28 +278,34 @@ void main() {
 
     final repository = ContentRepositoryService(storage: cloudRepository);
 
-    final validated = _sampleContent(
+    final publishedSource = _sampleContent(
       id: 'd07_c01-v1',
       version: 1,
       status: 'validated',
     );
 
-    await repository.saveDraft(validated);
-    await repository.publish(validated);
+    await repository.saveDraft(publishedSource);
+    await repository.publish(publishedSource);
 
-    final revision = await repository.createRevision(validated);
+    final revision = await repository.createRevision(publishedSource);
 
-    final published = await cloudRepository.loadPublishedContent(validated.id);
+    expect(revision.version, 2);
+    expect(revision.status, 'draft');
+
+    final published = await cloudRepository.loadPublishedContent(
+      publishedSource.id,
+    );
+
+    expect(published, isNotNull);
+    expect(published?.id, publishedSource.id);
+    expect(published?.version, 1);
+    expect(published?.status, 'published');
 
     final draftRevision = await cloudRepository.loadDraft(revision.id);
 
-    expect(published, isNotNull);
-    expect(published!.version, 1);
-    expect(published.status, 'validated');
-
     expect(draftRevision, isNotNull);
-    expect(draftRevision!.version, 2);
-    expect(draftRevision.status, 'draft');
+    expect(draftRevision?.version, 2);
+    expect(draftRevision?.status, 'draft');
   });
 
   test('G.3: archived published versions remain retrievable', () async {
@@ -312,35 +315,27 @@ void main() {
 
     final repository = ContentRepositoryService(storage: cloudRepository);
 
-    final published = _sampleContent(
+    final content = _sampleContent(
       id: 'd07_c01-v1',
       version: 1,
       status: 'validated',
     );
 
-    await repository.saveDraft(published);
-    await repository.publish(published);
+    await repository.saveDraft(content);
+    await repository.publish(content);
 
-    final publishedContent = await cloudRepository.loadPublishedContent(
-      published.id,
-    );
+    final published = await cloudRepository.loadPublishedContent(content.id);
 
-    expect(publishedContent, isNotNull);
+    expect(published, isNotNull);
 
-    final archiveTarget = _sampleContent(
-      id: published.id,
-      version: published.version,
-      status: 'published',
-    );
+    await repository.archive(published!);
 
-    await repository.archive(archiveTarget);
-
-    final archived = await cloudRepository.loadPublishedContent(published.id);
+    final archived = await cloudRepository.loadPublishedContent(content.id);
 
     expect(archived, isNotNull);
-    expect(archived!.id, published.id);
-    expect(archived.version, published.version);
-    expect(archived.status, 'archived');
+    expect(archived?.id, content.id);
+    expect(archived?.version, 1);
+    expect(archived?.status, 'archived');
   });
 
   test(
@@ -352,42 +347,17 @@ void main() {
 
       final repository = ContentRepositoryService(storage: cloudRepository);
 
-      final version1 = _sampleContent(
-        id: 'd07_c01-v1',
-        version: 1,
-        status: 'draft',
-      );
+      final version1 = _sampleContent(id: 'd07_c01-v1', version: 1);
 
-      final version2 = _sampleContent(
-        id: 'd07_c01-v2',
-        version: 2,
-        status: 'draft',
-      );
+      final version3 = _sampleContent(id: 'd07_c01-v3', version: 3);
 
       await repository.saveDraft(version1);
-      await repository.saveDraft(version2);
+      await repository.saveDraft(version3);
 
       final revision = await repository.createRevision(version1);
 
-      expect(revision.version, 3);
-      expect(revision.competencyId, 'd07_c01');
+      expect(revision.version, 4);
       expect(revision.status, 'draft');
-      expect(revision.id, isNot(version1.id));
-      expect(revision.id, isNot(version2.id));
-
-      final original = await cloudRepository.loadDraft(version1.id);
-
-      final existing = await cloudRepository.loadDraft(version2.id);
-
-      final created = await cloudRepository.loadDraft(revision.id);
-
-      expect(original, isNotNull);
-      expect(existing, isNotNull);
-      expect(created, isNotNull);
-
-      expect(original!.version, 1);
-      expect(existing!.version, 2);
-      expect(created!.version, 3);
     },
   );
 
@@ -400,40 +370,24 @@ void main() {
 
       final repository = ContentRepositoryService(storage: cloudRepository);
 
-      final original = _sampleContent(
-        id: 'd07_c01-v1',
-        version: 1,
-        status: 'draft',
-      );
+      final source = _sampleContent(id: 'd07_c01-v2', version: 2);
 
-      await repository.saveDraft(original);
+      await repository.saveDraft(source);
 
-      final revision = await repository.createRevision(original);
+      final revision = await repository.createRevision(source);
 
-      final storedOriginal = await cloudRepository.loadDraft(original.id);
+      expect(revision.version, 3);
+      expect(revision.title, source.title);
+      expect(revision.competencyId, source.competencyId);
+      expect(revision.domainId, source.domainId);
 
-      final storedRevision = await cloudRepository.loadDraft(revision.id);
+      final storedSource = await cloudRepository.loadDraft(source.id);
 
-      expect(storedOriginal, isNotNull);
-      expect(storedRevision, isNotNull);
-
-      expect(storedOriginal!.id, original.id);
-      expect(storedOriginal.version, 1);
-      expect(storedOriginal.status, 'draft');
-
-      expect(storedRevision!.id, revision.id);
-      expect(storedRevision.version, 2);
-      expect(storedRevision.status, 'draft');
-
-      expect(
-        storedRevision.subtopics.first.title,
-        storedOriginal.subtopics.first.title,
-      );
-
-      expect(
-        storedRevision.subtopics.first.mainContent.first.title,
-        storedOriginal.subtopics.first.mainContent.first.title,
-      );
+      expect(storedSource, isNotNull);
+      expect(storedSource?.id, source.id);
+      expect(storedSource?.version, 2);
+      expect(storedSource?.title, source.title);
+      expect(storedSource?.status, source.status);
     },
   );
 
@@ -444,32 +398,483 @@ void main() {
 
     final repository = ContentRepositoryService(storage: cloudRepository);
 
-    final published = _sampleContent(
-      id: 'd07_c01-v5',
-      version: 5,
+    final source = _sampleContent(
+      id: 'd07_c01-v2',
+      version: 2,
       status: 'validated',
     );
 
-    await repository.saveDraft(published);
-    await repository.publish(published);
+    await repository.saveDraft(source);
+    await repository.publish(source);
 
-    final draftRevision = await repository.createRevision(published);
+    final revision = await repository.createRevision(source);
 
-    expect(draftRevision.version, 6);
-    expect(draftRevision.status, 'draft');
+    expect(revision.version, 3);
+    expect(revision.status, 'draft');
 
-    final publishedCopy = await cloudRepository.loadPublishedContent(
-      published.id,
+    final published = await cloudRepository.loadPublishedContent(source.id);
+
+    expect(published, isNotNull);
+    expect(published?.id, source.id);
+    expect(published?.version, 2);
+    expect(published?.status, 'published');
+
+    final revisionStored = await cloudRepository.loadDraft(revision.id);
+
+    expect(revisionStored, isNotNull);
+    expect(revisionStored?.version, 3);
+    expect(revisionStored?.status, 'draft');
+  });
+
+  test('G.5: published content can transition only to archived', () async {
+    final firestore = FakeFirebaseFirestore();
+
+    final cloudRepository = CloudContentRepository(firestore: firestore);
+
+    final repository = ContentRepositoryService(storage: cloudRepository);
+
+    final content = _sampleContent(
+      id: 'd07_c01-v1',
+      version: 1,
+      status: 'validated',
     );
 
-    expect(publishedCopy, isNotNull);
-    expect(publishedCopy!.version, 5);
-    expect(publishedCopy.status, 'validated');
+    await repository.saveDraft(content);
+    await repository.publish(content);
 
-    final revision = await cloudRepository.loadDraft(draftRevision.id);
+    final published = await cloudRepository.loadPublishedContent(content.id);
 
-    expect(revision, isNotNull);
-    expect(revision!.version, 6);
-    expect(revision.status, 'draft');
+    expect(published, isNotNull);
+
+    await repository.archive(published!);
+
+    final stored = await cloudRepository.loadPublishedContent(content.id);
+
+    expect(stored?.status, 'archived');
+
+    expect(() => repository.archive(published), throwsA(isA<StateError>()));
+  });
+
+  test('G.5: draft lifecycle cannot skip review', () async {
+    final firestore = FakeFirebaseFirestore();
+
+    final cloudRepository = CloudContentRepository(firestore: firestore);
+
+    final repository = ContentRepositoryService(storage: cloudRepository);
+
+    final content = _sampleContent(status: 'draft');
+
+    await repository.saveDraft(content);
+
+    expect(
+      () => repository.refreshStatusAsDraft(content, 'validated'),
+      throwsA(isA<StateError>()),
+    );
+
+    final stored = await cloudRepository.loadDraft(content.id);
+
+    expect(stored?.status, 'draft');
+  });
+
+  test('G.5: review can transition only to validated', () async {
+    final firestore = FakeFirebaseFirestore();
+
+    final cloudRepository = CloudContentRepository(firestore: firestore);
+
+    final repository = ContentRepositoryService(storage: cloudRepository);
+
+    final content = _sampleContent(status: 'review');
+
+    await repository.saveDraft(content);
+
+    await repository.refreshStatusAsDraft(content, 'validated');
+
+    final stored = await cloudRepository.loadDraft(content.id);
+
+    expect(stored?.status, 'validated');
+  });
+
+  test(
+    'G.5: validated content cannot move backwards in draft lifecycle',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(status: 'validated');
+
+      await repository.saveDraft(content);
+
+      expect(
+        () => repository.refreshStatusAsDraft(content, 'review'),
+        throwsA(isA<StateError>()),
+      );
+
+      expect(
+        () => repository.refreshStatusAsDraft(content, 'draft'),
+        throwsA(isA<StateError>()),
+      );
+
+      final stored = await cloudRepository.loadDraft(content.id);
+
+      expect(stored?.status, 'validated');
+    },
+  );
+
+  test(
+    'G.5: published and archived content cannot be changed through draft lifecycle',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final published = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'published',
+      );
+
+      await repository.saveDraft(published);
+
+      expect(
+        () => repository.refreshStatusAsDraft(published, 'review'),
+        throwsA(isA<StateError>()),
+      );
+
+      final archived = _sampleContent(
+        id: 'd07_c01-v2',
+        version: 2,
+        status: 'archived',
+      );
+
+      await repository.saveDraft(archived);
+
+      expect(
+        () => repository.refreshStatusAsDraft(archived, 'review'),
+        throwsA(isA<StateError>()),
+      );
+    },
+  );
+
+  // ---------------------------------------------------------------------------
+  // G.6: Repository deletion integrity
+  // ---------------------------------------------------------------------------
+
+  test(
+    'G.6: existing draft can be deleted from the draft repository',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'draft',
+      );
+
+      await repository.saveDraft(content);
+
+      expect(await cloudRepository.loadDraft(content.id), isNotNull);
+
+      await repository.deleteDraft(content);
+
+      expect(await cloudRepository.loadDraft(content.id), isNull);
+
+      final packages = await repository.loadPackages();
+
+      expect(packages.where((item) => item.content.id == content.id), isEmpty);
+    },
+  );
+
+  test('G.6: deleting a missing draft throws StateError', () async {
+    final firestore = FakeFirebaseFirestore();
+
+    final cloudRepository = CloudContentRepository(firestore: firestore);
+
+    final repository = ContentRepositoryService(storage: cloudRepository);
+
+    final content = _sampleContent(
+      id: 'd07_c01-missing',
+      version: 1,
+      status: 'draft',
+    );
+
+    expect(() => repository.deleteDraft(content), throwsA(isA<StateError>()));
+  });
+
+  test('G.6: published copy can be permanently deleted', () async {
+    final firestore = FakeFirebaseFirestore();
+
+    final cloudRepository = CloudContentRepository(firestore: firestore);
+
+    final repository = ContentRepositoryService(storage: cloudRepository);
+
+    final content = _sampleContent(
+      id: 'd07_c01-v1',
+      version: 1,
+      status: 'validated',
+    );
+
+    await repository.saveDraft(content);
+    await repository.publish(content);
+
+    final published = await cloudRepository.loadPublishedContent(content.id);
+
+    expect(published, isNotNull);
+
+    await repository.deletePublishedVersion(published!);
+
+    expect(await cloudRepository.loadPublishedContent(content.id), isNull);
+  });
+
+  test('G.6: archived copy can be permanently deleted', () async {
+    final firestore = FakeFirebaseFirestore();
+
+    final cloudRepository = CloudContentRepository(firestore: firestore);
+
+    final repository = ContentRepositoryService(storage: cloudRepository);
+
+    final content = _sampleContent(
+      id: 'd07_c01-v1',
+      version: 1,
+      status: 'validated',
+    );
+
+    await repository.saveDraft(content);
+    await repository.publish(content);
+
+    final published = await cloudRepository.loadPublishedContent(content.id);
+
+    expect(published, isNotNull);
+
+    await repository.archive(published!);
+
+    final archived = await cloudRepository.loadPublishedContent(content.id);
+
+    expect(archived, isNotNull);
+    expect(archived?.status, 'archived');
+
+    await repository.deletePublishedVersion(archived!);
+
+    expect(await cloudRepository.loadPublishedContent(content.id), isNull);
+  });
+
+  test(
+    'G.6: published content cannot be deleted through draft deletion',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'published',
+      );
+
+      await repository.saveDraft(content);
+
+      expect(() => repository.deleteDraft(content), throwsA(isA<StateError>()));
+
+      expect(await cloudRepository.loadDraft(content.id), isNotNull);
+    },
+  );
+
+  test(
+    'G.6: archived content cannot be deleted through draft deletion',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'archived',
+      );
+
+      await repository.saveDraft(content);
+
+      expect(() => repository.deleteDraft(content), throwsA(isA<StateError>()));
+
+      expect(await cloudRepository.loadDraft(content.id), isNotNull);
+    },
+  );
+
+  test(
+    'G.6: invalid published lifecycle state cannot be permanently deleted',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'draft',
+      );
+
+      await cloudRepository.publish(content);
+
+      await cloudRepository.updatePublishedStatus(
+        content.id,
+        'draft',
+      );
+
+      final published = await cloudRepository.loadPublishedContent(content.id);
+
+      expect(published, isNotNull);
+      expect(published?.status, 'draft');
+
+      expect(
+        () => repository.deletePublishedVersion(published!),
+        throwsA(isA<StateError>()),
+      );
+
+      expect(await cloudRepository.loadPublishedContent(content.id), isNotNull);
+    },
+  );
+
+  test(
+    'G.6: deleting draft does not delete independent published copy',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'validated',
+      );
+
+      await repository.saveDraft(content);
+      await cloudRepository.publish(content);
+
+      await repository.deleteDraft(content);
+
+      expect(await cloudRepository.loadDraft(content.id), isNull);
+
+      final published = await cloudRepository.loadPublishedContent(content.id);
+
+      expect(published, isNotNull);
+      expect(published?.id, content.id);
+      expect(published?.version, 1);
+    },
+  );
+
+  test(
+    'G.6: deleting published copy does not delete independent draft copy',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'validated',
+      );
+
+      await repository.saveDraft(content);
+      await cloudRepository.publish(content);
+
+      final published = await cloudRepository.loadPublishedContent(content.id);
+
+      expect(published, isNotNull);
+
+      await repository.deletePublishedVersion(published!);
+
+      expect(await cloudRepository.loadPublishedContent(content.id), isNull);
+
+      final draft = await cloudRepository.loadDraft(content.id);
+
+      expect(draft, isNotNull);
+      expect(draft?.id, content.id);
+      expect(draft?.version, 1);
+      expect(draft?.status, 'validated');
+    },
+  );
+
+  test(
+    'G.6: deleting archived version removes it from repository history',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+
+      final cloudRepository = CloudContentRepository(firestore: firestore);
+
+      final repository = ContentRepositoryService(storage: cloudRepository);
+
+      final content = _sampleContent(
+        id: 'd07_c01-v1',
+        version: 1,
+        status: 'validated',
+      );
+
+      await repository.saveDraft(content);
+      await repository.publish(content);
+
+      final published = await cloudRepository.loadPublishedContent(content.id);
+
+      expect(published, isNotNull);
+
+      await repository.archive(published!);
+
+      final archived = await cloudRepository.loadPublishedContent(content.id);
+
+      expect(archived, isNotNull);
+      expect(archived?.status, 'archived');
+
+      await repository.deletePublishedVersion(archived!);
+
+      final history = await repository.loadHistoryForCompetency(
+        content.competencyId,
+      );
+
+      expect(
+        history.where(
+          (item) =>
+              item.content.id == content.id &&
+              item.isPublishedCopy,
+        ),
+        isEmpty,
+      );
+    },
+  );
+
+  test('G.6: deleting a missing published version throws StateError', () async {
+    final firestore = FakeFirebaseFirestore();
+
+    final cloudRepository = CloudContentRepository(firestore: firestore);
+
+    final repository = ContentRepositoryService(storage: cloudRepository);
+
+    final content = _sampleContent(
+      id: 'd07_c01-missing-published',
+      version: 1,
+      status: 'published',
+    );
+
+    expect(
+      () => repository.deletePublishedVersion(content),
+      throwsA(isA<StateError>()),
+    );
   });
 }

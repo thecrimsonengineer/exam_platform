@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/study_content.dart';
 
 /// Firebase-backed repository for CSP11 study-content versions.
-/// This remains separate from LocalStudyContentRepository during Phase D.
+///
+/// Firebase stores draft and published copies independently.
+/// The lifecycle status of a published copy is always stored as
+/// PUBLISHED when the publish operation succeeds.
 class CloudContentRepository {
   CloudContentRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -14,11 +17,14 @@ class CloudContentRepository {
       _firestore.collection('contentVersions');
 
   String _draftId(String contentId) => 'draft_$contentId';
+
   String _publishedId(String contentId) => 'published_$contentId';
 
   Future<List<StudyContent>> loadDrafts() async {
-    final snapshot =
-        await _collection.where('copyType', isEqualTo: 'draft').get();
+    final snapshot = await _collection
+        .where('copyType', isEqualTo: 'draft')
+        .get();
+
     return snapshot.docs
         .map(_fromQueryDocument)
         .whereType<StudyContent>()
@@ -27,13 +33,14 @@ class CloudContentRepository {
 
   Future<StudyContent?> loadDraft(String contentId) async {
     final doc = await _collection.doc(_draftId(contentId)).get();
+
     return _fromDocument(doc);
   }
 
   Future<void> saveDraft(StudyContent content) async {
-    await _collection.doc(_draftId(content.id)).set(
-      _toDocument(content, copyType: 'draft'),
-    );
+    await _collection
+        .doc(_draftId(content.id))
+        .set(_toDocument(content, copyType: 'draft'));
   }
 
   Future<void> updateDraftStatus(String contentId, String status) async {
@@ -48,18 +55,24 @@ class CloudContentRepository {
   }
 
   Future<void> clearDrafts() async {
-    final snapshot =
-        await _collection.where('copyType', isEqualTo: 'draft').get();
+    final snapshot = await _collection
+        .where('copyType', isEqualTo: 'draft')
+        .get();
+
     final batch = _firestore.batch();
+
     for (final doc in snapshot.docs) {
       batch.delete(doc.reference);
     }
+
     await batch.commit();
   }
 
   Future<List<StudyContent>> loadPublished() async {
-    final snapshot =
-        await _collection.where('copyType', isEqualTo: 'published').get();
+    final snapshot = await _collection
+        .where('copyType', isEqualTo: 'published')
+        .get();
+
     return snapshot.docs
         .map(_fromQueryDocument)
         .whereType<StudyContent>()
@@ -68,13 +81,24 @@ class CloudContentRepository {
 
   Future<StudyContent?> loadPublishedContent(String contentId) async {
     final doc = await _collection.doc(_publishedId(contentId)).get();
+
     return _fromDocument(doc);
   }
 
+  /// Creates an independent published copy.
+  ///
+  /// The published repository has its own lifecycle. Therefore the copy
+  /// is explicitly stored as PUBLISHED regardless of the status of the
+  /// source object.
   Future<void> publish(StudyContent content) async {
-    await _collection.doc(_publishedId(content.id)).set(
-      _toDocument(content, copyType: 'published'),
-    );
+    final json = Map<String, dynamic>.from(content.toJson())
+      ..['status'] = 'published';
+
+    final publishedContent = StudyContent.fromJson(json);
+
+    await _collection
+        .doc(_publishedId(content.id))
+        .set(_toDocument(publishedContent, copyType: 'published'));
   }
 
   Future<void> updatePublishedStatus(String contentId, String status) async {
@@ -89,12 +113,16 @@ class CloudContentRepository {
   }
 
   Future<void> clearPublished() async {
-    final snapshot =
-        await _collection.where('copyType', isEqualTo: 'published').get();
+    final snapshot = await _collection
+        .where('copyType', isEqualTo: 'published')
+        .get();
+
     final batch = _firestore.batch();
+
     for (final doc in snapshot.docs) {
       batch.delete(doc.reference);
     }
+
     await batch.commit();
   }
 
@@ -103,6 +131,7 @@ class CloudContentRepository {
     required String copyType,
   }) {
     final encoded = _encodeFirestoreSafe(content.toJson());
+
     return {
       ...Map<String, dynamic>.from(encoded as Map),
       'copyType': copyType,
@@ -111,18 +140,18 @@ class CloudContentRepository {
   }
 
   /// Firestore does not allow an array to directly contain another array.
-  /// StudyContent can legitimately contain structures such as table rows:
-  /// `rows: [[cell, cell], [cell, cell]]`.
   ///
-  /// Encode only nested arrays into a reversible marker map. Arrays of maps
-  /// and arrays of scalar values remain normal Firestore arrays.
+  /// StudyContent can legitimately contain structures such as table rows:
+  /// rows: [[cell, cell], [cell, cell]].
+  ///
+  /// Encode only nested arrays into a reversible marker map.
+  /// Arrays of maps and arrays of scalar values remain normal
+  /// Firestore arrays.
   dynamic _encodeFirestoreSafe(dynamic value) {
     if (value is Map) {
       return value.map(
-        (key, nestedValue) => MapEntry(
-          key.toString(),
-          _encodeFirestoreSafe(nestedValue),
-        ),
+        (key, nestedValue) =>
+            MapEntry(key.toString(), _encodeFirestoreSafe(nestedValue)),
       );
     }
 
@@ -135,8 +164,7 @@ class CloudContentRepository {
         return {
           'csp11FirestoreNestedListV1': true,
           'items': <String, dynamic>{
-            for (var i = 0; i < encodedItems.length; i++)
-              '$i': encodedItems[i],
+            for (var i = 0; i < encodedItems.length; i++) '$i': encodedItems[i],
           },
         };
       }
@@ -157,18 +185,18 @@ class CloudContentRepository {
           ..sort((a, b) {
             final ai = int.tryParse(a.key.toString()) ?? 0;
             final bi = int.tryParse(b.key.toString()) ?? 0;
+
             return ai.compareTo(bi);
           });
+
         return entries
             .map((entry) => _decodeFirestoreSafe(entry.value))
             .toList();
       }
 
       return value.map(
-        (key, nestedValue) => MapEntry(
-          key.toString(),
-          _decodeFirestoreSafe(nestedValue),
-        ),
+        (key, nestedValue) =>
+            MapEntry(key.toString(), _decodeFirestoreSafe(nestedValue)),
       );
     }
 
@@ -185,26 +213,32 @@ class CloudContentRepository {
     return _decode(doc.data());
   }
 
-  StudyContent? _fromDocument(
-    DocumentSnapshot<Map<String, dynamic>> doc,
-  ) {
-    if (!doc.exists) return null;
+  StudyContent? _fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+    if (!doc.exists) {
+      return null;
+    }
+
     final data = doc.data();
-    if (data == null) return null;
+
+    if (data == null) {
+      return null;
+    }
+
     return _decode(data);
   }
 
   StudyContent? _decode(Map<String, dynamic> source) {
     try {
       final decoded = _decodeFirestoreSafe(source);
+
       final data = Map<String, dynamic>.from(decoded as Map)
         ..remove('copyType')
         ..remove('updatedAt')
         ..remove('createdAt');
+
       return StudyContent.fromJson(data);
     } catch (_) {
       return null;
     }
   }
 }
-
