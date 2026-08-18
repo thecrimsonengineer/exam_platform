@@ -138,10 +138,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
   Future<void> _publishQuestion(Question question) async {
     try {
-      await _questionService.publish(
-        question,
-        quizQuestionCount: _questions.length,
-      );
+      await _questionService.publish(question);
 
       _refreshQuestions();
 

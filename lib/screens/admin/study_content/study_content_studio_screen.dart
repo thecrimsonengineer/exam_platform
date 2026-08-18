@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../models/question.dart';
+import '../../../models/studio_question_context.dart';
 import '../../../services/question_bank_service.dart';
+import '../../../services/quiz_service.dart';
 import '../../../services/study_content/content_import_service.dart';
 import '../../../services/study_content/content_repository_service.dart';
 import '../../../services/study_content/content_validator.dart';
@@ -53,7 +55,6 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
   int _overviewQuestionCount = 0;
   int _overviewPublishedCount = 0;
-  int _overviewExpectedQuestionCount = 0;
   bool _overviewQuizReady = false;
 
   int? _selectedSubtopicIndex;
@@ -1033,20 +1034,17 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   }
 
   String _practiceQuizId(StudyContent content, StudySubtopic subtopic) {
-    final linkedQuizId = subtopic.quizzes
-        .map((quiz) => quiz.quizId.trim())
-        .firstWhere((quizId) => quizId.isNotEmpty, orElse: () => '');
-
-    if (linkedQuizId.isNotEmpty) {
-      return linkedQuizId;
-    }
+    final context = StudioQuestionContext.fromContent(
+      content: content,
+      subtopic: subtopic,
+    );
 
     final resolvedQuizId = _resolvedPracticeQuizId?.trim() ?? '';
     if (resolvedQuizId.isNotEmpty) {
       return resolvedQuizId;
     }
 
-    return '${content.id}_${subtopic.id}_quiz';
+    return context.quizId;
   }
 
   void _scheduleFocusPracticeQuestion(int questionId) {
@@ -1145,7 +1143,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       if (resolvedQuizId.isEmpty) {
-        resolvedQuizId = '${content.id}_${subtopic.id}_quiz';
+        resolvedQuizId = StudioQuestionContext.canonicalQuizId(
+          content.id,
+          subtopic.id,
+        );
       }
 
       final questions = _questionService.byQuizId(resolvedQuizId)
@@ -1163,7 +1164,6 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         _loadingPracticeQuestions = false;
         _overviewQuestionCount = overviewStats.questionCount;
         _overviewPublishedCount = overviewStats.publishedCount;
-        _overviewExpectedQuestionCount = overviewStats.expectedQuestionCount;
         _overviewQuizReady = overviewStats.ready;
       });
 
@@ -1341,18 +1341,18 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
               final metrics = [
                 _PracticeMetric(
-                  value: '$questionCount / 5',
+                  value: '$questionCount',
                   label: 'Questions',
                   icon: Icons.help_outline_rounded,
-                  color: questionCount == 5
+                  color: questionCount >= 5
                       ? StudyColors.success
                       : StudyColors.warning,
                 ),
                 _PracticeMetric(
-                  value: '$publishedCount / 5',
+                  value: '$publishedCount',
                   label: 'Published',
                   icon: Icons.verified_rounded,
-                  color: publishedCount == 5
+                  color: publishedCount >= 5
                       ? StudyColors.success
                       : StudyColors.warning,
                 ),
@@ -1802,7 +1802,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         .where((question) => question.status.toLowerCase() == 'published')
         .length;
 
-    if (_practiceQuestions.length < 5 || publishedCount < 5) {
+    if (!QuizService.hasMinimumPublishedQuestions(publishedCount)) {
       _showPracticeMessage(
         'The subtopic must have at least 5 published questions '
         'before the quiz can be linked.',
@@ -3249,12 +3249,12 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         icon: Icons.quiz_rounded,
       ),
       _OverviewMetric(
-        value: '$_overviewQuestionCount/$_overviewExpectedQuestionCount',
+        value: '$_overviewQuestionCount',
         label: 'Questions',
         icon: Icons.help_outline_rounded,
       ),
       _OverviewMetric(
-        value: '$_overviewPublishedCount/$_overviewExpectedQuestionCount',
+        value: '$_overviewPublishedCount',
         label: 'Published',
         icon: Icons.publish_rounded,
       ),
@@ -3320,7 +3320,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       questionCount += subtopicQuestionCount;
       publishedCount += subtopicPublishedCount;
 
-      if (subtopicQuestionCount != 5 || subtopicPublishedCount != 5) {
+      if (!QuizService.hasMinimumPublishedQuestions(subtopicPublishedCount)) {
         ready = false;
       }
     }

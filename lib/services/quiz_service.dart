@@ -101,21 +101,26 @@ class QuizService {
 
   /// Subtopic quiz used by QuizController.
   ///
-  /// A dedicated subtopic quiz should contain exactly
-  /// five published questions.
+  /// A dedicated subtopic quiz requires at least five published questions.
+  /// There is no maximum question count. When more than five published
+  /// questions exist, the full published pool is randomized.
   List<Question> getShuffledQuestionsBySubtopic(String subtopicId) {
     final questions = getQuestionsBySubtopic(subtopicId);
 
-    if (questions.length != 5) {
+    if (!hasMinimumPublishedQuestions(questions.length)) {
       throw StateError(
-        'This subtopic has ${questions.length} '
-        'published questions. A dedicated subtopic '
-        'quiz requires exactly 5 questions.',
+        'This subtopic has ${questions.length} published questions. '
+        'A dedicated subtopic quiz requires at least 5 published questions.',
       );
     }
 
     return _shuffle(questions);
   }
+
+  /// Returns whether a dedicated subtopic quiz has its minimum
+  /// published-question pool. Five is a minimum, not a maximum.
+  static bool hasMinimumPublishedQuestions(int publishedCount) =>
+      publishedCount >= 5;
 
   /// Main-content topic quiz used by QuizController.
   List<Question> getShuffledQuestionsByTopic(String topicId) {

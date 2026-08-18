@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/question.dart';
+import '../../../models/studio_question_context.dart';
 import '../../../models/study_content.dart';
 import '../../../services/complete_question_paste_parser.dart';
 import '../../../services/question_bank_service.dart';
@@ -136,7 +137,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
   }
 
   String _quizId(StudyContent content, StudySubtopic subtopic) {
-    return '${content.id}_${subtopic.id}_quiz';
+    return StudioQuestionContext.canonicalQuizId(content.id, subtopic.id);
   }
 
   void _scheduleFocusQuestion(int questionId) {
@@ -322,10 +323,7 @@ class _QuestionBankScreenState extends State<QuestionBankScreen> {
 
   Future<void> _publishQuestion(Question question) async {
     try {
-      await _questionService.publish(
-        question,
-        quizQuestionCount: _questions.length,
-      );
+      await _questionService.publish(question);
 
       _refreshQuestions();
 
@@ -1122,7 +1120,10 @@ class _CompleteQuestionPasteDialogState
         topicId: widget.subtopic.mainContent.isEmpty
             ? ''
             : widget.subtopic.mainContent.first.id,
-        quizId: '${widget.content.id}_${widget.subtopic.id}_quiz',
+        quizId: StudioQuestionContext.canonicalQuizId(
+        widget.content.id,
+        widget.subtopic.id,
+      ),
         contentPackageId: widget.content.id,
       );
 
@@ -1552,7 +1553,10 @@ class _QuestionEditorDialogState extends State<_QuestionEditorDialog> {
       topicId: widget.subtopic.mainContent.isEmpty
           ? ''
           : widget.subtopic.mainContent.first.id,
-      quizId: '${widget.content.id}_${widget.subtopic.id}_quiz',
+      quizId: StudioQuestionContext.canonicalQuizId(
+        widget.content.id,
+        widget.subtopic.id,
+      ),
       contentPackageId: widget.content.id,
       question: _stem.text.trim(),
       options: _options.map((controller) => controller.text.trim()).toList(),

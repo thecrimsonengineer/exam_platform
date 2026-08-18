@@ -46,18 +46,14 @@ class QuestionBankService {
   }
 
   /// Publishes a question only when all mandatory quality checks pass.
-  Future<void> publish(
-    Question question, {
-    required int quizQuestionCount,
-  }) async {
+  ///
+  /// Publication is independent of the dedicated subtopic quiz minimum.
+  /// A valid question may be published even when the subtopic has fewer
+  /// than five published questions. The five-question rule controls quiz
+  /// readiness/linking, not individual question publication.
+  Future<void> publish(Question question) async {
     final issues = validate(question);
 
-    if (quizQuestionCount < 5) {
-      throw StateError(
-        'A subtopic quiz must contain atleast 5 questions '
-        'before publication.',
-      );
-    }
 
     if (issues.any((issue) => issue.isError)) {
       throw StateError(issues.map((issue) => issue.message).join('\n'));

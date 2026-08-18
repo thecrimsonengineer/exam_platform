@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../models/question.dart';
 import '../../models/study_content.dart';
+import '../question_quality_validator.dart';
 
 class ContentImportResult {
   final StudyContent? content;
@@ -58,7 +59,15 @@ class ContentImportIssue {
 }
 
 class ContentImportService {
-  const ContentImportService();
+  const ContentImportService({this.answerLengthCheckEnabled = true});
+
+  /// Controls only the optional answer-length quality criterion.
+  /// All other CSP11 question quality checks remain active.
+  final bool answerLengthCheckEnabled;
+
+  QuestionQualityValidator get _questionValidator => QuestionQualityValidator(
+    answerLengthCheckEnabled: answerLengthCheckEnabled,
+  );
 
   ContentImportResult importJson(String source) {
     final trimmed = source.trim();
@@ -246,6 +255,22 @@ class ContentImportService {
               severity: ContentImportIssueSeverity.error,
               message: 'Question must contain exactly one valid BEST answer.',
               path: '$path.correctAnswer',
+            ),
+          );
+        }
+
+        // Use the same CSP11 question-quality gate as the Question Bank.
+        // This prevents Studio JSON imports from bypassing quality rules.
+        final qualityIssues = _questionValidator.validate(question);
+
+        for (final qualityIssue in qualityIssues) {
+          issues.add(
+            ContentImportIssue(
+              severity: qualityIssue.isError
+                  ? ContentImportIssueSeverity.error
+                  : ContentImportIssueSeverity.warning,
+              message: qualityIssue.message,
+              path: '$path.quality',
             ),
           );
         }

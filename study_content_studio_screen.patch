@@ -1,0 +1,47 @@
+--- lib/screens/admin/study_content/study_content_studio_screen.dart	2026-08-14 06:08:33.000000000 +0000
++++ /mnt/data/csp11_audit_work/exam_platform/lib/screens/admin/study_content/study_content_studio_screen.dart	2026-08-18 04:59:03.784021594 +0000
+@@ -1,5 +1,6 @@
+ import 'package:flutter/material.dart';
+ import '../../../models/question.dart';
++import '../../../models/studio_question_context.dart';
+ import '../../../services/question_bank_service.dart';
+ import '../../../services/study_content/content_import_service.dart';
+ import '../../../services/study_content/content_repository_service.dart';
+@@ -1033,20 +1034,17 @@
+   }
+ 
+   String _practiceQuizId(StudyContent content, StudySubtopic subtopic) {
+-    final linkedQuizId = subtopic.quizzes
+-        .map((quiz) => quiz.quizId.trim())
+-        .firstWhere((quizId) => quizId.isNotEmpty, orElse: () => '');
+-
+-    if (linkedQuizId.isNotEmpty) {
+-      return linkedQuizId;
+-    }
++    final context = StudioQuestionContext.fromContent(
++      content: content,
++      subtopic: subtopic,
++    );
+ 
+     final resolvedQuizId = _resolvedPracticeQuizId?.trim() ?? '';
+     if (resolvedQuizId.isNotEmpty) {
+       return resolvedQuizId;
+     }
+ 
+-    return '${content.id}_${subtopic.id}_quiz';
++    return context.quizId;
+   }
+ 
+   void _scheduleFocusPracticeQuestion(int questionId) {
+@@ -1145,7 +1143,10 @@
+       }
+ 
+       if (resolvedQuizId.isEmpty) {
+-        resolvedQuizId = '${content.id}_${subtopic.id}_quiz';
++        resolvedQuizId = StudioQuestionContext.canonicalQuizId(
++          content.id,
++          subtopic.id,
++        );
+       }
+ 
+       final questions = _questionService.byQuizId(resolvedQuizId)
