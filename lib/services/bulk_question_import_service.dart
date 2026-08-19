@@ -11,9 +11,7 @@ class BulkQuestionImportService {
         .where((item) => item.isNotEmpty);
 
     return List.unmodifiable(
-      blocks
-          .map(_parseBlock)
-          .whereType<QuestionEntryDraft>(),
+      blocks.map(_parseBlock).whereType<QuestionEntryDraft>(),
     );
   }
 
@@ -99,10 +97,10 @@ class BulkQuestionImportService {
     }
 
     return QuestionEntryDraft(
-      stem: stem!.trim(),
+      stem: stem.trim(),
       options: List.unmodifiable(options),
-      bestAnswer: bestAnswer!.trim(),
-      explanation: explanation!.trim(),
+      bestAnswer: bestAnswer.trim(),
+      explanation: explanation.trim(),
       reference: _nullable(reference),
       tags: List.unmodifiable(tags),
       difficulty: _nullable(difficulty),
@@ -120,7 +118,7 @@ class BulkQuestionImportService {
     if (item.isEmpty) {
       return current;
     }
-    if (current == null || current!.isEmpty) {
+    if (current == null || current.isEmpty) {
       return item;
     }
     return '$current\n$item';

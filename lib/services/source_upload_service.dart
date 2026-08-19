@@ -10,13 +10,11 @@ class SourceUploadService {
   final List<SourceExtractionAdapter> _adapters;
 
   const SourceUploadService({
-    ContentSourceLibraryService library =
-        const ContentSourceLibraryService(),
+    this._library = const ContentSourceLibraryService(),
     List<SourceExtractionAdapter> adapters = const [
       PlainTextSourceExtractionAdapter(),
     ],
-  })  : _library = library,
-        _adapters = adapters;
+  }) : _adapters = adapters;
 
   Future<SourceExtractionResult?> selectAndExtract() async {
     const group = XTypeGroup(
@@ -35,8 +33,7 @@ class SourceUploadService {
     final mimeType = file.mimeType ?? '';
 
     final now = DateTime.now();
-    final sourceId =
-        'src_${now.microsecondsSinceEpoch}';
+    final sourceId = 'src_${now.microsecondsSinceEpoch}';
 
     final source = ContentSource(
       id: sourceId,
@@ -53,10 +50,7 @@ class SourceUploadService {
     await _library.save(source);
 
     for (final adapter in _adapters) {
-      if (adapter.supports(
-        fileName: file.name,
-        mimeType: mimeType,
-      )) {
+      if (adapter.supports(fileName: file.name, mimeType: mimeType)) {
         final pages = await adapter.extract(bytes: bytes);
         await _library.save(
           source.copyWith(
@@ -90,8 +84,7 @@ class SourceUploadService {
       byteLength: bytes.length,
       pages: const [],
       successful: false,
-      errorMessage:
-          'No extraction adapter is registered for this file type.',
+      errorMessage: 'No extraction adapter is registered for this file type.',
     );
   }
 }

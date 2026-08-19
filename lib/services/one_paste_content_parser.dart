@@ -168,7 +168,7 @@ class OnePasteContentParser {
     if (item.isEmpty) {
       return current;
     }
-    if (current == null || current!.trim().isEmpty) {
+    if (current == null || current.trim().isEmpty) {
       return item;
     }
     return '$current\n$item';
@@ -188,7 +188,5 @@ class _TopicBuffer {
   String? examTip;
   String? reference;
 
-  _TopicBuffer({
-    required this.title,
-  });
+  _TopicBuffer({required this.title});
 }
