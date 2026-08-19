@@ -2,7 +2,7 @@ import '../models/question.dart';
 import '../services/quiz_service.dart';
 
 class QuizController {
-  final QuizService _quizService = QuizService();
+  final QuizService _quizService;
 
   late List<Question> questions;
 
@@ -18,13 +18,9 @@ class QuizController {
   // ==========================================================
 
   /// Creates a quiz from a specific CSP domain.
-  QuizController({
-    required int domain,
-  }) {
-    questions = _quizService.getQuiz(
-      domain: domain,
-      numberOfQuestions: 10,
-    );
+  QuizController({required int domain, QuizService? quizService})
+    : _quizService = quizService ?? QuizService() {
+    questions = _quizService.getQuiz(domain: domain, numberOfQuestions: 10);
   }
 
   // ==========================================================
@@ -32,9 +28,8 @@ class QuizController {
   // ==========================================================
 
   /// Creates a quiz using the existing quiz catalog.
-  QuizController.byQuizId({
-    required String quizId,
-  }) {
+  QuizController.byQuizId({required String quizId, QuizService? quizService})
+    : _quizService = quizService ?? QuizService() {
     questions = _quizService.getQuizById(quizId);
   }
 
@@ -45,11 +40,9 @@ class QuizController {
   /// Creates a quiz containing questions from a competency.
   QuizController.byCompetency({
     required String competencyId,
-  }) {
-    questions = _quizService
-        .getShuffledQuestionsByCompetency(
-      competencyId,
-    );
+    QuizService? quizService,
+  }) : _quizService = quizService ?? QuizService() {
+    questions = _quizService.getShuffledQuestionsByCompetency(competencyId);
   }
 
   // ==========================================================
@@ -59,11 +52,9 @@ class QuizController {
   /// Creates a quiz containing questions from a subtopic.
   QuizController.bySubtopic({
     required String subtopicId,
-  }) {
-    questions = _quizService
-        .getShuffledQuestionsBySubtopic(
-      subtopicId,
-    );
+    QuizService? quizService,
+  }) : _quizService = quizService ?? QuizService() {
+    questions = _quizService.getShuffledQuestionsBySubtopic(subtopicId);
   }
 
   // ==========================================================
@@ -72,13 +63,9 @@ class QuizController {
 
   /// Creates a quiz containing questions from
   /// one main-content topic.
-  QuizController.byTopic({
-    required String topicId,
-  }) {
-    questions = _quizService
-        .getShuffledQuestionsByTopic(
-      topicId,
-    );
+  QuizController.byTopic({required String topicId, QuizService? quizService})
+    : _quizService = quizService ?? QuizService() {
+    questions = _quizService.getShuffledQuestionsByTopic(topicId);
   }
 
   // ==========================================================
@@ -86,12 +73,14 @@ class QuizController {
   // ==========================================================
 
   /// Creates a quiz from previously incorrect questions.
+  ///
+  /// Review questions are already supplied by the caller, so
+  /// no QuizService loading is required.
   QuizController.review({
     required List<Question> questions,
-  }) {
-    this.questions = List<Question>.from(
-      questions,
-    );
+    QuizService? quizService,
+  }) : _quizService = quizService ?? QuizService() {
+    this.questions = List<Question>.from(questions);
   }
 
   // ==========================================================
@@ -115,13 +104,10 @@ class QuizController {
 
     submitted = true;
 
-    if (selectedAnswer ==
-        currentQuestionData.correctAnswer) {
+    if (selectedAnswer == currentQuestionData.correctAnswer) {
       score++;
     } else {
-      incorrectQuestions.add(
-        currentQuestionData,
-      );
+      incorrectQuestions.add(currentQuestionData);
     }
   }
 
@@ -158,8 +144,7 @@ class QuizController {
       return 0.0;
     }
 
-    return (currentQuestion + 1) /
-        questions.length;
+    return (currentQuestion + 1) / questions.length;
   }
 
   bool get isLastQuestion {
@@ -167,19 +152,14 @@ class QuizController {
       return false;
     }
 
-    return currentQuestion ==
-        questions.length - 1;
+    return currentQuestion == questions.length - 1;
   }
 
-  int get questionNumber =>
-      currentQuestion + 1;
+  int get questionNumber => currentQuestion + 1;
 
-  int get totalQuestions =>
-      questions.length;
+  int get totalQuestions => questions.length;
 
-  int get correctAnswers =>
-      score;
+  int get correctAnswers => score;
 
-  int get incorrectAnswers =>
-      totalQuestions - score;
+  int get incorrectAnswers => totalQuestions - score;
 }
