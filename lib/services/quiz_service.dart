@@ -1,29 +1,40 @@
 import 'dart:math';
 
 import '../models/question.dart';
+import '../models/study_content.dart';
 import 'cloud_question_repository.dart';
+import 'study_content/cloud_content_repository.dart';
 
 /// Central quiz service for the CSP11 application.
 ///
-/// Student quizzes consume Published questions from Firebase.
+/// Student quizzes can receive questions from two Firebase-backed sources:
 ///
-/// Questions may originate from:
-/// 1. Independent question authoring in the managed question repository.
-/// 2. Questions associated with a CSP11 content package/version.
+/// 1. Independently managed questions in the `questions` collection.
+/// 2. Questions embedded inside published StudyContent packages/versions.
 ///
-/// Both are represented as Question documents in the Firebase
-/// `questions` collection. The quiz service intentionally does not require
-/// a question to have a quizId or contentPackageId in order to participate
-/// in normal domain, competency, topic, or subtopic quizzes.
+/// Both sources are combined into one published student question pool.
 ///
-/// Offline caching is intentionally deferred to Phase K.
+/// Only Published questions are exposed to the student quiz system.
+///
+/// Offline caching and synchronization are intentionally deferred to
+/// Phase K.
 class QuizService {
-  QuizService({CloudQuestionRepository? repository})
-    : _repository = repository ?? CloudQuestionRepository();
+  QuizService({
+    CloudQuestionRepository? repository,
+    CloudQuestionRepository? questionRepository,
+    CloudContentRepository? contentRepository,
+  }) : _questionRepository =
+           questionRepository ?? repository ?? CloudQuestionRepository(),
+       _contentRepository = contentRepository ?? CloudContentRepository();
 
-  final CloudQuestionRepository _repository;
+  /// Firebase repository for independently managed questions.
+  final CloudQuestionRepository _questionRepository;
+
+  /// Firebase repository for published StudyContent packages/versions.
+  final CloudContentRepository _contentRepository;
 
   List<Question> _questions = const <Question>[];
+
   bool _initialized = false;
 
   bool get isInitialized => _initialized;
@@ -32,23 +43,63 @@ class QuizService {
   // INITIALIZATION
   // ==========================================================
 
-  /// Loads the complete managed question pool from Firebase.
+  /// Loads the complete published student question pool.
   ///
-  /// Only Published questions are retained for student consumption.
+  /// Questions are collected from:
   ///
-  /// Questions are allowed to exist independently of a content version.
-  /// Questions linked to a content package/version are also retained.
+  /// - the Firebase `questions` collection
+  /// - questions embedded inside published StudyContent
+  ///
+  /// Duplicate question IDs are removed.
+  ///
+  /// Questions originating from published StudyContent are treated as
+  /// published because the containing content package/version itself is
+  /// published.
   Future<void> initialize() async {
-    final questions = await _repository.loadAll();
+    final independentQuestions = await _questionRepository.loadAll();
+    final publishedContent = await _contentRepository.loadPublished();
 
-    _questions = _published(questions);
+    final merged = <int, Question>{};
+
+    // ----------------------------------------------------------
+    // SOURCE 1
+    // Independently managed Firebase questions
+    // ----------------------------------------------------------
+
+    for (final question in independentQuestions) {
+      if (!_isPublished(question)) {
+        continue;
+      }
+
+      if (question.id <= 0) {
+        continue;
+      }
+
+      merged[question.id] = question;
+    }
+
+    // ----------------------------------------------------------
+    // SOURCE 2
+    // Questions embedded in published content
+    // ----------------------------------------------------------
+
+    for (final content in publishedContent) {
+      if (!_isPublishedContent(content)) {
+        continue;
+      }
+
+      _addContentQuestions(content: content, target: merged);
+    }
+
+    _questions = merged.values.toList()..sort((a, b) => a.id.compareTo(b.id));
+
     _initialized = true;
   }
 
   /// Reloads the published question pool from Firebase.
   ///
-  /// This is useful when newly published questions have been added after
-  /// the service was initialized during the current application session.
+  /// Useful when new questions or content versions have been published
+  /// after the current session was initialized.
   Future<void> refresh() async {
     await initialize();
   }
@@ -57,11 +108,10 @@ class QuizService {
   // BASIC PUBLISHED QUESTION ACCESS
   // ==========================================================
 
-  /// Returns every published question available to the student platform.
+  /// Returns every published question available to students.
   ///
-  /// This includes:
-  /// - independently authored published questions
-  /// - published questions linked to content packages/versions
+  /// This includes both independent questions and questions originating
+  /// from published content versions.
   List<Question> getAllQuestions() {
     return _published(_questions);
   }
@@ -88,7 +138,7 @@ class QuizService {
 
   /// Returns all published questions for a specific subtopic.
   ///
-  /// The subtopic relationship is the primary mapping used by dedicated
+  /// The subtopic ID is the primary mapping used for dedicated
   /// CSP11 subtopic quizzes.
   List<Question> getQuestionsBySubtopic(String subtopicId) {
     final normalizedId = subtopicId.trim();
@@ -115,10 +165,7 @@ class QuizService {
     );
   }
 
-  /// Returns all published questions for a specific quiz ID.
-  ///
-  /// quizId is optional in the Question model. Therefore this method only
-  /// returns questions that explicitly carry the requested quizId.
+  /// Returns all published questions explicitly assigned to a quiz ID.
   List<Question> getQuestionsByQuizId(String quizId) {
     final normalizedId = quizId.trim();
 
@@ -132,9 +179,6 @@ class QuizService {
   }
 
   /// Returns all published questions associated with a content package.
-  ///
-  /// This can be used when a quiz is intentionally tied to a particular
-  /// content package/version.
   List<Question> getQuestionsByContentPackage(String contentPackageId) {
     final normalizedId = contentPackageId.trim();
 
@@ -152,8 +196,6 @@ class QuizService {
   // ==========================================================
 
   /// Domain quiz used by QuizController.
-  ///
-  /// The current domain quiz defaults to the requested number of questions.
   List<Question> getQuiz({
     required int domain,
     required int numberOfQuestions,
@@ -162,12 +204,8 @@ class QuizService {
   }
 
   /// Quiz-ID-based quiz used by QuizController.
-  ///
-  /// Questions are randomized and never duplicated.
   List<Question> getQuizById(String quizId) {
-    final questions = getQuestionsByQuizId(quizId);
-
-    return _shuffle(questions);
+    return _shuffle(getQuestionsByQuizId(quizId));
   }
 
   /// Competency quiz used by QuizController.
@@ -177,11 +215,10 @@ class QuizService {
 
   /// Subtopic quiz used by QuizController.
   ///
-  /// A dedicated subtopic quiz requires at least five published questions.
-  /// Five is the minimum, not the maximum.
+  /// A dedicated subtopic quiz requires at least five published
+  /// questions.
   ///
-  /// Questions may be independent or linked to a content package/version.
-  /// The subtopicId is the mapping used to collect them.
+  /// Five is the minimum, not the maximum.
   List<Question> getShuffledQuestionsBySubtopic(String subtopicId) {
     final questions = getQuestionsBySubtopic(subtopicId);
 
@@ -195,30 +232,25 @@ class QuizService {
     return _shuffle(questions);
   }
 
-  /// Returns whether a dedicated subtopic quiz has its minimum
-  /// published-question pool.
-  static bool hasMinimumPublishedQuestions(int publishedCount) {
-    return publishedCount >= 5;
-  }
-
-  /// Main-content topic quiz used by QuizController.
+  /// Topic quiz used by QuizController.
   List<Question> getShuffledQuestionsByTopic(String topicId) {
     return _shuffle(getQuestionsByTopic(topicId));
   }
 
+  /// Returns whether a subtopic has enough published questions
+  /// for a dedicated quiz.
+  static bool hasMinimumPublishedQuestions(int publishedCount) {
+    return publishedCount >= 5;
+  }
+
   // ==========================================================
-  // DYNAMIC MAIN-PAGE QUIZZES
+  // DYNAMIC QUIZ BUILDERS
   // ==========================================================
 
-  /// Mixed CSP11 quiz.
+  /// Builds a mixed CSP11 quiz.
   ///
-  /// Questions may come from:
-  /// - any published domain
-  /// - any published competency
-  /// - any published topic
-  /// - any published subtopic
-  /// - independent questions
-  /// - content-version-linked questions
+  /// Questions may come from any published domain, competency,
+  /// topic, subtopic, content package, or independent question source.
   List<Question> getMixedQuiz({
     required int numberOfQuestions,
     String? difficulty,
@@ -232,7 +264,7 @@ class QuizService {
     );
   }
 
-  /// Quiz restricted to one domain.
+  /// Builds a quiz restricted to one domain.
   List<Question> getDomainQuiz({
     required int domain,
     required int numberOfQuestions,
@@ -247,7 +279,7 @@ class QuizService {
     );
   }
 
-  /// Quiz restricted to one competency.
+  /// Builds a quiz restricted to one competency.
   List<Question> getCompetencyQuiz({
     required String competencyId,
     required int numberOfQuestions,
@@ -262,9 +294,10 @@ class QuizService {
     );
   }
 
-  /// Quiz restricted to one subtopic.
+  /// Builds a quiz restricted to one subtopic.
   ///
-  /// Questions may be independent or associated with a content version.
+  /// Questions may be independent or embedded in a published
+  /// content version.
   List<Question> getSubtopicQuiz({
     required String subtopicId,
     int numberOfQuestions = 5,
@@ -279,7 +312,7 @@ class QuizService {
     );
   }
 
-  /// Quiz restricted to one topic.
+  /// Builds a quiz restricted to one topic.
   List<Question> getTopicQuiz({
     required String topicId,
     required int numberOfQuestions,
@@ -294,10 +327,7 @@ class QuizService {
     );
   }
 
-  /// Quiz restricted to one content package/version.
-  ///
-  /// This is useful when the UI needs a quiz tied specifically to the
-  /// published content package currently being studied.
+  /// Builds a quiz restricted to one content package/version.
   List<Question> getContentPackageQuiz({
     required String contentPackageId,
     required int numberOfQuestions,
@@ -317,12 +347,6 @@ class QuizService {
   // ==========================================================
 
   /// Returns published questions matching all supplied filters.
-  ///
-  /// All filters are optional.
-  ///
-  /// Important:
-  /// contentPackageId is optional because independently authored questions
-  /// may not belong to a content package/version.
   List<Question> getFilteredQuestions({
     int? domain,
     String? competencyId,
@@ -345,8 +369,8 @@ class QuizService {
     );
   }
 
-  /// Returns the number of published questions matching the supplied
-  /// filters.
+  /// Returns the number of published questions matching
+  /// the supplied filters.
   int getAvailableQuestionCount({
     int? domain,
     String? competencyId,
@@ -369,37 +393,34 @@ class QuizService {
     ).length;
   }
 
-  /// Returns the total number of published managed questions.
+  // ==========================================================
+  // QUESTION COUNTS
+  // ==========================================================
+
   int getTotalQuestions() {
     return getAllQuestions().length;
   }
 
-  /// Returns the number of published questions in one domain.
   int getDomainQuestionCount(int domain) {
     return getQuestionsByDomain(domain).length;
   }
 
-  /// Returns the number of published questions in one competency.
   int getCompetencyQuestionCount(String competencyId) {
     return getQuestionsByCompetency(competencyId).length;
   }
 
-  /// Returns the number of published questions in one topic.
   int getTopicQuestionCount(String topicId) {
     return getQuestionsByTopic(topicId).length;
   }
 
-  /// Returns the number of published questions in one subtopic.
   int getSubtopicQuestionCount(String subtopicId) {
     return getQuestionsBySubtopic(subtopicId).length;
   }
 
-  /// Returns the number of published questions in one quiz.
   int getQuizQuestionCount(String quizId) {
     return getQuestionsByQuizId(quizId).length;
   }
 
-  /// Returns the number of published questions in one content package.
   int getContentPackageQuestionCount(String contentPackageId) {
     return getQuestionsByContentPackage(contentPackageId).length;
   }
@@ -408,11 +429,11 @@ class QuizService {
   // GENERIC QUIZ BUILDER
   // ==========================================================
 
-  /// Builds a randomized quiz from the managed published pool.
+  /// Builds a randomized quiz from the published question pool.
   ///
   /// Questions are never duplicated.
   ///
-  /// The requested number must not exceed the available published pool.
+  /// The requested number must not exceed the available pool.
   List<Question> buildQuiz({
     int? domain,
     String? competencyId,
@@ -451,7 +472,7 @@ class QuizService {
   }
 
   // ==========================================================
-  // INTERNAL HELPERS
+  // INTERNAL QUIZ HELPERS
   // ==========================================================
 
   List<Question> _buildQuiz(
@@ -568,13 +589,139 @@ class QuizService {
     return pool.toList();
   }
 
-  List<Question> _published(Iterable<Question> questions) {
-    return questions
-        .where(
-          (question) => question.status.trim().toLowerCase() == 'published',
-        )
-        .toList();
+  // ==========================================================
+  // CONTENT-VERSION QUESTION IMPORT
+  // ==========================================================
+
+  /// Adds questions embedded in one published StudyContent package.
+  ///
+  /// The containing StudyContent is already published because it came
+  /// from CloudContentRepository.loadPublished().
+  ///
+  /// Missing hierarchy metadata is filled from the content hierarchy:
+  ///
+  /// domain       <- StudyContent.domainId
+  /// competency   <- StudyContent.competencyId
+  /// subtopic     <- StudySubtopic.id
+  /// content      <- StudyContent.id
+  /// version      <- StudyContent.version
+  /// status       <- published
+  void _addContentQuestions({
+    required StudyContent content,
+    required Map<int, Question> target,
+  }) {
+    final domain = _parseDomainNumber(content.domainId);
+    final competencyId = content.competencyId.trim();
+    final contentPackageId = content.id.trim();
+
+    for (final subtopic in content.subtopics) {
+      final subtopicId = subtopic.id.trim();
+
+      for (final question in subtopic.questions) {
+        if (question.id <= 0) {
+          continue;
+        }
+
+        if (!_isPublished(question)) {
+          continue;
+        }
+
+        final normalized = _normalizeContentQuestion(
+          question: question,
+          domain: domain,
+          competencyId: competencyId,
+          subtopicId: subtopicId,
+          contentPackageId: contentPackageId,
+          contentVersion: content.version,
+        );
+
+        // Do not overwrite an independently managed Firebase
+        // question with an embedded copy using the same ID.
+        //
+        // The central questions collection is the stronger managed
+        // source when both sources contain the same question ID.
+        target.putIfAbsent(normalized.id, () => normalized);
+      }
+    }
   }
+
+  /// Creates the student-facing representation of an embedded
+  /// content question.
+  Question _normalizeContentQuestion({
+    required Question question,
+    required int domain,
+    required String competencyId,
+    required String subtopicId,
+    required String contentPackageId,
+    required int contentVersion,
+  }) {
+    return Question(
+      id: question.id,
+      domain: question.domain > 0 ? question.domain : domain,
+      competencyId: question.competencyId.trim().isNotEmpty
+          ? question.competencyId.trim()
+          : competencyId,
+      subtopicId: question.subtopicId.trim().isNotEmpty
+          ? question.subtopicId.trim()
+          : subtopicId,
+      topicId: question.topicId.trim(),
+      quizId: question.quizId.trim(),
+      contentPackageId: question.contentPackageId.trim().isNotEmpty
+          ? question.contentPackageId.trim()
+          : contentPackageId,
+      question: question.question,
+      options: List<String>.from(question.options),
+      correctAnswer: question.correctAnswer,
+      explanation: question.explanation,
+      bestAnswerRationale: question.bestAnswerRationale,
+      reference: question.reference,
+      difficulty: question.difficulty,
+      cognitiveLevel: question.cognitiveLevel,
+      questionType: question.questionType,
+      status: 'published',
+      version: question.version > 0 ? question.version : contentVersion,
+      tags: List<String>.from(question.tags),
+    );
+  }
+
+  // ==========================================================
+  // STATUS / ID HELPERS
+  // ==========================================================
+
+  bool _isPublished(Question question) {
+    return question.status.trim().toLowerCase() == 'published';
+  }
+
+  bool _isPublishedContent(StudyContent content) {
+    return content.status.trim().toLowerCase() == 'published';
+  }
+
+  List<Question> _published(Iterable<Question> questions) {
+    return questions.where(_isPublished).toList();
+  }
+
+  int _parseDomainNumber(String domainId) {
+    final normalized = domainId.trim();
+
+    if (normalized.isEmpty) {
+      return 0;
+    }
+
+    final match = RegExp(
+      r'(?:d|domain[_-]?)(\d+)',
+      caseSensitive: false,
+    ).firstMatch(normalized);
+
+    if (match != null) {
+      return int.tryParse(match.group(1)!) ?? 0;
+    }
+
+    return int.tryParse(normalized) ?? 0;
+  }
+
+  // ==========================================================
+  // RANDOMIZATION
+  // ==========================================================
 
   List<Question> _shuffle(List<Question> questions) {
     final result = List<Question>.from(questions);
