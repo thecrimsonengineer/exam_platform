@@ -10,18 +10,18 @@ import 'question_quality_validator.dart';
 /// Central managed-question service for CSP11.
 ///
 /// Admin authoring is Firebase-backed when the default repository is used.
-/// LocalQuestionRepository remains the local student-consumption cache until
-/// Phase I moves student question loading to Firebase.
+/// LocalQuestionRepository remains available for local cache and migration
+/// workflows. Student question loading is handled by QuizService through
+/// CloudQuestionRepository.
 class QuestionBankService {
   QuestionBankService({
     LocalQuestionRepository? repository,
     CloudQuestionRepository? cloudRepository,
     this.answerLengthCheckEnabled = true,
-  })  : _repository = repository ?? LocalQuestionRepository.instance,
-        _cloudRepository =
-            repository == null
-                ? (cloudRepository ?? CloudQuestionRepository())
-                : cloudRepository;
+  }) : _repository = repository ?? LocalQuestionRepository.instance,
+       _cloudRepository = repository == null
+           ? (cloudRepository ?? CloudQuestionRepository())
+           : cloudRepository;
 
   final LocalQuestionRepository _repository;
   final CloudQuestionRepository? _cloudRepository;
