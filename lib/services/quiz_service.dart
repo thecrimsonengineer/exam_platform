@@ -3,6 +3,7 @@ import 'dart:math';
 import '../models/question.dart';
 import '../models/study_content.dart';
 import 'cloud_question_repository.dart';
+import 'quiz_service_interface.dart';
 import 'study_content/cloud_content_repository.dart';
 
 /// Central quiz service for the CSP11 application.
@@ -18,7 +19,7 @@ import 'study_content/cloud_content_repository.dart';
 ///
 /// Offline caching and synchronization are intentionally deferred to
 /// Phase K.
-class QuizService {
+class QuizService implements QuizServiceInterface {
   QuizService({
     CloudQuestionRepository? repository,
     CloudQuestionRepository? questionRepository,

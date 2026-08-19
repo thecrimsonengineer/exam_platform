@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import '../models/question.dart';
 import '../services/quiz_service.dart';
+import '../services/quiz_service_interface.dart';
 
 class QuizController {
-  final QuizService _quizService;
+  final QuizServiceInterface _quizService;
+  final Random _random;
 
   late List<Question> questions;
 
@@ -13,74 +17,140 @@ class QuizController {
 
   final List<Question> incorrectQuestions = [];
 
+  /// Randomized display options for each question.
+  ///
+  /// The list at index [questionIndex] contains the original option
+  /// indexes in the order they should be displayed.
+  late List<List<int>> _optionOrders;
+
   // ==========================================================
   // DOMAIN QUIZ
   // ==========================================================
 
-  /// Creates a quiz from a specific CSP domain.
-  QuizController({required int domain, QuizService? quizService})
-    : _quizService = quizService ?? QuizService() {
+  QuizController({
+    required int domain,
+    QuizServiceInterface? quizService,
+    Random? random,
+  }) : _quizService = quizService ?? QuizService(),
+       _random = random ?? Random() {
     questions = _quizService.getQuiz(domain: domain, numberOfQuestions: 10);
+
+    _initializeOptionOrders();
   }
 
   // ==========================================================
   // QUIZ ID
   // ==========================================================
 
-  /// Creates a quiz using the existing quiz catalog.
-  QuizController.byQuizId({required String quizId, QuizService? quizService})
-    : _quizService = quizService ?? QuizService() {
+  QuizController.byQuizId({
+    required String quizId,
+    QuizServiceInterface? quizService,
+    Random? random,
+  }) : _quizService = quizService ?? QuizService(),
+       _random = random ?? Random() {
     questions = _quizService.getQuizById(quizId);
+
+    _initializeOptionOrders();
   }
 
   // ==========================================================
   // COMPETENCY QUIZ
   // ==========================================================
 
-  /// Creates a quiz containing questions from a competency.
   QuizController.byCompetency({
     required String competencyId,
-    QuizService? quizService,
-  }) : _quizService = quizService ?? QuizService() {
+    QuizServiceInterface? quizService,
+    Random? random,
+  }) : _quizService = quizService ?? QuizService(),
+       _random = random ?? Random() {
     questions = _quizService.getShuffledQuestionsByCompetency(competencyId);
+
+    _initializeOptionOrders();
   }
 
   // ==========================================================
   // SUBTOPIC QUIZ
   // ==========================================================
 
-  /// Creates a quiz containing questions from a subtopic.
   QuizController.bySubtopic({
     required String subtopicId,
-    QuizService? quizService,
-  }) : _quizService = quizService ?? QuizService() {
+    QuizServiceInterface? quizService,
+    Random? random,
+  }) : _quizService = quizService ?? QuizService(),
+       _random = random ?? Random() {
     questions = _quizService.getShuffledQuestionsBySubtopic(subtopicId);
+
+    _initializeOptionOrders();
   }
 
   // ==========================================================
   // MAIN CONTENT TOPIC QUIZ
   // ==========================================================
 
-  /// Creates a quiz containing questions from
-  /// one main-content topic.
-  QuizController.byTopic({required String topicId, QuizService? quizService})
-    : _quizService = quizService ?? QuizService() {
+  QuizController.byTopic({
+    required String topicId,
+    QuizServiceInterface? quizService,
+    Random? random,
+  }) : _quizService = quizService ?? QuizService(),
+       _random = random ?? Random() {
     questions = _quizService.getShuffledQuestionsByTopic(topicId);
+
+    _initializeOptionOrders();
   }
 
   // ==========================================================
   // REVIEW INCORRECT QUESTIONS
   // ==========================================================
 
-  /// Creates a quiz from previously incorrect questions.
-  ///
-  /// Review questions are already supplied by the caller, so
-  /// no QuizService loading is required.
   QuizController.review({
     required List<Question> questions,
-    QuizService? quizService,
-  }) : _quizService = quizService ?? QuizService() {
+    QuizServiceInterface? quizService,
+    Random? random,
+  }) : _quizService = quizService ?? QuizService(),
+       _random = random ?? Random() {
     this.questions = List<Question>.from(questions);
+
+    _initializeOptionOrders();
+  }
+
+  // ==========================================================
+  // OPTION RANDOMIZATION
+  // ==========================================================
+
+  void _initializeOptionOrders() {
+    _optionOrders = List<List<int>>.generate(questions.length, (questionIndex) {
+      final optionCount = questions[questionIndex].options.length;
+
+      final order = List<int>.generate(optionCount, (index) => index);
+
+      order.shuffle(_random);
+
+      return order;
+    });
+  }
+
+  /// Returns the original option index for a displayed option index.
+
+  /// Returns the options in their randomized display order.
+  List<String> get currentOptions {
+    final question = currentQuestionData;
+    final order = _optionOrders[currentQuestion];
+
+    return List<String>.unmodifiable(
+      order.map((originalIndex) => question.options[originalIndex]),
+    );
+  }
+
+  /// Returns the displayed position of the original correct answer.
+  int get currentCorrectDisplayIndex {
+    final correctOriginalIndex = currentQuestionData.correctAnswer;
+
+    return _optionOrders[currentQuestion].indexOf(correctOriginalIndex);
+  }
+
+  /// Returns whether a displayed option index is the correct answer.
+  bool isCorrectDisplayedOption(int displayedIndex) {
+    return displayedIndex == currentCorrectDisplayIndex;
   }
 
   // ==========================================================
@@ -90,7 +160,7 @@ class QuizController {
   void selectAnswer(int index) {
     if (submitted) return;
 
-    if (index < 0 || index >= currentQuestionData.options.length) {
+    if (index < 0 || index >= currentOptions.length) {
       return;
     }
 
@@ -104,7 +174,7 @@ class QuizController {
 
     submitted = true;
 
-    if (selectedAnswer == currentQuestionData.correctAnswer) {
+    if (isCorrectDisplayedOption(selectedAnswer!)) {
       score++;
     } else {
       incorrectQuestions.add(currentQuestionData);
@@ -129,6 +199,8 @@ class QuizController {
     submitted = false;
     score = 0;
     incorrectQuestions.clear();
+
+    _initializeOptionOrders();
   }
 
   // ==========================================================

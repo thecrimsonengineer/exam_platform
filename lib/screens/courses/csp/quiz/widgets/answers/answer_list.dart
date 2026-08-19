@@ -18,40 +18,33 @@ class AnswerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final options = controller.currentOptions;
+    final correctIndex = controller.currentCorrectDisplayIndex;
+
     return Column(
-      children: List.generate(
-        question.options.length,
-        (index) {
-          final bool isSelected =
-              controller.selectedAnswer == index;
+      children: List.generate(options.length, (index) {
+        final bool isSelected = controller.selectedAnswer == index;
 
-          final bool isCorrect =
-              controller.submitted &&
-              question.correctAnswer == index;
+        final bool isCorrect = controller.submitted && correctIndex == index;
 
-          final bool isIncorrect =
-              controller.submitted &&
-              isSelected &&
-              question.correctAnswer != index;
+        final bool isIncorrect =
+            controller.submitted && isSelected && correctIndex != index;
 
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: index == question.options.length - 1
-                  ? 0
-                  : 14,
-            ),
-            child: AnswerOptionCard(
-              label: String.fromCharCode(65 + index),
-              text: question.options[index],
-              isSelected: isSelected,
-              isCorrect: isCorrect,
-              isIncorrect: isIncorrect,
-              submitted: controller.submitted,
-              onTap: () => onSelect(index),
-            ),
-          );
-        },
-      ),
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: index == options.length - 1 ? 0 : 14,
+          ),
+          child: AnswerOptionCard(
+            label: String.fromCharCode(65 + index),
+            text: options[index],
+            isSelected: isSelected,
+            isCorrect: isCorrect,
+            isIncorrect: isIncorrect,
+            submitted: controller.submitted,
+            onTap: () => onSelect(index),
+          ),
+        );
+      }),
     );
   }
 }
