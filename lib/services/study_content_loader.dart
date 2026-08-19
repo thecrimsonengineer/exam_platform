@@ -1,27 +1,30 @@
 import 'package:flutter/foundation.dart';
 
 import '../models/study_content.dart';
-import 'study_content/local_study_content_repository.dart';
+import 'study_content/cloud_published_content_repository.dart';
 
 /// Loads CSP study content for the student-facing portal.
 ///
-/// Student content is loaded only from the Published Repository.
+/// Student content is loaded only from the Firebase-backed Published
+/// Repository. Draft, Review, Validated, and Archived content are never
+/// exposed through this service.
 ///
-/// Draft, Review, and other authoring states are never exposed here.
-///
-/// When multiple published versions exist for the same competency,
-/// the student portal uses only the highest published version.
+/// When multiple published versions exist for the same competency, the
+/// student portal uses only the highest published version.
 class StudyContentLoader {
-  const StudyContentLoader();
+  const StudyContentLoader({this.repository});
+
+  final CloudPublishedContentRepository? repository;
+
+  CloudPublishedContentRepository get _repository =>
+      repository ?? CloudPublishedContentRepository();
 
   // ==========================================================
   // Published Repository
   // ==========================================================
 
   Future<List<StudyContent>> loadPublishedContent() async {
-    final repository = LocalStudyContentRepository();
-
-    final published = await repository.loadPublished();
+    final published = await _repository.loadPublished();
 
     return _latestPublishedVersions(published);
   }
@@ -50,16 +53,10 @@ class StudyContentLoader {
 
   /// Loads one published competency by Content ID.
   Future<StudyContent> loadPublishedByContentId(String contentId) async {
-    final repository = LocalStudyContentRepository();
-
-    final content = await repository.loadPublishedContent(contentId);
+    final content = await _repository.loadPublishedContent(contentId);
 
     if (content == null) {
       throw StateError('Published content "$contentId" was not found.');
-    }
-
-    if (content.status.toLowerCase() != 'published') {
-      throw StateError('Content "$contentId" is not published.');
     }
 
     return content;
@@ -71,8 +68,7 @@ class StudyContentLoader {
     required String domainId,
     required String competencyId,
   }) async {
-    final repository = LocalStudyContentRepository();
-    final published = await repository.loadPublished();
+    final published = await _repository.loadPublished();
 
     StudyContent? latest;
 
@@ -166,29 +162,27 @@ class StudyContentLoader {
   // Legacy Asset Methods
   // ==========================================================
 
-  // These methods are intentionally no longer used for student
-  // content delivery. They remain unavailable here so the
-  // Student Portal cannot accidentally fall back to bundled
-  // draft/test assets.
+  // These methods are intentionally unavailable for student content
+  // delivery. The Student Portal must not fall back to bundled assets.
 
   @visibleForTesting
   Future<Never> loadContentIndex() async {
     throw UnsupportedError(
-      'Student content is loaded from the Published Repository.',
+      'Student content is loaded from the Firebase Published Repository.',
     );
   }
 
   @visibleForTesting
   Future<Never> loadDomain(String domainId) async {
     throw UnsupportedError(
-      'Student content is loaded from the Published Repository.',
+      'Student content is loaded from the Firebase Published Repository.',
     );
   }
 
   @visibleForTesting
   Future<Never> loadCompetencyFile(String assetPath) async {
     throw UnsupportedError(
-      'Student content is loaded from the Published Repository.',
+      'Student content is loaded from the Firebase Published Repository.',
     );
   }
 }
