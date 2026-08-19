@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../models/question.dart';
+import '../models/question.dart';
 
 /// Firebase-backed repository for CSP11 managed questions.
 ///
@@ -10,8 +10,8 @@ import '../../models/question.dart';
 /// The question lifecycle is stored directly on the question:
 /// draft -> review -> validated -> published.
 ///
-/// Student-side local quiz consumption remains backed by
-/// LocalQuestionRepository until the Phase I Firebase student integration.
+/// Student-facing quiz consumption can load the published question pool
+/// from this repository. Local caching is deferred to Phase K.
 class CloudQuestionRepository {
   CloudQuestionRepository({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;

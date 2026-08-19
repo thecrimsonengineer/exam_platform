@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../controllers/quiz_controller.dart';
 import '../../../../models/question.dart';
 import '../../../../services/bookmark_service.dart';
+import '../../../../services/quiz_service.dart';
 
 import 'result/result_screen.dart';
 import 'theme/quiz_colors.dart';
@@ -38,7 +39,9 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  late QuizController controller;
+  QuizController? controller;
+  bool _isInitializing = true;
+  String? _initializationError;
 
   final BookmarkService _bookmarkService = BookmarkService();
 
@@ -56,21 +59,49 @@ class _QuizScreenState extends State<QuizScreen> {
   // INITIALIZE QUIZ
   // ==========================================================
 
-  void _initializeController() {
-    if (widget.customQuestions != null) {
-      controller = QuizController.review(questions: widget.customQuestions!);
-    } else if (widget.topicId != null) {
-      controller = QuizController.byTopic(topicId: widget.topicId!);
-    } else if (widget.subtopicId != null) {
-      controller = QuizController.bySubtopic(subtopicId: widget.subtopicId!);
-    } else if (widget.competencyId != null) {
-      controller = QuizController.byCompetency(
-        competencyId: widget.competencyId!,
-      );
-    } else if (widget.quizId != null) {
-      controller = QuizController.byQuizId(quizId: widget.quizId!);
-    } else {
-      controller = QuizController(domain: widget.domain);
+  Future<void> _initializeController() async {
+    try {
+      if (widget.customQuestions != null) {
+        controller = QuizController.review(questions: widget.customQuestions!);
+      } else {
+        final quizService = QuizService();
+        await quizService.initialize();
+
+        if (widget.topicId != null) {
+          controller = QuizController.byTopic(
+            topicId: widget.topicId!,
+            quizService: quizService,
+          );
+        } else if (widget.subtopicId != null) {
+          controller = QuizController.bySubtopic(
+            subtopicId: widget.subtopicId!,
+            quizService: quizService,
+          );
+        } else if (widget.competencyId != null) {
+          controller = QuizController.byCompetency(
+            competencyId: widget.competencyId!,
+            quizService: quizService,
+          );
+        } else if (widget.quizId != null) {
+          controller = QuizController.byQuizId(
+            quizId: widget.quizId!,
+            quizService: quizService,
+          );
+        } else {
+          controller = QuizController(
+            domain: widget.domain,
+            quizService: quizService,
+          );
+        }
+      }
+    } catch (error) {
+      _initializationError = error.toString().replaceFirst('Bad state: ', '');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isInitializing = false;
+        });
+      }
     }
   }
 
@@ -105,24 +136,29 @@ class _QuizScreenState extends State<QuizScreen> {
   // ==========================================================
 
   void _selectAnswer(int index) {
-    if (controller.submitted) return;
+    final quizController = controller;
+    if (quizController == null || quizController.submitted) return;
 
     setState(() {
-      controller.selectAnswer(index);
+      quizController.selectAnswer(index);
     });
   }
 
   void _submitAnswer() {
-    if (controller.submitted) return;
-    if (controller.selectedAnswer == null) return;
+    final quizController = controller;
+    if (quizController == null || quizController.submitted) return;
+    if (quizController.selectedAnswer == null) return;
 
     setState(() {
-      controller.submitAnswer();
+      quizController.submitAnswer();
     });
   }
 
   void _nextQuestion() {
-    if (!controller.nextQuestion()) {
+    final quizController = controller;
+    if (quizController == null) return;
+
+    if (!quizController.nextQuestion()) {
       _showResult();
       return;
     }
@@ -135,6 +171,9 @@ class _QuizScreenState extends State<QuizScreen> {
   // ==========================================================
 
   Future<void> _showResult() async {
+    final quizController = controller;
+    if (quizController == null) return;
+
     final bookmarkedCount = await _bookmarkService.getBookmarkCount();
 
     if (!mounted) return;
@@ -144,10 +183,10 @@ class _QuizScreenState extends State<QuizScreen> {
       MaterialPageRoute(
         builder: (context) => ResultScreen(
           domain: widget.domain,
-          score: controller.score,
-          totalQuestions: controller.totalQuestions,
+          score: quizController.score,
+          totalQuestions: quizController.totalQuestions,
           bookmarkedCount: bookmarkedCount,
-          incorrectQuestions: controller.incorrectQuestions,
+          incorrectQuestions: quizController.incorrectQuestions,
         ),
       ),
     );
@@ -159,7 +198,29 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.questions.isEmpty) {
+    if (_isInitializing) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_initializationError != null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Quiz')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              'Unable to load published questions.\n$_initializationError',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final quizController = controller;
+    if (quizController == null || quizController.questions.isEmpty) {
       return Scaffold(
         backgroundColor: QuizColors.background,
         appBar: AppBar(
@@ -174,7 +235,7 @@ class _QuizScreenState extends State<QuizScreen> {
       );
     }
 
-    final Question question = controller.currentQuestionData;
+    final Question question = quizController.currentQuestionData;
 
     final bool isBookmarked = _bookmarkedQuestions.contains(question.id);
 
@@ -234,9 +295,9 @@ class _QuizScreenState extends State<QuizScreen> {
                           // ========================================
                           QuizHeader(
                             title: 'Training Needs Assessment',
-                            questionNumber: controller.questionNumber,
-                            totalQuestions: controller.totalQuestions,
-                            progress: controller.progress,
+                            questionNumber: quizController.questionNumber,
+                            totalQuestions: quizController.totalQuestions,
+                            progress: quizController.progress,
                             difficulty: question.difficulty,
                           ),
 
@@ -275,7 +336,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           // ========================================
                           QuestionCard(
                             question: question.question,
-                            questionNumber: controller.questionNumber,
+                            questionNumber: quizController.questionNumber,
                           ),
 
                           const SizedBox(height: QuizSpacing.sectionGap),
@@ -285,14 +346,14 @@ class _QuizScreenState extends State<QuizScreen> {
                           // ========================================
                           AnswerList(
                             question: question,
-                            controller: controller,
+                            controller: quizController,
                             onSelect: _selectAnswer,
                           ),
 
                           // ========================================
                           // FEEDBACK
                           // ========================================
-                          if (controller.submitted) ...[
+                          if (quizController.submitted) ...[
                             const SizedBox(height: QuizSpacing.sectionGap),
 
                             ExplanationCard(explanation: question.explanation),
@@ -464,9 +525,9 @@ class _QuizScreenState extends State<QuizScreen> {
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 1100),
                     child: QuizActionBar(
-                      submitted: controller.submitted,
-                      isLastQuestion: controller.isLastQuestion,
-                      onPressed: controller.submitted
+                      submitted: quizController.submitted,
+                      isLastQuestion: quizController.isLastQuestion,
+                      onPressed: quizController.submitted
                           ? _nextQuestion
                           : _submitAnswer,
                     ),

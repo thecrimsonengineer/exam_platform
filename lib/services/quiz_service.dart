@@ -1,26 +1,33 @@
 import 'dart:math';
 
 import '../models/question.dart';
-import 'local_question_repository.dart';
+import 'cloud_question_repository.dart';
 
 /// Central quiz service for the CSP11 application.
 ///
-/// The managed LocalQuestionRepository is the single source of truth.
-/// Only published questions are available to students.
-///
-/// Legacy static question-bank data is intentionally not used.
+/// Student quizzes load their managed question pool from Firebase through
+/// CloudQuestionRepository. Only published questions are retained for the
+/// current quiz session. Offline caching is intentionally deferred to
+/// Phase K.
 class QuizService {
-  QuizService({LocalQuestionRepository? repository})
-    : _repository = repository ?? LocalQuestionRepository.instance;
+  QuizService({CloudQuestionRepository? repository})
+      : _repository = repository ?? CloudQuestionRepository();
 
-  final LocalQuestionRepository _repository;
+  final CloudQuestionRepository _repository;
 
-  // ==========================================================
-  // INITIALIZATION
-  // ==========================================================
+  List<Question> _questions = const <Question>[];
+  bool _initialized = false;
 
+  bool get isInitialized => _initialized;
+
+  /// Loads the managed Firebase question pool once for the current session.
+  ///
+  /// Only Published questions are retained. Custom review quizzes supplied
+  /// directly by QuizScreen do not require this initialization.
   Future<void> initialize() async {
-    await _repository.initialize();
+    final questions = await _repository.loadAll();
+    _questions = _published(questions);
+    _initialized = true;
   }
 
   // ==========================================================
@@ -29,20 +36,20 @@ class QuizService {
 
   /// Returns every published question in the managed repository.
   List<Question> getAllQuestions() {
-    return _published(_repository.questions);
+    return _published(_questions);
   }
 
   /// Returns all published questions for a specific domain.
   List<Question> getQuestionsByDomain(int domain) {
     return _published(
-      _repository.questions.where((question) => question.domain == domain),
+      _questions.where((question) => question.domain == domain),
     );
   }
 
   /// Returns all published questions for a specific competency.
   List<Question> getQuestionsByCompetency(String competencyId) {
     return _published(
-      _repository.questions.where(
+      _questions.where(
         (question) => question.competencyId == competencyId,
       ),
     );
@@ -51,7 +58,7 @@ class QuizService {
   /// Returns all published questions for a specific subtopic.
   List<Question> getQuestionsBySubtopic(String subtopicId) {
     return _published(
-      _repository.questions.where(
+      _questions.where(
         (question) => question.subtopicId == subtopicId,
       ),
     );
@@ -60,14 +67,14 @@ class QuizService {
   /// Returns all published questions for a specific topic.
   List<Question> getQuestionsByTopic(String topicId) {
     return _published(
-      _repository.questions.where((question) => question.topicId == topicId),
+      _questions.where((question) => question.topicId == topicId),
     );
   }
 
   /// Returns all published questions for a specific quiz ID.
   List<Question> getQuestionsByQuizId(String quizId) {
     return _published(
-      _repository.questions.where((question) => question.quizId == quizId),
+      _questions.where((question) => question.quizId == quizId),
     );
   }
 
@@ -365,7 +372,7 @@ class QuizService {
     String? difficulty,
     String? cognitiveLevel,
   }) {
-    Iterable<Question> pool = _published(_repository.questions);
+    Iterable<Question> pool = _published(_questions);
 
     if (domain != null) {
       pool = pool.where((question) => question.domain == domain);
