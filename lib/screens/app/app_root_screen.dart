@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../admin/admin_home_screen.dart';
+import '../auth/admin_gate.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AppRootScreen extends StatelessWidget {
@@ -24,9 +24,7 @@ class AppRootScreen extends StatelessWidget {
                     size: 54,
                     color: Color(0xFF2457A6),
                   ),
-
                   const SizedBox(height: 18),
-
                   const Text(
                     'CSP11',
                     style: TextStyle(
@@ -35,9 +33,7 @@ class AppRootScreen extends StatelessWidget {
                       letterSpacing: 1.5,
                     ),
                   ),
-
                   const SizedBox(height: 6),
-
                   Text(
                     'Learning & Administration Platform',
                     style: TextStyle(
@@ -46,9 +42,7 @@ class AppRootScreen extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-
                   const SizedBox(height: 42),
-
                   LayoutBuilder(
                     builder: (context, constraints) {
                       final compact = constraints.maxWidth < 560;
@@ -60,7 +54,7 @@ class AppRootScreen extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => const AdminHomeScreen(),
+                              builder: (_) => const AdminGate(),
                             ),
                           );
                         },
@@ -73,7 +67,8 @@ class AppRootScreen extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => const BottomNavigationScreen(),
+                              builder: (_) =>
+                                  const BottomNavigationScreen(),
                             ),
                           );
                         },
@@ -109,11 +104,6 @@ class AppRootScreen extends StatelessWidget {
 }
 
 class _PortalCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
   const _PortalCard({
     required this.icon,
     required this.title,
@@ -121,70 +111,45 @@ class _PortalCard extends StatelessWidget {
     required this.onTap,
   });
 
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(20),
+    return Card(
+      elevation: 2,
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 190),
-          padding: const EdgeInsets.all(28),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFE2E7F0)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x0A000000),
-                blurRadius: 20,
-                offset: Offset(0, 8),
-              ),
-            ],
-          ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 58,
-                height: 58,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEAF1FC),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(icon, color: const Color(0xFF2457A6), size: 29),
+              Icon(
+                icon,
+                size: 42,
+                color: const Color(0xFF2457A6),
               ),
-
-              const SizedBox(height: 18),
-
+              const SizedBox(height: 16),
               Text(
                 title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-
-              const SizedBox(height: 6),
-
+              const SizedBox(height: 8),
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 13,
                   color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
                 ),
-              ),
-
-              const SizedBox(height: 16),
-
-              const Icon(
-                Icons.arrow_forward_rounded,
-                size: 19,
-                color: Color(0xFF2457A6),
               ),
             ],
           ),
