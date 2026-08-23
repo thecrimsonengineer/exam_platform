@@ -17,10 +17,10 @@ class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
 
   @override
-  State<ProgressScreen> createState() => _ProgressScreenState();
+  State<ProgressScreen> createState() => ProgressScreenState();
 }
 
-class _ProgressScreenState extends State<ProgressScreen> {
+class ProgressScreenState extends State<ProgressScreen> {
   final StudentProgressDashboardService _service =
       const StudentProgressDashboardService();
 
@@ -32,7 +32,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     _future = _service.loadDashboard();
   }
 
-  Future<void> _refresh() async {
+  Future<void> refresh() async {
     setState(() {
       _future = _service.loadDashboard();
     });
@@ -49,9 +49,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           future: _future,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasError) {
@@ -65,7 +63,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             }
 
             return RefreshIndicator(
-              onRefresh: _refresh,
+              onRefresh: refresh,
               child: _buildDashboard(dashboard),
             );
           },
@@ -107,8 +105,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   Widget _buildHero(StudentProgressDashboard dashboard) {
-    final percentage =
-        (dashboard.overallProgress * 100).round();
+    final percentage = (dashboard.overallProgress * 100).round();
 
     return Container(
       width: double.infinity,
@@ -149,9 +146,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               value: dashboard.overallProgress,
               minHeight: 8,
               backgroundColor: Colors.white.withValues(alpha: 0.16),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Colors.white,
-              ),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ),
         ],
@@ -213,11 +208,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 19,
-            color: StudyColors.primary,
-          ),
+          Icon(icon, size: 19, color: StudyColors.primary),
           const Spacer(),
           Text(
             label,
@@ -234,10 +225,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               fontWeight: FontWeight.w800,
             ),
           ),
-          Text(
-            caption,
-            style: StudyTypography.caption,
-          ),
+          Text(caption, style: StudyTypography.caption),
         ],
       ),
     );
@@ -249,28 +237,22 @@ class _ProgressScreenState extends State<ProgressScreen> {
       children: [
         Text(
           eyebrow,
-          style: StudyTypography.eyebrow.copyWith(
-            color: StudyColors.primary,
-          ),
+          style: StudyTypography.eyebrow.copyWith(color: StudyColors.primary),
         ),
         const SizedBox(height: 4),
-        Text(
-          title,
-          style: StudyTypography.sectionTitle,
-        ),
+        Text(title, style: StudyTypography.sectionTitle),
       ],
     );
   }
 
   Widget _buildDomainCard(StudentDomainProgress domain) {
-    final percentage =
-        (domain.subtopicProgress * 100).round();
+    final percentage = (domain.subtopicProgress * 100).round();
 
     final status = domain.completed
         ? 'COMPLETED'
         : domain.inProgress
-            ? 'IN PROGRESS'
-            : 'NOT STARTED';
+        ? 'IN PROGRESS'
+        : 'NOT STARTED';
 
     return Container(
       width: double.infinity,
@@ -320,9 +302,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     const SizedBox(height: 3),
                     Text(
                       domain.title,
-                      style: StudyTypography.cardTitle.copyWith(
-                        fontSize: 15,
-                      ),
+                      style: StudyTypography.cardTitle.copyWith(fontSize: 15),
                     ),
                   ],
                 ),
@@ -396,10 +376,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            FilledButton(
-              onPressed: _refresh,
-              child: const Text('TRY AGAIN'),
-            ),
+            FilledButton(onPressed: refresh, child: const Text('TRY AGAIN')),
           ],
         ),
       ),

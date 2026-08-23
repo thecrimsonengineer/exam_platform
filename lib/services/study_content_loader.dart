@@ -1,39 +1,88 @@
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/study_content.dart';
 import 'study_content/cloud_published_content_repository.dart';
+import 'study_content/student_content_cache_repository.dart';
 
 /// Loads CSP study content for the student-facing portal.
 ///
-/// Student content is loaded only from the Firebase-backed Published
-/// Repository. Draft, Review, Validated, and Archived content are never
-/// exposed through this service.
+/// Firebase is the authoritative source for published content.
 ///
-/// When multiple published versions exist for the same competency, the
-/// student portal uses only the highest published version.
+/// When Firebase is unavailable, the loader falls back to the last valid
+/// published content stored in the student cache.
+///
+/// Draft, Review, Validated, and Archived content are never exposed through
+/// this service.
 class StudyContentLoader {
-  const StudyContentLoader({this.repository});
+  const StudyContentLoader({
+    this.repository,
+    this.cacheRepository,
+  });
 
   final CloudPublishedContentRepository? repository;
+  final StudentContentCacheRepository? cacheRepository;
 
   CloudPublishedContentRepository get _repository =>
       repository ?? CloudPublishedContentRepository();
 
+  /// Creates the default student cache repository.
+  ///
+  /// SharedPreferences is resolved asynchronously because the student cache
+  /// is backed by local persistent storage.
+  Future<StudentContentCacheRepository> _resolveCache() async {
+    if (cacheRepository != null) {
+      return cacheRepository!;
+    }
+
+    final preferences = await SharedPreferences.getInstance();
+
+    return StudentContentCacheRepository(
+      preferences: preferences,
+    );
+  }
+
   // ==========================================================
-  // Published Repository
+  // Published Repository + Cache
   // ==========================================================
 
+  /// Loads the latest published version of each competency.
+  ///
+  /// Firebase is attempted first. Successfully retrieved published content
+  /// is written to the local student cache.
+  ///
+  /// If Firebase fails, the last valid published cache is returned instead.
   Future<List<StudyContent>> loadPublishedContent() async {
-    final published = await _repository.loadPublished();
+    final cache = await _resolveCache();
 
-    return _latestPublishedVersions(published);
+    try {
+      final published = await _repository.loadPublished();
+
+      final latest = _latestPublishedVersions(published);
+
+      for (final content in latest) {
+        await cache.save(content);
+      }
+
+      return latest;
+    } catch (_) {
+      final cached = await cache.loadAll();
+
+      if (cached.isNotEmpty) {
+        return _latestPublishedVersions(cached);
+      }
+
+      throw StateError(
+        'Published CSP11 content is unavailable because the cloud '
+        'repository could not be reached and no cached content exists.',
+      );
+    }
   }
 
   /// Returns the latest published version of each competency.
-  ///
-  /// Published repository history is preserved, but the student portal
-  /// must display only one live version per competency.
-  List<StudyContent> _latestPublishedVersions(List<StudyContent> published) {
+  List<StudyContent> _latestPublishedVersions(
+    List<StudyContent> published,
+  ) {
     final latestByCompetency = <String, StudyContent>{};
 
     for (final content in published) {
@@ -52,46 +101,93 @@ class StudyContentLoader {
   }
 
   /// Loads one published competency by Content ID.
-  Future<StudyContent> loadPublishedByContentId(String contentId) async {
-    final content = await _repository.loadPublishedContent(contentId);
+  ///
+  /// Firebase is attempted first. If Firebase fails, the cached published
+  /// content with the requested ID is used.
+  Future<StudyContent> loadPublishedByContentId(
+    String contentId,
+  ) async {
+    final cache = await _resolveCache();
 
-    if (content == null) {
-      throw StateError('Published content "$contentId" was not found.');
+    try {
+      final content = await _repository.loadPublishedContent(contentId);
+
+      if (content == null) {
+        throw StateError(
+          'Published content "$contentId" was not found.',
+        );
+      }
+
+      await cache.save(content);
+
+      return content;
+    } catch (_) {
+      final cached = await cache.load(contentId);
+
+      if (cached != null &&
+          cached.status.toLowerCase() == 'published') {
+        return cached;
+      }
+
+      throw StateError(
+        'Published content "$contentId" is unavailable.',
+      );
     }
-
-    return content;
   }
 
   /// Loads the latest published competency using Domain ID
   /// and Competency ID.
+  ///
+  /// Firebase is attempted first. If Firebase fails, the latest valid
+  /// cached version for the competency is returned.
   Future<StudyContent> loadStudyContent({
     required String domainId,
     required String competencyId,
   }) async {
-    final published = await _repository.loadPublished();
+    final cache = await _resolveCache();
 
-    StudyContent? latest;
+    try {
+      final published = await _repository.loadPublished();
 
-    for (final content in published) {
-      if (content.domainId != domainId ||
-          content.competencyId != competencyId ||
-          content.status.toLowerCase() != 'published') {
-        continue;
+      StudyContent? latest;
+
+      for (final content in published) {
+        if (content.domainId != domainId ||
+            content.competencyId != competencyId ||
+            content.status.toLowerCase() != 'published') {
+          continue;
+        }
+
+        if (latest == null || content.version > latest.version) {
+          latest = content;
+        }
       }
 
-      if (latest == null || content.version > latest.version) {
-        latest = content;
+      if (latest != null) {
+        await cache.save(latest);
+        return latest;
       }
-    }
 
-    if (latest != null) {
-      return latest;
-    }
+      throw StateError(
+        'Published competency "$competencyId" was not found '
+        'in domain "$domainId".',
+      );
+    } catch (_) {
+      final cached = await cache.loadLatestForCompetency(
+        competencyId,
+      );
 
-    throw StateError(
-      'Published competency "$competencyId" was not found '
-      'in domain "$domainId".',
-    );
+      if (cached != null &&
+          cached.domainId == domainId &&
+          cached.status.toLowerCase() == 'published') {
+        return cached;
+      }
+
+      throw StateError(
+        'Published competency "$competencyId" is unavailable '
+        'in domain "$domainId".',
+      );
+    }
   }
 
   // ==========================================================
@@ -120,7 +216,9 @@ class StudyContentLoader {
 
   /// Returns the latest published version of each competency
   /// belonging to a domain.
-  Future<List<Map<String, dynamic>>> loadCompetencies(String domainId) async {
+  Future<List<Map<String, dynamic>>> loadCompetencies(
+    String domainId,
+  ) async {
     final published = await loadPublishedContent();
 
     return published
@@ -162,27 +260,30 @@ class StudyContentLoader {
   // Legacy Asset Methods
   // ==========================================================
 
-  // These methods are intentionally unavailable for student content
-  // delivery. The Student Portal must not fall back to bundled assets.
-
+  /// Student content must never fall back to bundled assets.
   @visibleForTesting
   Future<Never> loadContentIndex() async {
     throw UnsupportedError(
-      'Student content is loaded from the Firebase Published Repository.',
+      'Student content is loaded from the Firebase Published Repository '
+      'or the published student cache.',
     );
   }
 
+  /// Student content must never fall back to bundled assets.
   @visibleForTesting
   Future<Never> loadDomain(String domainId) async {
     throw UnsupportedError(
-      'Student content is loaded from the Firebase Published Repository.',
+      'Student content is loaded from the Firebase Published Repository '
+      'or the published student cache.',
     );
   }
 
+  /// Student content must never fall back to bundled assets.
   @visibleForTesting
   Future<Never> loadCompetencyFile(String assetPath) async {
     throw UnsupportedError(
-      'Student content is loaded from the Firebase Published Repository.',
+      'Student content is loaded from the Firebase Published Repository '
+      'or the published student cache.',
     );
   }
 }

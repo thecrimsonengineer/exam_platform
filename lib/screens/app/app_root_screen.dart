@@ -67,8 +67,7 @@ class AppRootScreen extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  const BottomNavigationScreen(),
+                              builder: (_) => const BottomNavigationScreen(),
                             ),
                           );
                         },
@@ -128,11 +127,7 @@ class _PortalCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: 42,
-                color: const Color(0xFF2457A6),
-              ),
+              Icon(icon, size: 42, color: const Color(0xFF2457A6)),
               const SizedBox(height: 16),
               Text(
                 title,
@@ -146,10 +141,7 @@ class _PortalCard extends StatelessWidget {
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade600,
-                ),
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
               ),
             ],
           ),
