@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import '../models/question.dart';
+import 'package:exam_platform/models/question.dart';
 import '../models/study_content.dart';
 import 'cloud_question_repository.dart';
 import 'quiz_service_interface.dart';
