@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:exam_platform/models/app_user.dart';
@@ -82,7 +82,7 @@ void main() {
 
       await tester.pump();
 
-      expect(find.text('Student platform'), findsOneWidget);
+      expect(find.text('Home'), findsOneWidget);
     },
   );
 }

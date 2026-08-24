@@ -81,6 +81,14 @@ class ContentRepositoryService {
     return packages;
   }
 
+  Future<List<StudyContent>> loadDrafts() async {
+    return _storage.loadDrafts();
+  }
+
+  Future<List<StudyContent>> loadPublished() async {
+    return _storage.loadPublished();
+  }
+
   Future<List<ContentPackageSummary>> loadHistoryForCompetency(
     String competencyId,
   ) async {
@@ -157,7 +165,7 @@ class ContentRepositoryService {
     if (errors.isNotEmpty) {
       throw StateError(
         'Validation failed:\n'
-        '${errors.map((error) => '• $error').join('\n')}',
+        '${errors.map((error) => 'â€¢ $error').join('\n')}',
       );
     }
 

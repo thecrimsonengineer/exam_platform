@@ -7,7 +7,6 @@ import '../../../services/study_content/content_repository_service.dart';
 import '../../../services/study_content/content_validator.dart';
 
 import '../../../models/study_content.dart';
-import '../../../services/study_content/local_study_content_repository.dart';
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_shadows.dart';
@@ -40,7 +39,6 @@ class StudyContentStudioScreen extends StatefulWidget {
 class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   int _selectedSection = 0;
 
-  final LocalStudyContentRepository _repository = LocalStudyContentRepository();
   final ContentRepositoryService _contentRepositoryService =
       ContentRepositoryService();
   final StudioQuestionService _questionService = StudioQuestionService();
@@ -1066,7 +1064,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Future<void> _openPracticeQuestionEditor({Question? question}) async {
     final content = _importedContent;
     final index = _selectedSubtopicIndex;
-    if (content == null || index == null || index < 0 || index >= content.subtopics.length) {
+    if (content == null ||
+        index == null ||
+        index < 0 ||
+        index >= content.subtopics.length) {
       _showPracticeMessage('Select a subtopic before authoring a question.');
       return;
     }
@@ -1089,7 +1090,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Future<void> _openPracticeCompletePaste() async {
     final content = _importedContent;
     final index = _selectedSubtopicIndex;
-    if (content == null || index == null || index < 0 || index >= content.subtopics.length) {
+    if (content == null ||
+        index == null ||
+        index < 0 ||
+        index >= content.subtopics.length) {
       _showPracticeMessage('Select a subtopic before importing a question.');
       return;
     }
@@ -1111,7 +1115,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Future<void> _openPracticeJsonImport() async {
     final content = _importedContent;
     final index = _selectedSubtopicIndex;
-    if (content == null || index == null || index < 0 || index >= content.subtopics.length) {
+    if (content == null ||
+        index == null ||
+        index < 0 ||
+        index >= content.subtopics.length) {
       _showPracticeMessage('Select a subtopic before importing a JSON file.');
       return;
     }
@@ -1134,7 +1141,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
       await _refreshPracticeQuestions();
       if (mounted) {
-        _showPracticeMessage('${result.length} question${result.length == 1 ? '' : 's'} imported as Draft.');
+        _showPracticeMessage(
+          '${result.length} question${result.length == 1 ? '' : 's'} imported as Draft.',
+        );
       }
     } catch (error) {
       _showPracticeMessage('Unable to import JSON questions.\n$error');
@@ -1147,11 +1156,16 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     await _refreshPracticeQuestions();
 
     if (!mounted) return;
-    final errors = issues.where((issue) => issue.isError).map((issue) => issue.message).toList();
+    final errors = issues
+        .where((issue) => issue.isError)
+        .map((issue) => issue.message)
+        .toList();
     if (errors.isEmpty) {
       _showPracticeMessage('Question saved as Draft.');
     } else {
-      _showPracticeMessage('Question saved as Draft with quality issues:\n${errors.join('\n')}');
+      _showPracticeMessage(
+        'Question saved as Draft with quality issues:\n${errors.join('\n')}',
+      );
     }
   }
 
@@ -1170,10 +1184,18 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete question?'),
-        content: const Text('This removes the question from the managed repository.'),
+        content: const Text(
+          'This removes the question from the managed repository.',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
         ],
       ),
     );
@@ -1704,7 +1726,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                       spacing: 4,
                       children: [
                         TextButton.icon(
-                          onPressed: () => _openPracticeQuestionEditor(question: question),
+                          onPressed: () =>
+                              _openPracticeQuestionEditor(question: question),
                           icon: const Icon(Icons.edit_rounded, size: 16),
                           label: const Text('Edit'),
                         ),
@@ -1716,7 +1739,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                           ),
                         TextButton.icon(
                           onPressed: () => _deletePracticeQuestion(question),
-                          icon: const Icon(Icons.delete_outline_rounded, size: 16),
+                          icon: const Icon(
+                            Icons.delete_outline_rounded,
+                            size: 16,
+                          ),
                           label: const Text('Delete'),
                         ),
                       ],
@@ -1961,7 +1987,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     );
 
     try {
-      await _repository.saveDraft(updatedContent);
+      await _contentRepositoryService.saveDraft(updatedContent);
 
       if (!mounted) {
         return;
@@ -2610,7 +2636,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${topic.blocks.length} block${topic.blocks.length == 1 ? '' : 's'}  •  '
+                        '${topic.blocks.length} block${topic.blocks.length == 1 ? '' : 's'}  Ã¢â‚¬Â¢  '
                         '${topic.quizzes.length} quiz reference${topic.quizzes.length == 1 ? '' : 's'}',
                         style: StudyTypography.bodySecondary.copyWith(
                           fontSize: 10.5,
@@ -3134,7 +3160,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
   Widget _buildImportedHero(StudyContent content) {
     final subtitle =
-        'Domain ${content.domainId}  •  '
+        'Domain ${content.domainId}  Ã¢â‚¬Â¢  '
         'Competency ${content.competencyId}';
 
     return Container(
@@ -3684,8 +3710,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${subtopic.mainContent.length} main topics  •  '
-                  '$blocks content blocks  •  '
+                  '${subtopic.mainContent.length} main topics  Ã¢â‚¬Â¢  '
+                  '$blocks content blocks  Ã¢â‚¬Â¢  '
                   '${subtopic.learningObjectives.length} objectives',
                   style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
                 ),
@@ -4011,7 +4037,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     });
 
     try {
-      final drafts = await _repository.loadDrafts();
+      final drafts = await _contentRepositoryService.loadDrafts();
 
       if (!mounted) {
         return;
@@ -4046,7 +4072,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     });
 
     try {
-      final published = await _repository.loadPublished();
+      final published = await _contentRepositoryService.loadPublished();
 
       if (!mounted) {
         return;
@@ -4109,7 +4135,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
 
     try {
-      await _repository.saveDraft(content);
+      await _contentRepositoryService.saveDraft(content);
       await _loadDrafts();
 
       if (!mounted) {
@@ -4126,7 +4152,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Unable to save draft.\\n$error')));
+      ).showSnackBar(SnackBar(content: Text('Unable to save draft.\n$error')));
     }
   }
 
@@ -4140,7 +4166,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     final reviewedContent = _withStatus(content, 'review');
 
     try {
-      await _repository.saveDraft(reviewedContent);
+      await _contentRepositoryService.saveDraft(reviewedContent);
 
       if (!mounted) {
         return;
@@ -4165,7 +4191,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Unable to move content to Review.\\n$error')),
+        SnackBar(content: Text('Unable to move content to Review.\n$error')),
       );
     }
   }
@@ -4199,7 +4225,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
 
     try {
-      await _repository.updateDraftStatus(content.id, 'validated');
+      await _contentRepositoryService.validateAndMark(content);
 
       final validated = _withStatus(content, 'validated');
 
@@ -4222,7 +4248,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Unable to validate content.\\n$error')),
+        SnackBar(content: Text('Unable to validate content.\n$error')),
       );
     }
   }
@@ -4278,7 +4304,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
 
     try {
-      await _repository.publish(content);
+      await _contentRepositoryService.publish(content);
 
       final publishedContent = _withStatus(content, 'published');
 
@@ -4305,7 +4331,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Unable to publish content.\\n$error')),
+        SnackBar(content: Text('Unable to publish content.\n$error')),
       );
     }
   }
@@ -4436,7 +4462,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
 
     try {
-      await _repository.deleteDraft(draft.id);
+      await _contentRepositoryService.deleteDraft(draft);
       await _loadDrafts();
 
       if (!mounted) {
@@ -4464,7 +4490,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         return AlertDialog(
           title: const Text('Delete published content?'),
           content: Text(
-            'Delete \"${published.title}\" v${published.version} from the published repository? '
+            'Delete "${published.title}" v${published.version} from the published repository? '
             'Students will no longer be able to access this published version. This cannot be undone.',
           ),
           actions: [
@@ -4486,7 +4512,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
 
     try {
-      await _repository.deletePublished(published.id);
+      await _contentRepositoryService.deletePublishedVersion(published);
       await _loadPublishedContent();
 
       if (!mounted) {
@@ -4715,8 +4741,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Competency ${content.competencyNumber}  •  '
-                    '${content.competencyId}  •  v${content.version}',
+                    'Competency ${content.competencyNumber}  Ã¢â‚¬Â¢  '
+                    '${content.competencyId}  Ã¢â‚¬Â¢  v${content.version}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: StudyTypography.bodySecondary.copyWith(
@@ -4812,7 +4838,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Competency ${draft.competencyNumber}  •  ${draft.competencyId}  •  v${draft.version}',
+                    'Competency ${draft.competencyNumber}  Ã¢â‚¬Â¢  ${draft.competencyId}  Ã¢â‚¬Â¢  v${draft.version}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: StudyTypography.bodySecondary.copyWith(
