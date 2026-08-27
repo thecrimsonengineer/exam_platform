@@ -4,7 +4,6 @@ import '../../data/csp11_blueprint.dart';
 
 import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
-import 'question_bank_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -152,9 +151,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     } else if (index == 3) {
       _openRepository();
     } else if (index == 5) {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const QuestionBankScreen()),
-      );
+      _openStudio();
     }
   }
 
