@@ -1,10 +1,27 @@
 import '../models/question.dart';
+import '../models/question_validation_report.dart';
+
+enum QuestionIssueSeverity {
+  error,
+  warning,
+}
 
 class QuestionQualityIssue {
+  final String code;
+  final String field;
+  final QuestionIssueSeverity severity;
   final String message;
-  final bool isError;
 
-  const QuestionQualityIssue(this.message, {this.isError = true});
+  const QuestionQualityIssue({
+    required this.code,
+    required this.field,
+    required this.severity,
+    required this.message,
+  });
+
+  bool get isError => severity == QuestionIssueSeverity.error;
+
+  bool get isWarning => severity == QuestionIssueSeverity.warning;
 }
 
 /// Quality gate for CSP11 best-answer questions.
@@ -27,7 +44,21 @@ class QuestionQualityValidator {
 
   final bool answerLengthCheckEnabled;
 
+  /// Validates a question and returns one structured validation report.
+  QuestionValidationReport validateReport(Question question) {
+    return QuestionValidationReport(
+      issues: _validateIssues(question),
+    );
+  }
+
+  /// Backward-compatible validation API.
+  ///
+  /// New callers should prefer [validateReport].
   List<QuestionQualityIssue> validate(Question question) {
+    return validateReport(question).issues;
+  }
+
+  List<QuestionQualityIssue> _validateIssues(Question question) {
     final issues = <QuestionQualityIssue>[];
 
     final stem = question.question.trim();
@@ -40,7 +71,12 @@ class QuestionQualityValidator {
 
     if (question.questionType != 'scenario_mcq') {
       issues.add(
-        const QuestionQualityIssue('Question type must be Scenario MCQ.'),
+        const QuestionQualityIssue(
+          code: 'invalid_question_type',
+          field: 'questionType',
+          severity: QuestionIssueSeverity.error,
+          message: 'Question type must be Scenario MCQ.',
+        ),
       );
     }
 
@@ -54,7 +90,10 @@ class QuestionQualityValidator {
     }.contains(question.cognitiveLevel.toLowerCase())) {
       issues.add(
         const QuestionQualityIssue(
-          'Cognitive level must be Application or Analysis.',
+          code: 'invalid_cognitive_level',
+          field: 'cognitiveLevel',
+          severity: QuestionIssueSeverity.error,
+          message: 'Cognitive level must be Application or Analysis.',
         ),
       );
     }
@@ -66,7 +105,10 @@ class QuestionQualityValidator {
     if (question.difficulty.toLowerCase() != 'hard') {
       issues.add(
         const QuestionQualityIssue(
-          'CSP practice questions must be Hard difficulty.',
+          code: 'invalid_difficulty',
+          field: 'difficulty',
+          severity: QuestionIssueSeverity.error,
+          message: 'CSP practice questions must be Hard difficulty.',
         ),
       );
     }
@@ -76,11 +118,20 @@ class QuestionQualityValidator {
     // ---------------------------------------------------------------
 
     if (stem.isEmpty) {
-      issues.add(const QuestionQualityIssue('Question stem is required.'));
+      issues.add(const QuestionQualityIssue(
+          code: 'missing_question_stem',
+          field: 'question',
+          severity: QuestionIssueSeverity.error,
+          message: 'Question stem is required.',
+        ));
     } else if (stem.length < 80) {
       issues.add(
         const QuestionQualityIssue(
-          'Use a meaningful workplace scenario with enough context for a high-level decision.',
+          code: 'weak_question_stem',
+          field: 'question',
+          severity: QuestionIssueSeverity.warning,
+          message:
+              'Use a meaningful workplace scenario with enough context for a high-level decision.',
         ),
       );
     }
@@ -91,7 +142,12 @@ class QuestionQualityValidator {
 
     if (options.length != 4) {
       issues.add(
-        const QuestionQualityIssue('Exactly four answer options are required.'),
+        const QuestionQualityIssue(
+          code: 'invalid_option_count',
+          field: 'options',
+          severity: QuestionIssueSeverity.error,
+          message: 'Exactly four answer options are required.',
+        ),
       );
     }
 
@@ -101,14 +157,23 @@ class QuestionQualityValidator {
       if (nonEmpty != 4) {
         issues.add(
           const QuestionQualityIssue(
-            'All four answer options must contain meaningful text.',
+            code: 'empty_answer_option',
+            field: 'options',
+            severity: QuestionIssueSeverity.error,
+            message:
+                'All four answer options must contain meaningful text.',
           ),
         );
       }
 
       if (options.toSet().length != options.length) {
         issues.add(
-          const QuestionQualityIssue('Answer options must be distinct.'),
+          const QuestionQualityIssue(
+          code: 'duplicate_answer_option',
+          field: 'options',
+          severity: QuestionIssueSeverity.error,
+          message: 'Answer options must be distinct.',
+        ),
         );
       }
 
@@ -120,7 +185,10 @@ class QuestionQualityValidator {
           question.correctAnswer >= options.length) {
         issues.add(
           const QuestionQualityIssue(
-            'Exactly one valid BEST answer must be selected.',
+            code: 'invalid_correct_answer',
+            field: 'correctAnswer',
+            severity: QuestionIssueSeverity.error,
+            message: 'Exactly one valid BEST answer must be selected.',
           ),
         );
       }
@@ -142,11 +210,20 @@ class QuestionQualityValidator {
     // ---------------------------------------------------------------
 
     if (question.explanation.trim().isEmpty) {
-      issues.add(const QuestionQualityIssue('An explanation is required.'));
+      issues.add(const QuestionQualityIssue(
+          code: 'missing_explanation',
+          field: 'explanation',
+          severity: QuestionIssueSeverity.error,
+          message: 'An explanation is required.',
+        ));
     } else if (question.explanation.trim().length < 80) {
       issues.add(
         const QuestionQualityIssue(
-          'Explanation should clearly explain why the BEST answer is correct.',
+          code: 'weak_explanation',
+          field: 'explanation',
+          severity: QuestionIssueSeverity.warning,
+          message:
+              'Explanation should clearly explain why the BEST answer is correct.',
         ),
       );
     }
@@ -156,7 +233,12 @@ class QuestionQualityValidator {
     // ---------------------------------------------------------------
 
     if (question.reference.trim().isEmpty) {
-      issues.add(const QuestionQualityIssue('A source/reference is required.'));
+      issues.add(const QuestionQualityIssue(
+          code: 'missing_reference',
+          field: 'reference',
+          severity: QuestionIssueSeverity.error,
+          message: 'A source/reference is required.',
+        ));
     }
 
     // ---------------------------------------------------------------
@@ -165,7 +247,12 @@ class QuestionQualityValidator {
 
     if (question.tags.length < 2) {
       issues.add(
-        const QuestionQualityIssue('Add at least two useful question tags.'),
+        const QuestionQualityIssue(
+          code: 'insufficient_tags',
+          field: 'tags',
+          severity: QuestionIssueSeverity.warning,
+          message: 'Add at least two useful question tags.',
+        ),
       );
     }
 
@@ -189,53 +276,39 @@ class QuestionQualityValidator {
 
     final shortest = lengths.reduce((a, b) => a < b ? a : b);
 
-    // Count how many options share the maximum length.
     final longestCount = lengths.where((length) => length == longest).length;
 
-    // ---------------------------------------------------------------
-    // BEST ANSWER MAY BE TIED FOR LONGEST
-    //
-    // PASS:
-    // A = 8
-    // B = 7
-    // C = 8  <-- BEST
-    // D = 7
-    //
-    // FAIL:
-    // A = 7
-    // B = 7
-    // C = 8  <-- BEST
-    // D = 7
-    //
-    // Therefore, the BEST answer is rejected only when it is
-    // uniquely the longest option.
-    // ---------------------------------------------------------------
-
+    // BEST answer may be tied for longest.
+    // It fails only when it is uniquely the longest option.
     if (correctLength == longest && longestCount == 1) {
       issues.add(
         QuestionQualityIssue(
-          'The BEST answer is uniquely the longest option '
-          '($correctLength words). Keep the BEST answer comparable '
-          'in length to the other options.',
+          code: 'best_answer_length_bias',
+          field: 'options',
+          severity: QuestionIssueSeverity.warning,
+          message:
+              'The BEST answer is uniquely the longest option '
+              '($correctLength words). Keep the BEST answer comparable '
+              'in length to the other options.',
         ),
       );
     }
 
-    // ---------------------------------------------------------------
-    // OVERALL OPTION BALANCE
-    // ---------------------------------------------------------------
-
+    // Overall option balance.
     if (shortest > 0 && longest > shortest * 2) {
       issues.add(
         QuestionQualityIssue(
-          'Option lengths are too uneven '
-          '($shortest to $longest words). '
-          'Keep all options comparable in wording and detail.',
+          code: 'option_length_imbalance',
+          field: 'options',
+          severity: QuestionIssueSeverity.warning,
+          message:
+              'Option lengths are too uneven '
+              '($shortest to $longest words). '
+              'Keep all options comparable in wording and detail.',
         ),
       );
     }
   }
-
   // -----------------------------------------------------------------
   // WORD COUNT
   // -----------------------------------------------------------------
