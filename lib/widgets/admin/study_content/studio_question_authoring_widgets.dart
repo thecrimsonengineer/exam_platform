@@ -527,20 +527,29 @@ class _StudioJsonQuestionImportDialogState
     return widget.questionService.validate(question);
   }
 
-  bool _hasQualityIssues(Question question) {
-    return _issuesFor(question).isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final totalIssues = _questions.fold<int>(
+    final questionIssues = <Question, List<QuestionQualityIssue>>{
+      for (final question in _questions) question: _issuesFor(question),
+    };
+
+    final totalIssues = questionIssues.values.fold<int>(
       0,
-      (total, question) => total + _issuesFor(question).length,
+      (total, issues) => total + issues.length,
     );
 
-    final needsImprovementCount = _questions.where(_hasQualityIssues).length;
+    final blockedCount = questionIssues.values
+        .where((issues) => issues.any((issue) => issue.isError))
+        .length;
 
-    final readyCount = _questions.length - needsImprovementCount;
+    final warningOnlyCount = questionIssues.values
+        .where(
+          (issues) =>
+              issues.isNotEmpty && !issues.any((issue) => issue.isError),
+        )
+        .length;
+
+    final passedCount = _questions.length - blockedCount;
 
     return AlertDialog(
       title: const Text('Import Question JSON'),
@@ -596,15 +605,20 @@ class _StudioJsonQuestionImportDialogState
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
                     const Spacer(),
-                    if (needsImprovementCount == 0)
+                    if (blockedCount > 0)
                       _qualityBadge(
-                        label: 'READY',
-                        icon: Icons.check_circle_rounded,
+                        label: 'BLOCKED',
+                        icon: Icons.block_rounded,
+                      )
+                    else if (warningOnlyCount > 0)
+                      _qualityBadge(
+                        label: 'PASSED WITH WARNINGS',
+                        icon: Icons.warning_amber_rounded,
                       )
                     else
                       _qualityBadge(
-                        label: 'NEEDS IMPROVEMENT',
-                        icon: Icons.warning_amber_rounded,
+                        label: 'PASSED',
+                        icon: Icons.check_circle_rounded,
                       ),
                   ],
                 ),
@@ -613,22 +627,29 @@ class _StudioJsonQuestionImportDialogState
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: needsImprovementCount == 0
-                        ? Colors.green.withValues(alpha: 0.06)
-                        : Colors.orange.withValues(alpha: 0.08),
+                    color: blockedCount > 0
+                        ? Colors.red.withValues(alpha: 0.06)
+                        : warningOnlyCount > 0
+                            ? Colors.orange.withValues(alpha: 0.08)
+                            : Colors.green.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    needsImprovementCount == 0
-                        ? 'All $readyCount imported questions passed '
-                              'the current quality checks.'
-                        : '$needsImprovementCount question'
-                              '${needsImprovementCount == 1 ? '' : 's'} '
-                              'NEEDS IMPROVEMENT. '
+                    blockedCount > 0
+                        ? '$blockedCount question'
+                              '${blockedCount == 1 ? '' : 's'} BLOCKED. '
                               '$totalIssues quality issue'
                               '${totalIssues == 1 ? '' : 's'} detected. '
-                              'These questions can still be imported as '
-                              'drafts and improved before publishing.',
+                              'Blocked questions can still be imported as '
+                              'drafts and corrected before publishing.'
+                        : warningOnlyCount > 0
+                            ? '$warningOnlyCount question'
+                                  '${warningOnlyCount == 1 ? '' : 's'} '
+                                  'PASSED WITH WARNINGS. '
+                                  '$totalIssues quality issue'
+                                  '${totalIssues == 1 ? '' : 's'} detected.'
+                            : 'All $passedCount imported questions PASSED '
+                                  'the current quality checks.',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -640,8 +661,11 @@ class _StudioJsonQuestionImportDialogState
                     separatorBuilder: (_, __) => const Divider(height: 1),
                     itemBuilder: (context, index) {
                       final question = _questions[index];
-                      final issues = _issuesFor(question);
-                      final needsImprovement = issues.isNotEmpty;
+                      final issues = questionIssues[question]!;
+                      final hasErrors =
+                          issues.any((issue) => issue.isError);
+                      final hasWarnings =
+                          issues.isNotEmpty && !hasErrors;
 
                       return ExpansionTile(
                         tilePadding: EdgeInsets.zero,
@@ -659,16 +683,20 @@ class _StudioJsonQuestionImportDialogState
                           child: Row(
                             children: [
                               Icon(
-                                needsImprovement
-                                    ? Icons.warning_amber_rounded
-                                    : Icons.check_circle_rounded,
+                                hasErrors
+                                    ? Icons.block_rounded
+                                    : hasWarnings
+                                        ? Icons.warning_amber_rounded
+                                        : Icons.check_circle_rounded,
                                 size: 16,
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                needsImprovement
-                                    ? 'NEEDS IMPROVEMENT'
-                                    : 'READY',
+                                hasErrors
+                                    ? 'BLOCKED'
+                                    : hasWarnings
+                                        ? 'PASSED WITH WARNINGS'
+                                        : 'PASSED',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -679,7 +707,7 @@ class _StudioJsonQuestionImportDialogState
                         children: [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-                            child: needsImprovement
+                            child: hasErrors || hasWarnings
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
