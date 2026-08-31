@@ -1,0 +1,385 @@
+import json
+from pathlib import Path
+from datetime import datetime
+
+OUTPUT_PATH = Path(
+    "docs/source_pipeline/CSP11_canonical_blueprint.json"
+)
+
+BLUEPRINT_VERSION = "V.2024.04.24"
+EFFECTIVE_DATE = "2025-08-01"
+
+domains = [
+    {
+        "domain_id": "d01",
+        "domain_number": 1,
+        "name": "Advanced Application of Safety Principles",
+        "weight_percent": 25,
+        "competencies": [
+            {
+                "competency_id": "d01_c01",
+                "number": 1,
+                "statement": "Describe the principles of minimizing hazards using Prevention-Through-Design (e.g., avoidance, elimination, substitution, safety design criteria for workplace facilities, machines, and practices)"
+            },
+            {
+                "competency_id": "d01_c02",
+                "number": 2,
+                "statement": "Apply the principles of process safety (e.g., pressure relief systems, chemical compatibility, management of change, materials of construction, process flow diagrams)"
+            },
+            {
+                "competency_id": "d01_c03",
+                "number": 3,
+                "statement": "Evaluate common workplace hazards (e.g., electrical, falls, confined spaces, lockout/tagout, working around water, caught in, struck by, excavation)"
+            },
+            {
+                "competency_id": "d01_c04",
+                "number": 4,
+                "statement": "Evaluate facility life safety features (e.g., public space safety, floor loading, occupancy loads)"
+            },
+            {
+                "competency_id": "d01_c05",
+                "number": 5,
+                "statement": "Describe fleet safety principles (e.g., driver and equipment safety, maintenance, surveillance equipment, GPS monitoring, telematics, hybrid vehicles, fuel systems, driving under the influence, fatigue)"
+            },
+            {
+                "competency_id": "d01_c06",
+                "number": 6,
+                "statement": "Evaluate materials handling methods and controls (e.g., forklifts, aerial lifts, and other powered industrial trucks; cranes, hand trucks, hoists, rigging, manual handling, drones)"
+            },
+            {
+                "competency_id": "d01_c07",
+                "number": 7,
+                "statement": "Evaluate the use of tools, machines, and equipment (e.g., hand tools, power tools, ladders, grinders, hydraulics, robotics)"
+            }
+        ]
+    },
+
+    {
+        "domain_id": "d02",
+        "domain_number": 2,
+        "name": "Program Management",
+        "weight_percent": 25,
+        "competencies": [
+            {
+                "competency_id": "d02_c01",
+                "number": 1,
+                "statement": "Compare performance against established benchmarks (e.g., gap analysis)"
+            },
+            {
+                "competency_id": "d02_c02",
+                "number": 2,
+                "statement": "Analyze performance standards to determine plan of action"
+            },
+            {
+                "competency_id": "d02_c03",
+                "number": 3,
+                "statement": "Determine how to measure, analyze, and improve EHS culture"
+            },
+            {
+                "competency_id": "d02_c04",
+                "number": 4,
+                "statement": "Determine appropriate incident investigation techniques (root causes) and apply corrective actions"
+            },
+            {
+                "competency_id": "d02_c05",
+                "number": 5,
+                "statement": "Describe the Management of Change process (prior, during, after)"
+            },
+            {
+                "competency_id": "d02_c06",
+                "number": 6,
+                "statement": "Describe system safety analysis techniques (e.g., fault tree analysis, failure modes and effects analysis [FMEA], Safety Case approach, risk summation)"
+            },
+            {
+                "competency_id": "d02_c07",
+                "number": 7,
+                "statement": "Evaluate leading and lagging indicators"
+            },
+            {
+                "competency_id": "d02_c08",
+                "number": 8,
+                "statement": "Recognize safety, health, and environmental management and audit systems (e.g., ISO 14000 series, 45001, 19011, ANSI Z10)"
+            },
+            {
+                "competency_id": "d02_c09",
+                "number": 9,
+                "statement": "Describe required components for plans, systems, and policies (e.g., safety, health, and environmental regulations and standards)"
+            },
+            {
+                "competency_id": "d02_c10",
+                "number": 10,
+                "statement": "Utilize document retention or management principles (e.g., incident investigation, training records, exposure records, maintenance records, environmental management system, audit results, privacy, trade secrets, personal information)"
+            },
+            {
+                "competency_id": "d02_c11",
+                "number": 11,
+                "statement": "Apply budgeting, finance, and economic analysis techniques and principles (e.g., timelines, budget development, resourcing, return on investment, cost/benefit analysis, role in procurement process)"
+            },
+            {
+                "competency_id": "d02_c12",
+                "number": 12,
+                "statement": "Differentiate management leadership techniques (e.g., management theories, leadership theories, motivation, discipline, authority, responsibility, accountability, communication styles)"
+            },
+            {
+                "competency_id": "d02_c13",
+                "number": 13,
+                "statement": "Apply project management principles and techniques (e.g., RACI charts, project timelines)"
+            },
+            {
+                "competency_id": "d02_c14",
+                "number": 14,
+                "statement": "Analyze and/or interpret data (e.g., exposure, release concentrations, sampling data, mean, median, mode, confidence intervals, probabilities, Pareto analysis)"
+            }
+        ]
+    },
+
+    {
+        "domain_id": "d03",
+        "domain_number": 3,
+        "name": "Risk Management",
+        "weight_percent": 15,
+        "competencies": [
+            {
+                "competency_id": "d03_c01",
+                "number": 1,
+                "statement": "Apply general principles of the safety risk evaluation process (i.e., identifying, analyzing, evaluating, monitoring, and communicating risk affecting an organization)"
+            },
+            {
+                "competency_id": "d03_c02",
+                "number": 2,
+                "statement": "Apply risk management strategies to identify and mitigate EHS hazards (e.g., risk analysis, job hazard analysis, process hazard analysis, hierarchy of controls)"
+            },
+            {
+                "competency_id": "d03_c03",
+                "number": 3,
+                "statement": "Differentiate financial risk mitigation strategies as they relate to risk avoidance, risk retention, risk sharing, risk transfer, loss prevention and reduction"
+            },
+            {
+                "competency_id": "d03_c04",
+                "number": 4,
+                "statement": "Apply risk analysis process of identifying, ranking, and monitoring (e.g., disasters/emergency preparedness, fire prevention, occupational health, hazardous materials management/environmental compliance)"
+            }
+        ]
+    },
+
+    {
+        "domain_id": "d04",
+        "domain_number": 4,
+        "name": "Emergency Management",
+        "weight_percent": 9,
+        "competencies": [
+            {
+                "competency_id": "d04_c01",
+                "number": 1,
+                "statement": "Create, employ, and maintain an Emergency Response Plan (e.g., fire, severe weather, nuclear incidents, natural disasters, terrorist attacks, chemical spills, utilities systems, cyber security)"
+            },
+            {
+                "competency_id": "d04_c02",
+                "number": 2,
+                "statement": "Describe the elements in disaster response and recovery (e.g., incident command, business continuity, contingency plans)"
+            },
+            {
+                "competency_id": "d04_c03",
+                "number": 3,
+                "statement": "Identify key components of fire prevention, protection, and suppression systems"
+            },
+            {
+                "competency_id": "d04_c04",
+                "number": 4,
+                "statement": "Prepare procedures for the safe transportation and security of hazardous materials"
+            },
+            {
+                "competency_id": "d04_c05",
+                "number": 5,
+                "statement": "Implement a workplace violence prevention program"
+            }
+        ]
+    },
+
+    {
+        "domain_id": "d05",
+        "domain_number": 5,
+        "name": "Environmental Management",
+        "weight_percent": 6,
+        "competencies": [
+            {
+                "competency_id": "d05_c01",
+                "number": 1,
+                "statement": "Describe environmental protection and pollution prevention programs (e.g., spill containment, abatement, best practices)"
+            },
+            {
+                "competency_id": "d05_c02",
+                "number": 2,
+                "statement": "Identify procedures used to manage hazardous materials (e.g., GHS classification system, storage and handling, policy, security, hazardous waste storage and disposal)"
+            },
+            {
+                "competency_id": "d05_c03",
+                "number": 3,
+                "statement": "Identify procedures used to manage waste (e.g., universal, recycling, spill clean-up, labeling, remediation)"
+            },
+            {
+                "competency_id": "d05_c04",
+                "number": 4,
+                "statement": "Determine sustainability principles and practices (e.g., supply chain; reduce, reuse, recycle)"
+            },
+            {
+                "competency_id": "d05_c05",
+                "number": 5,
+                "statement": "Describe the impact of environmental issues (e.g., aging infrastructure, asbestos, air pollution, climate change, environmental, social, and governance)"
+            }
+        ]
+    },
+
+    {
+        "domain_id": "d06",
+        "domain_number": 6,
+        "name": "Occupational Health and Applied Science",
+        "weight_percent": 10,
+        "competencies": [
+            {
+                "competency_id": "d06_c01",
+                "number": 1,
+                "statement": "Anticipate, recognize, evaluate, and control occupational exposures by implementing techniques for measurement, sampling, and analysis (e.g., hazardous chemicals, SDS, radiation, noise, biological hazards, heat/cold, indoor air quality, ventilation, nanoparticles, combustible dust, heat systems, high pressure, silica, powder and spray applications, blasting, molten metals, hot work, cold and heat stress, laser)"
+            },
+            {
+                "competency_id": "d06_c02",
+                "number": 2,
+                "statement": "Understand principles of public health as applicable (i.e., fundamentals of epidemiology, infectious disease, risk factors, statistics to interpret data)"
+            },
+            {
+                "competency_id": "d06_c03",
+                "number": 3,
+                "statement": "Apply toxicology principles to create exposure control plans and develop risk mitigation plans (e.g., using sampling equipment, symptoms of an exposure, LD50, LC50, mutagens, carcinogens, teratogens, ototoxins)"
+            },
+            {
+                "competency_id": "d06_c04",
+                "number": 4,
+                "statement": "Evaluate principles related to ergonomics and human factors (e.g., visual acuity, body mechanics, lifting, vibration, anthropometrics, fatigue management)"
+            },
+            {
+                "competency_id": "d06_c05",
+                "number": 5,
+                "statement": "Apply chemistry principles to calculate required containment volumes and hazardous materials storage requirements"
+            },
+            {
+                "competency_id": "d06_c06",
+                "number": 6,
+                "statement": "Apply core concepts in physics (e.g., forms of energy, weights, forces, stresses)"
+            }
+        ]
+    },
+
+    {
+        "domain_id": "d07",
+        "domain_number": 7,
+        "name": "Training",
+        "weight_percent": 10,
+        "competencies": [
+            {
+                "competency_id": "d07_c01",
+                "number": 1,
+                "statement": "Describe the needs assessment process to determine worker training, competencies, and qualifications"
+            },
+            {
+                "competency_id": "d07_c02",
+                "number": 2,
+                "statement": "Develop training programs with training materials to address various learning styles (e.g., presentation methods and tools)"
+            },
+            {
+                "competency_id": "d07_c03",
+                "number": 3,
+                "statement": "Describe how to implement training programs utilizing the Continuous Improvement model"
+            },
+            {
+                "competency_id": "d07_c04",
+                "number": 4,
+                "statement": "Determine the effectiveness of training programs (e.g., surveys, on-the-job compliance, feedback, assessments, demonstrations, quizzes)"
+            },
+            {
+                "competency_id": "d07_c05",
+                "number": 5,
+                "statement": "Demonstrate working knowledge of education and training methods and techniques (e.g., classroom, online, simulation, computer-based, Artificial Intelligence, coaching, on-the-job training)"
+            },
+            {
+                "competency_id": "d07_c06",
+                "number": 6,
+                "statement": "Understand adult learning principles (e.g., visual, auditory, reading and writing, kinesthetic)"
+            }
+        ]
+    }
+]
+
+validation_rules = {
+    "exactly_seven_domains": True,
+    "domain_ids_unique": True,
+    "domain_numbers_unique": True,
+    "domain_numbers_must_be_1_to_7": True,
+    "domain_names_must_be_non_empty": True,
+    "weights_must_be_positive": True,
+    "weights_must_total_100": True,
+    "each_domain_requires_competencies": True,
+    "competency_ids_unique_globally": True,
+    "competency_ids_must_match_domain": True,
+    "competency_numbers_unique_within_domain": True,
+    "competency_numbers_must_be_sequential": True,
+    "competency_statements_must_be_non_empty": True,
+    "source_text_is_authoritative": True,
+    "no_inferred_competencies": True,
+    "no_merged_competencies": True,
+    "no_split_competencies": True,
+    "source_mapping_not_performed_at_l21": True
+}
+
+output = {
+    "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+    "stage": "L2.1 CSP11 Blueprint Structure",
+    "status": "CANONICAL",
+    "blueprint": {
+        "name": "CSP11 Examination Blueprint",
+        "version": BLUEPRINT_VERSION,
+        "effective_date": EFFECTIVE_DATE,
+        "issuing_body": "Board of Certified Safety Professionals",
+        "source_file": "CSP11-Blueprint.pdf"
+    },
+    "domain_count": len(domains),
+    "competency_count": sum(
+        len(domain["competencies"])
+        for domain in domains
+    ),
+    "weight_total_percent": sum(
+        domain["weight_percent"]
+        for domain in domains
+    ),
+    "domains": domains,
+    "validation_rules": validation_rules,
+    "authority": {
+        "domain_names_and_weights": "CSP11 Examination Blueprint",
+        "competency_statements": "CSP11 Examination Blueprint",
+        "human_review_required_for_future_mapping": True,
+        "mapping_stage": "L3",
+        "content_generation_stage": "L6",
+        "question_generation_stage": "L7"
+    },
+    "generated_at": datetime.now().isoformat(timespec="seconds")
+}
+
+OUTPUT_PATH.parent.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+with OUTPUT_PATH.open("w", encoding="utf-8") as f:
+    json.dump(
+        output,
+        f,
+        indent=2,
+        ensure_ascii=False
+    )
+
+print("===== L2.1 CSP11 BLUEPRINT STRUCTURE =====")
+print(f"Domains: {len(domains)}")
+print(f"Competencies: {output['competency_count']}")
+print(f"Weight total: {output['weight_total_percent']}%")
+print(f"Blueprint version: {BLUEPRINT_VERSION}")
+print(f"Effective date: {EFFECTIVE_DATE}")
+print(f"Output: {OUTPUT_PATH}")

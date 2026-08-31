@@ -1,0 +1,78 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L2.2 CSP11 Blueprint Validation and Integrity Gate",
+  "generated_at": "2026-08-31T14:55:20",
+  "blueprint_reference": {
+    "version": "V.2024.04.24",
+    "effective_date": "2025-08-01"
+  },
+  "validation_policy": {
+    "canonical_blueprint_is_authoritative": true,
+    "domain_weights_are_fixed": true,
+    "exactly_seven_domains_required": true,
+    "exactly_forty_seven_competencies_required": true,
+    "competencies_must_have_single_parent_domain": true,
+    "competency_ids_must_be_unique": true,
+    "competency_id_format_required": "dXX_cXX",
+    "invalid_structure_blocks_progression": true,
+    "validator_does_not_modify_blueprint": true,
+    "validator_does_not_invent_competencies": true,
+    "validator_does_not_reclassify_competencies": true
+  },
+  "canonical_domain_expectation": {
+    "domain_count": 7,
+    "weight_total": 100,
+    "domains": [
+      {
+        "domain_number": 1,
+        "name": "Advanced Application of Safety Principles",
+        "weight": 25
+      },
+      {
+        "domain_number": 2,
+        "name": "Program Management",
+        "weight": 25
+      },
+      {
+        "domain_number": 3,
+        "name": "Risk Management",
+        "weight": 15
+      },
+      {
+        "domain_number": 4,
+        "name": "Emergency Management",
+        "weight": 9
+      },
+      {
+        "domain_number": 5,
+        "name": "Environmental Management",
+        "weight": 6
+      },
+      {
+        "domain_number": 6,
+        "name": "Occupational Health and Applied Science",
+        "weight": 10
+      },
+      {
+        "domain_number": 7,
+        "name": "Training",
+        "weight": 10
+      }
+    ]
+  },
+  "observed_structure": {
+    "domain_count": 7,
+    "competency_count": 47,
+    "weight_total": 100,
+    "unique_domain_ids": 7,
+    "unique_domain_names": 7,
+    "unique_competency_ids": 47
+  },
+  "summary": {
+    "overall_status": "VALID",
+    "blocking_issues": 0,
+    "warnings": 0
+  },
+  "issues": [],
+  "warnings": []
+}
