@@ -1,7 +1,7 @@
 {
   "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
   "stage": "L2.3 CSP11 Source-to-Competency Mapping Preparation",
-  "generated_at": "2026-08-31T15:22:41",
+  "generated_at": "2026-08-31T16:53:36",
   "blueprint_reference": {
     "name": "CSP11 Examination Blueprint",
     "version": "V.2024.04.24",
