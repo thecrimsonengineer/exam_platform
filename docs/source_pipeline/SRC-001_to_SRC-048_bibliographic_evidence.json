@@ -1,0 +1,1269 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L1.5.1 Bibliographic Evidence Extraction",
+  "generated_at": "2026-08-31T14:35:58",
+  "source_count": 25,
+  "method": "Evidence extraction only. Detected terms and candidates are signals for human review and are not treated as final bibliographic classifications.",
+  "evidence_results": [
+    {
+      "source_id": "SRC-002",
+      "filename": "ACCIDENT PREVENTION  ADMINISTRATION AND PROGRAM.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 126,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 3470,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "©2015 National Safety Council \nACCIDENT PREVENTION MANUAL FOR BUSINESS & INDUSTRY\nAdministration & Programs\n1"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bmanual\\b"
+        ],
+        "author_terms_found": [],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "2015"
+        ],
+        "organisation_signals": [
+          "government",
+          "agency",
+          "organization"
+        ],
+        "regulatory_signals": [
+          "regulatory",
+          "legislation"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-003",
+      "filename": "Accident prevention manual for business & industry - Engineering and Tech COMPRESSED.pdf",
+      "pdf_metadata": {
+        "title": "Accident prevention manual for business & industry - Engineering and Tech.pdf",
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 881,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 7,
+        "first_nonempty_page": null,
+        "first_nonempty_page_text": ""
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [],
+        "author_terms_found": [],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [],
+        "organisation_signals": [],
+        "regulatory_signals": []
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-004",
+      "filename": "Accident prevention manual for business & industry - Engineering and Tech.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 881,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 10173,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "ENGINEERING &\nTECHNOLOGY\nENGINEERING & \nTECHNOLOGY\nFOR\nBUSINESS & INDUSTRY\nBUSINESS & INDUSTRY\nFOR\nACCIDENT\nPREVENTION MANUAL\nACCIDENT\nPREVENTION MANUAL\nPHILIP E. HAGAN\nJOHN F. MONTGOMERY\nJAMES T. O’REILLY\n1 2 T H\nE D I T I O N"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bbook\\b",
+          "\\bmanual\\b",
+          "\\bguide\\b",
+          "\\bhandbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\b\\d+(st|nd|rd|th)\\s+edition\\b",
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1944",
+          "1946",
+          "1947",
+          "1951",
+          "1955",
+          "1959",
+          "1964",
+          "1969",
+          "1974",
+          "1981",
+          "1988",
+          "1992",
+          "1997",
+          "2001"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "occupational health",
+          "organization"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-005",
+      "filename": "Accident Prevention Manual for Business & Industry- -- Gary R Krieger; John F Montgomery; Richard W Lack; National -- ( WeLib.org ).pdf",
+      "pdf_metadata": {
+        "title": "Accident prevention manual for business & industry. Environmental management ",
+        "authors": null,
+        "subject": "Industries -- Environmental aspects; Environmental management",
+        "keywords": "https://archive.org/details/accidentpreventi0000unse_h0b2"
+      },
+      "page_count": 572,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 3839,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "USINESS \nMANAGEMENT \n2ND EDITION"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bmanual\\b",
+          "\\bguide\\b",
+          "\\bhandbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\b\\d+(st|nd|rd|th)\\s+edition\\b",
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [
+          "\\bpublished by\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1999",
+          "2000"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "occupational health",
+          "organization"
+        ],
+        "regulatory_signals": []
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-008",
+      "filename": "apm-ap14-answers (2).pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": "jim",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 50,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 24879,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "Accident Prevention Manual: Administration & Programs, 14th Ed.—Answers to Review Questions \n \nCopyright © 2015 National Safety Council \nCHAPTER 1—HISTORICAL PERSPECTIVES \n1. List the six reasons for preventing injuries and \noccupational illnesses as given in the text.  \na. \nNeedless destruction of life and health is morally \nunjustified. \nb. Failure to take necessary precautions against \npredictable accidents and occupational illnesses \nmakes management and workers morally \nresponsible for those accidents and occupational \nillnesses. \nc. \nAccidents and occupational illnesses severely limit \nefficiency and productivity. \nd. Accidents and occupational illnesses produce far-\nreaching social harm. \ne. \nThe safety movement has demonstrated that its \ntechniques are effective in reducing accident rates \nand promoting efficiency. \nf. \nRecent state and federal legislation mandates \nmanagement responsibility to provide a safe, \nhealthful workplace. \n \n2. With the industrial revolution came innovations in the \nprocesses and organization of production known as the \nfactory system. List four components of the factory \nsystem that emerged at that time. \na. \nSubstitution of mechanical energy for animal \nsources of power, particularly steam power \nthrough the combustion of coal \nb. Substitution of machines for human skills and \nstrength \nc. \nInvention of new methods for transforming raw \nmaterials into finished goods, particularly in iron \nand steel production and industrial chemicals \nd. Organization of work into large units, such as \nfactories or forges or mills. This made possible \ndirect supervision of the manufacturing process \nand an efficient division of labor. \n \n3. What industry introduced the factory system in the \nUnited States?  \nc.     textiles \n4. Define the fellow servant rule. \nThe employer is not liable for an injury to an employee \nthat results from negligence of a fellow employee. \n5. Define contributory negligence. \nThe employer is not liable if an employee is injured due \nto his own negligence. \n \n \n6. Define assumption of risk \nThe employer is not liable because the employee took \nthe job with full knowledge of the risks and hazards \ninvolved. \n7. Which president’s legislation set up the first workers’ \ncompensation laws covering only federal employees? \na. \nTheodore Roosevelt \n8. Which state passed the first effective workers’ \ncompensation act? \nb. Wisconsin \n9. What industry was the first to realize that the actions of \npeople are important in creating unintentional-injury \nsituations? \nb. railroads \n10. When was the National Safety Council started? \nc. 1912 \n11. What is the “Three Es of Safety” concept? \nAs industry developed some experience in safety, it \ndiscovered that engineering could prevent \nunintentional injuries, that employees could be reached \nthrough education, and that safety rules could be \nestablished and enforced. \n12. List the three trends in safety work and the safety \nprofession that have emerged from the prevention and \ncontrol measure concepts of the 1950s. \na. \nFirst, more emphasis is being placed on analyzing \nthe loss potential of any organization or projected \nactivity. \nb. Second, industry is developing more factual, \nunbiased, and objective information about loss-\nproducing problems and accident causation to help \nthose who are ultimately responsible for worker \nhealth and safety make sound decisions. \nc. \nThird, management is making greater use of the \nsafety and health professional’s knowledge and \nassistance in developing safe products. \n \n13. List the necessary elements for a joint safety and health \nactivity to be successful in any workplace. \na. \nA sincere commitment to the safety and health \neffort must be displayed by both labor and \nmanagement leaders in the workplace. \nb. Specific roles and responsibilities should be \ndefined for all committee members."
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bmanual\\b",
+          "\\bguide\\b",
+          "\\breport\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "1902",
+          "1912",
+          "1984",
+          "1988",
+          "1990",
+          "2001",
+          "2003",
+          "2015"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "health and safety",
+          "government",
+          "agency",
+          "organization",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "regulatory",
+          "standard",
+          "legislation",
+          "directive"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-009",
+      "filename": "apm-et14-answers (1).pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": "Deborah Meyer",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 44,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 20740,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "Accident Prevention Manual: Engineering & Technology, 14th Ed.—Answers to Review Questions \n \n \n \nCHAPTER 1—SAFETY THROUGH DESIGN \n1. List the safety through design provisions in \nANSI/AIHA Z10. \n \n \nAddressing safety and health needs in the design \nand redesign processes \n \nIdentifying and analyzing hazards and \nassessingand prioritizing the risks that derive \nfrom them \n \nApplying a prescribed hierarchy of controls, to \nreduce risks to an acceptable level \n \nImplementing a management of change procedure \nso that hazards and risks are properly considered \nand minimized when changes are made \n \nIncluding safety and health specifications in \npurchasing documents to avoid bringing hazards \nand risks into the workplace \n \n2. Define safety through design. \n \nSafety through design is defined as the integration of \nhazard analysis and risk assessment methods early in \nthe design and redesign processes and taking the \nactions necessary so that the risks of injury or damage \nare at an acceptable level. This concept encompasses \nfacilities, hardware, equipment, tooling, materials, \nlayout and configuration, energy controls, \nenvironmental concerns, and products. \n \n3. What benefits are obtained by applying safety through \ndesign concepts? \n \n \nSignificant reductions will be achieved in injuries, \nillnesses, damage to the environment, and the \nattendant costs \n \nProductivity will be improved \n \nOperating costs will be reduced \n \nExpensive retrofitting to correct design \nshortcomings will be avoided. \n \n4. How do safety through design concepts relate to \nquality management? \n \nThere is a remarkable correlation between quality \nmanagement and safety through design principles. \nWe borrow from W. Edwards Deming, who was world \nrenowned in quality management. Deming stressed \nagain and again that, “Processes must be designed to \nachieve superior quality if that is the quality level \ndesired, and that superior quality cannot be attained \notherwise.” If the goal is to achieve superior quality, or \nsuperior safety, systems must be designed to achieve \nthose performance levels, and a continuous \nimprovement program must be maintained for the \nredesign of existing work places and work methods. \n \n5. Define the following terms: acceptable risk; safety; \nhazards; risk; probability; severity; residual risk. \n \na. \nAcceptable risk: Risk for which the probability of a \nhazard-related incident or exposure occurring and \nthe severity of harm or damage that may result \nare as low as reasonably practicable, and tolerable \nin the setting being considered. \nb. Safety: Safety is defined as that state for which the \nrisks are judged to be acceptable. \nc. \nHazards: Are the potential for harm. Hazards \ninclude all aspect of technology and activity that \nproduce risk. Hazards include the characteristics \nof things (equipment, dusts) and the actions or \ninactions of people. \nd. Risk: An estimate of the probability of a hazards \nrelated incident or exposure occurring and the \nseverity of harm or damage that could result. \ne. \nProbability: The likelihood of a hazard being \nrealized and initiating an incident or exposure \nthat could result in harm or damage—for a \nselected unit of time, events, population, items or \nactivity being considered. \nf. \nSeverity: The extent of harm or damage that could \nresult from a hazard-related incident or exposure. \nResidual risk: The risk remaining after preventive \nmeasures have been taken. No matter how \neffective the preventive actions, there will always \nbe residual risk if a facility or operation continues \nto exist. \n \n6. Outline the hazard analysis/risk assessment process. \n \nThe Hazard Analysis/Risk Assessment Process \nEstablish the Analysis Parameters \nIdentify the Hazards \nConsider the Failure Modes \nDetermine the Frequency and Duration of \nExposure \nAssess the Severity of Consequences \nDetermine Occurrence Probability \nDefine the Risk \nRank Risks in Priority Order \nDevelop Remediation Proposals \nFollow Up on Actions Taken \nDocument the Results \n \n7. What would a risk assessment matrix include and \nwhat benefit derives from its use? \n \nA risk assessment matrix includes combinations of \noccurrence probabilities and severities of harm, and \nthe risk levels that derive from those combinations. \n(Continued)"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bmanual\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [],
+        "organisation_signals": [
+          "institute",
+          "organization",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "guidance",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-011",
+      "filename": "ASP Safety Fundamentals Exam secrets study guide - your key -- ASP Exam Secrets Test Prep Team; Mometrix Safety -- ( WeLib.org ).pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 207,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 12646,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "FREE Study Skills DVD Offer \nDear Customer, \nThank you for your purchase from Mometrix! We consider it an honor and privilege that you \nhave purchased our product and want to ensure your satisfaction. \nAs a way of showing our appreciation and to help us better serve you, we have developed a \nStudy Skills DVD that we would like to give you for FREE. This DVD covers our “best practices” \nfor studying for your exam, from using our study materials to preparing for the day of the \ntest. \nAll that we ask is that you email us your feedback that would describe your experience so far \nwith our product. Good, bad or indifferent, we want to know what you think! \nTo get your FREE Study Skills DVD, email freedvd@mometrix.com with “FREE STUDY SKILLS \nDVD” in the subject line and the following information in the body of the email: \na. The name of the product you purchased. \nb. Your product rating on a scale of 1-5, with 5 being the highest rating. \nc. Your feedback. It can be long, short, or anything in-between, just your impressions \nand experience so far with our product. Good feedback might include how our study \nmaterial met your needs and will highlight features of the product that you found \nhelpful. \nd. Your full name and shipping address where you would like us to send your free DVD. \nIf you have any questions or concerns, please don’t hesitate to contact me directly. \nThanks again! \nSincerely, \nJay Willis \nVice President \njay.willis@mometrix.com \n1-800-673-8175"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bmanual\\b",
+          "\\bguide\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [
+          "\\bpublished by\\b",
+          "\\bpublisher\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1992",
+          "2016"
+        ],
+        "organisation_signals": [
+          "occupational health",
+          "department",
+          "organization"
+        ],
+        "regulatory_signals": [
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-012",
+      "filename": "BCSPcodeofethics.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1,
+      "sampled_page_count": 1,
+      "text_evidence": {
+        "total_characters": 3145,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "This code sets forth the code of ethics and professional standards to be observed by anyone \nholding status with Board of Certified Safety Professionals (applicant, candidate or credential \nholder). Those holding status with the Board of Certified Safety Professionals shall, in their \nprofessional activities, sustain and advance the integrity, honor, and prestige of the profession \nby adhering to these standards.\nApproved by the BCSP Board of Directors, October 2002\nRevised: November 1, 2012 with an Effective Date of January 1, 2013 for all BCSP credentials\nRevised: March 26, 2020\nRevised: November 4, 2022; with an effective date of January 1, 2023\n1. \u0007HOLD paramount the safety and health of \npeople, the protection of the environment and \nof property in the performance of professional \nduties and exercise their obligation to advise \nemployers, clients, employees, the public, \nand appropriate authorities of danger and \nunacceptable risks to people, the environment, \nor property.\n2. \u0007BE honest, fair, and impartial; act with \nresponsibility and integrity. Adhere to high \nstandards of ethical conduct with balanced \ncare for the interests of the public, employers, \nclients, employees, colleagues and the \nprofession. Avoid all conduct or practice that \nis likely to discredit the profession or deceive \nthe public.\n3. \u0007ISSUE public statements only in an objective \nand truthful manner and only when founded \nupon knowledge of the facts and competence in \nthe subject matter.\n4. \u0007UNDERTAKE assignments only when \nqualified by education or experience in the \nspecific field(s)  involved. Accept responsibility \nfor continued professional development \nby acquiring and maintaining competence \nthrough continuing education, experience, and \nprofessional training, and keeping current on \nrelevant legal issues.\n5. \u0007REPRESENT academic and professional \nqualifications accurately. Represent degree \nof responsibility in or for the subject matter \nin prior assignments accurately. Represent \npertinent facts accurately when presenting \nqualifications, experience, or other information \nfor solicitation of employment including facts \nabout employers, employees, associates, or \npast accomplishments.\n6. \u0007CONDUCT their professional relations by \nthe highest standards of integrity and avoid \ncompromise of their professional judgment \nby conflicts of interest. When becoming \naware of professional misconduct by another \nholding status with the Board of Certified \nSafety Professionals, take steps to bring that \nmisconduct to the attention of the Board of \nCertified Safety Professionals.\n7. \u0007ACT in a manner free of bias, discrimination or \nharassment on the basis of race, color, religion \n(creed), gender, gender expression, age, \nnational origin (ancestry), disability, marital \nstatus, sexual orientation, veteran status or \nany characteristic protected by the law of the \napplicable jurisdiction.\n8. \u0007SEEK opportunities to be of constructive \nservice in civic affairs and work for the \nadvancement of the safety, health and well-being \nof their community and their profession by \nsharing their knowledge and skills.\nPOLICY\nSTANDARDS"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "2002",
+          "2012",
+          "2013",
+          "2020",
+          "2022",
+          "2023"
+        ],
+        "organisation_signals": [
+          "standards"
+        ],
+        "regulatory_signals": [
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-013",
+      "filename": "Bowen_EHS_ASP_CSP_Question__Answers_2003_to_2018_and_CSP_Questions new (1).pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1390,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 5120,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "Professional Development for Health & Safety Experts \n1.866.264.5852 | support@bowenehs.com \nwww.BowenEHS.com \nCopyright © 2017 Bowen EHS – A Division of Bowen Learning Network, Inc. \n \n \nASP-CSP Question 10/12/2003 – Statistics \n \nParamedic response times for 7 emergencies at a large industrial plant were 4 minutes, \n8 minutes, 3 minutes, 9 minutes, 8 minutes, 5 minutes and 6 minutes.   \n  \nWhat was the mean, the median, and the standard deviation of the paramedic response \ntimes (in that order)?   \n \nx ൌ \n∑୶౟\n୬  \ns ൌට∑ሺ୶౟ି ୶ሻమ\n୬ିଵ\n \n \nA. \n6.14 min, 6.00 min, 2.27 min \nB. \n6.17 min, 8.00 min, 5.14 min \nC. \n7.28 min, 6.00 min, 4.39 min \nD. \n7.28 min, 8.00 min, 4.39 min \n \n \n(Solution on next page)"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "2003",
+          "2017"
+        ],
+        "organisation_signals": [],
+        "regulatory_signals": [
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-014",
+      "filename": "csp 11.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 3,
+      "sampled_page_count": 3,
+      "text_evidence": {
+        "total_characters": 2,
+        "first_nonempty_page": null,
+        "first_nonempty_page_text": ""
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [],
+        "author_terms_found": [],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [],
+        "organisation_signals": [],
+        "regulatory_signals": []
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-015",
+      "filename": "csp reference.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 2,
+      "sampled_page_count": 2,
+      "text_evidence": {
+        "total_characters": 5852,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "1\nBoard of Certified Safety Professionals\nE: bcsp@bcsp.org | W: BCSP.ORG\nCSP Blueprint References | V.2021.06.09\n© 2021 Board of Certified Safety Professionals\nTitle & Auxiliary Information \nAccident Prevention Manual for Business & Industry: Administration & Programs; 14th Edition\nHagan, P. E., Montgomery, J. F., et al. (2015). Itasca, IL: National Safety Council.\nAccident Prevention Manual for Business & Industry: Engineering and Technology; 14th Edition\nHagan, P. E., Montgomery, J. F., et al. (2015). Itasca, IL: National Safety Council.\nAccident Prevention Manual for Business & Industry: Environmental Management; 2nd Edition\nKrieger, G. R. (2000). Itasca, IL: National Safety Council.\nAdvanced Safety Management: Focusing on Z10 & Serious Injury Prevention; 2nd Edition\nManuele, F. A. (2014). Hoboken, NJ: John Wiley & Sons, Inc.\nApplied Mathematics for Safety Professionals: Tips, Tools, and Techniques to Solve Everyday Problems\nYoung, G. (2010). Des Plaines, IL: American Society of Safety Engineers.\nApplied Statistics in Occupational Safety & Health\nJanicak, C. A. (2004). Lanham, MD: Government Institutes.\nBCSP Code of Ethics\nBoard of Certified Safety Professionals. (2020). Retrieved from http://www.bcsp.org/Portals/0/Assets/DocumentLibrary/BCSPcodeofethics.pdf.\nDisaster Recovery Handbook, The: A Step-By-Step Plan to Ensure Business Continuity and Protect Vital Operations,         \nFacilities, & Assets\nWallace, M. & Webber, L. (2004). New York, NY: American Management Association.\nEmergency Incident Management Systems: Fundamentals and Applications\n\u0007Stringfield, W. H. (2000). Rockville, MD: Government Institutes.\nEmployee Training & Development; 8th Edition\nNoe, R. A. (2019). New York, NY: McGraw-Hill.\nFire Safety Management Handbook; 3rd Edition\nDella-Giustina, D. E. (2014). Boca Raton, FL: Taylor & Francis Group, LLC.\nFundamentals of Industrial Hygiene; 6th Edition\nPlog, B. A. & Quinlan, P. (2012). Itasca, IL: National Safety Council.\nFundamentals of Management; 8th Edition\nGriffin, R. W. (2016). Mason, OH: Cengage Learning.\nFundamentals of Occupational Safety and Health; 7th Edition\nFriend, M. A. & James P. K. (2018). Lanham, MD: Government Institutes.\nFundamentals of Wastewater Treatment and Engineering\nRiffat, R. (2013). Boca Raton, FL: Taylor & Francis Group, LLC\nGuidelines for Risk Based Process Safety\nAmerican Institute of Chemical Engineers. (2007). New York, NY: Wiley-Interscience. \nHazardous Materials Management Desk Reference: Science and Technology, Volume 1; 3rd Edition\nSnyder, D. J. & Arnofsky, A. H. (2013). Bethesda, MD: Alliance of Hazardous Materials Professionals.\nIncidental Trainer: A Reference Guide for Training Design, Development and Delivery\nWan, M. (2014). Boca Raton, FL: Taylor & Francis Group, LLC.\nIntroduction to Fall Protection; 4th Edition\nEllis, J. N. (2011). Plaines, IL: American Society of Safety Engineers.\nJob Hazard Analysis: A Guide to Identifying Risks in the Workplace\nSwartz, G. (2001). Lanham, MD: Government Institutes.\nBLUEPRINT \nREFERENCES\nThe questions that appear on the CSP examination are written by subject matter experts, and \nevery question is supported by a published reference. The following is a list of references that \nwere frequently used during development of the CSP examination. This is not intended as a \ncomprehensive list of all materials available to CSP candidates and should not be intended as a \nguaranteed means of passing the exam. Candidates are also strongly advised to become familiar \nwith industry regulations, standards, and practices in preparing for the CSP certification examination."
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bmanual\\b",
+          "\\bguide\\b",
+          "\\bhandbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b",
+          "\\bwritten by\\b"
+        ],
+        "edition_terms_found": [
+          "\\b\\d+(st|nd|rd|th)\\s+edition\\b",
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "2000",
+          "2001",
+          "2004",
+          "2007",
+          "2009",
+          "2010",
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2018",
+          "2019",
+          "2020",
+          "2021"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "occupational health",
+          "health and safety",
+          "government",
+          "institute",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-016",
+      "filename": "CSP-References.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 2,
+      "sampled_page_count": 2,
+      "text_evidence": {
+        "total_characters": 5866,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "1\nBoard of Certified Safety Professionals\nE: bcsp@bcsp.org | W: BCSP.ORG\nCSP Blueprint References | V.2021.06.09\n© 2021 Board of Certified Safety Professionals\nTitle & Auxiliary Information \nAccident Prevention Manual for Business & Industry: Administration & Programs; 14th Edition\nHagan, P. E., Montgomery, J. F., et al. (2015). Itasca, IL: National Safety Council.\nAccident Prevention Manual for Business & Industry: Engineering and Technology; 14th Edition\nHagan, P. E., Montgomery, J. F., et al. (2015). Itasca, IL: National Safety Council.\nAccident Prevention Manual for Business & Industry: Environmental Management; 2nd Edition\nKrieger, G. R. (2000). Itasca, IL: National Safety Council.\nAdvanced Safety Management: Focusing on Z10 & Serious Injury Prevention; 2nd Edition\nManuele, F. A. (2014). Hoboken, NJ: John Wiley & Sons, Inc.\nApplied Mathematics for Safety Professionals: Tips, Tools, and Techniques to Solve Everyday Problems\nYoung, G. (2010). Des Plaines, IL: American Society of Safety Engineers.\nApplied Statistics in Occupational Safety & Health\nJanicak, C. A. (2004). Lanham, MD: Government Institutes.\nBCSP Code of Ethics\nBoard of Certified Safety Professionals. (2020). Retrieved from http://www.bcsp.org/Portals/0/Assets/DocumentLibrary/BCSPcodeofethics.pdf.\nDisaster Recovery Handbook, The: A Step-By-Step Plan to Ensure Business Continuity and Protect Vital Operations,         \nFacilities, & Assets\nWallace, M. & Webber, L. (2004). New York, NY: American Management Association.\nEmergency Incident Management Systems: Fundamentals and Applications \n\u0007Stringfield, W. H. (2000). Rockville, MD: Government Institutes.\nEmployee Training & Development; 8th Edition \nNoe, R. A. (2019). New York, NY: McGraw-Hill.\nFire Safety Management Handbook; 3rd Edition\nDella-Giustina, D. E. (2014). Boca Raton, FL: Taylor & Francis Group, LLC.\nFundamentals of Industrial Hygiene; 6th Edition\nPlog, B. A. & Quinlan, P. (2012). Itasca, IL: National Safety Council.\nFundamentals of Management; 8th Edition \nGriffin, R. W. (2016). Mason, OH: Cengage Learning.\nFundamentals of Occupational Safety and Health; 7th Edition\nFriend, M. A. & James P. K. (2018). Lanham, MD: Government Institutes.\nFundamentals of Wastewater Treatment and Engineering \nRiffat, R. (2013). Boca Raton, FL: Taylor & Francis Group, LLC\nGuidelines for Risk Based Process Safety \nAmerican Institute of Chemical Engineers. (2007). New York, NY: Wiley-Interscience. \nHazardous Materials Management Desk Reference: Science and Technology, Volume 1; 3rd Edition\nSnyder, D. J. & Arnofsky, A. H. (2013). Bethesda, MD: Alliance of Hazardous Materials Professionals.\nIncidental Trainer: A Reference Guide for Training Design, Development and Delivery \nWan, M. (2014). Boca Raton, FL: Taylor & Francis Group, LLC.\nIntroduction to Fall Protection; 4th Edition \nEllis, J. N. (2011). Plaines, IL: American Society of Safety Engineers.\nJob Hazard Analysis: A Guide to Identifying Risks in the Workplace\nSwartz, G. (2001). Lanham, MD: Government Institutes.\nBLUEPRINT  \nREFERENCES\nThe questions that appear on the CSP examination are written by subject matter experts, and \nevery question is supported by a published reference. The following is a list of references that \nwere frequently used during development of the CSP examination. This is not intended as a \ncomprehensive list of all materials available to CSP candidates and should not be intended as a \nguaranteed means of passing the exam. Candidates are also strongly advised to become familiar \nwith industry regulations, standards, and practices in preparing for the CSP certification examination."
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bmanual\\b",
+          "\\bguide\\b",
+          "\\bhandbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b",
+          "\\bwritten by\\b"
+        ],
+        "edition_terms_found": [
+          "\\b\\d+(st|nd|rd|th)\\s+edition\\b",
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "2000",
+          "2001",
+          "2004",
+          "2007",
+          "2009",
+          "2010",
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2018",
+          "2019",
+          "2020",
+          "2021"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "occupational health",
+          "health and safety",
+          "government",
+          "institute",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-018",
+      "filename": "Emergency Incident Management Systems - Fundamentals and -- Louis N. Molino, Sr. -- ( WeLib.org ).pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 539,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 5526,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "Emergency Incident \nManagement Systems"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [
+          "\\bpublished by\\b",
+          "\\bpublisher\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1976",
+          "2006"
+        ],
+        "organisation_signals": [
+          "department"
+        ],
+        "regulatory_signals": []
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-022",
+      "filename": "Fundamentals of Industrial Hygiene (5e), Plog 2002_compressed.pdf",
+      "pdf_metadata": {
+        "title": "00 Front Matter",
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1105,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 7525,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "5 T H\nE D I T I O N\nBARBARA A. PLOG\nPATRICIA J. QUINLAN\nFUNDAMENTALS OF\nINDUSTRIAL HYGIENE\nFUNDAMENTALS OF\nINDUSTRIAL HYGIENE"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bbook\\b",
+          "\\bmanual\\b",
+          "\\bguide\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1951",
+          "1971",
+          "1979",
+          "1988",
+          "1996",
+          "2001",
+          "2002"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "occupational health",
+          "health and safety",
+          "government",
+          "organization"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "guidance",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-023",
+      "filename": "Fundamentals of management.pdf",
+      "pdf_metadata": {
+        "title": "Fundamentals of Management, 8th ed.",
+        "authors": null,
+        "subject": null,
+        "keywords": "WCN: 02-200-203"
+      },
+      "page_count": 547,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 8329,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "5  REASONS\nto buy your textbooks \nand course materials at\nSAVINGS: \nPrices up to 75% off, daily coupons, and free shipping on orders over $25\nCHOICE: \nMultiple format options including textbook, eBook and eChapter rentals\nCONVENIENCE: \nAnytime, anywhere access of eBooks or eChapters via mobile devices\nSERVICE: \nFree eBook access while your text ships, and instant access to online homework products \nSTUDY TOOLS: \nStudy tools* for your text, plus writing, research, career and job search resources\n*availability varies\n1\n2\n3\n4\n5\nFind your course materials and start saving at: \nwww.cengagebrain.com\nEngaged with you.\nwww.cengage.com\nSource Code: 14M-AA0107\nCopyright 2016 Cengage Learning. All Rights Reserved. May not be copied, scanned, or duplicated, in whole or in part. Due to electronic rights, some third party content may be suppressed from the eBook and/or eChapter(s).\nEditorial review has deemed that any suppressed content does not materially affect the overall learning experience. Cengage Learning reserves the right to remove additional content at any time if subsequent rights restrictions require it."
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b",
+          "\\bversion\\b"
+        ],
+        "publisher_terms_found": [
+          "\\bpublisher\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1976",
+          "2011",
+          "2015",
+          "2016"
+        ],
+        "organisation_signals": [
+          "organization"
+        ],
+        "regulatory_signals": []
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-025",
+      "filename": "fundamentals_of_occupational_safety_and_health.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 506,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 5322,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "Fundamentals of\nFourth Edition\nFourth Edition\nMark A. Friend and James P. Kohn\nMark A. Friend and James P. Kohn\nGovernment Institutes\nGovernment Institutes\nOccupational\nOccupational\nSAFETY\nSAFETY\nHEALTH\nHEALTH\nand\nand"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bbook\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [
+          "\\bpublisher\\b",
+          "\\bpublishing\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1910",
+          "1926",
+          "1992",
+          "2007"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "government",
+          "institute",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "standard",
+          "legislation"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-027",
+      "filename": "guidelines for risk based process safety.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 709,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 6804,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "GUIDELINES FOR \nRISK BASED \nPROCESS SAFETY \nCenter for Chemical Process Safety \nCCPS \nCENTER FOR \nCHEMICAL PROCESS SAFETY \nAn AlChE Industry \nTechnology Alliance \nWILEY-\nINTERSCIENCE \nA JOHN WILEY & SONS, INC., PUBLICATION"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [
+          "\\bpublished by\\b",
+          "\\bpublisher\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1929",
+          "1976",
+          "2005",
+          "2007"
+        ],
+        "organisation_signals": [
+          "government",
+          "department",
+          "institute",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-030",
+      "filename": "Introduction to Fall Protection, 4th Edition -- J. Nigel Ellis, Ph.D., PE, CPE CSP -- ( WeLib.org ).pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 617,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 13512,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "edition\nAmerican Society of Safety Engineers"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bbook\\b",
+          "\\bguide\\b",
+          "\\bhandbook\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [
+          "\\bpublisher\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1910",
+          "1926",
+          "1942",
+          "1991",
+          "1995",
+          "2003",
+          "2006",
+          "2007",
+          "2011",
+          "2015"
+        ],
+        "organisation_signals": [
+          "standards"
+        ],
+        "regulatory_signals": [
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-033",
+      "filename": "NFPA Fire Protection Handbook-2003.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1200,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 12756,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "FIRE PROTECTION\nHANDBOOK\nNineteenth Edition\nVOLUMES I & II\nArthur E. Cote, P.E.\nEditor-in-Chief\nJohn R. Hall, Jr., Ph.D.\nPamela A. Powell\nCasey C. Grant, P.E.\nAssociate Editor\nManaging Editor\nConsulting Editor\nRobert P. Benedetti, P.E.\nGuy R. Colonna, P.E.\nMark T. Conroy\nArthur E. Cote, P.E.\nRita Fahy, Ph.D.\nCasey C. Grant, P.E.\nRaymond A. Grill, P.E.\nJohn R. Hall, Jr., Ph.D.\nMilosh T. Puchovsky, P.E.\nDena E. Schumacher\nGary O. Tokle\nRobert J. Vondrasek, P.E.\nGregory E. Harrington, P.E.\nSection Editors\nNational Fire Protection Association\nQuincy, Massachusetts"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bhandbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "2001",
+          "2003"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "department",
+          "organization",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-037",
+      "filename": "pdfcoffee.com_csp-p41pdf-pdf-free.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": "Russell Bowen",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 643,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 3935,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "1289 Fordham Blvd, Suite 411 • Chapel Hill, NC 27514 • 866-264-5852 • Manager@BowenEHS.com \n \nCopyright © 2008 Bowen EHS, Inc. \nCSP Question 01/02/2008 – Radiation \n \nWhat is the expected radiation exposure rate at a distance of 1 foot from an unshielded \n200 millicurie Iodine-125 source with an average gamma energy of 41 KeV? \n \nA. \n49.2 mrem/hour \nB. \n98.4 mrem/hour \nC. \n4920 mrem/hour \nD. \n9840 mrem/hour \n \n(Solution on next page)"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [],
+        "author_terms_found": [],
+        "edition_terms_found": [],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "2008"
+        ],
+        "organisation_signals": [],
+        "regulatory_signals": []
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-039",
+      "filename": "Radiation Detection & Measurement (4th Ed., 2010).pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 857,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 6394,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "Radiation Detection and Measurement"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [
+          "\\bpublisher\\b",
+          "\\bpublishing\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1962",
+          "1976",
+          "1979",
+          "1980",
+          "1990",
+          "1991",
+          "1995",
+          "1996",
+          "1999",
+          "2000",
+          "2004",
+          "2006",
+          "2007",
+          "2010"
+        ],
+        "organisation_signals": [
+          "government",
+          "department",
+          "institute",
+          "organization"
+        ],
+        "regulatory_signals": []
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-040",
+      "filename": "Rigging-1.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 790,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 14034,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "Handbook of Rigging"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bbook\\b",
+          "\\bguide\\b",
+          "\\bhandbook\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b",
+          "\\bversion\\b"
+        ],
+        "publisher_terms_found": [
+          "\\bpublisher\\b",
+          "\\bpublishing\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1950",
+          "1957",
+          "1964",
+          "1974",
+          "1975",
+          "1976",
+          "1980",
+          "1988",
+          "2009"
+        ],
+        "organisation_signals": [
+          "government",
+          "department",
+          "agency",
+          "institute",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-044",
+      "filename": "safety training ninja chapter 2.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": "McMichael",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 9,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 11482,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "American Society of Safety Professionals, 520 N. Northwest Highway, Park Ridge, IL 60068\nCopyright © 2019 by American Society of Safety Professionals\nAll rights reserved. Published 2019.\nLimits of Liability/Disclaimer of Warranty\nWhile the publisher and authors have used their best efforts in preparing this book, they \nmake no representations or warranties with respect to the accuracy or completeness of the \ncontents of this book, and specifically disclaim any implied warranties of merchantability \nor fitness for a particular purpose. The information is provided with the understanding that \nthe authors are not hereby engaged in rendering legal or other professional services. If legal \nadvice or other professional assistance is required, the services of a qualified professional \nshould be sought.\nPrint ISBN: 978-0-939874-25-5\nE-book ISBN: 978-0-939874-26-2\nManaging Editor: Rick Blanchette, ASSP\nText design and composition: Cathy Lombardi\nCover design: Amy Ackerman, ASSP\nPrinted in the United States of America\n27 26 25 24 23 22 21 20 19        1 2 3 4 5 6 7 8\nLibrary of Congress Cataloging-in-Publication Data\nNames: McMichael, Regina, (Safety Speaker), author.\nTitle: The safety training ninja / Regina McMichael.\nDescription: Park Ridge, IL : American Society of Safety Professionals, 2019.\nIdentifiers: LCCN 2018043933| ISBN 9780939874255 (paperback : alk. paper) | \n   ISBN 9780939874262 (ebook)\nSubjects: LCSH: Safety education, Industrial. | Industrial safety.\nClassification: LCC T55.2 .M395 2018 | DDC 658.3/1244--dc23 LC record available at \nhttps://lccn.loc.gov/2018043933"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bbook\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [],
+        "publisher_terms_found": [
+          "\\bpublisher\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1910",
+          "1975",
+          "2016",
+          "2018",
+          "2019"
+        ],
+        "organisation_signals": [
+          "occupational safety",
+          "government",
+          "department",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "regulatory",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-045",
+      "filename": "Safety-and-health-for-engineers.pdf",
+      "pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 734,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 8307,
+        "first_nonempty_page": 2,
+        "first_nonempty_page_text": "SAFETY AND HEALTH \nFOR ENGINEERS"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\btitle\\b",
+          "\\bbook\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bauthor\\b",
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\bedition\\b",
+          "\\brevision\\b"
+        ],
+        "publisher_terms_found": [
+          "\\bpublished by\\b",
+          "\\bpublisher\\b"
+        ],
+        "identifier_terms_found": [
+          "\\bisbn\\b"
+        ],
+        "year_candidates": [
+          "1976",
+          "2005",
+          "2006"
+        ],
+        "organisation_signals": [
+          "department",
+          "organization",
+          "standards"
+        ],
+        "regulatory_signals": [
+          "regulation",
+          "regulations",
+          "regulatory",
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-046",
+      "filename": "Supervisors Safety Manual- Better Production Without Injury -- National Safety Council -- ( WeLib.org ).pdf",
+      "pdf_metadata": {
+        "title": "Supervisors' safety manual ",
+        "authors": null,
+        "subject": "Industrial safety -- United States -- Management -- Handbooks, manuals, etc",
+        "keywords": "https://archive.org/details/supervisorssafet0000unse_c3t0"
+      },
+      "page_count": 408,
+      "sampled_page_count": 8,
+      "text_evidence": {
+        "total_characters": 4209,
+        "first_nonempty_page": 1,
+        "first_nonempty_page_text": "8th EDITION"
+      },
+      "bibliographic_signals": {
+        "title_terms_found": [
+          "\\bbook\\b",
+          "\\bmanual\\b",
+          "\\bstandard\\b"
+        ],
+        "author_terms_found": [
+          "\\bby\\b"
+        ],
+        "edition_terms_found": [
+          "\\b\\d+(st|nd|rd|th)\\s+edition\\b",
+          "\\bedition\\b"
+        ],
+        "publisher_terms_found": [],
+        "identifier_terms_found": [],
+        "year_candidates": [
+          "1989",
+          "1993",
+          "2024"
+        ],
+        "organisation_signals": [
+          "organization"
+        ],
+        "regulatory_signals": [
+          "standard"
+        ]
+      },
+      "candidate_source_type": null,
+      "review_status": "PENDING_HUMAN_REVIEW"
+    }
+  ]
+}

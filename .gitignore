@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# CSP11 source pipeline local Python environment
+tools/source_pipeline/.venv/

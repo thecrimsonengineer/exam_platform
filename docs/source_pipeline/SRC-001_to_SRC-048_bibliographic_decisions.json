@@ -1,0 +1,1688 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L1.6 Human-Reviewable Bibliographic Decision Records",
+  "generated_at": "2026-08-31T14:35:58",
+  "input_source_count": 25,
+  "decision_record_count": 25,
+  "purpose": "Provide a controlled decision layer for human validation of bibliographic identity before CSP11 source mapping. Candidate evidence is preserved separately from final human-approved bibliographic facts.",
+  "workflow": [
+    "Review candidate evidence.",
+    "Compare candidates against visible source evidence.",
+    "Enter only bibliographic values supported by evidence.",
+    "Leave uncertain fields null.",
+    "Assign source type.",
+    "Determine whether the source is official or regulatory.",
+    "Record reviewer and review date.",
+    "Set decision to ACCEPT, MODIFY, REJECT, or HOLD.",
+    "Only accepted or modified records may proceed to final source classification."
+  ],
+  "allowed_decisions": [
+    "ACCEPT",
+    "MODIFY",
+    "REJECT",
+    "HOLD"
+  ],
+  "allowed_source_types": [
+    "TEXTBOOK",
+    "PROFESSIONAL_BOOK",
+    "ACADEMIC_BOOK",
+    "ACADEMIC_ARTICLE",
+    "TECHNICAL_REPORT",
+    "GOVERNMENT_PUBLICATION",
+    "REGULATORY_DOCUMENT",
+    "PROFESSIONAL_BODY_PUBLICATION",
+    "INTERNATIONAL_ORGANISATION_PUBLICATION",
+    "STANDARD",
+    "GUIDANCE",
+    "CODE_OF_PRACTICE",
+    "WEBSITE_OR_WEB_DOCUMENT",
+    "OTHER",
+    "UNCLASSIFIED"
+  ],
+  "decision_records": [
+    {
+      "source_id": "SRC-002",
+      "filename": "ACCIDENT PREVENTION  ADMINISTRATION AND PROGRAM.pdf",
+      "page_count": 126,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2015",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-003",
+      "filename": "Accident prevention manual for business & industry - Engineering and Tech COMPRESSED.pdf",
+      "page_count": 881,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Accident prevention manual for business & industry - Engineering and Tech.pdf",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": "Accident prevention manual for business & industry - Engineering and Tech.pdf",
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-004",
+      "filename": "Accident prevention manual for business & industry - Engineering and Tech.pdf",
+      "page_count": 881,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "ENGINEERING &",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-005",
+      "filename": "Accident Prevention Manual for Business & Industry- -- Gary R Krieger; John F Montgomery; Richard W Lack; National -- ( WeLib.org ).pdf",
+      "page_count": 572,
+      "candidate_confidence": "MEDIUM",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Accident prevention manual for business & industry. Environmental management ",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [
+          {
+            "value": "2ND EDITION",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": "Accident prevention manual for business & industry. Environmental management ",
+        "authors": null,
+        "subject": "Industries -- Environmental aspects; Environmental management",
+        "keywords": "https://archive.org/details/accidentpreventi0000unse_h0b2"
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-008",
+      "filename": "apm-ap14-answers (2).pdf",
+      "page_count": 50,
+      "candidate_confidence": "MEDIUM",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "discovered that engineering could prevent",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [
+          {
+            "value": "jim",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "1912",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2015",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": "jim",
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-009",
+      "filename": "apm-et14-answers (1).pdf",
+      "page_count": 44,
+      "candidate_confidence": "MEDIUM",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Accident Prevention Manual: Engineering & Technology, 14th Ed.—Answers to Review Questions",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "hazard analysis and risk assessment methods early in",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [
+          {
+            "value": "Deborah Meyer",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": "Deborah Meyer",
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-011",
+      "filename": "ASP Safety Fundamentals Exam secrets study guide - your key -- ASP Exam Secrets Test Prep Team; Mometrix Safety -- ( WeLib.org ).pdf",
+      "page_count": 207,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Study Skills DVD that we would like to give you for FREE. This DVD covers our “best practices”",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-012",
+      "filename": "BCSPcodeofethics.pdf",
+      "page_count": 1,
+      "candidate_confidence": "HIGH",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "This code sets forth the code of ethics and professional standards to be observed by anyone",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "by adhering to these standards.",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "standards of ethical conduct with balanced",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "profession. Avoid all conduct or practice that",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "the highest standards of integrity and avoid",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "STANDARDS",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [
+          {
+            "value": "adhering to these standards.",
+            "source": "sampled_page_text",
+            "confidence": "HIGH"
+          },
+          {
+            "value": "acquiring and maintaining competence",
+            "source": "sampled_page_text",
+            "confidence": "HIGH"
+          },
+          {
+            "value": "conflicts of interest. When becoming",
+            "source": "sampled_page_text",
+            "confidence": "HIGH"
+          }
+        ],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2002",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2012",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2013",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2020",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2022",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2023",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-013",
+      "filename": "Bowen_EHS_ASP_CSP_Question__Answers_2003_to_2018_and_CSP_Questions new (1).pdf",
+      "page_count": 1390,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "What was the mean, the median, and the standard deviation of the paramedic response",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2003",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2017",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-014",
+      "filename": "csp 11.pdf",
+      "page_count": 3,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-015",
+      "filename": "csp reference.pdf",
+      "page_count": 2,
+      "candidate_confidence": "MEDIUM",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Accident Prevention Manual for Business & Industry: Engineering and Technology; 14th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Advanced Safety Management: Focusing on Z10 & Serious Injury Prevention; 2nd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Applied Statistics in Occupational Safety & Health",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fire Safety Management Handbook; 3rd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fundamentals of Industrial Hygiene; 6th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fundamentals of Occupational Safety and Health; 7th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fundamentals of Wastewater Treatment and Engineering",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Guidelines for Risk Based Process Safety",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Job Hazard Analysis: A Guide to Identifying Risks in the Workplace",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "with industry regulations, standards, and practices in preparing for the CSP certification examination.",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [
+          {
+            "value": "14th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "2nd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "8th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "3rd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "6th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "7th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "4th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2000",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2001",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2004",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2007",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2010",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2011",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2012",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2013",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2014",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2015",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2016",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2018",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2019",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2020",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2021",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-016",
+      "filename": "CSP-References.pdf",
+      "page_count": 2,
+      "candidate_confidence": "MEDIUM",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Accident Prevention Manual for Business & Industry: Engineering and Technology; 14th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Advanced Safety Management: Focusing on Z10 & Serious Injury Prevention; 2nd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Applied Statistics in Occupational Safety & Health",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fire Safety Management Handbook; 3rd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fundamentals of Industrial Hygiene; 6th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fundamentals of Occupational Safety and Health; 7th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Fundamentals of Wastewater Treatment and Engineering",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Guidelines for Risk Based Process Safety",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "Job Hazard Analysis: A Guide to Identifying Risks in the Workplace",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "with industry regulations, standards, and practices in preparing for the CSP certification examination.",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [
+          {
+            "value": "14th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "2nd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "8th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "3rd Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "6th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "7th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "4th Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2000",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2001",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2004",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2007",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2010",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2011",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2012",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2013",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2014",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2015",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2016",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2018",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2019",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2020",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2021",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-018",
+      "filename": "Emergency Incident Management Systems - Fundamentals and -- Louis N. Molino, Sr. -- ( WeLib.org ).pdf",
+      "page_count": 539,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-022",
+      "filename": "Fundamentals of Industrial Hygiene (5e), Plog 2002_compressed.pdf",
+      "page_count": 1105,
+      "candidate_confidence": "MEDIUM",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "INDUSTRIAL HYGIENE",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          },
+          {
+            "value": "00 Front Matter",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": "00 Front Matter",
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-023",
+      "filename": "Fundamentals of management.pdf",
+      "page_count": 547,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Fundamentals of Management, 8th ed.",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2016",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": "Fundamentals of Management, 8th ed.",
+        "authors": null,
+        "subject": null,
+        "keywords": "WCN: 02-200-203"
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-025",
+      "filename": "fundamentals_of_occupational_safety_and_health.pdf",
+      "page_count": 506,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [
+          {
+            "value": "Fourth Edition",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-027",
+      "filename": "guidelines for risk based process safety.pdf",
+      "page_count": 709,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "GUIDELINES FOR",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-030",
+      "filename": "Introduction to Fall Protection, 4th Edition -- J. Nigel Ellis, Ph.D., PE, CPE CSP -- ( WeLib.org ).pdf",
+      "page_count": 617,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-033",
+      "filename": "NFPA Fire Protection Handbook-2003.pdf",
+      "page_count": 1200,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-037",
+      "filename": "pdfcoffee.com_csp-p41pdf-pdf-free.pdf",
+      "page_count": 643,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [
+          {
+            "value": "Russell Bowen",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2008",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": "Russell Bowen",
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-039",
+      "filename": "Radiation Detection & Measurement (4th Ed., 2010).pdf",
+      "page_count": 857,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-040",
+      "filename": "Rigging-1.pdf",
+      "page_count": 790,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-044",
+      "filename": "safety training ninja chapter 2.pdf",
+      "page_count": 9,
+      "candidate_confidence": "HIGH",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [
+          {
+            "value": "McMichael",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [
+          {
+            "value": "2018",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          },
+          {
+            "value": "2019",
+            "source": "sampled_page_text",
+            "confidence": "LOW"
+          }
+        ],
+        "identifier_candidates": [
+          {
+            "value": "ISBN: 978-0-939874-25-5",
+            "source": "sampled_page_text",
+            "confidence": "HIGH"
+          },
+          {
+            "value": "ISBN: 978-0-939874-26-2",
+            "source": "sampled_page_text",
+            "confidence": "HIGH"
+          },
+          {
+            "value": "ISBN 9780939874255",
+            "source": "sampled_page_text",
+            "confidence": "HIGH"
+          },
+          {
+            "value": "ISBN 9780939874262",
+            "source": "sampled_page_text",
+            "confidence": "HIGH"
+          }
+        ]
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": "McMichael",
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-045",
+      "filename": "Safety-and-health-for-engineers.pdf",
+      "page_count": 734,
+      "candidate_confidence": "LOW",
+      "candidate_evidence": {
+        "title_candidates": [],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-046",
+      "filename": "Supervisors Safety Manual- Better Production Without Injury -- National Safety Council -- ( WeLib.org ).pdf",
+      "page_count": 408,
+      "candidate_confidence": "MEDIUM",
+      "candidate_evidence": {
+        "title_candidates": [
+          {
+            "value": "Supervisors' safety manual ",
+            "source": "pdf_metadata",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "author_or_organisation_candidates": [],
+        "edition_or_version_candidates": [
+          {
+            "value": "8th EDITION",
+            "source": "sampled_page_text",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "publisher_candidates": [],
+        "publication_year_candidates": [],
+        "identifier_candidates": []
+      },
+      "pdf_metadata_reference": {
+        "title": "Supervisors' safety manual ",
+        "authors": null,
+        "subject": "Industrial safety -- United States -- Management -- Handbooks, manuals, etc",
+        "keywords": "https://archive.org/details/supervisorssafet0000unse_c3t0"
+      },
+      "human_decision": {
+        "source_type": null,
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "decision": "PENDING",
+        "reviewer": null,
+        "review_date": null,
+        "review_notes": null
+      },
+      "decision_rules": {
+        "accepted_values_must_be_supported": true,
+        "candidate_values_are_not_final_facts": true,
+        "pdf_metadata_is_not_automatically_authoritative": true,
+        "human_review_required_before_final_classification": true,
+        "uncertain_values_must_remain_null": true
+      },
+      "review_status": "PENDING_HUMAN_REVIEW"
+    }
+  ]
+}

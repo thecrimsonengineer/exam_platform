@@ -1,0 +1,756 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L1.5 Bibliographic Review and Source Classification",
+  "generated_at": "2026-08-31T14:29:46",
+  "input_source_count": 25,
+  "classification_count": 25,
+  "method": "Structured bibliographic classification prepared from PDF metadata and sampled-page evidence. Missing values are left null until supported by source evidence or human review.",
+  "classification_results": [
+    {
+      "source_id": "SRC-002",
+      "filename": "ACCIDENT PREVENTION  ADMINISTRATION AND PROGRAM.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 126,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 3470,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-003",
+      "filename": "Accident prevention manual for business & industry - Engineering and Tech COMPRESSED.pdf",
+      "current_pdf_metadata": {
+        "title": "Accident prevention manual for business & industry - Engineering and Tech.pdf",
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 881,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 0,
+        "has_extractable_sample_text": false
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "No extractable text found in sampled pages.",
+        "PDF metadata contains a title that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-004",
+      "filename": "Accident prevention manual for business & industry - Engineering and Tech.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 881,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 10173,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-005",
+      "filename": "Accident Prevention Manual for Business & Industry- -- Gary R Krieger; John F Montgomery; Richard W Lack; National -- ( WeLib.org ).pdf",
+      "current_pdf_metadata": {
+        "title": "Accident prevention manual for business & industry. Environmental management ",
+        "authors": null,
+        "subject": "Industries -- Environmental aspects; Environmental management",
+        "keywords": "https://archive.org/details/accidentpreventi0000unse_h0b2"
+      },
+      "page_count": 572,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 3839,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains a title that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-008",
+      "filename": "apm-ap14-answers (2).pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": "jim",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 50,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 24879,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains author information that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-009",
+      "filename": "apm-et14-answers (1).pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": "Deborah Meyer",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 44,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 20740,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains author information that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-011",
+      "filename": "ASP Safety Fundamentals Exam secrets study guide - your key -- ASP Exam Secrets Test Prep Team; Mometrix Safety -- ( WeLib.org ).pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 207,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 12645,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-012",
+      "filename": "BCSPcodeofethics.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1,
+      "evidence": {
+        "sampled_pages": 1,
+        "sample_text_characters": 3145,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-013",
+      "filename": "Bowen_EHS_ASP_CSP_Question__Answers_2003_to_2018_and_CSP_Questions new (1).pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1390,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 5120,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-014",
+      "filename": "csp 11.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 3,
+      "evidence": {
+        "sampled_pages": 3,
+        "sample_text_characters": 0,
+        "has_extractable_sample_text": false
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "No extractable text found in sampled pages."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-015",
+      "filename": "csp reference.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 2,
+      "evidence": {
+        "sampled_pages": 2,
+        "sample_text_characters": 5852,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-016",
+      "filename": "CSP-References.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 2,
+      "evidence": {
+        "sampled_pages": 2,
+        "sample_text_characters": 5866,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-018",
+      "filename": "Emergency Incident Management Systems - Fundamentals and -- Louis N. Molino, Sr. -- ( WeLib.org ).pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 539,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 5525,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-022",
+      "filename": "Fundamentals of Industrial Hygiene (5e), Plog 2002_compressed.pdf",
+      "current_pdf_metadata": {
+        "title": "00 Front Matter",
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1105,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 7525,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains a title that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-023",
+      "filename": "Fundamentals of management.pdf",
+      "current_pdf_metadata": {
+        "title": "Fundamentals of Management, 8th ed.",
+        "authors": null,
+        "subject": null,
+        "keywords": "WCN: 02-200-203"
+      },
+      "page_count": 547,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 8328,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains a title that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-025",
+      "filename": "fundamentals_of_occupational_safety_and_health.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 506,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 5321,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-027",
+      "filename": "guidelines for risk based process safety.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 709,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 6803,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-030",
+      "filename": "Introduction to Fall Protection, 4th Edition -- J. Nigel Ellis, Ph.D., PE, CPE CSP -- ( WeLib.org ).pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 617,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 13512,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-033",
+      "filename": "NFPA Fire Protection Handbook-2003.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 1200,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 12756,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-037",
+      "filename": "pdfcoffee.com_csp-p41pdf-pdf-free.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": "Russell Bowen",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 643,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 3935,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains author information that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-039",
+      "filename": "Radiation Detection & Measurement (4th Ed., 2010).pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 857,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 6393,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-040",
+      "filename": "Rigging-1.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 790,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 14033,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-044",
+      "filename": "safety training ninja chapter 2.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": "McMichael",
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 9,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 11481,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains author information that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-045",
+      "filename": "Safety-and-health-for-engineers.pdf",
+      "current_pdf_metadata": {
+        "title": null,
+        "authors": null,
+        "subject": null,
+        "keywords": null
+      },
+      "page_count": 734,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 8306,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    },
+    {
+      "source_id": "SRC-046",
+      "filename": "Supervisors Safety Manual- Better Production Without Injury -- National Safety Council -- ( WeLib.org ).pdf",
+      "current_pdf_metadata": {
+        "title": "Supervisors' safety manual ",
+        "authors": null,
+        "subject": "Industrial safety -- United States -- Management -- Handbooks, manuals, etc",
+        "keywords": "https://archive.org/details/supervisorssafet0000unse_c3t0"
+      },
+      "page_count": 408,
+      "evidence": {
+        "sampled_pages": 8,
+        "sample_text_characters": 4209,
+        "has_extractable_sample_text": true
+      },
+      "bibliographic_classification": {
+        "source_type": "UNCLASSIFIED",
+        "title": null,
+        "author_or_organisation": null,
+        "edition_or_version": null,
+        "publisher": null,
+        "publication_year": null,
+        "isbn_or_identifier": null,
+        "official_or_regulatory_source": null,
+        "confidence": "UNASSESSED"
+      },
+      "review_flags": [
+        "PDF metadata contains a title that should be checked against visible source evidence."
+      ],
+      "classification_status": "PENDING_HUMAN_REVIEW"
+    }
+  ]
+}

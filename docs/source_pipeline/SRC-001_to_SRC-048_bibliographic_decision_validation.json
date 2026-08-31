@@ -1,0 +1,226 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L1.7 Bibliographic Decision Validation Gate",
+  "generated_at": "2026-08-31T14:35:58",
+  "validation_policy": {
+    "purpose": "Validate bibliographic decision records deterministically without assigning or inventing bibliographic facts.",
+    "human_authority_preserved": true,
+    "candidate_evidence_not_final_fact": true,
+    "uncertain_values_remain_null": true,
+    "invalid_records_block_progression": true,
+    "pending_decision_is_valid_pre_review_state": true
+  },
+  "input_source_count": 25,
+  "actual_record_count": 25,
+  "summary": {
+    "overall_status": "VALID",
+    "valid_records": 25,
+    "invalid_records": 0,
+    "blocking_issues": 0,
+    "warnings": 0,
+    "global_issues": 0
+  },
+  "global_issues": [],
+  "record_results": [
+    {
+      "source_id": "SRC-002",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-003",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-004",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-005",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-008",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-009",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-011",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-012",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-013",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-014",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-015",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-016",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-018",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-022",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-023",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-025",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-027",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-030",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-033",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-037",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-039",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-040",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-044",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-045",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    },
+    {
+      "source_id": "SRC-046",
+      "status": "VALID",
+      "blocking_issue_count": 0,
+      "warning_count": 0,
+      "issues": [],
+      "warnings": []
+    }
+  ]
+}
