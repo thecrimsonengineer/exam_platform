@@ -76,7 +76,7 @@ class Question {
     required this.difficulty,
     this.cognitiveLevel = 'application',
     this.questionType = 'scenario_mcq',
-    this.status = 'published',
+    this.status = 'draft',
     this.version = 1,
     required this.tags,
   });
@@ -99,7 +99,7 @@ class Question {
       difficulty: json['difficulty']?.toString() ?? 'Hard',
       cognitiveLevel: json['cognitiveLevel']?.toString() ?? 'application',
       questionType: json['questionType']?.toString() ?? 'scenario_mcq',
-      status: json['status']?.toString() ?? 'published',
+      status: json['status']?.toString() ?? 'draft',
       version: _toInt(json['version'], defaultValue: 1),
       tags: _stringList(json['tags']),
     );

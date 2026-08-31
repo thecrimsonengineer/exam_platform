@@ -12,6 +12,80 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
+  group('H2 Question safe lifecycle defaults', () {
+    test('Question constructor defaults status to draft', () {
+      final question = Question(
+        id: 2001,
+        domain: 1,
+        competencyId: 'd01_c01',
+        subtopicId: 'd01_c01_st01',
+        topicId: 'd01_c01_t01',
+        question: 'Test question.',
+        options: const [
+          'Option A',
+          'Option B',
+          'Option C',
+          'Option D',
+        ],
+        correctAnswer: 0,
+        explanation: 'Test explanation.',
+        reference: 'Test reference.',
+        difficulty: 'Hard',
+        tags: const ['test'],
+      );
+
+      expect(question.status, 'draft');
+    });
+
+    test('Question.fromJson defaults missing status to draft', () {
+      final question = Question.fromJson({
+        'id': 2002,
+        'domain': 1,
+        'competencyId': 'd01_c01',
+        'subtopicId': 'd01_c01_st01',
+        'topicId': 'd01_c01_t01',
+        'question': 'Test question.',
+        'options': [
+          'Option A',
+          'Option B',
+          'Option C',
+          'Option D',
+        ],
+        'correctAnswer': 0,
+        'explanation': 'Test explanation.',
+        'reference': 'Test reference.',
+        'difficulty': 'Hard',
+        'tags': ['test'],
+      });
+
+      expect(question.status, 'draft');
+    });
+
+    test('Question preserves explicit published status', () {
+      final question = Question(
+        id: 2003,
+        domain: 1,
+        competencyId: 'd01_c01',
+        subtopicId: 'd01_c01_st01',
+        topicId: 'd01_c01_t01',
+        question: 'Test question.',
+        options: const [
+          'Option A',
+          'Option B',
+          'Option C',
+          'Option D',
+        ],
+        correctAnswer: 0,
+        explanation: 'Test explanation.',
+        reference: 'Test reference.',
+        difficulty: 'Hard',
+        status: 'published',
+        tags: const ['test'],
+      );
+
+      expect(question.status, 'published');
+    });
+  });
   group('H1.1 QuestionBankService lifecycle', () {
     late QuestionBankService service;
 

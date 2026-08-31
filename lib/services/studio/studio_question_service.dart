@@ -9,9 +9,8 @@ import '../question_quality_validator.dart';
 /// The Studio owns the authoring workflow, while persistence remains
 /// centralized in QuestionBankService and LocalQuestionRepository.
 class StudioQuestionService {
-  StudioQuestionService({
-    QuestionBankService? questionBankService,
-  }) : _questionBankService = questionBankService ?? QuestionBankService();
+  StudioQuestionService({QuestionBankService? questionBankService})
+    : _questionBankService = questionBankService ?? QuestionBankService();
 
   final QuestionBankService _questionBankService;
 
@@ -33,9 +32,9 @@ class StudioQuestionService {
     // filtering here because existing imported questions may predate the
     // current contentPackageId metadata. This preserves the current Studio
     // visibility behaviour while the service boundary is introduced.
-    final questions = questionsForQuizId(quizId)
-        .where((question) => question.subtopicId == context.subtopicId)
-        .toList();
+    final questions = questionsForQuizId(
+      quizId,
+    ).where((question) => question.subtopicId == context.subtopicId).toList();
 
     questions.sort((a, b) => a.id.compareTo(b.id));
     return questions;
@@ -74,9 +73,9 @@ class StudioQuestionService {
 
     final preferred = preferredQuizId?.trim() ?? '';
     if (preferred.isNotEmpty &&
-        questionsForQuizId(preferred).any(
-          (question) => question.subtopicId == subtopic.id,
-        )) {
+        questionsForQuizId(
+          preferred,
+        ).any((question) => question.subtopicId == subtopic.id)) {
       return preferred;
     }
 
@@ -116,6 +115,13 @@ class StudioQuestionService {
 
   Future<List<QuestionQualityIssue>> saveDraft(Question question) =>
       _questionBankService.saveDraft(question);
+
+  Future<void> sendToReview(Question question) =>
+      _questionBankService.sendToReview(question);
+
+  Future<List<QuestionQualityIssue>> validateForPublication(
+    Question question,
+  ) => _questionBankService.validateForPublication(question);
 
   Future<void> publish(Question question) =>
       _questionBankService.publish(question);
