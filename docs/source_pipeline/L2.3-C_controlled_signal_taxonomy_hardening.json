@@ -1,0 +1,112 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L2.3-C",
+  "specification": "L2.3-C Controlled Signal-Taxonomy Hardening",
+  "status": "FROZEN",
+  "purpose": "Define the mandatory hardening architecture for Evidence-Based Source-to-Competency Candidate Generation before L2.3-C can become a trusted input to L2.3-D.",
+  "principle": "Candidate generation must remain conservative, deterministic, evidence-based, and human-review dependent. Signal presence alone must not establish competency relevance.",
+  "processing_pipeline": [
+    "SOURCE PAGE",
+    "NORMALIZE",
+    "TOKEN-AWARE MATCHING",
+    "SIGNAL CLASSIFICATION",
+    "SPECIFICITY WEIGHTING",
+    "SIGNAL INDEPENDENCE",
+    "PHRASE HIERARCHY COLLAPSE",
+    "NEGATIVE-CONTEXT CHECK",
+    "EVIDENCE PROXIMITY",
+    "COMPETENCY SCORING",
+    "COMPETITOR DETECTION",
+    "DETERMINISTIC THRESHOLDS",
+    "CANDIDATE CLASSIFICATION",
+    "HUMAN REVIEW REQUIRED"
+  ],
+  "mandatory_controls": {
+    "token_aware_matching": {
+      "required": true,
+      "purpose": "Prevent substring and partial-word matches from creating false competency signals."
+    },
+    "signal_classification": {
+      "required": true,
+      "purpose": "Classify matched signals according to their topical role and evidential strength."
+    },
+    "specificity_weighting": {
+      "required": true,
+      "purpose": "Give distinctive competency-specific phrases greater evidential weight than generic occupational terms."
+    },
+    "signal_independence": {
+      "required": true,
+      "purpose": "Prevent multiple overlapping phrases from being incorrectly treated as independent evidence."
+    },
+    "phrase_hierarchy_collapse": {
+      "required": true,
+      "purpose": "Collapse parent and child phrase matches so that hierarchical variants do not inflate signal counts."
+    },
+    "negative_context_check": {
+      "required": true,
+      "purpose": "Detect contextual language indicating that a matched term is being discussed negatively, hypothetically, historically, comparatively, or outside the competency meaning."
+    },
+    "evidence_proximity": {
+      "required": true,
+      "purpose": "Evaluate whether supporting signals occur within a meaningful local evidence window rather than merely appearing somewhere in the same source."
+    },
+    "competency_scoring": {
+      "required": true,
+      "purpose": "Calculate deterministic competency relevance using controlled signal evidence rather than raw keyword counts."
+    },
+    "competitor_detection": {
+      "required": true,
+      "purpose": "Identify competing competency interpretations where the same evidence could reasonably support multiple competencies."
+    },
+    "deterministic_thresholds": {
+      "required": true,
+      "purpose": "Use explicit reproducible thresholds for candidate classification with no hidden or nondeterministic decisions."
+    },
+    "candidate_classification": {
+      "required": true,
+      "purpose": "Classify results using controlled confidence and evidence rules while preserving candidate-only status."
+    },
+    "human_review_required": {
+      "required": true,
+      "purpose": "Ensure automatically generated mappings never become confirmed mappings without human review."
+    }
+  },
+  "non_negotiable_rules": [
+    "The canonical CSP11 blueprint remains authoritative.",
+    "Source content evidence remains the substantive basis for competency mapping.",
+    "Bibliographic metadata must not be treated as competency evidence.",
+    "Generic standalone keywords must not establish competency relevance.",
+    "Overlapping signals must not be counted as independent evidence.",
+    "Phrase hierarchy must not artificially inflate scores.",
+    "Evidence from distant unrelated sections must not be treated as equivalent to locally coherent evidence.",
+    "A candidate mapping must never be automatically confirmed.",
+    "No new competencies may be created by the pipeline.",
+    "No automatic competency reclassification is permitted.",
+    "No padding of candidate mappings is permitted.",
+    "Sources without extractable evidence must remain unmapped and require human review.",
+    "The same source-to-competency pair must not be generated more than once.",
+    "Candidate generation must be deterministic and reproducible.",
+    "Every generated candidate must retain an auditable evidence basis.",
+    "Human review remains the final authority."
+  ],
+  "promotion_gate": {
+    "target": "L2.3-D",
+    "condition": "L2.3-C must pass all hardened signal-taxonomy controls and deterministic validation before its output is treated as a trusted input to L2.3-D.",
+    "required_validation": [
+      "All mandatory controls implemented",
+      "Deterministic output verified",
+      "False-positive regression tests implemented",
+      "False-negative regression tests implemented",
+      "Phrase hierarchy regression tests implemented",
+      "Negative-context regression tests implemented",
+      "Competitor detection regression tests implemented",
+      "Evidence proximity regression tests implemented",
+      "No duplicate mappings",
+      "No automatic confirmations",
+      "All generated candidates contain evidence_basis",
+      "flutter/code validation appropriate to the implementation passes",
+      "Git diff check passes",
+      "Only intentional L2.3-C hardening changes remain"
+    ]
+  }
+}

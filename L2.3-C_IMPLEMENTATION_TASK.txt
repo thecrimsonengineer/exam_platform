@@ -1,0 +1,339 @@
+L2.3-C IMPLEMENTATION TASK
+==========================
+
+Implement the frozen specification:
+
+docs/source_pipeline/L2.3-C_controlled_signal_taxonomy_hardening.json
+
+Specification:
+L2.3-C Controlled Signal-Taxonomy Hardening
+
+DO NOT change the frozen specification file.
+
+The existing generator is:
+
+tools/source_pipeline/generate_source_competency_candidates.py
+
+The existing independent validator is:
+
+tools/source_pipeline/validate_source_competency_candidates.py
+
+The current implementation has basic normalization, phrase matching,
+signal counting, page counting and scoring, but does NOT yet implement
+the full frozen L2.3-C hardening pipeline.
+
+Implement the frozen 14-stage pipeline:
+
+SOURCE PAGE
+↓
+NORMALIZE
+↓
+TOKEN-AWARE MATCHING
+↓
+SIGNAL CLASSIFICATION
+↓
+SPECIFICITY WEIGHTING
+↓
+SIGNAL INDEPENDENCE
+↓
+PHRASE HIERARCHY COLLAPSE
+↓
+NEGATIVE-CONTEXT CHECK
+↓
+EVIDENCE PROXIMITY
+↓
+COMPETENCY SCORING
+↓
+COMPETITOR DETECTION
+↓
+DETERMINISTIC THRESHOLDS
+↓
+CANDIDATE CLASSIFICATION
+↓
+HUMAN REVIEW REQUIRED
+
+
+MANDATORY CONTROLS
+==================
+
+1. TOKEN-AWARE MATCHING
+Do not use unsafe raw substring matching for controlled signals.
+
+Signal phrases must be matched using token-aware logic so that a signal
+cannot match merely because its characters occur inside an unrelated word.
+
+Preserve case-insensitive matching and existing normalization behavior.
+
+2. SIGNAL CLASSIFICATION
+Every controlled signal must have an explicit classification that can be
+used by the scoring engine.
+
+Do not treat all signals as equivalent.
+
+Use a deterministic machine-readable representation.
+
+3. SPECIFICITY WEIGHTING
+Generic signals must contribute less evidence than distinctive,
+competency-specific signals.
+
+Do not allow generic high-frequency terms such as:
+
+exposure
+fire prevention
+hazardous materials
+training programs
+management of change
+risk analysis
+statistics
+forces
+stresses
+
+to dominate mappings merely because they occur frequently.
+
+Weights must be deterministic and documented in code.
+
+4. SIGNAL INDEPENDENCE
+Multiple occurrences of the same conceptual evidence must not be treated
+as independent signals.
+
+Independence must operate on controlled signal identity/classification,
+not simply phrase count.
+
+5. PHRASE HIERARCHY COLLAPSE
+Where a specific phrase and a broader parent phrase both match the same
+evidence, collapse the redundant parent evidence.
+
+Examples include:
+
+"failure modes and effects analysis" versus "fmea"
+
+and other parent/child or alias relationships that exist in the taxonomy.
+
+Do not double-count equivalent evidence.
+
+6. NEGATIVE-CONTEXT CHECK
+Implement deterministic negative-context handling.
+
+A signal appearing in a clearly negative, exclusionary, unrelated, or
+non-topical context must not automatically create positive competency
+evidence.
+
+Do not use unrestricted semantic AI or nondeterministic classification.
+Keep this rule-based and auditable.
+
+7. EVIDENCE PROXIMITY
+Measure how closely matched signals occur within source-page evidence.
+
+Signals occurring together within the same relevant evidence region should
+receive stronger support than signals scattered across unrelated pages.
+
+The implementation must remain deterministic.
+
+8. COMPETENCY SCORING
+Replace the current simplistic:
+
+distinct_signals * 2.0
++ page_count * 0.5
+
+model with the hardened deterministic scoring model.
+
+The scoring model must incorporate, as appropriate:
+
+signal specificity
+signal independence
+phrase hierarchy collapse
+negative-context filtering
+evidence proximity
+supporting pages
+
+Keep the score explainable and auditable.
+
+9. COMPETITOR DETECTION
+A candidate must be evaluated against competing competencies.
+
+Do not classify a competency as strong merely because it has one reasonable
+signal when another competency has materially stronger evidence.
+
+The output must retain enough information to explain competitor effects.
+
+10. DETERMINISTIC THRESHOLDS
+Thresholds must be explicit constants or an equivalent deterministic
+configuration.
+
+Do not use arbitrary implicit thresholds.
+
+The same inputs must always produce identical candidate ordering,
+scores and classifications.
+
+11. CANDIDATE CLASSIFICATION
+Classification must be deterministic.
+
+Use the frozen contract's intended candidate/confidence model, but do not
+silently invent business rules that conflict with the existing architecture.
+
+Candidates remain candidates.
+
+No automatic confirmation is permitted.
+
+12. HUMAN REVIEW REQUIRED
+Every generated candidate must explicitly contain:
+
+human_review_required: true
+
+Every source must also remain subject to human review.
+
+No generated mapping may be marked confirmed.
+
+
+IMPORTANT DESIGN REQUIREMENTS
+=============================
+
+A. Preserve the existing CSP11 architecture.
+
+B. Preserve the 47 canonical competencies and dXX_cXX IDs.
+
+C. Preserve the 48-source population.
+
+D. Preserve the existing evidence_basis mechanism.
+
+E. Preserve exact evidence text from A4.
+
+F. Preserve deterministic source and competency ordering.
+
+G. Preserve NO_EXTRACTABLE_TEXT protection.
+
+H. Do not introduce external dependencies unless absolutely necessary.
+
+I. Do not use an LLM, embeddings, network calls, probabilistic model,
+randomness, or external API for this pipeline.
+
+J. Do not modify the canonical blueprint.
+
+K. Do not modify L2.3-B mapping.
+
+L. Do not modify unrelated CSP11 application code.
+
+M. Keep the implementation auditable by a human reviewer.
+
+N. Preserve JSON validity.
+
+
+TESTING REQUIREMENTS
+====================
+
+There are currently no dedicated L2.3-C source-pipeline tests.
+
+Create an appropriate deterministic regression test suite for the Python
+pipeline.
+
+At minimum implement tests covering:
+
+1. Token-aware matching
+2. False positive from substring matching
+3. Specificity weighting
+4. Generic signal suppression
+5. Signal independence
+6. Phrase hierarchy collapse
+7. Negative context
+8. Evidence proximity
+9. Competitor detection
+10. Deterministic threshold behaviour
+11. Candidate classification
+12. Human-review requirement
+13. Duplicate mapping prevention
+14. NO_EXTRACTABLE_TEXT protection
+15. Deterministic output ordering
+
+Tests must use controlled synthetic examples where possible rather than
+depending only on the 48 production sources.
+
+Do not weaken the production validator simply to make tests pass.
+
+
+VALIDATOR REQUIREMENTS
+======================
+
+Extend:
+
+tools/source_pipeline/validate_source_competency_candidates.py
+
+so that the independent validator checks the hardened output contract.
+
+It must independently verify the important externally observable
+properties of the hardened pipeline.
+
+Do not merely import the generator's functions and declare the output valid.
+
+The validator must remain independent enough to detect generator defects.
+
+Add deterministic validation for the hardened fields and rules where those
+fields are exposed in the output.
+
+
+OUTPUT / AUDITABILITY
+=====================
+
+Extend the candidate output only where necessary to make the hardening
+auditable.
+
+Useful evidence may include:
+
+- signal classification
+- specificity weight
+- independence group
+- hierarchy information
+- negative-context result
+- proximity information
+- competitor information
+- scoring components
+- final classification
+
+Do not add unnecessary duplicated data.
+
+Do not remove existing required fields unless the frozen specification
+explicitly requires replacement.
+
+If a new schema version is required, update the generator and validator
+consistently and document the reason.
+
+
+PRODUCTION DATA
+===============
+
+After implementation:
+
+1. Run the generator.
+2. Run the independent validator.
+3. Run the dedicated L2.3-C regression tests.
+4. Inspect candidate counts and confidence distribution.
+5. Inspect one-signal candidates.
+6. Inspect high-frequency generic signals.
+7. Check that obvious false-positive patterns have been reduced.
+8. Verify that legitimate distinctive mappings remain.
+9. Verify deterministic output by running generation twice and comparing
+the resulting JSON byte-for-byte or through canonical JSON comparison.
+
+
+DO NOT COMMIT OR PUSH
+=====================
+
+Do NOT run git commit.
+Do NOT run git push.
+
+At the end, report:
+
+- files changed
+- files created
+- implementation summary
+- test command(s)
+- test results
+- generator result
+- validator result
+- candidate count
+- high/medium/low counts
+- unmapped source count
+- any remaining concerns
+- git status
+- git diff --check
+
+Stop after reporting these results.

@@ -3,6 +3,17 @@ import re
 from pathlib import Path
 from datetime import datetime
 
+from l23c_hardening import (
+    MAX_EVIDENCE_PAGES,
+    build_taxonomy,
+    classify_candidate,
+    competitor_analysis,
+    final_score_with_competitor_adjustment,
+    match_signals,
+    score_candidate,
+    serialize_match,
+)
+
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -57,14 +68,7 @@ def contains_phrase(text, phrase):
     return phrase in text
 
 
-def build_signals(statement):
-    """
-    Conservative topic signals manually derived from the canonical
-    CSP11 competency statement. Generic standalone terms are excluded.
-    """
-    s = normalize(statement)
-
-    signal_map = {
+SIGNAL_MAP = {
         "prevention through design": [
             "prevention through design",
             "avoidance elimination substitution",
@@ -367,12 +371,25 @@ def build_signals(statement):
         ],
     }
 
+def build_signals(statement):
+    """
+    Compatibility wrapper retained for the existing generator architecture.
+
+    The controlled L2.3-C hardening taxonomy is built from the same
+    SIGNAL_MAP used by this generator.
+    """
+    s = normalize(statement)
+
     return [
         (label, phrase)
-        for label, phrases in signal_map.items()
+        for label, phrases in SIGNAL_MAP.items()
         for phrase in phrases
         if phrase in s
     ]
+
+
+HARDENED_TAXONOMY = build_taxonomy(SIGNAL_MAP)
+
 
 
 blueprint = load_json(
@@ -518,7 +535,7 @@ if len(source_ids) != len(set(source_ids)):
 
 
 # ----------------------------------------------------------------
-# Conservative candidate generation
+# Controlled L2.3-C candidate generation
 # ----------------------------------------------------------------
 
 source_candidates = []
@@ -526,7 +543,7 @@ candidate_pairs = set()
 
 for source in sorted(
     evidence_records,
-    key=lambda x: x.get("source_id", "")
+    key=lambda x: x.get("source_id", ""),
 ):
     if not isinstance(source, dict):
         add_error("L23C-E015", "Source evidence record is not an object.")
@@ -546,6 +563,7 @@ for source in sorted(
             "candidate_mappings": [],
             "human_review_required": True,
         })
+
         add_warning(
             "L23C-W001",
             "Source has no machine-readable text evidence; "
@@ -560,93 +578,123 @@ for source in sorted(
         if not isinstance(page, dict):
             continue
 
-        text = page.get("text")
+        text_value = page.get("text")
 
-        if not isinstance(text, str) or not text.strip():
+        if not isinstance(text_value, str) or not text_value.strip():
             continue
 
         page_records.append({
             "page_number": page.get("page_number"),
-            "text": text,
-            "normalized": normalize(text),
+            "text": text_value,
         })
+
+    # ------------------------------------------------------------
+    # First pass: match and score every competency.
+    # Competitor analysis requires the complete deterministic
+    # competency score set before candidate classification.
+    # ------------------------------------------------------------
+
+    competency_results = []
+
+    for competency in competencies:
+        matches = match_signals(
+            page_records,
+            HARDENED_TAXONOMY,
+        )
+
+        # match_signals operates on the supplied taxonomy, so filter
+        # the shared result to signals belonging to this competency.
+        competency_labels = {
+            label
+            for label, _phrase in build_signals(
+                competency["statement"]
+            )
+        }
+
+        competency_matches = [
+            match
+            for match in matches
+            if match.label in competency_labels
+        ]
+
+        if not competency_matches:
+            continue
+
+        scoring = score_candidate(competency_matches)
+
+        competency_results.append({
+            "competency": competency,
+            "matches": competency_matches,
+            "scoring": scoring,
+        })
+
+    # ------------------------------------------------------------
+    # Second pass: deterministic competitor analysis and final score.
+    # ------------------------------------------------------------
+
+    scored_candidates = [
+        (
+            item["competency"]["competency_id"],
+            item["scoring"]["raw_score"],
+        )
+        for item in competency_results
+    ]
+
+    scored_candidates.sort(key=lambda item: item[0])
 
     candidate_mappings = []
 
-    for competency in competencies:
-        signals = build_signals(competency["statement"])
+    for item in sorted(
+        competency_results,
+        key=lambda x: x["competency"]["competency_id"],
+    ):
+        competency = item["competency"]
+        matches = item["matches"]
+        scoring = item["scoring"]
 
-        matched = []
-
-        for label, phrase in signals:
-            phrase_norm = normalize(phrase)
-
-            supporting_pages = [
-                page
-                for page in page_records
-                if contains_phrase(page["normalized"], phrase_norm)
-            ]
-
-            if supporting_pages:
-                matched.append({
-                    "signal": label,
-                    "phrase": phrase,
-                    "pages": [
-                        page["page_number"]
-                        for page in supporting_pages
-                    ],
-                    "occurrences": len(supporting_pages),
-                })
-
-        if not matched:
-            continue
-
-        # Conservative score:
-        # multi-signal evidence is strongly preferred.
-        distinct_signals = len(matched)
-        supporting_page_count = len({
-            page
-            for item in matched
-            for page in item["pages"]
-        })
-
-        score = (
-            distinct_signals * 2.0
-            + min(supporting_page_count, 5) * 0.5
+        competitor_info = competitor_analysis(
+            competency["competency_id"],
+            scoring["raw_score"],
+            scored_candidates,
         )
 
-        # Require either:
-        #   2+ independent signals
-        # OR
-        #   1 highly distinctive multi-word signal.
-        qualifying = (
-            distinct_signals >= 2
-            or any(
-                len(item["phrase"].split()) >= 3
-                for item in matched
+        final_score, competitor_adjustment = (
+            final_score_with_competitor_adjustment(
+                scoring["raw_score"],
+                competitor_info,
             )
         )
 
-        if not qualifying:
-            continue
+        independent_signal_count = len(
+            {
+                match.independence_group
+                for match in matches
+            }
+        )
 
-        # Conservative threshold.
-        if score < 2.5:
-            continue
+        confidence = classify_candidate(
+            final_score,
+            independent_signal_count,
+            competitor_info["stronger_competitor_count"],
+        )
 
-        evidence_basis = []
+        if confidence is None:
+            continue
 
         selected_pages = sorted({
             page
-            for item in matched
-            for page in item["pages"]
-        })
+            for match in matches
+            for page in match.pages
+        })[:MAX_EVIDENCE_PAGES]
 
-        for page_number in selected_pages[:6]:
+        evidence_basis = []
+
+        for page_number in selected_pages:
             page = next(
                 (
-                    item for item in page_records
-                    if item["page_number"] == page_number
+                    item_page
+                    for item_page in page_records
+                    if item_page["page_number"] == page_number
                 ),
                 None,
             )
@@ -666,30 +714,6 @@ for source in sorted(
             )
             continue
 
-        if distinct_signals >= 3 or score >= 6:
-            confidence = "high"
-        elif distinct_signals >= 2 or score >= 3.5:
-            confidence = "medium"
-        else:
-            confidence = "low"
-
-        matched_signals = [
-            {
-                "signal": item["signal"],
-                "phrase": item["phrase"],
-                "pages": item["pages"],
-                "occurrences": item["occurrences"],
-            }
-            for item in matched
-        ]
-
-        rationale = (
-            "Candidate generated from meaningful source-content alignment "
-            f"with {distinct_signals} controlled topical signal(s) across "
-            f"{supporting_page_count} evidence page(s). "
-            "The mapping remains a candidate and requires human review."
-        )
-
         pair = (
             source_id,
             competency["competency_id"],
@@ -706,13 +730,29 @@ for source in sorted(
 
         candidate_pairs.add(pair)
 
+        matched_signals = [
+            serialize_match(match)
+            for match in matches
+        ]
+
+        rationale = (
+            "Candidate generated from controlled L2.3-C signal alignment. "
+            f"Raw score {scoring['raw_score']:.3f}; "
+            f"competitor adjustment {competitor_adjustment:.3f}; "
+            f"final score {final_score:.3f}. "
+            f"{len(matches)} hardened signal match(es) across "
+             f"{len(selected_pages)} "
+            "evidence page(s). "
+            "The mapping remains a candidate and requires human review."
+        )
+
         candidate_mappings.append({
             "source_id": source_id,
             "competency_id": competency["competency_id"],
             "domain_id": competency["domain_id"],
             "mapping_status": "candidate",
             "confidence": confidence,
-            "score": round(score, 3),
+            "score": final_score,
             "matched_signals": matched_signals,
             "evidence_basis": evidence_basis,
             "rationale": rationale,
