@@ -1,0 +1,192 @@
+# CSP11 Source-to-Domain Knowledge Pipeline
+
+**Version:** 1.0  
+**Status:** FROZEN
+
+## Purpose
+
+Systematically analyse source PDFs, map knowledge to the correct CSP11 Domain, Competency, Topic and Subtopic, generate content and questions, apply quality gates, and import only approved material into the exam platform.
+
+## Controlled Pipeline
+
+**PDFs → Source Index → CSP11 Mapping → Human Review → Extraction → Content → Questions → Quality Gate → Repository**
+
+## Protected Foundation
+
+H0.3, H4, Content Repository 2.0, lifecycle/versioning, and Studio Question Bank remain the foundation. This pipeline must not replace them.
+
+## Authority Rule
+
+Naveed/Admin remains the final authority over source classification, CSP11 mapping and approval of uncertain material.
+
+## Phases
+
+### L1: Source Library Setup
+- L1.1 Create the source-book inventory
+- L1.2 Record book title, edition, publisher and year
+- L1.3 Assign a unique source ID to every PDF
+- L1.4 Extract table of contents and chapter structure
+- L1.5 Extract searchable text from each PDF
+- L1.6 Identify page ranges for each chapter/section
+- L1.7 Create a source metadata index
+
+**Checkpoint:** All PDFs are indexed and traceable to page numbers.
+
+### L2: CSP11 Blueprint Mapping
+- L2.1 Load the official 7-domain CSP11 structure
+- L2.2 Load all competency IDs
+- L2.3 Load topics and subtopics
+- L2.4 Create the master CSP11 mapping table
+- L2.5 Assign every source section to one or more CSP11 locations
+- L2.6 Identify source material that does not clearly map
+- L2.7 Flag potentially overlapping material
+
+**Checkpoint:** Every CSP11 area has a defined destination.
+
+### L3: Source-to-Domain Analysis
+- L3.1 Analyse each source chapter
+- L3.2 Identify concepts, principles and terminology
+- L3.3 Identify applicable CSP11 domains
+- L3.4 Map concepts to competency
+- L3.5 Map concepts to topic
+- L3.6 Map concepts to subtopic
+- L3.7 Record source page numbers
+- L3.8 Assign confidence to each mapping
+- L3.9 Flag content requiring human review
+
+**Checkpoint:** A defensible source-to-CSP11 map exists before content creation.
+
+### L4: Coverage and Gap Detection
+- L4.1 Calculate source coverage for each domain
+- L4.2 Calculate coverage for each competency
+- L4.3 Calculate topic/subtopic coverage
+- L4.4 Identify CSP11 areas with insufficient source material
+- L4.5 Identify source material with no destination
+- L4.6 Detect duplicate concepts across domains
+- L4.7 Flag important CSP11 areas supported by multiple sources
+- L4.8 Produce a Domain Coverage Report
+
+**Checkpoint:** Coverage, missing material, duplication and uncertainty are identified.
+
+### L5: Content Extraction
+- L5.1 Extract relevant source material
+- L5.2 Preserve source terminology
+- L5.3 Separate concepts from examples
+- L5.4 Separate principles from procedures
+- L5.5 Capture formulas and calculations
+- L5.6 Capture tables and important data
+- L5.7 Capture case studies/examples
+- L5.8 Capture source references
+- L5.9 Link every extracted item back to its source page
+
+**Checkpoint:** Raw knowledge is organised under the correct CSP11 location.
+
+### L6: CSP11 Content Generation
+- L6.1 Convert extracted material into CSP11 learning content
+- L6.2 Create topic explanations
+- L6.3 Create subtopic explanations
+- L6.4 Create definitions
+- L6.5 Create worked examples
+- L6.6 Create formulas/calculations where applicable
+- L6.7 Create tables and comparison material
+- L6.8 Create case studies
+- L6.9 Create exam traps and memory aids
+- L6.10 Attach references to relevant content
+
+**Checkpoint:** Structured CSP11 content packages are created.
+
+### L7: Question Generation
+- L7.1 Identify examinable concepts
+- L7.2 Generate candidate questions
+- L7.3 Assign domain/competency/topic/subtopic
+- L7.4 Assign difficulty
+- L7.5 Assign cognitive level
+- L7.6 Generate exactly four options
+- L7.7 Identify the single BEST answer
+- L7.8 Generate explanation/rationale
+- L7.9 Attach source reference
+- L7.10 Run H0.3 quality validation
+- L7.11 Save as Draft
+
+**Checkpoint:** Questions enter the existing Studio Question Bank lifecycle.
+
+### L8: Cross-Domain Integrity
+- L8.1 Check domain assignment
+- L8.2 Check competency assignment
+- L8.3 Check topic assignment
+- L8.4 Check subtopic assignment
+- L8.5 Compare overlapping concepts
+- L8.6 Detect misplaced content
+- L8.7 Detect duplicated content
+- L8.8 Verify source references
+- L8.9 Produce exceptions requiring Admin review
+
+**Checkpoint:** No content is silently accepted into the wrong CSP11 location.
+
+### L9: Admin Review Workflow
+- L9.1 Add source-analysis dashboard
+- L9.2 Show unmapped source material
+- L9.3 Show low-confidence mappings
+- L9.4 Show domain coverage
+- L9.5 Allow Admin to approve/reject mappings
+- L9.6 Allow Admin to move incorrectly mapped content
+- L9.7 Record mapping decisions
+- L9.8 Lock approved mappings
+
+**Checkpoint:** Naveed/Admin becomes the final authority over classification.
+
+### L10: Import into Content Repository
+- L10.1 Convert approved content into CSP11 JSON
+- L10.2 Validate JSON structure
+- L10.3 Validate domain/competency/topic/subtopic IDs
+- L10.4 Validate references
+- L10.5 Import into Content Repository 2.0
+- L10.6 Create content package/version
+- L10.7 Set lifecycle to Draft
+- L10.8 Review
+- L10.9 Validate
+- L10.10 Publish
+
+**Checkpoint:** Approved source-derived material becomes official CSP11 platform content.
+
+### L11: Final CSP11 Coverage Audit
+- L11.1 Audit all seven domains
+- L11.2 Audit every competency
+- L11.3 Audit every topic
+- L11.4 Audit every subtopic
+- L11.5 Check source coverage
+- L11.6 Check question coverage
+- L11.7 Check reference coverage
+- L11.8 Check duplicate content
+- L11.9 Check unmapped material
+- L11.10 Generate final coverage report
+
+**Checkpoint:** Domain is considered complete only when it passes the coverage gate.
+
+### L12: Repeatable Production Pipeline
+- L12.1 Freeze the proven workflow
+- L12.2 Process Domain 1
+- L12.3 Record lessons learned
+- L12.4 Improve the pipeline
+- L12.5 Process Domain 2
+- L12.6 Repeat through Domain 7
+- L12.7 Run whole-CSP11 integrity audit
+- L12.8 Freeze the complete CSP11 knowledge base
+
+**Checkpoint:** The complete CSP11 knowledge pipeline is repeatable and passes whole-system integrity review.
+
+## Global Quality Gates
+
+- Uncertain mapping → Human review required
+- Unmapped content → Blocked from import
+- Cross-domain conflict → Blocked pending Admin decision
+- Source reference → Required
+- Admin final authority → Required
+
+## Progress Rule
+
+Each substep must be explicitly tracked. A phase is not complete until its checkpoint passes.
+
+The JSON file is the authoritative machine-readable roadmap:
+
+`CSP11_SOURCE_TO_DOMAIN_PIPELINE.json`
