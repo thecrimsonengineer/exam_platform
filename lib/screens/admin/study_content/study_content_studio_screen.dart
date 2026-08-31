@@ -1169,6 +1169,41 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     }
   }
 
+  Future<void> _sendPracticeQuestionToReview(Question question) async {
+    try {
+      await _questionService.sendToReview(question);
+      await _refreshPracticeQuestions();
+      if (mounted) {
+        _showPracticeMessage('Question sent to Review.');
+      }
+    } catch (error) {
+      _showPracticeMessage(error.toString().replaceFirst('Bad state: ', ''));
+    }
+  }
+
+  Future<void> _validatePracticeQuestion(Question question) async {
+    try {
+      final issues = await _questionService.validateForPublication(question);
+      await _refreshPracticeQuestions();
+
+      if (!mounted) return;
+
+      final warnings = issues
+          .where((issue) => !issue.isError)
+          .map((issue) => issue.message)
+          .toList();
+
+      if (warnings.isEmpty) {
+        _showPracticeMessage('Question validated.');
+      } else {
+        _showPracticeMessage(
+          'Question validated with quality warnings:\n',
+        );
+      }
+    } catch (error) {
+      _showPracticeMessage(error.toString().replaceFirst('Bad state: ', ''));
+    }
+  }
   Future<void> _publishPracticeQuestion(Question question) async {
     try {
       await _questionService.publish(question);
@@ -1663,8 +1698,15 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   }
 
   Widget _buildPracticeQuestionRow(Question question, int index) {
-    final published = question.status.toLowerCase() == 'published';
-    final statusColor = published ? StudyColors.success : StudyColors.warning;
+    final status = question.status.trim().toLowerCase();
+    final published = status == 'published';
+    final statusColor = published
+        ? StudyColors.success
+        : status == 'validated'
+            ? StudyColors.primary
+            : status == 'review'
+                ? StudyColors.info
+                : StudyColors.warning;
 
     final rowKey = _practiceQuestionKeys.putIfAbsent(
       question.id,
@@ -1731,7 +1773,19 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                           icon: const Icon(Icons.edit_rounded, size: 16),
                           label: const Text('Edit'),
                         ),
-                        if (!published)
+                        if (status == 'draft')
+                          TextButton.icon(
+                            onPressed: () => _sendPracticeQuestionToReview(question),
+                            icon: const Icon(Icons.rate_review_rounded, size: 16),
+                            label: const Text('Send to Review'),
+                          ),
+                        if (status == 'review')
+                          TextButton.icon(
+                            onPressed: () => _validatePracticeQuestion(question),
+                            icon: const Icon(Icons.verified_rounded, size: 16),
+                            label: const Text('Validate'),
+                          ),
+                        if (status == 'validated')
                           TextButton.icon(
                             onPressed: () => _publishPracticeQuestion(question),
                             icon: const Icon(Icons.publish_rounded, size: 16),
@@ -1759,7 +1813,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                 borderRadius: StudyRadius.pillRadius,
               ),
               child: Text(
-                published ? 'PUBLISHED' : 'DRAFT',
+                status.toUpperCase(),
                 style: TextStyle(
                   color: statusColor,
                   fontSize: 9,
