@@ -5,6 +5,7 @@ from l23c_hardening import (
     match_signals,
     score_candidate,
     classify_candidate,
+    count_independent_groups,
     PHRASE_INDEPENDENCE_FAMILIES,
     phrase_independence_group,
     validate_phrase_independence_registry,
@@ -256,6 +257,85 @@ def test_unassigned_phrase_uses_non_independent_default_group():
 
     taxonomy = build_taxonomy(signal_map)
     assert taxonomy[0].independence_group == "test_c01::default"
+
+
+def test_count_independent_groups_excludes_default_and_deduplicates():
+    def make_match(signal_id, group):
+        return SignalMatch(
+            signal_id=signal_id,
+            competency_id="test_c01",
+            label="Test competency",
+            phrase=signal_id,
+            classification="direct",
+            specificity_weight=1.0,
+            independence_group=group,
+            hierarchy_parent=None,
+            hierarchy_role="none",
+            hierarchy_collapsed=False,
+            negative_context=False,
+            pages=(1,),
+            occurrences=1,
+            positions=(1,),
+            proximity=0.0,
+        )
+
+    matches = [
+        make_match("default_a", "test_c01::default"),
+        make_match("family_a", "test_c01::family_a"),
+        make_match("family_a_duplicate", "test_c01::family_a"),
+        make_match("family_b", "test_c01::family_b"),
+        make_match("default_b", "test_c01::default"),
+    ]
+
+    assert count_independent_groups(matches) == 2
+
+
+def test_count_independent_groups_boundary_values():
+    def make_match(signal_id, group):
+        return SignalMatch(
+            signal_id=signal_id,
+            competency_id="test_c01",
+            label="Test competency",
+            phrase=signal_id,
+            classification="direct",
+            specificity_weight=1.0,
+            independence_group=group,
+            hierarchy_parent=None,
+            hierarchy_role="none",
+            hierarchy_collapsed=False,
+            negative_context=False,
+            pages=(1,),
+            occurrences=1,
+            positions=(1,),
+            proximity=0.0,
+        )
+
+    assert count_independent_groups([]) == 0
+
+    assert count_independent_groups([
+        make_match("default", "test_c01::default"),
+    ]) == 0
+
+    assert count_independent_groups([
+        make_match("family_a", "test_c01::family_a"),
+    ]) == 1
+
+    assert count_independent_groups([
+        make_match("family_a", "test_c01::family_a"),
+        make_match("default", "test_c01::default"),
+    ]) == 1
+
+    assert count_independent_groups([
+        make_match("family_a", "test_c01::family_a"),
+        make_match("family_b", "test_c01::family_b"),
+    ]) == 2
+
+    assert count_independent_groups([
+        make_match("family_a", "test_c01::family_a"),
+        make_match("family_b", "test_c01::family_b"),
+        make_match("family_c", "test_c01::family_c"),
+        make_match("default", "test_c01::default"),
+    ]) == 3
 
 
 def test_default_group_does_not_count_as_independent_evidence():

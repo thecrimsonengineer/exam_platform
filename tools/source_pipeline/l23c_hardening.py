@@ -876,6 +876,18 @@ def independent_groups(
     return groups
 
 
+def count_independent_groups(
+    matches: Sequence[SignalMatch],
+) -> int:
+    """Return the number of unique non-default evidence groups."""
+
+    return sum(
+        1
+        for group_id in independent_groups(matches)
+        if not group_id.endswith("::default")
+    )
+
+
 # ================================================================
 # SCORING
 # ================================================================
@@ -894,11 +906,7 @@ def score_candidate(
         for group in groups.values()
     )
 
-    independent_group_count = sum(
-        1
-        for group_id in groups
-        if not group_id.endswith("::default")
-    )
+    independent_group_count = count_independent_groups(matches)
 
     independence_score = min(
         independent_group_count * 1.00,
@@ -1111,6 +1119,7 @@ __all__ = [
     "MEDIUM_CONFIDENCE_SCORE",
     "HIGH_CONFIDENCE_SCORE",
     "MIN_INDEPENDENT_SIGNALS",
+    "count_independent_groups",
     "VERY_CLOSE_TOKEN_DISTANCE",
     "CLOSE_TOKEN_DISTANCE",
     "MATERIAL_COMPETITOR_MARGIN",

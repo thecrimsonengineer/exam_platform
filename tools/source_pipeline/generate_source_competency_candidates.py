@@ -8,6 +8,7 @@ from l23c_hardening import (
     build_taxonomy,
     classify_candidate,
     competitor_analysis,
+    count_independent_groups,
     final_score_with_competitor_adjustment,
     match_signals,
     score_candidate,
@@ -778,12 +779,7 @@ for source in sorted(
             )
         )
 
-        independent_signal_count = len(
-            {
-                match.independence_group
-                for match in matches
-            }
-        )
+        independent_signal_count = count_independent_groups(matches)
 
         non_generic_signal_count = sum(
             1
