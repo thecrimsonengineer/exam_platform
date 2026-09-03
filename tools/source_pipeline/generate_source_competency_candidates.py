@@ -785,10 +785,17 @@ for source in sorted(
             }
         )
 
+        non_generic_signal_count = sum(
+            1
+            for match in matches
+            if match.classification != "generic"
+        )
+
         confidence = classify_candidate(
             final_score,
             independent_signal_count,
             competitor_info["stronger_competitor_count"],
+            non_generic_signal_count,
         )
 
         if confidence is None:

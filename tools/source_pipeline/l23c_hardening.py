@@ -884,13 +884,23 @@ def final_score_with_competitor_adjustment(
 # CLASSIFICATION
 # ================================================================
 
+MIN_NON_GENERIC_SIGNALS = 1
+
+
 def classify_candidate(
     final_score: float,
     independent_signal_count: int,
     stronger_competitor_count: int,
+    non_generic_signal_count: int,
 ) -> str | None:
 
     if final_score < MIN_CANDIDATE_SCORE:
+        return None
+
+    if independent_signal_count < MIN_INDEPENDENT_SIGNALS:
+        return None
+
+    if non_generic_signal_count < MIN_NON_GENERIC_SIGNALS:
         return None
 
     if (

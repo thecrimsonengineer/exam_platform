@@ -204,4 +204,15 @@ def test_scoring_is_deterministic():
 
 
 def test_classification_thresholds_are_deterministic():
-    assert classify_candidate(0.0, 0, 0) is None
+    assert classify_candidate(0.0, 0, 0, 0) is None
+    assert classify_candidate(6.5, 1, 0, 2) is None
+    assert classify_candidate(6.5, 2, 0, 0) is None
+    assert classify_candidate(3.5, 2, 0, 1) == "medium"
+    assert classify_candidate(6.0, 3, 0, 1) == "high"
+
+    results = [
+        classify_candidate(3.5, 2, 0, 1),
+        classify_candidate(3.5, 2, 0, 1),
+        classify_candidate(3.5, 2, 0, 1),
+    ]
+    assert results == ["medium", "medium", "medium"]
