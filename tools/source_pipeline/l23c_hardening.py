@@ -228,30 +228,178 @@ def classify_signal(label: str, phrase: str) -> str:
 # SIGNAL INDEPENDENCE
 # ================================================================
 
-INDEPENDENCE_OVERRIDES = {
-    # All signals in these conceptual families are one evidence group.
-    "system safety analysis": "system_safety_analysis",
-    "data analysis": "data_analysis",
-    "risk evaluation": "risk_evaluation",
-    "risk management strategies": "risk_management",
-    "risk ranking": "risk_ranking",
-    "training needs assessment": "training_needs",
-    "training program development": "training_development",
-    "training effectiveness": "training_effectiveness",
-    "education training methods": "training_methods",
-    "adult learning": "adult_learning",
+# H1.1 STEP 2.4: PHRASE-LEVEL INDEPENDENCE HARDENING
+#
+# Independence is scoped to a competency and assigned at phrase level.
+# An explicitly assigned phrase belongs to a controlled evidence family.
+# An unassigned phrase receives the competency-level default group and
+# contributes to specificity, but it does not count as an independent
+# evidence family. This prevents phrase volume or a broad competency label
+# from masquerading as independent evidence.
+#
+# The registry is keyed by (competency_id, phrase), so a phrase reused in
+# another competency cannot silently inherit an independence family.
+# Closely related phrases deliberately share a family. Only clearly
+# different evidence dimensions receive separate families.
+PHRASE_INDEPENDENCE_FAMILIES = {
+    ("d01_c03", "confined spaces"): "confined_space",
+    ("d01_c03", "lockout tagout"): "hazardous_energy",
+    ("d01_c03", "working around water"): "water_hazards",
+    ("d01_c03", "caught in"): "mechanical_contact",
+    ("d01_c03", "struck by"): "mechanical_contact",
+    ("d01_c03", "excavation"): "excavation",
+
+    ("d01_c05", "gps monitoring"): "fleet_monitoring",
+    ("d01_c05", "telematics"): "fleet_monitoring",
+    ("d01_c05", "hybrid vehicles"): "vehicle_systems",
+    ("d01_c05", "fuel systems"): "vehicle_systems",
+    ("d01_c05", "driving under the influence"): "driver_factors",
+    ("d01_c05", "fatigue"): "driver_factors",
+
+    ("d01_c06", "powered industrial trucks"): "powered_equipment",
+    ("d01_c06", "aerial lifts"): "powered_equipment",
+    ("d01_c06", "hand trucks"): "manual_equipment",
+    ("d01_c06", "manual handling"): "manual_handling",
+    ("d01_c06", "rigging"): "rigging",
+
+    ("d01_c07", "power tools"): "tools",
+    ("d01_c07", "hand tools"): "tools",
+    ("d01_c07", "grinders"): "tools",
+    ("d01_c07", "ladders"): "access_equipment",
+    ("d01_c07", "hydraulics"): "equipment_systems",
+    ("d01_c07", "robotics"): "automation_systems",
+
+    ("d02_c04", "incident investigation"): "investigation_process",
+    ("d02_c04", "root causes"): "causal_analysis",
+    ("d02_c04", "corrective actions"): "corrective_action",
+
+    ("d02_c14", "sampling data"): "data_collection",
+    ("d02_c14", "mean median mode"): "descriptive_statistics",
+    ("d02_c14", "confidence intervals"): "inferential_statistics",
+    ("d02_c14", "pareto analysis"): "analytical_methods",
+    ("d02_c14", "probabilities"): "probability_methods",
+    ("d02_c14", "exposure"): "exposure_data",
+    ("d02_c14", "release concentrations"): "exposure_data",
+
+    ("d03_c02", "job hazard analysis"): "hazard_analysis_methods",
+    ("d03_c02", "process hazard analysis"): "hazard_analysis_methods",
+    ("d03_c02", "hierarchy of controls"): "control_framework",
+    ("d03_c02", "risk analysis"): "risk_analysis_methods",
+
+    ("d03_c03", "risk avoidance"): "risk_strategy",
+    ("d03_c03", "risk retention"): "risk_strategy",
+    ("d03_c03", "risk sharing"): "risk_strategy",
+    ("d03_c03", "risk transfer"): "risk_strategy",
+    ("d03_c03", "loss prevention"): "loss_control",
+    ("d03_c03", "loss reduction"): "loss_control",
+
+    ("d04_c01", "severe weather"): "natural_hazards",
+    ("d04_c01", "natural disasters"): "natural_hazards",
+    ("d04_c01", "chemical spills"): "hazardous_release",
+    ("d04_c01", "utilities systems"): "critical_utilities",
+    ("d04_c01", "cyber security"): "cyber_response",
+
+    ("d06_c01", "measurement sampling analysis"): "exposure_assessment",
+    ("d06_c01", "sds"): "chemical_information",
+    ("d06_c01", "radiation"): "physical_agents",
+    ("d06_c01", "noise"): "physical_agents",
+    ("d06_c01", "biological hazards"): "biological_hazards",
+    ("d06_c01", "indoor air quality"): "indoor_air",
+    ("d06_c01", "ventilation"): "indoor_air",
+    ("d06_c01", "nanoparticles"): "particulates",
+    ("d06_c01", "combustible dust"): "particulates",
+    ("d06_c01", "silica"): "particulates",
+    ("d06_c01", "hot work"): "thermal_hazards",
+    ("d06_c01", "cold and heat stress"): "thermal_hazards",
+    ("d06_c01", "laser"): "physical_agents",
+
+    ("d06_c03", "exposure control plans"): "exposure_controls",
+    ("d06_c03", "ld50"): "toxicity_metrics",
+    ("d06_c03", "lc50"): "toxicity_metrics",
+    ("d06_c03", "mutagens"): "toxic_endpoints",
+    ("d06_c03", "carcinogens"): "toxic_endpoints",
+    ("d06_c03", "teratogens"): "toxic_endpoints",
+    ("d06_c03", "ototoxins"): "toxic_endpoints",
+
+    ("d06_c04", "visual acuity"): "visual_factors",
+    ("d06_c04", "body mechanics"): "biomechanics",
+    ("d06_c04", "anthropometrics"): "biomechanics",
+    ("d06_c04", "fatigue management"): "fatigue",
+    ("d06_c04", "vibration"): "physical_exposure",
+
+    ("d07_c04", "effectiveness of training"): "effectiveness_outcome",
+    ("d07_c04", "on the job compliance"): "workplace_application",
+    ("d07_c04", "feedback"): "feedback",
+    ("d07_c04", "assessments"): "assessment_methods",
+    ("d07_c04", "demonstrations"): "assessment_methods",
+    ("d07_c04", "quizzes"): "assessment_methods",
+
+    ("d07_c05", "classroom"): "delivery_modes",
+    ("d07_c05", "online"): "delivery_modes",
+    ("d07_c05", "simulation"): "experiential_methods",
+    ("d07_c05", "computer based"): "technology_methods",
+    ("d07_c05", "artificial intelligence"): "technology_methods",
+    ("d07_c05", "coaching"): "workplace_methods",
+    ("d07_c05", "on the job training"): "workplace_methods",
 }
 
 
-def independence_group(label: str) -> str:
-    if label in INDEPENDENCE_OVERRIDES:
-        return INDEPENDENCE_OVERRIDES[label]
+def phrase_independence_group(
+    competency_id: str,
+    label: str,
+    phrase: str,
+) -> str:
+    normalized_phrase = normalize_text(phrase)
+    family = PHRASE_INDEPENDENCE_FAMILIES.get(
+        (competency_id, normalized_phrase)
+    )
 
-    return re.sub(
-        r"[^a-z0-9]+",
-        "_",
-        label.lower(),
-    ).strip("_")
+    if family is None:
+        return f"{competency_id}::default"
+
+    normalized_family = normalize_text(family).replace(" ", "_")
+    return f"{competency_id}::{normalized_family}"
+
+
+def validate_phrase_independence_registry(
+    signal_map: Dict[str, Dict],
+    *,
+    strict: bool = False,
+) -> None:
+    known_phrases = {
+        (competency_id, normalize_text(phrase))
+        for competency_id, entry in signal_map.items()
+        if isinstance(entry, dict)
+        for phrase in entry.get("phrases", [])
+    }
+
+    for key, family in PHRASE_INDEPENDENCE_FAMILIES.items():
+        if not isinstance(key, tuple) or len(key) != 2:
+            raise TypeError(
+                "Phrase independence registry keys must be "
+                "(competency_id, phrase) tuples."
+            )
+
+        competency_id, phrase = key
+        if competency_id not in signal_map:
+            if strict:
+                raise ValueError(
+                    f"Phrase independence registry references unknown competency "
+                    f"{competency_id!r}."
+                )
+            continue
+
+        if (competency_id, normalize_text(phrase)) not in known_phrases:
+            raise ValueError(
+                f"Phrase independence registry references phrase {phrase!r} "
+                f"not present under {competency_id!r}."
+            )
+
+        if not isinstance(family, str) or not normalize_text(family):
+            raise ValueError(
+                f"Phrase independence family for {competency_id!r} / "
+                f"{phrase!r} must be a non-empty string."
+            )
 
 
 # ================================================================
@@ -264,6 +412,8 @@ def build_taxonomy(
     """Build deterministic signal definitions with explicit ownership."""
 
     definitions: List[SignalDefinition] = []
+
+    validate_phrase_independence_registry(signal_map)
 
     for competency_id in sorted(signal_map):
         entry = signal_map[competency_id]
@@ -313,7 +463,11 @@ def build_taxonomy(
                     specificity_weight=SPECIFICITY_WEIGHTS[
                         classification
                     ],
-                    independence_group=independence_group(label),
+                    independence_group=phrase_independence_group(
+                        competency_id,
+                        label,
+                        normalized_phrase,
+                    ),
                 )
             )
 
@@ -740,8 +894,14 @@ def score_candidate(
         for group in groups.values()
     )
 
+    independent_group_count = sum(
+        1
+        for group_id in groups
+        if not group_id.endswith("::default")
+    )
+
     independence_score = min(
-        len(groups) * 1.00,
+        independent_group_count * 1.00,
         4.00,
     )
 
@@ -965,7 +1125,10 @@ __all__ = [
     "token_aware_positions",
     "token_aware_match",
     "classify_signal",
+    "PHRASE_INDEPENDENCE_FAMILIES",
     "independence_group",
+    "phrase_independence_group",
+    "validate_phrase_independence_registry",
     "build_taxonomy",
     "hierarchy_group",
     "collapse_hierarchy",

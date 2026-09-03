@@ -1,9 +1,13 @@
 from l23c_hardening import (
     SignalDefinition,
+    SignalMatch,
     build_taxonomy,
     match_signals,
     score_candidate,
     classify_candidate,
+    PHRASE_INDEPENDENCE_FAMILIES,
+    phrase_independence_group,
+    validate_phrase_independence_registry,
     collapse_hierarchy,
     has_negative_context,
     tokenize,
@@ -216,3 +220,136 @@ def test_classification_thresholds_are_deterministic():
         classify_candidate(3.5, 2, 0, 1),
     ]
     assert results == ["medium", "medium", "medium"]
+
+def test_phrase_independence_groups_are_controlled_and_scoped():
+    signal_map = {
+        "d01_c03": {
+            "label": "common workplace hazards",
+            "phrases": [
+                "confined spaces",
+                "lockout tagout",
+                "working around water",
+                "caught in",
+                "struck by",
+                "excavation",
+            ],
+        },
+    }
+
+    taxonomy = build_taxonomy(signal_map)
+    groups = {item.phrase: item.independence_group for item in taxonomy}
+
+    assert groups["caught in"] == groups["struck by"]
+    assert groups["caught in"] != groups["confined spaces"]
+    assert groups["confined spaces"] != groups["lockout tagout"]
+    assert groups["excavation"] != groups["lockout tagout"]
+    assert groups["confined spaces"].startswith("d01_c03::")
+
+
+def test_unassigned_phrase_uses_non_independent_default_group():
+    signal_map = {
+        "test_c01": {
+            "label": "Test competency",
+            "phrases": ["unassigned phrase"],
+        },
+    }
+
+    taxonomy = build_taxonomy(signal_map)
+    assert taxonomy[0].independence_group == "test_c01::default"
+
+
+def test_default_group_does_not_count_as_independent_evidence():
+    def make_match(signal_id, phrase, weight, group, position):
+        return SignalMatch(
+            signal_id=signal_id,
+            competency_id="test_c01",
+            label="Test competency",
+            phrase=phrase,
+            classification="direct",
+            specificity_weight=weight,
+            independence_group=group,
+            hierarchy_parent=None,
+            hierarchy_role="none",
+            hierarchy_collapsed=False,
+            negative_context=False,
+            pages=(1,),
+            occurrences=1,
+            positions=(position,),
+            proximity=0.0,
+        )
+
+    matches = [
+        make_match("default", "broad signal", 1.0, "test_c01::default", 1),
+        make_match("family_a", "specific signal a", 1.75, "test_c01::family_a", 3),
+        make_match("family_a_2", "specific signal a2", 1.0, "test_c01::family_a", 5),
+        make_match("family_b", "specific signal b", 1.75, "test_c01::family_b", 7),
+    ]
+
+    result = score_candidate(matches)
+    assert result["independence_score"] == 2.0
+
+
+def test_registry_validation_rejects_unknown_phrase():
+    original = dict(PHRASE_INDEPENDENCE_FAMILIES)
+    try:
+        PHRASE_INDEPENDENCE_FAMILIES[("d01_c03", "not registered")] = "invalid"
+        signal_map = {
+            "d01_c03": {
+                "label": "common workplace hazards",
+                "phrases": [
+                    "confined spaces",
+                    "lockout tagout",
+                    "working around water",
+                    "caught in",
+                    "struck by",
+                    "excavation",
+                ],
+            },
+        }
+
+        try:
+            validate_phrase_independence_registry(signal_map)
+        except ValueError as exc:
+            assert "not present" in str(exc)
+        else:
+            raise AssertionError("Registry validation accepted an unknown phrase.")
+    finally:
+        PHRASE_INDEPENDENCE_FAMILIES.clear()
+        PHRASE_INDEPENDENCE_FAMILIES.update(original)
+
+
+def test_phrase_independence_registry_is_deterministic():
+    phrases = (
+        "confined spaces",
+        "lockout tagout",
+        "caught in",
+        "struck by",
+        "unmapped phrase",
+    )
+
+    first = [
+        phrase_independence_group(
+            "d01_c03",
+            "common workplace hazards",
+            phrase,
+        )
+        for phrase in phrases
+    ]
+
+    second = [
+        phrase_independence_group(
+            "d01_c03",
+            "common workplace hazards",
+            phrase,
+        )
+        for phrase in phrases
+    ]
+
+    assert first == second
+    assert first == [
+        "d01_c03::confined_space",
+        "d01_c03::hazardous_energy",
+        "d01_c03::mechanical_contact",
+        "d01_c03::mechanical_contact",
+        "d01_c03::default",
+    ]
