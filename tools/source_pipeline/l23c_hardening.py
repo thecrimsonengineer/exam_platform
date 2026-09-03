@@ -827,6 +827,7 @@ def evidence_proximity(
                 continue
 
             common_page_positions = []
+            shared_physical_occurrence = False
 
             for page_number in sorted(common_pages):
                 first_positions = [
@@ -843,15 +844,22 @@ def evidence_proximity(
                 if not first_positions or not second_positions:
                     continue
 
-                distance = min(
+                if set(first_positions).intersection(second_positions):
+                    shared_physical_occurrence = True
+
+                distinct_distances = [
                     abs(first_position - second_position)
                     for first_position in first_positions
                     for second_position in second_positions
-                )
+                    if first_position != second_position
+                ]
 
-                common_page_positions.append(distance)
+                if distinct_distances:
+                    common_page_positions.append(min(distinct_distances))
 
             if not common_page_positions:
+                if shared_physical_occurrence:
+                    continue
                 scores.append(0.75)
                 continue
 
@@ -864,15 +872,13 @@ def evidence_proximity(
             else:
                 scores.append(0.75)
 
+    if not scores:
+        return 0.0
+
     return round(
         sum(scores) / len(scores),
         3,
     )
-
-
-# ================================================================
-# MATCHING
-# ================================================================
 
 def match_signals(
     page_records: Sequence[Dict],

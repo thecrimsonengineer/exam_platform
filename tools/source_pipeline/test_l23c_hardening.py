@@ -476,6 +476,53 @@ def test_page_aware_proximity_uses_matching_page_positions():
     assert result == 1.25
 
 
+
+def test_cross_signal_same_physical_occurrence_does_not_create_proximity():
+    first = SignalMatch(
+        signal_id="a", competency_id="test_c01", label="Evidence",
+        phrase="signal a", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(7,), occurrences=1, positions=(500,),
+        page_positions=((7, 500),), proximity=1.0,
+    )
+    second = SignalMatch(
+        signal_id="b", competency_id="test_c01", label="Evidence",
+        phrase="signal b", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(7,), occurrences=1, positions=(500,),
+        page_positions=((7, 500),), proximity=1.0,
+    )
+
+    # A and B identify the same physical evidence occurrence. They are
+    # already in the same independence family, so they must not gain
+    # additional proximity merely because two signal definitions matched it.
+    assert evidence_proximity([first, second]) == 0.0
+
+
+def test_cross_signal_same_physical_occurrence_does_not_change_candidate_score():
+    def make_match(signal_id, phrase, weight, group):
+        return SignalMatch(
+            signal_id=signal_id, competency_id="test_c01", label="Evidence",
+            phrase=phrase, classification="distinctive",
+            specificity_weight=weight, independence_group=group,
+            hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+            negative_context=False, pages=(7,), occurrences=1, positions=(500,),
+            page_positions=((7, 500),), proximity=1.0,
+        )
+
+    single = make_match("a", "signal a", 1.5, "test_c01::family")
+    duplicate = make_match("b", "signal b", 1.0, "test_c01::family")
+
+    baseline = score_candidate([single])
+    duplicated = score_candidate([single, duplicate])
+
+    assert duplicated["independence_score"] == baseline["independence_score"]
+    assert duplicated["page_support_score"] == baseline["page_support_score"]
+    assert duplicated["proximity_score"] == baseline["proximity_score"]
+    assert duplicated["raw_score"] == baseline["raw_score"]
+
 def test_page_position_serialization_is_deterministic():
     signal_map = {
         "test_c01": {
@@ -823,3 +870,67 @@ def test_phrase_independence_registry_is_deterministic():
         "d01_c03::mechanical_contact",
         "d01_c03::default",
     ]
+
+def test_cross_signal_distinct_physical_occurrences_still_create_proximity():
+    first = SignalMatch(
+        signal_id="a", competency_id="test_c01", label="Evidence",
+        phrase="signal a", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(7,), occurrences=1, positions=(500,),
+        page_positions=((7, 500),), proximity=1.0,
+    )
+    second = SignalMatch(
+        signal_id="b", competency_id="test_c01", label="Evidence",
+        phrase="signal b", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(7,), occurrences=1, positions=(510,),
+        page_positions=((7, 510),), proximity=1.0,
+    )
+
+    assert evidence_proximity([first, second]) == 1.25
+
+
+def test_cross_signal_shared_and_distinct_occurrences_use_distinct_coordinates():
+    first = SignalMatch(
+        signal_id="a", competency_id="test_c01", label="Evidence",
+        phrase="signal a", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(7,), occurrences=2,
+        positions=(500, 510),
+        page_positions=((7, 500), (7, 510)), proximity=1.0,
+    )
+    second = SignalMatch(
+        signal_id="b", competency_id="test_c01", label="Evidence",
+        phrase="signal b", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(7,), occurrences=2,
+        positions=(500, 530),
+        page_positions=((7, 500), (7, 530)), proximity=1.0,
+    )
+
+    assert evidence_proximity([first, second]) == 1.25
+
+
+def test_cross_signal_same_occurrence_on_different_pages_does_not_create_pair():
+    first = SignalMatch(
+        signal_id="a", competency_id="test_c01", label="Evidence",
+        phrase="signal a", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(7,), occurrences=1, positions=(500,),
+        page_positions=((7, 500),), proximity=1.0,
+    )
+    second = SignalMatch(
+        signal_id="b", competency_id="test_c01", label="Evidence",
+        phrase="signal b", classification="distinctive",
+        specificity_weight=1.0, independence_group="test_c01::family",
+        hierarchy_parent=None, hierarchy_role="none", hierarchy_collapsed=False,
+        negative_context=False, pages=(8,), occurrences=1, positions=(500,),
+        page_positions=((8, 500),), proximity=1.0,
+    )
+
+    assert evidence_proximity([first, second]) == 0.25
