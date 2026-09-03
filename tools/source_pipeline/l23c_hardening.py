@@ -127,7 +127,8 @@ class SignalMatch:
     pages: Tuple[int, ...]
     occurrences: int
     positions: Tuple[int, ...]
-    proximity: float
+    page_positions: Tuple[Tuple[int, int], ...] = ()
+    proximity: float = 0.0
 
 
 # ================================================================
@@ -548,6 +549,7 @@ def collapse_hierarchy(
                 pages=winner.pages,
                 occurrences=winner.occurrences,
                 positions=winner.positions,
+                page_positions=winner.page_positions,
                 proximity=winner.proximity,
             )
         )
@@ -736,6 +738,56 @@ def proximity_score(
     return 0.75
 
 
+def page_aware_proximity_score(
+    page_positions: Sequence[Tuple[int, int]],
+) -> float:
+    """Return deterministic proximity for occurrences on one or more pages.
+
+    Token positions are comparable only within the same page. Evidence on
+    different pages must not become artificially close because their token
+    offsets happen to have similar numeric values.
+    """
+
+    if not page_positions:
+        return 0.0
+
+    by_page: Dict[int, List[int]] = {}
+
+    for page_number, position in page_positions:
+        by_page.setdefault(page_number, []).append(position)
+
+    if not by_page:
+        return 0.0
+
+    page_scores: List[float] = []
+
+    for page_number in sorted(by_page):
+        positions = sorted(by_page[page_number])
+
+        if len(positions) == 1:
+            page_scores.append(1.0)
+            continue
+
+        distances = [
+            positions[index + 1] - positions[index]
+            for index in range(len(positions) - 1)
+        ]
+
+        minimum_distance = min(distances)
+
+        if minimum_distance <= VERY_CLOSE_TOKEN_DISTANCE:
+            page_scores.append(1.25)
+        elif minimum_distance <= CLOSE_TOKEN_DISTANCE:
+            page_scores.append(1.00)
+        else:
+            page_scores.append(0.75)
+
+    return round(
+        sum(page_scores) / len(page_scores),
+        3,
+    )
+
+
 def evidence_proximity(
     matches: Sequence[SignalMatch],
 ) -> float:
@@ -756,15 +808,36 @@ def evidence_proximity(
                 scores.append(0.25)
                 continue
 
-            if not first.positions or not second.positions:
+            common_page_positions = []
+
+            for page_number in sorted(common_pages):
+                first_positions = [
+                    position
+                    for page, position in first.page_positions
+                    if page == page_number
+                ]
+                second_positions = [
+                    position
+                    for page, position in second.page_positions
+                    if page == page_number
+                ]
+
+                if not first_positions or not second_positions:
+                    continue
+
+                distance = min(
+                    abs(first_position - second_position)
+                    for first_position in first_positions
+                    for second_position in second_positions
+                )
+
+                common_page_positions.append(distance)
+
+            if not common_page_positions:
                 scores.append(0.75)
                 continue
 
-            distance = min(
-                abs(a - b)
-                for a in first.positions
-                for b in second.positions
-            )
+            distance = min(common_page_positions)
 
             if distance <= VERY_CLOSE_TOKEN_DISTANCE:
                 scores.append(1.25)
@@ -794,6 +867,7 @@ def match_signals(
 
         pages: List[int] = []
         positions: List[int] = []
+        page_positions: List[Tuple[int, int]] = []
         positive_occurrences = 0
 
         for page in page_records:
@@ -826,7 +900,13 @@ def match_signals(
                 continue
 
             pages.append(page_number)
-            positions.extend(positive_positions)
+
+            for position in positive_positions:
+                positions.append(position)
+                page_positions.append(
+                    (page_number, position)
+                )
+
             positive_occurrences += len(
                 positive_positions
             )
@@ -850,7 +930,12 @@ def match_signals(
                 pages=tuple(sorted(set(pages))),
                 occurrences=positive_occurrences,
                 positions=tuple(sorted(positions)),
-                proximity=proximity_score(positions),
+                page_positions=tuple(
+                    sorted(set(page_positions))
+                ),
+                proximity=page_aware_proximity_score(
+                    tuple(sorted(set(page_positions)))
+                ),
             )
         )
 
@@ -1106,6 +1191,14 @@ def serialize_match(
         "negative_context": match.negative_context,
         "pages": list(match.pages),
         "occurrences": match.occurrences,
+        "positions": list(match.positions),
+        "page_positions": [
+            {
+                "page_number": page_number,
+                "position": position,
+            }
+            for page_number, position in match.page_positions
+        ],
         "proximity": match.proximity,
     }
 

@@ -12,6 +12,9 @@ from l23c_hardening import (
     collapse_hierarchy,
     has_negative_context,
     tokenize,
+    token_aware_positions,
+    evidence_proximity,
+    serialize_match,
 )
 
 
@@ -163,6 +166,269 @@ def test_hierarchy_collapse_is_deterministic():
     assert collapsed1 == collapsed2
     assert len(collapsed1) >= 1
     assert len(collapsed1) <= len(matches)
+
+
+
+def test_match_signals_preserves_page_position_pairs():
+    signal_map = {
+        "test_c01": {
+            "label": "Failure modes",
+            "phrases": [
+                "failure modes",
+            ],
+        },
+    }
+
+    taxonomy = build_taxonomy(signal_map)
+
+    page_records = [
+        {
+            "page_number": 7,
+            "text": (
+                "Failure modes are discussed. "
+                "Failure modes are reviewed."
+            ),
+        },
+        {
+            "page_number": 4,
+            "text": "Failure modes are documented.",
+        },
+    ]
+
+    matches = match_signals(page_records, taxonomy)
+
+    assert len(matches) == 1
+
+    match = matches[0]
+
+    assert match.pages == (4, 7)
+    assert match.occurrences == 3
+    page_7_text = (
+        "Failure modes are discussed. "
+        "Failure modes are reviewed."
+    )
+
+    expected_page_7_positions = tuple(
+        token_aware_positions(page_7_text, "failure modes")
+    )
+
+    assert expected_page_7_positions == (0, 4)
+
+    assert match.page_positions == (
+        (4, phrase_position(
+            "Failure modes are documented.",
+            "failure modes",
+        )),
+        (7, 0),
+        (7, 4),
+    )
+
+
+def test_repeated_phrase_across_pages_remains_one_independent_group():
+    page_positions = (
+        (2, 0),
+        (8, 0),
+        (12, 0),
+    )
+
+    repeated_match = SignalMatch(
+        signal_id="test_c01__failure_modes__01",
+        competency_id="test_c01",
+        label="Failure modes",
+        phrase="failure modes",
+        classification="distinctive",
+        specificity_weight=1.0,
+        independence_group="test_c01::failure_modes",
+        hierarchy_parent=None,
+        hierarchy_role="primary",
+        hierarchy_collapsed=False,
+        negative_context=False,
+        pages=(2, 8, 12),
+        occurrences=3,
+        positions=(0, 0, 0),
+        page_positions=page_positions,
+        proximity=1.0,
+    )
+
+    assert repeated_match.occurrences == 3
+    assert repeated_match.pages == (2, 8, 12)
+    assert repeated_match.page_positions == page_positions
+
+    # Repeated occurrences of the same phrase, even across
+    # multiple pages, represent one independent evidence group.
+    assert count_independent_groups([repeated_match]) == 1
+
+
+def test_page_aware_proximity_does_not_cross_pages():
+    first = SignalMatch(
+        signal_id="a",
+        competency_id="test_c01",
+        label="Failure modes",
+        phrase="failure modes",
+        classification="distinctive",
+        specificity_weight=1.0,
+        independence_group="test_c01::failure",
+        hierarchy_parent=None,
+        hierarchy_role="primary",
+        hierarchy_collapsed=False,
+        negative_context=False,
+        pages=(4,),
+        occurrences=1,
+        positions=(500,),
+        page_positions=((4, 500),),
+        proximity=1.0,
+    )
+
+    second = SignalMatch(
+        signal_id="b",
+        competency_id="test_c02",
+        label="Risk assessment",
+        phrase="risk assessment",
+        classification="distinctive",
+        specificity_weight=1.0,
+        independence_group="test_c02::risk",
+        hierarchy_parent=None,
+        hierarchy_role="primary",
+        hierarchy_collapsed=False,
+        negative_context=False,
+        pages=(9,),
+        occurrences=1,
+        positions=(510,),
+        page_positions=((9, 510),),
+        proximity=1.0,
+    )
+
+    # The numeric positions are close, but they belong to different
+    # pages. Therefore they must not receive close-position scoring.
+    result = evidence_proximity([first, second])
+
+    assert result == 0.25
+
+
+def test_page_aware_proximity_uses_matching_page_positions():
+    first = SignalMatch(
+        signal_id="a",
+        competency_id="test_c01",
+        label="Failure modes",
+        phrase="failure modes",
+        classification="distinctive",
+        specificity_weight=1.0,
+        independence_group="test_c01::failure",
+        hierarchy_parent=None,
+        hierarchy_role="primary",
+        hierarchy_collapsed=False,
+        negative_context=False,
+        pages=(4, 9),
+        occurrences=2,
+        positions=(20, 500),
+        page_positions=((4, 20), (9, 500)),
+        proximity=1.0,
+    )
+
+    second = SignalMatch(
+        signal_id="b",
+        competency_id="test_c02",
+        label="Risk assessment",
+        phrase="risk assessment",
+        classification="distinctive",
+        specificity_weight=1.0,
+        independence_group="test_c02::risk",
+        hierarchy_parent=None,
+        hierarchy_role="primary",
+        hierarchy_collapsed=False,
+        negative_context=False,
+        pages=(4, 9),
+        occurrences=2,
+        positions=(100, 510),
+        page_positions=((4, 100), (9, 510)),
+        proximity=1.0,
+    )
+
+    result = evidence_proximity([first, second])
+
+    # Page 4 has positions 20 and 100, while page 9 has
+    # positions 500 and 510. The closest same-page pair is
+    # page 9 with a distance of 10.
+    assert result == 1.25
+
+
+def test_page_position_serialization_is_deterministic():
+    signal_map = {
+        "test_c01": {
+            "label": "Failure modes",
+            "phrases": [
+                "failure modes",
+            ],
+        },
+    }
+
+    taxonomy = build_taxonomy(signal_map)
+
+    page_records = [
+        {
+            "page_number": 9,
+            "text": "Failure modes are reviewed.",
+        },
+        {
+            "page_number": 4,
+            "text": "Failure modes are documented.",
+        },
+    ]
+
+    matches1 = match_signals(page_records, taxonomy)
+    matches2 = match_signals(list(reversed(page_records)), taxonomy)
+
+    assert matches1 == matches2
+
+    serialized = serialize_match(matches1[0])
+
+    assert serialized["page_positions"] == [
+        {
+            "page_number": 4,
+            "position": phrase_position(
+                "Failure modes are documented.",
+                "failure modes",
+            ),
+        },
+        {
+            "page_number": 9,
+            "position": phrase_position(
+                "Failure modes are reviewed.",
+                "failure modes",
+            ),
+        },
+    ]
+
+
+def test_collapse_hierarchy_preserves_page_positions():
+    original = SignalMatch(
+        signal_id="test_c01__failure_modes__01",
+        competency_id="test_c01",
+        label="Failure modes",
+        phrase="failure modes",
+        classification="distinctive",
+        specificity_weight=1.0,
+        independence_group="test_c01::failure_modes",
+        hierarchy_parent=None,
+        hierarchy_role="specific",
+        hierarchy_collapsed=False,
+        negative_context=False,
+        pages=(4, 7),
+        occurrences=2,
+        positions=(10, 30),
+        page_positions=((4, 10), (7, 30)),
+        proximity=1.0,
+    )
+
+    collapsed = collapse_hierarchy([original])
+
+    assert len(collapsed) == 1
+    assert collapsed[0].pages == (4, 7)
+    assert collapsed[0].positions == (10, 30)
+    assert collapsed[0].page_positions == (
+        (4, 10),
+        (7, 30),
+    )
 
 
 def test_scoring_is_deterministic():
