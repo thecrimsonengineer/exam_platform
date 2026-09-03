@@ -738,6 +738,24 @@ def proximity_score(
     return 0.75
 
 
+def canonical_page_positions(
+    page_positions: Sequence[Tuple[int, int]],
+) -> Tuple[Tuple[int, int], ...]:
+    """Return deterministic unique page-position evidence occurrences.
+
+    A physical evidence occurrence is identified by its page number and
+    token position. Duplicate coordinates represent the same occurrence
+    and therefore collapse to one canonical entry.
+    """
+    normalized = {
+        (page_number, position)
+        for page_number, position in page_positions
+        if isinstance(page_number, int) and isinstance(position, int)
+    }
+
+    return tuple(sorted(normalized))
+
+
 def page_aware_proximity_score(
     page_positions: Sequence[Tuple[int, int]],
 ) -> float:
@@ -914,6 +932,10 @@ def match_signals(
         if not pages:
             continue
 
+        canonical_positions = canonical_page_positions(
+            page_positions
+        )
+
         matches.append(
             SignalMatch(
                 signal_id=definition.signal_id,
@@ -927,14 +949,18 @@ def match_signals(
                 hierarchy_role="primary",
                 hierarchy_collapsed=False,
                 negative_context=False,
-                pages=tuple(sorted(set(pages))),
-                occurrences=positive_occurrences,
-                positions=tuple(sorted(positions)),
-                page_positions=tuple(
-                    sorted(set(page_positions))
+                pages=tuple(sorted({
+                    page_number
+                    for page_number, _ in canonical_positions
+                })),
+                occurrences=len(canonical_positions),
+                positions=tuple(
+                    position
+                    for _, position in canonical_positions
                 ),
+                page_positions=canonical_positions,
                 proximity=page_aware_proximity_score(
-                    tuple(sorted(set(page_positions)))
+                    canonical_positions
                 ),
             )
         )
@@ -1226,6 +1252,7 @@ __all__ = [
     "phrase_tokens",
     "token_aware_positions",
     "token_aware_match",
+    "canonical_page_positions",
     "classify_signal",
     "PHRASE_INDEPENDENCE_FAMILIES",
     "independence_group",

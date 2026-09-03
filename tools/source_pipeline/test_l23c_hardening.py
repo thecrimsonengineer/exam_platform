@@ -15,6 +15,7 @@ from l23c_hardening import (
     token_aware_positions,
     evidence_proximity,
     serialize_match,
+    canonical_page_positions,
 )
 
 
@@ -167,6 +168,129 @@ def test_hierarchy_collapse_is_deterministic():
     assert len(collapsed1) >= 1
     assert len(collapsed1) <= len(matches)
 
+
+
+def test_canonical_page_positions_deduplicates_and_sorts():
+    page_positions = (
+        (7, 40),
+        (4, 20),
+        (7, 40),
+        (4, 10),
+        (7, 20),
+        (4, 20),
+    )
+
+    assert canonical_page_positions(page_positions) == (
+        (4, 10),
+        (4, 20),
+        (7, 20),
+        (7, 40),
+    )
+
+
+def test_canonical_page_positions_is_order_independent():
+    first = (
+        (9, 500),
+        (4, 20),
+        (9, 100),
+        (4, 20),
+    )
+
+    second = (
+        (4, 20),
+        (9, 100),
+        (4, 20),
+        (9, 500),
+    )
+
+    assert canonical_page_positions(first) == (
+        canonical_page_positions(second)
+    )
+
+
+def test_match_occurrences_equal_unique_page_position_count():
+    signal_map = {
+        "test_c01": {
+            "label": "Failure modes",
+            "phrases": [
+                "failure modes",
+            ],
+        },
+    }
+
+    taxonomy = build_taxonomy(signal_map)
+
+    page_records = [
+        {
+            "page_number": 4,
+            "text": "Failure modes are documented.",
+        },
+        {
+            "page_number": 4,
+            "text": "Failure modes are documented.",
+        },
+        {
+            "page_number": 7,
+            "text": "Failure modes are reviewed.",
+        },
+    ]
+
+    matches = match_signals(page_records, taxonomy)
+
+    assert len(matches) == 1
+
+    match = matches[0]
+
+    assert match.page_positions == (
+        (4, 0),
+        (7, 0),
+    )
+
+    assert match.pages == (4, 7)
+    assert match.occurrences == 2
+    assert match.positions == (0, 0)
+
+
+def test_duplicate_occurrences_do_not_create_independent_groups():
+    page_positions = (
+        (2, 10),
+        (2, 10),
+        (2, 10),
+        (8, 10),
+        (8, 10),
+    )
+
+    canonical = canonical_page_positions(page_positions)
+
+    assert canonical == (
+        (2, 10),
+        (8, 10),
+    )
+
+    repeated_match = SignalMatch(
+        signal_id="test_c01__failure_modes__01",
+        competency_id="test_c01",
+        label="Failure modes",
+        phrase="failure modes",
+        classification="distinctive",
+        specificity_weight=1.0,
+        independence_group="test_c01::failure_modes",
+        hierarchy_parent=None,
+        hierarchy_role="primary",
+        hierarchy_collapsed=False,
+        negative_context=False,
+        pages=(2, 8),
+        occurrences=len(canonical),
+        positions=tuple(
+            position
+            for _, position in canonical
+        ),
+        page_positions=canonical,
+        proximity=1.0,
+    )
+
+    assert repeated_match.occurrences == 2
+    assert count_independent_groups([repeated_match]) == 1
 
 
 def test_match_signals_preserves_page_position_pairs():
