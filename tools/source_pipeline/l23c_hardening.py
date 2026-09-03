@@ -101,6 +101,7 @@ NEGATIVE_WINDOW = 6
 @dataclass(frozen=True)
 class SignalDefinition:
     signal_id: str
+    competency_id: str
     label: str
     phrase: str
     classification: str
@@ -113,6 +114,7 @@ class SignalDefinition:
 @dataclass(frozen=True)
 class SignalMatch:
     signal_id: str
+    competency_id: str
     label: str
     phrase: str
     classification: str
@@ -257,13 +259,32 @@ def independence_group(label: str) -> str:
 # ================================================================
 
 def build_taxonomy(
-    signal_map: Dict[str, Sequence[str]],
+    signal_map: Dict[str, Dict],
 ) -> List[SignalDefinition]:
+    """Build deterministic signal definitions with explicit ownership."""
 
     definitions: List[SignalDefinition] = []
 
-    for label in sorted(signal_map):
-        phrases = signal_map[label]
+    for competency_id in sorted(signal_map):
+        entry = signal_map[competency_id]
+
+        if not isinstance(entry, dict):
+            raise TypeError(
+                f"Signal registry entry for {competency_id!r} must be a mapping."
+            )
+
+        label = entry.get("label")
+        phrases = entry.get("phrases", [])
+
+        if not isinstance(label, str):
+            raise TypeError(
+                f"Signal registry label for {competency_id!r} must be a string."
+            )
+
+        if not isinstance(phrases, Sequence) or isinstance(phrases, (str, bytes)):
+            raise TypeError(
+                f"Signal registry phrases for {competency_id!r} must be a sequence."
+            )
 
         for index, phrase in enumerate(phrases, 1):
             normalized_phrase = normalize_text(phrase)
@@ -277,6 +298,7 @@ def build_taxonomy(
             )
 
             signal_id = (
+                f"{competency_id}__"
                 f"{re.sub(r'[^a-z0-9]+', '_', label.lower()).strip('_')}"
                 f"__{index:02d}"
             )
@@ -284,6 +306,7 @@ def build_taxonomy(
             definitions.append(
                 SignalDefinition(
                     signal_id=signal_id,
+                    competency_id=competency_id,
                     label=label,
                     phrase=normalized_phrase,
                     classification=classification,
@@ -358,6 +381,7 @@ def collapse_hierarchy(
         result.append(
             SignalMatch(
                 signal_id=winner.signal_id,
+                competency_id=winner.competency_id,
                 label=winner.label,
                 phrase=winner.phrase,
                 classification=winner.classification,
@@ -659,6 +683,7 @@ def match_signals(
         matches.append(
             SignalMatch(
                 signal_id=definition.signal_id,
+                competency_id=definition.competency_id,
                 label=definition.label,
                 phrase=definition.phrase,
                 classification=definition.classification,
@@ -891,6 +916,7 @@ def serialize_match(
 
     return {
         "signal_id": match.signal_id,
+        "competency_id": match.competency_id,
         "signal": match.label,
         "phrase": match.phrase,
         "classification": match.classification,

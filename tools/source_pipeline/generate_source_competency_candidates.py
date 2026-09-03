@@ -69,324 +69,445 @@ def contains_phrase(text, phrase):
 
 
 SIGNAL_MAP = {
-        "prevention through design": [
-            "prevention through design",
-            "avoidance elimination substitution",
-            "safety design criteria",
+    'd07_c06': {
+        'label': 'adult learning',
+        'phrases': [
+            'adult learning',
+            'visual auditory',
+            'reading and writing',
+            'kinesthetic',
         ],
-        "process safety": [
-            "process safety",
-            "pressure relief",
-            "chemical compatibility",
-            "management of change",
-            "process flow diagrams",
+    },
+    'd02_c08': {
+        'label': 'audit systems',
+        'phrases': [
+            'iso 14000',
+            'iso 45001',
+            'iso 19011',
+            'ansi z10',
+            'audit systems',
         ],
-        "common workplace hazards": [
-            "confined spaces",
-            "lockout tagout",
-            "working around water",
-            "caught in",
-            "struck by",
-            "excavation",
+    },
+    'd02_c01': {
+        'label': 'benchmarks gap analysis',
+        'phrases': [
+            'gap analysis',
+            'established benchmarks',
         ],
-        "facility life safety": [
-            "life safety",
-            "floor loading",
-            "occupancy loads",
-            "public space safety",
+    },
+    'd02_c11': {
+        'label': 'budgeting finance',
+        'phrases': [
+            'return on investment',
+            'cost benefit analysis',
+            'budget development',
+            'procurement process',
+            'resourcing',
         ],
-        "fleet safety": [
-            "fleet safety",
-            "driver and equipment safety",
-            "gps monitoring",
-            "telematics",
-            "hybrid vehicles",
-            "fuel systems",
-            "driving under the influence",
-            "fatigue",
+    },
+    'd06_c05': {
+        'label': 'chemistry containment',
+        'phrases': [
+            'containment volumes',
+            'hazardous materials storage requirements',
         ],
-        "materials handling": [
-            "materials handling",
-            "powered industrial trucks",
-            "aerial lifts",
-            "hand trucks",
-            "rigging",
-            "manual handling",
+    },
+    'd01_c03': {
+        'label': 'common workplace hazards',
+        'phrases': [
+            'confined spaces',
+            'lockout tagout',
+            'working around water',
+            'caught in',
+            'struck by',
+            'excavation',
         ],
-        "tools machines equipment": [
-            "power tools",
-            "hand tools",
-            "ladders",
-            "grinders",
-            "hydraulics",
-            "robotics",
+    },
+    'd07_c03': {
+        'label': 'continuous improvement training',
+        'phrases': [
+            'continuous improvement',
+            'implement training programs',
         ],
-        "benchmarks gap analysis": [
-            "gap analysis",
-            "established benchmarks",
+    },
+    'd02_c14': {
+        'label': 'data analysis',
+        'phrases': [
+            'sampling data',
+            'mean median mode',
+            'confidence intervals',
+            'pareto analysis',
+            'probabilities',
+            'exposure',
+            'release concentrations',
         ],
-        "performance standards": [
-            "performance standards",
-            "plan of action",
+    },
+    'd04_c02': {
+        'label': 'disaster response recovery',
+        'phrases': [
+            'incident command',
+            'business continuity',
+            'contingency plans',
         ],
-        "ehs culture": [
-            "ehs culture",
-            "safety culture",
+    },
+    'd02_c10': {
+        'label': 'document retention',
+        'phrases': [
+            'document retention',
+            'training records',
+            'exposure records',
+            'maintenance records',
+            'audit results',
+            'trade secrets',
+            'personal information',
         ],
-        "incident investigation": [
-            "incident investigation",
-            "root causes",
-            "corrective actions",
+    },
+    'd07_c05': {
+        'label': 'education training methods',
+        'phrases': [
+            'classroom',
+            'online',
+            'simulation',
+            'computer based',
+            'artificial intelligence',
+            'coaching',
+            'on the job training',
         ],
-        "management of change": [
-            "management of change",
+    },
+    'd02_c03': {
+        'label': 'ehs culture',
+        'phrases': [
+            'ehs culture',
+            'safety culture',
         ],
-        "system safety analysis": [
-            "fault tree analysis",
-            "failure modes and effects analysis",
-            "fmea",
-            "safety case",
-            "risk summation",
+    },
+    'd04_c01': {
+        'label': 'emergency response plan',
+        'phrases': [
+            'emergency response plan',
+            'severe weather',
+            'natural disasters',
+            'chemical spills',
+            'utilities systems',
+            'cyber security',
         ],
-        "leading lagging indicators": [
-            "leading indicators",
-            "lagging indicators",
+    },
+    'd05_c05': {
+        'label': 'environmental issues',
+        'phrases': [
+            'aging infrastructure',
+            'asbestos',
+            'air pollution',
+            'climate change',
+            'environmental social governance',
         ],
-        "audit systems": [
-            "iso 14000",
-            "iso 45001",
-            "iso 19011",
-            "ansi z10",
-            "audit systems",
+    },
+    'd06_c04': {
+        'label': 'ergonomics human factors',
+        'phrases': [
+            'ergonomics',
+            'human factors',
+            'visual acuity',
+            'body mechanics',
+            'anthropometrics',
+            'fatigue management',
+            'vibration',
         ],
-        "document retention": [
-            "document retention",
-            "training records",
-            "exposure records",
-            "maintenance records",
-            "audit results",
-            "trade secrets",
-            "personal information",
+    },
+    'd01_c04': {
+        'label': 'facility life safety',
+        'phrases': [
+            'life safety',
+            'floor loading',
+            'occupancy loads',
+            'public space safety',
         ],
-        "budgeting finance": [
-            "return on investment",
-            "cost benefit analysis",
-            "budget development",
-            "procurement process",
-            "resourcing",
+    },
+    'd03_c03': {
+        'label': 'financial risk mitigation',
+        'phrases': [
+            'risk avoidance',
+            'risk retention',
+            'risk sharing',
+            'risk transfer',
+            'loss prevention',
+            'loss reduction',
         ],
-        "leadership techniques": [
-            "leadership theories",
-            "motivation",
-            "discipline",
-            "authority responsibility accountability",
-            "communication styles",
+    },
+    'd04_c03': {
+        'label': 'fire prevention protection suppression',
+        'phrases': [
+            'fire prevention',
+            'fire protection',
+            'fire suppression',
         ],
-        "project management": [
-            "project management",
-            "raci charts",
-            "project timelines",
+    },
+    'd01_c05': {
+        'label': 'fleet safety',
+        'phrases': [
+            'fleet safety',
+            'driver and equipment safety',
+            'gps monitoring',
+            'telematics',
+            'hybrid vehicles',
+            'fuel systems',
+            'driving under the influence',
+            'fatigue',
         ],
-        "data analysis": [
-            "sampling data",
-            "mean median mode",
-            "confidence intervals",
-            "pareto analysis",
-            "probabilities",
-            "exposure",
-            "release concentrations",
+    },
+    'd05_c02': {
+        'label': 'hazardous materials management',
+        'phrases': [
+            'ghs classification',
+            'hazardous materials',
+            'storage and handling',
+            'hazardous waste storage',
+            'waste disposal',
         ],
-        "risk evaluation": [
-            "safety risk evaluation",
-            "identifying analyzing evaluating",
-            "monitoring risk",
-            "communicating risk",
+    },
+    'd04_c04': {
+        'label': 'hazardous materials transportation',
+        'phrases': [
+            'transportation',
+            'security of hazardous materials',
         ],
-        "risk management strategies": [
-            "job hazard analysis",
-            "process hazard analysis",
-            "hierarchy of controls",
-            "risk analysis",
+    },
+    'd02_c04': {
+        'label': 'incident investigation',
+        'phrases': [
+            'incident investigation',
+            'root causes',
+            'corrective actions',
         ],
-        "financial risk mitigation": [
-            "risk avoidance",
-            "risk retention",
-            "risk sharing",
-            "risk transfer",
-            "loss prevention",
-            "loss reduction",
+    },
+    'd02_c12': {
+        'label': 'leadership techniques',
+        'phrases': [
+            'leadership theories',
+            'motivation',
+            'discipline',
+            'authority responsibility accountability',
+            'communication styles',
         ],
-        "risk ranking": [
-            "risk ranking",
-            "emergency preparedness",
-            "fire prevention",
-            "hazardous materials management",
-            "environmental compliance",
+    },
+    'd02_c07': {
+        'label': 'leading lagging indicators',
+        'phrases': [
+            'leading indicators',
+            'lagging indicators',
         ],
-        "emergency response plan": [
-            "emergency response plan",
-            "severe weather",
-            "natural disasters",
-            "chemical spills",
-            "utilities systems",
-            "cyber security",
+    },
+    'd02_c05': {
+        'label': 'management of change',
+        'phrases': [
+            'management of change',
         ],
-        "disaster response recovery": [
-            "incident command",
-            "business continuity",
-            "contingency plans",
+    },
+    'd01_c06': {
+        'label': 'materials handling',
+        'phrases': [
+            'materials handling',
+            'powered industrial trucks',
+            'aerial lifts',
+            'hand trucks',
+            'rigging',
+            'manual handling',
         ],
-        "fire prevention protection suppression": [
-            "fire prevention",
-            "fire protection",
-            "fire suppression",
+    },
+    'd06_c01': {
+        'label': 'occupational exposure',
+        'phrases': [
+            'occupational exposures',
+            'measurement sampling analysis',
+            'sds',
+            'radiation',
+            'noise',
+            'biological hazards',
+            'indoor air quality',
+            'ventilation',
+            'nanoparticles',
+            'combustible dust',
+            'silica',
+            'hot work',
+            'cold and heat stress',
+            'laser',
         ],
-        "hazardous materials transportation": [
-            "transportation",
-            "security of hazardous materials",
+    },
+    'd02_c02': {
+        'label': 'performance standards',
+        'phrases': [
+            'performance standards',
+            'plan of action',
         ],
-        "workplace violence": [
-            "workplace violence prevention",
+    },
+    'd06_c06': {
+        'label': 'physics',
+        'phrases': [
+            'forms of energy',
+            'weights',
+            'forces',
+            'stresses',
         ],
-        "pollution prevention": [
-            "pollution prevention",
-            "spill containment",
-            "abatement",
+    },
+    'd05_c01': {
+        'label': 'pollution prevention',
+        'phrases': [
+            'pollution prevention',
+            'spill containment',
+            'abatement',
         ],
-        "hazardous materials management": [
-            "ghs classification",
-            "hazardous materials",
-            "storage and handling",
-            "hazardous waste storage",
-            "waste disposal",
+    },
+    'd01_c01': {
+        'label': 'prevention through design',
+        'phrases': [
+            'prevention through design',
+            'avoidance elimination substitution',
+            'safety design criteria',
         ],
-        "waste management": [
-            "universal waste",
-            "recycling",
-            "spill clean up",
-            "labeling",
-            "remediation",
+    },
+    'd01_c02': {
+        'label': 'process safety',
+        'phrases': [
+            'process safety',
+            'pressure relief',
+            'chemical compatibility',
+            'management of change',
+            'process flow diagrams',
         ],
-        "sustainability": [
-            "sustainability",
-            "supply chain",
-            "reduce reuse recycle",
+    },
+    'd02_c13': {
+        'label': 'project management',
+        'phrases': [
+            'project management',
+            'raci charts',
+            'project timelines',
         ],
-        "environmental issues": [
-            "aging infrastructure",
-            "asbestos",
-            "air pollution",
-            "climate change",
-            "environmental social governance",
+    },
+    'd06_c02': {
+        'label': 'public health epidemiology',
+        'phrases': [
+            'public health',
+            'epidemiology',
+            'infectious disease',
+            'risk factors',
+            'statistics',
         ],
-        "occupational exposure": [
-            "occupational exposures",
-            "measurement sampling analysis",
-            "sds",
-            "radiation",
-            "noise",
-            "biological hazards",
-            "indoor air quality",
-            "ventilation",
-            "nanoparticles",
-            "combustible dust",
-            "silica",
-            "hot work",
-            "cold and heat stress",
-            "laser",
+    },
+    'd03_c01': {
+        'label': 'risk evaluation',
+        'phrases': [
+            'safety risk evaluation',
+            'identifying analyzing evaluating',
+            'monitoring risk',
+            'communicating risk',
         ],
-        "public health epidemiology": [
-            "public health",
-            "epidemiology",
-            "infectious disease",
-            "risk factors",
-            "statistics",
+    },
+    'd03_c02': {
+        'label': 'risk management strategies',
+        'phrases': [
+            'job hazard analysis',
+            'process hazard analysis',
+            'hierarchy of controls',
+            'risk analysis',
         ],
-        "toxicology": [
-            "toxicology",
-            "exposure control plans",
-            "ld50",
-            "lc50",
-            "mutagens",
-            "carcinogens",
-            "teratogens",
-            "ototoxins",
+    },
+    'd03_c04': {
+        'label': 'risk ranking',
+        'phrases': [
+            'risk ranking',
+            'emergency preparedness',
+            'fire prevention',
+            'hazardous materials management',
+            'environmental compliance',
         ],
-        "ergonomics human factors": [
-            "ergonomics",
-            "human factors",
-            "visual acuity",
-            "body mechanics",
-            "anthropometrics",
-            "fatigue management",
-            "vibration",
+    },
+    'd05_c04': {
+        'label': 'sustainability',
+        'phrases': [
+            'sustainability',
+            'supply chain',
+            'reduce reuse recycle',
         ],
-        "chemistry containment": [
-            "containment volumes",
-            "hazardous materials storage requirements",
+    },
+    'd02_c06': {
+        'label': 'system safety analysis',
+        'phrases': [
+            'fault tree analysis',
+            'failure modes and effects analysis',
+            'fmea',
+            'safety case',
+            'risk summation',
         ],
-        "physics": [
-            "forms of energy",
-            "weights",
-            "forces",
-            "stresses",
+    },
+    'd01_c07': {
+        'label': 'tools machines equipment',
+        'phrases': [
+            'power tools',
+            'hand tools',
+            'ladders',
+            'grinders',
+            'hydraulics',
+            'robotics',
         ],
-        "training needs assessment": [
-            "needs assessment",
-            "worker training",
-            "competencies and qualifications",
+    },
+    'd06_c03': {
+        'label': 'toxicology',
+        'phrases': [
+            'toxicology',
+            'exposure control plans',
+            'ld50',
+            'lc50',
+            'mutagens',
+            'carcinogens',
+            'teratogens',
+            'ototoxins',
         ],
-        "training program development": [
-            "training programs",
-            "training materials",
-            "learning styles",
-            "presentation methods",
+    },
+    'd07_c04': {
+        'label': 'training effectiveness',
+        'phrases': [
+            'effectiveness of training',
+            'on the job compliance',
+            'feedback',
+            'assessments',
+            'demonstrations',
+            'quizzes',
         ],
-        "continuous improvement training": [
-            "continuous improvement",
-            "implement training programs",
+    },
+    'd07_c01': {
+        'label': 'training needs assessment',
+        'phrases': [
+            'needs assessment',
+            'worker training',
+            'competencies and qualifications',
         ],
-        "training effectiveness": [
-            "effectiveness of training",
-            "on the job compliance",
-            "feedback",
-            "assessments",
-            "demonstrations",
-            "quizzes",
+    },
+    'd07_c02': {
+        'label': 'training program development',
+        'phrases': [
+            'training programs',
+            'training materials',
+            'learning styles',
+            'presentation methods',
         ],
-        "education training methods": [
-            "classroom",
-            "online",
-            "simulation",
-            "computer based",
-            "artificial intelligence",
-            "coaching",
-            "on the job training",
+    },
+    'd05_c03': {
+        'label': 'waste management',
+        'phrases': [
+            'universal waste',
+            'recycling',
+            'spill clean up',
+            'labeling',
+            'remediation',
         ],
-        "adult learning": [
-            "adult learning",
-            "visual auditory",
-            "reading and writing",
-            "kinesthetic",
+    },
+    'd04_c05': {
+        'label': 'workplace violence',
+        'phrases': [
+            'workplace violence prevention',
         ],
-    }
-
-def build_signals(statement):
-    """
-    Compatibility wrapper retained for the existing generator architecture.
-
-    The controlled L2.3-C hardening taxonomy is built from the same
-    SIGNAL_MAP used by this generator.
-    """
-    s = normalize(statement)
-
-    return [
-        (label, phrase)
-        for label, phrases in SIGNAL_MAP.items()
-        for phrase in phrases
-        if phrase in s
-    ]
-
+    },
+}
 
 HARDENED_TAXONOMY = build_taxonomy(SIGNAL_MAP)
 
@@ -602,19 +723,11 @@ for source in sorted(
             HARDENED_TAXONOMY,
         )
 
-        # match_signals operates on the supplied taxonomy, so filter
-        # the shared result to signals belonging to this competency.
-        competency_labels = {
-            label
-            for label, _phrase in build_signals(
-                competency["statement"]
-            )
-        }
-
+        # Signal ownership is explicit in SignalDefinition and SignalMatch.
         competency_matches = [
             match
             for match in matches
-            if match.label in competency_labels
+            if match.competency_id == competency["competency_id"]
         ]
 
         if not competency_matches:

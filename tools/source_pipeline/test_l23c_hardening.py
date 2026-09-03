@@ -19,9 +19,11 @@ def signal(
     independence_group="test",
     hierarchy_parent=None,
     aliases=(),
+    competency_id="test_c01",
 ):
     return SignalDefinition(
         signal_id=signal_id,
+        competency_id=competency_id,
         label=label,
         phrase=phrase,
         classification=classification,
@@ -47,9 +49,12 @@ def phrase_position(text, phrase):
 
 def test_taxonomy_builds():
     signal_map = {
-        "Failure modes and effects": [
-            "failure modes and effects",
-        ],
+        "test_c01": {
+            "label": "Failure modes and effects",
+            "phrases": [
+                "failure modes and effects",
+            ],
+        },
     }
 
     taxonomy = build_taxonomy(signal_map)
@@ -58,6 +63,7 @@ def test_taxonomy_builds():
     assert len(taxonomy) == 1
     assert taxonomy[0].label == "Failure modes and effects"
     assert taxonomy[0].phrase == "failure modes and effects"
+    assert taxonomy[0].competency_id == "test_c01"
 
 
 def test_negative_context_detected():
@@ -92,12 +98,18 @@ def test_negative_context_not_false_positive():
 
 def test_hierarchy_collapse_is_deterministic():
     signal_map = {
-        "Failure modes": [
-            "failure modes",
-        ],
-        "Failure modes and effects": [
-            "failure modes and effects",
-        ],
+        "test_c01": {
+            "label": "Failure modes",
+            "phrases": [
+                "failure modes",
+            ],
+        },
+        "test_c02": {
+            "label": "Failure modes and effects",
+            "phrases": [
+                "failure modes and effects",
+            ],
+        },
     }
 
     taxonomy = build_taxonomy(signal_map)
@@ -117,12 +129,14 @@ def test_hierarchy_collapse_is_deterministic():
     definitions = [
         signal(
             parent,
+            "test_c01",
             "Failure modes",
             "failure modes",
             independence_group="failure",
         ),
         signal(
             child,
+            "test_c02",
             "Failure modes and effects",
             "failure modes and effects",
             independence_group="failure",
@@ -148,15 +162,24 @@ def test_hierarchy_collapse_is_deterministic():
 
 def test_scoring_is_deterministic():
     signal_map = {
-        "Failure modes and effects": [
-            "failure modes and effects",
-        ],
-        "Risk assessment": [
-            "risk assessment",
-        ],
-        "Hazard identification": [
-            "hazard identification",
-        ],
+        "test_c01": {
+            "label": "Failure modes and effects",
+            "phrases": [
+                "failure modes and effects",
+            ],
+        },
+        "test_c02": {
+            "label": "Risk assessment",
+            "phrases": [
+                "risk assessment",
+            ],
+        },
+        "test_c03": {
+            "label": "Hazard identification",
+            "phrases": [
+                "hazard identification",
+            ],
+        },
     }
 
     taxonomy = build_taxonomy(signal_map)
