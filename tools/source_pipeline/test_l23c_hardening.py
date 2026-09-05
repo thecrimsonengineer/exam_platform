@@ -1,3 +1,4 @@
+from pathlib import Path
 from l23c_hardening import (
     SignalDefinition,
     SignalMatch,
@@ -16,8 +17,13 @@ from l23c_hardening import (
     evidence_proximity,
     serialize_match,
     canonical_page_positions,
+    competitor_analysis,
+    final_score_with_competitor_adjustment,
 )
-
+import json
+import subprocess
+import sys
+import tempfile
 
 def signal(
     signal_id,
@@ -934,3 +940,235 @@ def test_cross_signal_same_occurrence_on_different_pages_does_not_create_pair():
     )
 
     assert evidence_proximity([first, second]) == 0.25
+
+def test_distinctive_signal_can_produce_positive_evidence():
+    definitions = [
+        SignalDefinition(
+            signal_id="d01_c01_s01",
+            competency_id="d01_c01",
+            label="prevention through design",
+            phrase="prevention through design",
+            classification="distinctive",
+            specificity_weight=2.5,
+            independence_group="d01_c01::ptd",
+        ),
+    ]
+    matches = match_signals(
+        [{"page_number": 1, "text": "Prevention through design was applied."}],
+        definitions,
+    )
+    assert len(matches) == 1
+    assert matches[0].competency_id == "d01_c01"
+    assert matches[0].occurrences == 1
+    assert matches[0].classification == "distinctive"
+
+
+def test_competitor_detection_identifies_materially_stronger_candidate():
+    result = competitor_analysis(
+        "d01_c01",
+        3.0,
+        [("d01_c01", 3.0), ("d02_c01", 4.0), ("d03_c01", 2.0)],
+    )
+    assert result["stronger_competitor_count"] == 0
+    assert result["strongest_competitor_competency_id"] == "d02_c01"
+    assert result["score_margin"] == -1.0
+
+
+def test_competitor_adjustment_is_deterministic():
+    competitor = {"stronger_competitor_count": 1}
+    assert final_score_with_competitor_adjustment(5.0, competitor) == (4.5, -0.5)
+    assert final_score_with_competitor_adjustment(5.0, competitor) == (4.5, -0.5)
+
+
+def test_low_evidence_is_rejected_at_admission_threshold():
+    assert classify_candidate(2.49, 2, 0, 1) is None
+    assert classify_candidate(2.50, 2, 0, 1) == "low"
+
+
+def test_high_confidence_requires_no_stronger_competitor():
+    assert classify_candidate(6.0, 3, 0, 1) == "high"
+    assert classify_candidate(6.0, 3, 1, 1) == "medium"
+
+def test_source_control_defines_frozen_48_46_2_boundary():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    path = root / "docs" / "source_pipeline" / "CSP11_source_control.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+
+    records = data["source_control"]
+    expected_ids = [f"SRC-{i:03d}" for i in range(1, 49)]
+    assert [record["source_id"] for record in records] == expected_ids
+
+    authoritative = [record["source_id"] for record in records if record["source_eligibility"] == "AUTHORITATIVE"]
+    excluded = [record["source_id"] for record in records if record["source_eligibility"] == "EXCLUDED"]
+
+    assert len(authoritative) == 46
+    assert excluded == ["SRC-003", "SRC-014"]
+    assert data["authoritative_source_ids"] == authoritative
+    assert data["excluded_source_ids"] == excluded
+
+
+def test_source_control_candidate_generation_flags_match_eligibility():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    data = json.loads((root / "docs" / "source_pipeline" / "CSP11_source_control.json").read_text(encoding="utf-8"))
+
+    for record in data["source_control"]:
+        assert record["candidate_generation_allowed"] is (record["source_eligibility"] == "AUTHORITATIVE")
+
+
+def test_source_control_preserves_excluded_sources_but_blocks_generation():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    data = json.loads((root / "docs" / "source_pipeline" / "CSP11_source_control.json").read_text(encoding="utf-8"))
+    records = {record["source_id"]: record for record in data["source_control"]}
+
+    for sid in ("SRC-003", "SRC-014"):
+        record = records[sid]
+        assert record["inventory_present"] is True
+        assert record["content_evidence_present"] is True
+        assert record["source_eligibility"] == "EXCLUDED"
+        assert record["candidate_generation_allowed"] is False
+
+
+def _run_validator_with_temporary_output(output_mutator):
+    root = Path(__file__).resolve().parents[2]
+    validator_path = (
+        root
+        / "tools"
+        / "source_pipeline"
+        / "validate_source_competency_candidates.py"
+    )
+    output_path = (
+        root
+        / "docs"
+        / "source_pipeline"
+        / "CSP11_source_to_competency_candidates.json"
+    )
+
+    with tempfile.TemporaryDirectory(
+        prefix="l23c_validator_position_"
+    ) as temp_dir:
+        temp_root = Path(temp_dir)
+        temporary_output = temp_root / "candidates.json"
+        temporary_validator = (
+            root
+            / "tools"
+            / "source_pipeline"
+            / f"_l23c_validator_test_{temporary_output.stem}.py"
+        )
+
+        output_data = json.loads(
+            output_path.read_text(encoding="utf-8")
+        )
+
+        output_mutator(output_data)
+
+        temporary_output.write_text(
+            json.dumps(output_data, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+
+        validator_source = validator_path.read_text(
+            encoding="utf-8"
+        )
+
+        output_literal = repr(str(temporary_output))
+        validator_source = validator_source.replace(
+            'OUTPUT_PATH = ROOT / "docs/source_pipeline/CSP11_source_to_competency_candidates.json"',
+            f"OUTPUT_PATH = Path({output_literal})",
+            1,
+        )
+
+        temporary_validator.write_text(
+            validator_source,
+            encoding="utf-8",
+        )
+
+        try:
+            result = subprocess.run(
+                [sys.executable, str(temporary_validator)],
+                cwd=str(root),
+                capture_output=True,
+                text=True,
+            )
+        finally:
+            temporary_validator.unlink(missing_ok=True)
+
+        return result
+
+
+def _first_hardened_match(output_data):
+    for source_record in output_data.get("source_candidates", []):
+        for mapping in source_record.get("candidate_mappings", []):
+            matches = mapping.get("matched_signals", [])
+            if matches:
+                return matches[0]
+
+    raise AssertionError(
+        "No hardened matched signal was found in candidate output."
+    )
+
+
+def test_validator_accepts_cross_page_projected_positions():
+    def mutate(output_data):
+        match = _first_hardened_match(output_data)
+
+        match["page_positions"] = [
+            {
+                "page_number": 112,
+                "position": 56,
+            },
+            {
+                "page_number": 136,
+                "position": 491,
+            },
+            {
+                "page_number": 145,
+                "position": 238,
+            },
+        ]
+        match["pages"] = [112, 136, 145]
+        match["occurrences"] = 3
+        match["positions"] = [56, 491, 238]
+
+    result = _run_validator_with_temporary_output(mutate)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "L23C-V066" not in result.stdout
+    assert "L23C-V073" not in result.stdout
+    assert "L23C-V074" not in result.stdout
+
+
+def test_validator_rejects_noncanonical_physical_coordinates():
+    def mutate(output_data):
+        match = _first_hardened_match(output_data)
+
+        match["page_positions"] = [
+            {
+                "page_number": 145,
+                "position": 238,
+            },
+            {
+                "page_number": 112,
+                "position": 56,
+            },
+            {
+                "page_number": 136,
+                "position": 491,
+            },
+        ]
+        match["pages"] = [112, 136, 145]
+        match["occurrences"] = 3
+        match["positions"] = [238, 56, 491]
+
+    result = _run_validator_with_temporary_output(mutate)
+
+    assert result.returncode != 0
+    assert "L23C-V066" in result.stdout

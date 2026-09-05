@@ -1,0 +1,83 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L2.3 Blueprint-to-Source Mapping Preparation",
+  "generated_at": "2026-09-05T08:37:37",
+  "blueprint_reference": {
+    "version": "V.2024.04.24",
+    "effective_date": "2025-08-01",
+    "path": "docs/source_pipeline/CSP11_canonical_blueprint.json"
+  },
+  "mapping_policy": {
+    "human_authority_preserved": true,
+    "candidate_mapping_is_not_confirmed_coverage": true,
+    "accepted_mapping_requires_human_review": true,
+    "zero_candidate_mappings_allowed": true,
+    "unknown_sources_block_progression": true,
+    "unknown_competencies_block_progression": true,
+    "domain_must_match_canonical_competency_parent": true,
+    "automatic_reclassification_prohibited": true,
+    "automatic_coverage_assignment_prohibited": true
+  },
+  "source_reference": {
+    "actual_source_count": 25,
+    "source_ids": [
+      "SRC-002",
+      "SRC-003",
+      "SRC-004",
+      "SRC-005",
+      "SRC-008",
+      "SRC-009",
+      "SRC-011",
+      "SRC-012",
+      "SRC-013",
+      "SRC-014",
+      "SRC-015",
+      "SRC-016",
+      "SRC-018",
+      "SRC-022",
+      "SRC-023",
+      "SRC-025",
+      "SRC-027",
+      "SRC-030",
+      "SRC-033",
+      "SRC-037",
+      "SRC-039",
+      "SRC-040",
+      "SRC-044",
+      "SRC-045",
+      "SRC-046"
+    ],
+    "record_authority": "L1.7 valid bibliographic decision records",
+    "inventory_reference": "docs/source_pipeline/SRC-001_to_SRC-048_inventory.json",
+    "decision_validation_reference": "docs/source_pipeline/SRC-001_to_SRC-048_bibliographic_decision_validation.json"
+  },
+  "blueprint_reference_summary": {
+    "domain_count": 7,
+    "competency_count": 47
+  },
+  "mapping_status_definitions": {
+    "CANDIDATE": "An automated or analytical process identified a possible relationship; it is not confirmed coverage.",
+    "REVIEW_REQUIRED": "The relationship requires human evaluation before it can be accepted.",
+    "ACCEPTED": "A human-authorized mapping has been confirmed and may count as confirmed mapping coverage.",
+    "REJECTED": "A human reviewer determined that the relationship is not appropriate.",
+    "HOLD": "The relationship cannot currently be resolved and requires later review."
+  },
+  "mapping_record_schema": {
+    "relationship_key": "source_id + competency_id",
+    "required_fields": [
+      "mapping_id",
+      "source_id",
+      "domain_id",
+      "competency_id",
+      "mapping_status",
+      "mapping_basis",
+      "candidate_confidence",
+      "candidate_evidence_reference",
+      "human_decision",
+      "reviewer",
+      "review_date",
+      "review_notes"
+    ]
+  },
+  "mappings": []
+}

@@ -23,6 +23,7 @@ BLUEPRINT_VALIDATION_PATH = ROOT / "docs/source_pipeline/CSP11_canonical_bluepri
 EVIDENCE_PATH = ROOT / "docs/source_pipeline/CSP11_source_content_evidence.json"
 DECISIONS_PATH = ROOT / "docs/source_pipeline/SRC-001_to_SRC-048_bibliographic_decisions.json"
 L23B_PATH = ROOT / "docs/source_pipeline/CSP11_source_to_competency_mapping.json"
+SOURCE_CONTROL_PATH = ROOT / "docs/source_pipeline/CSP11_source_control.json"
 OUTPUT_PATH = ROOT / "docs/source_pipeline/CSP11_source_to_competency_candidates.json"
 
 
@@ -513,6 +514,98 @@ SIGNAL_MAP = {
 HARDENED_TAXONOMY = build_taxonomy(SIGNAL_MAP)
 
 
+EXPECTED_SOURCE_IDS = [f"SRC-{i:03d}" for i in range(1, 49)]
+EXPECTED_EXCLUDED_SOURCE_IDS = {"SRC-003", "SRC-014"}
+
+
+def validate_source_control(control, evidence_source_ids):
+    authoritative = set()
+
+    if not isinstance(control, dict):
+        add_error("L23C-E024", "Source-control artifact must be a JSON object.")
+        return authoritative
+
+    records = control.get("source_control")
+    if not isinstance(records, list):
+        add_error("L23C-E025", "Source-control source_control field must be a list.")
+        return authoritative
+
+    record_ids = [record.get("source_id") for record in records if isinstance(record, dict)]
+
+    if len(records) != 48 or len(record_ids) != 48 or len(set(record_ids)) != 48 or sorted(record_ids) != EXPECTED_SOURCE_IDS:
+        add_error("L23C-E026", "Source-control universe must contain exactly SRC-001 through SRC-048.")
+        return authoritative
+
+    if len(evidence_source_ids) != 48 or len(set(evidence_source_ids)) != 48 or sorted(evidence_source_ids) != EXPECTED_SOURCE_IDS:
+        add_error("L23C-E027", "A4 evidence universe must contain exactly SRC-001 through SRC-048 before source-control filtering.")
+        return authoritative
+
+    eligibility_by_id = {}
+
+    for record in records:
+        if not isinstance(record, dict):
+            add_error("L23C-E028", "Source-control record is not an object.")
+            return set()
+
+        sid = record.get("source_id")
+        eligibility = record.get("source_eligibility")
+        allowed = record.get("candidate_generation_allowed")
+
+        if eligibility not in {"AUTHORITATIVE", "EXCLUDED"}:
+            add_error("L23C-E029", "Invalid source eligibility in source-control artifact.", source_id=sid, eligibility=eligibility)
+            continue
+
+        expected_allowed = eligibility == "AUTHORITATIVE"
+        if allowed is not expected_allowed:
+            add_error("L23C-E030", "candidate_generation_allowed disagrees with source eligibility.", source_id=sid, eligibility=eligibility, candidate_generation_allowed=allowed)
+
+        eligibility_by_id[sid] = eligibility
+
+    authoritative = {sid for sid, eligibility in eligibility_by_id.items() if eligibility == "AUTHORITATIVE"}
+    excluded = {sid for sid, eligibility in eligibility_by_id.items() if eligibility == "EXCLUDED"}
+
+    if len(authoritative) != 46:
+        add_error("L23C-E031", "Source-control artifact must define exactly 46 authoritative sources.", actual=len(authoritative), expected=46)
+
+    if excluded != EXPECTED_EXCLUDED_SOURCE_IDS:
+        add_error("L23C-E032", "Excluded source set must be exactly SRC-003 and SRC-014.", actual=sorted(excluded), expected=sorted(EXPECTED_EXCLUDED_SOURCE_IDS))
+
+    if control.get("authoritative_source_ids") != sorted(authoritative):
+        add_error("L23C-E033", "Top-level authoritative_source_ids is inconsistent with source-control records.")
+
+    if control.get("excluded_source_ids") != sorted(excluded):
+        add_error("L23C-E034", "Top-level excluded_source_ids is inconsistent with source-control records.")
+
+    source_universe = control.get("source_universe")
+    expected_counts = {
+        "inventory_source_count": 48,
+        "content_evidence_source_count": 48,
+        "controlled_source_count": 48,
+        "authoritative_source_count": 46,
+        "excluded_source_count": 2,
+    }
+    if not isinstance(source_universe, dict) or any(source_universe.get(key) != value for key, value in expected_counts.items()):
+        add_error("L23C-E035", "Source-control universe counts are inconsistent with the frozen 48/46/2 boundary.")
+
+    policy = control.get("policy")
+    required_true_policy = [
+        "source_eligibility_is_separate_from_bibliographic_review",
+        "source_eligibility_is_separate_from_competency_mapping_review",
+        "excluded_sources_are_preserved_for_provenance",
+        "excluded_sources_are_not_candidate_generation_inputs",
+        "authoritative_sources_are_not_automatically_competency_mapped",
+        "human_review_remains_required_for_competency_mapping",
+        "fail_closed_on_source_universe_mismatch",
+    ]
+    if not isinstance(policy, dict) or any(policy.get(key) is not True for key in required_true_policy):
+        add_error("L23C-E036", "Source-control policy does not satisfy the frozen eligibility boundary.")
+
+    if errors:
+        return set()
+
+    return authoritative
+
+
 
 blueprint = load_json(
     BLUEPRINT_PATH,
@@ -542,6 +635,12 @@ l23b = load_json(
     L23B_PATH,
     "L23C-E005",
     "L2.3-B mapping contract",
+)
+
+source_control = load_json(
+    SOURCE_CONTROL_PATH,
+    "L23C-E024",
+    "CSP11 source control",
 )
 
 
@@ -656,6 +755,12 @@ if len(source_ids) != len(set(source_ids)):
     )
 
 
+authoritative_source_ids = validate_source_control(
+    source_control,
+    source_ids,
+)
+
+
 # ----------------------------------------------------------------
 # Controlled L2.3-C candidate generation
 # ----------------------------------------------------------------
@@ -672,6 +777,10 @@ for source in sorted(
         continue
 
     source_id = source.get("source_id")
+
+    if source_id not in authoritative_source_ids:
+        continue
+
     filename = source.get("filename")
     extraction_status = source.get("source_extraction_status")
     evidence_pages = source.get("evidence_pages", [])
@@ -719,17 +828,21 @@ for source in sorted(
     competency_results = []
 
     for competency in competencies:
+        competency_definitions = [
+            definition
+            for definition in HARDENED_TAXONOMY
+            if definition.competency_id == competency["competency_id"]
+        ]
+
         matches = match_signals(
             page_records,
-            HARDENED_TAXONOMY,
+            competency_definitions,
         )
 
         # Signal ownership is explicit in SignalDefinition and SignalMatch.
-        competency_matches = [
-            match
-            for match in matches
-            if match.competency_id == competency["competency_id"]
-        ]
+        # Definitions are filtered before matching so unrelated competencies
+        # are never scanned and then discarded.
+        competency_matches = matches
 
         if not competency_matches:
             continue
@@ -869,6 +982,16 @@ for source in sorted(
             "mapping_status": "candidate",
             "confidence": confidence,
             "score": final_score,
+            "scoring": {
+                "specificity_score": scoring["specificity_score"],
+                "independence_score": scoring["independence_score"],
+                "proximity_score": scoring["proximity_score"],
+                "page_support_score": scoring["page_support_score"],
+                "raw_score": scoring["raw_score"],
+                "competitor_adjustment": competitor_adjustment,
+                "final_score": final_score,
+            },
+            "competitor_analysis": competitor_info,
             "matched_signals": matched_signals,
             "evidence_basis": evidence_basis,
             "rationale": rationale,
@@ -981,11 +1104,16 @@ output = {
         "l23b_mapping_contract": str(
             L23B_PATH.relative_to(ROOT)
         ),
+        "source_control": str(
+            SOURCE_CONTROL_PATH.relative_to(ROOT)
+        ),
     },
 
     "mapping_policy": {
         "canonical_blueprint_is_authoritative": True,
         "source_content_evidence_is_substantive_basis": True,
+        "source_control_defines_generation_eligibility": True,
+        "excluded_sources_are_preserved_but_not_scored": True,
         "bibliographic_metadata_is_not_competency_evidence": True,
         "conservative_candidate_generation": True,
         "single_generic_keyword_is_insufficient": True,

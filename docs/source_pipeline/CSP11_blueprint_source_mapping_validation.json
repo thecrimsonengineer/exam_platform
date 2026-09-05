@@ -1,0 +1,29 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L2.3 Blueprint-to-Source Mapping Validation Gate",
+  "generated_at": "2026-09-05T08:37:37",
+  "validation_policy": {
+    "validator_does_not_modify_mapping": true,
+    "candidate_mapping_is_not_confirmed_coverage": true,
+    "accepted_mapping_requires_human_authority": true,
+    "canonical_blueprint_is_authoritative": true,
+    "current_valid_bibliographic_records_define_source_population": true
+  },
+  "summary": {
+    "overall_status": "VALID",
+    "blocking_issues": 0,
+    "warnings": 0,
+    "source_count": 25,
+    "competency_count": 47,
+    "mapping_count": 0,
+    "accepted_mapping_count": 0,
+    "candidate_mapping_count": 0,
+    "review_required_mapping_count": 0,
+    "rejected_mapping_count": 0,
+    "hold_mapping_count": 0,
+    "confirmed_mapping_count": 0,
+    "candidate_mappings_are_confirmed_coverage": false
+  },
+  "issues": [],
+  "warnings": []
+}
