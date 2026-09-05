@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import '../../models/question.dart';
+import '../../data/csp11_blueprint.dart';
 import '../../models/study_content.dart';
+import 'canonical_content_identity_mapper.dart';
 import '../question_quality_validator.dart';
 
 class ContentImportResult {
@@ -59,7 +61,12 @@ class ContentImportIssue {
 }
 
 class ContentImportService {
-  const ContentImportService({this.answerLengthCheckEnabled = true});
+  const ContentImportService({
+    this.answerLengthCheckEnabled = true,
+    this.identityMapper = const CanonicalContentIdentityMapper(),
+  });
+
+  final CanonicalContentIdentityMapper identityMapper;
 
   /// Controls only the optional answer-length quality criterion.
   /// All other CSP11 question quality checks remain active.
@@ -146,6 +153,49 @@ class ContentImportService {
 
     final issues = <ContentImportIssue>[...questionIssues];
 
+    CanonicalContentIdentityResult identityResult;
+
+    try {
+      identityResult = identityMapper.normalize(content);
+      content = identityResult.content;
+    } on FormatException catch (error) {
+      issues.add(
+        ContentImportIssue(
+          severity: ContentImportIssueSeverity.error,
+          message:
+              'Canonical content identity mapping failed: ${error.message}',
+        ),
+      );
+
+      return ContentImportResult(
+        content: null,
+        issues: List.unmodifiable(issues),
+        questions: List.unmodifiable(questions),
+      );
+    } catch (error) {
+      issues.add(
+        ContentImportIssue(
+          severity: ContentImportIssueSeverity.error,
+          message: 'Canonical content identity mapping failed: $error',
+        ),
+      );
+
+      return ContentImportResult(
+        content: null,
+        issues: List.unmodifiable(issues),
+        questions: List.unmodifiable(questions),
+      );
+    }
+
+    final canonicalQuestions = questions
+        .map(
+          (question) => _withCanonicalContentIdentity(
+            question,
+            content: content,
+          ),
+        )
+        .toList();
+
     _validateRoot(content, root, issues);
 
     _validateSubtopics(content, issues);
@@ -153,7 +203,42 @@ class ContentImportService {
     return ContentImportResult(
       content: content,
       issues: List.unmodifiable(issues),
-      questions: List.unmodifiable(questions),
+      questions: List.unmodifiable(canonicalQuestions),
+    );
+  }
+
+  Question _withCanonicalContentIdentity(
+    Question question, {
+    required StudyContent content,
+  }) {
+    final domain = domainForContentId(content.domainId);
+
+    if (domain == null) {
+      throw StateError(
+        'Canonical content domain could not be resolved: ${content.domainId}',
+      );
+    }
+
+    return Question(
+      id: question.id,
+      domain: domain.number,
+      competencyId: content.competencyId,
+      subtopicId: question.subtopicId,
+      topicId: question.topicId,
+      quizId: question.quizId,
+      contentPackageId: content.id,
+      question: question.question,
+      options: question.options,
+      correctAnswer: question.correctAnswer,
+      explanation: question.explanation,
+      bestAnswerRationale: question.bestAnswerRationale,
+      reference: question.reference,
+      difficulty: question.difficulty,
+      cognitiveLevel: question.cognitiveLevel,
+      questionType: question.questionType,
+      status: question.status,
+      version: question.version,
+      tags: question.tags,
     );
   }
 
