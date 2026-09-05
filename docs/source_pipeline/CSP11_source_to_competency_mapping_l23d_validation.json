@@ -1,0 +1,45 @@
+{
+  "pipeline": "CSP11 Source-to-Domain Knowledge Pipeline",
+  "stage": "L2.3-D",
+  "schema_version": "L2.3-D.V1",
+  "validated_artifact": "CSP11_source_to_competency_mapping_l23d.json",
+  "overall_status": "VALID",
+  "counts": {
+    "source_count": 46,
+    "competency_count": 47,
+    "mapping_count": 272,
+    "candidate_mapping_count": 272,
+    "resolved_mapping_count": 0,
+    "unmapped_authoritative_source_count": 4,
+    "relationship_count_checked": 272
+  },
+  "expected_counts": {
+    "source_count": 46,
+    "competency_count": 47,
+    "mapping_count": 272,
+    "candidate_mapping_count": 272,
+    "resolved_mapping_count": 0,
+    "unmapped_authoritative_source_count": 4
+  },
+  "unmapped_authoritative_source_ids": [
+    "SRC-012",
+    "SRC-015",
+    "SRC-016",
+    "SRC-044"
+  ],
+  "blocking_issues": [],
+  "warnings": [],
+  "quality_gate": {
+    "source_control_boundary_verified": true,
+    "canonical_competency_boundary_verified": true,
+    "upstream_l23c_validity_required": true,
+    "relationship_identity_verified": true,
+    "mapping_id_determinism_verified": true,
+    "evidence_reference_determinism_verified": true,
+    "human_review_fields_null_for_candidates": true,
+    "automatic_acceptance_prohibited": true,
+    "candidate_status_only_for_generated_records": true,
+    "candidate_relationships_do_not_confirm_coverage": true,
+    "deterministic_order_verified": true
+  }
+}
