@@ -6,7 +6,7 @@ import '../../../app/app_radius.dart';
 import '../../../app/app_spacing.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../services/study_content_loader.dart';
-import 'competency_screen.dart';
+import 'study_content_screen.dart';
 import 'quiz/quiz_screen.dart';
 
 class DomainScreen extends StatefulWidget {
@@ -42,8 +42,7 @@ class _DomainScreenState extends State<DomainScreen> {
         .where(
           (content) =>
               content.status.toLowerCase() == 'published' &&
-              content.domainId ==
-                  'domain_${widget.domainNumber.toString().padLeft(2, '0')}',
+              content.domainId == _domain.id,
         )
         .toList();
   }
@@ -65,12 +64,11 @@ class _DomainScreenState extends State<DomainScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => CompetencyScreen(
+        builder: (_) => StudyContentScreen(
           domainId: domainId,
-          domainNumber: widget.domainNumber,
-          domainTitle: _domain.title,
           competencyId: competencyId,
-          title: title,
+          domainTitle: _domain.title,
+          loadingTitle: title,
         ),
       ),
     );
