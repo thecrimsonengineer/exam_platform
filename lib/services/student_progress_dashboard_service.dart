@@ -1,31 +1,46 @@
 import '../data/csp11_blueprint.dart';
 import '../models/student_learning_progress.dart';
 import '../models/student_progress_dashboard.dart';
-import '../models/student_topic_progress.dart';
+import '../models/study_content.dart';
 import 'student_learning_progress_service.dart';
-import 'student_topic_progress_service.dart';
 import 'study_content_loader.dart';
 
 /// Builds learner progress strictly from published content and persisted
 /// learner activity.
+///
+/// Subtopic progress is authoritative persisted learner state.
+/// Topic completion is derived from the completion state of every Subtopic
+/// that belongs to that Topic. Topic completion is not persisted separately.
 class StudentProgressDashboardService {
   const StudentProgressDashboardService();
 
   Future<StudentProgressDashboard> loadDashboard() async {
     final loader = const StudyContentLoader();
-
     final contents = await loader.loadPublishedContent();
 
     final subtopicService = const StudentLearningProgressService();
-    final topicService = const StudentTopicProgressService();
-
     final subtopicProgress = await subtopicService.loadAllProgress();
-    final topicProgress = await topicService.loadAllProgress();
 
+    return buildDashboard(
+      contents: contents,
+      subtopicProgress: subtopicProgress,
+    );
+  }
+
+  /// Pure progress aggregation used by the real dashboard and regression tests.
+  ///
+  /// A Topic is complete only when it contains at least one Subtopic and every
+  /// child Subtopic has a completed progress record for the same content ID
+  /// and content version currently being aggregated.
+  static StudentProgressDashboard buildDashboard({
+    required Iterable<StudyContent> contents,
+    required Map<String, StudentSubtopicProgress> subtopicProgress,
+  }) {
+    final contentList = contents.toList(growable: false);
     final domains = <StudentDomainProgress>[];
 
     for (final domain in csp11Domains) {
-      final domainContents = contents.where(
+      final domainContents = contentList.where(
         (content) => content.domainId == domain.id,
       );
 
@@ -41,22 +56,28 @@ class StudentProgressDashboardService {
         for (final topic in content.topics) {
           topicCount++;
 
+          var topicCompleted = topic.subtopics.isNotEmpty;
+
           for (final subtopic in topic.subtopics) {
             subtopicCount++;
 
-            final subtopicRecord = subtopicProgress[subtopic.id];
+            final record = subtopicProgress[subtopic.id];
+            final belongsToCurrentContent =
+                record?.studyContentId == content.id &&
+                record?.studyContentVersion == content.version;
+            final subtopicCompleted =
+                belongsToCurrentContent &&
+                record?.state == StudentLearningState.completed;
 
-            if (subtopicRecord?.state == StudentLearningState.completed) {
+            if (subtopicCompleted) {
               completedSubtopics++;
+            } else {
+              topicCompleted = false;
             }
+          }
 
-            final key = '${content.id}::${subtopic.id}::${topic.id}';
-
-            final topicRecord = topicProgress[key];
-
-            if (topicRecord?.state == StudentTopicLearningState.completed) {
-              completedTopics++;
-            }
+          if (topicCompleted) {
+            completedTopics++;
           }
         }
       }
@@ -81,15 +102,6 @@ class StudentProgressDashboardService {
       final value = record.lastOpenedAt;
 
       if (latestActivity == null || value.isAfter(latestActivity)) {
-        latestActivity = value;
-      }
-    }
-
-    for (final record in topicProgress.values) {
-      final value = record.completedAt;
-
-      if (value != null &&
-          (latestActivity == null || value.isAfter(latestActivity))) {
         latestActivity = value;
       }
     }

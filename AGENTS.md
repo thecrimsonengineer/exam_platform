@@ -6,8 +6,9 @@ For ANY task involving CSP11 learning content, content population, Admin Studio,
 
 1. `CSP11_FINAL_TOPIC_SUBTOPIC_ARCHITECTURE_FROZEN.md`
 2. `CSP11_CONTENT_AUTHORING_STANDARD_FROZEN.md`
+3. `CSP11_PROGRESS_CONTRACT_FROZEN.md`
 
-Treat both documents as frozen authority.
+Treat all three documents as frozen authority.
 
 ## Mandatory rules
 
@@ -36,7 +37,8 @@ Before changing learner-progress semantics, inspect the current implementations 
 - `lib/screens/progress/progress_screen.dart`
 - `lib/screens/courses/csp/study_subtopic_screen.dart`
 
-Do not assume Topic-level progress is fully canonical merely because the Topic/Subtopic content hierarchy is canonical. Topic-progress aggregation must be separately verified before changing or freezing its behavior.
+The canonical learner-progress contract is frozen in `CSP11_PROGRESS_CONTRACT_FROZEN.md`.
+Subtopic completion is authoritative persisted state. Topic completion is derived from all child Subtopics and is not separately authoritative. Preserve content ID/version safety when aggregating progress.
 
 ## Change control
 
