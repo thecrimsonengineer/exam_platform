@@ -148,7 +148,11 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
   }
 
   Widget _buildStudyContent(BuildContext context, StudyContent content) {
-    if (content.subtopics.isEmpty) {
+    final hasSubtopics = content.topics.any(
+      (topic) => topic.subtopics.isNotEmpty,
+    );
+
+    if (!hasSubtopics) {
       return _buildEmptyState(
         context,
         message: 'This competency does not contain any study content yet.',

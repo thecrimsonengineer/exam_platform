@@ -64,18 +64,11 @@ class IntelligentContentDraftService {
       );
     }
 
-    final topic = MainContentTopic(
-      id: topicId,
-      title: topicTitle,
-      blocks: blocks,
-      quizzes: const [],
-    );
-
     final subtopic = StudySubtopic(
       id: subtopicId,
       title: subtopicTitle,
+      blocks: blocks,
       learningObjectives: const [],
-      mainContent: [topic],
       questions: const [],
       keyPoints: const [],
       examples: const [],
@@ -88,6 +81,12 @@ class IntelligentContentDraftService {
       quizzes: const [],
     );
 
+    final topic = StudyTopic(
+      id: topicId,
+      title: topicTitle,
+      subtopics: [subtopic],
+    );
+
     return StudyContent(
       id: _buildContentId(candidate, competencyId),
       domainId: domain.id,
@@ -96,7 +95,7 @@ class IntelligentContentDraftService {
       title: competency.statement,
       status: 'draft',
       version: 1,
-      subtopics: [subtopic],
+      topics: [topic],
     );
   }
 

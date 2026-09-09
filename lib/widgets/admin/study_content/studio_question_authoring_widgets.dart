@@ -10,6 +10,7 @@ import '../../../services/question_quality_validator.dart';
 
 class StudioQuestionEditorDialog extends StatefulWidget {
   final StudyContent content;
+  final StudyTopic topic;
   final StudySubtopic subtopic;
   final StudioQuestionService questionService;
   final Question? existing;
@@ -17,6 +18,7 @@ class StudioQuestionEditorDialog extends StatefulWidget {
   const StudioQuestionEditorDialog({
     super.key,
     required this.content,
+    required this.topic,
     required this.subtopic,
     required this.questionService,
     this.existing,
@@ -85,9 +87,7 @@ class _StudioQuestionEditorDialogState
       domain: _domainNumber(widget.content.domainId),
       competencyId: widget.content.competencyId,
       subtopicId: widget.subtopic.id,
-      topicId: widget.subtopic.mainContent.isEmpty
-          ? ''
-          : widget.subtopic.mainContent.first.id,
+      topicId: widget.topic.id,
       quizId: widget.questionService.resolveQuizId(
         content: widget.content,
         subtopic: widget.subtopic,
@@ -234,12 +234,14 @@ class _StudioQuestionEditorDialogState
 
 class StudioCompleteQuestionPasteDialog extends StatefulWidget {
   final StudyContent content;
+  final StudyTopic topic;
   final StudySubtopic subtopic;
   final StudioQuestionService questionService;
 
   const StudioCompleteQuestionPasteDialog({
     super.key,
     required this.content,
+    required this.topic,
     required this.subtopic,
     required this.questionService,
   });
@@ -281,6 +283,7 @@ class _StudioCompleteQuestionPasteDialogState
         parsed: parsed,
         id: widget.questionService.nextQuestionId(),
         content: widget.content,
+        topic: widget.topic,
         subtopic: widget.subtopic,
         quizId: widget.questionService.resolveQuizId(
           content: widget.content,
@@ -455,12 +458,14 @@ class _StudioCompleteQuestionPasteDialogState
 
 class StudioJsonQuestionImportDialog extends StatefulWidget {
   final StudyContent content;
+  final StudyTopic topic;
   final StudySubtopic subtopic;
   final StudioQuestionService questionService;
 
   const StudioJsonQuestionImportDialog({
     super.key,
     required this.content,
+    required this.topic,
     required this.subtopic,
     required this.questionService,
   });
@@ -503,6 +508,7 @@ class _StudioJsonQuestionImportDialogState
         input: text,
         nextId: widget.questionService.nextQuestionId,
         content: widget.content,
+        topic: widget.topic,
         subtopic: widget.subtopic,
         quizId: widget.questionService.resolveQuizId(
           content: widget.content,
@@ -606,10 +612,7 @@ class _StudioJsonQuestionImportDialogState
                     ),
                     const Spacer(),
                     if (blockedCount > 0)
-                      _qualityBadge(
-                        label: 'BLOCKED',
-                        icon: Icons.block_rounded,
-                      )
+                      _qualityBadge(label: 'BLOCKED', icon: Icons.block_rounded)
                     else if (warningOnlyCount > 0)
                       _qualityBadge(
                         label: 'PASSED WITH WARNINGS',
@@ -630,8 +633,8 @@ class _StudioJsonQuestionImportDialogState
                     color: blockedCount > 0
                         ? Colors.red.withValues(alpha: 0.06)
                         : warningOnlyCount > 0
-                            ? Colors.orange.withValues(alpha: 0.08)
-                            : Colors.green.withValues(alpha: 0.06),
+                        ? Colors.orange.withValues(alpha: 0.08)
+                        : Colors.green.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
@@ -643,13 +646,13 @@ class _StudioJsonQuestionImportDialogState
                               'Blocked questions can still be imported as '
                               'drafts and corrected before publishing.'
                         : warningOnlyCount > 0
-                            ? '$warningOnlyCount question'
-                                  '${warningOnlyCount == 1 ? '' : 's'} '
-                                  'PASSED WITH WARNINGS. '
-                                  '$totalIssues quality issue'
-                                  '${totalIssues == 1 ? '' : 's'} detected.'
-                            : 'All $passedCount imported questions PASSED '
-                                  'the current quality checks.',
+                        ? '$warningOnlyCount question'
+                              '${warningOnlyCount == 1 ? '' : 's'} '
+                              'PASSED WITH WARNINGS. '
+                              '$totalIssues quality issue'
+                              '${totalIssues == 1 ? '' : 's'} detected.'
+                        : 'All $passedCount imported questions PASSED '
+                              'the current quality checks.',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -662,10 +665,8 @@ class _StudioJsonQuestionImportDialogState
                     itemBuilder: (context, index) {
                       final question = _questions[index];
                       final issues = questionIssues[question]!;
-                      final hasErrors =
-                          issues.any((issue) => issue.isError);
-                      final hasWarnings =
-                          issues.isNotEmpty && !hasErrors;
+                      final hasErrors = issues.any((issue) => issue.isError);
+                      final hasWarnings = issues.isNotEmpty && !hasErrors;
 
                       return ExpansionTile(
                         tilePadding: EdgeInsets.zero,
@@ -686,8 +687,8 @@ class _StudioJsonQuestionImportDialogState
                                 hasErrors
                                     ? Icons.block_rounded
                                     : hasWarnings
-                                        ? Icons.warning_amber_rounded
-                                        : Icons.check_circle_rounded,
+                                    ? Icons.warning_amber_rounded
+                                    : Icons.check_circle_rounded,
                                 size: 16,
                               ),
                               const SizedBox(width: 5),
@@ -695,8 +696,8 @@ class _StudioJsonQuestionImportDialogState
                                 hasErrors
                                     ? 'BLOCKED'
                                     : hasWarnings
-                                        ? 'PASSED WITH WARNINGS'
-                                        : 'PASSED',
+                                    ? 'PASSED WITH WARNINGS'
+                                    : 'PASSED',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                 ),

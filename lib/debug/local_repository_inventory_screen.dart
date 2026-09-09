@@ -113,12 +113,7 @@ class _LocalRepositoryInventoryScreenState
       try {
         final json = Map<String, dynamic>.from(item);
         final content = StudyContent.fromJson(json);
-        records.add(
-          _InventoryRecord(
-            sourceIndex: index,
-            content: content,
-          ),
-        );
+        records.add(_InventoryRecord(sourceIndex: index, content: content));
       } catch (_) {
         malformed++;
       }
@@ -198,8 +193,8 @@ class _LocalRepositoryInventoryScreenState
                   Text(
                     'Local CSP11 Content Baseline',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   const Text(
@@ -218,7 +213,11 @@ class _LocalRepositoryInventoryScreenState
                     )
                   else
                     Column(
-                      children: [stores[0], const SizedBox(height: 20), stores[1]],
+                      children: [
+                        stores[0],
+                        const SizedBox(height: 20),
+                        stores[1],
+                      ],
                     ),
                   const SizedBox(height: 28),
                   _buildNextStepCard(),
@@ -297,17 +296,34 @@ class _StoreCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              title,
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 8),
-            SelectableText(keyName, style: Theme.of(context).textTheme.bodySmall),
+            SelectableText(
+              keyName,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             const SizedBox(height: 18),
             Wrap(
               spacing: 10,
               runSpacing: 10,
               children: [
-                _Metric(label: 'Stored records', value: '${inventory.rawRecordCount}'),
-                _Metric(label: 'Valid records', value: '${inventory.validRecordCount}'),
-                _Metric(label: 'Malformed', value: '${inventory.malformedRecordCount}'),
+                _Metric(
+                  label: 'Stored records',
+                  value: '${inventory.rawRecordCount}',
+                ),
+                _Metric(
+                  label: 'Valid records',
+                  value: '${inventory.validRecordCount}',
+                ),
+                _Metric(
+                  label: 'Malformed',
+                  value: '${inventory.malformedRecordCount}',
+                ),
               ],
             ),
             const SizedBox(height: 14),
@@ -332,9 +348,19 @@ class _RecordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = record.content;
-    final questionCount = content.subtopics.fold<int>(
+    final subtopicCount = content.topics.fold<int>(
       0,
-      (total, subtopic) => total + subtopic.questions.length,
+      (total, topic) => total + topic.subtopics.length,
+    );
+    final questionCount = content.topics.fold<int>(
+      0,
+      (topicTotal, topic) =>
+          topicTotal +
+          topic.subtopics.fold<int>(
+            0,
+            (subtopicTotal, subtopic) =>
+                subtopicTotal + subtopic.questions.length,
+          ),
     );
 
     return ExpansionTile(
@@ -352,11 +378,17 @@ class _RecordTile extends StatelessWidget {
         _DetailRow(label: 'Content ID', value: content.id),
         _DetailRow(label: 'Domain ID', value: content.domainId),
         _DetailRow(label: 'Competency ID', value: content.competencyId),
-        _DetailRow(label: 'Competency number', value: '${content.competencyNumber}'),
+        _DetailRow(
+          label: 'Competency number',
+          value: '${content.competencyNumber}',
+        ),
         _DetailRow(label: 'Title', value: content.title),
         _DetailRow(label: 'Version', value: '${content.version}'),
         _DetailRow(label: 'Lifecycle status', value: content.status),
-        _DetailRow(label: 'Topics/subtopics', value: '${content.subtopics.length} subtopics'),
+        _DetailRow(
+          label: 'Topics/subtopics',
+          value: '${content.topics.length} topics • $subtopicCount subtopics',
+        ),
         _DetailRow(label: 'Questions', value: '$questionCount'),
       ],
     );
@@ -382,7 +414,12 @@ class _Metric extends StatelessWidget {
         children: [
           Text(label, style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 3),
-          Text(value, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            value,
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
         ],
       ),
     );
@@ -404,7 +441,10 @@ class _DetailRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 150,
-            child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
           Expanded(child: SelectableText(value.isEmpty ? '(empty)' : value)),
         ],

@@ -7,7 +7,7 @@ import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography.dart';
-import 'main_content_topic_renderer.dart';
+import 'content_block_renderer.dart';
 import 'quiz_block.dart';
 import 'study_icon_badge.dart';
 
@@ -31,7 +31,7 @@ class StudySubtopicRenderer extends StatelessWidget {
       children: [
         _buildSubtopicTitle(),
         _buildLearningObjectives(),
-        _buildMainContent(),
+        _buildContentBlocks(),
         _buildKeyPoints(),
         _buildExamples(),
         _buildCaseStudies(),
@@ -172,11 +172,11 @@ class StudySubtopicRenderer extends StatelessWidget {
   }
 
   // ==========================================================
-  // MAIN CONTENT
+  // CONTENT BLOCKS
   // ==========================================================
 
-  Widget _buildMainContent() {
-    if (subtopic.mainContent.isEmpty) {
+  Widget _buildContentBlocks() {
+    if (subtopic.blocks.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -188,12 +188,14 @@ class StudySubtopicRenderer extends StatelessWidget {
       background: StudyColors.surfaceSoft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: subtopic.mainContent
-            .map(
-              (MainContentTopic topic) =>
-                  MainContentTopicRenderer(topic: topic, domain: domain),
-            )
-            .toList(),
+        children: subtopic.blocks.asMap().entries.map((entry) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: entry.key == subtopic.blocks.length - 1 ? 0 : 12,
+            ),
+            child: ContentBlockRenderer(block: entry.value),
+          );
+        }).toList(),
       ),
     );
   }
@@ -203,25 +205,13 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildKeyPoints() {
-    if (subtopic.keyPoints.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final points = subtopic.keyPoints
-        .where((entry) => entry.content.trim().isNotEmpty)
-        .toList();
-
-    if (points.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildSection(
+    return _buildStringSection(
+      values: subtopic.keyPoints,
       title: 'Key Points',
       eyebrow: 'HIGH-VALUE CONCEPTS',
       icon: StudyIcons.remember,
       accent: StudyColors.accent,
       background: StudyColors.accentLight,
-      child: _buildContentEntryList(points, accent: StudyColors.accent),
     );
   }
 
@@ -230,25 +220,13 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildExamples() {
-    if (subtopic.examples.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final examples = subtopic.examples
-        .where((entry) => entry.content.trim().isNotEmpty)
-        .toList();
-
-    if (examples.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildSection(
+    return _buildStringSection(
+      values: subtopic.examples,
       title: 'Workplace Examples',
       eyebrow: 'APPLY THE CONCEPT',
       icon: StudyIcons.caseStudy,
       accent: StudyColors.accent,
       background: StudyColors.accentLight,
-      child: _buildContentEntryList(examples, accent: StudyColors.accent),
     );
   }
 
@@ -257,25 +235,13 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildCaseStudies() {
-    if (subtopic.caseStudies.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final caseStudies = subtopic.caseStudies
-        .where((entry) => entry.content.trim().isNotEmpty)
-        .toList();
-
-    if (caseStudies.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildSection(
+    return _buildStringSection(
+      values: subtopic.caseStudies,
       title: 'Case Studies',
       eyebrow: 'SCENARIO ANALYSIS',
       icon: StudyIcons.caseStudy,
       accent: StudyColors.caseStudy,
       background: StudyColors.caseStudyLight,
-      child: _buildContentEntryList(caseStudies, accent: StudyColors.caseStudy),
     );
   }
 
@@ -284,13 +250,7 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildFormulas() {
-    if (subtopic.formulas.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final formulas = subtopic.formulas
-        .where((entry) => entry.content.trim().isNotEmpty)
-        .toList();
+    final formulas = _cleanStrings(subtopic.formulas);
 
     if (formulas.isEmpty) {
       return const SizedBox.shrink();
@@ -304,72 +264,30 @@ class StudySubtopicRenderer extends StatelessWidget {
       background: StudyColors.primaryLight,
       child: Column(
         children: formulas.asMap().entries.map((entry) {
-          final index = entry.key;
-          final formula = entry.value;
-
           return Padding(
             padding: EdgeInsets.only(
-              bottom: index == formulas.length - 1 ? 0 : 12,
+              bottom: entry.key == formulas.length - 1 ? 0 : 12,
             ),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
               decoration: BoxDecoration(
                 color: StudyColors.surface,
                 borderRadius: StudyRadius.medium,
                 border: Border.all(
                   color: StudyColors.primary.withValues(alpha: 0.12),
                 ),
-                boxShadow: StudyShadows.soft,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (formula.title.trim().isNotEmpty) ...[
-                    Row(
-                      children: [
-                        const StudyIconBadge(
-                          icon: StudyIcons.formula,
-                          color: StudyColors.primary,
-                          backgroundColor: StudyColors.primaryLight,
-                          size: 34,
-                          iconSize: 17,
-                          showShadow: false,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            formula.title.trim(),
-                            style: StudyTypography.cardTitle,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                  ],
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 18,
-                    ),
-                    decoration: BoxDecoration(
-                      color: StudyColors.surfaceSoft,
-                      borderRadius: StudyRadius.small,
-                    ),
-                    child: SelectableText(
-                      formula.content.trim(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontFamily: 'monospace',
-                        height: 1.55,
-                        fontWeight: FontWeight.w600,
-                        color: StudyColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                ],
+              child: SelectableText(
+                entry.value,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontFamily: 'monospace',
+                  height: 1.55,
+                  fontWeight: FontWeight.w600,
+                  color: StudyColors.textPrimary,
+                ),
               ),
             ),
           );
@@ -383,95 +301,14 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildReferences() {
-    if (subtopic.references.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final references = subtopic.references
-        .where(
-          (entry) =>
-              entry.title.trim().isNotEmpty ||
-              entry.content.trim().isNotEmpty ||
-              entry.source.trim().isNotEmpty ||
-              entry.url.trim().isNotEmpty,
-        )
-        .toList();
-
-    if (references.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildSection(
+    return _buildStringSection(
+      values: subtopic.references,
       title: 'References',
       eyebrow: 'SOURCE MATERIAL',
       icon: StudyIcons.reference,
       accent: StudyColors.reference,
       background: StudyColors.referenceLight,
-      child: Column(
-        children: references.asMap().entries.map((entry) {
-          final index = entry.key;
-          final reference = entry.value;
-
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: index == references.length - 1 ? 0 : 12,
-            ),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: StudyColors.surface,
-                borderRadius: StudyRadius.medium,
-                border: Border.all(color: StudyColors.border),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (reference.title.trim().isNotEmpty)
-                    Text(
-                      reference.title.trim(),
-                      style: StudyTypography.cardTitle,
-                    ),
-                  if (reference.source.trim().isNotEmpty) ...[
-                    const SizedBox(height: 7),
-                    Text(
-                      reference.source.trim(),
-                      style: StudyTypography.bodySecondary.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                  if (reference.content.trim().isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      reference.content.trim(),
-                      style: StudyTypography.bodySecondary,
-                    ),
-                  ],
-                  if (reference.url.trim().isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: StudyColors.referenceLight,
-                        borderRadius: StudyRadius.small,
-                      ),
-                      child: SelectableText(
-                        reference.url.trim(),
-                        style: StudyTypography.bodySecondary.copyWith(
-                          color: StudyColors.reference,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
+      selectable: true,
     );
   }
 
@@ -480,25 +317,13 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildExamTips() {
-    if (subtopic.examTips.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final tips = subtopic.examTips
-        .where((entry) => entry.content.trim().isNotEmpty)
-        .toList();
-
-    if (tips.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildSection(
+    return _buildStringSection(
+      values: subtopic.examTips,
       title: 'Exam Tips',
       eyebrow: 'EXAM FOCUS',
       icon: StudyIcons.examTip,
       accent: StudyColors.examTip,
       background: StudyColors.examTipLight,
-      child: _buildContentEntryList(tips, accent: StudyColors.examTip),
     );
   }
 
@@ -507,25 +332,13 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildCommonMistakes() {
-    if (subtopic.commonMistakes.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final mistakes = subtopic.commonMistakes
-        .where((entry) => entry.content.trim().isNotEmpty)
-        .toList();
-
-    if (mistakes.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildSection(
+    return _buildStringSection(
+      values: subtopic.commonMistakes,
       title: 'Common Mistakes',
       eyebrow: 'EXAM TRAPS',
       icon: StudyIcons.warning,
       accent: StudyColors.warning,
       background: StudyColors.warningLight,
-      child: _buildContentEntryList(mistakes, accent: StudyColors.warning),
     );
   }
 
@@ -534,25 +347,13 @@ class StudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildKeyTakeaways() {
-    if (subtopic.keyTakeaways.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final takeaways = subtopic.keyTakeaways
-        .where((entry) => entry.content.trim().isNotEmpty)
-        .toList();
-
-    if (takeaways.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return _buildSection(
+    return _buildStringSection(
+      values: subtopic.keyTakeaways,
       title: 'Key Takeaways',
       eyebrow: 'FINAL REVISION',
       icon: StudyIcons.completed,
       accent: StudyColors.success,
       background: StudyColors.successLight,
-      child: _buildContentEntryList(takeaways, accent: StudyColors.success),
     );
   }
 
@@ -597,72 +398,91 @@ class StudySubtopicRenderer extends StatelessWidget {
   }
 
   // ==========================================================
-  // CONTENT ENTRY LIST
+  // STRING CONTENT LISTS
   // ==========================================================
 
-  Widget _buildContentEntryList(
-    List<ContentEntry> entries, {
+  List<String> _cleanStrings(List<String> values) {
+    return values
+        .map((value) => value.trim())
+        .where((value) => value.isNotEmpty)
+        .toList();
+  }
+
+  Widget _buildStringSection({
+    required List<String> values,
+    required String title,
+    required String eyebrow,
+    required IconData icon,
     required Color accent,
+    required Color background,
+    bool selectable = false,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: entries.asMap().entries.map((entry) {
-        final index = entry.key;
-        final item = entry.value;
+    final items = _cleanStrings(values);
 
-        final title = item.title.trim();
-        final content = item.content.trim();
+    if (items.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: index == entries.length - 1 ? 0 : 10,
-          ),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: StudyColors.surface,
-              borderRadius: StudyRadius.medium,
-              border: Border.all(color: StudyColors.border),
+    return _buildSection(
+      title: title,
+      eyebrow: eyebrow,
+      icon: icon,
+      accent: accent,
+      background: background,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: items.asMap().entries.map((entry) {
+          final item = entry.value;
+
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: entry.key == items.length - 1 ? 0 : 10,
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: accent.withValues(alpha: 0.10),
-                    borderRadius: StudyRadius.small,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: StudyColors.surface,
+                borderRadius: StudyRadius.medium,
+                border: Border.all(color: StudyColors.border),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 30,
+                    height: 30,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.10),
+                      borderRadius: StudyRadius.small,
+                    ),
+                    child: Icon(StudyIcons.completed, size: 16, color: accent),
                   ),
-                  child: Icon(StudyIcons.completed, size: 16, color: accent),
-                ),
-                const SizedBox(width: 11),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (title.isNotEmpty)
-                        Text(title, style: StudyTypography.cardTitle),
-                      if (content.isNotEmpty) ...[
-                        if (title.isNotEmpty) const SizedBox(height: 6),
-                        Text(
-                          content,
-                          style: StudyTypography.bodySecondary.copyWith(
-                            fontSize: 14.5,
-                            height: 1.55,
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: selectable
+                        ? SelectableText(
+                            item,
+                            style: StudyTypography.bodySecondary.copyWith(
+                              fontSize: 14.5,
+                              height: 1.55,
+                            ),
+                          )
+                        : Text(
+                            item,
+                            style: StudyTypography.bodySecondary.copyWith(
+                              fontSize: 14.5,
+                              height: 1.55,
+                            ),
                           ),
-                        ),
-                      ],
-                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 

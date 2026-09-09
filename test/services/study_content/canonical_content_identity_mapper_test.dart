@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../lib/data/csp11_blueprint.dart';
-import '../../../lib/models/study_content.dart';
-import '../../../lib/services/study_content/canonical_content_identity_mapper.dart';
+import 'package:exam_platform/data/csp11_blueprint.dart';
+import 'package:exam_platform/models/study_content.dart';
+import 'package:exam_platform/services/study_content/canonical_content_identity_mapper.dart';
 
 void main() {
   const mapper = CanonicalContentIdentityMapper();
@@ -23,7 +23,7 @@ void main() {
       title: 'Needs Assessment',
       status: status,
       version: version,
-      subtopics: const [],
+      topics: const [],
     );
   }
 
@@ -37,11 +37,7 @@ void main() {
 
   test('preserves package identity, version, and lifecycle status', () {
     final result = mapper.normalize(
-      makeContent(
-        id: 'domain_07_01-v2',
-        version: 2,
-        status: 'draft',
-      ),
+      makeContent(id: 'domain_07_01-v2', version: 2, status: 'draft'),
     );
 
     expect(result.content.id, 'domain_07_01-v2');
@@ -58,10 +54,7 @@ void main() {
 
   test('accepts an already canonical competency ID', () {
     final result = mapper.normalize(
-      makeContent(
-        domainId: 'd07',
-        competencyId: 'd07_c01',
-      ),
+      makeContent(domainId: 'd07', competencyId: 'd07_c01'),
     );
 
     expect(result.content.domainId, 'd07');
@@ -70,9 +63,7 @@ void main() {
 
   test('rejects an unknown domain', () {
     expect(
-      () => mapper.normalize(
-        makeContent(domainId: 'domain_99'),
-      ),
+      () => mapper.normalize(makeContent(domainId: 'domain_99')),
       throwsA(isA<FormatException>()),
     );
   });
@@ -80,10 +71,7 @@ void main() {
   test('rejects a competency number that does not exist in the domain', () {
     expect(
       () => mapper.normalize(
-        makeContent(
-          competencyId: 'domain_07_99',
-          competencyNumber: 99,
-        ),
+        makeContent(competencyId: 'domain_07_99', competencyNumber: 99),
       ),
       throwsA(isA<FormatException>()),
     );
@@ -92,30 +80,25 @@ void main() {
   test('rejects mismatched competency ID and competency number', () {
     expect(
       () => mapper.normalize(
-        makeContent(
-          competencyId: 'domain_07_02',
-          competencyNumber: 1,
-        ),
+        makeContent(competencyId: 'domain_07_02', competencyNumber: 1),
       ),
       throwsA(isA<FormatException>()),
     );
   });
 
   test('does not rewrite the package ID into the competency ID', () {
-    final result = mapper.normalize(
-      makeContent(id: 'domain_07_01-v2'),
-    );
+    final result = mapper.normalize(makeContent(id: 'domain_07_01-v2'));
 
     expect(result.content.id, 'domain_07_01-v2');
     expect(result.content.competencyId, 'd07_c01');
   });
 
-  test('preserves subtopics unchanged', () {
+  test('preserves topics unchanged', () {
     final content = makeContent();
 
     final result = mapper.normalize(content);
 
-    expect(result.content.subtopics, same(content.subtopics));
+    expect(result.content.topics, same(content.topics));
   });
 
   test('canonical resolution agrees with the frozen blueprint', () {

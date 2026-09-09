@@ -495,8 +495,8 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
             decoration: const InputDecoration(
               hintText:
                   '{\n'
-                  '  "id": "domain_07_01",\n'
-                  '  "domainId": "domain_07",\n'
+                  '  "id": "d07_c01-v1",\n'
+                  '  "domainId": "d07",\n'
                   '  ...\n'
                   '}',
               hintStyle: TextStyle(
@@ -641,13 +641,13 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
   Widget _buildStatistics(_ContentStatistics statistics) {
     final cards = [
       _StatisticItem(
-        label: 'Subtopics',
-        value: statistics.subtopics,
+        label: 'Topics',
+        value: statistics.topics,
         icon: Icons.account_tree_rounded,
       ),
       _StatisticItem(
-        label: 'Main Topics',
-        value: statistics.mainTopics,
+        label: 'Subtopics',
+        value: statistics.subtopics,
         icon: Icons.menu_book_rounded,
       ),
       _StatisticItem(
@@ -917,7 +917,7 @@ class _ContentImportPanelState extends State<ContentImportPanel> {
 
 class _ContentStatistics {
   final int subtopics;
-  final int mainTopics;
+  final int topics;
   final int blocks;
   final int learningObjectives;
   final int examples;
@@ -927,7 +927,7 @@ class _ContentStatistics {
 
   const _ContentStatistics({
     required this.subtopics,
-    required this.mainTopics,
+    required this.topics,
     required this.blocks,
     required this.learningObjectives,
     required this.examples,
@@ -937,7 +937,7 @@ class _ContentStatistics {
   });
 
   factory _ContentStatistics.fromContent(StudyContent content) {
-    var mainTopics = 0;
+    var subtopics = 0;
     var blocks = 0;
     var learningObjectives = 0;
     var examples = 0;
@@ -945,24 +945,21 @@ class _ContentStatistics {
     var references = 0;
     var quizReferences = 0;
 
-    for (final subtopic in content.subtopics) {
-      learningObjectives += subtopic.learningObjectives.length;
-
-      examples += subtopic.examples.length;
-      caseStudies += subtopic.caseStudies.length;
-      references += subtopic.references.length;
-      quizReferences += subtopic.quizzes.length;
-
-      for (final topic in subtopic.mainContent) {
-        mainTopics++;
-        blocks += topic.blocks.length;
-        quizReferences += topic.quizzes.length;
+    for (final topic in content.topics) {
+      for (final subtopic in topic.subtopics) {
+        subtopics++;
+        blocks += subtopic.blocks.length;
+        learningObjectives += subtopic.learningObjectives.length;
+        examples += subtopic.examples.length;
+        caseStudies += subtopic.caseStudies.length;
+        references += subtopic.references.length;
+        quizReferences += subtopic.quizzes.length;
       }
     }
 
     return _ContentStatistics(
-      subtopics: content.subtopics.length,
-      mainTopics: mainTopics,
+      subtopics: subtopics,
+      topics: content.topics.length,
       blocks: blocks,
       learningObjectives: learningObjectives,
       examples: examples,
@@ -987,58 +984,57 @@ class _StatisticItem {
 
 const String _exampleJson = '''
 {
-  "id": "domain_07_01",
-  "domainId": "domain_07",
-  "competencyId": "domain_07_01",
+  "id": "d07_c01-v1",
+  "domainId": "d07",
+  "competencyId": "d07_c01",
   "competencyNumber": 1,
   "title": "Training Needs Assessment",
   "status": "draft",
   "version": 1,
-  "subtopics": [
+  "topics": [
     {
-      "id": "domain_07_01_01",
+      "id": "topic_training_needs",
       "title": "Training Needs Analysis",
-      "learningObjectives": [
-        "Explain the purpose of a training needs analysis.",
-        "Identify factors that indicate a need for worker training."
-      ],
-      "mainContent": [
+      "subtopics": [
         {
-          "id": "topic_001",
-          "title": "What is Training Needs Analysis?",
+          "id": "subtopic_training_gaps",
+          "title": "Identifying Training Gaps",
+          "learningObjectives": [
+            "Explain the purpose of a training needs analysis.",
+            "Identify factors that indicate a need for worker training."
+          ],
           "blocks": [
             {
-              "id": "block_001",
+              "id": "block_training_gaps_heading",
               "type": "heading",
               "data": {
-                "title": "Definition",
+                "title": "Training gaps",
                 "level": 2
               }
             },
             {
-              "id": "block_002",
+              "id": "block_training_gaps_text",
               "type": "text",
               "data": {
-                "content": "Training needs analysis is a systematic process used to identify gaps between current and required worker knowledge, skills and competencies."
+                "content": "Compare current worker knowledge and skills with the requirements of the task to identify training needs."
               }
             }
           ],
+          "keyPoints": [],
+          "examples": [],
+          "caseStudies": [],
+          "formulas": [],
+          "references": [],
+          "examTips": [],
+          "commonMistakes": [],
+          "keyTakeaways": [],
           "quizzes": [
             {
-              "quizId": "d07_topic_001_quiz"
+              "quizId": "d07_c01-v1_subtopic_training_gaps_quiz"
             }
           ]
         }
-      ],
-      "keyPoints": [],
-      "examples": [],
-      "caseStudies": [],
-      "formulas": [],
-      "references": [],
-      "examTips": [],
-      "commonMistakes": [],
-      "keyTakeaways": [],
-      "quizzes": []
+      ]
     }
   ]
 }

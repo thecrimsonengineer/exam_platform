@@ -17,7 +17,6 @@ import '../../../widgets/admin/study_content/content_preview_panel.dart';
 import '../../../widgets/admin/study_content/content_validation_panel.dart';
 import '../../../widgets/admin/study_content/studio_question_authoring_widgets.dart';
 import '../../../widgets/admin/study_content/editor/subtopic/subtopic_editor_panel.dart';
-import '../../../widgets/admin/study_content/editor/main_content/main_content_editor_panel.dart';
 import '../../../widgets/admin/study_content/structure/content_structure_panel.dart';
 import '../../courses/csp/study_content_screen.dart';
 
@@ -55,9 +54,11 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   bool _overviewQuizReady = false;
   bool _answerLengthCheckEnabled = true;
 
+  int? _selectedTopicIndex;
   int? _selectedSubtopicIndex;
-  int? _selectedMainContentIndex;
 
+  // Temporary legacy selection state.
+  // Retained only until the old Main Content workspace is retired in Phase 3B-3.
   List<StudyContent> _savedDrafts = <StudyContent>[];
   List<StudyContent> _publishedContent = <StudyContent>[];
   bool _loadingDrafts = false;
@@ -98,13 +99,13 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       icon: Icons.file_download_rounded,
     ),
     _StudioSection(
-      title: 'Subtopics',
-      subtitle: 'Inspect and edit subtopics',
+      title: 'Topics & Subtopics',
+      subtitle: 'Navigate the learning hierarchy',
       icon: Icons.account_tree_rounded,
     ),
     _StudioSection(
-      title: 'Main Content',
-      subtitle: 'Create educational content',
+      title: 'Learning Content',
+      subtitle: 'Edit the selected subtopic content',
       icon: Icons.menu_book_rounded,
     ),
     _StudioSection(
@@ -139,16 +140,14 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       _importedContent = initial;
 
       final initialQuestionId = widget.initialQuestionId;
-      final selectedIndex = initial.subtopics.isEmpty ? null : 0;
+      final hasTopics = initial.topics.isNotEmpty;
+      final hasSubtopics =
+          hasTopics && initial.topics.first.subtopics.isNotEmpty;
 
       _selectedSection = initialQuestionId == null ? 0 : 5;
-      _selectedSubtopicIndex = selectedIndex;
+      _selectedTopicIndex = hasTopics ? 0 : null;
+      _selectedSubtopicIndex = hasSubtopics ? 0 : null;
       _focusedPracticeQuestionId = initialQuestionId;
-      _selectedMainContentIndex =
-          selectedIndex != null &&
-              initial.subtopics[selectedIndex].mainContent.isNotEmpty
-          ? 0
-          : null;
     }
 
     _initializeQuestionService();
@@ -173,16 +172,32 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             );
 
         if (targetQuestion != null) {
-          final targetSubtopicIndex = content.subtopics.indexWhere(
-            (subtopic) => subtopic.id == targetQuestion.subtopicId,
+          var targetTopicIndex = content.topics.indexWhere(
+            (topic) => topic.id == targetQuestion.topicId,
           );
 
-          if (targetSubtopicIndex >= 0 && mounted) {
-            setState(() {
-              _selectedSection = 5;
-              _selectedSubtopicIndex = targetSubtopicIndex;
-              _focusedPracticeQuestionId = targetQuestion.id;
-            });
+          if (targetTopicIndex < 0) {
+            targetTopicIndex = content.topics.indexWhere(
+              (topic) => topic.subtopics.any(
+                (subtopic) => subtopic.id == targetQuestion.subtopicId,
+              ),
+            );
+          }
+
+          if (targetTopicIndex >= 0) {
+            final targetTopic = content.topics[targetTopicIndex];
+            final targetSubtopicIndex = targetTopic.subtopics.indexWhere(
+              (subtopic) => subtopic.id == targetQuestion.subtopicId,
+            );
+
+            if (targetSubtopicIndex >= 0 && mounted) {
+              setState(() {
+                _selectedSection = 5;
+                _selectedTopicIndex = targetTopicIndex;
+                _selectedSubtopicIndex = targetSubtopicIndex;
+                _focusedPracticeQuestionId = targetQuestion.id;
+              });
+            }
           }
         }
       }
@@ -853,10 +868,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         return ContentImportPanel(onImported: _handleCompleteContentImport);
 
       case 2:
-        return _buildSubtopicsWorkspace();
+        return _buildTopicSubtopicWorkspace();
 
       case 3:
-        return _buildMainContentWorkspace();
+        return _buildTopicSubtopicWorkspace();
 
       case 4:
         return _buildPlaceholderEditor(
@@ -906,12 +921,14 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
       setState(() {
         _importedContent = content;
-        _selectedSubtopicIndex = content.subtopics.isEmpty ? null : 0;
-        _selectedMainContentIndex =
-            content.subtopics.isNotEmpty &&
-                content.subtopics.first.mainContent.isNotEmpty
+        _selectedTopicIndex = content.topics.isEmpty ? null : 0;
+        _selectedSubtopicIndex =
+            content.topics.isNotEmpty &&
+                content.topics.first.subtopics.isNotEmpty
             ? 0
             : null;
+
+        // Temporary legacy workspace state.
         _resolvedPracticeQuizId = null;
       });
 
@@ -957,8 +974,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             eyebrow: 'ASSESSMENT',
             title: 'Practice Questions',
             description:
-                'Connect the managed CSP11 question bank to the selected '
-                'subtopic.',
+                'Connect the managed CSP11 question bank to the selected subtopic.',
           ),
           const SizedBox(height: 24),
           _buildNoImportedPracticeQuestionsState(),
@@ -966,7 +982,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       );
     }
 
-    if (content.subtopics.isEmpty) {
+    if (content.topics.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -974,8 +990,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             eyebrow: 'ASSESSMENT',
             title: 'Practice Questions',
             description:
-                'A dedicated subtopic quiz requires at least five '
-                'published questions.',
+                'A dedicated subtopic quiz requires a Topic and Subtopic parent.',
           ),
           const SizedBox(height: 24),
           _buildNoPracticeSubtopicsState(),
@@ -983,16 +998,34 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       );
     }
 
-    _ensureSelectedSubtopicIsValid();
+    _ensureSelectedTopicSubtopicIsValid();
 
-    final selectedIndex = _selectedSubtopicIndex ?? 0;
-    final subtopic = content.subtopics[selectedIndex];
+    final topicIndex = _selectedTopicIndex;
+
+    if (topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length) {
+      return _buildNoPracticeSubtopicsState();
+    }
+
+    final topic = content.topics[topicIndex];
+
+    if (topic.subtopics.isEmpty) {
+      return _buildNoPracticeSubtopicsState();
+    }
+
+    final subtopicIndex = _selectedSubtopicIndex ?? 0;
+    final subtopic = topic.subtopics[subtopicIndex];
     final quizId = _practiceQuizId(content, subtopic);
+
     final isLinked = subtopic.quizzes.any((quiz) => quiz.quizId == quizId);
+
     final questionCount = _practiceQuestions.length;
+
     final publishedCount = _practiceQuestions
         .where((question) => question.status.toLowerCase() == 'published')
         .length;
+
     final ready = questionCount >= 5 && publishedCount >= 5;
 
     return Column(
@@ -1003,8 +1036,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           title: 'Practice Questions',
           description:
               'Connect the managed CSP11 question bank to the selected '
-              'subtopic. A dedicated subtopic quiz requires at least five '
-              'published questions.',
+              'Topic and Subtopic. A dedicated subtopic quiz requires at '
+              'least five published questions.',
         ),
         const SizedBox(height: 22),
         _buildPracticeSubtopicSelector(),
@@ -1063,72 +1096,125 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
   Future<void> _openPracticeQuestionEditor({Question? question}) async {
     final content = _importedContent;
-    final index = _selectedSubtopicIndex;
+    final topicIndex = _selectedTopicIndex;
+    final subtopicIndex = _selectedSubtopicIndex;
+
     if (content == null ||
-        index == null ||
-        index < 0 ||
-        index >= content.subtopics.length) {
-      _showPracticeMessage('Select a subtopic before authoring a question.');
+        topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length ||
+        subtopicIndex == null) {
+      _showPracticeMessage(
+        'Select a topic and subtopic before authoring a question.',
+      );
       return;
     }
+
+    final topic = content.topics[topicIndex];
+
+    if (subtopicIndex < 0 || subtopicIndex >= topic.subtopics.length) {
+      _showPracticeMessage(
+        'Select a topic and subtopic before authoring a question.',
+      );
+      return;
+    }
+
+    final subtopic = topic.subtopics[subtopicIndex];
 
     final result = await showDialog<Question>(
       context: context,
       barrierDismissible: false,
       builder: (_) => StudioQuestionEditorDialog(
         content: content,
-        subtopic: content.subtopics[index],
+        topic: topic,
+        subtopic: subtopic,
         questionService: _questionService,
         existing: question,
       ),
     );
 
     if (result == null) return;
+
     await _savePracticeQuestionDraft(result);
   }
 
   Future<void> _openPracticeCompletePaste() async {
     final content = _importedContent;
-    final index = _selectedSubtopicIndex;
+    final topicIndex = _selectedTopicIndex;
+    final subtopicIndex = _selectedSubtopicIndex;
+
     if (content == null ||
-        index == null ||
-        index < 0 ||
-        index >= content.subtopics.length) {
-      _showPracticeMessage('Select a subtopic before importing a question.');
+        topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length ||
+        subtopicIndex == null) {
+      _showPracticeMessage(
+        'Select a topic and subtopic before importing a question.',
+      );
       return;
     }
+
+    final topic = content.topics[topicIndex];
+
+    if (subtopicIndex < 0 || subtopicIndex >= topic.subtopics.length) {
+      _showPracticeMessage(
+        'Select a topic and subtopic before importing a question.',
+      );
+      return;
+    }
+
+    final subtopic = topic.subtopics[subtopicIndex];
 
     final result = await showDialog<Question>(
       context: context,
       barrierDismissible: false,
       builder: (_) => StudioCompleteQuestionPasteDialog(
         content: content,
-        subtopic: content.subtopics[index],
+        topic: topic,
+        subtopic: subtopic,
         questionService: _questionService,
       ),
     );
 
     if (result == null) return;
+
     await _savePracticeQuestionDraft(result);
   }
 
   Future<void> _openPracticeJsonImport() async {
     final content = _importedContent;
-    final index = _selectedSubtopicIndex;
+    final topicIndex = _selectedTopicIndex;
+    final subtopicIndex = _selectedSubtopicIndex;
+
     if (content == null ||
-        index == null ||
-        index < 0 ||
-        index >= content.subtopics.length) {
-      _showPracticeMessage('Select a subtopic before importing a JSON file.');
+        topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length ||
+        subtopicIndex == null) {
+      _showPracticeMessage(
+        'Select a topic and subtopic before importing a JSON file.',
+      );
       return;
     }
+
+    final topic = content.topics[topicIndex];
+
+    if (subtopicIndex < 0 || subtopicIndex >= topic.subtopics.length) {
+      _showPracticeMessage(
+        'Select a topic and subtopic before importing a JSON file.',
+      );
+      return;
+    }
+
+    final subtopic = topic.subtopics[subtopicIndex];
 
     final result = await showDialog<List<Question>>(
       context: context,
       barrierDismissible: false,
       builder: (_) => StudioJsonQuestionImportDialog(
         content: content,
-        subtopic: content.subtopics[index],
+        topic: topic,
+        subtopic: subtopic,
         questionService: _questionService,
       ),
     );
@@ -1139,7 +1225,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       for (final question in result) {
         await _questionService.saveDraft(question);
       }
+
       await _refreshPracticeQuestions();
+
       if (mounted) {
         _showPracticeMessage(
           '${result.length} question${result.length == 1 ? '' : 's'} imported as Draft.',
@@ -1196,14 +1284,13 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       if (warnings.isEmpty) {
         _showPracticeMessage('Question validated.');
       } else {
-        _showPracticeMessage(
-          'Question validated with quality warnings:\n',
-        );
+        _showPracticeMessage('Question validated with quality warnings:\n');
       }
     } catch (error) {
       _showPracticeMessage(error.toString().replaceFirst('Bad state: ', ''));
     }
   }
+
   Future<void> _publishPracticeQuestion(Question question) async {
     try {
       await _questionService.publish(question);
@@ -1241,12 +1328,25 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
   Future<void> _refreshPracticeQuestions() async {
     final content = _importedContent;
-    final index = _selectedSubtopicIndex;
+    final topicIndex = _selectedTopicIndex;
+    final subtopicIndex = _selectedSubtopicIndex;
 
     if (content == null ||
-        index == null ||
-        index < 0 ||
-        index >= content.subtopics.length) {
+        topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length ||
+        subtopicIndex == null) {
+      if (mounted) {
+        setState(() {
+          _practiceQuestions = <Question>[];
+        });
+      }
+      return;
+    }
+
+    final topic = content.topics[topicIndex];
+
+    if (subtopicIndex < 0 || subtopicIndex >= topic.subtopics.length) {
       if (mounted) {
         setState(() {
           _practiceQuestions = <Question>[];
@@ -1264,19 +1364,21 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     try {
       await _questionService.initialize();
 
-      final subtopic = content.subtopics[index];
+      final subtopic = topic.subtopics[subtopicIndex];
+
       final resolvedQuizId = _questionService.resolveQuizId(
         content: content,
         subtopic: subtopic,
         preferredQuizId: _resolvedPracticeQuizId,
       );
 
-      final context = _questionService.contextFor(
+      final questionContext = _questionService.contextFor(
         content: content,
         subtopic: subtopic,
       );
+
       final questions = _questionService.questionsForContext(
-        context,
+        questionContext,
         quizIdOverride: resolvedQuizId,
       );
 
@@ -1296,6 +1398,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       });
 
       final focusedQuestionId = _focusedPracticeQuestionId;
+
       if (focusedQuestionId != null &&
           questions.any((question) => question.id == focusedQuestionId)) {
         _scheduleFocusPracticeQuestion(focusedQuestionId);
@@ -1319,129 +1422,26 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Widget _buildPracticeSubtopicSelector() {
     final content = _importedContent!;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: StudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final compact = constraints.maxWidth < 720;
+    _ensureSelectedTopicSubtopicIsValid();
 
-          final selector = DropdownButtonFormField<int>(
-            initialValue: _selectedSubtopicIndex,
-            isExpanded: true,
-            decoration: InputDecoration(
-              labelText: 'Select Subtopic',
-              prefixIcon: const Icon(Icons.account_tree_rounded),
-              filled: true,
-              fillColor: StudyColors.surfaceSoft,
-              border: OutlineInputBorder(
-                borderRadius: StudyRadius.medium,
-                borderSide: BorderSide(color: StudyColors.border),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: StudyRadius.medium,
-                borderSide: BorderSide(color: StudyColors.border),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: StudyRadius.medium,
-                borderSide: BorderSide(color: StudyColors.primary, width: 1.3),
-              ),
-            ),
-            items: List.generate(content.subtopics.length, (index) {
-              final subtopic = content.subtopics[index];
+    final topicIndex = _selectedTopicIndex;
 
-              return DropdownMenuItem<int>(
-                value: index,
-                child: Text(
-                  '${index + 1}. ${subtopic.title}',
-                  overflow: TextOverflow.ellipsis,
-                ),
-              );
-            }),
-            onChanged: (value) {
-              if (value == null) {
-                return;
-              }
+    if (topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length) {
+      return _buildNoPracticeSubtopicsState();
+    }
 
-              setState(() {
-                _selectedSubtopicIndex = value;
-                _selectedMainContentIndex = 0;
-                _resolvedPracticeQuizId = null;
-                _focusedPracticeQuestionId = null;
-              });
+    final topic = content.topics[topicIndex];
 
-              _refreshPracticeQuestions();
-            },
-          );
-
-          final count = Container(
-            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
-            decoration: BoxDecoration(
-              color: StudyColors.primary.withValues(alpha: 0.07),
-              borderRadius: StudyRadius.pillRadius,
-            ),
-            child: Text(
-              '${content.subtopics.length} subtopics',
-              style: StudyTypography.label.copyWith(
-                color: StudyColors.primary,
-                fontSize: 11,
-              ),
-            ),
-          );
-
-          if (compact) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Choose the subtopic to configure',
-                        style: StudyTypography.subSectionTitle,
-                      ),
-                    ),
-                    count,
-                  ],
-                ),
-                const SizedBox(height: 14),
-                selector,
-              ],
-            );
-          }
-
-          return Row(
-            children: [
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Choose the subtopic to configure',
-                      style: StudyTypography.subSectionTitle,
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      'The quiz reference will be stored on this subtopic.',
-                      style: StudyTypography.bodySecondary,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 14),
-              SizedBox(width: 360, child: selector),
-              const SizedBox(width: 10),
-              count,
-            ],
-          );
-        },
-      ),
+    return Column(
+      children: [
+        _buildTopicSelector(),
+        if (topic.subtopics.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildCanonicalSubtopicSelector(topic),
+        ],
+      ],
     );
   }
 
@@ -1703,10 +1703,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     final statusColor = published
         ? StudyColors.success
         : status == 'validated'
-            ? StudyColors.primary
-            : status == 'review'
-                ? StudyColors.info
-                : StudyColors.warning;
+        ? StudyColors.primary
+        : status == 'review'
+        ? StudyColors.info
+        : StudyColors.warning;
 
     final rowKey = _practiceQuestionKeys.putIfAbsent(
       question.id,
@@ -1775,13 +1775,18 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                         ),
                         if (status == 'draft')
                           TextButton.icon(
-                            onPressed: () => _sendPracticeQuestionToReview(question),
-                            icon: const Icon(Icons.rate_review_rounded, size: 16),
+                            onPressed: () =>
+                                _sendPracticeQuestionToReview(question),
+                            icon: const Icon(
+                              Icons.rate_review_rounded,
+                              size: 16,
+                            ),
                             label: const Text('Send to Review'),
                           ),
                         if (status == 'review')
                           TextButton.icon(
-                            onPressed: () => _validatePracticeQuestion(question),
+                            onPressed: () =>
+                                _validatePracticeQuestion(question),
                             icon: const Icon(Icons.verified_rounded, size: 16),
                             label: const Text('Validate'),
                           ),
@@ -1971,12 +1976,20 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
   Future<void> _linkPracticeQuiz() async {
     final content = _importedContent;
-    final index = _selectedSubtopicIndex;
+    final topicIndex = _selectedTopicIndex;
+    final subtopicIndex = _selectedSubtopicIndex;
 
     if (content == null ||
-        index == null ||
-        index < 0 ||
-        index >= content.subtopics.length) {
+        topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length ||
+        subtopicIndex == null) {
+      return;
+    }
+
+    final topic = content.topics[topicIndex];
+
+    if (subtopicIndex < 0 || subtopicIndex >= topic.subtopics.length) {
       return;
     }
 
@@ -1987,7 +2000,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       return;
     }
 
-    final subtopic = content.subtopics[index];
+    final subtopic = topic.subtopics[subtopicIndex];
     final quizId = _practiceQuizId(content, subtopic);
 
     final publishedCount = _practiceQuestions
@@ -2007,38 +2020,24 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       return;
     }
 
-    final updatedSubtopic = StudySubtopic(
-      id: subtopic.id,
-      title: subtopic.title,
-      learningObjectives: List<String>.from(subtopic.learningObjectives),
-      mainContent: List<MainContentTopic>.from(subtopic.mainContent),
-      keyPoints: List<ContentEntry>.from(subtopic.keyPoints),
-      examples: List<ContentEntry>.from(subtopic.examples),
-      caseStudies: List<ContentEntry>.from(subtopic.caseStudies),
-      formulas: List<ContentEntry>.from(subtopic.formulas),
-      references: List<ContentEntry>.from(subtopic.references),
-      examTips: List<ContentEntry>.from(subtopic.examTips),
-      commonMistakes: List<ContentEntry>.from(subtopic.commonMistakes),
-      keyTakeaways: List<ContentEntry>.from(subtopic.keyTakeaways),
+    final updatedSubtopic = subtopic.copyWith(
       quizzes: [
         ...subtopic.quizzes,
         QuizReference(quizId: quizId),
       ],
     );
 
-    final updatedSubtopics = List<StudySubtopic>.from(content.subtopics);
-    updatedSubtopics[index] = updatedSubtopic;
+    final updatedSubtopics = List<StudySubtopic>.from(topic.subtopics);
 
-    final updatedContent = StudyContent(
-      id: content.id,
-      domainId: content.domainId,
-      competencyId: content.competencyId,
-      competencyNumber: content.competencyNumber,
-      title: content.title,
-      status: content.status,
-      version: content.version,
-      subtopics: updatedSubtopics,
-    );
+    updatedSubtopics[subtopicIndex] = updatedSubtopic;
+
+    final updatedTopic = topic.copyWith(subtopics: updatedSubtopics);
+
+    final updatedTopics = List<StudyTopic>.from(content.topics);
+
+    updatedTopics[topicIndex] = updatedTopic;
+
+    final updatedContent = content.copyWith(topics: updatedTopics);
 
     try {
       await _contentRepositoryService.saveDraft(updatedContent);
@@ -2155,7 +2154,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   // SUBTOPICS WORKSPACE
   // ==========================================================
 
-  Widget _buildSubtopicsWorkspace() {
+  Widget _buildTopicSubtopicWorkspace() {
     final content = _importedContent;
 
     if (content == null) {
@@ -2164,10 +2163,9 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
         children: [
           _buildPageHeading(
             eyebrow: 'CONTENT STRUCTURE',
-            title: 'Subtopics',
+            title: 'Topics & Subtopics',
             description:
-                'Import a CSP11 competency before inspecting or '
-                'editing its subtopics.',
+                'Import a CSP11 competency before navigating or editing its learning hierarchy.',
           ),
           const SizedBox(height: 24),
           _buildNoImportedSubtopicState(),
@@ -2175,60 +2173,92 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       );
     }
 
-    if (content.subtopics.isEmpty) {
+    if (content.topics.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildPageHeading(
             eyebrow: 'CONTENT STRUCTURE',
-            title: 'Subtopics',
+            title: 'Topics & Subtopics',
             description:
-                'No subtopics are currently available in this competency.',
+                'This competency does not yet contain any learner-facing topics.',
           ),
           const SizedBox(height: 24),
-          _buildNoSubtopicsState(),
+          _buildNoTopicsState(),
         ],
       );
     }
 
-    _ensureSelectedSubtopicIsValid();
+    _ensureSelectedTopicSubtopicIsValid();
 
-    final selectedIndex = _selectedSubtopicIndex ?? 0;
+    final topicIndex = _selectedTopicIndex ?? 0;
+    final topic = content.topics[topicIndex];
+    final isLearningContentSection = _selectedSection == 3;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildPageHeading(
-          eyebrow: 'CONTENT STRUCTURE',
-          title: 'Subtopics',
-          description:
-              'Inspect the imported hierarchy and edit individual '
-              'subtopics without changing the underlying content architecture.',
+          eyebrow: isLearningContentSection
+              ? 'LEARNING CONTENT'
+              : 'CONTENT STRUCTURE',
+          title: isLearningContentSection
+              ? 'Learning Content'
+              : 'Topics & Subtopics',
+          description: isLearningContentSection
+              ? 'Select a topic and subtopic, then edit the learning content attached directly to that subtopic.'
+              : 'Navigate the canonical Topic to Subtopic hierarchy and edit the selected learning unit.',
         ),
         const SizedBox(height: 22),
-        _buildSubtopicSelector(),
-        const SizedBox(height: 22),
-        _buildStructureInspectorCard(),
-        const SizedBox(height: 22),
-        _buildSubtopicEditorCard(content.subtopics[selectedIndex]),
+        _buildTopicSelector(),
+        const SizedBox(height: 16),
+        if (topic.subtopics.isEmpty)
+          _buildNoSubtopicsForTopicState(topic)
+        else ...[
+          _buildCanonicalSubtopicSelector(topic),
+          const SizedBox(height: 22),
+          if (!isLearningContentSection) ...[
+            _buildStructureInspectorCard(),
+            const SizedBox(height: 22),
+          ],
+          _buildSubtopicEditorCard(
+            topic.subtopics[_selectedSubtopicIndex ?? 0],
+          ),
+        ],
       ],
     );
   }
 
-  void _ensureSelectedSubtopicIsValid() {
-    final count = _importedContent?.subtopics.length ?? 0;
+  void _ensureSelectedTopicSubtopicIsValid() {
+    final content = _importedContent;
 
-    if (count == 0) {
+    if (content == null || content.topics.isEmpty) {
+      _selectedTopicIndex = null;
       _selectedSubtopicIndex = null;
       return;
     }
 
-    if (_selectedSubtopicIndex == null || _selectedSubtopicIndex! >= count) {
+    if (_selectedTopicIndex == null ||
+        _selectedTopicIndex! < 0 ||
+        _selectedTopicIndex! >= content.topics.length) {
+      _selectedTopicIndex = 0;
+    }
+
+    final topic = content.topics[_selectedTopicIndex!];
+
+    if (topic.subtopics.isEmpty) {
+      _selectedSubtopicIndex = null;
+      return;
+    }
+
+    if (_selectedSubtopicIndex == null ||
+        _selectedSubtopicIndex! < 0 ||
+        _selectedSubtopicIndex! >= topic.subtopics.length) {
       _selectedSubtopicIndex = 0;
     }
   }
 
-  Widget _buildSubtopicSelector() {
+  Widget _buildTopicSelector() {
     final content = _importedContent!;
 
     return Container(
@@ -2245,10 +2275,10 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
           final compact = constraints.maxWidth < 720;
 
           final selector = DropdownButtonFormField<int>(
-            initialValue: _selectedSubtopicIndex,
+            initialValue: _selectedTopicIndex,
             isExpanded: true,
             decoration: InputDecoration(
-              labelText: 'Select Subtopic',
+              labelText: 'Select Topic',
               prefixIcon: const Icon(Icons.account_tree_rounded),
               filled: true,
               fillColor: StudyColors.surfaceSoft,
@@ -2265,13 +2295,13 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                 borderSide: BorderSide(color: StudyColors.primary, width: 1.3),
               ),
             ),
-            items: List.generate(content.subtopics.length, (index) {
-              final subtopic = content.subtopics[index];
+            items: List.generate(content.topics.length, (index) {
+              final topic = content.topics[index];
 
               return DropdownMenuItem<int>(
                 value: index,
                 child: Text(
-                  '${index + 1}. ${subtopic.title}',
+                  '${index + 1}. ${topic.title}',
                   overflow: TextOverflow.ellipsis,
                 ),
               );
@@ -2281,14 +2311,21 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                 return;
               }
 
+              final selectedTopic = content.topics[value];
+
               setState(() {
-                _selectedSubtopicIndex = value;
-                _selectedMainContentIndex = 0;
+                _selectedTopicIndex = value;
+                _selectedSubtopicIndex = selectedTopic.subtopics.isEmpty
+                    ? null
+                    : 0;
                 _resolvedPracticeQuizId = null;
               });
+
               _refreshPracticeQuestions();
             },
           );
+
+          final selectedTopic = content.topics[_selectedTopicIndex ?? 0];
 
           final count = Container(
             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
@@ -2297,7 +2334,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               borderRadius: StudyRadius.pillRadius,
             ),
             child: Text(
-              '${content.subtopics.length} subtopics',
+              '${selectedTopic.subtopics.length} subtopic${selectedTopic.subtopics.length == 1 ? '' : 's'}',
               style: StudyTypography.label.copyWith(
                 color: StudyColors.primary,
                 fontSize: 11,
@@ -2313,7 +2350,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   children: [
                     const Expanded(
                       child: Text(
-                        'Edit a specific subtopic',
+                        'Select a topic',
                         style: StudyTypography.subSectionTitle,
                       ),
                     ),
@@ -2333,12 +2370,12 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Edit a specific subtopic',
+                      'Select a topic',
                       style: StudyTypography.subSectionTitle,
                     ),
                     SizedBox(height: 3),
                     Text(
-                      'Select a subtopic to load it into the editor.',
+                      'Topics are the first learner-facing navigation level.',
                       style: StudyTypography.bodySecondary,
                     ),
                   ],
@@ -2355,97 +2392,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     );
   }
 
-  // ==========================================================
-  // MAIN CONTENT WORKSPACE
-  // ==========================================================
-
-  Widget _buildMainContentWorkspace() {
-    final content = _importedContent;
-
-    if (content == null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildPageHeading(
-            eyebrow: 'CONTENT BUILDER',
-            title: 'Main Content',
-            description:
-                'Import a CSP11 competency before creating or editing main content topics.',
-          ),
-          const SizedBox(height: 24),
-          _buildNoImportedMainContentState(),
-        ],
-      );
-    }
-
-    if (content.subtopics.isEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildPageHeading(
-            eyebrow: 'CONTENT BUILDER',
-            title: 'Main Content',
-            description:
-                'Create educational topics inside the competency subtopic hierarchy.',
-          ),
-          const SizedBox(height: 24),
-          _buildNoMainContentSubtopicsState(),
-        ],
-      );
-    }
-
-    _ensureSelectedSubtopicIsValid();
-
-    final selectedSubtopicIndex = _selectedSubtopicIndex ?? 0;
-    final subtopic = content.subtopics[selectedSubtopicIndex];
-
-    _ensureSelectedMainContentIsValid(subtopic);
-
-    final mainContentIndex = _selectedMainContentIndex;
-    final topics = subtopic.mainContent;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildPageHeading(
-          eyebrow: 'CONTENT BUILDER',
-          title: 'Main Content',
-          description:
-              'Create and edit the educational topics within the selected subtopic while preserving the structured content hierarchy.',
-        ),
-        const SizedBox(height: 22),
-        _buildMainContentSubtopicSelector(),
-        const SizedBox(height: 22),
-        _buildMainContentTopicList(subtopic),
-        const SizedBox(height: 22),
-        if (mainContentIndex != null &&
-            mainContentIndex >= 0 &&
-            mainContentIndex < topics.length)
-          _buildMainContentEditorCard(topics[mainContentIndex])
-        else
-          _buildNoSelectedMainContentState(),
-      ],
-    );
-  }
-
-  void _ensureSelectedMainContentIsValid(StudySubtopic subtopic) {
-    final count = subtopic.mainContent.length;
-
-    if (count == 0) {
-      _selectedMainContentIndex = null;
-      return;
-    }
-
-    if (_selectedMainContentIndex == null ||
-        _selectedMainContentIndex! < 0 ||
-        _selectedMainContentIndex! >= count) {
-      _selectedMainContentIndex = 0;
-    }
-  }
-
-  Widget _buildMainContentSubtopicSelector() {
-    final content = _importedContent!;
-
+  Widget _buildCanonicalSubtopicSelector(StudyTopic topic) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
@@ -2464,7 +2411,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             isExpanded: true,
             decoration: InputDecoration(
               labelText: 'Select Subtopic',
-              prefixIcon: const Icon(Icons.account_tree_rounded),
+              prefixIcon: const Icon(Icons.subdirectory_arrow_right_rounded),
               filled: true,
               fillColor: StudyColors.surfaceSoft,
               border: OutlineInputBorder(
@@ -2480,8 +2427,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                 borderSide: BorderSide(color: StudyColors.primary, width: 1.3),
               ),
             ),
-            items: List.generate(content.subtopics.length, (index) {
-              final subtopic = content.subtopics[index];
+            items: List.generate(topic.subtopics.length, (index) {
+              final subtopic = topic.subtopics[index];
 
               return DropdownMenuItem<int>(
                 value: index,
@@ -2498,14 +2445,12 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
               setState(() {
                 _selectedSubtopicIndex = value;
-                _selectedMainContentIndex = 0;
                 _resolvedPracticeQuizId = null;
               });
+
+              _refreshPracticeQuestions();
             },
           );
-
-          final selectedIndex = _selectedSubtopicIndex ?? 0;
-          final selectedSubtopic = content.subtopics[selectedIndex];
 
           final count = Container(
             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
@@ -2514,7 +2459,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               borderRadius: StudyRadius.pillRadius,
             ),
             child: Text(
-              '${selectedSubtopic.mainContent.length} topics',
+              '${topic.subtopics.length} subtopic${topic.subtopics.length == 1 ? '' : 's'}',
               style: StudyTypography.label.copyWith(
                 color: StudyColors.primary,
                 fontSize: 11,
@@ -2545,17 +2490,17 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
           return Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Select a subtopic',
                       style: StudyTypography.subSectionTitle,
                     ),
-                    SizedBox(height: 3),
+                    const SizedBox(height: 3),
                     Text(
-                      'Main content topics belong to the selected subtopic.',
+                      'Subtopics belong directly to ${topic.title}.',
                       style: StudyTypography.bodySecondary,
                     ),
                   ],
@@ -2572,273 +2517,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     );
   }
 
-  Widget _buildMainContentTopicList(StudySubtopic subtopic) {
-    final topics = subtopic.mainContent;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: StudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Main Content Topics',
-                      style: StudyTypography.subSectionTitle,
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      '${topics.length} topic${topics.length == 1 ? '' : 's'} in ${subtopic.title}',
-                      style: StudyTypography.bodySecondary,
-                    ),
-                  ],
-                ),
-              ),
-              FilledButton.icon(
-                onPressed: _addMainContentTopic,
-                icon: const Icon(Icons.add_rounded, size: 17),
-                label: const Text('Add Main Content'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          if (topics.isEmpty)
-            _buildNoMainContentTopicsState()
-          else
-            Column(
-              children: [
-                for (var index = 0; index < topics.length; index++)
-                  _buildMainContentTopicRow(topics[index], index),
-              ],
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMainContentTopicRow(MainContentTopic topic, int index) {
-    final selected = _selectedMainContentIndex == index;
-
-    final currentSubtopic =
-        _importedContent!.subtopics[_selectedSubtopicIndex ?? 0];
-
-    final isLast = index == currentSubtopic.mainContent.length - 1;
-
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(bottom: isLast ? 0 : 9),
-      decoration: BoxDecoration(
-        color: selected ? StudyColors.primaryLight : StudyColors.surfaceSoft,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(
-          color: selected
-              ? StudyColors.primary.withValues(alpha: 0.18)
-              : StudyColors.border,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              _selectedMainContentIndex = index;
-            });
-          },
-          borderRadius: StudyRadius.medium,
-          child: Padding(
-            padding: const EdgeInsets.all(13),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: selected
-                        ? StudyColors.primary
-                        : StudyColors.background,
-                    borderRadius: StudyRadius.small,
-                  ),
-                  child: Text(
-                    '${index + 1}',
-                    style: StudyTypography.label.copyWith(
-                      color: selected ? Colors.white : StudyColors.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 11),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        topic.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: StudyTypography.label.copyWith(fontSize: 12.5),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${topic.blocks.length} block${topic.blocks.length == 1 ? '' : 's'}  Ã¢â‚¬Â¢  '
-                        '${topic.quizzes.length} quiz reference${topic.quizzes.length == 1 ? '' : 's'}',
-                        style: StudyTypography.bodySecondary.copyWith(
-                          fontSize: 10.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Icon(
-                  selected
-                      ? Icons.check_circle_rounded
-                      : Icons.chevron_right_rounded,
-                  size: 19,
-                  color: selected
-                      ? StudyColors.primary
-                      : StudyColors.textSecondary,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMainContentEditorCard(MainContentTopic topic) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: StudyColors.background,
-        borderRadius: StudyRadius.large,
-      ),
-      child: MainContentEditorPanel(
-        topic: topic,
-        onSave: _handleMainContentSave,
-        onCancel: _handleMainContentCancel,
-      ),
-    );
-  }
-
-  Widget _buildNoSelectedMainContentState() {
-    return _buildEditorCard(
-      title: 'Main Content Editor',
-      icon: Icons.menu_book_rounded,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(30),
-        decoration: BoxDecoration(
-          color: StudyColors.surfaceSoft,
-          borderRadius: StudyRadius.medium,
-          border: Border.all(color: StudyColors.border),
-        ),
-        child: const Column(
-          children: [
-            Icon(
-              Icons.touch_app_rounded,
-              size: 40,
-              color: StudyColors.textSecondary,
-            ),
-            SizedBox(height: 12),
-            Text(
-              'Select a main content topic',
-              style: StudyTypography.cardTitle,
-            ),
-            SizedBox(height: 6),
-            Text(
-              'Select an existing topic above or add a new one.',
-              textAlign: TextAlign.center,
-              style: StudyTypography.bodySecondary,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNoMainContentTopicsState() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: StudyColors.surfaceSoft,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(color: StudyColors.border),
-      ),
-      child: const Column(
-        children: [
-          Icon(
-            Icons.menu_book_outlined,
-            size: 40,
-            color: StudyColors.textSecondary,
-          ),
-          SizedBox(height: 12),
-          Text('No main content topics yet', style: StudyTypography.cardTitle),
-          SizedBox(height: 6),
-          Text(
-            'Use Add Main Content to create the first educational topic.',
-            textAlign: TextAlign.center,
-            style: StudyTypography.bodySecondary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNoImportedMainContentState() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(34),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: StudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
-      child: Column(
-        children: [
-          const Icon(
-            Icons.menu_book_outlined,
-            size: 44,
-            color: StudyColors.primary,
-          ),
-          const SizedBox(height: 14),
-          const Text('No content imported', style: StudyTypography.cardTitle),
-          const SizedBox(height: 7),
-          const Text(
-            'Use Import Complete Content to load a competency before creating main content.',
-            textAlign: TextAlign.center,
-            style: StudyTypography.bodySecondary,
-          ),
-          const SizedBox(height: 18),
-          FilledButton.icon(
-            onPressed: () {
-              setState(() {
-                _selectedSection = 1;
-              });
-            },
-            icon: const Icon(Icons.file_download_rounded, size: 17),
-            label: const Text('Import Content'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNoMainContentSubtopicsState() {
+  Widget _buildNoTopicsState() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(34),
@@ -2856,10 +2535,40 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             color: StudyColors.textSecondary,
           ),
           SizedBox(height: 14),
-          Text('No subtopics found', style: StudyTypography.cardTitle),
+          Text('No topics found', style: StudyTypography.cardTitle),
           SizedBox(height: 7),
           Text(
-            'Create or import a subtopic before adding main content topics.',
+            'This competency does not yet contain a learner-facing topic.',
+            textAlign: TextAlign.center,
+            style: StudyTypography.bodySecondary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoSubtopicsForTopicState(StudyTopic topic) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(34),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+        boxShadow: StudyShadows.soft,
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.subdirectory_arrow_right_rounded,
+            size: 44,
+            color: StudyColors.textSecondary,
+          ),
+          const SizedBox(height: 14),
+          const Text('No subtopics found', style: StudyTypography.cardTitle),
+          const SizedBox(height: 7),
+          Text(
+            '"${topic.title}" does not yet contain a subtopic.',
             textAlign: TextAlign.center,
             style: StudyTypography.bodySecondary,
           ),
@@ -2869,157 +2578,53 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   }
 
   // ==========================================================
+  // MAIN CONTENT WORKSPACE
+  // ==========================================================
+
+  // ==========================================================
   // MAIN CONTENT SAVE FLOW
   // ==========================================================
 
-  void _handleMainContentSave(MainContentTopic updatedTopic) {
+  void _replaceTopic(int topicIndex, StudyTopic updatedTopic) {
     final content = _importedContent;
 
-    if (content == null) {
-      return;
-    }
-
-    final subtopicIndex = _selectedSubtopicIndex;
-
-    if (subtopicIndex == null ||
-        subtopicIndex < 0 ||
-        subtopicIndex >= content.subtopics.length) {
-      return;
-    }
-
-    final subtopic = content.subtopics[subtopicIndex];
-    final topicIndex = _selectedMainContentIndex;
-
-    if (topicIndex == null ||
+    if (content == null ||
         topicIndex < 0 ||
-        topicIndex >= subtopic.mainContent.length) {
+        topicIndex >= content.topics.length) {
       return;
     }
 
-    final updatedMainContent = List<MainContentTopic>.from(
-      subtopic.mainContent,
-    );
-
-    updatedMainContent[topicIndex] = updatedTopic;
-
-    final updatedSubtopic = StudySubtopic(
-      id: subtopic.id,
-      title: subtopic.title,
-      learningObjectives: List<String>.from(subtopic.learningObjectives),
-      mainContent: updatedMainContent,
-      keyPoints: List<ContentEntry>.from(subtopic.keyPoints),
-      examples: List<ContentEntry>.from(subtopic.examples),
-      caseStudies: List<ContentEntry>.from(subtopic.caseStudies),
-      formulas: List<ContentEntry>.from(subtopic.formulas),
-      references: List<ContentEntry>.from(subtopic.references),
-      examTips: List<ContentEntry>.from(subtopic.examTips),
-      commonMistakes: List<ContentEntry>.from(subtopic.commonMistakes),
-      keyTakeaways: List<ContentEntry>.from(subtopic.keyTakeaways),
-      quizzes: List<QuizReference>.from(subtopic.quizzes),
-    );
-
-    _replaceSubtopic(subtopicIndex, updatedSubtopic);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Main content topic updated successfully.')),
-    );
-  }
-
-  void _handleMainContentCancel() {
-    FocusScope.of(context).unfocus();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Main content editing cancelled.')),
-    );
-  }
-
-  void _addMainContentTopic() {
-    final content = _importedContent;
-
-    if (content == null) {
-      return;
-    }
-
-    final subtopicIndex = _selectedSubtopicIndex;
-
-    if (subtopicIndex == null ||
-        subtopicIndex < 0 ||
-        subtopicIndex >= content.subtopics.length) {
-      return;
-    }
-
-    final subtopic = content.subtopics[subtopicIndex];
-
-    final newTopic = MainContentTopic(
-      id: _generateMainContentId(subtopic, subtopic.mainContent.length),
-      title: 'New Main Content Topic',
-      blocks: const [],
-      quizzes: const [],
-    );
-
-    final updatedMainContent = List<MainContentTopic>.from(subtopic.mainContent)
-      ..add(newTopic);
-
-    final updatedSubtopic = StudySubtopic(
-      id: subtopic.id,
-      title: subtopic.title,
-      learningObjectives: List<String>.from(subtopic.learningObjectives),
-      mainContent: updatedMainContent,
-      keyPoints: List<ContentEntry>.from(subtopic.keyPoints),
-      examples: List<ContentEntry>.from(subtopic.examples),
-      caseStudies: List<ContentEntry>.from(subtopic.caseStudies),
-      formulas: List<ContentEntry>.from(subtopic.formulas),
-      references: List<ContentEntry>.from(subtopic.references),
-      examTips: List<ContentEntry>.from(subtopic.examTips),
-      commonMistakes: List<ContentEntry>.from(subtopic.commonMistakes),
-      keyTakeaways: List<ContentEntry>.from(subtopic.keyTakeaways),
-      quizzes: List<QuizReference>.from(subtopic.quizzes),
-    );
-
-    _replaceSubtopic(subtopicIndex, updatedSubtopic);
+    final updatedTopics = List<StudyTopic>.from(content.topics);
+    updatedTopics[topicIndex] = updatedTopic;
 
     setState(() {
-      _selectedMainContentIndex = updatedMainContent.length - 1;
+      _importedContent = content.copyWith(topics: updatedTopics);
     });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('New main content topic created.')),
-    );
-  }
-
-  String _generateMainContentId(StudySubtopic subtopic, int index) {
-    final base = subtopic.id.trim().isEmpty ? 'subtopic' : subtopic.id.trim();
-
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-
-    return '${base}_topic_${index + 1}_$timestamp';
   }
 
   void _replaceSubtopic(int subtopicIndex, StudySubtopic updatedSubtopic) {
     final content = _importedContent;
+    final topicIndex = _selectedTopicIndex;
 
-    if (content == null) {
+    if (content == null ||
+        topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length) {
       return;
     }
 
-    final updatedSubtopics = List<StudySubtopic>.from(content.subtopics);
+    final topic = content.topics[topicIndex];
 
+    if (subtopicIndex < 0 || subtopicIndex >= topic.subtopics.length) {
+      return;
+    }
+
+    final updatedSubtopics = List<StudySubtopic>.from(topic.subtopics);
     updatedSubtopics[subtopicIndex] = updatedSubtopic;
 
-    final updatedContent = StudyContent(
-      id: content.id,
-      version: content.version,
-      domainId: content.domainId,
-      competencyId: content.competencyId,
-      competencyNumber: content.competencyNumber,
-      title: content.title,
-      status: content.status,
-      subtopics: updatedSubtopics,
-    );
+    final updatedTopic = topic.copyWith(subtopics: updatedSubtopics);
 
-    setState(() {
-      _importedContent = updatedContent;
-    });
+    _replaceTopic(topicIndex, updatedTopic);
   }
 
   Widget _buildStructureInspectorCard() {
@@ -3056,35 +2661,24 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
   void _handleSubtopicSave(StudySubtopic updatedSubtopic) {
     final content = _importedContent;
+    final topicIndex = _selectedTopicIndex;
+    final subtopicIndex = _selectedSubtopicIndex;
 
-    if (content == null) {
+    if (content == null ||
+        topicIndex == null ||
+        topicIndex < 0 ||
+        topicIndex >= content.topics.length ||
+        subtopicIndex == null) {
       return;
     }
 
-    final index = _selectedSubtopicIndex;
+    final topic = content.topics[topicIndex];
 
-    if (index == null || index < 0 || index >= content.subtopics.length) {
+    if (subtopicIndex < 0 || subtopicIndex >= topic.subtopics.length) {
       return;
     }
 
-    final updatedSubtopics = List<StudySubtopic>.from(content.subtopics);
-
-    updatedSubtopics[index] = updatedSubtopic;
-
-    final updatedContent = StudyContent(
-      id: content.id,
-      version: content.version,
-      domainId: content.domainId,
-      competencyId: content.competencyId,
-      competencyNumber: content.competencyNumber,
-      title: content.title,
-      status: content.status,
-      subtopics: updatedSubtopics,
-    );
-
-    setState(() {
-      _importedContent = updatedContent;
-    });
+    _replaceSubtopic(subtopicIndex, updatedSubtopic);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Subtopic updated successfully.')),
@@ -3138,36 +2732,6 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
             },
             icon: const Icon(Icons.file_download_rounded, size: 17),
             label: const Text('Import Content'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNoSubtopicsState() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(34),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: StudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
-      child: const Column(
-        children: [
-          Icon(
-            Icons.account_tree_outlined,
-            size: 44,
-            color: StudyColors.textSecondary,
-          ),
-          SizedBox(height: 14),
-          Text('No subtopics found', style: StudyTypography.cardTitle),
-          SizedBox(height: 7),
-          Text(
-            'The imported competency does not contain any subtopics.',
-            textAlign: TextAlign.center,
-            style: StudyTypography.bodySecondary,
           ),
         ],
       ),
@@ -3416,13 +2980,13 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
     final metrics = [
       _OverviewMetric(
-        value: '${statistics.subtopics}',
-        label: 'Subtopics',
+        value: '${statistics.topics}',
+        label: 'Topics',
         icon: Icons.account_tree_rounded,
       ),
       _OverviewMetric(
-        value: '${statistics.mainTopics}',
-        label: 'Main Topics',
+        value: '${statistics.subtopics}',
+        label: 'Subtopics',
         icon: Icons.menu_book_rounded,
       ),
       _OverviewMetric(
@@ -3490,27 +3054,32 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   ) {
     var questionCount = 0;
     var publishedCount = 0;
-    var ready = content.subtopics.isNotEmpty;
+    var ready = content.topics.isNotEmpty;
 
-    for (final subtopic in content.subtopics) {
-      final quizId = _resolveExistingQuizIdForOverview(content, subtopic);
-
-      if (quizId.isEmpty) {
+    for (final topic in content.topics) {
+      if (topic.subtopics.isEmpty) {
         ready = false;
-        continue;
       }
+      for (final subtopic in topic.subtopics) {
+        final quizId = _resolveExistingQuizIdForOverview(content, subtopic);
 
-      final questions = _questionService.questionsForQuizId(quizId);
-      final subtopicQuestionCount = questions.length;
-      final subtopicPublishedCount = questions
-          .where((question) => question.status.toLowerCase() == 'published')
-          .length;
+        if (quizId.isEmpty) {
+          ready = false;
+          continue;
+        }
 
-      questionCount += subtopicQuestionCount;
-      publishedCount += subtopicPublishedCount;
+        final questions = _questionService.questionsForQuizId(quizId);
+        final subtopicQuestionCount = questions.length;
+        final subtopicPublishedCount = questions
+            .where((question) => question.status.toLowerCase() == 'published')
+            .length;
 
-      if (!QuizService.hasMinimumPublishedQuestions(subtopicPublishedCount)) {
-        ready = false;
+        questionCount += subtopicQuestionCount;
+        publishedCount += subtopicPublishedCount;
+
+        if (!QuizService.hasMinimumPublishedQuestions(subtopicPublishedCount)) {
+          ready = false;
+        }
       }
     }
 
@@ -3708,73 +3277,76 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
                   });
                 },
                 icon: const Icon(Icons.arrow_forward_rounded, size: 16),
-                label: const Text('Open Subtopics'),
+                label: const Text('Open Topics'),
               ),
             ],
           ),
           const SizedBox(height: 14),
-          for (var index = 0; index < content.subtopics.length; index++)
-            _buildSubtopicSnapshot(content.subtopics[index], index),
+          if (content.topics.isEmpty)
+            const Text('No topics yet.', style: StudyTypography.bodySecondary),
+          for (var index = 0; index < content.topics.length; index++)
+            _buildTopicSnapshot(content.topics[index], index),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopicSnapshot(StudyTopic topic, int index) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ExpansionTile(
+        initiallyExpanded: true,
+        title: Text(
+          '${index + 1}. ${topic.title}',
+          style: StudyTypography.label,
+        ),
+        subtitle: Text(
+          '${topic.subtopics.length} subtopics',
+          style: StudyTypography.bodySecondary,
+        ),
+        children: [
+          if (topic.subtopics.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(14),
+              child: Text(
+                'No subtopics yet.',
+                style: StudyTypography.bodySecondary,
+              ),
+            ),
+          for (
+            var childIndex = 0;
+            childIndex < topic.subtopics.length;
+            childIndex++
+          )
+            _buildSubtopicSnapshot(topic.subtopics[childIndex], childIndex),
         ],
       ),
     );
   }
 
   Widget _buildSubtopicSnapshot(StudySubtopic subtopic, int index) {
-    var blocks = 0;
-
-    for (final topic in subtopic.mainContent) {
-      blocks += topic.blocks.length;
-    }
-
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(
-        bottom: index == _importedContent!.subtopics.length - 1 ? 0 : 10,
-      ),
+      margin: const EdgeInsets.only(left: 14, right: 14, bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: StudyColors.surfaceSoft,
         borderRadius: StudyRadius.medium,
         border: Border.all(color: StudyColors.border),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 34,
-            height: 34,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: StudyColors.primaryLight,
-              borderRadius: StudyRadius.small,
-            ),
-            child: Text(
-              '${index + 1}',
-              style: StudyTypography.label.copyWith(color: StudyColors.primary),
-            ),
+          Text(
+            '${index + 1}. ${subtopic.title}',
+            style: StudyTypography.label.copyWith(fontSize: 13),
           ),
-          const SizedBox(width: 11),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  subtopic.title,
-                  style: StudyTypography.label.copyWith(fontSize: 13),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${subtopic.mainContent.length} main topics  Ã¢â‚¬Â¢  '
-                  '$blocks content blocks  Ã¢â‚¬Â¢  '
-                  '${subtopic.learningObjectives.length} objectives',
-                  style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            Icons.chevron_right_rounded,
-            color: StudyColors.textSecondary,
+          const SizedBox(height: 4),
+          Text(
+            '${subtopic.blocks.length} content blocks | '
+            '${subtopic.learningObjectives.length} objectives | '
+            '${subtopic.quizzes.length} quiz links',
+            style: StudyTypography.bodySecondary.copyWith(fontSize: 10.5),
           ),
         ],
       ),
@@ -4393,12 +3965,13 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   Future<void> _openDraft(StudyContent draft, {bool showMessage = true}) async {
     setState(() {
       _importedContent = draft;
-      _selectedSubtopicIndex = draft.subtopics.isEmpty ? null : 0;
-      _selectedMainContentIndex =
-          draft.subtopics.isNotEmpty &&
-              draft.subtopics.first.mainContent.isNotEmpty
+      _selectedTopicIndex = draft.topics.isEmpty ? null : 0;
+      _selectedSubtopicIndex =
+          draft.topics.isNotEmpty && draft.topics.first.subtopics.isNotEmpty
           ? 0
           : null;
+
+      // Temporary legacy workspace state.
       _selectedSection = 0;
       _resolvedPracticeQuizId = null;
     });
@@ -4424,12 +3997,14 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
     setState(() {
       _importedContent = published;
-      _selectedSubtopicIndex = published.subtopics.isEmpty ? null : 0;
-      _selectedMainContentIndex =
-          published.subtopics.isNotEmpty &&
-              published.subtopics.first.mainContent.isNotEmpty
+      _selectedTopicIndex = published.topics.isEmpty ? null : 0;
+      _selectedSubtopicIndex =
+          published.topics.isNotEmpty &&
+              published.topics.first.subtopics.isNotEmpty
           ? 0
           : null;
+
+      // Temporary legacy workspace state.
       _selectedSection = 0;
       _resolvedPracticeQuizId = null;
     });
@@ -4576,8 +4151,8 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
       if (_importedContent?.id == published.id) {
         setState(() {
           _importedContent = null;
+          _selectedTopicIndex = null;
           _selectedSubtopicIndex = null;
-          _selectedMainContentIndex = null;
           _selectedSection = 0;
           _resolvedPracticeQuizId = null;
         });
@@ -4989,7 +4564,7 @@ class _PracticeMetric {
 
 class _ContentStatistics {
   final int subtopics;
-  final int mainTopics;
+  final int topics;
   final int blocks;
   final int learningObjectives;
   final int examples;
@@ -4999,7 +4574,7 @@ class _ContentStatistics {
 
   const _ContentStatistics({
     required this.subtopics,
-    required this.mainTopics,
+    required this.topics,
     required this.blocks,
     required this.learningObjectives,
     required this.examples,
@@ -5009,7 +4584,8 @@ class _ContentStatistics {
   });
 
   factory _ContentStatistics.fromContent(StudyContent content) {
-    var mainTopics = 0;
+    var topics = 0;
+    var subtopics = 0;
     var blocks = 0;
     var learningObjectives = 0;
     var examples = 0;
@@ -5017,27 +4593,22 @@ class _ContentStatistics {
     var references = 0;
     var quizReferences = 0;
 
-    for (final subtopic in content.subtopics) {
-      learningObjectives += subtopic.learningObjectives.length;
-
-      examples += subtopic.examples.length;
-
-      caseStudies += subtopic.caseStudies.length;
-
-      references += subtopic.references.length;
-
-      quizReferences += subtopic.quizzes.length;
-
-      for (final topic in subtopic.mainContent) {
-        mainTopics++;
-        blocks += topic.blocks.length;
-        quizReferences += topic.quizzes.length;
+    for (final topic in content.topics) {
+      topics++;
+      for (final subtopic in topic.subtopics) {
+        subtopics++;
+        blocks += subtopic.blocks.length;
+        learningObjectives += subtopic.learningObjectives.length;
+        examples += subtopic.examples.length;
+        caseStudies += subtopic.caseStudies.length;
+        references += subtopic.references.length;
+        quizReferences += subtopic.quizzes.length;
       }
     }
 
     return _ContentStatistics(
-      subtopics: content.subtopics.length,
-      mainTopics: mainTopics,
+      subtopics: subtopics,
+      topics: topics,
       blocks: blocks,
       learningObjectives: learningObjectives,
       examples: examples,

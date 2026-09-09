@@ -97,17 +97,17 @@ Risk analysis involves identifying, ranking, and monitoring risks.
       expect(draft.competencyId, candidate.competencyId);
       expect(draft.competencyNumber, greaterThan(0));
       expect(draft.title, isNotEmpty);
-      expect(draft.subtopics, isNotEmpty);
+      expect(draft.topics, isNotEmpty);
 
-      final subtopic = draft.subtopics.first;
+      final topic = draft.topics.first;
 
-      expect(subtopic.mainContent, isNotEmpty);
+      expect(topic.subtopics, isNotEmpty);
 
-      final topic = subtopic.mainContent.first;
+      final subtopic = topic.subtopics.first;
 
-      expect(topic.blocks, isNotEmpty);
+      expect(subtopic.blocks, isNotEmpty);
 
-      final block = topic.blocks.first;
+      final block = subtopic.blocks.first;
 
       final generatedContent = block.data['content']?.toString() ?? '';
 
@@ -137,9 +137,9 @@ Risk analysis involves identifying, ranking, and monitoring risks.
       expect(saved.competencyId, draft.competencyId);
       expect(saved.competencyNumber, draft.competencyNumber);
 
-      expect(saved.subtopics, isNotEmpty);
-      expect(saved.subtopics.first.mainContent, isNotEmpty);
-      expect(saved.subtopics.first.mainContent.first.blocks, isNotEmpty);
+      expect(saved.topics, isNotEmpty);
+      expect(saved.topics.first.subtopics, isNotEmpty);
+      expect(saved.topics.first.subtopics.first.blocks, isNotEmpty);
 
       expect(savedPackage.isPublishedCopy, isFalse);
     },

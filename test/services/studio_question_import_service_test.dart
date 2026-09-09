@@ -14,21 +14,27 @@ void main() {
     title: 'Continuous Improvement',
     status: 'draft',
     version: 1,
-    subtopics: [
-      StudySubtopic(
-        id: 'd07_c03_01',
+    topics: [
+      StudyTopic(
+        id: 'd07_c03_t01',
         title: 'Continuous Improvement',
-        learningObjectives: [],
-        mainContent: [],
-        keyPoints: [],
-        examples: [],
-        caseStudies: [],
-        formulas: [],
-        references: [],
-        examTips: [],
-        commonMistakes: [],
-        keyTakeaways: [],
-        quizzes: [],
+        subtopics: [
+          StudySubtopic(
+            id: 'd07_c03_01',
+            title: 'Continuous Improvement',
+            learningObjectives: [],
+            blocks: [],
+            keyPoints: [],
+            examples: [],
+            caseStudies: [],
+            formulas: [],
+            references: [],
+            examTips: [],
+            commonMistakes: [],
+            keyTakeaways: [],
+            quizzes: [],
+          ),
+        ],
       ),
     ],
   );
@@ -49,7 +55,8 @@ void main() {
       }''',
       nextId: () => 1001,
       content: content,
-      subtopic: content.subtopics.first,
+      topic: content.topics.first,
+      subtopic: content.topics.first.subtopics.first,
       quizId: 'd07_c03-v1_d07_c03_01_quiz',
     );
 
@@ -77,7 +84,8 @@ void main() {
       ]''',
       nextId: () => 1002,
       content: content,
-      subtopic: content.subtopics.first,
+      topic: content.topics.first,
+      subtopic: content.topics.first.subtopics.first,
       quizId: 'd07_c03-v1_d07_c03_01_quiz',
     );
 
@@ -106,7 +114,8 @@ void main() {
       }''',
         nextId: () => 1003,
         content: content,
-        subtopic: content.subtopics.first,
+        topic: content.topics.first,
+        subtopic: content.topics.first.subtopics.first,
         quizId: 'd07_c03-v1_d07_c03_01_quiz',
       );
 
@@ -142,7 +151,8 @@ void main() {
       }''',
       nextId: () => 1004,
       content: content,
-      subtopic: content.subtopics.first,
+      topic: content.topics.first,
+      subtopic: content.topics.first.subtopics.first,
       quizId: 'd07_c03-v1_d07_c03_01_quiz',
     );
 
@@ -161,7 +171,8 @@ void main() {
         input: '{"questions": []}',
         nextId: () => 1005,
         content: content,
-        subtopic: content.subtopics.first,
+        topic: content.topics.first,
+        subtopic: content.topics.first.subtopics.first,
         quizId: 'd07_c03-v1_d07_c03_01_quiz',
       ),
       throwsFormatException,

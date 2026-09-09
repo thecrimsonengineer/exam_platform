@@ -16,7 +16,7 @@ class ContentValidator {
     final issues = <ContentImportIssue>[];
 
     _validateRoot(content, issues);
-    _validateSubtopics(content, issues);
+    _validateTopics(content, issues);
 
     return List.unmodifiable(issues);
   }
@@ -55,35 +55,88 @@ class ContentValidator {
       );
     }
 
-    if (content.subtopics.isEmpty) {
+    if (content.topics.isEmpty) {
       issues.add(
         const ContentImportIssue(
           severity: ContentImportIssueSeverity.error,
-          message: 'At least one subtopic is required.',
-          path: 'subtopics',
+          message: 'At least one topic is required.',
+          path: 'topics',
         ),
       );
     }
   }
 
-  void _validateSubtopics(
-    StudyContent content,
-    List<ContentImportIssue> issues,
-  ) {
+  void _validateTopics(StudyContent content, List<ContentImportIssue> issues) {
+    final topicIds = <String>{};
+
+    // Subtopic IDs remain unique within the content package.
+    // Several learner-progress services identify subtopics by ID.
     final subtopicIds = <String>{};
 
-    for (var i = 0; i < content.subtopics.length; i++) {
-      final subtopic = content.subtopics[i];
-      final path = 'subtopics[$i]';
+    for (var topicIndex = 0; topicIndex < content.topics.length; topicIndex++) {
+      final topic = content.topics[topicIndex];
+      final topicPath = 'topics[$topicIndex]';
 
-      _required(subtopic.id, 'Subtopic ID is required.', '$path.id', issues);
+      _required(topic.id, 'Topic ID is required.', '$topicPath.id', issues);
+
+      if (topic.id.isNotEmpty && !topicIds.add(topic.id)) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.error,
+            message: 'Duplicate topic ID: ${topic.id}',
+            path: '$topicPath.id',
+          ),
+        );
+      }
+
+      _required(
+        topic.title,
+        'Topic title is required.',
+        '$topicPath.title',
+        issues,
+      );
+
+      if (topic.subtopics.isEmpty) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.warning,
+            message: 'Topic contains no subtopics.',
+            path: '$topicPath.subtopics',
+          ),
+        );
+      }
+
+      _validateSubtopics(topic, topicPath, subtopicIds, issues);
+    }
+  }
+
+  void _validateSubtopics(
+    StudyTopic topic,
+    String topicPath,
+    Set<String> subtopicIds,
+    List<ContentImportIssue> issues,
+  ) {
+    for (
+      var subtopicIndex = 0;
+      subtopicIndex < topic.subtopics.length;
+      subtopicIndex++
+    ) {
+      final subtopic = topic.subtopics[subtopicIndex];
+      final subtopicPath = '$topicPath.subtopics[$subtopicIndex]';
+
+      _required(
+        subtopic.id,
+        'Subtopic ID is required.',
+        '$subtopicPath.id',
+        issues,
+      );
 
       if (subtopic.id.isNotEmpty && !subtopicIds.add(subtopic.id)) {
         issues.add(
           ContentImportIssue(
             severity: ContentImportIssueSeverity.error,
             message: 'Duplicate subtopic ID: ${subtopic.id}',
-            path: '$path.id',
+            path: '$subtopicPath.id',
           ),
         );
       }
@@ -91,7 +144,7 @@ class ContentValidator {
       _required(
         subtopic.title,
         'Subtopic title is required.',
-        '$path.title',
+        '$subtopicPath.title',
         issues,
       );
 
@@ -100,75 +153,24 @@ class ContentValidator {
           ContentImportIssue(
             severity: ContentImportIssueSeverity.warning,
             message: 'No learning objectives were supplied.',
-            path: '$path.learningObjectives',
+            path: '$subtopicPath.learningObjectives',
           ),
         );
       }
 
-      if (subtopic.mainContent.isEmpty) {
+      if (subtopic.blocks.isEmpty) {
         issues.add(
           ContentImportIssue(
             severity: ContentImportIssueSeverity.warning,
-            message: 'No main content topics were supplied.',
-            path: '$path.mainContent',
+            message: 'Subtopic contains no content blocks.',
+            path: '$subtopicPath.blocks',
           ),
         );
       }
 
-      _validateTopics(subtopic, path, issues);
+      _validateBlocks(subtopic.blocks, '$subtopicPath.blocks', issues);
 
-      _validateEntries(subtopic, path, issues);
-
-      _validateQuizzes(subtopic, path, issues);
-    }
-  }
-
-  void _validateTopics(
-    StudySubtopic subtopic,
-    String subtopicPath,
-    List<ContentImportIssue> issues,
-  ) {
-    final topicIds = <String>{};
-
-    for (var i = 0; i < subtopic.mainContent.length; i++) {
-      final topic = subtopic.mainContent[i];
-      final path = '$subtopicPath.mainContent[$i]';
-
-      _required(
-        topic.id,
-        'Main content topic ID is required.',
-        '$path.id',
-        issues,
-      );
-
-      if (topic.id.isNotEmpty && !topicIds.add(topic.id)) {
-        issues.add(
-          ContentImportIssue(
-            severity: ContentImportIssueSeverity.error,
-            message: 'Duplicate main content topic ID: ${topic.id}',
-            path: '$path.id',
-          ),
-        );
-      }
-
-      _required(
-        topic.title,
-        'Main content topic title is required.',
-        '$path.title',
-        issues,
-      );
-
-      if (topic.blocks.isEmpty) {
-        issues.add(
-          ContentImportIssue(
-            severity: ContentImportIssueSeverity.warning,
-            message: 'Topic contains no content blocks.',
-            path: '$path.blocks',
-          ),
-        );
-      }
-
-      _validateBlocks(topic.blocks, '$path.blocks', issues);
+      _validateQuizzes(subtopic, subtopicPath, issues);
     }
   }
 
@@ -243,69 +245,19 @@ class ContentValidator {
         );
       }
 
-      if (block.type == 'image' && !block.hasImage) {
-        issues.add(
-          ContentImportIssue(
-            severity: ContentImportIssueSeverity.warning,
-            message: 'Image block has no image path.',
-            path: '$blockPath.data.image',
-          ),
-        );
-      }
-    }
-  }
+      if (block.type == 'image') {
+        final imageValue = block.data['image'];
+        final imagePath = imageValue?.toString().trim() ?? '';
 
-  void _validateEntries(
-    StudySubtopic subtopic,
-    String subtopicPath,
-    List<ContentImportIssue> issues,
-  ) {
-    final groups = <String, List<ContentEntry>>{
-      'keyPoints': subtopic.keyPoints,
-      'examples': subtopic.examples,
-      'caseStudies': subtopic.caseStudies,
-      'formulas': subtopic.formulas,
-      'references': subtopic.references,
-      'examTips': subtopic.examTips,
-      'commonMistakes': subtopic.commonMistakes,
-      'keyTakeaways': subtopic.keyTakeaways,
-    };
-
-    for (final entryGroup in groups.entries) {
-      final ids = <String>{};
-
-      for (var i = 0; i < entryGroup.value.length; i++) {
-        final entry = entryGroup.value[i];
-        final path = '$subtopicPath.${entryGroup.key}[$i]';
-
-        _required(
-          entry.id,
-          'Content entry ID is required.',
-          '$path.id',
-          issues,
-        );
-
-        if (entry.id.isNotEmpty && !ids.add(entry.id)) {
-          issues.add(
-            ContentImportIssue(
-              severity: ContentImportIssueSeverity.error,
-              message: 'Duplicate ${entryGroup.key} entry ID: ${entry.id}',
-              path: '$path.id',
-            ),
-          );
-        }
-
-        if (entry.title.trim().isEmpty && entry.content.trim().isEmpty) {
+        if (imagePath.isEmpty) {
           issues.add(
             ContentImportIssue(
               severity: ContentImportIssueSeverity.warning,
-              message: 'Entry has neither a title nor text content.',
-              path: path,
+              message: 'Image block has no image path.',
+              path: '$blockPath.data.image',
             ),
           );
         }
-
-        _validateBlocks(entry.blocks, '$path.blocks', issues);
       }
     }
   }
@@ -322,7 +274,7 @@ class ContentValidator {
       final path = '$subtopicPath.quizzes[$i]';
 
       // QuizReference contains quizId, not id.
-      // The actual quiz questions belong to the quiz system.
+      // Actual question records remain owned by the question system.
       _required(quiz.quizId, 'Quiz ID is required.', '$path.quizId', issues);
 
       if (quiz.quizId.isNotEmpty && !quizIds.add(quiz.quizId)) {

@@ -15,6 +15,7 @@ class StudioQuestionImportService {
     required CompleteQuestionPasteResult parsed,
     required int id,
     required StudyContent content,
+    required StudyTopic topic,
     required StudySubtopic subtopic,
     required String quizId,
   }) {
@@ -23,7 +24,7 @@ class StudioQuestionImportService {
       domain: _domainNumber(content.domainId),
       competencyId: content.competencyId,
       subtopicId: subtopic.id,
-      topicId: _topicId(subtopic),
+      topicId: topic.id,
       quizId: quizId,
       contentPackageId: content.id,
     );
@@ -33,6 +34,7 @@ class StudioQuestionImportService {
     required String input,
     required int Function() nextId,
     required StudyContent content,
+    required StudyTopic topic,
     required StudySubtopic subtopic,
     required String quizId,
   }) {
@@ -41,6 +43,7 @@ class StudioQuestionImportService {
       decoded: decoded,
       nextId: nextId,
       content: content,
+      topic: topic,
       subtopic: subtopic,
       quizId: quizId,
     );
@@ -50,6 +53,7 @@ class StudioQuestionImportService {
     required dynamic decoded,
     required int Function() nextId,
     required StudyContent content,
+    required StudyTopic topic,
     required StudySubtopic subtopic,
     required String quizId,
   }) {
@@ -66,6 +70,7 @@ class StudioQuestionImportService {
         raw,
         id: nextId(),
         content: content,
+        topic: topic,
         subtopic: subtopic,
         quizId: quizId,
       );
@@ -76,6 +81,7 @@ class StudioQuestionImportService {
     Map<String, dynamic> raw, {
     required int id,
     required StudyContent content,
+    required StudyTopic topic,
     required StudySubtopic subtopic,
     required String quizId,
   }) {
@@ -87,7 +93,7 @@ class StudioQuestionImportService {
       domain: _domainNumber(content.domainId),
       competencyId: content.competencyId,
       subtopicId: subtopic.id,
-      topicId: _topicId(subtopic),
+      topicId: topic.id,
       quizId: quizId,
       contentPackageId: content.id,
       question: _string(raw['question'] ?? raw['stem']),
@@ -139,7 +145,8 @@ class StudioQuestionImportService {
   }
 
   int _correctAnswerIndex(Map<String, dynamic> raw, List<String> options) {
-    final value = raw['correctAnswer'] ?? raw['correct_answer'] ?? raw['bestAnswer'];
+    final value =
+        raw['correctAnswer'] ?? raw['correct_answer'] ?? raw['bestAnswer'];
 
     if (value is int) {
       if (value >= 0 && value < options.length) return value;
@@ -194,10 +201,6 @@ class StudioQuestionImportService {
     if (value is int) return value;
     if (value is num) return value.toInt();
     return int.tryParse(value?.toString() ?? '') ?? fallback;
-  }
-
-  String _topicId(StudySubtopic subtopic) {
-    return subtopic.mainContent.isEmpty ? '' : subtopic.mainContent.first.id;
   }
 
   int _domainNumber(String domainId) {

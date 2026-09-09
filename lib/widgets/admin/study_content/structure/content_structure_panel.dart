@@ -44,19 +44,15 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
           const SizedBox(height: 24),
           _buildHierarchyHeader(),
           const SizedBox(height: 12),
-          if (content!.subtopics.isEmpty)
-            _buildNoSubtopics()
+          if (content!.topics.isEmpty)
+            _buildNoTopics()
           else
             KeyedSubtree(
               key: ValueKey(_structureRefreshKey),
               child: Column(
                 children: List.generate(
-                  content!.subtopics.length,
-                  (index) => SubtopicStructureCard(
-                    subtopic: content!.subtopics[index],
-                    index: index,
-                    forceExpanded: _expandAll,
-                  ),
+                  content!.topics.length,
+                  (index) => _buildTopicCard(content!.topics[index], index),
                 ),
               ),
             ),
@@ -68,6 +64,61 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
   // ==========================================================
   // HEADER
   // ==========================================================
+
+  Widget _buildTopicCard(StudyTopic topic, int index) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 18),
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(color: StudyColors.border),
+      ),
+      child: Material(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        clipBehavior: Clip.antiAlias,
+        child: ExpansionTile(
+          key: ValueKey('topic-$index-${topic.id}'),
+          initiallyExpanded: _expandAll,
+          maintainState: true,
+          title: Text(
+            'Topic ${index + 1}: '
+            '${topic.title.isEmpty ? 'Untitled Topic' : topic.title}',
+            style: StudyTypography.sectionTitle.copyWith(fontSize: 17),
+          ),
+          subtitle: Text(
+            '${topic.id.isEmpty ? 'No topic ID' : topic.id} | '
+            '${topic.subtopics.length} subtopics',
+            style: StudyTypography.caption,
+          ),
+          childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          children: [
+            if (topic.subtopics.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(14),
+                child: Text(
+                  'No subtopics in this topic.',
+                  style: StudyTypography.bodySecondary,
+                ),
+              ),
+            for (
+              var childIndex = 0;
+              childIndex < topic.subtopics.length;
+              childIndex++
+            )
+              SubtopicStructureCard(
+                key: ValueKey(
+                  'subtopic-$childIndex-${topic.subtopics[childIndex].id}',
+                ),
+                subtopic: topic.subtopics[childIndex],
+                index: childIndex,
+                forceExpanded: _expandAll,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildHeading() {
     return Column(
@@ -446,15 +497,11 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
     final quizzes = _quizCount();
 
     final metrics = [
-      _StructureMetric(
-        Icons.account_tree_outlined,
-        content!.subtopics.length,
-        'Subtopics',
-      ),
+      _StructureMetric(Icons.account_tree_outlined, topics, 'Topics'),
       _StructureMetric(Icons.flag_outlined, objectives, 'Objectives'),
-      _StructureMetric(Icons.menu_book_outlined, topics, 'Main Topics'),
+      _StructureMetric(Icons.menu_book_outlined, _subtopicCount(), 'Subtopics'),
       _StructureMetric(Icons.view_agenda_outlined, blocks, 'Blocks'),
-      _StructureMetric(Icons.article_outlined, entries, 'Entries'),
+      _StructureMetric(Icons.article_outlined, entries, 'Metadata Items'),
       _StructureMetric(Icons.quiz_outlined, quizzes, 'Quiz References'),
     ];
 
@@ -558,9 +605,8 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
               ),
               const SizedBox(height: 4),
               Text(
-                '${content!.subtopics.length} '
-                '${content!.subtopics.length == 1 ? 'subtopic' : 'subtopics'} '
-                'detected',
+                '${content!.topics.length} topics | '
+                '${_subtopicCount()} subtopics',
                 style: StudyTypography.sectionTitle.copyWith(
                   color: StudyColors.textPrimary,
                   fontSize: 17,
@@ -580,8 +626,8 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
       runSpacing: 5,
       alignment: WrapAlignment.end,
       children: [
-        _legendItem(Icons.account_tree_outlined, 'Subtopic'),
-        _legendItem(Icons.menu_book_outlined, 'Topic'),
+        _legendItem(Icons.account_tree_outlined, 'Topic'),
+        _legendItem(Icons.menu_book_outlined, 'Subtopic'),
         _legendItem(Icons.view_agenda_outlined, 'Block'),
       ],
     );
@@ -617,7 +663,7 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
   // EMPTY STATES
   // ==========================================================
 
-  Widget _buildNoSubtopics() {
+  Widget _buildNoTopics() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(28),
@@ -645,7 +691,7 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
           ),
           const SizedBox(height: 14),
           Text(
-            'No subtopics detected',
+            'No topics detected',
             style: StudyTypography.sectionTitle.copyWith(
               color: StudyColors.textPrimary,
               fontSize: 17,
@@ -654,7 +700,7 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
           const SizedBox(height: 6),
           Text(
             'The imported competency does not currently contain '
-            'any subtopics.',
+            'any topics.',
             textAlign: TextAlign.center,
             style: StudyTypography.bodySecondary.copyWith(
               fontSize: 13.5,
@@ -724,58 +770,41 @@ class _ContentStructurePanelState extends State<ContentStructurePanel> {
   // STATISTICS
   // ==========================================================
 
-  int _objectiveCount() {
-    return content!.subtopics.fold<int>(
-      0,
-      (total, subtopic) => total + subtopic.learningObjectives.length,
-    );
-  }
+  Iterable<StudySubtopic> get _subtopics =>
+      content!.topics.expand((topic) => topic.subtopics);
 
-  int _topicCount() {
-    return content!.subtopics.fold<int>(
-      0,
-      (total, subtopic) => total + subtopic.mainContent.length,
-    );
-  }
+  int _topicCount() => content!.topics.length;
 
-  int _blockCount() {
-    return content!.subtopics.fold<int>(
-      0,
-      (total, subtopic) =>
-          total +
-          subtopic.mainContent.fold<int>(
-            0,
-            (topicTotal, topic) => topicTotal + topic.blocks.length,
-          ),
-    );
-  }
+  int _subtopicCount() => _subtopics.length;
 
-  int _entryCount() {
-    return content!.subtopics.fold<int>(
-      0,
-      (total, subtopic) =>
-          total +
-          subtopic.keyPoints.length +
-          subtopic.examples.length +
-          subtopic.caseStudies.length +
-          subtopic.formulas.length +
-          subtopic.references.length +
-          subtopic.examTips.length +
-          subtopic.commonMistakes.length +
-          subtopic.keyTakeaways.length,
-    );
-  }
+  int _objectiveCount() => _subtopics.fold<int>(
+    0,
+    (total, subtopic) => total + subtopic.learningObjectives.length,
+  );
 
-  int _quizCount() {
-    return content!.subtopics.fold<int>(0, (total, subtopic) {
-      final topicQuizCount = subtopic.mainContent.fold<int>(
-        0,
-        (topicTotal, topic) => topicTotal + topic.quizzes.length,
-      );
+  int _blockCount() => _subtopics.fold<int>(
+    0,
+    (total, subtopic) => total + subtopic.blocks.length,
+  );
 
-      return total + subtopic.quizzes.length + topicQuizCount;
-    });
-  }
+  int _entryCount() => _subtopics.fold<int>(
+    0,
+    (total, subtopic) =>
+        total +
+        subtopic.keyPoints.length +
+        subtopic.examples.length +
+        subtopic.caseStudies.length +
+        subtopic.formulas.length +
+        subtopic.references.length +
+        subtopic.examTips.length +
+        subtopic.commonMistakes.length +
+        subtopic.keyTakeaways.length,
+  );
+
+  int _quizCount() => _subtopics.fold<int>(
+    0,
+    (total, subtopic) => total + subtopic.quizzes.length,
+  );
 }
 
 // ============================================================

@@ -18,15 +18,15 @@ StudyContent _sampleContent({
     title: 'Needs Assessment',
     status: status,
     version: version,
-    subtopics: [
-      StudySubtopic(
-        id: 'd07_c01_st01',
-        title: 'Risk Assessment',
-        learningObjectives: const ['Understand risk assessment principles'],
-        mainContent: [
-          MainContentTopic(
-            id: 'topic_01',
-            title: 'Risk Assessment Process',
+    topics: [
+      StudyTopic(
+        id: 'd07_c01_t01',
+        title: 'Risk Assessment Process',
+        subtopics: [
+          StudySubtopic(
+            id: 'd07_c01_st01',
+            title: 'Risk Assessment',
+            learningObjectives: const ['Understand risk assessment principles'],
             blocks: const [
               ContentBlock(
                 id: 'block_01',
@@ -37,19 +37,18 @@ StudyContent _sampleContent({
                 },
               ),
             ],
+            questions: const [],
+            keyPoints: const [],
+            examples: const [],
+            caseStudies: const [],
+            formulas: const [],
+            references: const [],
+            examTips: const [],
+            commonMistakes: const [],
+            keyTakeaways: const [],
             quizzes: const [],
           ),
         ],
-        questions: const [],
-        keyPoints: const [],
-        examples: const [],
-        caseStudies: const [],
-        formulas: const [],
-        references: const [],
-        examTips: const [],
-        commonMistakes: const [],
-        keyTakeaways: const [],
-        quizzes: const [],
       ),
     ],
   );
@@ -131,7 +130,7 @@ void main() {
       title: 'Another Competency',
       status: 'draft',
       version: 1,
-      subtopics: const [],
+      topics: const [],
     );
 
     await repository.saveDraft(otherCompetency);
@@ -729,10 +728,7 @@ void main() {
 
       await cloudRepository.publish(content);
 
-      await cloudRepository.updatePublishedStatus(
-        content.id,
-        'draft',
-      );
+      await cloudRepository.updatePublishedStatus(content.id, 'draft');
 
       final published = await cloudRepository.loadPublishedContent(content.id);
 
@@ -850,9 +846,7 @@ void main() {
 
       expect(
         history.where(
-          (item) =>
-              item.content.id == content.id &&
-              item.isPublishedCopy,
+          (item) => item.content.id == content.id && item.isPublishedCopy,
         ),
         isEmpty,
       );

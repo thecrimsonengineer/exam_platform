@@ -984,7 +984,7 @@ class _StudySubtopicBuilderState extends State<StudySubtopicBuilder> {
           Text('NEXT CONTENT LAYERS', style: StudyTypography.eyebrow),
           SizedBox(height: 8),
           Text(
-            'Main Content Topics • Content Blocks • '
+            'Content Blocks • '
             'Examples • Case Studies • Formulas • '
             'References • Exam Tips • Common Mistakes • '
             'Key Takeaways • Quizzes',

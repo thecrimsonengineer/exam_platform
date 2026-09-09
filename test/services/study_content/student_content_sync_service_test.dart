@@ -21,7 +21,7 @@ StudyContent _content({
     title: 'Needs Assessment',
     status: status,
     version: version,
-    subtopics: const [],
+    topics: const [],
   );
 }
 
@@ -67,7 +67,7 @@ void main() {
         title: content.title,
         status: 'validated',
         version: content.version,
-        subtopics: content.subtopics,
+        topics: content.topics,
       ),
     );
 
@@ -98,7 +98,7 @@ void main() {
         title: content.title,
         status: 'validated',
         version: content.version,
-        subtopics: content.subtopics,
+        topics: content.topics,
       ),
     );
 
@@ -188,7 +188,7 @@ void main() {
         title: 'Another Competency',
         status: 'validated',
         version: 1,
-        subtopics: const [],
+        topics: const [],
       );
 
       await cloudRepository.publish(first);
@@ -221,7 +221,7 @@ void main() {
         title: content.title,
         status: 'validated',
         version: content.version,
-        subtopics: content.subtopics,
+        topics: content.topics,
       ),
     );
 

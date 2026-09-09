@@ -94,13 +94,25 @@ class _ContentBlockEditorPanelState extends State<ContentBlockEditorPanel> {
         ? initialType
         : 'text';
 
-    _titleController = TextEditingController(text: widget.block.title);
+    _titleController = TextEditingController(
+      text: _stringValue(widget.block.data['title']),
+    );
 
-    _textController = TextEditingController(text: widget.block.text);
+    _textController = TextEditingController(
+      text: _stringValue(
+        widget.block.data['text'] ?? widget.block.data['content'],
+      ),
+    );
 
-    _contentController = TextEditingController(text: widget.block.content);
+    _contentController = TextEditingController(
+      text: _stringValue(widget.block.data['content']),
+    );
 
-    _imageController = TextEditingController(text: widget.block.image ?? '');
+    _imageController = TextEditingController(
+      text: _stringValue(
+        widget.block.data['image'] ?? widget.block.data['url'],
+      ),
+    );
 
     _sourceController = TextEditingController(
       text: _stringValue(widget.block.data['source']),
@@ -115,14 +127,17 @@ class _ContentBlockEditorPanelState extends State<ContentBlockEditorPanel> {
     );
 
     _columnsController = TextEditingController(
-      text: widget.block.columns.join(', '),
+      text: _stringListValue(widget.block.data['columns']).join(', '),
     );
 
     _rowsController = TextEditingController(
-      text: _rowsToText(widget.block.rows),
+      text: _rowsToText(_rowListValue(widget.block.data['rows'])),
     );
 
-    _headingLevel = widget.block.level.clamp(1, 6);
+    _headingLevel = _intValue(
+      widget.block.data['level'],
+      fallback: 2,
+    ).clamp(1, 6);
   }
 
   @override
@@ -1036,6 +1051,37 @@ class _ContentBlockEditorPanelState extends State<ContentBlockEditorPanel> {
 
   String _stringValue(dynamic value) {
     return value?.toString() ?? '';
+  }
+
+  int _intValue(dynamic value, {required int fallback}) {
+    if (value is int) {
+      return value;
+    }
+
+    if (value is num) {
+      return value.toInt();
+    }
+
+    return int.tryParse(value?.toString() ?? '') ?? fallback;
+  }
+
+  List<String> _stringListValue(dynamic value) {
+    if (value is! List) {
+      return const [];
+    }
+
+    return value.map((item) => item?.toString() ?? '').toList();
+  }
+
+  List<List<String>> _rowListValue(dynamic value) {
+    if (value is! List) {
+      return const [];
+    }
+
+    return value
+        .whereType<List>()
+        .map((row) => row.map((item) => item?.toString() ?? '').toList())
+        .toList();
   }
 
   List<String> _parseColumns() {

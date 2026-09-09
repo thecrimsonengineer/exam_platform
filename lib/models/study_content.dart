@@ -1,11 +1,23 @@
-import 'dart:convert';
-import 'package:exam_platform/models/question.dart';
+import 'package:equatable/equatable.dart';
 
-/// Represents one CSP study competency.
+import 'question.dart';
+
+/// CSP11 learning content root.
 ///
-/// Example:
-/// Domain 7 -> Competency 1 -> Needs Assessment
-class StudyContent {
+/// Frozen hierarchy:
+///
+/// Domain
+///   -> Competency
+///       -> Content Package
+///           -> Content Version
+///               -> Topic
+///                   -> Subtopic
+///                       -> Content Blocks
+///                           -> Practice Questions
+///
+/// StudyContent represents the content version consumed by the
+/// application. Topic and Subtopic are learning-navigation units.
+class StudyContent extends Equatable {
   final String id;
   final String domainId;
   final String competencyId;
@@ -13,7 +25,7 @@ class StudyContent {
   final String title;
   final String status;
   final int version;
-  final List<StudySubtopic> subtopics;
+  final List<StudyTopic> topics;
 
   const StudyContent({
     required this.id,
@@ -23,21 +35,29 @@ class StudyContent {
     required this.title,
     required this.status,
     required this.version,
-    required this.subtopics,
+    this.topics = const [],
   });
 
   factory StudyContent.fromJson(Map<String, dynamic> json) {
+    final rawTopics = json['topics'];
+
     return StudyContent(
       id: json['id']?.toString() ?? '',
       domainId: json['domainId']?.toString() ?? '',
       competencyId: json['competencyId']?.toString() ?? '',
       competencyNumber: _toInt(json['competencyNumber']),
       title: json['title']?.toString() ?? '',
-      status: json['status']?.toString() ?? 'draft',
-      version: _toInt(json['version'], defaultValue: 1),
-      subtopics: _mapList(
-        json['subtopics'],
-      ).map(StudySubtopic.fromJson).toList(),
+      status: json['status']?.toString() ?? 'Draft',
+      version: _toInt(json['version'], fallback: 1),
+      topics: rawTopics is List
+          ? rawTopics
+                .whereType<Map>()
+                .map(
+                  (item) =>
+                      StudyTopic.fromJson(Map<String, dynamic>.from(item)),
+                )
+                .toList()
+          : const [],
     );
   }
 
@@ -50,392 +70,150 @@ class StudyContent {
       'title': title,
       'status': status,
       'version': version,
-      'subtopics': subtopics.map((item) => item.toJson()).toList(),
+      'topics': topics.map((topic) => topic.toJson()).toList(),
     };
   }
 
-  static int _toInt(dynamic value, {int defaultValue = 0}) {
-    if (value is int) {
-      return value;
-    }
-
-    if (value is num) {
-      return value.toInt();
-    }
-
-    return int.tryParse(value?.toString() ?? '') ?? defaultValue;
+  StudyContent copyWith({
+    String? id,
+    String? domainId,
+    String? competencyId,
+    int? competencyNumber,
+    String? title,
+    String? status,
+    int? version,
+    List<StudyTopic>? topics,
+  }) {
+    return StudyContent(
+      id: id ?? this.id,
+      domainId: domainId ?? this.domainId,
+      competencyId: competencyId ?? this.competencyId,
+      competencyNumber: competencyNumber ?? this.competencyNumber,
+      title: title ?? this.title,
+      status: status ?? this.status,
+      version: version ?? this.version,
+      topics: topics ?? this.topics,
+    );
   }
 
-  static List<Map<String, dynamic>> _mapList(dynamic value) {
-    if (value is! List) {
-      return <Map<String, dynamic>>[];
-    }
-
-    return value
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
+  @override
+  List<Object?> get props => [
+    id,
+    domainId,
+    competencyId,
+    competencyNumber,
+    title,
+    status,
+    version,
+    topics,
+  ];
 }
 
-/// Represents one study subtopic within a CSP competency.
-class StudySubtopic {
+/// Topic is the first learner-facing learning-navigation level.
+///
+/// Frozen hierarchy:
+///
+/// StudyContent
+///   -> StudyTopic
+///       -> StudySubtopic
+///           -> ContentBlock
+class StudyTopic extends Equatable {
   final String id;
   final String title;
+  final List<StudySubtopic> subtopics;
+
+  const StudyTopic({
+    required this.id,
+    required this.title,
+    this.subtopics = const [],
+  });
+
+  factory StudyTopic.fromJson(Map<String, dynamic> json) {
+    final rawSubtopics = json['subtopics'];
+
+    return StudyTopic(
+      id: json['id']?.toString() ?? '',
+      title: json['title']?.toString() ?? '',
+      subtopics: rawSubtopics is List
+          ? rawSubtopics
+                .whereType<Map>()
+                .map(
+                  (item) =>
+                      StudySubtopic.fromJson(Map<String, dynamic>.from(item)),
+                )
+                .toList()
+          : const [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'subtopics': subtopics.map((subtopic) => subtopic.toJson()).toList(),
+    };
+  }
+
+  StudyTopic copyWith({
+    String? id,
+    String? title,
+    List<StudySubtopic>? subtopics,
+  }) {
+    return StudyTopic(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      subtopics: subtopics ?? this.subtopics,
+    );
+  }
+
+  @override
+  List<Object?> get props => [id, title, subtopics];
+}
+
+/// Subtopic is the second learner-facing learning-navigation level.
+///
+/// A Subtopic contains ContentBlocks directly.
+///
+/// There is intentionally NO intermediate MainContent layer.
+class StudySubtopic extends Equatable {
+  final String id;
+  final String title;
+  final List<ContentBlock> blocks;
+  final List<dynamic> questions;
   final List<String> learningObjectives;
-  final List<MainContentTopic> mainContent;
-
-  /// Questions supplied by the Complete Content JSON.
-  ///
-  /// A subtopic can contain five or more questions.
-  /// There is no upper limit.
-  ///
-  /// These questions will subsequently be imported into the
-  /// central Question Repository.
-  final List<Question> questions;
-
-  final List<ContentEntry> keyPoints;
-  final List<ContentEntry> examples;
-  final List<ContentEntry> caseStudies;
-  final List<ContentEntry> formulas;
-  final List<ContentEntry> references;
-  final List<ContentEntry> examTips;
-  final List<ContentEntry> commonMistakes;
-  final List<ContentEntry> keyTakeaways;
-
-  /// Quizzes associated with the entire subtopic.
+  final List<String> keyPoints;
+  final List<String> examples;
+  final List<String> caseStudies;
+  final List<String> formulas;
+  final List<String> references;
+  final List<String> examTips;
+  final List<String> commonMistakes;
+  final List<String> keyTakeaways;
   final List<QuizReference> quizzes;
 
   const StudySubtopic({
     required this.id,
     required this.title,
-    required this.learningObjectives,
-    required this.mainContent,
+    this.blocks = const [],
     this.questions = const [],
-    required this.keyPoints,
-    required this.examples,
-    required this.caseStudies,
-    required this.formulas,
-    required this.references,
-    required this.examTips,
-    required this.commonMistakes,
-    required this.keyTakeaways,
-    required this.quizzes,
+    this.learningObjectives = const [],
+    this.keyPoints = const [],
+    this.examples = const [],
+    this.caseStudies = const [],
+    this.formulas = const [],
+    this.references = const [],
+    this.examTips = const [],
+    this.commonMistakes = const [],
+    this.keyTakeaways = const [],
+    this.quizzes = const [],
   });
 
   factory StudySubtopic.fromJson(Map<String, dynamic> json) {
+    final rawBlocks = json['blocks'];
+
     return StudySubtopic(
       id: json['id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
-      learningObjectives: _stringList(json['learningObjectives']),
-
-      questions: _questionList(json['questions']),
-
-      mainContent: _mapList(
-        json['mainContent'],
-      ).map(MainContentTopic.fromJson).toList(),
-
-      keyPoints: _mapList(
-        json['keyPoints'],
-      ).map(ContentEntry.fromJson).toList(),
-
-      examples: _mapList(json['examples']).map(ContentEntry.fromJson).toList(),
-
-      caseStudies: _mapList(
-        json['caseStudies'],
-      ).map(ContentEntry.fromJson).toList(),
-
-      formulas: _mapList(json['formulas']).map(ContentEntry.fromJson).toList(),
-
-      references: _mapList(
-        json['references'],
-      ).map(ContentEntry.fromJson).toList(),
-
-      examTips: _mapList(json['examTips']).map(ContentEntry.fromJson).toList(),
-
-      commonMistakes: _mapList(
-        json['commonMistakes'],
-      ).map(ContentEntry.fromJson).toList(),
-
-      keyTakeaways: _mapList(
-        json['keyTakeaways'],
-      ).map(ContentEntry.fromJson).toList(),
-
-      quizzes: _mapList(json['quizzes']).map(QuizReference.fromJson).toList(),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'learningObjectives': learningObjectives,
-
-      'questions': questions.map((question) => question.toJson()).toList(),
-
-      'mainContent': mainContent.map((item) => item.toJson()).toList(),
-
-      'keyPoints': keyPoints.map((item) => item.toJson()).toList(),
-
-      'examples': examples.map((item) => item.toJson()).toList(),
-
-      'caseStudies': caseStudies.map((item) => item.toJson()).toList(),
-
-      'formulas': formulas.map((item) => item.toJson()).toList(),
-
-      'references': references.map((item) => item.toJson()).toList(),
-
-      'examTips': examTips.map((item) => item.toJson()).toList(),
-
-      'commonMistakes': commonMistakes.map((item) => item.toJson()).toList(),
-
-      'keyTakeaways': keyTakeaways.map((item) => item.toJson()).toList(),
-
-      'quizzes': quizzes.map((item) => item.toJson()).toList(),
-    };
-  }
-
-  static List<Question> _questionList(dynamic value) {
-    if (value is! List) {
-      return <Question>[];
-    }
-
-    return value
-        .whereType<Map>()
-        .map((item) => Question.fromJson(Map<String, dynamic>.from(item)))
-        .toList();
-  }
-
-  static List<String> _stringList(dynamic value) {
-    if (value is! List) {
-      return <String>[];
-    }
-
-    return value
-        .map((item) => item?.toString() ?? '')
-        .where((item) => item.isNotEmpty)
-        .toList();
-  }
-
-  static List<Map<String, dynamic>> _mapList(dynamic value) {
-    if (value is! List) {
-      return <Map<String, dynamic>>[];
-    }
-
-    return value
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-}
-
-/// Represents one topic inside the Main Content section.
-///
-/// A subtopic can have unlimited Main Content topics.
-class MainContentTopic {
-  final String id;
-  final String title;
-  final List<ContentBlock> blocks;
-
-  /// Quizzes associated specifically with this main-content topic.
-  final List<QuizReference> quizzes;
-
-  const MainContentTopic({
-    required this.id,
-    required this.title,
-    required this.blocks,
-    required this.quizzes,
-  });
-
-  factory MainContentTopic.fromJson(Map<String, dynamic> json) {
-    return MainContentTopic(
-      id: json['id']?.toString() ?? '',
-      title: json['title']?.toString() ?? '',
-      blocks: _blockList(json['blocks']),
-      quizzes: _quizReferenceList(json['quizzes']),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'blocks': blocks.map((block) => block.toJson()).toList(),
-      'quizzes': quizzes.map((quiz) => quiz.toJson()).toList(),
-    };
-  }
-
-  static List<ContentBlock> _blockList(dynamic value) {
-    if (value is! List) {
-      return <ContentBlock>[];
-    }
-
-    return value
-        .whereType<Map>()
-        .map((item) => ContentBlock.fromJson(Map<String, dynamic>.from(item)))
-        .toList();
-  }
-
-  static List<QuizReference> _quizReferenceList(dynamic value) {
-    if (value is! List) {
-      return <QuizReference>[];
-    }
-
-    return value
-        .whereType<Map>()
-        .map((item) => QuizReference.fromJson(Map<String, dynamic>.from(item)))
-        .where((quiz) => quiz.quizId.isNotEmpty)
-        .toList();
-  }
-}
-
-/// Represents a reusable structured content block.
-///
-/// Examples:
-/// heading
-/// text
-/// image
-/// table
-/// formula
-/// warning
-/// examTip
-/// remember
-/// quote
-/// reference
-/// quiz
-/// caseStudy
-/// checklist
-class ContentBlock {
-  final String id;
-  final String type;
-  final Map<String, dynamic> data;
-
-  const ContentBlock({
-    required this.id,
-    required this.type,
-    required this.data,
-  });
-
-  factory ContentBlock.fromJson(Map<String, dynamic> json) {
-    final rawData = json['data'];
-
-    return ContentBlock(
-      id: json['id']?.toString() ?? '',
-      type: json['type']?.toString() ?? 'text',
-      data: rawData is Map
-          ? Map<String, dynamic>.from(rawData)
-          : <String, dynamic>{},
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'type': type, 'data': data};
-  }
-
-  String get content {
-    return data['content']?.toString() ?? '';
-  }
-
-  String get text {
-    return data['text']?.toString() ?? '';
-  }
-
-  String get title {
-    return data['title']?.toString() ?? '';
-  }
-
-  int get level {
-    final value = data['level'];
-
-    if (value is int) {
-      return value;
-    }
-
-    return int.tryParse(value?.toString() ?? '') ?? 2;
-  }
-
-  String? get image {
-    final value = data['image'];
-
-    if (value == null) {
-      return null;
-    }
-
-    final path = value.toString().trim();
-
-    if (path.isEmpty) {
-      return null;
-    }
-
-    return path;
-  }
-
-  bool get hasImage {
-    return image != null;
-  }
-
-  List<String> get columns {
-    final value = data['columns'];
-
-    if (value is! List) {
-      return <String>[];
-    }
-
-    return value.map((item) => item.toString()).toList();
-  }
-
-  List<List<String>> get rows {
-    final value = data['rows'];
-
-    if (value is! List) {
-      return <List<String>>[];
-    }
-
-    return value
-        .whereType<List>()
-        .map((row) => row.map((cell) => cell.toString()).toList())
-        .toList();
-  }
-}
-
-/// Represents a reusable entry such as:
-///
-/// key point
-/// example
-/// case study
-/// formula
-/// reference
-/// exam tip
-/// common mistake
-/// key takeaway
-///
-/// Complex entries can contain blocks.
-class ContentEntry {
-  final String id;
-  final String title;
-  final String content;
-  final String source;
-  final String url;
-  final List<ContentBlock> blocks;
-
-  const ContentEntry({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.source,
-    required this.url,
-    required this.blocks,
-  });
-
-  factory ContentEntry.fromJson(Map<String, dynamic> json) {
-    final rawBlocks = json['blocks'];
-
-    return ContentEntry(
-      id: json['id']?.toString() ?? '',
-      title: json['title']?.toString() ?? '',
-      content: json['content']?.toString() ?? '',
-      source: json['source']?.toString() ?? '',
-      url: json['url']?.toString() ?? '',
       blocks: rawBlocks is List
           ? rawBlocks
                 .whereType<Map>()
@@ -444,7 +222,38 @@ class ContentEntry {
                       ContentBlock.fromJson(Map<String, dynamic>.from(item)),
                 )
                 .toList()
-          : <ContentBlock>[],
+          : const [],
+      questions: json['questions'] is List
+          ? (json['questions'] as List).map((item) {
+              if (item is Question) {
+                return item;
+              }
+
+              if (item is Map) {
+                return Question.fromJson(Map<String, dynamic>.from(item));
+              }
+
+              return item;
+            }).toList()
+          : const [],
+      learningObjectives: _toStringList(json['learningObjectives']),
+      keyPoints: _toStringList(json['keyPoints']),
+      examples: _toStringList(json['examples']),
+      caseStudies: _toStringList(json['caseStudies']),
+      formulas: _toStringList(json['formulas']),
+      references: _toStringList(json['references']),
+      examTips: _toStringList(json['examTips']),
+      commonMistakes: _toStringList(json['commonMistakes']),
+      keyTakeaways: _toStringList(json['keyTakeaways']),
+      quizzes: json['quizzes'] is List
+          ? (json['quizzes'] as List)
+                .whereType<Map>()
+                .map(
+                  (item) =>
+                      QuizReference.fromJson(Map<String, dynamic>.from(item)),
+                )
+                .toList()
+          : const [],
     );
   }
 
@@ -452,19 +261,125 @@ class ContentEntry {
     return {
       'id': id,
       'title': title,
-      'content': content,
-      'source': source,
-      'url': url,
       'blocks': blocks.map((block) => block.toJson()).toList(),
+      'questions': questions
+          .map(
+            (question) => question is Question ? question.toJson() : question,
+          )
+          .toList(),
+      'learningObjectives': learningObjectives,
+      'keyPoints': keyPoints,
+      'examples': examples,
+      'caseStudies': caseStudies,
+      'formulas': formulas,
+      'references': references,
+      'examTips': examTips,
+      'commonMistakes': commonMistakes,
+      'keyTakeaways': keyTakeaways,
+      'quizzes': quizzes.map((quiz) => quiz.toJson()).toList(),
     };
   }
+
+  StudySubtopic copyWith({
+    String? id,
+    String? title,
+    List<ContentBlock>? blocks,
+    List<dynamic>? questions,
+    List<String>? learningObjectives,
+    List<String>? keyPoints,
+    List<String>? examples,
+    List<String>? caseStudies,
+    List<String>? formulas,
+    List<String>? references,
+    List<String>? examTips,
+    List<String>? commonMistakes,
+    List<String>? keyTakeaways,
+    List<QuizReference>? quizzes,
+  }) {
+    return StudySubtopic(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      blocks: blocks ?? this.blocks,
+      questions: questions ?? this.questions,
+      learningObjectives: learningObjectives ?? this.learningObjectives,
+      keyPoints: keyPoints ?? this.keyPoints,
+      examples: examples ?? this.examples,
+      caseStudies: caseStudies ?? this.caseStudies,
+      formulas: formulas ?? this.formulas,
+      references: references ?? this.references,
+      examTips: examTips ?? this.examTips,
+      commonMistakes: commonMistakes ?? this.commonMistakes,
+      keyTakeaways: keyTakeaways ?? this.keyTakeaways,
+      quizzes: quizzes ?? this.quizzes,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    id,
+    title,
+    blocks,
+    questions,
+    learningObjectives,
+    keyPoints,
+    examples,
+    caseStudies,
+    formulas,
+    references,
+    examTips,
+    commonMistakes,
+    keyTakeaways,
+    quizzes,
+  ];
 }
 
-/// References an existing quiz.
+/// Generic CSP11 learning-content block.
 ///
-/// The quiz ID remains available for compatibility with the
-/// current quiz-linking architecture.
-class QuizReference {
+/// Block types remain flexible and are intentionally not changed by
+/// the Topic/Subtopic architecture replacement.
+class ContentBlock extends Equatable {
+  final String id;
+  final String type;
+  final Map<String, dynamic> data;
+
+  const ContentBlock({
+    required this.id,
+    required this.type,
+    this.data = const {},
+  });
+
+  factory ContentBlock.fromJson(Map<String, dynamic> json) {
+    return ContentBlock(
+      id: json['id']?.toString() ?? '',
+      type: json['type']?.toString() ?? 'text',
+      data: json['data'] is Map
+          ? Map<String, dynamic>.from(json['data'] as Map)
+          : const {},
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'type': type, 'data': data};
+  }
+
+  ContentBlock copyWith({
+    String? id,
+    String? type,
+    Map<String, dynamic>? data,
+  }) {
+    return ContentBlock(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      data: data ?? this.data,
+    );
+  }
+
+  @override
+  List<Object?> get props => [id, type, data];
+}
+
+/// Retained for the existing quiz/content architecture.
+class QuizReference extends Equatable {
   final String quizId;
 
   const QuizReference({required this.quizId});
@@ -476,22 +391,30 @@ class QuizReference {
   Map<String, dynamic> toJson() {
     return {'quizId': quizId};
   }
+
+  @override
+  List<Object?> get props => [quizId];
 }
 
-/// Utility for decoding a JSON string directly into StudyContent.
-StudyContent studyContentFromJson(String source) {
-  final decoded = json.decode(source);
-
-  if (decoded is! Map) {
-    throw const FormatException(
-      'Study content JSON must contain an object at the root.',
-    );
+int _toInt(dynamic value, {int fallback = 0}) {
+  if (value is int) {
+    return value;
   }
 
-  return StudyContent.fromJson(Map<String, dynamic>.from(decoded));
+  if (value is num) {
+    return value.toInt();
+  }
+
+  return int.tryParse(value?.toString() ?? '') ?? fallback;
 }
 
-/// Utility for encoding StudyContent as a JSON string.
-String studyContentToJson(StudyContent content) {
-  return json.encode(content.toJson());
+List<String> _toStringList(dynamic value) {
+  if (value is! List) {
+    return const [];
+  }
+
+  return value
+      .map((item) => item?.toString() ?? '')
+      .where((item) => item.isNotEmpty)
+      .toList();
 }

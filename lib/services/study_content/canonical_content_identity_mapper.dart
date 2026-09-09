@@ -35,9 +35,7 @@ class CanonicalContentIdentityMapper {
     final domain = domainForContentId(legacyDomainId);
 
     if (domain == null) {
-      throw FormatException(
-        'Unknown CSP11 content domain: $legacyDomainId',
-      );
+      throw FormatException('Unknown CSP11 content domain: $legacyDomainId');
     }
 
     final competency = _resolveCompetency(
@@ -62,7 +60,7 @@ class CanonicalContentIdentityMapper {
       title: content.title,
       status: content.status,
       version: content.version,
-      subtopics: content.subtopics,
+      topics: content.topics,
     );
 
     return CanonicalContentIdentityResult(
@@ -77,10 +75,7 @@ class CanonicalContentIdentityMapper {
     required String legacyCompetencyId,
     required int competencyNumber,
   }) {
-    final byNumber = competencyForDomainAndNumber(
-      domainId,
-      competencyNumber,
-    );
+    final byNumber = competencyForDomainAndNumber(domainId, competencyNumber);
 
     if (byNumber == null) {
       return null;

@@ -69,7 +69,9 @@ class _ContentMigrationScreenState extends State<ContentMigrationScreen> {
     final report = _report;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Phase E2 • Local → Firebase Migration')),
+      appBar: AppBar(
+        title: const Text('Phase E2 • Local → Firebase Migration'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
@@ -127,9 +129,7 @@ class _ContentMigrationScreenState extends State<ContentMigrationScreen> {
   }
 
   Widget _summary(MigrationReport report) {
-    final missing = report.items
-        .where((item) => !item.cloudExists)
-        .length;
+    final missing = report.items.where((item) => !item.cloudExists).length;
     final matching = report.items
         .where((item) => item.cloudExists && item.cloudMatches)
         .length;
@@ -184,7 +184,9 @@ class _ContentMigrationScreenState extends State<ContentMigrationScreen> {
           '${item.copyType.name.toUpperCase()} • ${content.id}\n'
           'domain=${content.domainId} • competency=${content.competencyId}\n'
           'version=${content.version} • status=${content.status}\n'
-          'subtopics=${content.subtopics.length} • questions=${_questionCount(content)}',
+          'topics=${content.topics.length} • '
+          'subtopics=${_subtopicCount(content)} • '
+          'questions=${_questionCount(content)}',
         ),
         isThreeLine: true,
         trailing: Text(
@@ -196,10 +198,23 @@ class _ContentMigrationScreenState extends State<ContentMigrationScreen> {
     );
   }
 
-  int _questionCount(StudyContent content) {
-    return content.subtopics.fold<int>(
+  int _subtopicCount(StudyContent content) {
+    return content.topics.fold<int>(
       0,
-      (total, subtopic) => total + subtopic.questions.length,
+      (total, topic) => total + topic.subtopics.length,
+    );
+  }
+
+  int _questionCount(StudyContent content) {
+    return content.topics.fold<int>(
+      0,
+      (topicTotal, topic) =>
+          topicTotal +
+          topic.subtopics.fold<int>(
+            0,
+            (subtopicTotal, subtopic) =>
+                subtopicTotal + subtopic.questions.length,
+          ),
     );
   }
 }

@@ -135,7 +135,10 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
               );
             }
 
-            final subtopics = content.subtopics ?? [];
+            final subtopics = <dynamic>[];
+            for (final topic in content.topics ?? []) {
+              subtopics.addAll(topic.subtopics ?? []);
+            }
 
             return CustomScrollView(
               slivers: [

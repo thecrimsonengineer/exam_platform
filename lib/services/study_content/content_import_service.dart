@@ -189,16 +189,14 @@ class ContentImportService {
 
     final canonicalQuestions = questions
         .map(
-          (question) => _withCanonicalContentIdentity(
-            question,
-            content: content,
-          ),
+          (question) =>
+              _withCanonicalContentIdentity(question, content: content),
         )
         .toList();
 
     _validateRoot(content, root, issues);
 
-    _validateSubtopics(content, issues);
+    _validateTopics(content, issues);
 
     return ContentImportResult(
       content: content,
@@ -440,43 +438,92 @@ class ContentImportService {
       );
     }
 
-    if (!root.containsKey('subtopics')) {
+    if (!root.containsKey('topics')) {
       issues.add(
         const ContentImportIssue(
           severity: ContentImportIssueSeverity.warning,
-          message: 'No subtopics array was supplied.',
-          path: 'subtopics',
+          message: 'No topics array was supplied.',
+          path: 'topics',
         ),
       );
     }
   }
 
-  void _validateSubtopics(
-    StudyContent content,
-    List<ContentImportIssue> issues,
-  ) {
-    if (content.subtopics.isEmpty) {
+  void _validateTopics(StudyContent content, List<ContentImportIssue> issues) {
+    if (content.topics.isEmpty) {
       issues.add(
         const ContentImportIssue(
           severity: ContentImportIssueSeverity.warning,
-          message: 'The competency contains no subtopics.',
-          path: 'subtopics',
+          message: 'The competency contains no topics.',
+          path: 'topics',
         ),
       );
 
       return;
     }
 
+    final topicIds = <String>{};
     final subtopicIds = <String>{};
 
+    for (var topicIndex = 0; topicIndex < content.topics.length; topicIndex++) {
+      final topic = content.topics[topicIndex];
+      final topicPath = 'topics[$topicIndex]';
+
+      if (topic.id.trim().isEmpty) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.error,
+            message: 'Topic ID is required.',
+            path: '$topicPath.id',
+          ),
+        );
+      } else if (!topicIds.add(topic.id)) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.error,
+            message: 'Duplicate topic ID: ${topic.id}',
+            path: '$topicPath.id',
+          ),
+        );
+      }
+
+      if (topic.title.trim().isEmpty) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.error,
+            message: 'Topic title is required.',
+            path: '$topicPath.title',
+          ),
+        );
+      }
+
+      if (topic.subtopics.isEmpty) {
+        issues.add(
+          ContentImportIssue(
+            severity: ContentImportIssueSeverity.warning,
+            message: 'Topic contains no subtopics.',
+            path: '$topicPath.subtopics',
+          ),
+        );
+      }
+
+      _validateSubtopics(topic, topicPath, subtopicIds, issues);
+    }
+  }
+
+  void _validateSubtopics(
+    StudyTopic topic,
+    String topicPath,
+    Set<String> subtopicIds,
+    List<ContentImportIssue> issues,
+  ) {
     for (
       var subtopicIndex = 0;
-      subtopicIndex < content.subtopics.length;
+      subtopicIndex < topic.subtopics.length;
       subtopicIndex++
     ) {
-      final subtopic = content.subtopics[subtopicIndex];
-
-      final subtopicPath = 'subtopics[$subtopicIndex]';
+      final subtopic = topic.subtopics[subtopicIndex];
+      final subtopicPath = '$topicPath.subtopics[$subtopicIndex]';
 
       if (subtopic.id.trim().isEmpty) {
         issues.add(
@@ -506,63 +553,13 @@ class ContentImportService {
         );
       }
 
-      _validateMainContent(subtopic, subtopicPath, issues);
+      _validateBlocks(subtopic.blocks, '$subtopicPath.blocks', issues);
 
       _validateQuizReferences(
         subtopic.quizzes,
         '$subtopicPath.quizzes',
         issues,
       );
-    }
-  }
-
-  void _validateMainContent(
-    StudySubtopic subtopic,
-    String subtopicPath,
-    List<ContentImportIssue> issues,
-  ) {
-    final topicIds = <String>{};
-
-    for (
-      var topicIndex = 0;
-      topicIndex < subtopic.mainContent.length;
-      topicIndex++
-    ) {
-      final topic = subtopic.mainContent[topicIndex];
-
-      final topicPath = '$subtopicPath.mainContent[$topicIndex]';
-
-      if (topic.id.trim().isEmpty) {
-        issues.add(
-          ContentImportIssue(
-            severity: ContentImportIssueSeverity.error,
-            message: 'Main content topic ID is required.',
-            path: '$topicPath.id',
-          ),
-        );
-      } else if (!topicIds.add(topic.id)) {
-        issues.add(
-          ContentImportIssue(
-            severity: ContentImportIssueSeverity.error,
-            message: 'Duplicate main content topic ID: ${topic.id}',
-            path: '$topicPath.id',
-          ),
-        );
-      }
-
-      if (topic.title.trim().isEmpty) {
-        issues.add(
-          ContentImportIssue(
-            severity: ContentImportIssueSeverity.error,
-            message: 'Main content topic title is required.',
-            path: '$topicPath.title',
-          ),
-        );
-      }
-
-      _validateBlocks(topic.blocks, '$topicPath.blocks', issues);
-
-      _validateQuizReferences(topic.quizzes, '$topicPath.quizzes', issues);
     }
   }
 
@@ -575,7 +572,6 @@ class ContentImportService {
 
     for (var blockIndex = 0; blockIndex < blocks.length; blockIndex++) {
       final block = blocks[blockIndex];
-
       final blockPath = '$blocksPath[$blockIndex]';
 
       if (block.id.trim().isEmpty) {

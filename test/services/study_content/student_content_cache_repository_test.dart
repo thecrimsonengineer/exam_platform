@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../lib/models/study_content.dart';
-import '../../../lib/services/study_content/student_content_cache_repository.dart';
+import 'package:exam_platform/models/study_content.dart';
+import 'package:exam_platform/services/study_content/student_content_cache_repository.dart';
 
 void main() {
   group('StudentContentCacheRepository', () {
@@ -229,6 +229,6 @@ StudyContent _content({
     title: 'Test Content',
     status: status,
     version: version,
-    subtopics: const [],
+    topics: const [],
   );
 }

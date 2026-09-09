@@ -8,6 +8,55 @@ import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_typography.dart';
 import 'study_icon_badge.dart';
 
+extension _ContentBlockView on ContentBlock {
+  String get content => data['content']?.toString() ?? '';
+
+  String get text =>
+      data['text']?.toString() ?? data['content']?.toString() ?? '';
+
+  String get title => data['title']?.toString() ?? '';
+
+  String get image =>
+      data['image']?.toString() ?? data['url']?.toString() ?? '';
+
+  int get level {
+    final value = data['level'];
+
+    if (value is int) {
+      return value;
+    }
+
+    if (value is num) {
+      return value.toInt();
+    }
+
+    return int.tryParse(value?.toString() ?? '') ?? 1;
+  }
+
+  List<String> get columns {
+    final value = data['columns'];
+
+    if (value is! List) {
+      return const [];
+    }
+
+    return value.map((item) => item?.toString() ?? '').toList();
+  }
+
+  List<List<String>> get rows {
+    final value = data['rows'];
+
+    if (value is! List) {
+      return const [];
+    }
+
+    return value
+        .whereType<List>()
+        .map((row) => row.map((item) => item?.toString() ?? '').toList())
+        .toList();
+  }
+}
+
 /// Premium renderer for all CSP Study Content blocks.
 ///
 /// The underlying ContentBlock model remains unchanged.
@@ -180,7 +229,7 @@ class ContentBlockRenderer extends StatelessWidget {
   Widget _buildImage() {
     final imagePath = block.image;
 
-    if (imagePath == null || imagePath.trim().isEmpty) {
+    if (imagePath.trim().isEmpty) {
       return const SizedBox.shrink();
     }
 

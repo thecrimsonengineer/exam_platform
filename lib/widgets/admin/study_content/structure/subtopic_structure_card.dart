@@ -6,7 +6,7 @@ import '../../../../theme/study/study_radius.dart';
 import '../../../../theme/study/study_shadows.dart';
 import '../../../../theme/study/study_typography.dart';
 
-import 'main_content_structure_card.dart';
+import 'content_block_structure_card.dart';
 
 class SubtopicStructureCard extends StatefulWidget {
   final StudySubtopic subtopic;
@@ -59,58 +59,63 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
         border: Border.all(color: StudyColors.border),
         boxShadow: StudyShadows.soft,
       ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          key: PageStorageKey<String>('subtopic-${subtopic.id}'),
-          initiallyExpanded: _isExpanded,
-          maintainState: true,
-          onExpansionChanged: (expanded) {
-            setState(() {
-              _isExpanded = expanded;
-            });
-          },
-          tilePadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          childrenPadding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-          collapsedBackgroundColor: StudyColors.surface,
-          backgroundColor: StudyColors.surface,
-          collapsedShape: RoundedRectangleBorder(
-            borderRadius: StudyRadius.large,
-            side: BorderSide.none,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: StudyRadius.large,
-            side: BorderSide.none,
-          ),
-          iconColor: StudyColors.primary,
-          collapsedIconColor: StudyColors.textSecondary,
-          leading: _buildNumber(),
-          title: Text(
-            subtopic.title.isEmpty ? 'Untitled Subtopic' : subtopic.title,
-            style: StudyTypography.sectionTitle.copyWith(
-              color: StudyColors.textPrimary,
-              fontSize: 17,
+      child: Material(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        clipBehavior: Clip.antiAlias,
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            key: ValueKey('subtopic-${subtopic.id}-${widget.forceExpanded}'),
+            initiallyExpanded: _isExpanded,
+            maintainState: true,
+            onExpansionChanged: (expanded) {
+              setState(() {
+                _isExpanded = expanded;
+              });
+            },
+            tilePadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            childrenPadding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            collapsedBackgroundColor: StudyColors.surface,
+            backgroundColor: StudyColors.surface,
+            collapsedShape: RoundedRectangleBorder(
+              borderRadius: StudyRadius.large,
+              side: BorderSide.none,
             ),
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              subtopic.id,
-              style: StudyTypography.caption.copyWith(
-                color: StudyColors.textSecondary,
+            shape: RoundedRectangleBorder(
+              borderRadius: StudyRadius.large,
+              side: BorderSide.none,
+            ),
+            iconColor: StudyColors.primary,
+            collapsedIconColor: StudyColors.textSecondary,
+            leading: _buildNumber(),
+            title: Text(
+              subtopic.title.isEmpty ? 'Untitled Subtopic' : subtopic.title,
+              style: StudyTypography.sectionTitle.copyWith(
+                color: StudyColors.textPrimary,
+                fontSize: 17,
               ),
             ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                subtopic.id,
+                style: StudyTypography.caption.copyWith(
+                  color: StudyColors.textSecondary,
+                ),
+              ),
+            ),
+            trailing: _buildMetrics(),
+            children: [
+              _buildOverviewStrip(),
+              const SizedBox(height: 18),
+              _buildObjectives(),
+              const SizedBox(height: 18),
+              _buildContentBlocks(),
+              _buildTextSections(),
+              _buildQuizSection(),
+            ],
           ),
-          trailing: _buildMetrics(),
-          children: [
-            _buildOverviewStrip(),
-            const SizedBox(height: 18),
-            _buildObjectives(),
-            const SizedBox(height: 18),
-            _buildMainContent(),
-            _buildEntrySections(),
-            _buildQuizSection(),
-          ],
         ),
       ),
     );
@@ -140,7 +145,7 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
       spacing: 5,
       children: [
         _metric(Icons.flag_outlined, '${subtopic.learningObjectives.length}'),
-        _metric(Icons.menu_book_outlined, '${subtopic.mainContent.length}'),
+        _metric(Icons.menu_book_outlined, '${subtopic.blocks.length}'),
         _metric(Icons.quiz_outlined, '${subtopic.quizzes.length}'),
       ],
     );
@@ -185,7 +190,7 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
         runSpacing: 8,
         children: [
           _overviewItem('Objectives', subtopic.learningObjectives.length),
-          _overviewItem('Main Topics', subtopic.mainContent.length),
+          _overviewItem('Content Blocks', subtopic.blocks.length),
           _overviewItem('Key Points', subtopic.keyPoints.length),
           _overviewItem('Examples', subtopic.examples.length),
           _overviewItem('Case Studies', subtopic.caseStudies.length),
@@ -270,23 +275,23 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
     );
   }
 
-  Widget _buildMainContent() {
-    if (subtopic.mainContent.isEmpty) {
+  Widget _buildContentBlocks() {
+    if (subtopic.blocks.isEmpty) {
       return _emptySection(
-        'Main Content',
+        'Content Blocks',
         Icons.menu_book_outlined,
-        'No main content topics supplied.',
+        'No content blocks supplied.',
       );
     }
 
     return _sectionCard(
-      title: 'Main Content',
+      title: 'Content Blocks',
       icon: Icons.menu_book_rounded,
       child: Column(
         children: List.generate(
-          subtopic.mainContent.length,
-          (index) => MainContentStructureCard(
-            topic: subtopic.mainContent[index],
+          subtopic.blocks.length,
+          (index) => ContentBlockStructureCard(
+            block: subtopic.blocks[index],
             index: index,
           ),
         ),
@@ -294,44 +299,44 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
     );
   }
 
-  Widget _buildEntrySections() {
-    final sections = <_EntrySection>[
-      _EntrySection(
+  Widget _buildTextSections() {
+    final sections = <_TextSection>[
+      _TextSection(
         title: 'Key Points',
         icon: Icons.push_pin_outlined,
         entries: subtopic.keyPoints,
       ),
-      _EntrySection(
+      _TextSection(
         title: 'Examples',
         icon: Icons.lightbulb_outline_rounded,
         entries: subtopic.examples,
       ),
-      _EntrySection(
+      _TextSection(
         title: 'Case Studies',
         icon: Icons.business_center_outlined,
         entries: subtopic.caseStudies,
       ),
-      _EntrySection(
+      _TextSection(
         title: 'Formulas',
         icon: Icons.functions_rounded,
         entries: subtopic.formulas,
       ),
-      _EntrySection(
+      _TextSection(
         title: 'References',
         icon: Icons.link_rounded,
         entries: subtopic.references,
       ),
-      _EntrySection(
+      _TextSection(
         title: 'Exam Tips',
         icon: Icons.school_rounded,
         entries: subtopic.examTips,
       ),
-      _EntrySection(
+      _TextSection(
         title: 'Common Mistakes',
         icon: Icons.error_outline_rounded,
         entries: subtopic.commonMistakes,
       ),
-      _EntrySection(
+      _TextSection(
         title: 'Key Takeaways',
         icon: Icons.bookmark_rounded,
         entries: subtopic.keyTakeaways,
@@ -349,14 +354,14 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
           .map(
             (section) => Padding(
               padding: const EdgeInsets.only(top: 18),
-              child: _buildEntrySection(section),
+              child: _buildTextSection(section),
             ),
           )
           .toList(),
     );
   }
 
-  Widget _buildEntrySection(_EntrySection section) {
+  Widget _buildTextSection(_TextSection section) {
     return _sectionCard(
       title: section.title,
       icon: section.icon,
@@ -369,11 +374,7 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
     );
   }
 
-  Widget _buildEntry(ContentEntry entry, int index) {
-    final preview = entry.content.trim().isNotEmpty
-        ? entry.content.trim()
-        : entry.title.trim();
-
+  Widget _buildEntry(String entry, int index) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 8),
@@ -383,53 +384,12 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
         borderRadius: StudyRadius.small,
         border: Border.all(color: StudyColors.border),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '${index + 1}'.padLeft(2, '0'),
-                style: StudyTypography.caption.copyWith(
-                  color: StudyColors.primary,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(width: 9),
-              Expanded(
-                child: Text(
-                  entry.title.isEmpty ? 'Untitled Entry' : entry.title,
-                  style: StudyTypography.label.copyWith(
-                    color: StudyColors.textPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          if (preview.isNotEmpty) ...[
-            const SizedBox(height: 7),
-            Text(
-              preview,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-              style: StudyTypography.bodySecondary.copyWith(
-                fontSize: 13,
-                height: 1.45,
-              ),
-            ),
-          ],
-          if (entry.blocks.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              '${entry.blocks.length} nested content block'
-              '${entry.blocks.length == 1 ? '' : 's'}',
-              style: StudyTypography.caption.copyWith(
-                color: StudyColors.textSecondary,
-              ),
-            ),
-          ],
-        ],
+      child: Text(
+        '${index + 1}. ${entry.trim().isEmpty ? '(Empty item)' : entry}',
+        style: StudyTypography.bodySecondary.copyWith(
+          fontSize: 13,
+          height: 1.45,
+        ),
       ),
     );
   }
@@ -545,12 +505,12 @@ class _SubtopicStructureCardState extends State<SubtopicStructureCard> {
   }
 }
 
-class _EntrySection {
+class _TextSection {
   final String title;
   final IconData icon;
-  final List<ContentEntry> entries;
+  final List<String> entries;
 
-  const _EntrySection({
+  const _TextSection({
     required this.title,
     required this.icon,
     required this.entries,

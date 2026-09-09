@@ -120,12 +120,14 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
     final values = <String, _SubtopicChoice>{};
 
     for (final package in _competencyPackages) {
-      for (final subtopic in package.content.subtopics) {
-        values[subtopic.id] = _SubtopicChoice(
-          id: subtopic.id,
-          title: subtopic.title,
-          competencyId: package.content.competencyId,
-        );
+      for (final topic in package.content.topics) {
+        for (final subtopic in topic.subtopics) {
+          values[subtopic.id] = _SubtopicChoice(
+            id: subtopic.id,
+            title: subtopic.title,
+            competencyId: package.content.competencyId,
+          );
+        }
       }
     }
 

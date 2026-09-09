@@ -38,17 +38,17 @@ class StudentProgressDashboardService {
       for (final content in domainContents) {
         competencyIds.add(content.competencyId);
 
-        for (final subtopic in content.subtopics) {
-          subtopicCount++;
+        for (final topic in content.topics) {
+          topicCount++;
 
-          final subtopicRecord = subtopicProgress[subtopic.id];
+          for (final subtopic in topic.subtopics) {
+            subtopicCount++;
 
-          if (subtopicRecord?.state == StudentLearningState.completed) {
-            completedSubtopics++;
-          }
+            final subtopicRecord = subtopicProgress[subtopic.id];
 
-          for (final topic in subtopic.mainContent) {
-            topicCount++;
+            if (subtopicRecord?.state == StudentLearningState.completed) {
+              completedSubtopics++;
+            }
 
             final key = '${content.id}::${subtopic.id}::${topic.id}';
 

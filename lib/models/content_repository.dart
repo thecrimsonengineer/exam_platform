@@ -17,33 +17,31 @@ class ContentPackageSummary {
 
   String get status => content.status.toLowerCase();
 
-  int get subtopicCount => content.subtopics.length;
+  int get topicCount => content.topics.length;
 
-  int get topicCount => content.subtopics.fold<int>(
-        0,
-        (sum, subtopic) => sum + subtopic.mainContent.length,
-      );
+  int get subtopicCount =>
+      content.topics.fold<int>(0, (sum, topic) => sum + topic.subtopics.length);
 
-  int get blockCount => content.subtopics.fold<int>(
-        0,
-        (sum, subtopic) =>
-            sum +
-            subtopic.mainContent.fold<int>(
-              0,
-              (topicSum, topic) => topicSum + topic.blocks.length,
-            ),
-      );
+  int get blockCount => content.topics.fold<int>(
+    0,
+    (sum, topic) =>
+        sum +
+        topic.subtopics.fold<int>(
+          0,
+          (subtopicSum, subtopic) => subtopicSum + subtopic.blocks.length,
+        ),
+  );
 
-  int get questionCount => content.subtopics.fold<int>(
-        0,
-        (sum, subtopic) =>
-            sum +
-            subtopic.quizzes.length +
-            subtopic.mainContent.fold<int>(
-              0,
-              (topicSum, topic) => topicSum + topic.quizzes.length,
-            ),
-      );
+  int get questionCount => content.topics.fold<int>(
+    0,
+    (sum, topic) =>
+        sum +
+        topic.subtopics.fold<int>(
+          0,
+          (subtopicSum, subtopic) =>
+              subtopicSum + subtopic.questions.length + subtopic.quizzes.length,
+        ),
+  );
 
   double get completeness {
     var checks = 0;

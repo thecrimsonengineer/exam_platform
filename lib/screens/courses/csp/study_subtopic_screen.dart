@@ -60,7 +60,7 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
   }
 
   Future<StudentSubtopicProgress?> _openAndLoadProgress() async {
-    final subtopics = widget.content.subtopics;
+    final subtopics = _orderedSubtopics();
 
     if (subtopics.isEmpty ||
         widget.subtopicIndex < 0 ||
@@ -90,7 +90,7 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
   }
 
   Future<void> _completeSubtopic() async {
-    final subtopics = widget.content.subtopics;
+    final subtopics = _orderedSubtopics();
 
     if (subtopics.isEmpty ||
         widget.subtopicIndex < 0 ||
@@ -127,7 +127,7 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final subtopics = widget.content.subtopics;
+    final subtopics = _orderedSubtopics();
 
     if (subtopics.isEmpty ||
         widget.subtopicIndex < 0 ||
@@ -494,6 +494,10 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
         ),
       ),
     );
+  }
+
+  List<StudySubtopic> _orderedSubtopics() {
+    return [for (final topic in widget.content.topics) ...topic.subtopics];
   }
 
   int _getDomainNumber(String domainId) {

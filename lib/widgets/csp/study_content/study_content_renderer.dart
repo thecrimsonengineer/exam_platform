@@ -83,7 +83,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
   Widget build(BuildContext context) {
     final domain = _getDomainNumber(widget.content.domainId);
 
-    final subtopics = widget.content.subtopics;
+    final subtopics = _orderedSubtopics();
 
     return Container(
       color: StudyColors.background,
@@ -154,7 +154,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
       return;
     }
 
-    final subtopics = widget.content.subtopics;
+    final subtopics = _orderedSubtopics();
 
     final index = subtopics.indexWhere(
       (subtopic) => _subtopicId(subtopic) == savedId,
@@ -174,12 +174,11 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) =>
-            StudySubtopicScreen(
-            content: widget.content,
-            subtopicIndex: index,
-            domainTitle: widget.domainTitle,
-          ),
+        builder: (_) => StudySubtopicScreen(
+          content: widget.content,
+          subtopicIndex: index,
+          domainTitle: widget.domainTitle,
+        ),
       ),
     );
   }
@@ -244,7 +243,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                     _buildHeroStat(
                       icon: StudyIcons.subtopic,
                       label: 'SUBTOPICS',
-                      value: '${widget.content.subtopics.length}',
+                      value: '${_orderedSubtopics().length}',
                     ),
                     _buildHeroStat(
                       icon: StudyIcons.book,
@@ -411,7 +410,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     required int index,
     required int total,
   }) {
-    final topicCount = subtopic.mainContent.length;
+    final blockCount = subtopic.blocks.length;
 
     final objectiveCount = subtopic.learningObjectives.length;
 
@@ -486,9 +485,9 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                       spacing: 8,
                       runSpacing: 7,
                       children: [
-                        _buildMetaChip('$topicCount topics'),
+                        _buildMetaChip('$blockCount content blocks'),
                         _buildMetaChip('$objectiveCount objectives'),
-                          if (quizCount > 0)
+                        if (quizCount > 0)
                           _buildMetaChip('$quizCount practice links'),
                         _buildProgressStatus(subtopic.id),
                       ],
@@ -519,7 +518,8 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
   }
 
   Widget _buildProgressStatus(String subtopicId) {
-    final state = _progressBySubtopicId[subtopicId]?.state ??
+    final state =
+        _progressBySubtopicId[subtopicId]?.state ??
         StudentLearningState.notStarted;
 
     switch (state) {
@@ -599,26 +599,23 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     );
   }
 
+  List<StudySubtopic> _orderedSubtopics() {
+    return [for (final topic in widget.content.topics) ...topic.subtopics];
+  }
+
   int _topicCount() {
-    return widget.content.subtopics.fold<int>(
-      0,
-      (sum, subtopic) => sum + subtopic.mainContent.length,
-    );
+    return widget.content.topics.length;
   }
 
   int _quizCount() {
-    return widget.content.subtopics.fold<int>(
+    return _orderedSubtopics().fold<int>(
       0,
       (sum, subtopic) => sum + _subtopicQuizCount(subtopic),
     );
   }
 
   int _subtopicQuizCount(StudySubtopic subtopic) {
-    return subtopic.quizzes.length +
-        subtopic.mainContent.fold<int>(
-          0,
-          (sum, topic) => sum + topic.quizzes.length,
-        );
+    return subtopic.quizzes.length;
   }
 
   int _getDomainNumber(String domainId) {

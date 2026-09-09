@@ -26,13 +26,15 @@ class StudentCompetencyProgressService {
         continue;
       }
 
-      for (final subtopic in content.subtopics) {
-        totalSubtopics++;
+      for (final topic in content.topics) {
+        for (final subtopic in topic.subtopics) {
+          totalSubtopics++;
 
-        final record = progress[subtopic.id];
+          final record = progress[subtopic.id];
 
-        if (record?.state == StudentLearningState.completed) {
-          completedSubtopics++;
+          if (record?.state == StudentLearningState.completed) {
+            completedSubtopics++;
+          }
         }
       }
     }

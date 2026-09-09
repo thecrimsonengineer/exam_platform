@@ -629,8 +629,8 @@ class _SubtopicEditorPanelState extends State<SubtopicEditorPanel> {
         children: [
           _summaryChip(
             Icons.menu_book_outlined,
-            current.mainContent.length,
-            'Main Topics',
+            current.blocks.length,
+            'Content Blocks',
           ),
           _summaryChip(
             Icons.push_pin_outlined,
@@ -802,7 +802,8 @@ class _SubtopicEditorPanelState extends State<SubtopicEditorPanel> {
       id: _idController.text.trim(),
       title: _titleController.text.trim(),
       learningObjectives: objectives,
-      mainContent: current.mainContent,
+      blocks: current.blocks,
+      questions: current.questions,
       keyPoints: current.keyPoints,
       examples: current.examples,
       caseStudies: current.caseStudies,

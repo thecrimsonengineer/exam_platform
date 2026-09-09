@@ -231,7 +231,7 @@ class RepositoryDetailScreen extends StatelessWidget {
             ),
             _metric(
               cardWidth,
-              'MAIN TOPICS',
+              'TOPICS',
               '${package.topicCount}',
               Icons.menu_book_rounded,
             ),
@@ -311,7 +311,7 @@ class RepositoryDetailScreen extends StatelessWidget {
   Widget _buildStructure() {
     final content = package.content;
 
-    var mainTopics = 0;
+    var subtopics = 0;
     var blocks = 0;
     var objectives = 0;
     var examples = 0;
@@ -319,17 +319,16 @@ class RepositoryDetailScreen extends StatelessWidget {
     var references = 0;
     var quizLinks = 0;
 
-    for (final subtopic in content.subtopics) {
-      objectives += subtopic.learningObjectives.length;
-      examples += subtopic.examples.length;
-      caseStudies += subtopic.caseStudies.length;
-      references += subtopic.references.length;
-      quizLinks += subtopic.quizzes.length;
+    for (final topic in content.topics) {
+      subtopics += topic.subtopics.length;
 
-      for (final topic in subtopic.mainContent) {
-        mainTopics++;
-        blocks += topic.blocks.length;
-        quizLinks += topic.quizzes.length;
+      for (final subtopic in topic.subtopics) {
+        blocks += subtopic.blocks.length;
+        objectives += subtopic.learningObjectives.length;
+        examples += subtopic.examples.length;
+        caseStudies += subtopic.caseStudies.length;
+        references += subtopic.references.length;
+        quizLinks += subtopic.quizzes.length;
       }
     }
 
@@ -340,8 +339,8 @@ class RepositoryDetailScreen extends StatelessWidget {
         spacing: 10,
         runSpacing: 10,
         children: [
-          _structureTile('Subtopics', content.subtopics.length),
-          _structureTile('Main Topics', mainTopics),
+          _structureTile('Topics', content.topics.length),
+          _structureTile('Subtopics', subtopics),
           _structureTile('Content Blocks', blocks),
           _structureTile('Objectives', objectives),
           _structureTile('Examples', examples),

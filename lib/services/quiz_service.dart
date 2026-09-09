@@ -197,6 +197,7 @@ class QuizService implements QuizServiceInterface {
   // ==========================================================
 
   /// Domain quiz used by QuizController.
+  @override
   List<Question> getQuiz({
     required int domain,
     required int numberOfQuestions,
@@ -205,11 +206,13 @@ class QuizService implements QuizServiceInterface {
   }
 
   /// Quiz-ID-based quiz used by QuizController.
+  @override
   List<Question> getQuizById(String quizId) {
     return _shuffle(getQuestionsByQuizId(quizId));
   }
 
   /// Competency quiz used by QuizController.
+  @override
   List<Question> getShuffledQuestionsByCompetency(String competencyId) {
     return _shuffle(getQuestionsByCompetency(competencyId));
   }
@@ -220,6 +223,7 @@ class QuizService implements QuizServiceInterface {
   /// questions.
   ///
   /// Five is the minimum, not the maximum.
+  @override
   List<Question> getShuffledQuestionsBySubtopic(String subtopicId) {
     final questions = getQuestionsBySubtopic(subtopicId);
 
@@ -234,6 +238,7 @@ class QuizService implements QuizServiceInterface {
   }
 
   /// Topic quiz used by QuizController.
+  @override
   List<Question> getShuffledQuestionsByTopic(String topicId) {
     return _shuffle(getQuestionsByTopic(topicId));
   }
@@ -615,33 +620,35 @@ class QuizService implements QuizServiceInterface {
     final competencyId = content.competencyId.trim();
     final contentPackageId = content.id.trim();
 
-    for (final subtopic in content.subtopics) {
-      final subtopicId = subtopic.id.trim();
+    for (final topic in content.topics) {
+      for (final subtopic in topic.subtopics) {
+        final subtopicId = subtopic.id.trim();
 
-      for (final question in subtopic.questions) {
-        if (question.id <= 0) {
-          continue;
+        for (final question in subtopic.questions) {
+          if (question.id <= 0) {
+            continue;
+          }
+
+          if (!_isPublished(question)) {
+            continue;
+          }
+
+          final normalized = _normalizeContentQuestion(
+            question: question,
+            domain: domain,
+            competencyId: competencyId,
+            subtopicId: subtopicId,
+            contentPackageId: contentPackageId,
+            contentVersion: content.version,
+          );
+
+          // Do not overwrite an independently managed Firebase
+          // question with an embedded copy using the same ID.
+          //
+          // The central questions collection is the stronger managed
+          // source when both sources contain the same question ID.
+          target.putIfAbsent(normalized.id, () => normalized);
         }
-
-        if (!_isPublished(question)) {
-          continue;
-        }
-
-        final normalized = _normalizeContentQuestion(
-          question: question,
-          domain: domain,
-          competencyId: competencyId,
-          subtopicId: subtopicId,
-          contentPackageId: contentPackageId,
-          contentVersion: content.version,
-        );
-
-        // Do not overwrite an independently managed Firebase
-        // question with an embedded copy using the same ID.
-        //
-        // The central questions collection is the stronger managed
-        // source when both sources contain the same question ID.
-        target.putIfAbsent(normalized.id, () => normalized);
       }
     }
   }

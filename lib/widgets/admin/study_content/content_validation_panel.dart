@@ -271,18 +271,18 @@ class ContentValidationPanel extends StatelessWidget {
   // ============================================================
 
   Widget _structureChecks(StudyContent content) {
-    final mainTopics = content.subtopics.fold<int>(
+    final subtopics = content.topics.fold<int>(
       0,
-      (sum, item) => sum + item.mainContent.length,
+      (sum, topic) => sum + topic.subtopics.length,
     );
 
-    final blocks = content.subtopics.fold<int>(
+    final blocks = content.topics.fold<int>(
       0,
-      (sum, subtopic) =>
+      (sum, topic) =>
           sum +
-          subtopic.mainContent.fold<int>(
+          topic.subtopics.fold<int>(
             0,
-            (topicSum, topic) => topicSum + topic.blocks.length,
+            (subtopicSum, subtopic) => subtopicSum + subtopic.blocks.length,
           ),
     );
 
@@ -290,9 +290,9 @@ class ContentValidationPanel extends StatelessWidget {
       children: [
         _passRow('Competency exists', content.title.trim().isNotEmpty),
 
-        _passRow('Subtopics detected', content.subtopics.isNotEmpty),
+        _passRow('Topics detected', content.topics.isNotEmpty),
 
-        _passRow('Main content topics', mainTopics > 0),
+        _passRow('Subtopics detected', subtopics > 0),
 
         _passRow('Content blocks', blocks > 0),
       ],
@@ -304,31 +304,28 @@ class ContentValidationPanel extends StatelessWidget {
   // ============================================================
 
   Widget _identifierChecks(StudyContent content) {
-    final subtopicIds = content.subtopics
-        .map((item) => item.id)
-        .where((item) => item.trim().isNotEmpty)
-        .toSet();
+    final topicIds = content.topics.map((topic) => topic.id.trim()).toList();
+
+    final subtopicIds = content.topics
+        .expand((topic) => topic.subtopics)
+        .map((subtopic) => subtopic.id.trim())
+        .toList();
+
+    final topicIdsValid =
+        topicIds.every((id) => id.isNotEmpty) &&
+        topicIds.toSet().length == topicIds.length;
+
+    final subtopicIdsValid =
+        subtopicIds.every((id) => id.isNotEmpty) &&
+        subtopicIds.toSet().length == subtopicIds.length;
 
     return Column(
       children: [
         _passRow('Competency ID', content.competencyId.trim().isNotEmpty),
 
-        _passRow(
-          'Subtopic IDs',
-          subtopicIds.length == content.subtopics.length,
-        ),
+        _passRow('Topic IDs', topicIdsValid),
 
-        _passRow(
-          'Topic IDs',
-          content.subtopics.every(
-            (subtopic) =>
-                subtopic.mainContent
-                    .map((topic) => topic.id)
-                    .where((id) => id.trim().isNotEmpty)
-                    .length ==
-                subtopic.mainContent.length,
-          ),
-        ),
+        _passRow('Subtopic IDs', subtopicIdsValid),
       ],
     );
   }

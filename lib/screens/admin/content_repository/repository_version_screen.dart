@@ -56,7 +56,7 @@ class RepositoryVersionScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 _buildStructure(),
                 const SizedBox(height: 16),
-                _buildSubtopics(),
+                _buildTopicRegister(),
               ],
             ),
           ),
@@ -197,7 +197,7 @@ class RepositoryVersionScreen extends StatelessWidget {
   Widget _buildStructure() {
     final content = package.content;
 
-    var mainTopics = 0;
+    var subtopics = 0;
     var blocks = 0;
     var objectives = 0;
     var examples = 0;
@@ -205,17 +205,16 @@ class RepositoryVersionScreen extends StatelessWidget {
     var references = 0;
     var quizLinks = 0;
 
-    for (final subtopic in content.subtopics) {
-      objectives += subtopic.learningObjectives.length;
-      examples += subtopic.examples.length;
-      caseStudies += subtopic.caseStudies.length;
-      references += subtopic.references.length;
-      quizLinks += subtopic.quizzes.length;
+    for (final topic in content.topics) {
+      subtopics += topic.subtopics.length;
 
-      for (final topic in subtopic.mainContent) {
-        mainTopics++;
-        blocks += topic.blocks.length;
-        quizLinks += topic.quizzes.length;
+      for (final subtopic in topic.subtopics) {
+        blocks += subtopic.blocks.length;
+        objectives += subtopic.learningObjectives.length;
+        examples += subtopic.examples.length;
+        caseStudies += subtopic.caseStudies.length;
+        references += subtopic.references.length;
+        quizLinks += subtopic.quizzes.length;
       }
     }
 
@@ -225,8 +224,8 @@ class RepositoryVersionScreen extends StatelessWidget {
         spacing: 10,
         runSpacing: 10,
         children: [
-          _stat('Subtopics', content.subtopics.length),
-          _stat('Main Topics', mainTopics),
+          _stat('Topics', content.topics.length),
+          _stat('Subtopics', subtopics),
           _stat('Content Blocks', blocks),
           _stat('Objectives', objectives),
           _stat('Examples', examples),
@@ -259,82 +258,100 @@ class RepositoryVersionScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSubtopics() {
-    final subtopics = package.content.subtopics;
+  Widget _buildTopicRegister() {
+    final topics = package.content.topics;
 
     return _section(
-      title: 'SUBTOPIC REGISTER',
-      child: subtopics.isEmpty
-          ? const Text('No subtopics are currently stored in this version.')
+      title: 'TOPIC / SUBTOPIC REGISTER',
+      child: topics.isEmpty
+          ? const Text('No topics are currently stored in this version.')
           : Column(
-              children: subtopics.asMap().entries.map((entry) {
-                final index = entry.key;
-                final subtopic = entry.value;
+              children: topics.asMap().entries.map((topicEntry) {
+                final topicIndex = topicEntry.key;
+                final topic = topicEntry.value;
 
                 return Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(
-                    bottom: index == subtopics.length - 1 ? 0 : 8,
+                    bottom: topicIndex == topics.length - 1 ? 0 : 8,
                   ),
-                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: StudyColors.surfaceSoft,
                     borderRadius: StudyRadius.medium,
                     border: Border.all(color: StudyColors.border),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 32,
-                        height: 32,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: StudyColors.primaryLight,
-                          borderRadius: StudyRadius.small,
-                        ),
-                        child: Text(
-                          '${index + 1}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w900,
-                            color: StudyColors.primary,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 11),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(subtopic.title, style: StudyTypography.label),
-                            const SizedBox(height: 7),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 6,
-                              children: [
-                                _miniPill(
-                                  'Topics',
-                                  subtopic.mainContent.length,
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 2,
+                    ),
+                    childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                    title: Text(topic.title, style: StudyTypography.label),
+                    subtitle: Text(
+                      '${topic.id} • ${topic.subtopics.length} subtopics',
+                      style: StudyTypography.caption,
+                    ),
+                    children: topic.subtopics.isEmpty
+                        ? const [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 6),
+                                child: Text(
+                                  'No subtopics are currently stored under this topic.',
                                 ),
-                                _miniPill(
-                                  'Objectives',
-                                  subtopic.learningObjectives.length,
-                                ),
-                                _miniPill(
-                                  'Quiz Links',
-                                  subtopic.quizzes.length,
-                                ),
-                                _miniPill(
-                                  'References',
-                                  subtopic.references.length,
-                                ),
-                              ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
+                          ]
+                        : topic.subtopics.map((subtopic) {
+                            return Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(top: 8),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: StudyColors.surface,
+                                borderRadius: StudyRadius.small,
+                                border: Border.all(color: StudyColors.border),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    subtopic.title,
+                                    style: StudyTypography.label,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    subtopic.id,
+                                    style: StudyTypography.caption,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 6,
+                                    children: [
+                                      _miniPill(
+                                        'Content Blocks',
+                                        subtopic.blocks.length,
+                                      ),
+                                      _miniPill(
+                                        'Objectives',
+                                        subtopic.learningObjectives.length,
+                                      ),
+                                      _miniPill(
+                                        'Quiz Links',
+                                        subtopic.quizzes.length,
+                                      ),
+                                      _miniPill(
+                                        'References',
+                                        subtopic.references.length,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                   ),
                 );
               }).toList(),
