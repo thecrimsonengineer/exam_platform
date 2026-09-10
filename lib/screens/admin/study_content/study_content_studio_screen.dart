@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../models/question.dart';
 import '../../../services/studio/studio_question_service.dart';
+import '../../../services/studio/studio_bulk_question_publish_service.dart';
 import '../../../services/quiz_service.dart';
 import '../../../services/study_content/content_import_service.dart';
 import '../../../services/study_content/content_repository_service.dart';
@@ -53,6 +54,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   int _overviewPublishedCount = 0;
   bool _overviewQuizReady = false;
   bool _answerLengthCheckEnabled = true;
+  bool _bulkQuestionPublishing = false;
 
   int? _selectedTopicIndex;
   int? _selectedSubtopicIndex;
@@ -1039,6 +1041,34 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               'Topic and Subtopic. A dedicated subtopic quiz requires at '
               'least five published questions.',
         ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: FilledButton.icon(
+            onPressed: _bulkQuestionPublishing
+                ? null
+                : _openBulkQuestionPublish,
+            icon: _bulkQuestionPublishing
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.rocket_launch_rounded),
+            label: Text(
+              _bulkQuestionPublishing
+                  ? 'Publishing competency question bank...'
+                  : 'Bulk 120 JSON • Publish • Auto-Link',
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use this competency-wide importer for multi-Subtopic packages. '
+          'Each question is routed by its own topicId and subtopicId, so the '
+          'currently selected Subtopic does not control bulk placement.',
+          style: StudyTypography.bodySecondary,
+        ),
         const SizedBox(height: 22),
         _buildPracticeSubtopicSelector(),
         const SizedBox(height: 22),
@@ -1222,19 +1252,134 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
     if (result == null || result.isEmpty) return;
 
     try {
-      for (final question in result) {
-        await _questionService.saveDraft(question);
-      }
+      final batch = await _questionService.saveDraftBatch(result);
 
       await _refreshPracticeQuestions();
 
       if (mounted) {
-        _showPracticeMessage(
-          '${result.length} question${result.length == 1 ? '' : 's'} imported as Draft.',
-        );
+        final added = batch.addedCount;
+        final duplicates = batch.duplicateCount;
+
+        if (duplicates == 0) {
+          _showPracticeMessage(
+            '$added question${added == 1 ? '' : 's'} imported as Draft.',
+          );
+        } else if (added == 0) {
+          _showPracticeMessage(
+            'No duplicate questions were added. '
+            '$duplicates existing question${duplicates == 1 ? '' : 's'} '
+            'already use the same managed question identity.',
+          );
+        } else {
+          _showPracticeMessage(
+            '$added question${added == 1 ? '' : 's'} imported as Draft. '
+            '$duplicates exact duplicate${duplicates == 1 ? '' : 's'} '
+            'skipped without creating new IDs.',
+          );
+        }
       }
     } catch (error) {
-      _showPracticeMessage('Unable to import JSON questions.\n$error');
+      _showPracticeMessage(
+        'Unable to import JSON questions.\n'
+        '${error.toString().replaceFirst('Bad state: ', '')}',
+      );
+    }
+  }
+
+  Future<void> _openBulkQuestionPublish() async {
+    final content = _importedContent;
+
+    if (content == null) {
+      _showPracticeMessage(
+        'Open a competency before importing a bulk question package.',
+      );
+      return;
+    }
+
+    final bulkService = StudioBulkQuestionPublishService(
+      questionService: _questionService,
+      contentRepositoryService: _contentRepositoryService,
+    );
+
+    final plan = await showDialog<StudioBulkQuestionPlan>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => StudioBulkQuestionJsonDialog(
+        content: content,
+        bulkService: bulkService,
+      ),
+    );
+
+    if (plan == null || !mounted) {
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Publish and link competency question bank?'),
+        content: Text(
+          '${plan.questionCount} quality-gate-passing questions will be '
+          'published and ${plan.subtopicCount} Subtopic quizzes will be '
+          'linked. If the current content is already Published, a new Draft '
+          'revision will be created and automatically advanced through '
+          'Review, Validated, and Published.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).pop(true),
+            icon: const Icon(Icons.rocket_launch_rounded),
+            label: const Text('Publish & Link All'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
+    setState(() => _bulkQuestionPublishing = true);
+
+    try {
+      final result = await bulkService.publishAndLink(plan);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _importedContent = result.publishedContent;
+        _bulkQuestionPublishing = false;
+        _resolvedPracticeQuizId = null;
+      });
+
+      await _loadRepositoryContent();
+      await _refreshPracticeQuestions();
+
+      if (!mounted) {
+        return;
+      }
+
+      _showPracticeMessage(
+        '${result.questionCount} questions published and '
+        '${result.linkedSubtopicCount} Subtopic quizzes linked. '
+        '${result.reusedQuestionCount} existing question '
+        'ID${result.reusedQuestionCount == 1 ? '' : 's'} preserved.',
+      );
+    } catch (error) {
+      if (mounted) {
+        setState(() => _bulkQuestionPublishing = false);
+      }
+
+      _showPracticeMessage(
+        'Bulk publish/link failed.\n'
+        '${error.toString().replaceFirst('Bad state: ', '').replaceFirst('FormatException: ', '')}',
+      );
     }
   }
 
@@ -1673,7 +1818,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               OutlinedButton.icon(
                 onPressed: _openPracticeJsonImport,
                 icon: const Icon(Icons.upload_file_rounded, size: 17),
-                label: const Text('Import JSON'),
+                label: const Text('Import to Selected Subtopic'),
               ),
             ],
           ),

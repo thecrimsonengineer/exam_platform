@@ -57,7 +57,7 @@ class QuizService implements QuizServiceInterface {
   /// published because the containing content package/version itself is
   /// published.
   Future<void> initialize() async {
-    final independentQuestions = await _questionRepository.loadAll();
+    final independentQuestions = await _questionRepository.loadPublished();
     final publishedContent = await _contentRepository.loadPublished();
 
     final merged = <int, Question>{};

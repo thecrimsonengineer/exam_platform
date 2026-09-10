@@ -135,34 +135,29 @@ void main() {
   );
 
   test('JSON metadata cannot override the active Studio context', () {
-    final questions = importer.fromJsonText(
-      input: '''{
-        "question": "A manager must choose the strongest action for a recurring safety-system weakness.",
-        "domain": 1,
-        "domainId": "domain_01",
-        "competencyId": "wrong_competency",
-        "subtopicId": "wrong_subtopic",
-        "quizId": "wrong_quiz",
-        "contentPackageId": "wrong_package",
-        "options": ["One", "Two", "Three", "Four"],
-        "correctAnswer": 1,
-        "explanation": "The selected action addresses the underlying weakness.",
-        "tags": ["safety", "controls"]
-      }''',
-      nextId: () => 1004,
-      content: content,
-      topic: content.topics.first,
-      subtopic: content.topics.first.subtopics.first,
-      quizId: 'd07_c03-v1_d07_c03_01_quiz',
+    expect(
+      () => importer.fromJsonText(
+        input: '''{
+          "question": "A manager must choose the strongest action for a recurring safety-system weakness.",
+          "domain": 1,
+          "domainId": "domain_01",
+          "competencyId": "wrong_competency",
+          "subtopicId": "wrong_subtopic",
+          "quizId": "wrong_quiz",
+          "contentPackageId": "wrong_package",
+          "options": ["One", "Two", "Three", "Four"],
+          "correctAnswer": 1,
+          "explanation": "The selected action addresses the underlying weakness.",
+          "tags": ["safety", "controls"]
+        }''',
+        nextId: () => 1004,
+        content: content,
+        topic: content.topics.first,
+        subtopic: content.topics.first.subtopics.first,
+        quizId: 'd07_c03-v1_d07_c03_01_quiz',
+      ),
+      throwsFormatException,
     );
-
-    final question = questions.single;
-
-    expect(question.domain, 7);
-    expect(question.competencyId, 'd07_c03');
-    expect(question.subtopicId, 'd07_c03_01');
-    expect(question.quizId, 'd07_c03-v1_d07_c03_01_quiz');
-    expect(question.contentPackageId, 'd07_c03-v1');
   });
 
   test('JSON import rejects an empty question collection', () {
@@ -170,6 +165,105 @@ void main() {
       () => importer.fromJsonText(
         input: '{"questions": []}',
         nextId: () => 1005,
+        content: content,
+        topic: content.topics.first,
+        subtopic: content.topics.first.subtopics.first,
+        quizId: 'd07_c03-v1_d07_c03_01_quiz',
+      ),
+      throwsFormatException,
+    );
+  });
+  test('JSON nested context is accepted when it matches selected subtopic', () {
+    var id = 2000;
+
+    final questions = importer.fromJsonText(
+      input: '''{
+        "context": {
+          "domainId": "d07",
+          "competencyId": "d07_c03",
+          "topicId": "d07_c03_t01",
+          "subtopicId": "d07_c03_01",
+          "quizId": "d07_c03-v1_d07_c03_01_quiz",
+          "contentPackageId": "d07_c03-v1"
+        },
+        "questions": [
+          {
+            "question": "A trainer must select a delivery method that best matches a defined learning outcome and workplace transfer need.",
+            "options": ["One", "Two", "Three", "Four"],
+            "correctAnswer": "A",
+            "explanation": "The selected method best aligns the objective with practice and transfer requirements.",
+            "reference": "CSP11 training reference",
+            "tags": ["training methods", "method selection"]
+          }
+        ]
+      }''',
+      nextId: () => ++id,
+      content: content,
+      topic: content.topics.first,
+      subtopic: content.topics.first.subtopics.first,
+      quizId: 'd07_c03-v1_d07_c03_01_quiz',
+    );
+
+    expect(questions, hasLength(1));
+    expect(questions.single.subtopicId, 'd07_c03_01');
+  });
+
+  test('JSON context mismatch is rejected before questions are created', () {
+    expect(
+      () => importer.fromJsonText(
+        input: '''{
+          "context": {
+            "competencyId": "d07_c03",
+            "topicId": "d07_c03_t01",
+            "subtopicId": "d07_c03_99"
+          },
+          "questions": [
+            {
+              "question": "A trainer selects a method for a practical task.",
+              "options": ["One", "Two", "Three", "Four"],
+              "correctAnswer": "A",
+              "explanation": "Explanation.",
+              "reference": "Reference.",
+              "tags": ["training", "methods"]
+            }
+          ]
+        }''',
+        nextId: () => 3001,
+        content: content,
+        topic: content.topics.first,
+        subtopic: content.topics.first.subtopics.first,
+        quizId: 'd07_c03-v1_d07_c03_01_quiz',
+      ),
+      throwsFormatException,
+    );
+  });
+
+  test('JSON import rejects duplicate normalized question stems', () {
+    var id = 4000;
+
+    expect(
+      () => importer.fromJsonText(
+        input: '''{
+          "questions": [
+            {
+              "question": "Which training method BEST fits this scenario?",
+              "options": ["One", "Two", "Three", "Four"],
+              "correctAnswer": "A",
+              "explanation": "Explanation.",
+              "reference": "Reference.",
+              "tags": ["training", "methods"]
+            },
+            {
+              "question": "which training method best fits this scenario",
+              "options": ["One", "Two", "Three", "Four"],
+              "correctAnswer": "A",
+              "explanation": "Explanation.",
+              "reference": "Reference.",
+              "tags": ["training", "methods"]
+            }
+          ]
+        }''',
+        nextId: () => ++id,
         content: content,
         topic: content.topics.first,
         subtopic: content.topics.first.subtopics.first,

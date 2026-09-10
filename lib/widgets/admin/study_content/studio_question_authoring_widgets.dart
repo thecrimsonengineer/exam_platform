@@ -5,6 +5,7 @@ import '../../../models/question.dart';
 import '../../../models/study_content.dart';
 import '../../../services/complete_question_paste_parser.dart';
 import '../../../services/studio/studio_question_import_service.dart';
+import '../../../services/studio/studio_bulk_question_publish_service.dart';
 import '../../../services/studio/studio_question_service.dart';
 import '../../../services/question_quality_validator.dart';
 
@@ -558,7 +559,7 @@ class _StudioJsonQuestionImportDialogState
     final passedCount = _questions.length - blockedCount;
 
     return AlertDialog(
-      title: const Text('Import Question JSON'),
+      title: const Text('Import JSON to Selected Subtopic'),
       content: SizedBox(
         width: 820,
         child: SingleChildScrollView(
@@ -567,8 +568,11 @@ class _StudioJsonQuestionImportDialogState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Choose a .json file. Imported questions are automatically '
-                'attached to the selected Studio subtopic and enter as Draft.',
+                'This importer is only for one selected Subtopic. Every '
+                'question in the file must belong to that Subtopic and enters '
+                'as Draft. For a competency-wide file containing multiple '
+                'topicId/subtopicId values, use Bulk 120 JSON • Publish • '
+                'Auto-Link on the Practice Questions page.',
               ),
               const SizedBox(height: 14),
               Container(
@@ -812,6 +816,225 @@ class _StudioJsonQuestionImportDialogState
           ),
         ],
       ),
+    );
+  }
+}
+
+class StudioBulkQuestionJsonDialog extends StatefulWidget {
+  final StudyContent content;
+  final StudioBulkQuestionPublishService bulkService;
+
+  const StudioBulkQuestionJsonDialog({
+    super.key,
+    required this.content,
+    required this.bulkService,
+  });
+
+  @override
+  State<StudioBulkQuestionJsonDialog> createState() =>
+      _StudioBulkQuestionJsonDialogState();
+}
+
+class _StudioBulkQuestionJsonDialogState
+    extends State<StudioBulkQuestionJsonDialog> {
+  StudioBulkQuestionPlan? _plan;
+  String? _fileName;
+  String? _error;
+  bool _busy = false;
+
+  Future<void> _selectFile() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+      _plan = null;
+    });
+
+    try {
+      const group = XTypeGroup(
+        label: 'CSP11 Bulk Question JSON',
+        extensions: ['json'],
+      );
+
+      final file = await openFile(acceptedTypeGroups: [group]);
+
+      if (file == null) {
+        if (mounted) {
+          setState(() => _busy = false);
+        }
+        return;
+      }
+
+      final text = await file.readAsString();
+      final plan = widget.bulkService.prepareFromJsonText(
+        input: text,
+        content: widget.content,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _fileName = file.name;
+        _plan = plan;
+        _busy = false;
+      });
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _busy = false;
+        _error = error
+            .toString()
+            .replaceFirst('FormatException: ', '')
+            .replaceFirst('Bad state: ', '');
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final plan = _plan;
+    final coverage = plan?.questionCountBySubtopic.entries.toList()
+      ?..sort((a, b) => a.key.compareTo(b.key));
+
+    return AlertDialog(
+      title: const Text('Bulk Import, Publish & Link'),
+      content: SizedBox(
+        width: 900,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Choose one competency-wide JSON package. Every question must '
+                'declare topicId and subtopicId. The Studio validates all '
+                'questions first, requires at least 5 per Subtopic, then '
+                'publishes the questions and links every Subtopic quiz in one '
+                'managed workflow.',
+              ),
+              const SizedBox(height: 14),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'Competency: ${widget.content.competencyId} • '
+                  '${widget.content.title}\n'
+                  'Current content status: '
+                  '${widget.content.status.toUpperCase()}',
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  FilledButton.icon(
+                    onPressed: _busy ? null : _selectFile,
+                    icon: const Icon(Icons.upload_file_rounded),
+                    label: Text(_busy ? 'Reading...' : 'Choose Bulk JSON'),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _fileName ?? 'No file selected',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              if (_error != null) ...[
+                const SizedBox(height: 14),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.06),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    _error!,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+              if (plan != null) ...[
+                const SizedBox(height: 18),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: 0.07),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '${plan.questionCount} questions PASSED the quality gate.\n'
+                    '${plan.subtopicCount}/${plan.subtopicCount} Subtopics '
+                    'meet the minimum 5-question coverage gate.',
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  'Subtopic coverage',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 280,
+                  child: ListView.separated(
+                    itemCount: coverage?.length ?? 0,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final entry = coverage![index];
+                      return ListTile(
+                        dense: true,
+                        leading: const Icon(
+                          Icons.check_circle_rounded,
+                          color: Colors.green,
+                          size: 18,
+                        ),
+                        title: Text(entry.key),
+                        trailing: Text(
+                          '${entry.value} questions',
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'The operation will preserve existing question IDs for '
+                  'exact duplicates, publish all prepared questions, attach '
+                  'one stable quiz link to every Subtopic, and publish a new '
+                  'content revision when the current version is already '
+                  'Published.',
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _busy ? null : () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        FilledButton.icon(
+          onPressed: plan == null || _busy
+              ? null
+              : () => Navigator.of(context).pop(plan),
+          icon: const Icon(Icons.rocket_launch_rounded),
+          label: const Text('Continue'),
+        ),
+      ],
     );
   }
 }

@@ -71,6 +71,7 @@ class CloudContentRepository {
   Future<List<StudyContent>> loadPublished() async {
     final snapshot = await _collection
         .where('copyType', isEqualTo: 'published')
+        .where('status', isEqualTo: 'published')
         .get();
 
     return snapshot.docs

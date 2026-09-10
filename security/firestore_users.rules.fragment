@@ -1,0 +1,116 @@
+// CSP11 Firestore users/{uid} hardening fragment
+//
+// IMPORTANT:
+// - This is intentionally a FRAGMENT, not a complete Firestore ruleset.
+// - Merge it inside:
+//     service cloud.firestore {
+//       match /databases/{database}/documents {
+//         ...THIS CONTENT...
+//       }
+//     }
+// - Do not add a broad catch-all allow rule that also matches /users/{uid}.
+//   Firestore allow rules are OR-combined, so a broader allow could bypass
+//   these restrictions.
+//
+// Security contract:
+// - A learner can create only their own student profile.
+// - A learner can read only their own profile.
+// - A learner can update only approved mutable profile fields.
+// - A learner cannot change uid, email, role or createdAt.
+// - A learner cannot delete their profile from the client.
+// - An admin can read/manage user profiles and roles.
+
+function csp11SignedIn() {
+  return request.auth != null;
+}
+
+function csp11IsSelf(uid) {
+  return csp11SignedIn() && request.auth.uid == uid;
+}
+
+function csp11IsAdmin() {
+  return csp11SignedIn()
+    && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+    && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+}
+
+function csp11AllowedUserKeys() {
+  return [
+    'uid',
+    'fullName',
+    'email',
+    'country',
+    'phone',
+    'organization',
+    'jobTitle',
+    'yearsExperience',
+    'role',
+    'createdAt',
+    'updatedAt'
+  ];
+}
+
+function csp11RequiredUserKeys() {
+  return [
+    'uid',
+    'fullName',
+    'email',
+    'country',
+    'role',
+    'createdAt',
+    'updatedAt'
+  ];
+}
+
+function csp11LearnerMutableKeys() {
+  return [
+    'fullName',
+    'country',
+    'phone',
+    'organization',
+    'jobTitle',
+    'yearsExperience',
+    'updatedAt'
+  ];
+}
+
+function csp11ValidNewLearner(uid) {
+  return request.resource.data.keys().hasAll(csp11RequiredUserKeys())
+    && request.resource.data.keys().hasOnly(csp11AllowedUserKeys())
+    && request.resource.data.uid == uid
+    && request.resource.data.role == 'student'
+    && request.resource.data.fullName is string
+    && request.resource.data.email is string
+    && request.resource.data.country is string
+    && request.resource.data.createdAt is timestamp
+    && request.resource.data.updatedAt is timestamp;
+}
+
+function csp11ValidLearnerUpdate() {
+  return request.resource.data.keys().hasAll(csp11RequiredUserKeys())
+    && request.resource.data.keys().hasOnly(csp11AllowedUserKeys())
+    && request.resource.data.uid == resource.data.uid
+    && request.resource.data.email == resource.data.email
+    && request.resource.data.role == resource.data.role
+    && request.resource.data.createdAt == resource.data.createdAt
+    && request.resource.data
+      .diff(resource.data)
+      .affectedKeys()
+      .hasOnly(csp11LearnerMutableKeys());
+}
+
+match /users/{uid} {
+  allow get: if csp11IsSelf(uid) || csp11IsAdmin();
+
+  // Collection-wide user listing is admin-only. Learners do not need to
+  // enumerate other learner profiles.
+  allow list: if csp11IsAdmin();
+
+  allow create: if csp11IsAdmin()
+    || (csp11IsSelf(uid) && csp11ValidNewLearner(uid));
+
+  allow update: if csp11IsAdmin()
+    || (csp11IsSelf(uid) && csp11ValidLearnerUpdate());
+
+  allow delete: if csp11IsAdmin();
+}

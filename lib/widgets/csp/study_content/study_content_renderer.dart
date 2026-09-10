@@ -14,13 +14,13 @@ import '../../../theme/study/study_typography.dart';
 
 /// Premium student-facing renderer for a CSP competency index.
 ///
-/// The competency screen remains an overview and subtopic launcher.
+/// Frozen learner hierarchy:
+/// Competency -> Topic accordion -> Subtopic -> Learning content.
 ///
-/// When [initialSubtopicId] is supplied, the saved subtopic is opened
-/// automatically. Otherwise the normal competency overview is shown.
+/// Topics remain concept-level navigation units. Subtopic progress remains the
+/// persisted unit; topic completion is always derived from child subtopics.
 class StudyContentRenderer extends StatefulWidget {
   final StudyContent content;
-
   final String? initialSubtopicId;
   final String? domainTitle;
 
@@ -37,6 +37,8 @@ class StudyContentRenderer extends StatefulWidget {
 
 class _StudyContentRendererState extends State<StudyContentRenderer> {
   bool _resumeHandled = false;
+  bool _topicSelectionInitialized = false;
+  int _expandedTopicIndex = 0;
 
   final StudentLearningProgressService _progressService =
       const StudentLearningProgressService();
@@ -54,9 +56,20 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
   void didUpdateWidget(covariant StudyContentRenderer oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.content.id != widget.content.id ||
-        oldWidget.content.version != widget.content.version) {
+    final contentChanged =
+        oldWidget.content.id != widget.content.id ||
+        oldWidget.content.version != widget.content.version;
+
+    final resumeTargetChanged =
+        oldWidget.initialSubtopicId != widget.initialSubtopicId;
+
+    if (contentChanged) {
+      _topicSelectionInitialized = false;
+      _expandedTopicIndex = 0;
+      _resumeHandled = false;
       _loadProgress();
+    } else if (resumeTargetChanged) {
+      _resumeHandled = false;
     }
   }
 
@@ -69,21 +82,25 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
 
     setState(() {
       _progressBySubtopicId = progress;
+
+      if (!_topicSelectionInitialized) {
+        _expandedTopicIndex = _preferredTopicIndex(progress);
+        _topicSelectionInitialized = true;
+      }
     });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     _openSavedSubtopicIfRequired();
   }
 
   @override
   Widget build(BuildContext context) {
     final domain = _getDomainNumber(widget.content.domainId);
-
-    final subtopics = _orderedSubtopics();
+    final topics = widget.content.topics;
+    final subtopicCount = _orderedSubtopics().length;
 
     return Container(
       color: StudyColors.background,
@@ -114,18 +131,21 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildOverviewCard(subtopics.length),
+                          _buildOverviewCard(
+                            topicCount: topics.length,
+                            subtopicCount: subtopicCount,
+                          ),
                           const SizedBox(height: 26),
-                          _buildSectionHeader(subtopics.length),
+                          _buildSectionHeader(topics.length),
                           const SizedBox(height: 14),
-                          ...subtopics.asMap().entries.map(
+                          ...topics.asMap().entries.map(
                             (entry) => Padding(
                               padding: const EdgeInsets.only(bottom: 14),
-                              child: _buildSubtopicCard(
+                              child: _buildTopicAccordionCard(
                                 context,
-                                subtopic: entry.value,
-                                index: entry.key,
-                                total: subtopics.length,
+                                topic: entry.value,
+                                topicIndex: entry.key,
+                                totalTopics: topics.length,
                               ),
                             ),
                           ),
@@ -155,7 +175,6 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     }
 
     final subtopics = _orderedSubtopics();
-
     final index = subtopics.indexWhere(
       (subtopic) => _subtopicId(subtopic) == savedId,
     );
@@ -230,7 +249,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                 ),
                 const SizedBox(height: 9),
                 Text(
-                  'Competency ${widget.content.competencyNumber} • Choose a subtopic to begin studying',
+                  'Competency ${widget.content.competencyNumber} • Choose a topic to explore its subtopics',
                   style: StudyTypography.bodyLarge.copyWith(
                     color: Colors.white.withValues(alpha: 0.78),
                   ),
@@ -241,14 +260,14 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                   runSpacing: 12,
                   children: [
                     _buildHeroStat(
+                      icon: StudyIcons.book,
+                      label: 'TOPICS',
+                      value: '${widget.content.topics.length}',
+                    ),
+                    _buildHeroStat(
                       icon: StudyIcons.subtopic,
                       label: 'SUBTOPICS',
                       value: '${_orderedSubtopics().length}',
-                    ),
-                    _buildHeroStat(
-                      icon: StudyIcons.book,
-                      label: 'CONTENT TOPICS',
-                      value: '${_topicCount()}',
                     ),
                     _buildHeroStat(
                       icon: StudyIcons.quiz,
@@ -311,7 +330,10 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     );
   }
 
-  Widget _buildOverviewCard(int count) {
+  Widget _buildOverviewCard({
+    required int topicCount,
+    required int subtopicCount,
+  }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -351,12 +373,15 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '$count ${count == 1 ? 'subtopic' : 'subtopics'}',
+                  '$topicCount ${topicCount == 1 ? 'topic' : 'topics'} • '
+                  '$subtopicCount ${subtopicCount == 1 ? 'subtopic' : 'subtopics'}',
                   style: StudyTypography.subSectionTitle,
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'Each subtopic opens on its own study screen. Use Previous and Next to move through the competency without returning to this page.',
+                  'Open a topic to reveal its learning sections. Your progress '
+                  'is tracked at subtopic level and topic completion is derived '
+                  'automatically.',
                   style: StudyTypography.bodySecondary,
                 ),
               ],
@@ -367,7 +392,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     );
   }
 
-  Widget _buildSectionHeader(int count) {
+  Widget _buildSectionHeader(int topicCount) {
     return Row(
       children: [
         Expanded(
@@ -375,13 +400,13 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'LEARNING SECTIONS',
+                'TOPICS & SUBTOPICS',
                 style: StudyTypography.eyebrow.copyWith(
                   color: StudyColors.primary,
                 ),
               ),
               const SizedBox(height: 4),
-              Text('Choose a subtopic', style: StudyTypography.sectionTitle),
+              Text('Choose a topic', style: StudyTypography.sectionTitle),
             ],
           ),
         ),
@@ -393,7 +418,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
             border: Border.all(color: StudyColors.border),
           ),
           child: Text(
-            '$count ${count == 1 ? 'SECTION' : 'SECTIONS'}',
+            '$topicCount ${topicCount == 1 ? 'TOPIC' : 'TOPICS'}',
             style: StudyTypography.eyebrow.copyWith(
               color: StudyColors.textSecondary,
               fontSize: 9,
@@ -404,28 +429,295 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     );
   }
 
+  Widget _buildTopicAccordionCard(
+    BuildContext context, {
+    required StudyTopic topic,
+    required int topicIndex,
+    required int totalTopics,
+  }) {
+    final isExpanded = _expandedTopicIndex == topicIndex;
+    final subtopicCount = topic.subtopics.length;
+    final completedCount = _completedSubtopicCount(topic);
+    final completionRatio = _topicCompletionRatio(topic);
+    final isCompleted = subtopicCount > 0 && completedCount == subtopicCount;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: StudyColors.surface,
+        borderRadius: StudyRadius.large,
+        border: Border.all(
+          color: isExpanded
+              ? StudyColors.primary.withValues(alpha: 0.34)
+              : StudyColors.border,
+          width: isExpanded ? 1.25 : 1,
+        ),
+        boxShadow: isExpanded ? StudyShadows.soft : const [],
+      ),
+      child: ClipRRect(
+        borderRadius: StudyRadius.large,
+        child: Column(
+          children: [
+            Material(
+              color: isExpanded
+                  ? StudyColors.primaryLight.withValues(alpha: 0.42)
+                  : StudyColors.surface,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _topicSelectionInitialized = true;
+                    _expandedTopicIndex = isExpanded ? -1 : topicIndex;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 52,
+                        height: 52,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          gradient: StudyGradients.heroSoft,
+                          borderRadius: StudyRadius.medium,
+                        ),
+                        child: Text(
+                          'T${(topicIndex + 1).toString().padLeft(2, '0')}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.4,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'TOPIC ${topicIndex + 1} OF $totalTopics',
+                              style: StudyTypography.eyebrow.copyWith(
+                                color: StudyColors.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              topic.title.trim().isEmpty
+                                  ? 'Untitled Topic'
+                                  : topic.title,
+                              style: StudyTypography.subSectionTitle.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 7,
+                              children: [
+                                _buildMetaChip(
+                                  '$subtopicCount '
+                                  '${subtopicCount == 1 ? 'subtopic' : 'subtopics'}',
+                                ),
+                                if (subtopicCount > 0)
+                                  _buildMetaChip(
+                                    '$completedCount/$subtopicCount complete',
+                                  ),
+                                if (isCompleted)
+                                  _buildStatusChip(
+                                    label: 'Completed',
+                                    icon: Icons.check_circle_rounded,
+                                    foreground: const Color(0xFF1F8A4C),
+                                    background: const Color(0xFFEAF8F0),
+                                    border: const Color(0xFFB9E7CA),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      AnimatedRotation(
+                        turns: isExpanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeOutCubic,
+                        child: Container(
+                          width: 42,
+                          height: 42,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: isExpanded
+                                ? StudyColors.primary
+                                : StudyColors.primaryLight,
+                            borderRadius: StudyRadius.medium,
+                          ),
+                          child: Icon(
+                            Icons.expand_more_rounded,
+                            color: isExpanded
+                                ? Colors.white
+                                : StudyColors.primary,
+                            size: 23,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 280),
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: !isExpanded
+                  ? const SizedBox.shrink()
+                  : Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+                      color: StudyColors.surface,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Divider(height: 1),
+                          const SizedBox(height: 16),
+                          _buildTopicProgress(
+                            completedCount: completedCount,
+                            totalCount: subtopicCount,
+                            ratio: completionRatio,
+                          ),
+                          if (subtopicCount > 0) ...[
+                            const SizedBox(height: 16),
+                            ...topic.subtopics.asMap().entries.map(
+                              (entry) => Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      entry.key == topic.subtopics.length - 1
+                                      ? 0
+                                      : 10,
+                                ),
+                                child: _buildSubtopicCard(
+                                  context,
+                                  subtopic: entry.value,
+                                  topicIndex: topicIndex,
+                                  subtopicIndex: entry.key,
+                                  totalInTopic: subtopicCount,
+                                ),
+                              ),
+                            ),
+                          ] else ...[
+                            const SizedBox(height: 14),
+                            Text(
+                              'No subtopics are available in this topic yet.',
+                              style: StudyTypography.bodySecondary,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopicProgress({
+    required int completedCount,
+    required int totalCount,
+    required double ratio,
+  }) {
+    final percent = (ratio * 100).round();
+
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'TOPIC PROGRESS',
+                    style: StudyTypography.eyebrow.copyWith(
+                      color: StudyColors.textSecondary,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    totalCount == 0
+                        ? 'No sections'
+                        : '$completedCount of $totalCount complete',
+                    style: StudyTypography.caption.copyWith(
+                      color: StudyColors.textSecondary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: StudyRadius.pillRadius,
+                child: LinearProgressIndicator(
+                  value: ratio,
+                  minHeight: 7,
+                  backgroundColor: StudyColors.surfaceSoft,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    StudyColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (totalCount > 0) ...[
+          const SizedBox(width: 14),
+          Container(
+            constraints: const BoxConstraints(minWidth: 52),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: StudyColors.primaryLight,
+              borderRadius: StudyRadius.medium,
+              border: Border.all(
+                color: StudyColors.primary.withValues(alpha: 0.12),
+              ),
+            ),
+            child: Text(
+              '$percent%',
+              style: StudyTypography.caption.copyWith(
+                color: StudyColors.primary,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
   Widget _buildSubtopicCard(
     BuildContext context, {
     required StudySubtopic subtopic,
-    required int index,
-    required int total,
+    required int topicIndex,
+    required int subtopicIndex,
+    required int totalInTopic,
   }) {
     final blockCount = subtopic.blocks.length;
-
     final objectiveCount = subtopic.learningObjectives.length;
-
     final quizCount = _subtopicQuizCount(subtopic);
+    final globalIndex = _globalSubtopicIndex(topicIndex, subtopicIndex);
 
     return Material(
-      color: StudyColors.surface,
-      borderRadius: StudyRadius.large,
+      color: StudyColors.surfaceSoft,
+      borderRadius: StudyRadius.medium,
       child: InkWell(
         onTap: () async {
           await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => StudySubtopicScreen(
                 content: widget.content,
-                subtopicIndex: index,
+                subtopicIndex: globalIndex,
                 domainTitle: widget.domainTitle,
               ),
             ),
@@ -433,42 +725,42 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
 
           await _loadProgress();
         },
-        borderRadius: StudyRadius.large,
+        borderRadius: StudyRadius.medium,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            borderRadius: StudyRadius.large,
+            borderRadius: StudyRadius.medium,
             border: Border.all(color: StudyColors.border),
-            boxShadow: StudyShadows.soft,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 42,
+                height: 42,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  gradient: StudyGradients.heroSoft,
-                  borderRadius: StudyRadius.medium,
+                  color: StudyColors.surface,
+                  borderRadius: StudyRadius.small,
+                  border: Border.all(color: StudyColors.border),
                 ),
                 child: Text(
-                  '${index + 1}'.padLeft(2, '0'),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
+                  '${subtopicIndex + 1}'.padLeft(2, '0'),
+                  style: TextStyle(
+                    color: StudyColors.primary,
+                    fontSize: 12,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 13),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'SUBTOPIC ${index + 1} OF $total',
+                      'SUBTOPIC ${subtopicIndex + 1} OF $totalInTopic',
                       style: StudyTypography.eyebrow.copyWith(
                         color: StudyColors.primary,
                       ),
@@ -495,10 +787,10 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Container(
-                width: 40,
-                height: 40,
+                width: 38,
+                height: 38,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: StudyColors.primaryLight,
@@ -507,7 +799,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                 child: const Icon(
                   StudyIcons.next,
                   color: StudyColors.primary,
-                  size: 20,
+                  size: 19,
                 ),
               ),
             ],
@@ -599,12 +891,76 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     );
   }
 
-  List<StudySubtopic> _orderedSubtopics() {
-    return [for (final topic in widget.content.topics) ...topic.subtopics];
+  int _preferredTopicIndex(Map<String, StudentSubtopicProgress> progress) {
+    final savedId = widget.initialSubtopicId;
+
+    if (savedId != null && savedId.trim().isNotEmpty) {
+      for (
+        var topicIndex = 0;
+        topicIndex < widget.content.topics.length;
+        topicIndex++
+      ) {
+        final topic = widget.content.topics[topicIndex];
+
+        if (topic.subtopics.any((subtopic) => subtopic.id == savedId)) {
+          return topicIndex;
+        }
+      }
+    }
+
+    for (
+      var topicIndex = 0;
+      topicIndex < widget.content.topics.length;
+      topicIndex++
+    ) {
+      final topic = widget.content.topics[topicIndex];
+
+      if (topic.subtopics.isEmpty) {
+        continue;
+      }
+
+      final hasIncomplete = topic.subtopics.any(
+        (subtopic) =>
+            (progress[subtopic.id]?.state ?? StudentLearningState.notStarted) !=
+            StudentLearningState.completed,
+      );
+
+      if (hasIncomplete) {
+        return topicIndex;
+      }
+    }
+
+    return 0;
   }
 
-  int _topicCount() {
-    return widget.content.topics.length;
+  int _completedSubtopicCount(StudyTopic topic) {
+    return topic.subtopics.where((subtopic) {
+      return (_progressBySubtopicId[subtopic.id]?.state ??
+              StudentLearningState.notStarted) ==
+          StudentLearningState.completed;
+    }).length;
+  }
+
+  double _topicCompletionRatio(StudyTopic topic) {
+    if (topic.subtopics.isEmpty) {
+      return 0;
+    }
+
+    return _completedSubtopicCount(topic) / topic.subtopics.length;
+  }
+
+  int _globalSubtopicIndex(int topicIndex, int subtopicIndex) {
+    var index = subtopicIndex;
+
+    for (var i = 0; i < topicIndex; i++) {
+      index += widget.content.topics[i].subtopics.length;
+    }
+
+    return index;
+  }
+
+  List<StudySubtopic> _orderedSubtopics() {
+    return [for (final topic in widget.content.topics) ...topic.subtopics];
   }
 
   int _quizCount() {

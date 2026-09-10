@@ -21,12 +21,7 @@ void main() {
         subtopicId: 'd01_c01_st01',
         topicId: 'd01_c01_t01',
         question: 'Test question.',
-        options: const [
-          'Option A',
-          'Option B',
-          'Option C',
-          'Option D',
-        ],
+        options: const ['Option A', 'Option B', 'Option C', 'Option D'],
         correctAnswer: 0,
         explanation: 'Test explanation.',
         reference: 'Test reference.',
@@ -45,12 +40,7 @@ void main() {
         'subtopicId': 'd01_c01_st01',
         'topicId': 'd01_c01_t01',
         'question': 'Test question.',
-        'options': [
-          'Option A',
-          'Option B',
-          'Option C',
-          'Option D',
-        ],
+        'options': ['Option A', 'Option B', 'Option C', 'Option D'],
         'correctAnswer': 0,
         'explanation': 'Test explanation.',
         'reference': 'Test reference.',
@@ -69,12 +59,7 @@ void main() {
         subtopicId: 'd01_c01_st01',
         topicId: 'd01_c01_t01',
         question: 'Test question.',
-        options: const [
-          'Option A',
-          'Option B',
-          'Option C',
-          'Option D',
-        ],
+        options: const ['Option A', 'Option B', 'Option C', 'Option D'],
         correctAnswer: 0,
         explanation: 'Test explanation.',
         reference: 'Test reference.',
@@ -258,6 +243,189 @@ void main() {
         expect(published.options[published.correctAnswer], correctText);
 
         expect(published.options.toSet(), question.options.toSet());
+      },
+    );
+
+    test('nextQuestionId is unique across rapid consecutive allocations', () {
+      final ids = List<int>.generate(20, (_) => service.nextQuestionId());
+
+      expect(ids.toSet(), hasLength(ids.length));
+
+      for (var index = 1; index < ids.length; index++) {
+        expect(ids[index], greaterThan(ids[index - 1]));
+      }
+    });
+
+    test('five-question batch persists five distinct managed IDs', () async {
+      final base = validQuestion();
+      final questions = List<Question>.generate(
+        5,
+        (index) => Question.fromJson({
+          ...base.toJson(),
+          'id': service.nextQuestionId(),
+          'question':
+              '${base.question} Batch variation ${index + 1} requires a different decision.',
+        }),
+      );
+
+      final result = await service.saveDraftBatch(questions);
+
+      expect(result.addedCount, 5);
+      expect(result.duplicateCount, 0);
+      expect(service.allManagedQuestions(), hasLength(5));
+      expect(
+        service.allManagedQuestions().map((question) => question.id).toSet(),
+        hasLength(5),
+      );
+    });
+
+    test('exact re-import keeps one existing question ID', () async {
+      final original = validQuestion();
+      await service.saveDraft(original);
+
+      final duplicate = Question.fromJson({
+        ...original.toJson(),
+        'id': service.nextQuestionId(),
+      });
+
+      final result = await service.saveDraftBatch([duplicate]);
+
+      expect(result.addedCount, 0);
+      expect(result.duplicateCount, 1);
+      expect(service.allManagedQuestions(), hasLength(1));
+      expect(service.allManagedQuestions().single.id, original.id);
+    });
+
+    test('same stem with changed answer metadata is rejected', () async {
+      final original = validQuestion();
+      await service.saveDraft(original);
+
+      final conflict = Question.fromJson({
+        ...original.toJson(),
+        'id': service.nextQuestionId(),
+        'explanation': 'A materially changed explanation.',
+      });
+
+      expect(() => service.saveDraftBatch([conflict]), throwsStateError);
+      expect(service.allManagedQuestions(), hasLength(1));
+      expect(service.allManagedQuestions().single.id, original.id);
+    });
+
+    test('same stem cannot be imported into a different subtopic', () async {
+      final original = validQuestion();
+      await service.saveDraft(original);
+
+      final wrongPlacement = Question.fromJson({
+        ...original.toJson(),
+        'id': service.nextQuestionId(),
+        'subtopicId': 'd01_c01_st99',
+        'topicId': 'd01_c01_t99',
+        'quizId': 'quiz_99',
+      });
+
+      expect(() => service.saveDraftBatch([wrongPlacement]), throwsStateError);
+      expect(service.allManagedQuestions(), hasLength(1));
+      expect(service.allManagedQuestions().single.subtopicId, 'd01_c01_st01');
+    });
+  });
+
+  group('Bulk prepared question publication', () {
+    late QuestionBankService service;
+
+    setUp(() async {
+      service = QuestionBankService(
+        repository: LocalQuestionRepository.instance,
+      );
+      await LocalQuestionRepository.instance.replaceAll(const <Question>[]);
+    });
+
+    Question validQuestion(int id, String stem) {
+      return Question(
+        id: id,
+        domain: 7,
+        competencyId: 'd07_c05',
+        subtopicId: 'd07_c05_t01_s01',
+        topicId: 'd07_c05_t01',
+        quizId: 'd07_c05_t01_s01_quiz',
+        contentPackageId: 'd07_c05-v2',
+        question: stem,
+        options: const [
+          'Use a lecture because it is quick to deliver.',
+          'Use supervised practice with feedback.',
+          'Use self-study only to reduce instructor time.',
+          'Use a written test without practical activity.',
+        ],
+        correctAnswer: 1,
+        explanation:
+            'Supervised practice with feedback best supports application of '
+            'a practical skill and allows immediate correction.',
+        reference: 'Raymond A. Noe, Employee Training and Development',
+        difficulty: 'Hard',
+        cognitiveLevel: 'application',
+        questionType: 'scenario_mcq',
+        status: 'draft',
+        version: 1,
+        tags: const ['training methods', 'skill practice'],
+      );
+    }
+
+    test('publishes a five-question prepared batch', () async {
+      final questions = List<Question>.generate(
+        5,
+        (index) => validQuestion(
+          service.nextQuestionId(),
+          'A supervisor must select a practical training method for task '
+          '${index + 1} after workers understood the theory. Which approach '
+          'BEST supports safe transfer to the job?',
+        ),
+      );
+
+      final result = await service.publishPreparedBatch(questions);
+
+      expect(result.publishedQuestionCount, 5);
+      expect(result.reusedQuestionCount, 0);
+      expect(service.allManagedQuestions(), hasLength(5));
+      expect(
+        service.allManagedQuestions().every(
+          (question) => question.status == 'published',
+        ),
+        isTrue,
+      );
+      expect(
+        service.allManagedQuestions().map((question) => question.id).toSet(),
+        hasLength(5),
+      );
+    });
+
+    test(
+      'exact existing question keeps ID while quiz metadata is rebound',
+      () async {
+        final original = validQuestion(
+          7001,
+          'A safety trainer must teach a hands-on isolation sequence. Which '
+          'method BEST supports correct task performance?',
+        );
+
+        await service.saveDraft(original);
+
+        final incoming = Question.fromJson({
+          ...original.toJson(),
+          'id': service.nextQuestionId(),
+          'quizId': 'd07_c05_t01_s01_quiz',
+          'contentPackageId': 'd07_c05-v3',
+        });
+
+        final result = await service.publishPreparedBatch([incoming]);
+
+        expect(result.publishedQuestionCount, 1);
+        expect(result.reusedQuestionCount, 1);
+        expect(service.allManagedQuestions(), hasLength(1));
+
+        final saved = service.allManagedQuestions().single;
+        expect(saved.id, 7001);
+        expect(saved.status, 'published');
+        expect(saved.quizId, 'd07_c05_t01_s01_quiz');
+        expect(saved.contentPackageId, 'd07_c05-v3');
       },
     );
   });

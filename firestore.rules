@@ -1,0 +1,120 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function allowedUserKeys() {
+      return [
+        'uid',
+        'fullName',
+        'email',
+        'country',
+        'phone',
+        'organization',
+        'jobTitle',
+        'yearsExperience',
+        'role',
+        'createdAt',
+        'updatedAt'
+      ];
+    }
+
+    function requiredUserKeys() {
+      return [
+        'uid',
+        'fullName',
+        'email',
+        'country',
+        'role',
+        'createdAt',
+        'updatedAt'
+      ];
+    }
+
+    function learnerMutableKeys() {
+      return [
+        'fullName',
+        'country',
+        'phone',
+        'organization',
+        'jobTitle',
+        'yearsExperience',
+        'updatedAt'
+      ];
+    }
+
+    function validNewLearner(uid) {
+      return request.resource.data.keys().hasAll(requiredUserKeys())
+        && request.resource.data.keys().hasOnly(allowedUserKeys())
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'student'
+        && request.resource.data.fullName is string
+        && request.resource.data.email is string
+        && request.resource.data.country is string
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp;
+    }
+
+    function validLearnerUpdate() {
+      return request.resource.data.keys().hasAll(requiredUserKeys())
+        && request.resource.data.keys().hasOnly(allowedUserKeys())
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data
+          .diff(resource.data)
+          .affectedKeys()
+          .hasOnly(learnerMutableKeys());
+    }
+
+    match /users/{uid} {
+      allow get: if isSelf(uid) || isAdmin();
+      allow list: if isAdmin();
+
+      allow create: if isAdmin()
+        || (isSelf(uid) && validNewLearner(uid));
+
+      allow update: if isAdmin()
+        || (isSelf(uid) && validLearnerUpdate());
+
+      allow delete: if isAdmin();
+    }
+
+    match /questions/{questionId} {
+      allow get, list: if isAdmin()
+        || (signedIn() && resource.data.status == 'published');
+
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /contentVersions/{contentVersionId} {
+      allow get, list: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.copyType == 'published'
+          && resource.data.status == 'published'
+        );
+
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Fail closed for every Firestore path not explicitly declared above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

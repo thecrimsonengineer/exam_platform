@@ -6,12 +6,19 @@ import '../../services/auth/auth_state_service.dart';
 import '../admin/admin_home_screen.dart';
 import '../navigation/bottom_navigation.dart';
 import 'login_screen.dart';
+import 'verify_email_screen.dart';
 
 class AuthGate extends StatelessWidget {
-  const AuthGate({super.key, this.authStateService, this.loginScreen});
+  const AuthGate({
+    super.key,
+    this.authStateService,
+    this.loginScreen,
+    this.verificationScreen,
+  });
 
   final AuthStateProvider? authStateService;
   final Widget? loginScreen;
+  final Widget? verificationScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +45,10 @@ class AuthGate extends StatelessWidget {
 
         if (appUser.isAdmin) {
           return const AdminHomeScreen();
+        }
+
+        if (!appUser.emailVerified) {
+          return verificationScreen ?? const VerifyEmailScreen();
         }
 
         return const BottomNavigationScreen();

@@ -14,7 +14,7 @@ import '../models/question.dart';
 /// from this repository. Local caching is deferred to Phase K.
 class CloudQuestionRepository {
   CloudQuestionRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -25,6 +25,20 @@ class CloudQuestionRepository {
 
   Future<List<Question>> loadAll() async {
     final snapshot = await _collection.get();
+
+    final questions = snapshot.docs
+        .map((doc) => _decode(doc.data()))
+        .whereType<Question>()
+        .toList();
+
+    questions.sort((a, b) => a.id.compareTo(b.id));
+    return questions;
+  }
+
+  Future<List<Question>> loadPublished() async {
+    final snapshot = await _collection
+        .where('status', isEqualTo: 'published')
+        .get();
 
     final questions = snapshot.docs
         .map((doc) => _decode(doc.data()))

@@ -116,6 +116,13 @@ class StudioQuestionService {
   Future<List<QuestionQualityIssue>> saveDraft(Question question) =>
       _questionBankService.saveDraft(question);
 
+  Future<QuestionDraftBatchResult> saveDraftBatch(List<Question> questions) =>
+      _questionBankService.saveDraftBatch(questions);
+
+  Future<QuestionPreparedBatchPublishResult> publishPreparedBatch(
+    List<Question> questions,
+  ) => _questionBankService.publishPreparedBatch(questions);
+
   Future<void> sendToReview(Question question) =>
       _questionBankService.sendToReview(question);
 

@@ -57,6 +57,14 @@ class StudioQuestionImportService {
     required StudySubtopic subtopic,
     required String quizId,
   }) {
+    _validateDeclaredContext(
+      decoded,
+      content: content,
+      topic: topic,
+      subtopic: subtopic,
+      quizId: quizId,
+    );
+
     final rawQuestions = _extractQuestionObjects(decoded);
 
     if (rawQuestions.isEmpty) {
@@ -65,7 +73,15 @@ class StudioQuestionImportService {
       );
     }
 
-    return rawQuestions.map((raw) {
+    final questions = rawQuestions.map((raw) {
+      _validateDeclaredContext(
+        raw,
+        content: content,
+        topic: topic,
+        subtopic: subtopic,
+        quizId: quizId,
+      );
+
       return _questionFromMap(
         raw,
         id: nextId(),
@@ -75,6 +91,9 @@ class StudioQuestionImportService {
         quizId: quizId,
       );
     }).toList();
+
+    _validateUniqueQuestionStems(questions);
+    return questions;
   }
 
   Question _questionFromMap(
@@ -142,6 +161,152 @@ class StudioQuestionImportService {
     throw const FormatException(
       'JSON must contain a question object or an array of question objects.',
     );
+  }
+
+  void _validateDeclaredContext(
+    dynamic source, {
+    required StudyContent content,
+    required StudyTopic topic,
+    required StudySubtopic subtopic,
+    required String quizId,
+  }) {
+    if (source is! Map) {
+      return;
+    }
+
+    final map = Map<String, dynamic>.from(source);
+    final nestedContext = map['context'];
+
+    if (nestedContext is Map) {
+      _validateDeclaredContext(
+        Map<String, dynamic>.from(nestedContext),
+        content: content,
+        topic: topic,
+        subtopic: subtopic,
+        quizId: quizId,
+      );
+    }
+
+    _assertStringContext(
+      label: 'competencyId',
+      declared: _firstString(map, const [
+        'competencyId',
+        'competency_id',
+        'competency',
+      ]),
+      expected: content.competencyId,
+    );
+
+    _assertStringContext(
+      label: 'topicId',
+      declared: _firstString(map, const ['topicId', 'topic_id', 'topic']),
+      expected: topic.id,
+    );
+
+    _assertStringContext(
+      label: 'subtopicId',
+      declared: _firstString(map, const [
+        'subtopicId',
+        'subtopic_id',
+        'subtopic',
+      ]),
+      expected: subtopic.id,
+    );
+
+    _assertStringContext(
+      label: 'quizId',
+      declared: _firstString(map, const ['quizId', 'quiz_id']),
+      expected: quizId,
+    );
+
+    _assertStringContext(
+      label: 'contentPackageId',
+      declared: _firstString(map, const [
+        'contentPackageId',
+        'content_package_id',
+        'contentId',
+        'content_id',
+      ]),
+      expected: content.id,
+    );
+
+    final declaredDomain = _firstString(map, const [
+      'domain',
+      'domainId',
+      'domain_id',
+    ]);
+
+    if (declaredDomain.isNotEmpty) {
+      final parsedDomain = _domainNumber(declaredDomain);
+      final expectedDomain = _domainNumber(content.domainId);
+
+      if (parsedDomain != expectedDomain) {
+        throw FormatException(
+          'JSON context mismatch for domain: file declares '
+          '"$declaredDomain" but the selected Studio context is '
+          '"${content.domainId}". Open the matching subtopic before import.',
+        );
+      }
+    }
+  }
+
+  void _assertStringContext({
+    required String label,
+    required String declared,
+    required String expected,
+  }) {
+    if (declared.isEmpty) {
+      return;
+    }
+
+    if (declared.trim() != expected.trim()) {
+      throw FormatException(
+        'JSON context mismatch for $label: file declares "$declared" '
+        'but the selected Studio context is "$expected". '
+        'Open the matching subtopic before import.',
+      );
+    }
+  }
+
+  String _firstString(Map<String, dynamic> map, List<String> keys) {
+    for (final key in keys) {
+      final value = map[key];
+      if (value is String && value.trim().isNotEmpty) {
+        return value.trim();
+      }
+      if (value is num) {
+        return value.toString();
+      }
+    }
+    return '';
+  }
+
+  void _validateUniqueQuestionStems(List<Question> questions) {
+    final seen = <String>{};
+
+    for (final question in questions) {
+      final normalized = _normalizedQuestionStem(question.question);
+
+      if (normalized.isEmpty) {
+        continue;
+      }
+
+      if (!seen.add(normalized)) {
+        throw const FormatException(
+          'The JSON file contains the same question stem more than once. '
+          'Each imported question must be unique.',
+        );
+      }
+    }
+  }
+
+  String _normalizedQuestionStem(String value) {
+    return value
+        .trim()
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9 ]'), '')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
   }
 
   int _correctAnswerIndex(Map<String, dynamic> raw, List<String> options) {
