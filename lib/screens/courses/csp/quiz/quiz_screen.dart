@@ -4,6 +4,7 @@ import '../../../../controllers/quiz_controller.dart';
 import '../../../../models/question.dart';
 import '../../../../services/bookmark_service.dart';
 import '../../../../services/quiz_service.dart';
+import '../../../../services/student_question_progress_service.dart';
 
 import 'result/result_screen.dart';
 import 'theme/quiz_colors.dart';
@@ -44,6 +45,8 @@ class _QuizScreenState extends State<QuizScreen> {
   String? _initializationError;
 
   final BookmarkService _bookmarkService = BookmarkService();
+  final StudentQuestionProgressService _questionProgressService =
+      const StudentQuestionProgressService();
 
   Set<int> _bookmarkedQuestions = <int>{};
 
@@ -149,9 +152,30 @@ class _QuizScreenState extends State<QuizScreen> {
     if (quizController == null || quizController.submitted) return;
     if (quizController.selectedAnswer == null) return;
 
+    final question = quizController.currentQuestionData;
+    final correct = quizController.isCorrectDisplayedOption(
+      quizController.selectedAnswer!,
+    );
+
     setState(() {
       quizController.submitAnswer();
     });
+
+    _recordQuestionCompletion(question, correct);
+  }
+
+  Future<void> _recordQuestionCompletion(
+    Question question,
+    bool correct,
+  ) async {
+    try {
+      await _questionProgressService.recordAnswer(
+        question: question,
+        correct: correct,
+      );
+    } catch (_) {
+      // Question-history persistence must never interrupt the active quiz.
+    }
   }
 
   void _nextQuestion() {
@@ -199,9 +223,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isInitializing) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_initializationError != null) {
@@ -260,14 +282,7 @@ class _QuizScreenState extends State<QuizScreen> {
       // BODY
       // ======================================================
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFF3F6FC), Color(0xFFF7F9FC), Color(0xFFF8F7FC)],
-            stops: [0.0, 0.55, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: QuizColors.pageGradient),
         child: SafeArea(
           top: false,
           child: Column(
@@ -309,7 +324,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
                                   'Choose the best answer',
                                   style: TextStyle(
@@ -412,7 +427,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                           ),
                                         ),
                                         const SizedBox(width: QuizSpacing.md),
-                                        const Expanded(
+                                        Expanded(
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -475,7 +490,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                           ),
                                           child: Text(
                                             tag,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: QuizColors.textPrimary,
                                               fontSize: 12.5,
                                               fontWeight: FontWeight.w600,
@@ -510,9 +525,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 ),
                 decoration: BoxDecoration(
                   color: QuizColors.surface.withValues(alpha: 0.97),
-                  border: const Border(
-                    top: BorderSide(color: QuizColors.border),
-                  ),
+                  border: Border(top: BorderSide(color: QuizColors.border)),
                   boxShadow: [
                     BoxShadow(
                       color: QuizColors.navy.withValues(alpha: 0.055),

@@ -21,16 +21,12 @@ class QuizTheme {
         elevation: 1,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            QuizSpacing.cardRadius,
-          ),
-          side: const BorderSide(
-            color: QuizColors.border,
-          ),
+          borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+          side: BorderSide(color: QuizColors.border),
         ),
       ),
 
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: QuizColors.surface,
         foregroundColor: QuizColors.textPrimary,
         elevation: 0,
@@ -39,10 +35,7 @@ class QuizTheme {
 
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size(
-            double.infinity,
-            QuizSpacing.buttonHeight,
-          ),
+          minimumSize: const Size(double.infinity, QuizSpacing.buttonHeight),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),

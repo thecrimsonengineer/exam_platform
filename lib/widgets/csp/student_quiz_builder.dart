@@ -330,21 +330,23 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Practice Quiz',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      SizedBox(height: 3),
+                      const SizedBox(height: 3),
                       Text(
                         'Build a CSP11 quiz from published questions.',
-                        style: TextStyle(color: Colors.black54),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -354,13 +356,13 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
 
             const SizedBox(height: 20),
 
-            const Text(
+            Text(
               'QUIZ SCOPE',
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.4,
-                color: Colors.black54,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
 

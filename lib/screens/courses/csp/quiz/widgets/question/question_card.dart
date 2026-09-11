@@ -18,46 +18,26 @@ class QuestionCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFFFFFFF),
-            Color(0xFFF8FAFF),
-            Color(0xFFFAF8FF),
-          ],
-          stops: [0.0, 0.58, 1.0],
-        ),
+        gradient: QuizColors.questionGradient,
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: QuizColors.border.withValues(
-            alpha: 0.85,
-          ),
+          color: QuizColors.borderStrong.withValues(alpha: 0.92),
         ),
         boxShadow: [
           BoxShadow(
-            color: QuizColors.navy.withValues(
-              alpha: 0.05,
-            ),
+            color: QuizColors.navy.withValues(alpha: 0.10),
             blurRadius: 20,
             offset: const Offset(0, 7),
           ),
           BoxShadow(
-            color: QuizColors.purple.withValues(
-              alpha: 0.022,
-            ),
+            color: QuizColors.purple.withValues(alpha: 0.04),
             blurRadius: 28,
             offset: const Offset(7, 0),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          20,
-          20,
-          20,
-          24,
-        ),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -83,29 +63,24 @@ class QuestionCard extends StatelessWidget {
             gradient: QuizColors.selectedGradient,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: QuizColors.primary.withValues(
-                alpha: 0.12,
-              ),
+              color: QuizColors.questionAccent.withValues(alpha: 0.35),
             ),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.help_outline_rounded,
-            color: QuizColors.primary,
+            color: QuizColors.questionAccent,
             size: 21,
           ),
         ),
-        const SizedBox(
-          width: QuizSpacing.md,
-        ),
+        const SizedBox(width: QuizSpacing.md),
         Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'QUESTION',
                 style: TextStyle(
-                  color: QuizColors.textSecondary,
+                  color: QuizColors.questionLabel,
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1.2,
@@ -114,10 +89,10 @@ class QuestionCard extends StatelessWidget {
               const SizedBox(height: 3),
               Text(
                 'Scenario $questionNumber',
-                style: const TextStyle(
-                  color: QuizColors.textMuted,
+                style: TextStyle(
+                  color: QuizColors.questionMuted,
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 0.05,
                 ),
               ),
@@ -135,15 +110,9 @@ class QuestionCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            QuizColors.border.withValues(
-              alpha: 0.20,
-            ),
-            QuizColors.border.withValues(
-              alpha: 0.78,
-            ),
-            QuizColors.purple.withValues(
-              alpha: 0.10,
-            ),
+            QuizColors.border.withValues(alpha: 0.28),
+            QuizColors.borderStrong.withValues(alpha: 0.92),
+            QuizColors.questionAccent.withValues(alpha: 0.22),
           ],
         ),
       ),
@@ -153,7 +122,7 @@ class QuestionCard extends StatelessWidget {
   Widget _buildQuestion() {
     return SelectableText(
       question,
-      style: const TextStyle(
+      style: TextStyle(
         color: QuizColors.textPrimary,
         fontSize: 17.5,
         fontWeight: FontWeight.w500,

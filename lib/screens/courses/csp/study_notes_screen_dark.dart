@@ -2,30 +2,40 @@ import 'package:flutter/material.dart';
 
 import '../../../controllers/note_controller.dart';
 import '../../../models/note_domain.dart';
-import '../../../services/settings/theme_mode_service.dart';
-import 'study_notes_screen_dark.dart';
-import 'note_sections_screen.dart';
+import 'note_sections_screen_dark.dart';
 
-class StudyNotesScreen extends StatelessWidget {
-  StudyNotesScreen({super.key});
+class DarkStudyNotesScreen extends StatelessWidget {
+  final NoteController controller;
 
-  final NoteController _controller = NoteController();
+  DarkStudyNotesScreen({super.key, NoteController? controller})
+    : controller = controller ?? NoteController();
+
+  static const _bg = Color(0xFF0A111D);
+  static const _surface = Color(0xFF111B2C);
+  static const _surfaceSoft = Color(0xFF162238);
+  static const _border = Color(0xFF25344A);
+  static const _textPrimary = Color(0xFFF4F7FB);
+  static const _textSecondary = Color(0xFFA5B1C4);
+  static const _accent = Color(0xFF6EA8FF);
 
   @override
   Widget build(BuildContext context) {
-    if (ThemeModeService.isDarkMode.value) {
-      return DarkStudyNotesScreen(controller: _controller);
-    }
-
-    final List<NoteDomain> domains = _controller.domains;
+    final List<NoteDomain> domains = controller.domains;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Study Notes'), centerTitle: true),
+      backgroundColor: _bg,
+      appBar: AppBar(
+        title: const Text('Study Notes'),
+        centerTitle: true,
+        backgroundColor: _bg,
+        foregroundColor: _textPrimary,
+        surfaceTintColor: Colors.transparent,
+      ),
       body: domains.isEmpty
           ? const Center(
               child: Text(
                 'No study notes available.',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(color: _textSecondary, fontSize: 16),
               ),
             )
           : ListView.builder(
@@ -36,30 +46,33 @@ class StudyNotesScreen extends StatelessWidget {
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
+                  child: Material(
+                    color: _surface,
+                    borderRadius: BorderRadius.circular(18),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(18),
                       onTap: () {
-                        _controller.selectDomain(domain.id);
-
+                        controller.selectDomain(domain.id);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) =>
-                                NoteSectionsScreen(controller: _controller),
+                                DarkNoteSectionsScreen(controller: controller),
                           ),
                         );
                       },
-                      child: Padding(
+                      child: Container(
                         padding: const EdgeInsets.all(18),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(color: _border),
+                        ),
                         child: Row(
                           children: [
                             CircleAvatar(
                               radius: 28,
+                              backgroundColor: _surfaceSoft,
+                              foregroundColor: _accent,
                               child: Text(
                                 domain.title.substring(0, 1),
                                 style: const TextStyle(
@@ -78,6 +91,7 @@ class StudyNotesScreen extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
+                                      color: _textPrimary,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -87,8 +101,9 @@ class StudyNotesScreen extends StatelessWidget {
                                     domain.description,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Colors.grey.shade700,
+                                    style: const TextStyle(
+                                      color: _textSecondary,
+                                      height: 1.45,
                                     ),
                                   ),
                                   const SizedBox(height: 8),
@@ -96,15 +111,15 @@ class StudyNotesScreen extends StatelessWidget {
                                     '${domain.sectionCount} Sections • ${domain.noteCount} Topics',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontWeight: FontWeight.w500,
+                                    style: const TextStyle(
+                                      color: _textSecondary,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const Icon(Icons.chevron_right),
+                            const Icon(Icons.chevron_right, color: _accent),
                           ],
                         ),
                       ),

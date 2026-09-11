@@ -6,44 +6,26 @@ import '../../theme/quiz_spacing.dart';
 class ReferenceCard extends StatelessWidget {
   final String reference;
 
-  const ReferenceCard({
-    super.key,
-    required this.reference,
-  });
+  const ReferenceCard({super.key, required this.reference});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: QuizColors.surfaceAlt.withValues(
-          alpha: 0.72,
-        ),
-        borderRadius: BorderRadius.circular(
-          QuizSpacing.cardRadius,
-        ),
-        border: Border.all(
-          color: QuizColors.border.withValues(
-            alpha: 0.85,
-          ),
-        ),
+        color: QuizColors.surfaceAlt.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+        border: Border.all(color: QuizColors.border.withValues(alpha: 0.85)),
         boxShadow: [
           BoxShadow(
-            color: QuizColors.navy.withValues(
-              alpha: 0.022,
-            ),
+            color: QuizColors.navy.withValues(alpha: 0.022),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          20,
-          19,
-          20,
-          20,
-        ),
+        padding: const EdgeInsets.fromLTRB(20, 19, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -66,14 +48,10 @@ class ReferenceCard extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: QuizColors.reference.withValues(
-              alpha: 0.075,
-            ),
+            color: QuizColors.reference.withValues(alpha: 0.075),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: QuizColors.reference.withValues(
-                alpha: 0.09,
-              ),
+              color: QuizColors.reference.withValues(alpha: 0.09),
             ),
           ),
           child: const Icon(
@@ -82,13 +60,10 @@ class ReferenceCard extends StatelessWidget {
             size: 21,
           ),
         ),
-        const SizedBox(
-          width: QuizSpacing.md,
-        ),
-        const Expanded(
+        const SizedBox(width: QuizSpacing.md),
+        Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'REFERENCE',
@@ -119,16 +94,14 @@ class ReferenceCard extends StatelessWidget {
     return Container(
       height: 1,
       width: double.infinity,
-      color: QuizColors.border.withValues(
-        alpha: 0.55,
-      ),
+      color: QuizColors.border.withValues(alpha: 0.55),
     );
   }
 
   Widget _buildReference() {
     return SelectableText(
       reference,
-      style: const TextStyle(
+      style: TextStyle(
         color: QuizColors.textPrimary,
         fontSize: 15,
         fontWeight: FontWeight.w400,

@@ -37,7 +37,7 @@ class ResultScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         foregroundColor: QuizColors.textPrimary,
-        title: const Text(
+        title: Text(
           'Quiz Result',
           style: TextStyle(
             color: QuizColors.textPrimary,
@@ -47,53 +47,25 @@ class ResultScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFF3F6FC),
-              Color(0xFFF7F9FC),
-              Color(0xFFF8F7FC),
-            ],
-            stops: [0.0, 0.55, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: QuizColors.pageGradient),
         child: SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              16,
-              8,
-              16,
-              16,
-            ),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Column(
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    physics:
-                        const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.only(
-                      bottom: 190,
-                    ),
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 190),
                     child: Center(
                       child: ConstrainedBox(
-                        constraints:
-                            const BoxConstraints(
-                          maxWidth: 1000,
-                        ),
+                        constraints: const BoxConstraints(maxWidth: 1000),
                         child: Column(
                           children: [
-                            _buildHeroCard(
-                              percentage,
-                              score,
-                              totalQuestions,
-                            ),
+                            _buildHeroCard(percentage, score, totalQuestions),
 
-                            const SizedBox(
-                              height: 16,
-                            ),
+                            const SizedBox(height: 16),
 
                             _buildPerformanceCard(
                               score,
@@ -101,13 +73,9 @@ class ResultScreen extends StatelessWidget {
                               bookmarkedCount,
                             ),
 
-                            const SizedBox(
-                              height: 16,
-                            ),
+                            const SizedBox(height: 16),
 
-                            _buildReviewCard(
-                              incorrectCount,
-                            ),
+                            _buildReviewCard(incorrectCount),
                           ],
                         ),
                       ),
@@ -119,13 +87,8 @@ class ResultScreen extends StatelessWidget {
 
                 Center(
                   child: ConstrainedBox(
-                    constraints:
-                        const BoxConstraints(
-                      maxWidth: 1000,
-                    ),
-                    child: _buildActionButtons(
-                      context,
-                    ),
+                    constraints: const BoxConstraints(maxWidth: 1000),
+                    child: _buildActionButtons(context),
                   ),
                 ),
               ],
@@ -140,37 +103,23 @@ class ResultScreen extends StatelessWidget {
   // HERO
   // ==========================================================
 
-  Widget _buildHeroCard(
-    double percentage,
-    int score,
-    int totalQuestions,
-  ) {
-    final performance =
-        _performanceLabel(percentage);
+  Widget _buildHeroCard(double percentage, int score, int totalQuestions) {
+    final performance = _performanceLabel(percentage);
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(
-        22,
-        25,
-        22,
-        24,
-      ),
+      padding: const EdgeInsets.fromLTRB(22, 25, 22, 24),
       decoration: BoxDecoration(
         gradient: QuizColors.headerGradient,
         borderRadius: BorderRadius.circular(26),
         boxShadow: [
           BoxShadow(
-            color: QuizColors.navy.withValues(
-              alpha: 0.16,
-            ),
+            color: QuizColors.navy.withValues(alpha: 0.16),
             blurRadius: 24,
             offset: const Offset(0, 9),
           ),
           BoxShadow(
-            color: QuizColors.purple.withValues(
-              alpha: 0.07,
-            ),
+            color: QuizColors.purple.withValues(alpha: 0.07),
             blurRadius: 32,
             offset: const Offset(7, 0),
           ),
@@ -182,15 +131,9 @@ class ResultScreen extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(
-                alpha: 0.12,
-              ),
+              color: Colors.white.withValues(alpha: 0.12),
               shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white.withValues(
-                  alpha: 0.18,
-                ),
-              ),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
             ),
             child: const Icon(
               Icons.emoji_events_rounded,
@@ -215,7 +158,7 @@ class ResultScreen extends StatelessWidget {
 
           Text(
             '${percentage.toStringAsFixed(0)}%',
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 50,
               height: 1,
@@ -229,7 +172,7 @@ class ResultScreen extends StatelessWidget {
           Text(
             performance,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -242,7 +185,7 @@ class ResultScreen extends StatelessWidget {
             '$score correct out of '
             '$totalQuestions questions',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white70,
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -262,29 +205,19 @@ class ResultScreen extends StatelessWidget {
   // ==========================================================
 
   Widget _buildProgressBar(double percentage) {
-    final double value =
-        (percentage / 100).clamp(0.0, 1.0);
+    final double value = (percentage / 100).clamp(0.0, 1.0);
 
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-          borderRadius:
-              BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20),
           child: SizedBox(
             height: 7,
             child: LinearProgressIndicator(
               value: value,
-              backgroundColor:
-                  Colors.white.withValues(
-                alpha: 0.14,
-              ),
-              valueColor:
-                  const AlwaysStoppedAnimation<
-                      Color>(
-                Colors.white,
-              ),
+              backgroundColor: Colors.white.withValues(alpha: 0.14),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ),
         ),
@@ -292,8 +225,7 @@ class ResultScreen extends StatelessWidget {
         const SizedBox(height: 8),
 
         Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
               'Performance',
@@ -305,7 +237,7 @@ class ResultScreen extends StatelessWidget {
             ),
             Text(
               '${percentage.toStringAsFixed(0)}% complete',
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white70,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -321,39 +253,26 @@ class ResultScreen extends StatelessWidget {
   // PERFORMANCE
   // ==========================================================
 
-  Widget _buildPerformanceCard(
-    int correct,
-    int incorrect,
-    int bookmarked,
-  ) {
+  Widget _buildPerformanceCard(int correct, int incorrect, int bookmarked) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(
-        QuizSpacing.cardPadding,
-      ),
+      padding: const EdgeInsets.all(QuizSpacing.cardPadding),
       decoration: BoxDecoration(
         color: QuizColors.surface,
-        borderRadius: BorderRadius.circular(
-          QuizSpacing.cardRadius,
-        ),
-        border: Border.all(
-          color: QuizColors.border,
-        ),
+        borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+        border: Border.all(color: QuizColors.border),
         boxShadow: [
           BoxShadow(
-            color: QuizColors.navy.withValues(
-              alpha: 0.03,
-            ),
+            color: QuizColors.navy.withValues(alpha: 0.03),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'PERFORMANCE',
             style: TextStyle(
               color: QuizColors.textSecondary,
@@ -365,7 +284,7 @@ class ResultScreen extends StatelessWidget {
 
           const SizedBox(height: 4),
 
-          const Text(
+          Text(
             'Your quiz breakdown',
             style: TextStyle(
               color: QuizColors.textMuted,
@@ -405,29 +324,17 @@ class ResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatRow(
-    IconData icon,
-    Color color,
-    String title,
-    String value,
-  ) {
+  Widget _buildStatRow(IconData icon, Color color, String title, String value) {
     return Row(
       children: [
         Container(
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: color.withValues(
-              alpha: 0.09,
-            ),
-            borderRadius:
-                BorderRadius.circular(11),
+            color: color.withValues(alpha: 0.09),
+            borderRadius: BorderRadius.circular(11),
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
+          child: Icon(icon, color: color, size: 20),
         ),
 
         const SizedBox(width: 12),
@@ -435,7 +342,7 @@ class ResultScreen extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: QuizColors.textPrimary,
               fontSize: 15,
               fontWeight: FontWeight.w600,
@@ -445,7 +352,7 @@ class ResultScreen extends StatelessWidget {
 
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             color: QuizColors.textPrimary,
             fontSize: 17,
             fontWeight: FontWeight.w800,
@@ -457,14 +364,10 @@ class ResultScreen extends StatelessWidget {
 
   Widget _buildStatDivider() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 12,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Divider(
         height: 1,
-        color: QuizColors.border.withValues(
-          alpha: 0.60,
-        ),
+        color: QuizColors.border.withValues(alpha: 0.60),
       ),
     );
   }
@@ -473,47 +376,29 @@ class ResultScreen extends StatelessWidget {
   // REVIEW MESSAGE
   // ==========================================================
 
-  Widget _buildReviewCard(
-    int incorrectCount,
-  ) {
-    final bool hasMistakes =
-        incorrectCount > 0;
+  Widget _buildReviewCard(int incorrectCount) {
+    final bool hasMistakes = incorrectCount > 0;
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(
-        QuizSpacing.cardPadding,
-      ),
+      padding: const EdgeInsets.all(QuizSpacing.cardPadding),
       decoration: BoxDecoration(
-        color: QuizColors.surfaceAlt.withValues(
-          alpha: 0.72,
-        ),
-        borderRadius: BorderRadius.circular(
-          QuizSpacing.cardRadius,
-        ),
-        border: Border.all(
-          color: QuizColors.border.withValues(
-            alpha: 0.80,
-          ),
-        ),
+        color: QuizColors.surfaceAlt.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+        border: Border.all(color: QuizColors.border.withValues(alpha: 0.80)),
       ),
       child: Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: QuizColors.primary
-                  .withValues(alpha: 0.08),
-              borderRadius:
-                  BorderRadius.circular(12),
+              color: QuizColors.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              hasMistakes
-                  ? Icons.menu_book_outlined
-                  : Icons.verified_rounded,
+              hasMistakes ? Icons.menu_book_outlined : Icons.verified_rounded,
               color: QuizColors.primary,
               size: 21,
             ),
@@ -523,14 +408,11 @@ class ResultScreen extends StatelessWidget {
 
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  hasMistakes
-                      ? 'WHAT TO REVIEW'
-                      : 'STRONG PERFORMANCE',
-                  style: const TextStyle(
+                  hasMistakes ? 'WHAT TO REVIEW' : 'STRONG PERFORMANCE',
+                  style: TextStyle(
                     color: QuizColors.primary,
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
@@ -544,7 +426,7 @@ class ResultScreen extends StatelessWidget {
                   hasMistakes
                       ? 'Review the questions you missed to strengthen your understanding.'
                       : 'You answered every question correctly. Keep building your exam readiness.',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: QuizColors.textSecondary,
                     fontSize: 13,
                     height: 1.5,
@@ -562,34 +444,22 @@ class ResultScreen extends StatelessWidget {
   // ACTION BUTTONS
   // ==========================================================
 
-  Widget _buildActionButtons(
-    BuildContext context,
-  ) {
+  Widget _buildActionButtons(BuildContext context) {
     return Column(
       children: [
         SizedBox(
           width: double.infinity,
           height: 52,
           child: FilledButton.icon(
-            icon: const Icon(
-              Icons.refresh_rounded,
-              size: 20,
-            ),
+            icon: const Icon(Icons.refresh_rounded, size: 20),
             label: const Text(
               'Retry Quiz',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
             ),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => QuizScreen(
-                    domain: domain,
-                  ),
-                ),
+                MaterialPageRoute(builder: (_) => QuizScreen(domain: domain)),
               );
             },
           ),
@@ -601,48 +471,34 @@ class ResultScreen extends StatelessWidget {
           width: double.infinity,
           height: 52,
           child: OutlinedButton.icon(
-            icon: const Icon(
-              Icons.menu_book_rounded,
-              size: 20,
-            ),
+            icon: const Icon(Icons.menu_book_rounded, size: 20),
             label: const Text(
               'Review Incorrect Answers',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
-            onPressed:
-                incorrectQuestions.isEmpty
-                    ? null
-                    : () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                QuizScreen(
-                              domain: domain,
-                              customQuestions:
-                                  incorrectQuestions,
-                            ),
-                          ),
-                        );
-                      },
+            onPressed: incorrectQuestions.isEmpty
+                ? null
+                : () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => QuizScreen(
+                          domain: domain,
+                          customQuestions: incorrectQuestions,
+                        ),
+                      ),
+                    );
+                  },
           ),
         ),
 
         const SizedBox(height: 6),
 
         TextButton.icon(
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            size: 18,
-          ),
+          icon: const Icon(Icons.arrow_back_rounded, size: 18),
           label: const Text(
             'Back to Domain',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -656,9 +512,7 @@ class ResultScreen extends StatelessWidget {
   // PERFORMANCE LABEL
   // ==========================================================
 
-  String _performanceLabel(
-    double percentage,
-  ) {
+  String _performanceLabel(double percentage) {
     if (percentage >= 90) {
       return 'Excellent performance';
     }

@@ -9,29 +9,30 @@ import '../../services/student_question_progress_service.dart';
 import '../../services/settings/settings_external_links.dart';
 import '../../services/settings/theme_mode_service.dart';
 import 'legal_document_screen.dart';
+import 'legal_document_screen_dark.dart';
 
-typedef SettingsUriLauncher = Future<bool> Function(Uri uri);
+typedef DarkSettingsUriLauncher = Future<bool> Function(Uri uri);
 
-class SettingsScreen extends StatelessWidget {
-  final SettingsUriLauncher? externalLauncher;
+class DarkSettingsScreen extends StatelessWidget {
+  final DarkSettingsUriLauncher? externalLauncher;
   final Future<void> Function()? signOutAction;
   final Future<void> Function()? resetLearningDataAction;
 
-  const SettingsScreen({
+  const DarkSettingsScreen({
     super.key,
     this.externalLauncher,
     this.signOutAction,
     this.resetLearningDataAction,
   });
 
-  static const _background = Color(0xFFF3F6FC);
-  static const _surface = Colors.white;
-  static const _navy = Color(0xFF102A56);
-  static const _blue = Color(0xFF1E4C91);
-  static const _violet = Color(0xFF5B36A8);
-  static const _textPrimary = Color(0xFF18243A);
-  static const _textMuted = Color(0xFF718096);
-  static const _border = Color(0xFFE1E7F0);
+  static const _background = Color(0xFF0A111D);
+  static const _surface = Color(0xFF111B2C);
+  static const _navy = Color(0xFF5F93D8);
+  static const _blue = Color(0xFF6EA8FF);
+  static const _violet = Color(0xFF9A7CF4);
+  static const _textPrimary = Color(0xFFF4F7FB);
+  static const _textMuted = Color(0xFFA5B1C4);
+  static const _border = Color(0xFF25344A);
   static const _green = Color(0xFF1F8A4C);
   static const _amber = Color(0xFFE59A24);
 
@@ -153,7 +154,7 @@ class SettingsScreen extends StatelessWidget {
   void _openLegal(BuildContext context, LegalDocument document) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LegalDocumentScreen(document: document),
+        builder: (_) => DarkLegalDocumentScreen(document: document),
       ),
     );
   }
@@ -167,7 +168,7 @@ class SettingsScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFF3F6FC), Color(0xFFF7F9FC), Color(0xFFF8F7FC)],
+            colors: [Color(0xFF0A111D), Color(0xFF0D1624), Color(0xFF111827)],
             stops: [0.0, 0.55, 1.0],
           ),
         ),
@@ -215,10 +216,10 @@ class SettingsScreen extends StatelessWidget {
                                 key: const ValueKey('settings-dark-mode'),
                                 icon: Icons.dark_mode_rounded,
                                 iconColor: _violet,
-                                iconBackground: const Color(0xFFF4F0FF),
+                                iconBackground: const Color(0xFF1D1934),
                                 title: 'Dark mode',
                                 subtitle:
-                                    'Use the dark CSP11 design across Home, Study, Domain, Topics, Quiz, Results, Flashcards, Progress, and Settings.',
+                                    'Use the dark CSP11 design across Home, Study, Domain, Topics, Subtopics, Notes, Practice, Quiz, Results, Legal, Flashcards, Progress, and Settings.',
                                 trailing: ValueListenableBuilder<bool>(
                                   valueListenable: ThemeModeService.isDarkMode,
                                   builder: (context, enabled, _) => Switch(
@@ -234,7 +235,7 @@ class SettingsScreen extends StatelessWidget {
                                 key: const ValueKey('settings-rate-app'),
                                 icon: Icons.star_rounded,
                                 iconColor: _amber,
-                                iconBackground: const Color(0xFFFFF5E7),
+                                iconBackground: const Color(0xFF2A2113),
                                 title: 'Rate CSP11',
                                 subtitle:
                                     'Play Store rating link will activate after release.',
@@ -247,7 +248,7 @@ class SettingsScreen extends StatelessWidget {
                               _SettingsTile(
                                 icon: Icons.storage_rounded,
                                 iconColor: _blue,
-                                iconBackground: const Color(0xFFEAF1FF),
+                                iconBackground: const Color(0xFF14243B),
                                 title: 'Learning data on this device',
                                 subtitle:
                                     'Progress is separated by your Firebase account UID and stored locally on this device.',
@@ -259,7 +260,7 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                                 icon: Icons.delete_outline_rounded,
                                 iconColor: Colors.red.shade700,
-                                iconBackground: const Color(0xFFFFEEEE),
+                                iconBackground: const Color(0xFF2B171C),
                                 title: 'Clear my local learning data',
                                 subtitle:
                                     'Reset this account’s local progress, Continue Learning position, and question history.',
@@ -269,7 +270,7 @@ class SettingsScreen extends StatelessWidget {
                                 key: const ValueKey('settings-sign-out'),
                                 icon: Icons.logout_rounded,
                                 iconColor: _textPrimary,
-                                iconBackground: const Color(0xFFF0F3F8),
+                                iconBackground: const Color(0xFF162238),
                                 title: 'Sign out',
                                 subtitle:
                                     'Your local progress remains available for this account on this device.',
@@ -291,7 +292,7 @@ class SettingsScreen extends StatelessWidget {
                                 key: const ValueKey('settings-privacy-policy'),
                                 icon: Icons.privacy_tip_outlined,
                                 iconColor: _green,
-                                iconBackground: const Color(0xFFEAF8F0),
+                                iconBackground: const Color(0xFF13271D),
                                 title: 'Privacy Policy',
                                 subtitle:
                                     'Account, local progress, external links, and data choices.',
@@ -306,7 +307,7 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                                 icon: Icons.description_outlined,
                                 iconColor: _blue,
-                                iconBackground: const Color(0xFFEAF1FF),
+                                iconBackground: const Color(0xFF14243B),
                                 title: 'Terms of Service',
                                 subtitle:
                                     'Conditions for using the CSP11 learning platform.',
@@ -321,7 +322,7 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                                 icon: Icons.gavel_rounded,
                                 iconColor: _violet,
-                                iconBackground: const Color(0xFFF4F0FF),
+                                iconBackground: const Color(0xFF1D1934),
                                 title: 'Legal Disclaimer',
                                 subtitle:
                                     'Educational-use limits, exam outcomes, and professional reliance.',
@@ -427,7 +428,7 @@ class SettingsScreen extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_navy, _blue, _violet],
+          colors: [Color(0xFF102A56), Color(0xFF1E4C91), Color(0xFF5B36A8)],
           stops: [0.0, 0.58, 1.0],
         ),
         boxShadow: [
@@ -839,7 +840,7 @@ class SettingsScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFD),
+        color: const Color(0xFF101A2A),
         borderRadius: BorderRadius.circular(21),
         border: Border.all(color: _border),
       ),
@@ -925,7 +926,7 @@ class _SettingsTile extends StatelessWidget {
                     Text(
                       title,
                       style: const TextStyle(
-                        color: SettingsScreen._textPrimary,
+                        color: DarkSettingsScreen._textPrimary,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                       ),
@@ -934,7 +935,7 @@ class _SettingsTile extends StatelessWidget {
                     Text(
                       subtitle,
                       style: const TextStyle(
-                        color: SettingsScreen._textMuted,
+                        color: DarkSettingsScreen._textMuted,
                         fontSize: 9.5,
                         height: 1.4,
                       ),
@@ -946,7 +947,7 @@ class _SettingsTile extends StatelessWidget {
               trailing ??
                   const Icon(
                     Icons.chevron_right_rounded,
-                    color: SettingsScreen._textMuted,
+                    color: DarkSettingsScreen._textMuted,
                     size: 20,
                   ),
             ],
@@ -965,13 +966,13 @@ class _ComingSoonPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF5E7),
+        color: const Color(0xFF2A2113),
         borderRadius: BorderRadius.circular(999),
       ),
       child: const Text(
         'LATER',
         style: TextStyle(
-          color: SettingsScreen._amber,
+          color: DarkSettingsScreen._amber,
           fontSize: 7.5,
           fontWeight: FontWeight.w900,
           letterSpacing: 0.5,

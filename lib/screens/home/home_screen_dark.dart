@@ -4,11 +4,11 @@ import '../../app/app_colors.dart';
 import '../../models/student_learning_progress.dart';
 import '../../services/student_learning_position_service.dart';
 import '../../services/student_learning_progress_service.dart';
-import '../courses/csp/csp_practice_screen.dart';
-import '../courses/csp/domain_screen.dart';
-import '../courses/csp/study_content_screen.dart';
+import '../courses/csp/csp_practice_screen_dark.dart';
+import '../courses/csp/domain_screen_dark.dart';
+import '../courses/csp/study_content_screen_dark.dart';
 
-class HomeScreen extends StatefulWidget {
+class DarkHomeScreen extends StatefulWidget {
   final VoidCallback? onOpenStudy;
   final VoidCallback? onOpenFlashcards;
   final VoidCallback? onOpenProgress;
@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
   final Future<StudentLearningPosition?> Function()? loadLearningPosition;
   final Future<Map<String, StudentSubtopicProgress>> Function()? loadProgress;
 
-  const HomeScreen({
+  const DarkHomeScreen({
     super.key,
     this.onOpenStudy,
     this.onOpenFlashcards,
@@ -27,18 +27,18 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<DarkHomeScreen> createState() => _DarkHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  static const _background = Color(0xFFF3F6FC);
-  static const _surface = Colors.white;
-  static const _navy = Color(0xFF102A56);
-  static const _blue = Color(0xFF1E4C91);
-  static const _violet = Color(0xFF5B36A8);
-  static const _textPrimary = Color(0xFF18243A);
-  static const _textMuted = Color(0xFF718096);
-  static const _border = Color(0xFFE1E7F0);
+class _DarkHomeScreenState extends State<DarkHomeScreen> {
+  static const _background = Color(0xFF0A111D);
+  static const _surface = Color(0xFF111B2C);
+  static const _navy = Color(0xFF5F93D8);
+  static const _blue = Color(0xFF6EA8FF);
+  static const _violet = Color(0xFF9A7CF4);
+  static const _textPrimary = Color(0xFFF4F7FB);
+  static const _textMuted = Color(0xFFA5B1C4);
+  static const _border = Color(0xFF25344A);
 
   final StudentLearningPositionService _positionService =
       const StudentLearningPositionService();
@@ -83,7 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _continueLearning(StudentLearningPosition? position) async {
     if (position == null) {
       await Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const DomainScreen(domainNumber: 1)),
+        MaterialPageRoute(
+          builder: (_) => const DarkDomainScreen(domainNumber: 1),
+        ),
       );
       await _refreshHome();
       return;
@@ -91,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => StudyContentScreen(
+        builder: (_) => DarkStudyContentScreen(
           domainId: position.domainId,
           competencyId: position.competencyId,
           domainTitle: position.domainTitle,
@@ -108,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) =>
-            CspPracticeScreen(title: title, description: description),
+            DarkCspPracticeScreen(title: title, description: description),
       ),
     );
   }
@@ -122,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFF3F6FC), Color(0xFFF7F9FC), Color(0xFFF8F7FC)],
+            colors: [Color(0xFF0A111D), Color(0xFF0D1624), Color(0xFF111827)],
             stops: [0.0, 0.55, 1.0],
           ),
         ),
@@ -304,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_navy, _blue, _violet],
+          colors: [Color(0xFF102A56), Color(0xFF1E4C91), Color(0xFF5B36A8)],
           stops: [0.0, 0.58, 1.0],
         ),
         boxShadow: [
@@ -601,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         _featureIcon(
           icon: Icons.cloud_off_rounded,
-          background: const Color(0xFFF4F0FF),
+          background: const Color(0xFF1D1934),
           foreground: _violet,
         ),
         const SizedBox(width: 14),
@@ -633,7 +635,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         _featureIcon(
           icon: Icons.route_rounded,
-          background: const Color(0xFFEAF1FF),
+          background: const Color(0xFF14243B),
           foreground: _blue,
         ),
         const SizedBox(width: 14),
@@ -683,7 +685,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             _featureIcon(
               icon: Icons.play_arrow_rounded,
-              background: const Color(0xFFEAF8F0),
+              background: const Color(0xFF13271D),
               foreground: const Color(0xFF1F8A4C),
             ),
             const SizedBox(width: 14),
@@ -1021,7 +1023,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Daily Challenge',
         subtitle: 'A short focused session',
         accent: const Color(0xFFE37A2F),
-        tint: const Color(0xFFFFF4EB),
+        tint: const Color(0xFF2A2015),
         onTap: () => _openPractice(
           title: 'Daily Challenge',
           description:
@@ -1034,7 +1036,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Weak Areas',
         subtitle: 'Target a precise learning area',
         accent: const Color(0xFF7A52C8),
-        tint: const Color(0xFFF4F0FF),
+        tint: const Color(0xFF1D1934),
         onTap: () => _openPractice(
           title: 'Weak Areas',
           description:
@@ -1047,7 +1049,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Random Quiz',
         subtitle: 'Mix published CSP11 questions',
         accent: const Color(0xFF1A8178),
-        tint: const Color(0xFFEAF8F5),
+        tint: const Color(0xFF102925),
         onTap: () => _openPractice(
           title: 'Random Quiz',
           description:
@@ -1220,7 +1222,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
 
           final action = Material(
-            color: const Color(0xFFF5F8FD),
+            color: const Color(0xFF101A2A),
             borderRadius: BorderRadius.circular(18),
             child: InkWell(
               key: const ValueKey('home-progress'),
@@ -1298,7 +1300,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F8FD),
+        color: const Color(0xFF101A2A),
         borderRadius: BorderRadius.circular(999),
         border: Border.all(color: _border),
       ),
@@ -1424,7 +1426,7 @@ class _ArrowButton extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: _HomeScreenState._navy,
+        color: _DarkHomeScreenState._navy,
         borderRadius: BorderRadius.circular(13),
         child: InkWell(
           onTap: onTap,
@@ -1460,7 +1462,7 @@ class _HomeInlineLoading extends StatelessWidget {
         Text(
           'Preparing your learning position…',
           style: TextStyle(
-            color: _HomeScreenState._textMuted,
+            color: _DarkHomeScreenState._textMuted,
             fontSize: 11,
             fontWeight: FontWeight.w600,
           ),
@@ -1482,12 +1484,12 @@ class _ProgressOrb extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [_HomeScreenState._navy, _HomeScreenState._violet],
+          colors: [_DarkHomeScreenState._navy, _DarkHomeScreenState._violet],
         ),
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: _HomeScreenState._navy.withValues(alpha: 0.13),
+            color: _DarkHomeScreenState._navy.withValues(alpha: 0.13),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
