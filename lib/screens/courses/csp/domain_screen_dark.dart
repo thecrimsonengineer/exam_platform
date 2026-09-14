@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/study_content.dart';
+
 import '../../../data/csp11_blueprint.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/app_radius.dart';
 import '../../../app/app_spacing.dart';
 import '../../../app/app_text_styles.dart';
 import '../../../services/study_content_loader.dart';
+import '../../../services/study_content/student_study_content_prefetch_service.dart';
 import 'study_content_screen_dark.dart';
 import 'quiz/quiz_screen.dart';
 
@@ -20,6 +23,10 @@ class DarkDomainScreen extends StatefulWidget {
 
 class _DarkDomainScreenState extends State<DarkDomainScreen> {
   final StudyContentLoader _loader = const StudyContentLoader();
+  final StudentStudyContentPrefetchService _prefetchService =
+      const StudentStudyContentPrefetchService();
+
+  bool _prefetchScheduled = false;
 
   late Csp11Domain _domain;
   Future<List<dynamic>>? _contentFuture;
@@ -36,15 +43,29 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
   }
 
   Future<List<dynamic>> _loadDomainContent() async {
-    final published = await _loader.loadPublishedContent();
+    return _loader.loadPublishedDomainContent(_domain.id);
+  }
 
-    return published
-        .where(
-          (content) =>
-              content.status.toLowerCase() == 'published' &&
-              content.domainId == _domain.id,
-        )
-        .toList();
+  void _scheduleSmartPrefetch(List<dynamic> content) {
+    if (_prefetchScheduled || content.isEmpty) {
+      return;
+    }
+
+    final published = content.whereType<StudyContent>().toList(growable: false);
+
+    if (published.isEmpty) {
+      return;
+    }
+
+    _prefetchScheduled = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      _prefetchService.warmOne(domainId: _domain.id, contents: published);
+    });
   }
 
   void _openPracticeQuiz() {
@@ -224,13 +245,14 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   _heroPill(
                     icon: Icons.verified_rounded,
                     text: 'DOMAIN $domainNumber',
                   ),
-                  const SizedBox(width: 8),
                   _heroPill(
                     icon: Icons.trending_up_rounded,
                     text: '${_domain.weightPercent}% WEIGHT',
@@ -652,6 +674,8 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
                 color: Colors.orange,
               );
             }
+
+            _scheduleSmartPrefetch(content);
 
             return Column(
               children: List.generate(

@@ -1,4 +1,3 @@
-import '../../models/study_content.dart';
 import 'cloud_published_content_repository.dart';
 import 'student_content_cache_repository.dart';
 
@@ -68,17 +67,24 @@ class StudentContentSyncService {
   Future<StudentContentSyncResult> synchronizeCompetency(
     String competencyId,
   ) async {
-    final publishedContents = await _cloudRepository.loadPublished();
+    final match = RegExp(
+      r'^d(\d{2})_c\d+$',
+      caseSensitive: false,
+    ).firstMatch(competencyId.trim());
 
-    final matching = publishedContents
-        .where((content) => content.competencyId == competencyId)
-        .toList();
-
-    if (matching.isEmpty) {
+    if (match == null) {
       return const StudentContentSyncResult();
     }
 
-    final content = _latestVersion(matching);
+    final domainId = 'd${match.group(1)}';
+    final content = await _cloudRepository.loadPublishedCompetency(
+      domainId: domainId,
+      competencyId: competencyId,
+    );
+
+    if (content == null) {
+      return const StudentContentSyncResult();
+    }
 
     final cached = await _cacheRepository.loadLatestForCompetency(competencyId);
 
@@ -99,13 +105,6 @@ class StudentContentSyncService {
     }
 
     return const StudentContentSyncResult(skippedOlder: 1);
-  }
-
-  StudyContent _latestVersion(List<StudyContent> contents) {
-    return contents.reduce(
-      (current, candidate) =>
-          candidate.version > current.version ? candidate : current,
-    );
   }
 }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/student_learning_progress.dart';
+import 'student_learning_progress_session_cache.dart';
 
 /// Local persistence for the learner's actual CSP11 study progress.
 ///
@@ -125,6 +126,7 @@ class StudentLearningProgressService {
     }
 
     await _saveAllProgress(all);
+    StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
   Future<void> completeSubtopic({
@@ -164,6 +166,7 @@ class StudentLearningProgressService {
     );
 
     await _saveAllProgress(all);
+    StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
   Future<void> resetSubtopic(String subtopicId) async {
@@ -175,11 +178,13 @@ class StudentLearningProgressService {
     all.remove(subtopicId);
 
     await _saveAllProgress(all);
+    StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
   Future<void> clearAllProgress() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_storageKey);
+    StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
   Future<StudentProgressSummary> summarizeSubtopics(

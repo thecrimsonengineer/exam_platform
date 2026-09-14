@@ -86,6 +86,89 @@ class CloudContentRepository {
     return _fromDocument(doc);
   }
 
+  /// Loads only documents belonging to one competency.
+  ///
+  /// The query intentionally uses the single equality field [competencyId]
+  /// so Firestore can use its normal single-field index without requiring
+  /// a new composite index. The returned documents are then fail-closed to
+  /// the requested domain and the independent published copy.
+
+  /// Loads the latest published version of every competency in one domain.
+  ///
+  /// The Firestore query intentionally uses one equality only so this path
+  /// does not require a new composite index. Published-copy and lifecycle
+  /// checks are then enforced locally, fail-closed.
+  Future<List<StudyContent>> loadPublishedDomain(String domainId) async {
+    final snapshot = await _collection
+        .where('domainId', isEqualTo: domainId)
+        .get();
+
+    final latestByCompetency = <String, StudyContent>{};
+
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
+
+      if (data['copyType']?.toString().toLowerCase() != 'published' ||
+          data['status']?.toString().toLowerCase() != 'published' ||
+          data['domainId']?.toString() != domainId) {
+        continue;
+      }
+
+      final content = _fromQueryDocument(doc);
+
+      if (content == null ||
+          content.domainId != domainId ||
+          content.status.toLowerCase() != 'published') {
+        continue;
+      }
+
+      final existing = latestByCompetency[content.competencyId];
+
+      if (existing == null || content.version > existing.version) {
+        latestByCompetency[content.competencyId] = content;
+      }
+    }
+
+    final contents = latestByCompetency.values.toList()
+      ..sort((a, b) => a.competencyNumber.compareTo(b.competencyNumber));
+
+    return contents;
+  }
+
+  Future<StudyContent?> loadPublishedCompetency({
+    required String domainId,
+    required String competencyId,
+  }) async {
+    final snapshot = await _collection
+        .where('competencyId', isEqualTo: competencyId)
+        .get();
+
+    StudyContent? latest;
+
+    for (final doc in snapshot.docs) {
+      final source = doc.data();
+
+      if (source['copyType']?.toString().toLowerCase() != 'published' ||
+          source['status']?.toString().toLowerCase() != 'published' ||
+          source['domainId']?.toString() != domainId ||
+          source['competencyId']?.toString() != competencyId) {
+        continue;
+      }
+
+      final content = _fromQueryDocument(doc);
+
+      if (content == null) {
+        continue;
+      }
+
+      if (latest == null || content.version > latest.version) {
+        latest = content;
+      }
+    }
+
+    return latest;
+  }
+
   /// Creates an independent published copy.
   ///
   /// The published repository has its own lifecycle. Therefore the copy

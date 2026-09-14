@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../models/study_content.dart';
 import '../../../models/student_learning_progress.dart';
 import '../../../services/student_learning_progress_service.dart';
+import '../../../services/student_learning_progress_session_cache.dart';
 import '../../../screens/courses/csp/study_subtopic_screen.dart';
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_gradients.dart';
@@ -49,7 +50,10 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
   @override
   void initState() {
     super.initState();
-    _loadProgress();
+
+    if (!_applyCachedProgress()) {
+      _loadProgress();
+    }
   }
 
   @override
@@ -67,14 +71,36 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
       _topicSelectionInitialized = false;
       _expandedTopicIndex = 0;
       _resumeHandled = false;
-      _loadProgress();
+
+      if (!_applyCachedProgress()) {
+        _loadProgress();
+      }
     } else if (resumeTargetChanged) {
       _resumeHandled = false;
     }
   }
 
+  bool _applyCachedProgress() {
+    final progress = StudentLearningProgressSessionCache.peek();
+
+    if (progress == null) {
+      return false;
+    }
+
+    _progressBySubtopicId = progress;
+
+    if (!_topicSelectionInitialized) {
+      _expandedTopicIndex = _preferredTopicIndex(progress);
+      _topicSelectionInitialized = true;
+    }
+
+    return true;
+  }
+
   Future<void> _loadProgress() async {
-    final progress = await _progressService.loadAllProgress();
+    final progress = await StudentLearningProgressSessionCache.load(
+      loader: _progressService.loadAllProgress,
+    );
 
     if (!mounted) {
       return;

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/study_content.dart';
 import 'study_content/cloud_published_content_repository.dart';
 import 'study_content/student_content_cache_repository.dart';
+import 'study_content/student_study_content_session_cache.dart';
 
 /// Loads CSP study content for the student-facing portal.
 ///
@@ -15,10 +16,7 @@ import 'study_content/student_content_cache_repository.dart';
 /// Draft, Review, Validated, and Archived content are never exposed through
 /// this service.
 class StudyContentLoader {
-  const StudyContentLoader({
-    this.repository,
-    this.cacheRepository,
-  });
+  const StudyContentLoader({this.repository, this.cacheRepository});
 
   final CloudPublishedContentRepository? repository;
   final StudentContentCacheRepository? cacheRepository;
@@ -37,9 +35,48 @@ class StudyContentLoader {
 
     final preferences = await SharedPreferences.getInstance();
 
-    return StudentContentCacheRepository(
-      preferences: preferences,
+    return StudentContentCacheRepository(preferences: preferences);
+  }
+
+  /// Returns published content already verified during this app session.
+  ///
+  /// This is process memory only and must never be treated as an offline
+  /// repository.
+  StudyContent? peekSessionStudyContent({
+    required String domainId,
+    required String competencyId,
+  }) {
+    return StudentStudyContentSessionCache.get(
+      domainId: domainId,
+      competencyId: competencyId,
     );
+  }
+
+  /// Refreshes one competency from the authoritative published cloud boundary.
+  ///
+  /// No persistent-cache fallback is used here because this method is the
+  /// silent online revalidation path for content already visible from RAM.
+  Future<StudyContent> refreshStudyContent({
+    required String domainId,
+    required String competencyId,
+  }) async {
+    final cache = await _resolveCache();
+    final latest = await _repository.loadPublishedCompetency(
+      domainId: domainId,
+      competencyId: competencyId,
+    );
+
+    if (latest == null) {
+      throw StateError(
+        'Published competency "$competencyId" was not found '
+        'in domain "$domainId".',
+      );
+    }
+
+    await cache.save(latest);
+    StudentStudyContentSessionCache.put(latest);
+
+    return latest;
   }
 
   // ==========================================================
@@ -52,6 +89,54 @@ class StudyContentLoader {
   /// is written to the local student cache.
   ///
   /// If Firebase fails, the last valid published cache is returned instead.
+
+  /// Loads the latest published content for one domain only.
+  ///
+  /// Firebase is authoritative. If the targeted cloud read fails, the
+  /// existing published student cache may be used as a fallback for this
+  /// domain only.
+  Future<List<StudyContent>> loadPublishedDomainContent(String domainId) async {
+    final cache = await _resolveCache();
+
+    try {
+      final published = await _repository.loadPublishedDomain(domainId);
+
+      final latest = _latestPublishedVersions(
+        published
+            .where(
+              (content) =>
+                  content.domainId == domainId &&
+                  content.status.toLowerCase() == 'published',
+            )
+            .toList(),
+      );
+
+      for (final content in latest) {
+        await cache.save(content);
+      }
+
+      return latest;
+    } catch (_) {
+      final cached = await cache.loadAll();
+
+      final domainCached = cached
+          .where(
+            (content) =>
+                content.domainId == domainId &&
+                content.status.toLowerCase() == 'published',
+          )
+          .toList();
+
+      if (domainCached.isNotEmpty) {
+        return _latestPublishedVersions(domainCached);
+      }
+
+      throw StateError(
+        'Published content for domain "$domainId" is unavailable.',
+      );
+    }
+  }
+
   Future<List<StudyContent>> loadPublishedContent() async {
     final cache = await _resolveCache();
 
@@ -80,9 +165,7 @@ class StudyContentLoader {
   }
 
   /// Returns the latest published version of each competency.
-  List<StudyContent> _latestPublishedVersions(
-    List<StudyContent> published,
-  ) {
+  List<StudyContent> _latestPublishedVersions(List<StudyContent> published) {
     final latestByCompetency = <String, StudyContent>{};
 
     for (final content in published) {
@@ -104,18 +187,14 @@ class StudyContentLoader {
   ///
   /// Firebase is attempted first. If Firebase fails, the cached published
   /// content with the requested ID is used.
-  Future<StudyContent> loadPublishedByContentId(
-    String contentId,
-  ) async {
+  Future<StudyContent> loadPublishedByContentId(String contentId) async {
     final cache = await _resolveCache();
 
     try {
       final content = await _repository.loadPublishedContent(contentId);
 
       if (content == null) {
-        throw StateError(
-          'Published content "$contentId" was not found.',
-        );
+        throw StateError('Published content "$contentId" was not found.');
       }
 
       await cache.save(content);
@@ -124,14 +203,11 @@ class StudyContentLoader {
     } catch (_) {
       final cached = await cache.load(contentId);
 
-      if (cached != null &&
-          cached.status.toLowerCase() == 'published') {
+      if (cached != null && cached.status.toLowerCase() == 'published') {
         return cached;
       }
 
-      throw StateError(
-        'Published content "$contentId" is unavailable.',
-      );
+      throw StateError('Published content "$contentId" is unavailable.');
     }
   }
 
@@ -147,24 +223,14 @@ class StudyContentLoader {
     final cache = await _resolveCache();
 
     try {
-      final published = await _repository.loadPublished();
-
-      StudyContent? latest;
-
-      for (final content in published) {
-        if (content.domainId != domainId ||
-            content.competencyId != competencyId ||
-            content.status.toLowerCase() != 'published') {
-          continue;
-        }
-
-        if (latest == null || content.version > latest.version) {
-          latest = content;
-        }
-      }
+      final latest = await _repository.loadPublishedCompetency(
+        domainId: domainId,
+        competencyId: competencyId,
+      );
 
       if (latest != null) {
         await cache.save(latest);
+        StudentStudyContentSessionCache.put(latest);
         return latest;
       }
 
@@ -173,9 +239,7 @@ class StudyContentLoader {
         'in domain "$domainId".',
       );
     } catch (_) {
-      final cached = await cache.loadLatestForCompetency(
-        competencyId,
-      );
+      final cached = await cache.loadLatestForCompetency(competencyId);
 
       if (cached != null &&
           cached.domainId == domainId &&
@@ -216,10 +280,8 @@ class StudyContentLoader {
 
   /// Returns the latest published version of each competency
   /// belonging to a domain.
-  Future<List<Map<String, dynamic>>> loadCompetencies(
-    String domainId,
-  ) async {
-    final published = await loadPublishedContent();
+  Future<List<Map<String, dynamic>>> loadCompetencies(String domainId) async {
+    final published = await loadPublishedDomainContent(domainId);
 
     return published
         .where(

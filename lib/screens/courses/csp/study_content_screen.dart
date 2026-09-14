@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
@@ -35,6 +37,7 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
   final StudyContentLoader _loader = const StudyContentLoader();
 
   late Future<StudyContent> _contentFuture;
+  StudyContent? _visibleContent;
 
   @override
   void initState() {
@@ -54,14 +57,73 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
   }
 
   void _loadContent() {
-    _contentFuture = _loader.loadStudyContent(
+    final sessionContent = _loader.peekSessionStudyContent(
       domainId: widget.domainId,
       competencyId: widget.competencyId,
     );
+
+    if (sessionContent == null) {
+      _visibleContent = null;
+      _contentFuture = _loader.loadStudyContent(
+        domainId: widget.domainId,
+        competencyId: widget.competencyId,
+      );
+      return;
+    }
+
+    // P4A: render cloud-verified process memory in this very first build.
+    // Do not wrap a RAM hit in Future.value()/FutureBuilder.
+    _visibleContent = sessionContent;
+
+    // Revalidate only this competency in the background.
+    unawaited(
+      _refreshSessionContent(
+        visibleContent: sessionContent,
+        domainId: widget.domainId,
+        competencyId: widget.competencyId,
+      ),
+    );
+  }
+
+  Future<void> _refreshSessionContent({
+    required StudyContent visibleContent,
+    required String domainId,
+    required String competencyId,
+  }) async {
+    try {
+      final refreshed = await _loader.refreshStudyContent(
+        domainId: domainId,
+        competencyId: competencyId,
+      );
+
+      if (!mounted ||
+          widget.domainId != domainId ||
+          widget.competencyId != competencyId) {
+        return;
+      }
+
+      final changed =
+          refreshed.id != visibleContent.id ||
+          refreshed.version != visibleContent.version;
+
+      if (!changed) {
+        return;
+      }
+
+      setState(() {
+        _visibleContent = refreshed;
+      });
+    } catch (_) {
+      // Current-session RAM content was already verified from the published
+      // cloud boundary. A transient refresh failure must not blank the screen.
+    }
   }
 
   void _retry() {
-    setState(_loadContent);
+    setState(() {
+      _visibleContent = null;
+      _loadContent();
+    });
   }
 
   @override
@@ -69,24 +131,27 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
     return Scaffold(
       backgroundColor: StudyColors.background,
       appBar: _buildAppBar(context),
-      body: FutureBuilder<StudyContent>(
-        future: _contentFuture,
-        builder: (BuildContext context, AsyncSnapshot<StudyContent> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildLoadingState(context);
-          }
+      body: _visibleContent != null
+          ? _buildStudyContent(context, _visibleContent!)
+          : FutureBuilder<StudyContent>(
+              future: _contentFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<StudyContent> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildLoadingState(context);
+                    }
 
-          if (snapshot.hasError) {
-            return _buildErrorState(context, snapshot.error);
-          }
+                    if (snapshot.hasError) {
+                      return _buildErrorState(context, snapshot.error);
+                    }
 
-          if (!snapshot.hasData) {
-            return _buildEmptyState(context);
-          }
+                    if (!snapshot.hasData) {
+                      return _buildEmptyState(context);
+                    }
 
-          return _buildStudyContent(context, snapshot.data!);
-        },
-      ),
+                    return _buildStudyContent(context, snapshot.data!);
+                  },
+            ),
     );
   }
 
@@ -122,25 +187,38 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
           ),
           const SizedBox(width: StudySpacing.sm),
           Flexible(
-            child: FutureBuilder<StudyContent>(
-              future: _contentFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<StudyContent> snapshot) {
-                    final title = snapshot.hasData
-                        ? snapshot.data!.title
-                        : widget.loadingTitle ?? 'Study Content';
+            child: _visibleContent != null
+                ? Text(
+                    _visibleContent!.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: StudyTypography.cardTitle.copyWith(
+                      color: StudyColors.textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )
+                : FutureBuilder<StudyContent>(
+                    future: _contentFuture,
+                    builder:
+                        (
+                          BuildContext context,
+                          AsyncSnapshot<StudyContent> snapshot,
+                        ) {
+                          final title = snapshot.hasData
+                              ? snapshot.data!.title
+                              : widget.loadingTitle ?? 'Study Content';
 
-                    return Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: StudyTypography.cardTitle.copyWith(
-                        color: StudyColors.textPrimary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    );
-                  },
-            ),
+                          return Text(
+                            title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: StudyTypography.cardTitle.copyWith(
+                              color: StudyColors.textPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          );
+                        },
+                  ),
           ),
         ],
       ),

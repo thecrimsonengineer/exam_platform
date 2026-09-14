@@ -28,4 +28,37 @@ class CloudPublishedContentRepository {
 
     return content;
   }
+
+
+
+  Future<List<StudyContent>> loadPublishedDomain(String domainId) async {
+    final contents = await _repository.loadPublishedDomain(domainId);
+
+    return contents
+        .where(
+          (content) =>
+              content.domainId == domainId &&
+              content.status.toLowerCase() == 'published',
+        )
+        .toList();
+  }
+
+  Future<StudyContent?> loadPublishedCompetency({
+    required String domainId,
+    required String competencyId,
+  }) async {
+    final content = await _repository.loadPublishedCompetency(
+      domainId: domainId,
+      competencyId: competencyId,
+    );
+
+    if (content == null ||
+        content.domainId != domainId ||
+        content.competencyId != competencyId ||
+        content.status.toLowerCase() != 'published') {
+      return null;
+    }
+
+    return content;
+  }
 }
