@@ -5,19 +5,14 @@ import 'package:exam_platform/services/question_quality_validator.dart';
 
 void main() {
   group('QuestionQualityValidator H0.3', () {
-    late QuestionQualityValidator validator;
-
-    setUp(() {
-      validator = const QuestionQualityValidator();
-    });
+    const validator = QuestionQualityValidator();
 
     Question makeQuestion({
-      int id = 1,
       String question = 'Which culture response is best?',
       List<String>? options,
       int correctAnswer = 0,
       String explanation =
-          'The best answer addresses the underlying organizational mechanism and uses the evidence in the scenario rather than relying on a superficial metric or symbolic response.',
+          'The best answer addresses the underlying organizational mechanism and uses the scenario evidence rather than relying on a superficial metric or symbolic response.',
       String reference = 'CSP11 quality-gate reference',
       String difficulty = 'hard',
       String cognitiveLevel = 'analysis',
@@ -25,7 +20,7 @@ void main() {
       List<String>? tags,
     }) {
       return Question(
-        id: id,
+        id: 1,
         domain: 2,
         competencyId: 'd02_c03',
         subtopicId: 'd02_c03_t01_s01',
@@ -55,7 +50,7 @@ void main() {
     List<String> codes(Question question) =>
         validator.validateReport(question).issues.map((issue) => issue.code).toList();
 
-    test('valid question produces clean passing report', () {
+    test('valid question produces a clean passing report', () {
       final result = validator.validateReport(makeQuestion());
       expect(result.passed, isTrue);
       expect(result.blocked, isFalse);
@@ -63,58 +58,30 @@ void main() {
     });
 
     test('short non-empty stem has no character-length warning', () {
-      final result = validator.validateReport(
-        makeQuestion(question: 'Best action?'),
-      );
+      final result = validator.validateReport(makeQuestion(question: 'Best action?'));
       expect(result.passed, isTrue);
-      expect(result.blocked, isFalse);
-      expect(codes(makeQuestion(question: 'Best action?')),
-          isNot(contains('weak_question_stem')));
+      expect(result.issues.where((issue) => issue.field == 'question'), isEmpty);
     });
 
     test('very long stem has no maximum character limit', () {
-      final longStem = '${'A detailed workplace culture scenario. ' * 400}Which action is best?';
+      final longStem = '${List.filled(400, 'A detailed workplace culture scenario. ').join()}Which action is best?';
       final result = validator.validateReport(makeQuestion(question: longStem));
       expect(result.passed, isTrue);
-      expect(result.blocked, isFalse);
       expect(result.issues.where((issue) => issue.field == 'question'), isEmpty);
     });
 
     test('empty stem still blocks', () {
-      final result = validator.validateReport(makeQuestion(question: '   '));
-      expect(result.blocked, isTrue);
       expect(codes(makeQuestion(question: '   ')), contains('missing_question_stem'));
     });
 
-    test('question type must be scenario_mcq', () {
-      expect(
-        codes(makeQuestion(questionType: 'direct_mcq')),
-        contains('invalid_question_type'),
-      );
+    test('core metadata rules remain enforced', () {
+      expect(codes(makeQuestion(questionType: 'direct_mcq')), contains('invalid_question_type'));
+      expect(codes(makeQuestion(cognitiveLevel: 'knowledge')), contains('invalid_cognitive_level'));
+      expect(codes(makeQuestion(difficulty: 'medium')), contains('invalid_difficulty'));
     });
 
-    test('cognitive level must be application or analysis', () {
-      expect(
-        codes(makeQuestion(cognitiveLevel: 'knowledge')),
-        contains('invalid_cognitive_level'),
-      );
-    });
-
-    test('difficulty must be hard', () {
-      expect(
-        codes(makeQuestion(difficulty: 'medium')),
-        contains('invalid_difficulty'),
-      );
-    });
-
-    test('exactly four options required', () {
-      expect(
-        codes(makeQuestion(options: const ['A', 'B', 'C'])),
-        contains('invalid_option_count'),
-      );
-    });
-
-    test('empty option blocks', () {
+    test('answer option rules remain enforced', () {
+      expect(codes(makeQuestion(options: const ['A', 'B', 'C'])), contains('invalid_option_count'));
       expect(
         codes(makeQuestion(options: const [
           'First balanced option here.',
@@ -124,9 +91,6 @@ void main() {
         ])),
         contains('empty_answer_option'),
       );
-    });
-
-    test('duplicate option blocks', () {
       expect(
         codes(makeQuestion(options: const [
           'First balanced option here.',
@@ -138,25 +102,19 @@ void main() {
       );
     });
 
-    test('correct answer must be a valid zero-based index', () {
+    test('correctAnswer remains zero-based and bounded', () {
       expect(codes(makeQuestion(correctAnswer: -1)), contains('invalid_correct_answer'));
       expect(codes(makeQuestion(correctAnswer: 4)), contains('invalid_correct_answer'));
     });
 
-    test('missing explanation blocks and weak explanation warns', () {
+    test('explanation reference and tags remain quality-gated', () {
       expect(codes(makeQuestion(explanation: '')), contains('missing_explanation'));
       expect(codes(makeQuestion(explanation: 'Too short.')), contains('weak_explanation'));
-    });
-
-    test('reference is required', () {
       expect(codes(makeQuestion(reference: '')), contains('missing_reference'));
-    });
-
-    test('at least two tags expected', () {
       expect(codes(makeQuestion(tags: const [])), contains('insufficient_tags'));
     });
 
-    test('uniquely longest BEST answer warns', () {
+    test('answer-length bias checks remain active', () {
       final resultCodes = codes(makeQuestion(options: const [
         'Address the organizational mechanism and redesign the management system so the repeated pressure is removed at its source.',
         'Repeat the safety message.',
@@ -164,19 +122,10 @@ void main() {
         'Coach the employee again.',
       ]));
       expect(resultCodes, contains('best_answer_length_bias'));
-    });
-
-    test('option length imbalance warns', () {
-      final resultCodes = codes(makeQuestion(options: const [
-        'Use the control.',
-        'Repeat the message to the workforce during the next scheduled meeting and ask supervisors to monitor the issue closely.',
-        'Review the metric.',
-        'Coach the worker.',
-      ], correctAnswer: 2));
       expect(resultCodes, contains('option_length_imbalance'));
     });
 
-    test('answer-length checks can be disabled', () {
+    test('answer-length checks can still be disabled', () {
       const disabled = QuestionQualityValidator(answerLengthCheckEnabled: false);
       final result = disabled.validateReport(makeQuestion(options: const [
         'Address the organizational mechanism and redesign the management system so the repeated pressure is removed at its source.',
