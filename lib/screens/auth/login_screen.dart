@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../services/auth/auth_service.dart';
 import 'auth_experience_shell.dart';
 import 'forgot_password_screen.dart';
+import 'phone_sign_in_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -84,6 +85,35 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await _authService.signInWithGoogle();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage =
+            'Google sign-in could not be completed. Check your connection and Firebase Google provider setup.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _openPhoneSignIn() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PhoneSignInScreen(authService: _authService),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AuthExperienceShell(
@@ -155,6 +185,58 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
             ),
           ),
+          if (_authService.supportsGoogleSignIn ||
+              _authService.supportsPhoneSignIn) ...[
+            const SizedBox(height: 18),
+            Row(
+              children: [
+                const Expanded(child: Divider()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'OR CONTINUE WITH',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: const Color(0xFF71808C),
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+                const Expanded(child: Divider()),
+              ],
+            ),
+            const SizedBox(height: 18),
+            if (_authService.supportsGoogleSignIn)
+              SizedBox(
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signInWithGoogle,
+                  icon: const Text(
+                    'G',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                  ),
+                  label: const Text(
+                    'Continue with Google',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ),
+            if (_authService.supportsGoogleSignIn &&
+                _authService.supportsPhoneSignIn)
+              const SizedBox(height: 12),
+            if (_authService.supportsPhoneSignIn)
+              SizedBox(
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _openPhoneSignIn,
+                  icon: const Icon(Icons.phone_iphone_rounded),
+                  label: const Text(
+                    'Continue with phone number',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ),
+          ],
           const SizedBox(height: 18),
           Row(
             children: [
