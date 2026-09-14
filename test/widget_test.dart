@@ -1,96 +1,84 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:exam_platform/models/app_user.dart';
 import 'package:exam_platform/screens/auth/auth_gate.dart';
 import 'package:exam_platform/services/auth/auth_state_provider.dart';
+import 'package:exam_platform/services/auth/learner_local_identity.dart';
 
 void main() {
-  testWidgets(
-    'AuthGate shows login when user is signed out',
-    (tester) async {
-      final authStateProvider = _FakeAuthStateProvider(
-        appUser: null,
-      );
+  setUp(LearnerLocalIdentity.clear);
+  tearDown(LearnerLocalIdentity.clear);
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: AuthGate(
-            authStateService: authStateProvider,
-            loginScreen: const Scaffold(
-              body: Center(
-                child: Text('Sign in'),
-              ),
-            ),
-          ),
+  testWidgets('AuthGate shows login when user is signed out', (tester) async {
+    LearnerLocalIdentity.activate('stale-user');
+
+    final authStateProvider = _FakeAuthStateProvider(appUser: null);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AuthGate(
+          authStateService: authStateProvider,
+          loginScreen: const Scaffold(body: Center(child: Text('Sign in'))),
         ),
-      );
+      ),
+    );
 
-      await tester.pump();
+    await tester.pump();
 
-      expect(find.text('Sign in'), findsOneWidget);
-    },
-  );
+    expect(find.text('Sign in'), findsOneWidget);
+    expect(LearnerLocalIdentity.currentUserId, isNull);
+  });
 
-  testWidgets(
-    'AuthGate shows admin home for an admin user',
-    (tester) async {
-      const adminUser = AppUser(
-        uid: 'admin-1',
-        email: 'admin@example.com',
-        role: AppUserRole.admin,
-      );
+  testWidgets('AuthGate shows admin home for an admin user', (tester) async {
+    LearnerLocalIdentity.activate('stale-user');
 
-      final authStateProvider = _FakeAuthStateProvider(
-        appUser: adminUser,
-      );
+    const adminUser = AppUser(
+      uid: 'admin-1',
+      email: 'admin@example.com',
+      role: AppUserRole.admin,
+    );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: AuthGate(
-            authStateService: authStateProvider,
-          ),
-        ),
-      );
+    final authStateProvider = _FakeAuthStateProvider(appUser: adminUser);
 
-      await tester.pump();
+    await tester.pumpWidget(
+      MaterialApp(home: AuthGate(authStateService: authStateProvider)),
+    );
 
-      expect(find.text('Command Center'), findsOneWidget);
-    },
-  );
+    await tester.pump();
 
-  testWidgets(
-    'AuthGate shows student platform for a student user',
-    (tester) async {
-      const studentUser = AppUser(
-        uid: 'student-1',
-        email: 'student@example.com',
-        role: AppUserRole.student,
-      );
+    expect(find.text('Command Center'), findsOneWidget);
+    expect(LearnerLocalIdentity.currentUserId, isNull);
+  });
 
-      final authStateProvider = _FakeAuthStateProvider(
-        appUser: studentUser,
-      );
+  testWidgets('AuthGate scopes student platform to the Firebase UID', (
+    tester,
+  ) async {
+    const studentUser = AppUser(
+      uid: 'student-1',
+      email: 'student@example.com',
+      role: AppUserRole.student,
+    );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: AuthGate(
-            authStateService: authStateProvider,
-          ),
-        ),
-      );
+    final authStateProvider = _FakeAuthStateProvider(appUser: studentUser);
 
-      await tester.pump();
+    await tester.pumpWidget(
+      MaterialApp(home: AuthGate(authStateService: authStateProvider)),
+    );
 
-      expect(find.text('Home'), findsOneWidget);
-    },
-  );
+    await tester.pump();
+
+    expect(find.text('Home'), findsOneWidget);
+    expect(LearnerLocalIdentity.currentUserId, 'student-1');
+    expect(
+      find.byKey(const ValueKey('student-shell-student-1')),
+      findsOneWidget,
+    );
+  });
 }
 
 class _FakeAuthStateProvider implements AuthStateProvider {
-  const _FakeAuthStateProvider({
-    required this.appUser,
-  });
+  const _FakeAuthStateProvider({required this.appUser});
 
   final AppUser? appUser;
 

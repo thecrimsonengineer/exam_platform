@@ -131,7 +131,9 @@ void main() {
     test(
       'reopening a completed Subtopic does not downgrade completion',
       () async {
-        const service = StudentLearningProgressService();
+        const service = StudentLearningProgressService(
+          userIdOverride: 'test-student',
+        );
 
         await service.completeSubtopic(
           domainId: 'd01',

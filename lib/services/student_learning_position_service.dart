@@ -1,10 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Stores the learner's most recently opened CSP11 learning position.
+import 'auth/learner_local_identity.dart';
+
+/// Stores one learner's most recently opened CSP11 learning position.
 ///
-/// This is intentionally a small local persistence layer.
-/// It can later be replaced by a remote learner-progress repository
-/// without changing the student-facing screens.
+/// Every key is scoped by Firebase UID, so two accounts using the same device
+/// have independent Continue Learning state.
+///
+/// The former device-global V1 keys are intentionally ignored. They cannot be
+/// assigned safely to an account because their creator UID was never stored.
 class StudentLearningPosition {
   final String domainId;
   final int domainNumber;
@@ -13,7 +17,6 @@ class StudentLearningPosition {
   final String competencyId;
   final String competencyTitle;
 
-  /// The most recently selected subtopic ID, when available.
   final String? subtopicId;
   final String? subtopicTitle;
 
@@ -32,31 +35,23 @@ class StudentLearningPosition {
 }
 
 class StudentLearningPositionService {
-  const StudentLearningPositionService();
+  const StudentLearningPositionService({this.userIdOverride});
 
-  static const String _domainIdKey =
-      'csp11.student.learning_position.domain_id';
+  final String? userIdOverride;
 
-  static const String _domainNumberKey =
-      'csp11.student.learning_position.domain_number';
+  static const String legacyPrefix = 'csp11.student.learning_position.';
 
-  static const String _domainTitleKey =
-      'csp11.student.learning_position.domain_title';
+  static String storagePrefixForUser(String userId) =>
+      'csp11.student.$userId.learning_position.v2';
 
-  static const String _competencyIdKey =
-      'csp11.student.learning_position.competency_id';
+  String _requireUserId() {
+    return LearnerLocalIdentity.requireCurrentUserId(
+      userIdOverride: userIdOverride,
+    );
+  }
 
-  static const String _competencyTitleKey =
-      'csp11.student.learning_position.competency_title';
-
-  static const String _subtopicIdKey =
-      'csp11.student.learning_position.subtopic_id';
-
-  static const String _subtopicTitleKey =
-      'csp11.student.learning_position.subtopic_title';
-
-  static const String _lastOpenedAtKey =
-      'csp11.student.learning_position.last_opened_at';
+  String _key(String userId, String field) =>
+      '${storagePrefixForUser(userId)}.$field';
 
   Future<void> savePosition({
     required String domainId,
@@ -67,45 +62,43 @@ class StudentLearningPositionService {
     String? subtopicId,
     String? subtopicTitle,
   }) async {
+    final userId = _requireUserId();
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString(_domainIdKey, domainId);
-    await prefs.setInt(_domainNumberKey, domainNumber);
-    await prefs.setString(_domainTitleKey, domainTitle);
-
-    await prefs.setString(_competencyIdKey, competencyId);
-
-    await prefs.setString(_competencyTitleKey, competencyTitle);
+    await prefs.setString(_key(userId, 'domain_id'), domainId);
+    await prefs.setInt(_key(userId, 'domain_number'), domainNumber);
+    await prefs.setString(_key(userId, 'domain_title'), domainTitle);
+    await prefs.setString(_key(userId, 'competency_id'), competencyId);
+    await prefs.setString(_key(userId, 'competency_title'), competencyTitle);
 
     if (subtopicId != null && subtopicId.trim().isNotEmpty) {
-      await prefs.setString(_subtopicIdKey, subtopicId);
+      await prefs.setString(_key(userId, 'subtopic_id'), subtopicId);
     } else {
-      await prefs.remove(_subtopicIdKey);
+      await prefs.remove(_key(userId, 'subtopic_id'));
     }
 
     if (subtopicTitle != null && subtopicTitle.trim().isNotEmpty) {
-      await prefs.setString(_subtopicTitleKey, subtopicTitle);
+      await prefs.setString(_key(userId, 'subtopic_title'), subtopicTitle);
     } else {
-      await prefs.remove(_subtopicTitleKey);
+      await prefs.remove(_key(userId, 'subtopic_title'));
     }
 
-    await prefs.setString(_lastOpenedAtKey, DateTime.now().toIso8601String());
+    await prefs.setString(
+      _key(userId, 'last_opened_at'),
+      DateTime.now().toIso8601String(),
+    );
   }
 
   Future<StudentLearningPosition?> loadPosition() async {
+    final userId = _requireUserId();
     final prefs = await SharedPreferences.getInstance();
 
-    final domainId = prefs.getString(_domainIdKey);
-
-    final domainNumber = prefs.getInt(_domainNumberKey);
-
-    final domainTitle = prefs.getString(_domainTitleKey);
-
-    final competencyId = prefs.getString(_competencyIdKey);
-
-    final competencyTitle = prefs.getString(_competencyTitleKey);
-
-    final timestamp = prefs.getString(_lastOpenedAtKey);
+    final domainId = prefs.getString(_key(userId, 'domain_id'));
+    final domainNumber = prefs.getInt(_key(userId, 'domain_number'));
+    final domainTitle = prefs.getString(_key(userId, 'domain_title'));
+    final competencyId = prefs.getString(_key(userId, 'competency_id'));
+    final competencyTitle = prefs.getString(_key(userId, 'competency_title'));
+    final timestamp = prefs.getString(_key(userId, 'last_opened_at'));
 
     if (domainId == null ||
         domainNumber == null ||
@@ -128,22 +121,28 @@ class StudentLearningPositionService {
       domainTitle: domainTitle,
       competencyId: competencyId,
       competencyTitle: competencyTitle,
-      subtopicId: prefs.getString(_subtopicIdKey),
-      subtopicTitle: prefs.getString(_subtopicTitleKey),
+      subtopicId: prefs.getString(_key(userId, 'subtopic_id')),
+      subtopicTitle: prefs.getString(_key(userId, 'subtopic_title')),
       lastOpenedAt: lastOpenedAt,
     );
   }
 
+  /// Clears only the currently active learner's Continue Learning position.
   Future<void> clearPosition() async {
+    final userId = _requireUserId();
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.remove(_domainIdKey);
-    await prefs.remove(_domainNumberKey);
-    await prefs.remove(_domainTitleKey);
-    await prefs.remove(_competencyIdKey);
-    await prefs.remove(_competencyTitleKey);
-    await prefs.remove(_subtopicIdKey);
-    await prefs.remove(_subtopicTitleKey);
-    await prefs.remove(_lastOpenedAtKey);
+    for (final field in const <String>[
+      'domain_id',
+      'domain_number',
+      'domain_title',
+      'competency_id',
+      'competency_title',
+      'subtopic_id',
+      'subtopic_title',
+      'last_opened_at',
+    ]) {
+      await prefs.remove(_key(userId, field));
+    }
   }
 }

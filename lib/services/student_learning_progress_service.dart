@@ -4,25 +4,46 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/student_learning_progress.dart';
 import 'student_learning_progress_session_cache.dart';
+import 'auth/learner_local_identity.dart';
 
 /// Local persistence for the learner's actual CSP11 study progress.
 ///
-/// This deliberately lives beside, rather than inside,
-/// StudentLearningPositionService:
+/// Storage identity is two-dimensional:
 ///
-/// - learning position = where the learner last opened
-/// - learning progress = what the learner has actually started/completed
+/// 1. Firebase UID selects the learner namespace.
+/// 2. Subtopic ID selects the progress record inside that namespace.
 ///
-/// The storage contract is local today and can later be replaced by a
-/// remote learner-progress repository without changing the student UI.
+/// This prevents two accounts on the same phone/browser profile from sharing
+/// completion state.
+///
+/// The pre-UID device-global V1 key is intentionally NOT migrated automatically
+/// because the app cannot prove which historical account created it.
 class StudentLearningProgressService {
-  const StudentLearningProgressService();
+  const StudentLearningProgressService({this.userIdOverride});
 
-  static const String _storageKey = 'csp11.student.learning_progress.v1';
+  final String? userIdOverride;
+
+  static const String legacyStorageKey = 'csp11.student.learning_progress.v1';
+
+  static String storageKeyForUser(String userId) =>
+      'csp11.student.$userId.learning_progress.v2';
+
+  String _requireUserId() {
+    return LearnerLocalIdentity.requireCurrentUserId(
+      userIdOverride: userIdOverride,
+    );
+  }
 
   Future<Map<String, StudentSubtopicProgress>> loadAllProgress() async {
+    final userId = _requireUserId();
+    return _loadAllProgressForUser(userId);
+  }
+
+  Future<Map<String, StudentSubtopicProgress>> _loadAllProgressForUser(
+    String userId,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_storageKey);
+    final raw = prefs.getString(storageKeyForUser(userId));
 
     if (raw == null || raw.trim().isEmpty) {
       return <String, StudentSubtopicProgress>{};
@@ -53,8 +74,8 @@ class StudentLearningProgressService {
             result[entry.key.toString()] = record;
           }
         } catch (_) {
-          // Ignore a malformed individual record rather than losing
-          // the learner's other progress.
+          // Ignore one malformed record instead of losing the learner's
+          // remaining progress.
         }
       }
 
@@ -68,7 +89,8 @@ class StudentLearningProgressService {
     required String subtopicId,
     int? expectedContentVersion,
   }) async {
-    final all = await loadAllProgress();
+    final userId = _requireUserId();
+    final all = await _loadAllProgressForUser(userId);
     final record = all[subtopicId];
 
     if (record == null) {
@@ -98,12 +120,12 @@ class StudentLearningProgressService {
       return;
     }
 
-    final all = await loadAllProgress();
+    final userId = _requireUserId();
+    final all = await _loadAllProgressForUser(userId);
     final now = DateTime.now();
     final existing = all[subtopicId];
 
-    // Opening an already completed subtopic must never downgrade
-    // it back to "In Progress".
+    // Opening an already completed subtopic must never downgrade it.
     if (existing != null &&
         existing.state == StudentLearningState.completed &&
         existing.studyContentVersion == studyContentVersion) {
@@ -125,7 +147,7 @@ class StudentLearningProgressService {
       );
     }
 
-    await _saveAllProgress(all);
+    await _saveAllProgressForUser(userId, all);
     StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
@@ -144,7 +166,8 @@ class StudentLearningProgressService {
       return;
     }
 
-    final all = await loadAllProgress();
+    final userId = _requireUserId();
+    final all = await _loadAllProgressForUser(userId);
     final now = DateTime.now();
     final existing = all[subtopicId];
 
@@ -165,7 +188,7 @@ class StudentLearningProgressService {
       completedAt: completedAt,
     );
 
-    await _saveAllProgress(all);
+    await _saveAllProgressForUser(userId, all);
     StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
@@ -174,23 +197,27 @@ class StudentLearningProgressService {
       return;
     }
 
-    final all = await loadAllProgress();
+    final userId = _requireUserId();
+    final all = await _loadAllProgressForUser(userId);
     all.remove(subtopicId);
 
-    await _saveAllProgress(all);
+    await _saveAllProgressForUser(userId, all);
     StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
+  /// Clears only the currently active learner's progress.
   Future<void> clearAllProgress() async {
+    final userId = _requireUserId();
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_storageKey);
+    await prefs.remove(storageKeyForUser(userId));
     StudentLearningProgressSessionCache.invalidateCurrentUser();
   }
 
   Future<StudentProgressSummary> summarizeSubtopics(
     Iterable<String> subtopicIds,
   ) async {
-    final all = await loadAllProgress();
+    final userId = _requireUserId();
+    final all = await _loadAllProgressForUser(userId);
 
     final states = subtopicIds.map(
       (id) => all[id]?.state ?? StudentLearningState.notStarted,
@@ -199,11 +226,15 @@ class StudentLearningProgressService {
     return StudentProgressSummary.fromStates(states);
   }
 
-  Future<void> _saveAllProgress(
+  Future<void> _saveAllProgressForUser(
+    String userId,
     Map<String, StudentSubtopicProgress> progress,
   ) async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString(_storageKey, encodeStudentProgressMap(progress));
+    await prefs.setString(
+      storageKeyForUser(userId),
+      encodeStudentProgressMap(progress),
+    );
   }
 }
