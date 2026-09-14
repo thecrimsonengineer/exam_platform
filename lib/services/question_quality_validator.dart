@@ -30,7 +30,7 @@ class QuestionQualityIssue {
 /// - Scenario MCQ
 /// - Application or Analysis
 /// - Hard difficulty
-/// - Non-empty question stem; no minimum or maximum character limit
+/// - Non-empty question stem; stems under 90 characters produce a warning
 /// - Exactly 4 answer options
 /// - Exactly 1 valid BEST answer
 /// - Explanation required
@@ -117,9 +117,9 @@ class QuestionQualityValidator {
     // QUESTION STEM
     // ---------------------------------------------------------------
 
-    // There is intentionally no minimum or maximum character limit for the
-    // question stem. Quality is governed by scenario relevance and the other
-    // CSP11 quality-gate rules. The stem must only be non-empty here.
+    // The stem must be non-empty. Stems shorter than 90 characters are
+    // allowed through the lifecycle but are flagged as weak so authors can
+    // strengthen the scenario context. There is no maximum character limit.
     if (stem.isEmpty) {
       issues.add(
         const QuestionQualityIssue(
@@ -127,6 +127,16 @@ class QuestionQualityValidator {
           field: 'question',
           severity: QuestionIssueSeverity.error,
           message: 'Question stem is required.',
+        ),
+      );
+    } else if (stem.length < 90) {
+      issues.add(
+        const QuestionQualityIssue(
+          code: 'weak_question_stem',
+          field: 'question',
+          severity: QuestionIssueSeverity.warning,
+          message:
+              'Use a meaningful workplace scenario of at least 90 characters.',
         ),
       );
     }

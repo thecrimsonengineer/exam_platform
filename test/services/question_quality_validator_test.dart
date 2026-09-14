@@ -151,6 +151,35 @@ void main() {
       expect(result.blocked, isFalse);
     });
 
+
+    test('89-character stem produces weak-stem warning', () {
+      final result = report(
+        makeQuestion(
+          question: List.filled(89, 'a').join(),
+        ),
+      );
+
+      final issue = issueFor(result, 'weak_question_stem');
+
+      expect(issue.severity, QuestionIssueSeverity.warning);
+      expect(result.passed, isTrue);
+      expect(result.blocked, isFalse);
+    });
+
+    test('90-character stem has no stem-length issue', () {
+      final result = report(
+        makeQuestion(
+          question: List.filled(90, 'a').join(),
+        ),
+      );
+
+      expect(
+        codes(result),
+        isNot(contains('weak_question_stem')),
+      );
+      expect(result.blocked, isFalse);
+    });
+
     test('wrong option count produces blocking error', () {
       final result = report(
         makeQuestion(
