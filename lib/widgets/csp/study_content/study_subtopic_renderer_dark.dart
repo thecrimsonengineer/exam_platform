@@ -552,13 +552,28 @@ class DarkStudySubtopicRenderer extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(StudySpacing.cardPadding),
-              child: child,
-            ),
+            _ResponsiveSectionPadding(child: child),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ResponsiveSectionPadding extends StatelessWidget {
+  final Widget child;
+
+  const _ResponsiveSectionPadding({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final isPhone = MediaQuery.sizeOf(context).width < 600;
+
+    return Padding(
+      padding: EdgeInsets.all(
+        isPhone ? StudySpacing.sm : StudySpacing.cardPadding,
+      ),
+      child: child,
     );
   }
 }

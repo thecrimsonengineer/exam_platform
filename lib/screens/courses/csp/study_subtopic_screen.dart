@@ -152,16 +152,27 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final isDesktop = constraints.maxWidth >= 900;
+                final isPhone = constraints.maxWidth < 600;
+
+                final double horizontalPadding;
+                final double contentShellPadding;
+
+                if (isDesktop) {
+                  horizontalPadding = StudySpacing.pageHorizontalDesktop;
+                  contentShellPadding = 28;
+                } else if (isPhone) {
+                  horizontalPadding = StudySpacing.xs;
+                  contentShellPadding = StudySpacing.sm;
+                } else {
+                  horizontalPadding = StudySpacing.pageHorizontal;
+                  contentShellPadding = 20;
+                }
 
                 return SingleChildScrollView(
                   padding: EdgeInsets.only(
                     bottom: 36,
-                    left: isDesktop
-                        ? StudySpacing.pageHorizontalDesktop
-                        : StudySpacing.pageHorizontal,
-                    right: isDesktop
-                        ? StudySpacing.pageHorizontalDesktop
-                        : StudySpacing.pageHorizontal,
+                    left: horizontalPadding,
+                    right: horizontalPadding,
                   ),
                   child: Center(
                     child: ConstrainedBox(
@@ -181,7 +192,7 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
                           const SizedBox(height: 24),
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.all(isDesktop ? 28 : 20),
+                            padding: EdgeInsets.all(contentShellPadding),
                             decoration: BoxDecoration(
                               color: StudyColors.surface,
                               borderRadius: StudyRadius.large,
