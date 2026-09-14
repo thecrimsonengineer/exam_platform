@@ -30,7 +30,7 @@ class QuestionQualityIssue {
 /// - Scenario MCQ
 /// - Application or Analysis
 /// - Hard difficulty
-/// - Meaningful question stem
+/// - Non-empty question stem; no minimum or maximum character limit
 /// - Exactly 4 answer options
 /// - Exactly 1 valid BEST answer
 /// - Explanation required
@@ -117,21 +117,16 @@ class QuestionQualityValidator {
     // QUESTION STEM
     // ---------------------------------------------------------------
 
+    // There is intentionally no minimum or maximum character limit for the
+    // question stem. Quality is governed by scenario relevance and the other
+    // CSP11 quality-gate rules. The stem must only be non-empty here.
     if (stem.isEmpty) {
-      issues.add(const QuestionQualityIssue(
+      issues.add(
+        const QuestionQualityIssue(
           code: 'missing_question_stem',
           field: 'question',
           severity: QuestionIssueSeverity.error,
           message: 'Question stem is required.',
-        ));
-    } else if (stem.length < 80) {
-      issues.add(
-        const QuestionQualityIssue(
-          code: 'weak_question_stem',
-          field: 'question',
-          severity: QuestionIssueSeverity.warning,
-          message:
-              'Use a meaningful workplace scenario with enough context for a high-level decision.',
         ),
       );
     }
@@ -160,8 +155,7 @@ class QuestionQualityValidator {
             code: 'empty_answer_option',
             field: 'options',
             severity: QuestionIssueSeverity.error,
-            message:
-                'All four answer options must contain meaningful text.',
+            message: 'All four answer options must contain meaningful text.',
           ),
         );
       }
@@ -169,11 +163,11 @@ class QuestionQualityValidator {
       if (options.toSet().length != options.length) {
         issues.add(
           const QuestionQualityIssue(
-          code: 'duplicate_answer_option',
-          field: 'options',
-          severity: QuestionIssueSeverity.error,
-          message: 'Answer options must be distinct.',
-        ),
+            code: 'duplicate_answer_option',
+            field: 'options',
+            severity: QuestionIssueSeverity.error,
+            message: 'Answer options must be distinct.',
+          ),
         );
       }
 
@@ -210,20 +204,21 @@ class QuestionQualityValidator {
     // ---------------------------------------------------------------
 
     if (question.explanation.trim().isEmpty) {
-      issues.add(const QuestionQualityIssue(
+      issues.add(
+        const QuestionQualityIssue(
           code: 'missing_explanation',
           field: 'explanation',
           severity: QuestionIssueSeverity.error,
           message: 'An explanation is required.',
-        ));
+        ),
+      );
     } else if (question.explanation.trim().length < 80) {
       issues.add(
         const QuestionQualityIssue(
           code: 'weak_explanation',
           field: 'explanation',
           severity: QuestionIssueSeverity.warning,
-          message:
-              'Explanation should clearly explain why the BEST answer is correct.',
+          message: 'Explanation should clearly explain why the BEST answer is correct.',
         ),
       );
     }
@@ -233,12 +228,14 @@ class QuestionQualityValidator {
     // ---------------------------------------------------------------
 
     if (question.reference.trim().isEmpty) {
-      issues.add(const QuestionQualityIssue(
+      issues.add(
+        const QuestionQualityIssue(
           code: 'missing_reference',
           field: 'reference',
           severity: QuestionIssueSeverity.error,
           message: 'A source/reference is required.',
-        ));
+        ),
+      );
     }
 
     // ---------------------------------------------------------------
@@ -286,8 +283,7 @@ class QuestionQualityValidator {
           code: 'best_answer_length_bias',
           field: 'options',
           severity: QuestionIssueSeverity.warning,
-          message:
-              'The BEST answer is uniquely the longest option '
+          message: 'The BEST answer is uniquely the longest option '
               '($correctLength words). Keep the BEST answer comparable '
               'in length to the other options.',
         ),
@@ -301,14 +297,14 @@ class QuestionQualityValidator {
           code: 'option_length_imbalance',
           field: 'options',
           severity: QuestionIssueSeverity.warning,
-          message:
-              'Option lengths are too uneven '
+          message: 'Option lengths are too uneven '
               '($shortest to $longest words). '
               'Keep all options comparable in wording and detail.',
         ),
       );
     }
   }
+
   // -----------------------------------------------------------------
   // WORD COUNT
   // -----------------------------------------------------------------
