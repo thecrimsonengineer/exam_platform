@@ -1,0 +1,56 @@
+{
+    "schema_version":  1,
+    "phase":  "M1.5",
+    "approved_from_phase":  "M1.4",
+    "canonical_identity_frozen":  true,
+    "twin_id":  "naveed_learning_guide",
+    "display_name":  "Naveed",
+    "role_label":  "Learning Guide",
+    "asset_type":  "raster_backed_svg",
+    "default_state":  "default",
+    "local_only":  true,
+    "remote_fetch":  false,
+    "production_integration_deferred_to":  "M2",
+    "states":  {
+                   "default":  {
+                                   "label":  "Professional Â· Neutral",
+                                   "svg_path":  "assets/learning_twin/naveed_twin.svg",
+                                   "sha256":  "2d0ad2776c10eee37c85958adf72fe30ffcf4b96bc0d99ef97360f40c5bd0bcc",
+                                   "runtime_use":  [
+                                                       "default",
+                                                       "welcome",
+                                                       "encourage",
+                                                       "compact_preview"
+                                                   ]
+                               },
+                   "explain":  {
+                                   "label":  "Professional Â· Explain",
+                                   "svg_path":  "assets/learning_twin/naveed_twin_explain.svg",
+                                   "sha256":  "6e2517e5e508ecf72f3e29599c4b6d1980978249222ef590e775ce63d002e846",
+                                   "runtime_use":  [
+                                                       "teach",
+                                                       "explain"
+                                                   ]
+                               },
+                   "success":  {
+                                   "label":  "Professional Â· Success",
+                                   "svg_path":  "assets/learning_twin/naveed_twin_success.svg",
+                                   "sha256":  "68f0dbc1614d4fa9425def2ef79b49874ab0874d4ff8b84c9358dcf7f848fb16",
+                                   "runtime_use":  [
+                                                       "success",
+                                                       "celebrate",
+                                                       "positive_milestone"
+                                                   ]
+                               },
+                   "hero":  {
+                                "label":  "Professional Â· Full body",
+                                "svg_path":  "assets/learning_twin/naveed_twin_fullbody.svg",
+                                "sha256":  "d6b23df6403e60cadbb22a3ff8f5772c97343b36b450bfbe90138f1d8847d13d",
+                                "runtime_use":  [
+                                                    "hero",
+                                                    "large_surface",
+                                                    "empty_state"
+                                                ]
+                            }
+               }
+}

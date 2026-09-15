@@ -39,6 +39,8 @@ flutter:
   assets:
     - content/
     - content/domain_07/competencies/
+    - assets/learning_twin/
+    - assets/learning_twin/candidates/
 
 flutter_launcher_icons:
   android: true

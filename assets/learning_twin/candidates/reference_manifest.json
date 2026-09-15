@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "phase": "M1",
+  "status": "candidate_reference_only",
+  "canonical_identity_frozen": false,
+  "notes": [
+    "These are high-fidelity reference SVG containers derived from user-supplied illustrations.",
+    "They intentionally embed a transparent PNG data URI so the supplied illustration remains visually faithful.",
+    "They are not the M1.5 canonical vector asset and must not be promoted without explicit M1.4 approval."
+  ],
+  "assets": [
+    {
+      "id": "naveed_professional_neutral",
+      "label": "Neutral professional coat reference",
+      "intent": "neutral",
+      "path": "assets/learning_twin/candidates/naveed_professional_neutral.svg",
+      "sha256": "2d0ad2776c10eee37c85958adf72fe30ffcf4b96bc0d99ef97360f40c5bd0bcc",
+      "render_kind": "raster_backed_svg",
+      "canonical": false,
+      "source": "user_supplied_illustration"
+    },
+    {
+      "id": "naveed_professional_explain",
+      "label": "Explaining professional coat reference",
+      "intent": "explain",
+      "path": "assets/learning_twin/candidates/naveed_professional_explain.svg",
+      "sha256": "6e2517e5e508ecf72f3e29599c4b6d1980978249222ef590e775ce63d002e846",
+      "render_kind": "raster_backed_svg",
+      "canonical": false,
+      "source": "user_supplied_illustration"
+    },
+    {
+      "id": "naveed_professional_success",
+      "label": "Success professional coat reference",
+      "intent": "success",
+      "path": "assets/learning_twin/candidates/naveed_professional_success.svg",
+      "sha256": "68f0dbc1614d4fa9425def2ef79b49874ab0874d4ff8b84c9358dcf7f848fb16",
+      "render_kind": "raster_backed_svg",
+      "canonical": false,
+      "source": "user_supplied_illustration"
+    },
+    {
+      "id": "naveed_professional_fullbody",
+      "label": "Full-body professional coat reference",
+      "intent": "fullbody",
+      "path": "assets/learning_twin/candidates/naveed_professional_fullbody.svg",
+      "sha256": "d6b23df6403e60cadbb22a3ff8f5772c97343b36b450bfbe90138f1d8847d13d",
+      "render_kind": "raster_backed_svg",
+      "canonical": false,
+      "source": "user_supplied_illustration"
+    }
+  ]
+}

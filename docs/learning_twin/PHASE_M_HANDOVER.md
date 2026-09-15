@@ -4,9 +4,9 @@
 
 This document is the authoritative recovery handover for Phase M of the CSP11 learning platform.
 
-Phase M0 is CLOSED / PASS.
+Phase M0 and M1 are CLOSED / PASS.
 
-The next implementation phase is M1 - Naveed Twin Identity.
+The next implementation phase is M2 - Twin UI System.
 
 Do not rebuild M0 from memory. Do not replace the frozen architecture unless a later explicitly approved change records the reason.
 
@@ -66,7 +66,7 @@ The production baseline must remain recoverable through:
 Phase M introduces a Learning Twin, a stylized digital Naveed that appears only where it has pedagogical value.
 
 Working identity:
-`Naveed • Learning Guide`
+`Naveed â€¢ Learning Guide`
 
 The Learning Twin is intended to:
 - orient learners

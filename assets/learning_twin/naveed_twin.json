@@ -1,0 +1,49 @@
+{
+    "schema_version":  1,
+    "twin_id":  "naveed_learning_guide",
+    "display_name":  "Naveed",
+    "role_label":  "Learning Guide",
+    "phase":  "M1.5",
+    "approved_from_phase":  "M1.4",
+    "canonical_identity_frozen":  true,
+    "identity_family":  "professional_reference_set",
+    "asset_type":  "raster_backed_svg",
+    "background":  "transparent",
+    "default_state":  "default",
+    "default_asset":  "assets/learning_twin/naveed_twin.svg",
+    "notes":  [
+                  "Approved from the professional reference set reviewed in the isolated Twin Identity Studio.",
+                  "Canonical freeze creates bundled local assets only.",
+                  "Production UI/runtime integration remains deferred to Phase M2."
+              ],
+    "states":  {
+                   "default":  {
+                                   "label":  "Professional Â· Neutral",
+                                   "intent":  "calm/default",
+                                   "svg_path":  "assets/learning_twin/naveed_twin.svg",
+                                   "sha256":  "2d0ad2776c10eee37c85958adf72fe30ffcf4b96bc0d99ef97360f40c5bd0bcc",
+                                   "source_candidate_asset":  "assets/learning_twin/candidates/naveed_professional_neutral.svg"
+                               },
+                   "explain":  {
+                                   "label":  "Professional Â· Explain",
+                                   "intent":  "teach/explain",
+                                   "svg_path":  "assets/learning_twin/naveed_twin_explain.svg",
+                                   "sha256":  "6e2517e5e508ecf72f3e29599c4b6d1980978249222ef590e775ce63d002e846",
+                                   "source_candidate_asset":  "assets/learning_twin/candidates/naveed_professional_explain.svg"
+                               },
+                   "success":  {
+                                   "label":  "Professional Â· Success",
+                                   "intent":  "encourage/celebrate",
+                                   "svg_path":  "assets/learning_twin/naveed_twin_success.svg",
+                                   "sha256":  "68f0dbc1614d4fa9425def2ef79b49874ab0874d4ff8b84c9358dcf7f848fb16",
+                                   "source_candidate_asset":  "assets/learning_twin/candidates/naveed_professional_success.svg"
+                               },
+                   "hero":  {
+                                "label":  "Professional Â· Full body",
+                                "intent":  "hero/large surface",
+                                "svg_path":  "assets/learning_twin/naveed_twin_fullbody.svg",
+                                "sha256":  "d6b23df6403e60cadbb22a3ff8f5772c97343b36b450bfbe90138f1d8847d13d",
+                                "source_candidate_asset":  "assets/learning_twin/candidates/naveed_professional_fullbody.svg"
+                            }
+               }
+}

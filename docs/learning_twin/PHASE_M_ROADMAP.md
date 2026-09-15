@@ -7,7 +7,9 @@ Phase M is an experimental but controlled development stream on:
 
 M0 is CLOSED / PASS.
 
-M1 is NEXT.
+M1 is CLOSED / PASS.
+
+M2 is NEXT.
 
 The production branch remains separate until an explicit later integration decision.
 
@@ -42,7 +44,7 @@ Closure tag:
 ## M1 - Naveed Twin Identity
 
 Status:
-NEXT
+CLOSED / PASS
 
 Purpose:
 Design, compare and explicitly approve the canonical Naveed Learning Twin identity.
