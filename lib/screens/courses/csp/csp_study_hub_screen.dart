@@ -1,3 +1,4 @@
+import 'package:exam_platform/features/learning_twin/integration/learning_twin_study_hub_guidance.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/app_colors.dart';
@@ -52,6 +53,8 @@ class CspStudyHubScreen extends StatelessWidget {
                           _buildHero(context),
                           const SizedBox(height: 28),
                           _buildPathStrip(context),
+                          const SizedBox(height: 18),
+                          const LearningTwinStudyHubGuidance(),
                           const SizedBox(height: 30),
                           _sectionHeading(),
                           const SizedBox(height: 14),

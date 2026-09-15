@@ -6,6 +6,8 @@ This document is the authoritative recovery handover for Phase M of the CSP11 le
 
 Phase M0, M1, M2 and M3 are CLOSED / PASS.
 
+Phase M4 is IN PROGRESS.
+
 The next implementation phase is M4 - Core Learning Integration.
 
 Do not rebuild M0 from memory. Do not replace the frozen architecture unless a later explicitly approved change records the reason.
@@ -66,7 +68,7 @@ The production baseline must remain recoverable through:
 Phase M introduces a Learning Twin, a stylized digital Naveed that appears only where it has pedagogical value.
 
 Working identity:
-`Naveed Ã¢â‚¬Â¢ Learning Guide`
+`Naveed ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Learning Guide`
 
 The Learning Twin is intended to:
 - orient learners
@@ -397,7 +399,7 @@ Do not change Phase M code to work around the missing Windows toolchain.
 
 ## NEXT ACTION
 
-Start M4 - Core Learning Integration.
+Human-review M4.1 - Study Hub Learning Twin integration.
 
 Work only in:
 `C:\NAVEED\exam_platform_phase_m_spike`
@@ -405,23 +407,22 @@ Work only in:
 Branch:
 `phase-m-learning-twin-spike`
 
-M2 presentation and M3 guidance-domain contracts are closed and frozen after validation.
+M0-M3 remain closed and frozen. M4 is IN PROGRESS.
 
-Before M4 changes:
-1. verify the M3 validation output
-2. commit M3 as a narrow checkpoint
-3. create and push the `phase-m3-closed` recovery tag
-4. keep the production branch separate
-5. integrate only carefully selected learner surfaces
-6. enforce one unsolicited intervention maximum per screen visit
-7. preserve dismissal and deterministic decision ownership
-8. do not add Firebase Twin behavior unless explicitly required by the later roadmap
-9. do not add voice, TTS or audio
-10. do not implement adaptive M5 progress interpretation during M4
+M4.1 integrates one deterministic unsolicited Learning Twin card into the CSP11 Study Hub light and dark surfaces through `LearningTwinStudyHubGuidance`.
 
-M4 may consume the frozen M2 UI components and M3 domain contracts.
+Before closing M4:
+1. run the normal app in light mode and inspect the CSP11 Study Hub
+2. repeat in dark mode
+3. inspect an Android-width layout
+4. confirm the card does not obstruct the Study Hub path strip, domain grid or bottom navigation
+5. confirm dismiss removes the card naturally
+6. confirm no second unsolicited intervention appears during the same Study Hub visit
+7. do not add progress/adaptive M5 logic during this review
+8. do not add Firebase, voice, TTS, audio or Exam Simulator integration
+9. after explicit visual approval, decide whether M4 can close or needs another narrow M4 integration slice
 
-Production integration must remain narrow, reviewable and reversible.
+Do not merge the Phase M branch into production yet.
 ## New-chat recovery prompt
 
 In a new ChatGPT chat, use this request:

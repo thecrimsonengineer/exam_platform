@@ -13,7 +13,7 @@ M2 is CLOSED / PASS.
 
 M3 is CLOSED / PASS.
 
-M4 is NEXT.
+M4 is IN PROGRESS.
 
 The production branch remains separate until an explicit later integration decision.
 
@@ -130,7 +130,7 @@ UI presentation must not become the source of truth for whether guidance is allo
 ## M4 - Core Learning Integration
 
 Status:
-NEXT
+IN PROGRESS
 
 Purpose:
 Introduce carefully selected Learning Twin interventions in pedagogically useful learner surfaces.
