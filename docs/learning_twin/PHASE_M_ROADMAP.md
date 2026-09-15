@@ -9,7 +9,7 @@ M0 is CLOSED / PASS.
 
 M1 is CLOSED / PASS.
 
-M2 is NEXT.
+M2 is IN PROGRESS.
 
 The production branch remains separate until an explicit later integration decision.
 
@@ -79,7 +79,7 @@ M1 acceptance direction:
 ## M2 - Twin UI System
 
 Status:
-PLANNED
+IN PROGRESS
 
 Purpose:
 Create reusable learner-facing Twin presentation components while keeping the visual system responsive and unobtrusive.
