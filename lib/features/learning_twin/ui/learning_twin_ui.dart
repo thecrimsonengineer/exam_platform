@@ -2,5 +2,8 @@ export 'learning_twin_asset.dart';
 export 'learning_twin_avatar.dart';
 export 'learning_twin_bubble.dart';
 export 'learning_twin_card.dart';
+export 'learning_twin_celebration.dart';
+export 'learning_twin_coach_sheet.dart';
 export 'learning_twin_compact_tip.dart';
 export 'learning_twin_hero.dart';
+export 'learning_twin_inline_block.dart';

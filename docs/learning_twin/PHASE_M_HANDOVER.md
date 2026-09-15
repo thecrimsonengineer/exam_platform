@@ -4,9 +4,9 @@
 
 This document is the authoritative recovery handover for Phase M of the CSP11 learning platform.
 
-Phase M0 and M1 are CLOSED / PASS.
+Phase M0, M1 and M2 are CLOSED / PASS.
 
-The next implementation phase is M2 - Twin UI System.
+The next implementation phase is M3 - Guidance Domain Model.
 
 Do not rebuild M0 from memory. Do not replace the frozen architecture unless a later explicitly approved change records the reason.
 
@@ -172,19 +172,23 @@ The learner runtime should not fetch the Twin from Firebase Storage or another n
 
 ## Canonical asset target
 
-M1 is expected to end with:
+M1 closed with a frozen local Learning Twin asset family:
 
 ```text
 assets/learning_twin/
   naveed_twin.svg
+  naveed_twin_explain.svg
+  naveed_twin_success.svg
+  naveed_twin_fullbody.svg
   naveed_twin.json
   twin_manifest.json
 ```
 
-The canonical visual identity does not exist yet.
+The canonical visual identity is frozen and bundled locally.
 
-Do not treat the M0 sample avatar as final.
+M2 renders these assets through reusable presentation widgets and does not require avatar_maker in the learner runtime.
 
+The M0 sample avatar remains non-canonical.
 ## SVG export constraint discovered in M0
 
 avatar_maker's exported avatar SVG includes the primary avatar parts such as hair, facial hair, eyes, eyebrows, nose, mouth, outfit, skin and accessory.
@@ -393,7 +397,7 @@ Do not change Phase M code to work around the missing Windows toolchain.
 
 ## NEXT ACTION
 
-Start M1.1 - Twin Identity Studio.
+Start M3.1 - Guidance Domain Model.
 
 Work only in:
 `C:\NAVEED\exam_platform_phase_m_spike`
@@ -401,30 +405,21 @@ Work only in:
 Branch:
 `phase-m-learning-twin-spike`
 
-Before M1 changes:
-1. run `git status -sb`
-2. verify the branch is clean
-3. verify `phase-m0-closed` resolves to the documentation freeze checkpoint
-4. do not merge to production
-5. keep M1 isolated from production navigation
+M2 is presentation-only and is now closed after validation.
 
-M1.1 should improve the isolated authoring surface so multiple candidate Naveed Twin identities can be created and compared before any canonical asset is frozen.
+Before M3 changes:
+1. verify the working tree contains only the intended M2 completion set
+2. commit M2 as a narrow checkpoint
+3. create and push the `phase-m2-closed` recovery tag
+4. do not merge Phase M into production
+5. keep M3 presentation-independent
+6. do not wire Twin guidance into learner screens yet
 
-M1 should evaluate:
-- hair
-- beard/facial hair
-- glasses versus no glasses
-- expression
-- skin tone
-- outfit
-- professional/friendly balance
-- recognizability
-- transparent-background export
-- appearance at approximately 40, 48, 56, 72 and larger pixel sizes
-- light/dark host surfaces
+M3.1 should define deterministic guidance-domain contracts such as context, message, trigger, action and state types.
 
-Do not freeze the canonical asset until a candidate is explicitly approved.
+M3 must preserve the hard rule that presentation widgets do not decide whether guidance is allowed.
 
+Production learner integration remains deferred to M4.
 ## New-chat recovery prompt
 
 In a new ChatGPT chat, use this request:

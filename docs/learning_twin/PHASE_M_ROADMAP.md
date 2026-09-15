@@ -9,7 +9,9 @@ M0 is CLOSED / PASS.
 
 M1 is CLOSED / PASS.
 
-M2 is IN PROGRESS.
+M2 is CLOSED / PASS.
+
+M3 is NEXT.
 
 The production branch remains separate until an explicit later integration decision.
 
@@ -79,7 +81,7 @@ M1 acceptance direction:
 ## M2 - Twin UI System
 
 Status:
-IN PROGRESS
+CLOSED / PASS
 
 Purpose:
 Create reusable learner-facing Twin presentation components while keeping the visual system responsive and unobtrusive.
@@ -105,7 +107,7 @@ Requirements:
 ## M3 - Guidance Domain Model
 
 Status:
-PLANNED
+NEXT
 
 Purpose:
 Define deterministic data structures and decision contracts for guidance.

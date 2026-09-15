@@ -17,7 +17,7 @@ class LearningTwinUiShowcaseScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Phase M2.1 · Twin UI Foundation'),
+        title: const Text('Phase M2 · Twin UI System'),
         actions: [
           Semantics(
             label: 'Toggle dark mode',
@@ -53,7 +53,7 @@ class LearningTwinUiShowcaseScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'M2.1 isolation contract',
+                                'M2 isolation contract',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -131,15 +131,53 @@ class LearningTwinUiShowcaseScreen extends StatelessWidget {
                         actionLabel: 'Example action',
                         onAction: () {},
                       ),
+                      const SizedBox(height: 28),
+                      Text(
+                        'M2 completion surfaces',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      LearningTwinInlineBlock(
+                        title: 'Inline explanation',
+                        message:
+                            'Inline blocks sit inside learning content when a short '
+                            'explanation deserves more context than a compact tip.',
+                        actionLabel: 'Example action',
+                        onAction: () {},
+                      ),
+                      const SizedBox(height: 16),
+                      LearningTwinCoachSheet(
+                        title: 'Choose your next study step',
+                        message:
+                            'Coach-sheet content can be placed inside a controlled '
+                            'modal surface later. M2 itself does not open navigation '
+                            'or overlays.',
+                        primaryActionLabel: 'Primary action',
+                        onPrimaryAction: () {},
+                        secondaryActionLabel: 'Secondary action',
+                        onSecondaryAction: () {},
+                        onDismiss: () {},
+                      ),
+                      const SizedBox(height: 16),
+                      LearningTwinCelebration(
+                        title: 'Milestone reached',
+                        message:
+                            'Celebration remains static in M2 so reduced-motion '
+                            'preferences are respected by construction.',
+                        actionLabel: 'Continue',
+                        onAction: () {},
+                      ),
                       const SizedBox(height: 20),
                       Card(
                         color: theme.colorScheme.tertiaryContainer,
                         child: const Padding(
                           padding: EdgeInsets.all(16),
                           child: Text(
-                            'M2.1 intentionally uses no animation. Future motion '
-                            'must respect reduced-motion preferences before it is '
-                            'introduced. Production integration remains blocked.',
+                            'M2 presentation catalog is complete. It intentionally '
+                            'uses no animation and does not decide when guidance is '
+                            'allowed. Deterministic guidance contracts begin in M3.',
                           ),
                         ),
                       ),
