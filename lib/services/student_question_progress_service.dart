@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/question.dart';
 import '../models/student_question_progress.dart';
 import 'auth/learner_local_identity.dart';
+import 'progress_analytics_event_bus.dart';
 
 /// UID-scoped local record of CSP11 questions the learner has submitted.
 ///
@@ -120,6 +121,8 @@ class StudentQuestionProgressService {
         ),
       ),
     );
+
+    ProgressAnalyticsEventBus.markDirty();
   }
 
   /// Clears only the active learner's local question-completion history.
@@ -127,5 +130,6 @@ class StudentQuestionProgressService {
     final userId = _requireUserId();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(storageKeyForUser(userId));
+    ProgressAnalyticsEventBus.markDirty();
   }
 }

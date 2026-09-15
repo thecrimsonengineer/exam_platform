@@ -10,29 +10,23 @@ import 'study_content_loader.dart';
 /// Builds the CSP11 learner progress dashboard from published StudyContent and
 /// UID-scoped local learner activity.
 ///
-/// Subtopic progress is the authoritative persisted learning state.
-/// Topic completion remains derived: a non-empty Topic is complete only when
-/// every child Subtopic is complete for the current content version.
-///
-/// Question completion is independent from learning completion. A question is
-/// counted as completed when the learner has submitted it at least once.
+/// Inputs are loaded concurrently and question roll-ups are indexed once so
+/// Domain / Competency / Topic / Subtopic analytics do not repeatedly rescan
+/// the learner's entire question history.
 class StudentProgressDashboardService {
   const StudentProgressDashboardService();
 
   Future<StudentProgressDashboard> loadDashboard() async {
-    final loader = const StudyContentLoader();
-    final contents = await loader.loadPublishedContent();
-
-    final subtopicService = const StudentLearningProgressService();
-    final subtopicProgress = await subtopicService.loadAllProgress();
-
-    final questionService = const StudentQuestionProgressService();
-    final questionProgress = await questionService.loadAllProgress();
+    final results = await Future.wait<dynamic>([
+      const StudyContentLoader().loadPublishedContent(),
+      const StudentLearningProgressService().loadAllProgress(),
+      const StudentQuestionProgressService().loadAllProgress(),
+    ]);
 
     return buildDashboard(
-      contents: contents,
-      subtopicProgress: subtopicProgress,
-      questionProgress: questionProgress,
+      contents: results[0] as List<StudyContent>,
+      subtopicProgress: results[1] as Map<String, StudentSubtopicProgress>,
+      questionProgress: results[2] as Map<int, StudentQuestionProgress>,
     );
   }
 
@@ -62,6 +56,65 @@ class StudentProgressDashboardService {
       }
 
       return topicForSubtopic[record.subtopicId] ?? '';
+    }
+
+    final answeredBySubtopic = <String, int>{};
+    final correctBySubtopic = <String, int>{};
+    final answeredByTopic = <String, int>{};
+    final correctByTopic = <String, int>{};
+    final answeredByCompetency = <String, int>{};
+    final correctByCompetency = <String, int>{};
+    final answeredByDomain = <int, int>{};
+    final correctByDomain = <int, int>{};
+
+    void countString(
+      Map<String, int> answered,
+      Map<String, int> correct,
+      String key,
+      StudentQuestionProgress record,
+    ) {
+      final normalized = key.trim();
+
+      if (normalized.isEmpty) {
+        return;
+      }
+
+      answered[normalized] = (answered[normalized] ?? 0) + 1;
+
+      if (record.everCorrect) {
+        correct[normalized] = (correct[normalized] ?? 0) + 1;
+      }
+    }
+
+    for (final record in questionProgress.values) {
+      countString(
+        answeredBySubtopic,
+        correctBySubtopic,
+        record.subtopicId,
+        record,
+      );
+      countString(
+        answeredByTopic,
+        correctByTopic,
+        resolvedQuestionTopic(record),
+        record,
+      );
+      countString(
+        answeredByCompetency,
+        correctByCompetency,
+        record.competencyId,
+        record,
+      );
+
+      if (record.domainNumber > 0) {
+        answeredByDomain[record.domainNumber] =
+            (answeredByDomain[record.domainNumber] ?? 0) + 1;
+
+        if (record.everCorrect) {
+          correctByDomain[record.domainNumber] =
+              (correctByDomain[record.domainNumber] ?? 0) + 1;
+        }
+      }
     }
 
     for (final domain in csp11Domains) {
@@ -106,37 +159,25 @@ class StudentProgressDashboardService {
               completedInTopic++;
             }
 
-            final subtopicQuestions = questionProgress.values.where(
-              (question) => question.subtopicId == subtopic.id,
-            );
-
             subtopicDetails.add(
               StudentSubtopicProgressDetail(
                 subtopicId: subtopic.id,
                 title: subtopic.title,
                 completed: completed,
                 inProgress: inProgress,
-                answeredQuestions: subtopicQuestions.length,
-                correctQuestions: subtopicQuestions
-                    .where((item) => item.everCorrect)
-                    .length,
+                answeredQuestions: answeredBySubtopic[subtopic.id] ?? 0,
+                correctQuestions: correctBySubtopic[subtopic.id] ?? 0,
               ),
             );
           }
-
-          final topicQuestions = questionProgress.values.where(
-            (question) => resolvedQuestionTopic(question) == topic.id,
-          );
 
           final detail = StudentTopicProgressDetail(
             topicId: topic.id,
             title: topic.title,
             subtopicCount: topic.subtopics.length,
             completedSubtopics: completedInTopic,
-            answeredQuestions: topicQuestions.length,
-            correctQuestions: topicQuestions
-                .where((item) => item.everCorrect)
-                .length,
+            answeredQuestions: answeredByTopic[topic.id] ?? 0,
+            correctQuestions: correctByTopic[topic.id] ?? 0,
             subtopics: subtopicDetails,
           );
 
@@ -150,10 +191,6 @@ class StudentProgressDashboardService {
           }
         }
 
-        final competencyQuestions = questionProgress.values.where(
-          (question) => question.competencyId == content.competencyId,
-        );
-
         competencyDetails.add(
           StudentCompetencyProgressDetail(
             competencyId: content.competencyId,
@@ -163,10 +200,8 @@ class StudentProgressDashboardService {
             completedTopics: competencyCompletedTopics,
             subtopicCount: competencySubtopicCount,
             completedSubtopics: competencyCompletedSubtopics,
-            answeredQuestions: competencyQuestions.length,
-            correctQuestions: competencyQuestions
-                .where((item) => item.everCorrect)
-                .length,
+            answeredQuestions: answeredByCompetency[content.competencyId] ?? 0,
+            correctQuestions: correctByCompetency[content.competencyId] ?? 0,
             topics: topicDetails,
           ),
         );
@@ -176,10 +211,6 @@ class StudentProgressDashboardService {
         domainSubtopicCount += competencySubtopicCount;
         domainCompletedSubtopics += competencyCompletedSubtopics;
       }
-
-      final domainQuestions = questionProgress.values.where(
-        (question) => question.domainNumber == domain.number,
-      );
 
       domains.add(
         StudentDomainProgress(
@@ -191,10 +222,8 @@ class StudentProgressDashboardService {
           completedSubtopics: domainCompletedSubtopics,
           topicCount: domainTopicCount,
           completedTopics: domainCompletedTopics,
-          answeredQuestions: domainQuestions.length,
-          correctQuestions: domainQuestions
-              .where((item) => item.everCorrect)
-              .length,
+          answeredQuestions: answeredByDomain[domain.number] ?? 0,
+          correctQuestions: correctByDomain[domain.number] ?? 0,
           competencies: competencyDetails,
         ),
       );

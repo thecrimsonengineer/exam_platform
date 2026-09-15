@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/student_learning_progress.dart';
 import 'student_learning_progress_session_cache.dart';
+import 'progress_analytics_event_bus.dart';
 import 'auth/learner_local_identity.dart';
 
 /// Local persistence for the learner's actual CSP11 study progress.
@@ -149,6 +150,7 @@ class StudentLearningProgressService {
 
     await _saveAllProgressForUser(userId, all);
     StudentLearningProgressSessionCache.invalidateCurrentUser();
+    ProgressAnalyticsEventBus.markDirty();
   }
 
   Future<void> completeSubtopic({
@@ -190,6 +192,7 @@ class StudentLearningProgressService {
 
     await _saveAllProgressForUser(userId, all);
     StudentLearningProgressSessionCache.invalidateCurrentUser();
+    ProgressAnalyticsEventBus.markDirty();
   }
 
   Future<void> resetSubtopic(String subtopicId) async {
@@ -203,6 +206,7 @@ class StudentLearningProgressService {
 
     await _saveAllProgressForUser(userId, all);
     StudentLearningProgressSessionCache.invalidateCurrentUser();
+    ProgressAnalyticsEventBus.markDirty();
   }
 
   /// Clears only the currently active learner's progress.
@@ -211,6 +215,7 @@ class StudentLearningProgressService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(storageKeyForUser(userId));
     StudentLearningProgressSessionCache.invalidateCurrentUser();
+    ProgressAnalyticsEventBus.markDirty();
   }
 
   Future<StudentProgressSummary> summarizeSubtopics(

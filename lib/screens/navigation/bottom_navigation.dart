@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
 import '../../services/settings/theme_mode_service.dart';
+import '../../services/learning_activity_tracker.dart';
+import '../../services/progress_overview_snapshot_service.dart';
 import '../courses/csp/csp_study_hub_screen.dart';
 import '../courses/csp/csp_study_hub_screen_dark.dart';
 import '../flashcards/flashcards_screen.dart';
@@ -20,7 +22,8 @@ class BottomNavigationScreen extends StatefulWidget {
   State<BottomNavigationScreen> createState() => _BottomNavigationScreenState();
 }
 
-class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
+class _BottomNavigationScreenState extends State<BottomNavigationScreen>
+    with WidgetsBindingObserver {
   int _selectedIndex = 0;
 
   final GlobalKey<ProgressScreenState> _lightProgressKey =
@@ -34,7 +37,29 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _ensureScreenBuilt(0, ThemeModeService.isDarkMode.value);
+    LearningActivityTracker.instance.start();
+    const ProgressOverviewSnapshotService().prewarm();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      LearningActivityTracker.instance.resume();
+    } else if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.hidden) {
+      LearningActivityTracker.instance.pause();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    LearningActivityTracker.instance.dispose();
+    super.dispose();
   }
 
   Map<int, Widget> _screensFor(bool isDarkMode) =>
@@ -104,9 +129,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     if (index == 3) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (ThemeModeService.isDarkMode.value) {
-          _darkProgressKey.currentState?.refresh();
+          _darkProgressKey.currentState?.onVisible();
         } else {
-          _lightProgressKey.currentState?.refresh();
+          _lightProgressKey.currentState?.onVisible();
         }
       });
     }
