@@ -88,19 +88,20 @@ class CloudContentRepository {
 
   /// Loads only documents belonging to one competency.
   ///
-  /// The query intentionally uses the single equality field [competencyId]
-  /// so Firestore can use its normal single-field index without requiring
-  /// a new composite index. The returned documents are then fail-closed to
-  /// the requested domain and the independent published copy.
+  /// The learner query is scoped to domain, competency, published copy,
+  /// and published lifecycle status so it satisfies the Firestore read
+  /// boundary before documents are returned.
 
   /// Loads the latest published version of every competency in one domain.
   ///
-  /// The Firestore query intentionally uses one equality only so this path
-  /// does not require a new composite index. Published-copy and lifecycle
-  /// checks are then enforced locally, fail-closed.
+  /// The learner query includes the published-copy lifecycle predicates
+  /// required by Firestore security rules. Local checks remain as
+  /// defense-in-depth after the query returns.
   Future<List<StudyContent>> loadPublishedDomain(String domainId) async {
     final snapshot = await _collection
         .where('domainId', isEqualTo: domainId)
+        .where('copyType', isEqualTo: 'published')
+        .where('status', isEqualTo: 'published')
         .get();
 
     final latestByCompetency = <String, StudyContent>{};
@@ -140,7 +141,10 @@ class CloudContentRepository {
     required String competencyId,
   }) async {
     final snapshot = await _collection
+        .where('domainId', isEqualTo: domainId)
         .where('competencyId', isEqualTo: competencyId)
+        .where('copyType', isEqualTo: 'published')
+        .where('status', isEqualTo: 'published')
         .get();
 
     StudyContent? latest;

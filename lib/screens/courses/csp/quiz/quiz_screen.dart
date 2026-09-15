@@ -6,6 +6,7 @@ import '../../../../services/bookmark_service.dart';
 import '../../../../services/quiz_service.dart';
 import '../../../../services/student_question_progress_service.dart';
 
+import 'quiz_domain_label.dart';
 import 'result/result_screen.dart';
 import 'theme/quiz_colors.dart';
 import 'theme/quiz_spacing.dart';
@@ -309,7 +310,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           // QUIZ HEADER
                           // ========================================
                           QuizHeader(
-                            title: 'Training Needs Assessment',
+                            title: csp11QuizDomainTitle(widget.domain),
                             questionNumber: quizController.questionNumber,
                             totalQuestions: quizController.totalQuestions,
                             progress: quizController.progress,
