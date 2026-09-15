@@ -1,0 +1,15 @@
+enum LearningTwinState {
+  idle,
+  welcome,
+  explain,
+  tip,
+  important,
+  warning,
+  encourage,
+  celebrate,
+  remediate,
+  recommend,
+  checkpoint,
+  examReady,
+  resultReview,
+}

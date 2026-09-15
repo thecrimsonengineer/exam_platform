@@ -4,9 +4,9 @@
 
 This document is the authoritative recovery handover for Phase M of the CSP11 learning platform.
 
-Phase M0, M1 and M2 are CLOSED / PASS.
+Phase M0, M1, M2 and M3 are CLOSED / PASS.
 
-The next implementation phase is M3 - Guidance Domain Model.
+The next implementation phase is M4 - Core Learning Integration.
 
 Do not rebuild M0 from memory. Do not replace the frozen architecture unless a later explicitly approved change records the reason.
 
@@ -66,7 +66,7 @@ The production baseline must remain recoverable through:
 Phase M introduces a Learning Twin, a stylized digital Naveed that appears only where it has pedagogical value.
 
 Working identity:
-`Naveed â€¢ Learning Guide`
+`Naveed Ã¢â‚¬Â¢ Learning Guide`
 
 The Learning Twin is intended to:
 - orient learners
@@ -397,7 +397,7 @@ Do not change Phase M code to work around the missing Windows toolchain.
 
 ## NEXT ACTION
 
-Start M3.1 - Guidance Domain Model.
+Start M4 - Core Learning Integration.
 
 Work only in:
 `C:\NAVEED\exam_platform_phase_m_spike`
@@ -405,21 +405,23 @@ Work only in:
 Branch:
 `phase-m-learning-twin-spike`
 
-M2 is presentation-only and is now closed after validation.
+M2 presentation and M3 guidance-domain contracts are closed and frozen after validation.
 
-Before M3 changes:
-1. verify the working tree contains only the intended M2 completion set
-2. commit M2 as a narrow checkpoint
-3. create and push the `phase-m2-closed` recovery tag
-4. do not merge Phase M into production
-5. keep M3 presentation-independent
-6. do not wire Twin guidance into learner screens yet
+Before M4 changes:
+1. verify the M3 validation output
+2. commit M3 as a narrow checkpoint
+3. create and push the `phase-m3-closed` recovery tag
+4. keep the production branch separate
+5. integrate only carefully selected learner surfaces
+6. enforce one unsolicited intervention maximum per screen visit
+7. preserve dismissal and deterministic decision ownership
+8. do not add Firebase Twin behavior unless explicitly required by the later roadmap
+9. do not add voice, TTS or audio
+10. do not implement adaptive M5 progress interpretation during M4
 
-M3.1 should define deterministic guidance-domain contracts such as context, message, trigger, action and state types.
+M4 may consume the frozen M2 UI components and M3 domain contracts.
 
-M3 must preserve the hard rule that presentation widgets do not decide whether guidance is allowed.
-
-Production learner integration remains deferred to M4.
+Production integration must remain narrow, reviewable and reversible.
 ## New-chat recovery prompt
 
 In a new ChatGPT chat, use this request:

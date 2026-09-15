@@ -11,7 +11,9 @@ M1 is CLOSED / PASS.
 
 M2 is CLOSED / PASS.
 
-M3 is NEXT.
+M3 is CLOSED / PASS.
+
+M4 is NEXT.
 
 The production branch remains separate until an explicit later integration decision.
 
@@ -107,7 +109,7 @@ Requirements:
 ## M3 - Guidance Domain Model
 
 Status:
-NEXT
+CLOSED / PASS
 
 Purpose:
 Define deterministic data structures and decision contracts for guidance.
@@ -128,7 +130,7 @@ UI presentation must not become the source of truth for whether guidance is allo
 ## M4 - Core Learning Integration
 
 Status:
-PLANNED
+NEXT
 
 Purpose:
 Introduce carefully selected Learning Twin interventions in pedagogically useful learner surfaces.
