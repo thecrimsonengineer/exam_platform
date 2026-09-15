@@ -1,3 +1,4 @@
+import 'package:exam_platform/features/learning_twin/integration/learning_twin_domain_guidance.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
@@ -114,6 +115,8 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   _buildHero(),
+                  const SizedBox(height: 16),
+                  LearningTwinDomainGuidance(domainId: _domain.id),
                   const SizedBox(height: AppSpacing.xl),
                   _buildQuickActions(),
                   const SizedBox(height: AppSpacing.xl),

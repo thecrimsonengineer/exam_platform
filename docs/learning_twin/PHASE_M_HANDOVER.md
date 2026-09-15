@@ -68,7 +68,7 @@ The production baseline must remain recoverable through:
 Phase M introduces a Learning Twin, a stylized digital Naveed that appears only where it has pedagogical value.
 
 Working identity:
-`Naveed ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Learning Guide`
+`Naveed ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¢ Learning Guide`
 
 The Learning Twin is intended to:
 - orient learners
@@ -399,7 +399,7 @@ Do not change Phase M code to work around the missing Windows toolchain.
 
 ## NEXT ACTION
 
-Human-review M4.1 - Study Hub Learning Twin integration.
+Human-review M4.2 - additional core learning surfaces.
 
 Work only in:
 `C:\NAVEED\exam_platform_phase_m_spike`
@@ -407,20 +407,26 @@ Work only in:
 Branch:
 `phase-m-learning-twin-spike`
 
-M0-M3 remain closed and frozen. M4 is IN PROGRESS.
+M0-M3 remain closed and frozen. M4 remains IN PROGRESS.
 
-M4.1 integrates one deterministic unsolicited Learning Twin card into the CSP11 Study Hub light and dark surfaces through `LearningTwinStudyHubGuidance`.
+M4.1 Study Hub integration is checkpointed and visually approved.
 
-Before closing M4:
-1. run the normal app in light mode and inspect the CSP11 Study Hub
-2. repeat in dark mode
-3. inspect an Android-width layout
-4. confirm the card does not obstruct the Study Hub path strip, domain grid or bottom navigation
-5. confirm dismiss removes the card naturally
-6. confirm no second unsolicited intervention appears during the same Study Hub visit
-7. do not add progress/adaptive M5 logic during this review
-8. do not add Firebase, voice, TTS, audio or Exam Simulator integration
-9. after explicit visual approval, decide whether M4 can close or needs another narrow M4 integration slice
+M4.2 adds deterministic, dismissible guidance to:
+- Domain overview, light and dark
+- Competency content overview, light and dark
+
+M4.2 deliberately does not add automatic guidance to every subtopic page.
+
+Before the next checkpoint:
+1. inspect Domain guidance in light and dark mode
+2. inspect Competency Overview guidance in light and dark mode
+3. inspect both at Android width
+4. confirm dismissal closes each card naturally
+5. confirm M4.1 Study Hub remains unchanged
+6. confirm subtopic pages remain free of repeated automatic guidance
+7. do not add M5 adaptive progress interpretation
+8. do not add Firebase, voice, TTS, audio or Exam Simulator binding
+9. after visual approval, checkpoint M4.2 and decide whether M4 can close
 
 Do not merge the Phase M branch into production yet.
 ## New-chat recovery prompt

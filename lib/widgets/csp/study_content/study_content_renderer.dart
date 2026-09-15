@@ -1,3 +1,4 @@
+import 'package:exam_platform/features/learning_twin/integration/learning_twin_competency_guidance.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/study_content.dart';
@@ -161,6 +162,11 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                             topicCount: topics.length,
                             subtopicCount: subtopicCount,
                           ),
+                          const SizedBox(height: 16),
+                          LearningTwinCompetencyGuidance(
+                            domainId: widget.content.domainId,
+                            competencyId: widget.content.competencyId,
+                          ),
                           const SizedBox(height: 26),
                           _buildSectionHeader(topics.length),
                           const SizedBox(height: 14),
@@ -260,7 +266,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'CSP11 • DOMAIN ${domain.toString().padLeft(2, '0')}',
+                  'CSP11 â€¢ DOMAIN ${domain.toString().padLeft(2, '0')}',
                   style: StudyTypography.eyebrow.copyWith(
                     color: Colors.white.withValues(alpha: 0.68),
                   ),
@@ -275,7 +281,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                 ),
                 const SizedBox(height: 9),
                 Text(
-                  'Competency ${widget.content.competencyNumber} • Choose a topic to explore its subtopics',
+                  'Competency ${widget.content.competencyNumber} â€¢ Choose a topic to explore its subtopics',
                   style: StudyTypography.bodyLarge.copyWith(
                     color: Colors.white.withValues(alpha: 0.78),
                   ),
@@ -399,7 +405,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '$topicCount ${topicCount == 1 ? 'topic' : 'topics'} • '
+                  '$topicCount ${topicCount == 1 ? 'topic' : 'topics'} â€¢ '
                   '$subtopicCount ${subtopicCount == 1 ? 'subtopic' : 'subtopics'}',
                   style: StudyTypography.subSectionTitle,
                 ),
