@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../controllers/quiz_controller.dart';
+import '../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
+
 import '../../../../models/question.dart';
 import '../../../../services/bookmark_service.dart';
 import '../../../../services/quiz_service.dart';
@@ -27,6 +29,7 @@ class QuizScreen extends StatefulWidget {
   final List<Question>? customQuestions;
   final String? sessionTitle;
   final String? sessionNotice;
+  final LearningTwinPracticeContext? learningTwinPracticeContext;
 
   const QuizScreen({
     super.key,
@@ -38,6 +41,7 @@ class QuizScreen extends StatefulWidget {
     this.customQuestions,
     this.sessionTitle,
     this.sessionNotice,
+    this.learningTwinPracticeContext,
   });
 
   @override
@@ -207,18 +211,24 @@ class _QuizScreenState extends State<QuizScreen> {
 
     if (!mounted) return;
 
+    final resultRouteTheme = Theme.of(context);
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ResultScreen(
-          domain: widget.domain,
-          score: quizController.score,
-          totalQuestions: quizController.totalQuestions,
-          bookmarkedCount: bookmarkedCount,
-          incorrectQuestions: quizController.incorrectQuestions,
-          retryQuestions: widget.customQuestions,
-          sessionTitle: widget.sessionTitle,
-          sessionNotice: widget.sessionNotice,
+        builder: (context) => Theme(
+          data: resultRouteTheme,
+          child: ResultScreen(
+            domain: widget.domain,
+            score: quizController.score,
+            totalQuestions: quizController.totalQuestions,
+            bookmarkedCount: bookmarkedCount,
+            incorrectQuestions: quizController.incorrectQuestions,
+            retryQuestions: widget.customQuestions,
+            sessionTitle: widget.sessionTitle,
+            sessionNotice: widget.sessionNotice,
+            learningTwinPracticeContext: widget.learningTwinPracticeContext,
+          ),
         ),
       ),
     );

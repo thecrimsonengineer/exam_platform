@@ -116,6 +116,7 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
 
   Widget _buildSession(PracticeSessionPlan plan) {
     final builder = widget.sessionBuilder;
+    final learningTwinPracticeContext = _learningTwinContextFor(plan);
 
     final session = builder != null
         ? builder(plan)
@@ -124,10 +125,11 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
             customQuestions: plan.questions,
             sessionTitle: plan.title,
             sessionNotice: plan.notice,
+            learningTwinPracticeContext: learningTwinPracticeContext,
           );
 
     return LearningTwinPracticeSessionHost(
-      practiceContext: _learningTwinContextFor(plan),
+      practiceContext: learningTwinPracticeContext,
       child: session,
     );
   }

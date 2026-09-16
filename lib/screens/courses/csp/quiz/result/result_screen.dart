@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
+import '../../../../../features/learning_twin/coaching/learning_twin_practice_result_context.dart';
+import '../../../../../features/learning_twin/integration/learning_twin_post_practice_guidance.dart';
+
 import '../../../../../models/question.dart';
 import '../theme/quiz_colors.dart';
 import '../theme/quiz_spacing.dart';
@@ -14,6 +18,7 @@ class ResultScreen extends StatelessWidget {
   final List<Question>? retryQuestions;
   final String? sessionTitle;
   final String? sessionNotice;
+  final LearningTwinPracticeContext? learningTwinPracticeContext;
 
   const ResultScreen({
     super.key,
@@ -25,6 +30,7 @@ class ResultScreen extends StatelessWidget {
     this.retryQuestions,
     this.sessionTitle,
     this.sessionNotice,
+    this.learningTwinPracticeContext,
   });
 
   @override
@@ -70,6 +76,19 @@ class ResultScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             _buildHeroCard(percentage, score, totalQuestions),
+
+                            if (learningTwinPracticeContext != null) ...[
+                              const SizedBox(height: 16),
+                              LearningTwinPostPracticeGuidance(
+                                resultContext:
+                                    LearningTwinPracticeResultContext(
+                                      practiceContext:
+                                          learningTwinPracticeContext!,
+                                      score: score,
+                                      totalQuestions: totalQuestions,
+                                    ),
+                              ),
+                            ],
 
                             const SizedBox(height: 16),
 
@@ -463,14 +482,20 @@ class ResultScreen extends StatelessWidget {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
             ),
             onPressed: () {
+              final routeTheme = Theme.of(context);
+
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => QuizScreen(
-                    domain: domain,
-                    customQuestions: retryQuestions,
-                    sessionTitle: sessionTitle,
-                    sessionNotice: sessionNotice,
+                  builder: (_) => Theme(
+                    data: routeTheme,
+                    child: QuizScreen(
+                      domain: domain,
+                      customQuestions: retryQuestions,
+                      sessionTitle: sessionTitle,
+                      sessionNotice: sessionNotice,
+                      learningTwinPracticeContext: learningTwinPracticeContext,
+                    ),
                   ),
                 ),
               );
@@ -492,12 +517,17 @@ class ResultScreen extends StatelessWidget {
             onPressed: incorrectQuestions.isEmpty
                 ? null
                 : () {
+                    final routeTheme = Theme.of(context);
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => QuizScreen(
-                          domain: domain,
-                          customQuestions: incorrectQuestions,
+                        builder: (_) => Theme(
+                          data: routeTheme,
+                          child: QuizScreen(
+                            domain: domain,
+                            customQuestions: incorrectQuestions,
+                          ),
                         ),
                       ),
                     );

@@ -273,7 +273,11 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
           builder: (_) => LearningTwinPracticeSessionHost(
             practiceContext: learningTwinPracticeContext,
             theme: practiceRouteTheme,
-            child: QuizScreen(domain: _domain ?? 0, customQuestions: questions),
+            child: QuizScreen(
+              domain: _domain ?? 0,
+              customQuestions: questions,
+              learningTwinPracticeContext: learningTwinPracticeContext,
+            ),
           ),
         ),
       );
