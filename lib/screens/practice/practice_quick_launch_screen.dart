@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../features/learning_twin/coaching/learning_twin_practice_context.dart';
+import '../../features/learning_twin/integration/learning_twin_pre_practice_guidance.dart';
 import '../../services/practice/practice_mode_service.dart';
 import '../courses/csp/quiz/quiz_screen.dart';
 
@@ -95,18 +97,38 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
     }
   }
 
+  LearningTwinPracticeContext _learningTwinContextFor(
+    PracticeSessionPlan plan,
+  ) {
+    final mode = switch (plan.mode) {
+      PracticeMode.dailyChallenge => LearningTwinPracticeMode.dailyChallenge,
+      PracticeMode.randomQuiz => LearningTwinPracticeMode.randomQuiz,
+      PracticeMode.weakAreas => LearningTwinPracticeMode.weakAreas,
+    };
+
+    return LearningTwinPracticeContext(
+      mode: mode,
+      questionCount: plan.questionCount,
+      domainNumber: plan.domainNumber > 0 ? plan.domainNumber : null,
+      usedFallback: plan.usedFallback,
+    );
+  }
+
   Widget _buildSession(PracticeSessionPlan plan) {
     final builder = widget.sessionBuilder;
 
-    if (builder != null) {
-      return builder(plan);
-    }
+    final session = builder != null
+        ? builder(plan)
+        : QuizScreen(
+            domain: plan.domainNumber,
+            customQuestions: plan.questions,
+            sessionTitle: plan.title,
+            sessionNotice: plan.notice,
+          );
 
-    return QuizScreen(
-      domain: plan.domainNumber,
-      customQuestions: plan.questions,
-      sessionTitle: plan.title,
-      sessionNotice: plan.notice,
+    return LearningTwinPracticeSessionHost(
+      practiceContext: _learningTwinContextFor(plan),
+      child: session,
     );
   }
 

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../data/csp11_blueprint.dart';
 import '../../models/content_repository.dart';
 import '../../services/quiz_service.dart';
+import '../../features/learning_twin/coaching/learning_twin_practice_context.dart';
+import '../../features/learning_twin/integration/learning_twin_pre_practice_guidance.dart';
 import '../../screens/courses/csp/quiz/quiz_screen.dart';
 
 class StudentQuizBuilder extends StatefulWidget {
@@ -254,10 +256,25 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
         return;
       }
 
+      final practiceRouteTheme = Theme.of(context);
+
+      final learningTwinPracticeContext = LearningTwinPracticeContext(
+        mode: LearningTwinPracticeMode.customQuiz,
+        questionCount: questions.length,
+        domainNumber: _scope == 'all' ? null : _domain,
+        competencyId: _scope == 'competency' || _scope == 'subtopic'
+            ? _competencyId
+            : null,
+        subtopicId: _scope == 'subtopic' ? _subtopicId : null,
+      );
+
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) =>
-              QuizScreen(domain: _domain ?? 0, customQuestions: questions),
+          builder: (_) => LearningTwinPracticeSessionHost(
+            practiceContext: learningTwinPracticeContext,
+            theme: practiceRouteTheme,
+            child: QuizScreen(domain: _domain ?? 0, customQuestions: questions),
+          ),
         ),
       );
     } catch (error) {
