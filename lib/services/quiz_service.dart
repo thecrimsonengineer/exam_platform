@@ -20,6 +20,7 @@ import 'study_content/cloud_content_repository.dart';
 /// Offline caching and synchronization are intentionally deferred to
 /// Phase K.
 class QuizService implements QuizServiceInterface {
+  static final QuizService shared = QuizService();
   QuizService({
     CloudQuestionRepository? repository,
     CloudQuestionRepository? questionRepository,
@@ -35,10 +36,16 @@ class QuizService implements QuizServiceInterface {
   final CloudContentRepository _contentRepository;
 
   List<Question> _questions = const <Question>[];
+  List<StudyContent> _publishedContent = const <StudyContent>[];
+  Future<void>? _initializationFuture;
 
   bool _initialized = false;
 
   bool get isInitialized => _initialized;
+
+  List<StudyContent> getPublishedContent() {
+    return List<StudyContent>.unmodifiable(_publishedContent);
+  }
 
   // ==========================================================
   // INITIALIZATION
@@ -56,53 +63,74 @@ class QuizService implements QuizServiceInterface {
   /// Questions originating from published StudyContent are treated as
   /// published because the containing content package/version itself is
   /// published.
-  Future<void> initialize() async {
-    final independentQuestions = await _questionRepository.loadPublished();
-    final publishedContent = await _contentRepository.loadPublished();
+  Future<void> initialize({bool forceRefresh = false}) async {
+    if (_initialized && !forceRefresh) {
+      return;
+    }
+
+    final activeInitialization = _initializationFuture;
+
+    if (activeInitialization != null) {
+      await activeInitialization;
+
+      if (!forceRefresh) {
+        return;
+      }
+    }
+
+    final nextInitialization = _loadPublishedCatalog();
+    _initializationFuture = nextInitialization;
+
+    try {
+      await nextInitialization;
+    } finally {
+      if (identical(_initializationFuture, nextInitialization)) {
+        _initializationFuture = null;
+      }
+    }
+  }
+
+  Future<void> _loadPublishedCatalog() async {
+    // Start both learner-safe Firebase reads before awaiting either result.
+    // This avoids the previous sequential network waterfall.
+    final independentFuture = _questionRepository.loadPublished();
+    final publishedContentFuture = _contentRepository.loadPublished();
+
+    final independentQuestions = await independentFuture;
+    final publishedContent = await publishedContentFuture;
 
     final merged = <int, Question>{};
 
-    // ----------------------------------------------------------
-    // SOURCE 1
-    // Independently managed Firebase questions
-    // ----------------------------------------------------------
-
     for (final question in independentQuestions) {
-      if (!_isPublished(question)) {
-        continue;
-      }
-
-      if (question.id <= 0) {
+      if (!_isPublished(question) || question.id <= 0) {
         continue;
       }
 
       merged[question.id] = question;
     }
 
-    // ----------------------------------------------------------
-    // SOURCE 2
-    // Questions embedded in published content
-    // ----------------------------------------------------------
+    final normalizedPublishedContent = publishedContent
+        .where(_isPublishedContent)
+        .toList();
 
-    for (final content in publishedContent) {
-      if (!_isPublishedContent(content)) {
-        continue;
-      }
-
+    for (final content in normalizedPublishedContent) {
       _addContentQuestions(content: content, target: merged);
     }
 
-    _questions = merged.values.toList()..sort((a, b) => a.id.compareTo(b.id));
+    final nextQuestions = merged.values.toList()
+      ..sort((a, b) => a.id.compareTo(b.id));
 
+    // Commit the new catalogue atomically only after both Firebase reads
+    // succeed. An existing session cache is not destroyed by a failed refresh.
+    _questions = nextQuestions;
+    _publishedContent = List<StudyContent>.unmodifiable(
+      normalizedPublishedContent,
+    );
     _initialized = true;
   }
 
-  /// Reloads the published question pool from Firebase.
-  ///
-  /// Useful when new questions or content versions have been published
-  /// after the current session was initialized.
   Future<void> refresh() async {
-    await initialize();
+    await initialize(forceRefresh: true);
   }
 
   // ==========================================================

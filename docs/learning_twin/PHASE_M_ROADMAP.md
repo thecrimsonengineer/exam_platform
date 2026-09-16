@@ -165,7 +165,7 @@ Do not introduce an LLM requirement in this phase.
 ## M6 - Practice and Quiz Coach
 
 Status:
-PLANNED
+IN PROGRESS
 
 Purpose:
 Support pre-practice, post-practice and result interpretation without leaking answers.

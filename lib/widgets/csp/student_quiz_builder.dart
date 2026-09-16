@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../data/csp11_blueprint.dart';
 import '../../models/content_repository.dart';
 import '../../services/quiz_service.dart';
-import '../../services/study_content/content_repository_service.dart';
 import '../../screens/courses/csp/quiz/quiz_screen.dart';
 
 class StudentQuizBuilder extends StatefulWidget {
@@ -14,8 +13,7 @@ class StudentQuizBuilder extends StatefulWidget {
 }
 
 class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
-  final QuizService _quizService = QuizService();
-  final ContentRepositoryService _contentService = ContentRepositoryService();
+  final QuizService _quizService = QuizService.shared;
 
   List<ContentPackageSummary> _packages = <ContentPackageSummary>[];
 
@@ -44,13 +42,11 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
     try {
       await _quizService.initialize();
 
-      final packages = await _contentService.loadPackages();
-
-      final published = packages
-          .where(
-            (package) =>
-                package.isPublishedCopy &&
-                package.content.status.toLowerCase() == 'published',
+      final published = _quizService
+          .getPublishedContent()
+          .map(
+            (content) =>
+                ContentPackageSummary(content: content, isPublishedCopy: true),
           )
           .toList();
 
@@ -497,6 +493,8 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
 
   Widget _buildDomainDropdown() {
     return DropdownButtonFormField<int>(
+      isExpanded: true,
+      menuMaxHeight: 320,
       initialValue: _domain,
       decoration: const InputDecoration(
         labelText: 'Domain',
@@ -509,6 +507,8 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
               child: Text(
                 'D${domain.number} • '
                 '${domain.title}',
+                maxLines: 1,
+                softWrap: false,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -520,6 +520,8 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
 
   Widget _buildCompetencyDropdown() {
     return DropdownButtonFormField<String>(
+      isExpanded: true,
+      menuMaxHeight: 320,
       initialValue: _competencyIds.contains(_competencyId)
           ? _competencyId
           : null,
@@ -533,6 +535,8 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
               value: id,
               child: Text(
                 _competencyLabel(id),
+                maxLines: 1,
+                softWrap: false,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -544,6 +548,8 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
 
   Widget _buildSubtopicDropdown() {
     return DropdownButtonFormField<String>(
+      isExpanded: true,
+      menuMaxHeight: 320,
       initialValue: _subtopics.any((item) => item.id == _subtopicId)
           ? _subtopicId
           : null,
@@ -555,7 +561,12 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
           .map(
             (item) => DropdownMenuItem<String>(
               value: item.id,
-              child: Text(item.title, overflow: TextOverflow.ellipsis),
+              child: Text(
+                item.title,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           )
           .toList(),

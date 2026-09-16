@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
 import '../../services/settings/theme_mode_service.dart';
 import '../../services/learning_activity_tracker.dart';
 import '../../services/progress_overview_snapshot_service.dart';
+import '../../services/quiz_service.dart';
 import '../courses/csp/csp_study_hub_screen.dart';
 import '../courses/csp/csp_study_hub_screen_dark.dart';
 import '../flashcards/flashcards_screen.dart';
@@ -12,6 +15,7 @@ import '../home/home_screen.dart';
 import '../home/home_screen_dark.dart';
 import '../progress/progress_screen.dart';
 import '../progress/progress_screen_dark.dart';
+import '../practice/practice_hub_screen.dart';
 import '../settings/settings_screen.dart';
 import '../settings/settings_screen_dark.dart';
 
@@ -41,6 +45,26 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     _ensureScreenBuilt(0, ThemeModeService.isDarkMode.value);
     LearningActivityTracker.instance.start();
     const ProgressOverviewSnapshotService().prewarm();
+    unawaited(_prewarmQuizCatalog());
+  }
+
+  Future<void> _prewarmQuizCatalog() async {
+    try {
+      await QuizService.shared.initialize();
+    } catch (_) {
+      // Practice screens retain their normal retry/error path.
+    }
+  }
+
+  Future<void> _openSettings() async {
+    final isDarkMode = ThemeModeService.isDarkMode.value;
+
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            isDarkMode ? const DarkSettingsScreen() : const SettingsScreen(),
+      ),
+    );
   }
 
   @override
@@ -73,7 +97,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
             onOpenStudy: () => _selectTab(1),
             onOpenFlashcards: () => _selectTab(2),
             onOpenProgress: () => _selectTab(3),
-            onOpenSettings: () => _selectTab(4),
+            onOpenSettings: _openSettings,
           );
         case 1:
           return const DarkCspStudyHubScreen();
@@ -82,7 +106,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         case 3:
           return DarkProgressScreen(key: _darkProgressKey);
         case 4:
-          return const DarkSettingsScreen();
+          return const PracticeHubScreen();
         default:
           return const SizedBox.shrink();
       }
@@ -94,7 +118,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
           onOpenStudy: () => _selectTab(1),
           onOpenFlashcards: () => _selectTab(2),
           onOpenProgress: () => _selectTab(3),
-          onOpenSettings: () => _selectTab(4),
+          onOpenSettings: _openSettings,
         );
       case 1:
         return const CspStudyHubScreen();
@@ -103,7 +127,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
       case 3:
         return ProgressScreen(key: _lightProgressKey);
       case 4:
-        return const SettingsScreen();
+        return const PracticeHubScreen();
       default:
         return const SizedBox.shrink();
     }
@@ -181,9 +205,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                   label: 'Progress',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.settings_outlined),
-                  selectedIcon: Icon(Icons.settings),
-                  label: 'Settings',
+                  icon: Icon(Icons.quiz_outlined),
+                  selectedIcon: Icon(Icons.quiz_rounded),
+                  label: 'Practice',
                 ),
               ],
             ),
