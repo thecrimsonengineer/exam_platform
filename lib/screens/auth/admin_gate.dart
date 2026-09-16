@@ -7,17 +7,13 @@ import '../admin/admin_home_screen.dart';
 import '../app/app_root_screen.dart';
 
 class AdminGate extends StatelessWidget {
-  const AdminGate({
-    super.key,
-    this.authStateProvider,
-  });
+  const AdminGate({super.key, this.authStateProvider});
 
   final AuthStateProvider? authStateProvider;
 
   @override
   Widget build(BuildContext context) {
-    final AuthStateProvider service =
-        authStateProvider ?? AuthStateService();
+    final AuthStateProvider service = authStateProvider ?? AuthStateService();
 
     return StreamBuilder<AppUser?>(
       stream: service.appUserChanges,
@@ -40,7 +36,10 @@ class AdminGate extends StatelessWidget {
           return const _AccessDeniedScreen();
         }
 
-        return const AdminHomeScreen();
+        return AdminHomeScreen(
+          adminUserId: appUser.uid,
+          authStateProvider: service,
+        );
       },
     );
   }
@@ -51,11 +50,7 @@ class _AdminGateLoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
 
@@ -92,10 +87,7 @@ class _AccessDeniedScreen extends StatelessWidget {
             children: [
               const Text(
                 'Access denied',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -106,9 +98,7 @@ class _AccessDeniedScreen extends StatelessWidget {
               FilledButton(
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => const AppRootScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const AppRootScreen()),
                     (route) => false,
                   );
                 },

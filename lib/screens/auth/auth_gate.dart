@@ -49,7 +49,10 @@ class AuthGate extends StatelessWidget {
 
         if (appUser.isAdmin) {
           LearnerLocalIdentity.clear();
-          return const AdminHomeScreen();
+          return AdminHomeScreen(
+            adminUserId: appUser.uid,
+            authStateProvider: service,
+          );
         }
 
         if (!appUser.emailVerified) {

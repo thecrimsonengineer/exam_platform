@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../data/csp11_blueprint.dart';
+import '../../services/auth/auth_state_provider.dart';
+import '../../services/auth/auth_state_service.dart';
+import '../../services/auth/learner_local_identity.dart';
 
 import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
-  const AdminHomeScreen({super.key});
+  const AdminHomeScreen({super.key, this.adminUserId, this.authStateProvider});
+
+  final String? adminUserId;
+  final AuthStateProvider? authStateProvider;
 
   @override
   State<AdminHomeScreen> createState() => _AdminHomeScreenState();
@@ -15,6 +21,7 @@ class AdminHomeScreen extends StatefulWidget {
 
 class _AdminHomeScreenState extends State<AdminHomeScreen>
     with SingleTickerProviderStateMixin {
+  late final AuthStateProvider _authStateProvider;
   late final AnimationController _sidebarController;
   late final Animation<double> _sidebarAnimation;
 
@@ -48,6 +55,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   @override
   void initState() {
     super.initState();
+
+    _authStateProvider = widget.authStateProvider ?? AuthStateService();
 
     _sidebarController = AnimationController(
       vsync: this,
@@ -118,6 +127,58 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
+  Future<void> _openStudentPortal() async {
+    final adminUserId = widget.adminUserId?.trim();
+
+    if (adminUserId == null || adminUserId.isEmpty) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Student Portal preview is unavailable for this session.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    LearnerLocalIdentity.activate(adminUserId);
+
+    try {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const BottomNavigationScreen()),
+      );
+    } finally {
+      LearnerLocalIdentity.clear();
+
+      if (mounted) {
+        setState(() {
+          _selectedNav = 0;
+          _mobileDrawerOpen = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _signOut() async {
+    LearnerLocalIdentity.clear();
+
+    try {
+      await _authStateProvider.signOut();
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to sign out. Please try again.')),
+      );
+    }
+  }
+
   void _showComingSoon(String feature) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -143,9 +204,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     });
 
     if (index == 1) {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const BottomNavigationScreen()),
-      );
+      _openStudentPortal();
     } else if (index == 2) {
       _openStudio();
     } else if (index == 3) {
@@ -508,12 +567,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                     ),
                   ),
                 ),
-                Opacity(
-                  opacity: t,
-                  child: const Icon(
-                    Icons.more_horiz_rounded,
-                    color: Color(0xFF68748A),
-                    size: 17,
+                IgnorePointer(
+                  ignoring: t < .5,
+                  child: Opacity(
+                    opacity: t,
+                    child: IconButton(
+                      tooltip: 'Sign out',
+                      onPressed: _signOut,
+                      icon: const Icon(
+                        Icons.logout_rounded,
+                        color: Color(0xFF9AA5B8),
+                        size: 18,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -1678,6 +1744,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                     style: TextStyle(color: Color(0xFF707C91), fontSize: 9),
                   ),
                 ],
+              ),
+            ),
+            IconButton(
+              tooltip: 'Sign out',
+              onPressed: _signOut,
+              icon: const Icon(
+                Icons.logout_rounded,
+                color: Color(0xFF9AA5B8),
+                size: 20,
               ),
             ),
           ],
