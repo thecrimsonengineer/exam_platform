@@ -6,7 +6,7 @@ This document is the authoritative recovery handover for Phase M of the CSP11 le
 
 Phase M0 through M4 are CLOSED / PASS.
 
-Phase M5 is PLANNED.
+Phase M5 is IN PROGRESS.
 
 The next implementation phase is M5 - Adaptive Learning Coach.
 
@@ -399,7 +399,7 @@ Do not change Phase M code to work around the missing Windows toolchain.
 
 ## NEXT ACTION
 
-Begin M5.0 - Deterministic Progress Interpreter Foundation.
+Begin M5.1 - Progress Insight to M3 Candidate Bridge.
 
 Work only in:
 `C:\NAVEED\exam_platform_phase_m_spike`
@@ -407,25 +407,28 @@ Work only in:
 Branch:
 `phase-m-learning-twin-spike`
 
-Recovery point:
+Frozen recovery point:
 `phase-m4-closed`
 
-M0-M4 are CLOSED / PASS.
+M5.0 is CHECKPOINTED / PASS.
 
-M5 must begin with deterministic interpretation of the existing
-`ProgressAnalyticsSnapshot`. The first slice must remain pure and isolated:
-- no new Firebase reads
-- no SharedPreferences dependency inside the interpreter
-- no current-time reads
-- no randomness
-- no navigation or UI
+M5.1 must connect the deterministic M5 progress insight to the existing M3
+`LearningTwinMessage` contract without bypassing the M3 decision service.
+
+Required boundaries:
+- preserve deterministic message IDs and priorities
+- map semantic state and trigger explicitly
+- keep recommendation target separate from context matching scope
+- no learner-screen integration yet
+- no Firebase
+- no persistence
+- no randomness or current-time logic
 - no LLM
 - no voice, TTS or audio
-- no Exam Simulator integration
-- no learner-screen placement yet
+- no Exam Simulator binding beyond the already frozen M3 decision contract
 
-M3 remains the final authority for whether a future adaptive intervention may
-be displayed.
+M3 remains the final authority for whether a generated adaptive candidate may
+be shown.
 
 Do not merge the Phase M branch into production yet.
 ## New-chat recovery prompt

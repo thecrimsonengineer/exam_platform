@@ -145,7 +145,7 @@ Rules:
 ## M5 - Adaptive Learning Coach
 
 Status:
-PLANNED
+IN PROGRESS
 
 Purpose:
 Use existing learner progress and question-progress information to make deterministic study recommendations.
