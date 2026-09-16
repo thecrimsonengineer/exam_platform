@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../services/practice/practice_mode_service.dart';
 import '../courses/csp/csp_practice_screen.dart';
 import '../courses/csp/csp_practice_screen_dark.dart';
+import 'practice_quick_launch_screen.dart';
 
 class PracticeHubScreen extends StatelessWidget {
   const PracticeHubScreen({super.key});
@@ -22,6 +24,17 @@ class PracticeHubScreen extends StatelessWidget {
     );
   }
 
+  void _openQuickPractice(BuildContext context, PracticeMode mode) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            PracticeQuickLaunchScreen(mode: mode, isDarkMode: isDarkMode),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -33,40 +46,30 @@ class PracticeHubScreen extends StatelessWidget {
         keyName: 'practice-hub-daily',
         icon: Icons.local_fire_department_rounded,
         title: 'Daily Challenge',
-        subtitle: 'A short focused session from published CSP11 questions.',
+        subtitle: 'One tap starts today’s short published-question challenge.',
         accent: scheme.tertiary,
-        onTap: () => _openPractice(
-          context,
-          title: 'Daily Challenge',
-          description:
-              'Use the published-question catalogue for a short, focused CSP11 practice session.',
-        ),
+        actionLabel: 'START',
+        onTap: () => _openQuickPractice(context, PracticeMode.dailyChallenge),
       ),
       _PracticeMode(
         keyName: 'practice-hub-weak',
         icon: Icons.track_changes_rounded,
         title: 'Weak Areas',
-        subtitle: 'Target the areas that need the most reinforcement.',
+        subtitle:
+            'Uses real question history to focus an evidence-backed weak domain.',
         accent: scheme.secondary,
-        onTap: () => _openPractice(
-          context,
-          title: 'Weak Areas',
-          description:
-              'Target CSP11 learning areas that need more work by domain, competency, or subtopic.',
-        ),
+        actionLabel: 'START',
+        onTap: () => _openQuickPractice(context, PracticeMode.weakAreas),
       ),
       _PracticeMode(
         keyName: 'practice-hub-random',
         icon: Icons.shuffle_rounded,
         title: 'Random Quiz',
-        subtitle: 'Mix questions from the published CSP11 bank.',
+        subtitle:
+            'One tap mixes a fresh set from the warmed published catalogue.',
         accent: scheme.primary,
-        onTap: () => _openPractice(
-          context,
-          title: 'Random Quiz',
-          description:
-              'Build a mixed quiz from the published CSP11 question bank.',
-        ),
+        actionLabel: 'START',
+        onTap: () => _openQuickPractice(context, PracticeMode.randomQuiz),
       ),
       _PracticeMode(
         keyName: 'practice-hub-custom',
@@ -75,6 +78,7 @@ class PracticeHubScreen extends StatelessWidget {
         subtitle:
             'Choose scope, difficulty, cognitive level, and question count.',
         accent: scheme.primary,
+        actionLabel: 'BUILD',
         onTap: () => _openPractice(
           context,
           title: 'Custom Quiz',
@@ -118,8 +122,9 @@ class PracticeHubScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          'Every mode uses the learner-safe published question catalogue. '
-                          'Draft, review, and validated-only questions stay protected.',
+                          'Daily, Random, and Weak Areas now start directly from '
+                          'the learner-safe published catalogue. Custom Quiz keeps '
+                          'the full Domain → Competency → Subtopic builder.',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: scheme.onSurfaceVariant,
                             height: 1.45,
@@ -177,7 +182,7 @@ class PracticeHubScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Published-question catalogue',
+                                      'Fast published-question catalogue',
                                       style: theme.textTheme.titleSmall
                                           ?.copyWith(
                                             fontWeight: FontWeight.w900,
@@ -185,9 +190,9 @@ class PracticeHubScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      'CSP11 warms the published question catalogue when the learner shell opens. '
-                                      'Opening another practice mode reuses that session catalogue instead of '
-                                      'reloading draft and published repositories.',
+                                      'The learner shell prewarms one shared catalogue. '
+                                      'Direct modes reuse it instead of starting another '
+                                      'draft or published-content loading pipeline.',
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
                                             color: scheme.onSurfaceVariant,
@@ -284,8 +289,8 @@ class _PracticeHero extends StatelessWidget {
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 660),
                 child: Text(
-                  'Daily, targeted, random, and custom practice now share one '
-                  'published-question pipeline. The same hub works in light and dark mode.',
+                  'Three quick modes now remove unnecessary setup. Custom Quiz '
+                  'keeps the detailed controls when you want them.',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color:
                         (isDarkMode
@@ -405,7 +410,7 @@ class _PracticeModeCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'OPEN',
+                          mode.actionLabel,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: mode.accent,
                             fontWeight: FontWeight.w900,
@@ -438,6 +443,7 @@ class _PracticeMode {
     required this.title,
     required this.subtitle,
     required this.accent,
+    required this.actionLabel,
     required this.onTap,
   });
 
@@ -446,5 +452,6 @@ class _PracticeMode {
   final String title;
   final String subtitle;
   final Color accent;
+  final String actionLabel;
   final VoidCallback onTap;
 }

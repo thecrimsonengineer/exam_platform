@@ -11,6 +11,9 @@ class ResultScreen extends StatelessWidget {
   final int totalQuestions;
   final int bookmarkedCount;
   final List<Question> incorrectQuestions;
+  final List<Question>? retryQuestions;
+  final String? sessionTitle;
+  final String? sessionNotice;
 
   const ResultScreen({
     super.key,
@@ -19,6 +22,9 @@ class ResultScreen extends StatelessWidget {
     required this.totalQuestions,
     required this.bookmarkedCount,
     required this.incorrectQuestions,
+    this.retryQuestions,
+    this.sessionTitle,
+    this.sessionNotice,
   });
 
   @override
@@ -459,7 +465,14 @@ class ResultScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => QuizScreen(domain: domain)),
+                MaterialPageRoute(
+                  builder: (_) => QuizScreen(
+                    domain: domain,
+                    customQuestions: retryQuestions,
+                    sessionTitle: sessionTitle,
+                    sessionNotice: sessionNotice,
+                  ),
+                ),
               );
             },
           ),
@@ -496,9 +509,9 @@ class ResultScreen extends StatelessWidget {
 
         TextButton.icon(
           icon: const Icon(Icons.arrow_back_rounded, size: 18),
-          label: const Text(
-            'Back to Domain',
-            style: TextStyle(fontWeight: FontWeight.w600),
+          label: Text(
+            domain > 0 ? 'Back to Domain' : 'Back to Practice',
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
           onPressed: () {
             Navigator.pop(context);

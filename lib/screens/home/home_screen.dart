@@ -4,9 +4,11 @@ import '../../app/app_colors.dart';
 import '../../models/student_learning_progress.dart';
 import '../../services/student_learning_position_service.dart';
 import '../../services/student_learning_progress_service.dart';
+import '../../services/practice/practice_mode_service.dart';
 import '../courses/csp/csp_practice_screen.dart';
 import '../courses/csp/domain_screen.dart';
 import '../courses/csp/study_content_screen.dart';
+import '../practice/practice_quick_launch_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback? onOpenStudy;
@@ -109,6 +111,15 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (_) =>
             CspPracticeScreen(title: title, description: description),
+      ),
+    );
+  }
+
+  void _openQuickPractice(PracticeMode mode) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            PracticeQuickLaunchScreen(mode: mode, isDarkMode: false),
       ),
     );
   }
@@ -1022,11 +1033,7 @@ class _HomeScreenState extends State<HomeScreen> {
         subtitle: 'A short focused session',
         accent: const Color(0xFFE37A2F),
         tint: const Color(0xFFFFF4EB),
-        onTap: () => _openPractice(
-          title: 'Daily Challenge',
-          description:
-              'Use the published-question builder for a short, focused CSP11 practice session.',
-        ),
+        onTap: () => _openQuickPractice(PracticeMode.dailyChallenge),
       ),
       _QuickActionData(
         keyName: 'home-weak-areas',
@@ -1035,11 +1042,7 @@ class _HomeScreenState extends State<HomeScreen> {
         subtitle: 'Target a precise learning area',
         accent: const Color(0xFF7A52C8),
         tint: const Color(0xFFF4F0FF),
-        onTap: () => _openPractice(
-          title: 'Weak Areas',
-          description:
-              'Target the CSP11 areas that need more work by choosing a domain, competency, or subtopic.',
-        ),
+        onTap: () => _openQuickPractice(PracticeMode.weakAreas),
       ),
       _QuickActionData(
         keyName: 'home-random-quiz',
@@ -1048,11 +1051,7 @@ class _HomeScreenState extends State<HomeScreen> {
         subtitle: 'Mix published CSP11 questions',
         accent: const Color(0xFF1A8178),
         tint: const Color(0xFFEAF8F5),
-        onTap: () => _openPractice(
-          title: 'Random Quiz',
-          description:
-              'Build a mixed quiz from the published CSP11 question bank.',
-        ),
+        onTap: () => _openQuickPractice(PracticeMode.randomQuiz),
       ),
     ];
 

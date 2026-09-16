@@ -25,6 +25,8 @@ class QuizScreen extends StatefulWidget {
   final String? subtopicId;
   final String? topicId;
   final List<Question>? customQuestions;
+  final String? sessionTitle;
+  final String? sessionNotice;
 
   const QuizScreen({
     super.key,
@@ -34,6 +36,8 @@ class QuizScreen extends StatefulWidget {
     this.subtopicId,
     this.topicId,
     this.customQuestions,
+    this.sessionTitle,
+    this.sessionNotice,
   });
 
   @override
@@ -212,6 +216,9 @@ class _QuizScreenState extends State<QuizScreen> {
           totalQuestions: quizController.totalQuestions,
           bookmarkedCount: bookmarkedCount,
           incorrectQuestions: quizController.incorrectQuestions,
+          retryQuestions: widget.customQuestions,
+          sessionTitle: widget.sessionTitle,
+          sessionNotice: widget.sessionNotice,
         ),
       ),
     );
@@ -273,9 +280,11 @@ class _QuizScreenState extends State<QuizScreen> {
         foregroundColor: QuizColors.textPrimary,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
-        title: const Text(
-          'CSP11 Practice Quiz',
-          style: TextStyle(fontWeight: FontWeight.w700),
+        title: Text(
+          widget.sessionTitle ?? 'CSP11 Practice Quiz',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontWeight: FontWeight.w700),
         ),
       ),
 
@@ -309,6 +318,49 @@ class _QuizScreenState extends State<QuizScreen> {
                           // ========================================
                           // QUIZ HEADER
                           // ========================================
+                          if (widget.sessionNotice?.trim().isNotEmpty ==
+                              true) ...[
+                            Container(
+                              key: const ValueKey('quiz-session-notice'),
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: QuizColors.surfaceAlt.withValues(
+                                  alpha: 0.82,
+                                ),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: QuizColors.border.withValues(
+                                    alpha: 0.82,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(
+                                    Icons.info_outline_rounded,
+                                    color: QuizColors.primary,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      widget.sessionNotice!,
+                                      style: TextStyle(
+                                        color: QuizColors.textSecondary,
+                                        fontSize: 12.5,
+                                        height: 1.45,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: QuizSpacing.md),
+                          ],
+
                           QuizHeader(
                             title: csp11QuizDomainTitle(widget.domain),
                             questionNumber: quizController.questionNumber,
