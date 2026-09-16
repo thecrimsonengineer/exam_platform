@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../features/learning_twin/integration/learning_twin_progress_guidance.dart';
 import '../../models/progress_analytics_snapshot.dart';
 import '../../models/student_progress_dashboard.dart';
 import '../../services/progress_analytics_event_bus.dart';
@@ -246,6 +247,8 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
           sliver: SliverList(
             delegate: SliverChildListDelegate.fixed([
               _hero(context, snapshot),
+              const SizedBox(height: 16),
+              LearningTwinProgressGuidance(snapshot: snapshot),
               const SizedBox(height: 16),
               _kpiGrid(context, snapshot),
               const SizedBox(height: 16),
