@@ -15,9 +15,14 @@ import 'package:flutter/material.dart';
 /// screen silently refreshes its snapshot. This avoids replacing or repeating
 /// an unsolicited intervention while the learner is reading it.
 class LearningTwinProgressGuidance extends StatefulWidget {
-  const LearningTwinProgressGuidance({super.key, required this.snapshot});
+  const LearningTwinProgressGuidance({
+    super.key,
+    required this.snapshot,
+    this.onOpenDomain,
+  });
 
   final ProgressAnalyticsSnapshot snapshot;
+  final ValueChanged<String>? onOpenDomain;
 
   @override
   State<LearningTwinProgressGuidance> createState() =>
@@ -31,12 +36,14 @@ class _LearningTwinProgressGuidanceState
   static const _interpreter = DeterministicLearningTwinProgressInterpreter();
   static const _bridge = LearningTwinProgressMessageBridge();
   static const _decisionService = DeterministicLearningTwinDecisionService();
+  static const _actionPolicy = LearningTwinProgressActionPolicy();
 
   static int _nextVisitSequence = 0;
 
   late final LearningTwinContext _learningContext;
   late LearningTwinSessionState _sessionState;
   late LearningTwinDecision _decision;
+  bool _actionConsumed = false;
 
   @override
   void initState() {
@@ -88,6 +95,20 @@ class _LearningTwinProgressGuidanceState
     });
   }
 
+  void _performAction(LearningTwinProgressActionBinding binding) {
+    final openDomain = widget.onOpenDomain;
+
+    if (_actionConsumed || openDomain == null) {
+      return;
+    }
+
+    setState(() {
+      _actionConsumed = true;
+    });
+
+    openDomain(binding.targetDomainId);
+  }
+
   LearningTwinAsset _assetFor(LearningTwinState state) {
     return switch (state) {
       LearningTwinState.celebrate => LearningTwinAsset.success,
@@ -107,11 +128,25 @@ class _LearningTwinProgressGuidanceState
       return const SizedBox.shrink();
     }
 
+    final actionBinding = _actionConsumed
+        ? null
+        : _actionPolicy.resolve(message);
+
+    VoidCallback? actionCallback;
+    String? actionLabel;
+    if (widget.onOpenDomain != null && actionBinding != null) {
+      final binding = actionBinding;
+      actionLabel = binding.label;
+      actionCallback = () => _performAction(binding);
+    }
+
     return LearningTwinCard(
       key: const ValueKey<String>('learning-twin-progress-guidance'),
       title: message.title ?? 'Learning Guide',
       message: message.body,
       asset: _assetFor(message.state),
+      actionLabel: actionLabel,
+      onAction: actionCallback,
       onDismiss: _dismiss,
     );
   }

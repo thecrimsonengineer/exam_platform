@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../courses/csp/domain_screen.dart';
+import '../courses/csp/domain_screen_dark.dart';
 import '../../features/learning_twin/integration/learning_twin_progress_guidance.dart';
 import '../../models/progress_analytics_snapshot.dart';
 import '../../models/student_progress_dashboard.dart';
@@ -248,7 +250,11 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
             delegate: SliverChildListDelegate.fixed([
               _hero(context, snapshot),
               const SizedBox(height: 16),
-              LearningTwinProgressGuidance(snapshot: snapshot),
+              LearningTwinProgressGuidance(
+                snapshot: snapshot,
+                onOpenDomain: (domainId) =>
+                    _openLearningDomain(context, snapshot, domainId),
+              ),
               const SizedBox(height: 16),
               _kpiGrid(context, snapshot),
               const SizedBox(height: 16),
@@ -685,6 +691,35 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _openLearningDomain(
+    BuildContext context,
+    ProgressAnalyticsSnapshot snapshot,
+    String domainId,
+  ) {
+    ProgressDomainAnalyticsSummary? target;
+
+    for (final domain in snapshot.domains) {
+      if (domain.domainId == domainId) {
+        target = domain;
+        break;
+      }
+    }
+
+    if (target == null) {
+      return;
+    }
+
+    final domainNumber = target.domainNumber;
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => widget.isDarkMode
+            ? DarkDomainScreen(domainNumber: domainNumber)
+            : DomainScreen(domainNumber: domainNumber),
       ),
     );
   }

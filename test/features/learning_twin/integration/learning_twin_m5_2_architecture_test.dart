@@ -49,7 +49,10 @@ void main() {
       expect(text, contains('DeterministicLearningTwinDecisionService'));
       expect(text, contains('LearningTwinSessionState'));
       expect(text, contains('onDismiss: _dismiss'));
-      expect(text, isNot(contains('onAction:')));
+      // M5.3 may delegate an action, but this integration widget must
+      // remain navigation-free.
+      expect(text, contains('onAction:'));
+      expect(text, isNot(contains('Navigator.')));
     },
   );
 
