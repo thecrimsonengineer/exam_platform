@@ -15,6 +15,8 @@ M3 is CLOSED / PASS.
 
 M4 is CLOSED / PASS.
 
+M5 is CLOSED / PASS.
+
 The production branch remains separate until an explicit later integration decision.
 
 ## M0 - Architecture and package spike
@@ -145,7 +147,7 @@ Rules:
 ## M5 - Adaptive Learning Coach
 
 Status:
-IN PROGRESS
+CLOSED / PASS
 
 Purpose:
 Use existing learner progress and question-progress information to make deterministic study recommendations.

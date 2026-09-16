@@ -399,7 +399,7 @@ Do not change Phase M code to work around the missing Windows toolchain.
 
 ## NEXT ACTION
 
-Begin M5.3 - Safe Adaptive Action Routing.
+Begin M6 - Practice and Quiz Coach.
 
 Work only in:
 `C:\NAVEED\exam_platform_phase_m_spike`
@@ -407,32 +407,30 @@ Work only in:
 Branch:
 `phase-m-learning-twin-spike`
 
-Frozen recovery point:
-`phase-m4-closed`
+Recovery tags:
+- `phase-m0-closed`
+- `phase-m1-closed`
+- `phase-m2-closed`
+- `phase-m3-closed`
+- `phase-m4-closed`
+- `phase-m5-closed`
 
-M5.0, M5.1 and M5.2 are CHECKPOINTED / PASS.
+M5 is CLOSED / PASS.
 
-M5.3 may expose a user-initiated action only when the selected M5/M3 message
-already carries a supported Domain target.
+M6 purpose:
+Support pre-practice, post-practice and result interpretation without leaking
+protected answers.
 
-Routing rules:
-- the Learning Twin integration widget must not own Navigator logic
-- the Progress host owns navigation
-- Domain target IDs must resolve against the current Progress snapshot
-- weak-domain review and continue-learning may open the canonical CSP11 Domain
-  learning screen
-- unsupported or missing action targets fail closed with no button
-- one action tap is consumed for the mounted Progress visit
-- no automatic navigation
-- no Firebase added by the Twin
-- no persistence
-- no randomness
-- no LLM
+Frozen boundaries remain:
+- timed Exam Simulator sessions suppress Twin decisions
+- no protected answer leakage through hints or interventions
+- deterministic behavior first
+- M3 remains the decision authority
+- no automatic production merge
 - no voice, TTS or audio
+- no LLM requirement unless explicitly approved later
 
-M3 remains the final authority for whether an adaptive candidate may be shown.
-
-Do not merge the Phase M branch into production yet.
+Start M6 with architecture inspection before learner-screen integration.
 ## New-chat recovery prompt
 
 In a new ChatGPT chat, use this request:
