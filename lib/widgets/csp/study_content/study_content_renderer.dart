@@ -266,7 +266,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'CSP11 â€¢ DOMAIN ${domain.toString().padLeft(2, '0')}',
+                  'CSP11 \u2022 DOMAIN ${domain.toString().padLeft(2, '0')}',
                   style: StudyTypography.eyebrow.copyWith(
                     color: Colors.white.withValues(alpha: 0.68),
                   ),
@@ -281,7 +281,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                 ),
                 const SizedBox(height: 9),
                 Text(
-                  'Competency ${widget.content.competencyNumber} â€¢ Choose a topic to explore its subtopics',
+                  'Competency ${widget.content.competencyNumber} \u2022 Choose a topic to explore its subtopics',
                   style: StudyTypography.bodyLarge.copyWith(
                     color: Colors.white.withValues(alpha: 0.78),
                   ),
@@ -405,7 +405,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '$topicCount ${topicCount == 1 ? 'topic' : 'topics'} â€¢ '
+                  '$topicCount ${topicCount == 1 ? 'topic' : 'topics'} \u2022 '
                   '$subtopicCount ${subtopicCount == 1 ? 'subtopic' : 'subtopics'}',
                   style: StudyTypography.subSectionTitle,
                 ),

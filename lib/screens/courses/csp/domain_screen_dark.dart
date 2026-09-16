@@ -5,6 +5,7 @@ import '../../../models/study_content.dart';
 
 import '../../../data/csp11_blueprint.dart';
 import '../../../app/app_colors.dart';
+import '../../../app/theme.dart';
 import '../../../app/app_radius.dart';
 import '../../../app/app_spacing.dart';
 import '../../../app/app_text_styles.dart';
@@ -116,7 +117,10 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
                 delegate: SliverChildListDelegate([
                   _buildHero(),
                   const SizedBox(height: 16),
-                  LearningTwinDomainGuidance(domainId: _domain.id),
+                  Theme(
+                    data: AppTheme.darkTheme,
+                    child: LearningTwinDomainGuidance(domainId: _domain.id),
+                  ),
                   const SizedBox(height: AppSpacing.xl),
                   _buildQuickActions(),
                   const SizedBox(height: AppSpacing.xl),

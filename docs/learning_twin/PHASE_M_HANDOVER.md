@@ -4,11 +4,11 @@
 
 This document is the authoritative recovery handover for Phase M of the CSP11 learning platform.
 
-Phase M0, M1, M2 and M3 are CLOSED / PASS.
+Phase M0 through M4 are CLOSED / PASS.
 
-Phase M4 is IN PROGRESS.
+Phase M5 is PLANNED.
 
-The next implementation phase is M4 - Core Learning Integration.
+The next implementation phase is M5 - Adaptive Learning Coach.
 
 Do not rebuild M0 from memory. Do not replace the frozen architecture unless a later explicitly approved change records the reason.
 
@@ -399,7 +399,7 @@ Do not change Phase M code to work around the missing Windows toolchain.
 
 ## NEXT ACTION
 
-Human-review M4.2 - additional core learning surfaces.
+Begin M5.0 - Deterministic Progress Interpreter Foundation.
 
 Work only in:
 `C:\NAVEED\exam_platform_phase_m_spike`
@@ -407,26 +407,25 @@ Work only in:
 Branch:
 `phase-m-learning-twin-spike`
 
-M0-M3 remain closed and frozen. M4 remains IN PROGRESS.
+Recovery point:
+`phase-m4-closed`
 
-M4.1 Study Hub integration is checkpointed and visually approved.
+M0-M4 are CLOSED / PASS.
 
-M4.2 adds deterministic, dismissible guidance to:
-- Domain overview, light and dark
-- Competency content overview, light and dark
+M5 must begin with deterministic interpretation of the existing
+`ProgressAnalyticsSnapshot`. The first slice must remain pure and isolated:
+- no new Firebase reads
+- no SharedPreferences dependency inside the interpreter
+- no current-time reads
+- no randomness
+- no navigation or UI
+- no LLM
+- no voice, TTS or audio
+- no Exam Simulator integration
+- no learner-screen placement yet
 
-M4.2 deliberately does not add automatic guidance to every subtopic page.
-
-Before the next checkpoint:
-1. inspect Domain guidance in light and dark mode
-2. inspect Competency Overview guidance in light and dark mode
-3. inspect both at Android width
-4. confirm dismissal closes each card naturally
-5. confirm M4.1 Study Hub remains unchanged
-6. confirm subtopic pages remain free of repeated automatic guidance
-7. do not add M5 adaptive progress interpretation
-8. do not add Firebase, voice, TTS, audio or Exam Simulator binding
-9. after visual approval, checkpoint M4.2 and decide whether M4 can close
+M3 remains the final authority for whether a future adaptive intervention may
+be displayed.
 
 Do not merge the Phase M branch into production yet.
 ## New-chat recovery prompt

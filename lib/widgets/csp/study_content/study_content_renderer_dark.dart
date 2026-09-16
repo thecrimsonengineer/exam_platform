@@ -1,9 +1,12 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_competency_guidance.dart';
 import 'package:flutter/material.dart';
 
+import '../../../app/theme.dart';
+
 import '../../../models/study_content.dart';
 import '../../../models/student_learning_progress.dart';
 import '../../../services/student_learning_progress_service.dart';
+import '../../../services/student_learning_progress_session_cache.dart';
 import '../../../screens/courses/csp/study_subtopic_screen_dark.dart';
 import '../../../theme/study/study_colors_dark.dart';
 import '../../../theme/study/study_gradients.dart';
@@ -51,7 +54,10 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
   @override
   void initState() {
     super.initState();
-    _loadProgress();
+
+    if (!_applyCachedProgress()) {
+      _loadProgress();
+    }
   }
 
   @override
@@ -69,14 +75,36 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
       _topicSelectionInitialized = false;
       _expandedTopicIndex = 0;
       _resumeHandled = false;
-      _loadProgress();
+
+      if (!_applyCachedProgress()) {
+        _loadProgress();
+      }
     } else if (resumeTargetChanged) {
       _resumeHandled = false;
     }
   }
 
+  bool _applyCachedProgress() {
+    final progress = StudentLearningProgressSessionCache.peek();
+
+    if (progress == null) {
+      return false;
+    }
+
+    _progressBySubtopicId = progress;
+
+    if (!_topicSelectionInitialized) {
+      _expandedTopicIndex = _preferredTopicIndex(progress);
+      _topicSelectionInitialized = true;
+    }
+
+    return true;
+  }
+
   Future<void> _loadProgress() async {
-    final progress = await _progressService.loadAllProgress();
+    final progress = await StudentLearningProgressSessionCache.load(
+      loader: _progressService.loadAllProgress,
+    );
 
     if (!mounted) {
       return;
@@ -138,9 +166,12 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
                             subtopicCount: subtopicCount,
                           ),
                           const SizedBox(height: 16),
-                          LearningTwinCompetencyGuidance(
-                            domainId: widget.content.domainId,
-                            competencyId: widget.content.competencyId,
+                          Theme(
+                            data: AppTheme.darkTheme,
+                            child: LearningTwinCompetencyGuidance(
+                              domainId: widget.content.domainId,
+                              competencyId: widget.content.competencyId,
+                            ),
                           ),
                           const SizedBox(height: 26),
                           _buildSectionHeader(topics.length),
@@ -241,7 +272,7 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'CSP11 â€¢ DOMAIN ${domain.toString().padLeft(2, '0')}',
+                  'CSP11 \u2022 DOMAIN ${domain.toString().padLeft(2, '0')}',
                   style: DarkStudyTypography.eyebrow.copyWith(
                     color: Colors.white.withValues(alpha: 0.68),
                   ),
@@ -256,7 +287,7 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
                 ),
                 const SizedBox(height: 9),
                 Text(
-                  'Competency ${widget.content.competencyNumber} â€¢ Choose a topic to explore its subtopics',
+                  'Competency ${widget.content.competencyNumber} \u2022 Choose a topic to explore its subtopics',
                   style: DarkStudyTypography.bodyLarge.copyWith(
                     color: Colors.white.withValues(alpha: 0.78),
                   ),
@@ -380,7 +411,7 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '$topicCount ${topicCount == 1 ? 'topic' : 'topics'} â€¢ '
+                  '$topicCount ${topicCount == 1 ? 'topic' : 'topics'} \u2022 '
                   '$subtopicCount ${subtopicCount == 1 ? 'subtopic' : 'subtopics'}',
                   style: DarkStudyTypography.subSectionTitle.copyWith(
                     color: DarkStudyColors.textPrimary,
