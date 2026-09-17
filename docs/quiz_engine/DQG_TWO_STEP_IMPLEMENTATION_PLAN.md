@@ -2,56 +2,64 @@
 
 ## Base
 
-Implementation branch: `phase-q-dqg64-question-quality-validator`
-
 Step 1 hardening branch: `phase-q-dqg64-step1-contract-hardening`
 
 Parent specification: `docs/quiz_engine/CSP11_QUIZ_QUALITY_VALIDATOR_FREEZE_CANDIDATE.md`
+
+Authoritative Step 1 rule matrix: `docs/quiz_engine/DQG_300_RULE_MATRIX.md`
+
+Pinned freeze-candidate Git blob: `68b4fe0a132c8cc7ebd095aa7340a6ee4bb29b4b`
 
 The production architecture branch and Phase M branch are not modified by this work.
 
 ## Step 1 — Contract lock before implementation
 
-1. Freeze the 64 atomic DQG identifiers and their traceability to the candidate MD.
-2. Add temporary contract tests under `test/quality_validator_contract/temporary/`.
-3. Add one perfect DQ6 fixture carrying every required proof.
-4. Add targeted mutation tests that break one contract dimension at a time and require the named DQG plus aggregate DQG-064 to block publication.
-5. Add manifest-integrity tests requiring exactly 64 contiguous, unique IDs.
-6. Add no-override tests.
-7. Harden compound DQGs so every independently represented subcondition has an explicit mutation test. A compound rule is not considered contract-covered merely because one subcondition is tested.
-8. Include positive-path contract tests where the specification permits a controlled exception, such as a custom distractor family with explicit technical justification.
-9. Keep Step 1 implementation-free. Do not write or import production validator logic into this branch beyond the red contract references needed to define the future API.
-10. Do not alter the existing `Question` authoring model in Step 1.
-
-Step 1 is intentionally a red/contract stage. The tests reference the Step 2 API and are not claimed to pass until Step 2 is present.
+1. Decompose every mandatory requirement in all 35 freeze-candidate sections into 300 atomic DQGs.
+2. Require exactly contiguous identifiers `DQG-001` through `DQG-300`.
+3. Make `DQG-300` the derived aggregate publication gate. It cannot be manually set.
+4. Pin the source freeze-candidate Git blob so any later specification drift invalidates the Step 1 audit until remapped and retested.
+5. Preserve exact DQ6 thresholds: all three plausibility scores 5/5, all three Truth Component Scores 4/4, all three KEY↔distractor confusability scores exactly 4/5, and DQS exactly 100/100.
+6. Preserve zero-tolerance publication semantics: no unresolved blocks, failures, warnings, ambiguity, unsupported source distinction, option equivalence, or incomplete BEST-answer superiority proof.
+7. Preserve one uniquely defensible BEST answer and exactly three expert near-miss distractors.
+8. Preserve fail-closed structured evidence. Semantic quality must not be guessed from keywords when the evidence needed by the contract is absent.
+9. Provide no manual override, rounding tolerance, warning escape, reduced-quality route, or alternate publication path.
+10. Generate 30 temporary test shards covering 10 DQGs each. The generated shards collectively cover all 300 DQGs.
+11. Run a repository-native static audit verifying rule count, contiguity, section coverage, critical source anchors, pinned source blob, generated shard coverage, and final aggregate semantics.
+12. Keep Step 1 isolated from the new production validator implementation. The repository's pre-existing legacy `question_quality_validator.dart` remains baseline code and is not the DQG300 implementation.
+13. Do not add the Step 2 evidence model, result model, publication integration, or new DQG300 validator implementation during Step 1.
+14. Preserve the earlier targeted red Dart tests as implementation-facing design evidence. The 300-DQG matrix supersedes the earlier 64-rule matrix as the contract authority for Step 2.
 
 ### Step 1 completion gate
 
-Step 1 may be declared CLOSED only when all of the following are true:
+Step 1 is CLOSED only when all of the following are true:
 
-- `DQG_64_RULE_MATRIX.md` contains exactly DQG-001 through DQG-064, once each, in order.
-- Every DQG has at least one explicit contract assertion.
-- Every independently represented subcondition of a compound DQG has explicit mutation coverage.
-- The perfect fixture represents the complete required evidence surface for a publishable DQ6 item.
-- A mutation of any mandatory dimension causes the named DQG and DQG-064 to BLOCK.
-- Exact frozen thresholds are tested on both sides where relevant, including confusability 3 and 5 around the required value 4.
-- DQS is contractually derived from exactly ten fixed 10-point categories and cannot bypass any failed DQG.
-- Manual override requests are blocking and no Step 1 contract defines an override API.
-- Controlled exceptions explicitly permitted by the specification are tested positively rather than being accidentally forbidden.
-- The temporary contract suite remains isolated from production and Phase M branches.
-- No Step 2 validator, evidence model, result model, publication hook, or production integration is introduced on the Step 1 hardening branch.
+- `DQG_300_RULE_MATRIX.md` contains exactly DQG-001 through DQG-300, once each, in order.
+- All 35 numbered sections of the freeze candidate have at least one atomic DQG and every mandatory requirement identified in the coverage audit is represented.
+- The source freeze-candidate Git blob remains exactly `68b4fe0a132c8cc7ebd095aa7340a6ee4bb29b4b`.
+- DQG-300 is the derived final aggregate and cannot pass unless DQG-001 through DQG-299 all pass.
+- The temporary test generator produces exactly 30 shards and those shards collectively reference all 300 DQGs.
+- The Step 1 verifier passes after generation of the temporary tests.
+- The temporary Python contract suite passes in full.
+- A real failing test, if encountered during Step 1 construction, is corrected and the complete audit is rerun rather than bypassed.
+- The exact DQ6, 5/5, 4/4, 4/5 and DQS 100/100 thresholds remain unchanged.
+- Missing structured evidence remains publication-blocking.
+- No override or reduced-quality path exists in the contract.
+- No Step 2 implementation is introduced to make the contract artificially green.
+- The production architecture branch and Phase M branch remain outside the Step 1 changes.
 
 ## Step 2 — Deterministic implementation
 
-1. Add `QuestionQualityEvidence` and subordinate evidence models without changing the existing `Question` authoring model.
-2. Add `QuestionQualityValidationResult` with PASS/BLOCK only.
-3. Add `QuestionQualityValidator` implementing DQG-001..064.
-4. Compute DQS from ten fixed 10-point categories. Do not trust caller-supplied scores.
-5. Fail closed on missing structured evidence.
-6. Provide no manual override argument, method, or bypass.
-7. Run all temporary contract tests plus existing Flutter tests locally before final freeze.
-8. Only after green validation may temporary tests be promoted/renamed and the candidate specification be considered for final freeze.
+1. Branch from the accepted final Step 1 checkpoint.
+2. Add `QuestionQualityEvidence` and subordinate evidence models without weakening the existing `Question` authoring architecture.
+3. Add a validation result surface with publication eligibility restricted to PASS/BLOCK.
+4. Implement the new `QuestionQualityValidator` against DQG-001 through DQG-300.
+5. Compute DQS from the frozen ten fixed 10-point categories. Never trust caller-supplied DQS as authority.
+6. Fail closed on missing structured evidence.
+7. Provide no manual override argument, method, bypass, tolerance, or reduced-quality publication route.
+8. Convert each atomic DQG into implementation-facing mutation coverage and require DQG-300 to block whenever any preceding rule fails.
+9. Run the DQG300 contract suite, Flutter analysis, validator tests, and existing regression suite before any final freeze or integration decision.
+10. Step 2 may implement the Step 1 contract but may not rewrite the Step 1 contract to fit implementation.
 
 ## Why structured evidence is mandatory
 
-The existing `Question` model can prove structural properties such as option count and answer-key index. It cannot itself prove semantic properties such as expert-near-miss plausibility, counterfactual validity, source-backed rejection distinctions, SME ambiguity review, or single-fatal-flaw quality. Pretending to infer those requirements with word-count or keyword heuristics would violate the candidate MD. Therefore those requirements are represented as explicit review evidence and missing evidence blocks publication.
+The existing `Question` model can prove structural properties such as option count and answer-key index. It cannot itself prove semantic properties such as expert-near-miss plausibility, counterfactual validity, source-backed rejection distinctions, SME ambiguity review, single-fatal-flaw quality, or the reasoning pathway behind a numerical distractor. Pretending to infer these requirements using shallow word-count or keyword heuristics would violate the freeze candidate. Therefore semantic requirements must be represented as structured evidence and missing evidence blocks publication.
