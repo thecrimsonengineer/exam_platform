@@ -2,7 +2,6 @@
 from pathlib import Path
 import hashlib
 import subprocess
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,11 +26,12 @@ def main() -> None:
         validator_path: '4143211c6663545ec5dd47686b69ff257c6eb753',
         qbs_path: '3b42f563b3be0517c20b761a35b35d4d007ee74d',
     }
-    for path, sha in expected.items():
+    for path, expected_sha in expected.items():
         actual = blob_sha(path)
-        if actual != sha:
+        if actual != expected_sha:
             raise SystemExit(
-                f'Guard failed for {path.relative_to(ROOT)}: expected {sha}, got {actual}'
+                f'Guard failed for {path.relative_to(ROOT)}: '
+                f'expected {expected_sha}, got {actual}'
             )
 
     validator = validator_path.read_text(encoding='utf-8')
@@ -73,51 +73,35 @@ def main() -> None:
         qbs,
         """          _PreparedBulkQuestion(\n            question: question,\n            existingStatus: null,\n            reused: false,\n          ),""",
         """          _PreparedBulkQuestion(\n            question: question,\n            existingStatus: null,\n            reused: false,\n            qualityEvidence: qualityEvidence!,\n          ),""",
-        'new bulk item evidence',
+        'new bulk evidence',
     )
     qbs = replace_once(
         qbs,
         """        _PreparedBulkQuestion(\n          question: Question.fromJson({\n            ...question.toJson(),\n            'id': existing.id,\n          }),\n          existingStatus: existing.status,\n          reused: true,\n        ),""",
         """        _PreparedBulkQuestion(\n          question: Question.fromJson({\n            ...question.toJson(),\n            'id': existing.id,\n          }),\n          existingStatus: existing.status,\n          reused: true,\n          qualityEvidence: qualityEvidence!,\n        ),""",
-        'reused bulk item evidence',
+        'reused bulk evidence',
     )
     qbs = replace_once(
         qbs,
         """      await _publishPreparedQuestion(\n        item.question,\n        existingStatus: item.existingStatus,\n      );""",
         """      await _publishPreparedQuestion(\n        item.question,\n        existingStatus: item.existingStatus,\n        qualityEvidence: item.qualityEvidence,\n      );""",
-        'bulk publish evidence pass-through',
+        'bulk evidence pass-through',
     )
     qbs = replace_once(
         qbs,
         """  Future<void> _publishPreparedQuestion(\n    Question question, {\n    required String? existingStatus,\n  }) async {\n    final normalizedStatus = existingStatus?.trim().toLowerCase() ?? '';""",
         """  Future<void> _publishPreparedQuestion(\n    Question question, {\n    required String? existingStatus,\n    required QuestionQualityEvidence qualityEvidence,\n  }) async {\n    requireDqg300PublicationPass(question, qualityEvidence);\n    final normalizedStatus = existingStatus?.trim().toLowerCase() ?? '';""",
-        'private bulk recheck',
+        'private bulk strict recheck',
     )
 
-    qbs = replace_once(
-        qbs,
-        """  Future<List<QuestionQualityIssue>> validateForPublication(\n    Question question,\n  ) async {\n    if (_normalizedStatus(question) != 'review') {""",
-        """  Future<List<QuestionQualityIssue>> validateForPublication(\n    Question question, {\n    QuestionQualityEvidence? qualityEvidence,\n  }) async {\n    if (_normalizedStatus(question) != 'review') {""",
-        'validateForPublication signature',
-    )
-    qbs = replace_once(
-        qbs,
-        """    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {""",
-        """    requireDqg300PublicationPass(question, qualityEvidence);\n    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {""",
-        'validateForPublication strict gate',
-    )
-    qbs = replace_once(
-        qbs,
-        """  Future<void> publish(Question question) async {\n    if (_normalizedStatus(question) != 'validated') {""",
-        """  Future<void> publish(\n    Question question, {\n    QuestionQualityEvidence? qualityEvidence,\n  }) async {\n    if (_normalizedStatus(question) != 'validated') {""",
-        'publish signature',
-    )
-    qbs = replace_once(
-        qbs,
-        """    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {\n      throw StateError(issues.map((issue) => issue.message).join('\\n'));\n    }\n\n    final publishedQuestion = randomizeOptions(""",
-        """    requireDqg300PublicationPass(question, qualityEvidence);\n    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {\n      throw StateError(issues.map((issue) => issue.message).join('\\n'));\n    }\n\n    final publishedQuestion = randomizeOptions(""",
-        'publish strict gate',
-    )
+    old_validate = """  Future<List<QuestionQualityIssue>> validateForPublication(\n    Question question,\n  ) async {\n    if (_normalizedStatus(question) != 'review') {\n      throw StateError('Question can only be validated from review status.');\n    }\n\n    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {\n      throw StateError(issues.map((issue) => issue.message).join('\\n'));\n    }"""
+    new_validate = """  Future<List<QuestionQualityIssue>> validateForPublication(\n    Question question, {\n    QuestionQualityEvidence? qualityEvidence,\n  }) async {\n    if (_normalizedStatus(question) != 'review') {\n      throw StateError('Question can only be validated from review status.');\n    }\n\n    requireDqg300PublicationPass(question, qualityEvidence);\n    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {\n      throw StateError(issues.map((issue) => issue.message).join('\\n'));\n    }"""
+    qbs = replace_once(qbs, old_validate, new_validate, 'validateForPublication method')
+
+    old_publish = """  Future<void> publish(Question question) async {\n    if (_normalizedStatus(question) != 'validated') {\n      throw StateError('Question must be validated before publication.');\n    }\n\n    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {\n      throw StateError(issues.map((issue) => issue.message).join('\\n'));\n    }"""
+    new_publish = """  Future<void> publish(\n    Question question, {\n    QuestionQualityEvidence? qualityEvidence,\n  }) async {\n    if (_normalizedStatus(question) != 'validated') {\n      throw StateError('Question must be validated before publication.');\n    }\n\n    requireDqg300PublicationPass(question, qualityEvidence);\n    final issues = validate(question);\n\n    if (issues.any((issue) => issue.isError)) {\n      throw StateError(issues.map((issue) => issue.message).join('\\n'));\n    }"""
+    qbs = replace_once(qbs, old_publish, new_publish, 'publish method')
+
     qbs = replace_once(
         qbs,
         """class _PreparedBulkQuestion {\n  final Question question;\n  final String? existingStatus;\n  final bool reused;\n\n  const _PreparedBulkQuestion({\n    required this.question,\n    required this.existingStatus,\n    required this.reused,\n  });\n}""",
@@ -131,10 +115,8 @@ def main() -> None:
         cwd=ROOT,
         check=True,
     )
-    print('PASS: strict DQG300 superiority detector and publication gates applied')
+    print('PASS: guarded DQG300 publication gate applied')
 
 
 if __name__ == '__main__':
     main()
-
-# Trigger marker: execute the guarded patch workflow once after its workflow file exists.
