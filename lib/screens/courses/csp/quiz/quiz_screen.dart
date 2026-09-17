@@ -133,8 +133,8 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
-  Future<void> _toggleBookmark(int questionId) async {
-    await _bookmarkService.toggleBookmark(questionId);
+  Future<void> _toggleBookmark(Question question) async {
+    await _bookmarkService.toggleQuestion(question);
 
     final bookmarks = await _bookmarkService.getBookmarkedQuestionIds();
 
@@ -448,7 +448,7 @@ class _QuizScreenState extends State<QuizScreen> {
                               BookmarkButton(
                                 isBookmarked: isBookmarked,
                                 onPressed: () {
-                                  _toggleBookmark(question.id);
+                                  _toggleBookmark(question);
                                 },
                               ),
                             ],

@@ -7,6 +7,7 @@ import '../../services/student_learning_progress_service.dart';
 import '../../services/practice/practice_mode_service.dart';
 import '../../services/study_content_search_service.dart';
 import '../../widgets/csp/home/study_content_search_panel.dart';
+import '../bookmarks/bookmarked_questions_screen.dart';
 import '../courses/csp/csp_practice_screen.dart';
 import '../courses/csp/domain_screen.dart';
 import '../courses/csp/study_content_screen.dart';
@@ -125,6 +126,14 @@ class _HomeScreenState extends State<HomeScreen> {
     await _refreshHome();
   }
 
+  Future<void> _openBookmarks() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const BookmarkedQuestionsScreen(isDarkMode: false),
+      ),
+    );
+  }
+
   void _openPractice({required String title, required String description}) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -199,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   eyebrow: 'YOUR WORKSPACE',
                                   title: 'Learn, practise, remember',
                                   subtitle:
-                                      'Three focused routes. One CSP11 learning system.',
+                                      'Four focused routes. One CSP11 learning system.',
                                 ),
                                 const SizedBox(height: 14),
                                 _buildPrimaryActions(context),
@@ -889,12 +898,21 @@ class _HomeScreenState extends State<HomeScreen> {
         gradient: const [Color(0xFF126E66), Color(0xFF22A091)],
         onTap: widget.onOpenFlashcards,
       ),
+      _PrimaryActionData(
+        keyName: 'home-bookmarks',
+        eyebrow: 'SAVE',
+        title: 'Bookmarks',
+        description: 'Return to questions you saved locally on this device.',
+        icon: Icons.bookmarks_rounded,
+        gradient: const [Color(0xFF7B3FA1), Color(0xFFA855C7)],
+        onTap: _openBookmarks,
+      ),
     ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final columns = constraints.maxWidth >= 900
-            ? 3
+            ? 4
             : constraints.maxWidth >= 580
             ? 2
             : 1;
