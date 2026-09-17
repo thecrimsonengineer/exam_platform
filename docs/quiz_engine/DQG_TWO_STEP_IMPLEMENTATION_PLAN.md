@@ -4,6 +4,8 @@
 
 Implementation branch: `phase-q-dqg64-question-quality-validator`
 
+Step 1 hardening branch: `phase-q-dqg64-step1-contract-hardening`
+
 Parent specification: `docs/quiz_engine/CSP11_QUIZ_QUALITY_VALIDATOR_FREEZE_CANDIDATE.md`
 
 The production architecture branch and Phase M branch are not modified by this work.
@@ -16,9 +18,28 @@ The production architecture branch and Phase M branch are not modified by this w
 4. Add targeted mutation tests that break one contract dimension at a time and require the named DQG plus aggregate DQG-064 to block publication.
 5. Add manifest-integrity tests requiring exactly 64 contiguous, unique IDs.
 6. Add no-override tests.
-7. Do not write `question_quality_validator.dart` until these contract tests exist.
+7. Harden compound DQGs so every independently represented subcondition has an explicit mutation test. A compound rule is not considered contract-covered merely because one subcondition is tested.
+8. Include positive-path contract tests where the specification permits a controlled exception, such as a custom distractor family with explicit technical justification.
+9. Keep Step 1 implementation-free. Do not write or import production validator logic into this branch beyond the red contract references needed to define the future API.
+10. Do not alter the existing `Question` authoring model in Step 1.
 
 Step 1 is intentionally a red/contract stage. The tests reference the Step 2 API and are not claimed to pass until Step 2 is present.
+
+### Step 1 completion gate
+
+Step 1 may be declared CLOSED only when all of the following are true:
+
+- `DQG_64_RULE_MATRIX.md` contains exactly DQG-001 through DQG-064, once each, in order.
+- Every DQG has at least one explicit contract assertion.
+- Every independently represented subcondition of a compound DQG has explicit mutation coverage.
+- The perfect fixture represents the complete required evidence surface for a publishable DQ6 item.
+- A mutation of any mandatory dimension causes the named DQG and DQG-064 to BLOCK.
+- Exact frozen thresholds are tested on both sides where relevant, including confusability 3 and 5 around the required value 4.
+- DQS is contractually derived from exactly ten fixed 10-point categories and cannot bypass any failed DQG.
+- Manual override requests are blocking and no Step 1 contract defines an override API.
+- Controlled exceptions explicitly permitted by the specification are tested positively rather than being accidentally forbidden.
+- The temporary contract suite remains isolated from production and Phase M branches.
+- No Step 2 validator, evidence model, result model, publication hook, or production integration is introduced on the Step 1 hardening branch.
 
 ## Step 2 — Deterministic implementation
 
