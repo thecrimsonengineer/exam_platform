@@ -28,7 +28,6 @@ void main() {
         difficulty: 'Hard',
         tags: const ['test'],
       );
-
       expect(question.status, 'draft');
     });
 
@@ -47,7 +46,6 @@ void main() {
         'difficulty': 'Hard',
         'tags': ['test'],
       });
-
       expect(question.status, 'draft');
     });
 
@@ -67,10 +65,10 @@ void main() {
         status: 'published',
         tags: const ['test'],
       );
-
       expect(question.status, 'published');
     });
   });
+
   group('H1.1 QuestionBankService lifecycle', () {
     late QuestionBankService service;
 
@@ -78,7 +76,6 @@ void main() {
       service = QuestionBankService(
         repository: LocalQuestionRepository.instance,
       );
-
       await LocalQuestionRepository.instance.replaceAll(const <Question>[]);
     });
 
@@ -114,143 +111,78 @@ void main() {
 
     test('saveDraft forces persisted status to draft', () async {
       final question = validQuestion(status: 'published');
-
       final issues = await service.saveDraft(question);
-
       expect(issues, isEmpty);
-
       final saved = service.allManagedQuestions().firstWhere(
         (item) => item.id == question.id,
       );
-
       expect(saved.status, 'draft');
     });
 
     test('sendToReview accepts only draft questions', () async {
       final question = validQuestion(status: 'draft');
-
       await service.saveDraft(question);
-
       await service.sendToReview(
         service.allManagedQuestions().firstWhere(
           (item) => item.id == question.id,
         ),
       );
-
       final reviewed = service.allManagedQuestions().firstWhere(
         (item) => item.id == question.id,
       );
-
       expect(reviewed.status, 'review');
     });
 
     test('sendToReview rejects non-draft questions', () async {
       final question = validQuestion(status: 'review');
-
       expect(() => service.sendToReview(question), throwsStateError);
     });
 
-    test('validateForPublication accepts warning-only questions', () async {
+    test('review question cannot validate without DQG300 evidence', () {
       final question = validQuestion(status: 'review');
-
-      final warningQuestion = Question.fromJson({
-        ...question.toJson(),
-        'question': 'Short scenario question.',
-      });
-
-      final issues = await service.validateForPublication(warningQuestion);
-
-      expect(issues.any((issue) => issue.isWarning), isTrue);
-
-      expect(issues.any((issue) => issue.isError), isFalse);
-
-      final validated = service.allManagedQuestions().firstWhere(
-        (item) => item.id == question.id,
-      );
-
-      expect(validated.status, 'validated');
+      expect(() => service.validateForPublication(question), throwsStateError);
+      expect(service.allManagedQuestions(), isEmpty);
     });
 
-    test(
-      'validateForPublication rejects questions containing errors',
-      () async {
-        final question = Question.fromJson({
-          ...validQuestion(status: 'review').toJson(),
-          'reference': '',
-        });
+    test('warning-only review cannot validate without DQG300 evidence', () {
+      final warningQuestion = Question.fromJson({
+        ...validQuestion(status: 'review').toJson(),
+        'question': 'Short scenario question.',
+      });
+      expect(
+        () => service.validateForPublication(warningQuestion),
+        throwsStateError,
+      );
+      expect(service.allManagedQuestions(), isEmpty);
+    });
 
-        expect(
-          () => service.validateForPublication(question),
-          throwsStateError,
-        );
-
-        expect(
-          service.allManagedQuestions().where((item) => item.id == question.id),
-          isEmpty,
-        );
-      },
-    );
-
-    test('validateForPublication accepts only review questions', () async {
+    test('validateForPublication accepts only review questions', () {
       final question = validQuestion(status: 'draft');
-
       expect(() => service.validateForPublication(question), throwsStateError);
     });
 
-    test('publish accepts only validated questions', () async {
+    test('publish accepts only validated questions', () {
       final question = validQuestion(status: 'review');
-
       expect(() => service.publish(question), throwsStateError);
     });
 
-    test('validated question can be published', () async {
+    test('validated question cannot publish without DQG300 evidence', () {
       final question = validQuestion(status: 'validated');
-
-      await service.publish(question);
-
-      final published = service.allManagedQuestions().firstWhere(
-        (item) => item.id == question.id,
-      );
-
-      expect(published.status, 'published');
+      expect(() => service.publish(question), throwsStateError);
+      expect(service.allManagedQuestions(), isEmpty);
     });
 
-    test('publish rejects validated questions containing errors', () async {
+    test('validated question with legacy errors remains blocked', () {
       final question = Question.fromJson({
         ...validQuestion(status: 'validated').toJson(),
         'reference': '',
       });
-
       expect(() => service.publish(question), throwsStateError);
     });
 
-    test(
-      'publication randomizes options while preserving correct answer',
-      () async {
-        final question = validQuestion(status: 'validated');
-
-        await service.publish(question);
-
-        final published = service.allManagedQuestions().firstWhere(
-          (item) => item.id == question.id,
-        );
-
-        expect(published.status, 'published');
-        expect(published.options, hasLength(4));
-
-        final correctText = question.options[question.correctAnswer];
-
-        expect(published.options[published.correctAnswer], correctText);
-
-        expect(published.options.toSet(), question.options.toSet());
-      },
-    );
-
     test('nextQuestionId is unique across rapid consecutive allocations', () {
       final ids = List<int>.generate(20, (_) => service.nextQuestionId());
-
       expect(ids.toSet(), hasLength(ids.length));
-
       for (var index = 1; index < ids.length; index++) {
         expect(ids[index], greaterThan(ids[index - 1]));
       }
@@ -267,9 +199,7 @@ void main() {
               '${base.question} Batch variation ${index + 1} requires a different decision.',
         }),
       );
-
       final result = await service.saveDraftBatch(questions);
-
       expect(result.addedCount, 5);
       expect(result.duplicateCount, 0);
       expect(service.allManagedQuestions(), hasLength(5));
@@ -282,14 +212,11 @@ void main() {
     test('exact re-import keeps one existing question ID', () async {
       final original = validQuestion();
       await service.saveDraft(original);
-
       final duplicate = Question.fromJson({
         ...original.toJson(),
         'id': service.nextQuestionId(),
       });
-
       final result = await service.saveDraftBatch([duplicate]);
-
       expect(result.addedCount, 0);
       expect(result.duplicateCount, 1);
       expect(service.allManagedQuestions(), hasLength(1));
@@ -299,13 +226,11 @@ void main() {
     test('same stem with changed answer metadata is rejected', () async {
       final original = validQuestion();
       await service.saveDraft(original);
-
       final conflict = Question.fromJson({
         ...original.toJson(),
         'id': service.nextQuestionId(),
         'explanation': 'A materially changed explanation.',
       });
-
       expect(() => service.saveDraftBatch([conflict]), throwsStateError);
       expect(service.allManagedQuestions(), hasLength(1));
       expect(service.allManagedQuestions().single.id, original.id);
@@ -314,7 +239,6 @@ void main() {
     test('same stem cannot be imported into a different subtopic', () async {
       final original = validQuestion();
       await service.saveDraft(original);
-
       final wrongPlacement = Question.fromJson({
         ...original.toJson(),
         'id': service.nextQuestionId(),
@@ -322,7 +246,6 @@ void main() {
         'topicId': 'd01_c01_t99',
         'quizId': 'quiz_99',
       });
-
       expect(() => service.saveDraftBatch([wrongPlacement]), throwsStateError);
       expect(service.allManagedQuestions(), hasLength(1));
       expect(service.allManagedQuestions().single.subtopicId, 'd01_c01_st01');
@@ -357,8 +280,7 @@ void main() {
         ],
         correctAnswer: 1,
         explanation:
-            'Supervised practice with feedback best supports application of '
-            'a practical skill and allows immediate correction.',
+            'Supervised practice with feedback best supports application of a practical skill and allows immediate correction.',
         reference: 'Raymond A. Noe, Employee Training and Development',
         difficulty: 'Hard',
         cognitiveLevel: 'application',
@@ -369,64 +291,37 @@ void main() {
       );
     }
 
-    test('publishes a five-question prepared batch', () async {
+    test('prepared batch cannot publish without evidence map', () {
       final questions = List<Question>.generate(
         5,
         (index) => validQuestion(
           service.nextQuestionId(),
-          'A supervisor must select a practical training method for task '
-          '${index + 1} after workers understood the theory. Which approach '
-          'BEST supports safe transfer to the job?',
+          'A supervisor must select a practical training method for task ${index + 1} after workers understood the theory. Which approach BEST supports safe transfer to the job?',
         ),
       );
-
-      final result = await service.publishPreparedBatch(questions);
-
-      expect(result.publishedQuestionCount, 5);
-      expect(result.reusedQuestionCount, 0);
-      expect(service.allManagedQuestions(), hasLength(5));
-      expect(
-        service.allManagedQuestions().every(
-          (question) => question.status == 'published',
-        ),
-        isTrue,
-      );
-      expect(
-        service.allManagedQuestions().map((question) => question.id).toSet(),
-        hasLength(5),
-      );
+      expect(() => service.publishPreparedBatch(questions), throwsStateError);
+      expect(service.allManagedQuestions(), isEmpty);
     });
 
-    test(
-      'exact existing question keeps ID while quiz metadata is rebound',
-      () async {
-        final original = validQuestion(
-          7001,
-          'A safety trainer must teach a hands-on isolation sequence. Which '
-          'method BEST supports correct task performance?',
-        );
-
-        await service.saveDraft(original);
-
-        final incoming = Question.fromJson({
-          ...original.toJson(),
-          'id': service.nextQuestionId(),
-          'quizId': 'd07_c05_t01_s01_quiz',
-          'contentPackageId': 'd07_c05-v3',
-        });
-
-        final result = await service.publishPreparedBatch([incoming]);
-
-        expect(result.publishedQuestionCount, 1);
-        expect(result.reusedQuestionCount, 1);
-        expect(service.allManagedQuestions(), hasLength(1));
-
-        final saved = service.allManagedQuestions().single;
-        expect(saved.id, 7001);
-        expect(saved.status, 'published');
-        expect(saved.quizId, 'd07_c05_t01_s01_quiz');
-        expect(saved.contentPackageId, 'd07_c05-v3');
-      },
-    );
+    test('existing question is not rebound when evidence is absent', () async {
+      final original = validQuestion(
+        7001,
+        'A safety trainer must teach a hands-on isolation sequence. Which method BEST supports correct task performance?',
+      );
+      await service.saveDraft(original);
+      final incoming = Question.fromJson({
+        ...original.toJson(),
+        'id': service.nextQuestionId(),
+        'contentPackageId': 'd07_c05-v3',
+      });
+      expect(
+        () => service.publishPreparedBatch([incoming]),
+        throwsStateError,
+      );
+      expect(service.allManagedQuestions(), hasLength(1));
+      expect(service.allManagedQuestions().single.id, 7001);
+      expect(service.allManagedQuestions().single.status, 'draft');
+      expect(service.allManagedQuestions().single.contentPackageId, 'd07_c05-v2');
+    });
   });
 }
