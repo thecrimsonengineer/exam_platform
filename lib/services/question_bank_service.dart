@@ -433,9 +433,8 @@ class QuestionBankService {
       requireDqg300PublicationPass(question, qualityEvidence);
 
       final issues = validate(question);
-      final errors = issues.where((issue) => issue.isError).toList();
-      if (errors.isNotEmpty) {
-        throw StateError(errors.map((issue) => issue.message).join('\n'));
+      if (issues.isNotEmpty) {
+        throw StateError(issues.map((issue) => issue.message).join('\n'));
       }
 
       final matches = _repository.questions
@@ -592,10 +591,9 @@ class QuestionBankService {
   ///
   /// The question must already be in REVIEW status.
   ///
-  /// The existing H0.3 quality validator is used without modification.
-  ///
-  /// Warning-only questions are allowed to become VALIDATED.
-  /// Questions containing quality errors remain in REVIEW and are rejected.
+  /// Final lifecycle advancement requires both the frozen DQG300 gate
+  /// and a clean legacy authoring-linter result. Any unresolved issue,
+  /// including a warning, blocks VALIDATED and PUBLISHED status.
   Future<List<QuestionQualityIssue>> validateForPublication(
     Question question, {
     QuestionQualityEvidence? qualityEvidence,
@@ -607,7 +605,7 @@ class QuestionBankService {
     requireDqg300PublicationPass(question, qualityEvidence);
     final issues = validate(question);
 
-    if (issues.any((issue) => issue.isError)) {
+    if (issues.isNotEmpty) {
       throw StateError(issues.map((issue) => issue.message).join('\n'));
     }
 
@@ -644,7 +642,7 @@ class QuestionBankService {
     requireDqg300PublicationPass(question, qualityEvidence);
     final issues = validate(question);
 
-    if (issues.any((issue) => issue.isError)) {
+    if (issues.isNotEmpty) {
       throw StateError(issues.map((issue) => issue.message).join('\n'));
     }
 
