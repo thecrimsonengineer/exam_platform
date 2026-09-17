@@ -24,6 +24,8 @@ class LearningTwinAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     Widget picture = SvgPicture.asset(asset.assetPath, fit: BoxFit.contain);
 
     if (_shouldCrop) {
@@ -36,7 +38,13 @@ class LearningTwinAvatar extends StatelessWidget {
       );
     }
 
-    final sized = SizedBox.square(dimension: size, child: picture);
+    // Keep the Learning Twin avatar visually distinct from the surrounding
+    // surface in both themes. Material's inverseSurface is intentionally the
+    // opposite-brightness surface: dark in light mode and light in dark mode.
+    final sized = SizedBox.square(
+      dimension: size,
+      child: ColoredBox(color: colors.inverseSurface, child: picture),
+    );
 
     if (decorative) {
       return ExcludeSemantics(child: sized);
