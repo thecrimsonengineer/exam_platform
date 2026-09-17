@@ -8,6 +8,8 @@ import '../../../../services/bookmark_service.dart';
 import '../../../../services/quiz_service.dart';
 import '../../../../services/student_question_progress_service.dart';
 
+import '../study_content_screen.dart';
+
 import 'quiz_domain_label.dart';
 import 'result/result_screen.dart';
 import 'theme/quiz_colors.dart';
@@ -199,6 +201,51 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {});
   }
 
+  // ==========================================================
+  // HIERARCHY TAG NAVIGATION
+  // ==========================================================
+
+  void _openHierarchyTag(Question question, String tag) {
+    final hierarchyTags = question.navigationTags;
+    final level = hierarchyTags.indexOf(tag);
+
+    if (level < 0 || hierarchyTags.isEmpty) {
+      return;
+    }
+
+    final domainId = 'd${question.domain.toString().padLeft(2, '0')}';
+    final competencyId = question.competencyId.trim().isNotEmpty
+        ? question.competencyId.trim()
+        : hierarchyTags.first;
+
+    String? initialTopicId;
+    String? initialSubtopicId;
+
+    if (level >= 1 && hierarchyTags.length >= 2) {
+      initialTopicId = question.topicId.trim().isNotEmpty
+          ? question.topicId.trim()
+          : hierarchyTags[1];
+    }
+
+    if (level >= 2 && hierarchyTags.length >= 3) {
+      initialSubtopicId = question.subtopicId.trim().isNotEmpty
+          ? question.subtopicId.trim()
+          : hierarchyTags[2];
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => StudyContentScreen(
+          domainId: domainId,
+          competencyId: competencyId,
+          domainTitle: csp11QuizDomainTitle(question.domain),
+          loadingTitle: competencyId.toUpperCase(),
+          initialTopicId: initialTopicId,
+          initialSubtopicId: initialSubtopicId,
+        ),
+      ),
+    );
+  }
   // ==========================================================
   // RESULT
   // ==========================================================
@@ -440,7 +487,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
                             ReferenceCard(reference: question.reference),
 
-                            if (question.tags.isNotEmpty) ...[
+                            if (question.allTags.isNotEmpty) ...[
                               const SizedBox(height: QuizSpacing.md),
 
                               Container(
@@ -534,31 +581,92 @@ class _QuizScreenState extends State<QuizScreen> {
                                     Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
-                                      children: question.tags.map((tag) {
-                                        return Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 7,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: QuizColors.primary
-                                                .withValues(alpha: 0.07),
+                                      children: question.allTags.map((tag) {
+                                        final isNavigationTag = question
+                                            .navigationTags
+                                            .contains(tag);
+
+                                        final chip = Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            key: ValueKey('quiz-tag-$tag'),
+                                            onTap: isNavigationTag
+                                                ? () => _openHierarchyTag(
+                                                    question,
+                                                    tag,
+                                                  )
+                                                : null,
                                             borderRadius: BorderRadius.circular(
                                               20,
                                             ),
-                                            border: Border.all(
-                                              color: QuizColors.primary
-                                                  .withValues(alpha: 0.14),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 7,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: isNavigationTag
+                                                    ? QuizColors.violet
+                                                          .withValues(
+                                                            alpha: 0.13,
+                                                          )
+                                                    : QuizColors.primary
+                                                          .withValues(
+                                                            alpha: 0.07,
+                                                          ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                border: Border.all(
+                                                  color: isNavigationTag
+                                                      ? QuizColors.violet
+                                                            .withValues(
+                                                              alpha: 0.44,
+                                                            )
+                                                      : QuizColors.primary
+                                                            .withValues(
+                                                              alpha: 0.14,
+                                                            ),
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    tag,
+                                                    style: TextStyle(
+                                                      color: isNavigationTag
+                                                          ? QuizColors.violet
+                                                          : QuizColors
+                                                                .textPrimary,
+                                                      fontSize: 12.5,
+                                                      fontWeight:
+                                                          isNavigationTag
+                                                          ? FontWeight.w800
+                                                          : FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  if (isNavigationTag) ...[
+                                                    const SizedBox(width: 6),
+                                                    const Icon(
+                                                      Icons.north_east_rounded,
+                                                      color: QuizColors.violet,
+                                                      size: 14,
+                                                    ),
+                                                  ],
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                          child: Text(
-                                            tag,
-                                            style: TextStyle(
-                                              color: QuizColors.textPrimary,
-                                              fontSize: 12.5,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
+                                        );
+
+                                        if (!isNavigationTag) {
+                                          return chip;
+                                        }
+
+                                        return Tooltip(
+                                          message: 'Open $tag in study content',
+                                          child: chip,
                                         );
                                       }).toList(),
                                     ),

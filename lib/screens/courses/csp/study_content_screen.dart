@@ -18,6 +18,7 @@ class StudyContentScreen extends StatefulWidget {
 
   final String? loadingTitle;
 
+  final String? initialTopicId;
   final String? initialSubtopicId;
 
   const StudyContentScreen({
@@ -26,6 +27,7 @@ class StudyContentScreen extends StatefulWidget {
     required this.competencyId,
     this.domainTitle,
     this.loadingTitle,
+    this.initialTopicId,
     this.initialSubtopicId,
   });
 
@@ -51,6 +53,7 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
 
     if (oldWidget.domainId != widget.domainId ||
         oldWidget.competencyId != widget.competencyId ||
+        oldWidget.initialTopicId != widget.initialTopicId ||
         oldWidget.initialSubtopicId != widget.initialSubtopicId) {
       _loadContent();
     }
@@ -239,6 +242,7 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
 
     return StudyContentRenderer(
       content: content,
+      initialTopicId: widget.initialTopicId,
       initialSubtopicId: widget.initialSubtopicId,
       domainTitle: widget.domainTitle,
     );
