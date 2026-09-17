@@ -1,0 +1,44 @@
+name: DQG300 Step2 Validator
+
+on:
+  push:
+    branches:
+      - phase-q-dqg300-step2-validator
+  workflow_dispatch:
+
+jobs:
+  dqg300-step2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen Step 1 contract
+        run: |
+          python3 tools/generate_dqg300_temp_tests.py
+          python3 tools/verify_dqg300_step1.py
+          python3 -m unittest discover -p 'dqg_*_test.py' -v
+
+      - name: Verify Step 2 anti-shortcut integrity
+        run: python3 tools/verify_dqg300_step2.py
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Flutter analyze
+        run: flutter analyze
+
+      - name: Run DQG300 Step 2 tests
+        run: flutter test test/quality_validator_contract/dqg300
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
