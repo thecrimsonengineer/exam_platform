@@ -5,6 +5,8 @@ import '../../models/student_learning_progress.dart';
 import '../../services/student_learning_position_service.dart';
 import '../../services/student_learning_progress_service.dart';
 import '../../services/practice/practice_mode_service.dart';
+import '../../services/study_content_search_service.dart';
+import '../../widgets/csp/home/study_content_search_panel.dart';
 import '../courses/csp/csp_practice_screen_dark.dart';
 import '../courses/csp/domain_screen_dark.dart';
 import '../courses/csp/study_content_screen_dark.dart';
@@ -108,6 +110,22 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     await _refreshHome();
   }
 
+  Future<void> _openSearchResult(StudyContentSearchResult result) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => DarkStudyContentScreen(
+          domainId: result.domainId,
+          competencyId: result.competencyId,
+          domainTitle: result.domainTitle,
+          loadingTitle: result.competencyTitle,
+          initialSubtopicId: result.subtopicId,
+        ),
+      ),
+    );
+
+    await _refreshHome();
+  }
+
   void _openPractice({required String title, required String description}) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -169,6 +187,11 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildHero(context, snapshot, data),
+                                const SizedBox(height: 18),
+                                StudyContentSearchPanel(
+                                  isDarkMode: true,
+                                  onSelected: _openSearchResult,
+                                ),
                                 const SizedBox(height: 24),
                                 _buildContinueLearning(snapshot, data),
                                 const SizedBox(height: 28),
