@@ -1,0 +1,24 @@
+name: DQG300 Step1 Audit
+
+on:
+  push:
+    branches:
+      - phase-q-dqg64-step1-contract-hardening
+  workflow_dispatch:
+
+jobs:
+  dqg300-static-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate 30 temporary DQG test shards
+        run: python3 tools/generate_dqg300_temp_tests.py
+
+      - name: Verify freeze-candidate coverage and 300-DQG contract
+        run: python3 tools/verify_dqg300_step1.py
+
+      - name: Run 30 temporary DQG test shards
+        working-directory: test/quality_validator_contract/temporary/dqg300_generated
+        run: python3 -m unittest discover -p 'dqg_*_test.py' -v
