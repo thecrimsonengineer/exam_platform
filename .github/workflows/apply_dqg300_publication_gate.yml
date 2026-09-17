@@ -1,0 +1,45 @@
+name: Apply DQG300 Publication Gate
+
+on:
+  push:
+    branches:
+      - phase-q-dqg300-step2-validator
+    paths:
+      - tools/apply_dqg300_publication_gate.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: phase-q-dqg300-step2-validator
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Apply exact guarded patch
+        run: python3 tools/apply_dqg300_publication_gate.py
+
+      - name: Commit guarded publication gate
+        run: |
+          if git diff --quiet; then
+            echo "No changes produced"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/services/dqg300_question_quality_validator.dart lib/services/question_bank_service.dart
+          git diff --cached --check
+          git commit -m "Enforce DQG300 on all question publication paths"
+          git push origin HEAD:phase-q-dqg300-step2-validator
