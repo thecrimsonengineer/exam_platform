@@ -23,7 +23,7 @@ def main():
     if len(rules) != 300:
         raise SystemExit(f'expected 300 DQGs, found {len(rules)}')
     OUT.mkdir(parents=True, exist_ok=True)
-    support = """import re\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parents[5]\nMATRIX = ROOT / 'docs' / 'quiz_engine' / 'DQG_300_RULE_MATRIX.md'\nRULE_RE = re.compile(r'^(DQG-\\d{3})\\|S(\\d{2})\\|(.+)$')\n\ndef load_rules():\n    out = {}\n    for line in MATRIX.read_text(encoding='utf-8').splitlines():\n        m = RULE_RE.match(line.strip())\n        if m:\n            out[m.group(1)] = (int(m.group(2)), m.group(3).strip())\n    return out\n\ndef assert_contract(testcase, rule_id):\n    rules = load_rules()\n    testcase.assertIn(rule_id, rules)\n    section, requirement = rules[rule_id]\n    testcase.assertIn(section, range(1, 36))\n    testcase.assertTrue(requirement)\n"""
+    support = """import re\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parents[4]\nMATRIX = ROOT / 'docs' / 'quiz_engine' / 'DQG_300_RULE_MATRIX.md'\nRULE_RE = re.compile(r'^(DQG-\\d{3})\\|S(\\d{2})\\|(.+)$')\n\ndef load_rules():\n    out = {}\n    for line in MATRIX.read_text(encoding='utf-8').splitlines():\n        m = RULE_RE.match(line.strip())\n        if m:\n            out[m.group(1)] = (int(m.group(2)), m.group(3).strip())\n    return out\n\ndef assert_contract(testcase, rule_id):\n    rules = load_rules()\n    testcase.assertIn(rule_id, rules)\n    section, requirement = rules[rule_id]\n    testcase.assertIn(section, range(1, 36))\n    testcase.assertTrue(requirement)\n"""
     (OUT / 'contract_support.py').write_text(support, encoding='utf-8')
 
     for shard in range(30):
