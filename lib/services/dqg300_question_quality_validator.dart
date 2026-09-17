@@ -18,7 +18,7 @@ class Dqg300QuestionQualityValidator {
   static const bool publicationOverrideSupported = false;
 
   static final RegExp _genericSuperiority = RegExp(
-    r'^(less appropriate|not the best answer|incorrect)\.?$',
+    r'^(?:d[123]\s+is\s+)?(?:less appropriate|not the best answer|incorrect)\.?$',
     caseSensitive: false,
   );
 
@@ -57,8 +57,7 @@ class Dqg300QuestionQualityValidator {
     );
     final oneDefensible = e.defensibleBestAnswerCount == 1;
     final dq6 =
-        e.difficultyLevel == 'DQ6' &&
-        allD((d) => d.difficultyLevel == 'DQ6');
+        e.difficultyLevel == 'DQ6' && allD((d) => d.difficultyLevel == 'DQ6');
     final multiFact =
         e.decisiveScenarioFacts.where((x) => x.trim().isNotEmpty).length >= 2;
     final literalOptionsUnique =
@@ -86,11 +85,11 @@ class Dqg300QuestionQualityValidator {
         e.distractors.map((d) => d.family.trim()).toSet().length == 3;
     final distinctFingerprints =
         e.distractors
-                .map((d) => d.misconceptionFingerprint.trim())
-                .where((x) => x.isNotEmpty)
-                .toSet()
-                .length ==
-            3;
+            .map((d) => d.misconceptionFingerprint.trim())
+            .where((x) => x.isNotEmpty)
+            .toSet()
+            .length ==
+        3;
     final familiesValid = allD(_familyValid);
     final metadataComplete = allD(
       (d) =>
@@ -124,14 +123,17 @@ class Dqg300QuestionQualityValidator {
       return value.isNotEmpty && !_genericSuperiority.hasMatch(value);
     }
 
-    final superiorityComplete = distractorsMatch && nonKeyIndexes.every(proofFor);
+    final superiorityComplete =
+        distractorsMatch && nonKeyIndexes.every(proofFor);
     final superioritySpecific =
         superiorityComplete &&
         e.keySuperiorityProof.values.every(
           (value) => value.trim().split(RegExp(r'\s+')).length >= 5,
         );
 
-    final metricIndexes = e.optionSurfaceMetrics.map((m) => m.optionIndex).toSet();
+    final metricIndexes = e.optionSurfaceMetrics
+        .map((m) => m.optionIndex)
+        .toSet();
     final metricsComplete =
         e.optionSurfaceMetrics.length == 4 &&
         metricIndexes.length == 4 &&
@@ -168,21 +170,22 @@ class Dqg300QuestionQualityValidator {
       'truthComponent':
           allD(
             (d) =>
-                d.truthComponentScore == 4 &&
-                d.substantiallyTechnicallyCorrect,
+                d.truthComponentScore == 4 && d.substantiallyTechnicallyCorrect,
           )
           ? 10
           : 0,
-      'dq6Compliance':
-          dq6 && allD((d) => d.sophisticatedReasoningPath) ? 10 : 0,
-      'scenarioIntegration':
-          multiFact && allD((d) => d.scenarioAnchorsValid) ? 10 : 0,
+      'dq6Compliance': dq6 && allD((d) => d.sophisticatedReasoningPath)
+          ? 10
+          : 0,
+      'scenarioIntegration': multiFact && allD((d) => d.scenarioAnchorsValid)
+          ? 10
+          : 0,
       'misconceptionTargeting':
           distinctFingerprints &&
-                  distinctFamilies &&
-                  allD((d) => d.targetedMisconception.trim().isNotEmpty)
-              ? 10
-              : 0,
+              distinctFamilies &&
+              allD((d) => d.targetedMisconception.trim().isNotEmpty)
+          ? 10
+          : 0,
       'singleFatalFlaw':
           allD(
             (d) =>
@@ -195,17 +198,17 @@ class Dqg300QuestionQualityValidator {
       'confusability': allD((d) => d.confusabilityScore == 4) ? 10 : 0,
       'parity':
           e.noMaterialLengthCue &&
-                  allD(
-                    (d) =>
-                        d.grammarParallel &&
-                        d.specificityAndDetailParallel &&
-                        d.lengthAndClauseParallel &&
-                        d.terminologyUnitsPrecisionParallel &&
-                        d.conditionalWordingParallel &&
-                        !d.linguisticCueDetected,
-                  )
-              ? 10
-              : 0,
+              allD(
+                (d) =>
+                    d.grammarParallel &&
+                    d.specificityAndDetailParallel &&
+                    d.lengthAndClauseParallel &&
+                    d.terminologyUnitsPrecisionParallel &&
+                    d.conditionalWordingParallel &&
+                    !d.linguisticCueDetected,
+              )
+          ? 10
+          : 0,
       'eliminationResistance':
           allD(
             (d) =>
@@ -217,11 +220,11 @@ class Dqg300QuestionQualityValidator {
           : 0,
       'superiorityAmbiguity':
           oneDefensible &&
-                  superiorityComplete &&
-                  !e.ambiguityDetected &&
-                  keyAllCriteria
-              ? 10
-              : 0,
+              superiorityComplete &&
+              !e.ambiguityDetected &&
+              keyAllCriteria
+          ? 10
+          : 0,
     };
     final dqs = dqsCategories.values.fold<int>(0, (sum, value) => sum + value);
 
@@ -536,7 +539,8 @@ class Dqg300QuestionQualityValidator {
         return e.criterionMatrixComplete;
       case 94:
       case 99:
-        return e.criterionMatrixComplete && e.distractorFailedCriteria.length == 3;
+        return e.criterionMatrixComplete &&
+            e.distractorFailedCriteria.length == 3;
       case 95:
         return e.materialCriteria.isNotEmpty;
       case 97:
@@ -620,14 +624,14 @@ class Dqg300QuestionQualityValidator {
       case 144:
         return allD(
           (x) =>
-              !x.linguisticCueDetected &&
-              x.terminologyUnitsPrecisionParallel,
+              !x.linguisticCueDetected && x.terminologyUnitsPrecisionParallel,
         );
       case 146:
         return !e.answerPositionCueDetected;
       case 149:
         return allD(
-          (x) => !x.keywordLeakageDetected || x.terminologyUnitsPrecisionParallel,
+          (x) =>
+              !x.keywordLeakageDetected || x.terminologyUnitsPrecisionParallel,
         );
       case 151:
       case 152:
@@ -689,7 +693,8 @@ class Dqg300QuestionQualityValidator {
         return e.assumptions.every((a) => a.scenarioSupport.trim().isNotEmpty);
       case 185:
       case 242:
-        return e.noEquivalenceFromUnstatedAssumption && e.keyAssumptionsSupported;
+        return e.noEquivalenceFromUnstatedAssumption &&
+            e.keyAssumptionsSupported;
       case 187:
       case 188:
         return e.sourceAuthorityVerified && e.authoritativeSources.isNotEmpty;

@@ -1,7 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/question.dart';
+import '../models/question_quality_evidence.dart';
+import '../models/question_quality_validation_result.dart';
 import 'cloud_question_repository.dart';
+import 'dqg300_question_quality_validator.dart';
 import 'local_question_repository.dart';
 import 'question_quality_validator.dart';
 
@@ -62,6 +65,41 @@ class QuestionBankService {
   QuestionQualityValidator get _validator => QuestionQualityValidator(
     answerLengthCheckEnabled: answerLengthCheckEnabled,
   );
+
+  static const Dqg300QuestionQualityValidator _dqg300Validator =
+      Dqg300QuestionQualityValidator();
+
+  QuestionQualityValidationResult requireDqg300PublicationPass(
+    Question question,
+    QuestionQualityEvidence? qualityEvidence,
+  ) {
+    if (qualityEvidence == null) {
+      throw StateError(
+        'DQG300 publication evidence is required. Missing evidence blocks publication.',
+      );
+    }
+
+    final result = _dqg300Validator.validate(
+      question: question,
+      evidence: qualityEvidence,
+    );
+
+    if (!result.isPublishable ||
+        result.dqs != 100 ||
+        result.passedRuleCount != 300 ||
+        result.failedRuleCount != 0) {
+      final failedRules = result.rules
+          .where((rule) => !rule.passed)
+          .map((rule) => rule.ruleId)
+          .join(', ');
+      throw StateError(
+        'DQG300 publication BLOCK: DQS ${result.dqs}/100; '
+        '${result.passedRuleCount}/300 gates passed; failed gates: $failedRules',
+      );
+    }
+
+    return result;
+  }
 
   Future<void> initialize() async {
     await _repository.initialize();
@@ -356,8 +394,9 @@ class QuestionBankService {
   ///
   /// Every incoming question is validated before any writes begin.
   Future<QuestionPreparedBatchPublishResult> publishPreparedBatch(
-    List<Question> questions,
-  ) async {
+    List<Question> questions, {
+    Map<int, QuestionQualityEvidence>? qualityEvidenceByQuestionId,
+  }) async {
     if (questions.isEmpty) {
       return const QuestionPreparedBatchPublishResult(
         publishedQuestionCount: 0,
@@ -390,6 +429,9 @@ class QuestionBankService {
         );
       }
 
+      final qualityEvidence = qualityEvidenceByQuestionId?[question.id];
+      requireDqg300PublicationPass(question, qualityEvidence);
+
       final issues = validate(question);
       final errors = issues.where((issue) => issue.isError).toList();
       if (errors.isNotEmpty) {
@@ -413,6 +455,7 @@ class QuestionBankService {
             question: question,
             existingStatus: null,
             reused: false,
+            qualityEvidence: qualityEvidence!,
           ),
         );
         continue;
@@ -443,6 +486,7 @@ class QuestionBankService {
           }),
           existingStatus: existing.status,
           reused: true,
+          qualityEvidence: qualityEvidence!,
         ),
       );
     }
@@ -457,6 +501,7 @@ class QuestionBankService {
       await _publishPreparedQuestion(
         item.question,
         existingStatus: item.existingStatus,
+        qualityEvidence: item.qualityEvidence,
       );
     }
 
@@ -469,7 +514,9 @@ class QuestionBankService {
   Future<void> _publishPreparedQuestion(
     Question question, {
     required String? existingStatus,
+    required QuestionQualityEvidence qualityEvidence,
   }) async {
+    requireDqg300PublicationPass(question, qualityEvidence);
     final normalizedStatus = existingStatus?.trim().toLowerCase() ?? '';
 
     Future<void> persistWithStatus(String status) async {
@@ -550,12 +597,14 @@ class QuestionBankService {
   /// Warning-only questions are allowed to become VALIDATED.
   /// Questions containing quality errors remain in REVIEW and are rejected.
   Future<List<QuestionQualityIssue>> validateForPublication(
-    Question question,
-  ) async {
+    Question question, {
+    QuestionQualityEvidence? qualityEvidence,
+  }) async {
     if (_normalizedStatus(question) != 'review') {
       throw StateError('Question can only be validated from review status.');
     }
 
+    requireDqg300PublicationPass(question, qualityEvidence);
     final issues = validate(question);
 
     if (issues.any((issue) => issue.isError)) {
@@ -584,11 +633,15 @@ class QuestionBankService {
   /// A valid question may be published even when the subtopic has fewer
   /// than five published questions. The five-question rule controls quiz
   /// readiness/linking, not individual question publication.
-  Future<void> publish(Question question) async {
+  Future<void> publish(
+    Question question, {
+    QuestionQualityEvidence? qualityEvidence,
+  }) async {
     if (_normalizedStatus(question) != 'validated') {
       throw StateError('Question must be validated before publication.');
     }
 
+    requireDqg300PublicationPass(question, qualityEvidence);
     final issues = validate(question);
 
     if (issues.any((issue) => issue.isError)) {
@@ -689,10 +742,12 @@ class _PreparedBulkQuestion {
   final Question question;
   final String? existingStatus;
   final bool reused;
+  final QuestionQualityEvidence qualityEvidence;
 
   const _PreparedBulkQuestion({
     required this.question,
     required this.existingStatus,
     required this.reused,
+    required this.qualityEvidence,
   });
 }
