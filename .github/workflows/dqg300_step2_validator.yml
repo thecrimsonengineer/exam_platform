@@ -19,7 +19,9 @@ jobs:
         run: |
           python3 tools/generate_dqg300_temp_tests.py
           python3 tools/verify_dqg300_step1.py
-          python3 -m unittest discover -p 'dqg_*_test.py' -v
+          python3 -m unittest discover \
+            -s test/quality_validator_contract/temporary/dqg300_generated \
+            -p 'dqg_*_test.py' -v
 
       - name: Verify Step 2 anti-shortcut integrity
         run: python3 tools/verify_dqg300_step2.py
