@@ -44,12 +44,13 @@ flutter:
 
 flutter_launcher_icons:
   android: true
+  image_path: assets/icon/csp11_logo.png
+  adaptive_icon_background: "#080B10"
+  adaptive_icon_foreground: assets/icon/csp11_logo_foreground.png
+  min_sdk_android: 21
+
   web:
     generate: true
     image_path: assets/icon/csp11_logo.png
-    background_color: "#0B0F17"
-    theme_color: "#0B0F17"
-  image_path: assets/icon/csp11_logo.png
-  adaptive_icon_background: "#0B0F17"
-  adaptive_icon_foreground: assets/icon/csp11_logo.png
-  min_sdk_android: 21
+    background_color: "#080B10"
+    theme_color: "#080B10"
