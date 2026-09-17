@@ -178,7 +178,11 @@ class DarkStudySubtopicRenderer extends StatelessWidget {
   // ==========================================================
 
   Widget _buildContentBlocks() {
-    if (subtopic.blocks.isEmpty) {
+    final visibleBlocks = subtopic.blocks
+        .where((block) => !_isDuplicateSourceTraceabilityReference(block))
+        .toList(growable: false);
+
+    if (visibleBlocks.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -190,16 +194,30 @@ class DarkStudySubtopicRenderer extends StatelessWidget {
       background: DarkStudyColors.surfaceSoft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: subtopic.blocks.asMap().entries.map((entry) {
+        children: visibleBlocks.asMap().entries.map((entry) {
           return Padding(
             padding: EdgeInsets.only(
-              bottom: entry.key == subtopic.blocks.length - 1 ? 0 : 12,
+              bottom: entry.key == visibleBlocks.length - 1 ? 0 : 12,
             ),
             child: DarkContentBlockRenderer(block: entry.value),
           );
         }).toList(),
       ),
     );
+  }
+
+  /// Source traceability is already presented in the authoritative
+  /// Source Material -> References section below. Hide only the duplicated
+  /// learner-facing reference card. The stored ContentBlock remains intact.
+  bool _isDuplicateSourceTraceabilityReference(ContentBlock block) {
+    if (block.type.trim().toLowerCase() != 'reference') {
+      return false;
+    }
+
+    final title = block.data['title']?.toString().trim().toLowerCase() ?? '';
+    final normalizedTitle = title.replaceAll(RegExp(r'\s+'), ' ');
+
+    return normalizedTitle == 'csp source traceability';
   }
 
   // ==========================================================
