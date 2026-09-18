@@ -1,0 +1,46 @@
+name: D06C06 Two Question DQG300 Trial
+
+on:
+  push:
+    branches:
+      - phase-q-d06c06-two-question-validator-trial
+  workflow_dispatch:
+
+jobs:
+  validate-d06c06:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen Step 1 contract
+        run: |
+          python3 tools/generate_dqg300_temp_tests.py
+          python3 tools/verify_dqg300_step1.py
+          python3 -m unittest discover \
+            -s test/quality_validator_contract/temporary/dqg300_generated \
+            -p 'dqg_*_test.py' -v
+
+      - name: Verify Step 2 anti-shortcut integrity
+        run: python3 tools/verify_dqg300_step2.py
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Validate D06 C06 questions
+        run: flutter test test/quality_validator_contract/d06c06/d06c06_two_question_validation_test.dart
+
+      - name: Run complete DQG300 contract suite
+        run: flutter test test/quality_validator_contract/dqg300
