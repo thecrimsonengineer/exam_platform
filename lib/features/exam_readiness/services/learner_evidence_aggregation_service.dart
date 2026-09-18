@@ -1,6 +1,8 @@
 import '../models/competency_evidence_snapshot.dart';
 import '../models/evidence_confidence.dart';
 import '../models/learner_assessment_attempt.dart';
+import '../repositories/evidence_snapshot_repository.dart';
+import '../repositories/learner_assessment_attempt_repository.dart';
 import 'retention_evidence_service.dart';
 
 class CompetencyEvidenceScope {
@@ -278,6 +280,57 @@ class LearnerEvidenceAggregationService {
       scope: scope,
       now: now,
     );
+  }
+
+  Future<CompetencyEvidenceSnapshot> refreshCompetency({
+    required String competencyId,
+    required CompetencyEvidenceScope scope,
+    LearnerAssessmentAttemptRepository? attemptRepository,
+    EvidenceSnapshotRepository? snapshotRepository,
+    DateTime? now,
+    bool syncRemote = true,
+  }) async {
+    final attempts =
+        await (attemptRepository ?? const LearnerAssessmentAttemptRepository())
+            .loadAll();
+    final snapshot = buildSnapshot(
+      competencyId: competencyId,
+      attempts: attempts,
+      scope: scope,
+      now: now ?? DateTime.now(),
+    );
+
+    await (snapshotRepository ?? EvidenceSnapshotRepository()).save(
+      snapshot,
+      syncRemote: syncRemote,
+    );
+
+    return snapshot;
+  }
+
+  Future<Map<String, CompetencyEvidenceSnapshot>> rebuildAll({
+    required Iterable<CompetencyEvidenceScope> scopes,
+    LearnerAssessmentAttemptRepository? attemptRepository,
+    EvidenceSnapshotRepository? snapshotRepository,
+    DateTime? now,
+    bool syncRemote = true,
+  }) async {
+    final attempts =
+        await (attemptRepository ?? const LearnerAssessmentAttemptRepository())
+            .loadAll();
+    final snapshots = buildAllSnapshots(
+      attempts: attempts,
+      scopes: scopes,
+      now: now ?? DateTime.now(),
+    );
+    final repository = snapshotRepository ?? EvidenceSnapshotRepository();
+
+    await repository.saveMany(
+      snapshots.values,
+      syncRemote: syncRemote,
+    );
+
+    return snapshots;
   }
 
   ConfidenceCalibrationStats _confidenceCalibration(
