@@ -352,7 +352,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                       index < plan.blocks.length;
                       index++
                     ) ...[
-                      _PlanBlockStudentGlassCard(
+                      _PlanBlockCard(
                         block: plan.blocks[index],
                         index: index,
                         onStart: () => _apply(
@@ -479,7 +479,7 @@ class _TodayHero extends StatelessWidget {
 }
 
 class _PlanBlockCard extends StatelessWidget {
-  const _PlanBlockStudentGlassCard({
+  const _PlanBlockCard({
     required this.block,
     required this.index,
     required this.onStart,
