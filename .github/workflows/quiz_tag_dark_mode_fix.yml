@@ -1,0 +1,41 @@
+name: Quiz Tag Dark Mode Fix
+
+on:
+  push:
+    branches:
+      - fix-quiz-tag-dark-mode
+  workflow_dispatch:
+
+jobs:
+  verify-dark-tag-navigation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/screens/courses/csp/quiz/quiz_screen.dart \
+            lib/screens/courses/csp/study_content_screen_dark.dart \
+            lib/widgets/csp/study_content/study_content_renderer_dark.dart \
+            test/screens/courses/csp/quiz_tag_dark_mode_navigation_test.dart
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run dark tag regression tests
+        run: flutter test test/screens/courses/csp/quiz_tag_dark_mode_navigation_test.dart
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
