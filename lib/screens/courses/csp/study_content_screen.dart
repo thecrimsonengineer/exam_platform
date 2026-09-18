@@ -265,14 +265,11 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
             ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 620),
-              child: Container(
+              child: StudentGlassSurface(
                 padding: const EdgeInsets.all(StudySpacing.cardPaddingLarge),
-                decoration: BoxDecoration(
-                  color: StudyColors.surface,
-                  borderRadius: StudyRadius.large,
-                  border: Border.all(color: StudyColors.border),
-                  boxShadow: StudyShadows.soft,
-                ),
+                borderRadius: StudyRadius.large,
+                tint: StudyColors.surface.withValues(alpha: 0.50),
+                borderColor: StudyColors.border.withValues(alpha: 0.72),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -329,14 +326,11 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
         padding: const EdgeInsets.all(StudySpacing.xl),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
-          child: Container(
+          child: StudentGlassSurface(
             padding: const EdgeInsets.all(StudySpacing.cardPaddingLarge),
-            decoration: BoxDecoration(
-              color: StudyColors.surface,
-              borderRadius: StudyRadius.large,
-              border: Border.all(color: StudyColors.border),
-              boxShadow: StudyShadows.soft,
-            ),
+            borderRadius: StudyRadius.large,
+            tint: StudyColors.surface.withValues(alpha: 0.50),
+            borderColor: StudyColors.border.withValues(alpha: 0.72),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -393,14 +387,11 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
         padding: const EdgeInsets.all(StudySpacing.xl),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 620),
-          child: Container(
+          child: StudentGlassSurface(
             padding: const EdgeInsets.all(StudySpacing.cardPaddingLarge),
-            decoration: BoxDecoration(
-              color: StudyColors.surface,
-              borderRadius: StudyRadius.large,
-              border: Border.all(color: StudyColors.border),
-              boxShadow: StudyShadows.soft,
-            ),
+            borderRadius: StudyRadius.large,
+            tint: StudyColors.surface.withValues(alpha: 0.50),
+            borderColor: StudyColors.border.withValues(alpha: 0.72),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
