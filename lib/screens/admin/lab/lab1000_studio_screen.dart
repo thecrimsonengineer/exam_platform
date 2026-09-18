@@ -133,9 +133,23 @@ class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
           children: [
             const _StudioPanel(
               icon: Icons.data_object_rounded,
-              title: 'Single-JSON authoring',
+              title: 'JSON-first LAB authoring',
               body:
                   'Import or paste one LAB JSON package, validate the deterministic graph, inspect the authored state and routes, preview the package, review it and publish an immutable version.',
+            ),
+            const SizedBox(height: 14),
+            const _StudioPanel(
+              icon: Icons.account_tree_rounded,
+              title: 'Deterministic runtime contract',
+              body:
+                  'Scene → Decision → Option → Consequence → State Mutation → Story Gate → Next Scene / Event / Ending. Runtime LLM branching remains forbidden.',
+            ),
+            const SizedBox(height: 14),
+            const _StudioPanel(
+              icon: Icons.verified_user_rounded,
+              title: 'L1 boundary retained',
+              body:
+                  'The frozen L1 boundary established LAB-0 through LAB-3 only. L2 builds session, validation and Studio services on top without changing that deterministic foundation.',
             ),
             const SizedBox(height: 14),
             TextField(
