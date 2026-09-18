@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/competency_readiness_profile.dart';
+import '../models/evidence_confidence.dart';
 
 class CompetencyReadinessScreen extends StatelessWidget {
   const CompetencyReadinessScreen({super.key, required this.profile});
