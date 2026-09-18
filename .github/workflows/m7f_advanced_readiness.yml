@@ -1,0 +1,77 @@
+name: M7F Advanced Readiness
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+jobs:
+  verify-m7f:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen M7 contract through M7F
+        run: python3 tools/verify_m7_contract.py --phase m7f
+
+      - name: Diff and whitespace audit
+        run: |
+          git diff --check origin/ui-premium-csp-logo...HEAD
+          git diff --name-only origin/ui-premium-csp-logo...HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check M7F formatting
+        run: |
+          targets=(
+            lib/features/exam_readiness/models/exam_preparation_phase.dart
+            lib/features/exam_readiness/models/capacity_pressure_snapshot.dart
+            lib/features/exam_readiness/models/readiness_trajectory_point.dart
+            lib/features/exam_readiness/models/competency_dependency.dart
+            lib/features/exam_readiness/models/readiness_weight_configuration.dart
+            lib/features/exam_readiness/models/readiness_index_snapshot.dart
+            lib/features/exam_readiness/services/exam_preparation_phase_service.dart
+            lib/features/exam_readiness/services/capacity_pressure_service.dart
+            lib/features/exam_readiness/services/readiness_trajectory_service.dart
+            lib/features/exam_readiness/services/root_gap_reasoning_service.dart
+            lib/features/exam_readiness/services/readiness_index_service.dart
+            test/features/exam_readiness/m7f
+          )
+          dart format "${targets[@]}"
+          if ! git diff --quiet -- "${targets[@]}"; then
+            echo "M7F formatting drift detected:"
+            git diff -- "${targets[@]}"
+            exit 1
+          fi
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run M7F targeted tests
+        run: flutter test test/features/exam_readiness/m7f
+
+      - name: Run prior Exam Readiness phase regressions
+        run: |
+          flutter test test/features/exam_readiness/m7a
+          flutter test test/features/exam_readiness/m7b
+          flutter test test/features/exam_readiness/m7c
+          flutter test test/features/exam_readiness/m7d
+          flutter test test/features/exam_readiness/m7e
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release
