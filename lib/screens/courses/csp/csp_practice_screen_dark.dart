@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../app/theme.dart';
 import '../../../widgets/csp/student_quiz_builder.dart';
 
@@ -17,7 +19,7 @@ class DarkCspPracticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: AppTheme.darkTheme,
-      child: Scaffold(
+      child: StudentGlassScaffold(
         backgroundColor: const Color(0xFF0A111D),
         appBar: AppBar(
           backgroundColor: const Color(0xFF0A111D),

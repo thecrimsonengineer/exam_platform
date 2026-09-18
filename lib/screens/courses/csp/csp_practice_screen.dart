@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../widgets/csp/student_quiz_builder.dart';
 
 class CspPracticeScreen extends StatelessWidget {
@@ -14,7 +16,7 @@ class CspPracticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: const Color(0xFFF4F7FB),
       appBar: AppBar(
         backgroundColor: const Color(0xFFF4F7FB),

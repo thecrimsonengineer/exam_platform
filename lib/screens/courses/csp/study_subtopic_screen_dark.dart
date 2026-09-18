@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 import '../../../models/student_learning_progress.dart';
 import '../../../services/student_learning_progress_service.dart';
@@ -133,7 +135,7 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
     if (subtopics.isEmpty ||
         widget.subtopicIndex < 0 ||
         widget.subtopicIndex >= subtopics.length) {
-      return const Scaffold(
+      return const StudentGlassScaffold(
         body: Center(child: Text('Study subtopic is unavailable.')),
       );
     }
@@ -144,7 +146,7 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
     final hasNext = widget.subtopicIndex < subtopics.length - 1;
     final progress = (widget.subtopicIndex + 1) / subtopics.length;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: DarkStudyColors.background,
       appBar: _buildAppBar(context, subtopic),
       body: Column(

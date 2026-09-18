@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../controllers/note_controller.dart';
 import '../../../models/note_domain.dart';
 import 'note_sections_screen_dark.dart';
@@ -22,7 +24,7 @@ class DarkStudyNotesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<NoteDomain> domains = controller.domains;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _bg,
       appBar: AppBar(
         title: const Text('Study Notes'),
