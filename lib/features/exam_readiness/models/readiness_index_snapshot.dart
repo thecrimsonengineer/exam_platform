@@ -1,9 +1,6 @@
 import 'evidence_confidence.dart';
 
-enum ReadinessIndexAvailability {
-  available,
-  insufficientEvidence,
-}
+enum ReadinessIndexAvailability { available, insufficientEvidence }
 
 class ReadinessIndexEvidenceSummary {
   const ReadinessIndexEvidenceSummary({

@@ -1,12 +1,6 @@
 import 'exam_preparation_phase.dart';
 
-enum CapacityPressureState {
-  low,
-  manageable,
-  elevated,
-  high,
-  critical,
-}
+enum CapacityPressureState { low, manageable, elevated, high, critical }
 
 class CapacityPressureSnapshot {
   const CapacityPressureSnapshot({
@@ -67,26 +61,25 @@ class CapacityPressureSnapshot {
   }
 
   Map<String, dynamic> toJson() => {
-        'generatedAt': generatedAt.toIso8601String(),
-        'phase': phase.name,
-        'availableMinutes': availableMinutes,
-        'estimatedPriorityWorkloadMinMinutes':
-            estimatedPriorityWorkloadMinMinutes,
-        'estimatedPriorityWorkloadMaxMinutes':
-            estimatedPriorityWorkloadMaxMinutes,
-        'state': state.name,
-        'criticalGapCount': criticalGapCount,
-        'highGapCount': highGapCount,
-        'evidenceBlindSpotCount': evidenceBlindSpotCount,
-        'scheduledReviewDebtMinutes': scheduledReviewDebtMinutes,
-        'reasonCodes': reasonCodes,
-        'algorithmVersion': algorithmVersion,
-        'schemaVersion': schemaVersion,
-      };
+    'generatedAt': generatedAt.toIso8601String(),
+    'phase': phase.name,
+    'availableMinutes': availableMinutes,
+    'estimatedPriorityWorkloadMinMinutes': estimatedPriorityWorkloadMinMinutes,
+    'estimatedPriorityWorkloadMaxMinutes': estimatedPriorityWorkloadMaxMinutes,
+    'state': state.name,
+    'criticalGapCount': criticalGapCount,
+    'highGapCount': highGapCount,
+    'evidenceBlindSpotCount': evidenceBlindSpotCount,
+    'scheduledReviewDebtMinutes': scheduledReviewDebtMinutes,
+    'reasonCodes': reasonCodes,
+    'algorithmVersion': algorithmVersion,
+    'schemaVersion': schemaVersion,
+  };
 
   factory CapacityPressureSnapshot.fromJson(Map<String, dynamic> json) {
-    final generatedAt =
-        DateTime.tryParse(json['generatedAt']?.toString() ?? '');
+    final generatedAt = DateTime.tryParse(
+      json['generatedAt']?.toString() ?? '',
+    );
     if (generatedAt == null) {
       throw const FormatException('Invalid capacity pressure timestamp.');
     }
@@ -95,16 +88,17 @@ class CapacityPressureSnapshot {
       generatedAt: generatedAt,
       phase: _phase(json['phase']),
       availableMinutes: _asInt(json['availableMinutes']),
-      estimatedPriorityWorkloadMinMinutes:
-          _asInt(json['estimatedPriorityWorkloadMinMinutes']),
-      estimatedPriorityWorkloadMaxMinutes:
-          _asInt(json['estimatedPriorityWorkloadMaxMinutes']),
+      estimatedPriorityWorkloadMinMinutes: _asInt(
+        json['estimatedPriorityWorkloadMinMinutes'],
+      ),
+      estimatedPriorityWorkloadMaxMinutes: _asInt(
+        json['estimatedPriorityWorkloadMaxMinutes'],
+      ),
       state: _state(json['state']),
       criticalGapCount: _asInt(json['criticalGapCount']),
       highGapCount: _asInt(json['highGapCount']),
       evidenceBlindSpotCount: _asInt(json['evidenceBlindSpotCount']),
-      scheduledReviewDebtMinutes:
-          _asInt(json['scheduledReviewDebtMinutes']),
+      scheduledReviewDebtMinutes: _asInt(json['scheduledReviewDebtMinutes']),
       reasonCodes: _strings(json['reasonCodes']),
       algorithmVersion: json['algorithmVersion']?.toString() ?? '',
       schemaVersion: _asInt(

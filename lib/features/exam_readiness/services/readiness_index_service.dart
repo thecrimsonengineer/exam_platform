@@ -25,10 +25,7 @@ class ReadinessIndexService {
     gate.validate();
     evidence.validate();
 
-    final reasons = _gateReasons(
-      dashboard: dashboard,
-      evidence: evidence,
-    );
+    final reasons = _gateReasons(dashboard: dashboard, evidence: evidence);
 
     if (reasons.isNotEmpty) {
       return _unavailable(
@@ -65,19 +62,14 @@ class ReadinessIndexService {
         dashboard: dashboard,
         reasons: [
           'READINESS_DIMENSIONS_INCOMPLETE',
-          ...missing.map(
-            (name) => 'MISSING_${name.toUpperCase()}',
-          ),
+          ...missing.map((name) => 'MISSING_${name.toUpperCase()}'),
         ],
         generatedAt: generatedAt,
       );
     }
 
     final values = components.map(
-      (key, value) => MapEntry(
-        key,
-        value!.clamp(0.0, 1.0).toDouble(),
-      ),
+      (key, value) => MapEntry(key, value!.clamp(0.0, 1.0).toDouble()),
     );
     final weightMap = weights.asMap();
 
@@ -107,7 +99,8 @@ class ReadinessIndexService {
   }) {
     final reasons = <String>[];
 
-    if (evidence.assessedCompetencyRatio < gate.minimumAssessedCompetencyRatio) {
+    if (evidence.assessedCompetencyRatio <
+        gate.minimumAssessedCompetencyRatio) {
       reasons.add('INSUFFICIENT_COMPETENCY_COVERAGE');
     }
     if (evidence.totalAttempts < gate.minimumTotalAttempts) {

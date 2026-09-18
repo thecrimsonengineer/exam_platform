@@ -4,10 +4,7 @@ import 'package:exam_platform/features/exam_readiness/models/study_capacity_snap
 
 import '../../m7d/_support/m7d_fixture.dart';
 
-StudyCapacitySnapshot m7fCapacity({
-  int minutes = 600,
-  int daysRemaining = 30,
-}) {
+StudyCapacitySnapshot m7fCapacity({int minutes = 600, int daysRemaining = 30}) {
   return StudyCapacitySnapshot(
     generatedAt: DateTime(2026, 9, 18, 8),
     examDate: DateTime(2026, 9, 18).add(Duration(days: daysRemaining)),

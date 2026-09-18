@@ -34,11 +34,13 @@ class RootGapReasoningService {
         continue;
       }
 
-      final supporting = entry.value.where((dependency) {
-        return _hasObservedSeriousGap(
-          profiles[dependency.dependentCompetencyId],
-        );
-      }).toList(growable: false);
+      final supporting = entry.value
+          .where((dependency) {
+            return _hasObservedSeriousGap(
+              profiles[dependency.dependentCompetencyId],
+            );
+          })
+          .toList(growable: false);
 
       if (supporting.length < minimumDependentGapCount) {
         continue;
@@ -51,11 +53,12 @@ class RootGapReasoningService {
           ) /
           supporting.length;
 
-      final dependents = supporting
-          .map((dependency) => dependency.dependentCompetencyId)
-          .toSet()
-          .toList(growable: false)
-        ..sort();
+      final dependents =
+          supporting
+              .map((dependency) => dependency.dependentCompetencyId)
+              .toSet()
+              .toList(growable: false)
+            ..sort();
 
       result.add(
         RootGapCandidate(

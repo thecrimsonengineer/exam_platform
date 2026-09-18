@@ -44,13 +44,11 @@ class ReadinessTrajectoryService {
     final end = values.last;
     ReadinessTrajectoryPoint? start;
     for (final point in values) {
-      final days = DateTime(
-        end.date.year,
-        end.date.month,
-        end.date.day,
-      ).difference(
-        DateTime(point.date.year, point.date.month, point.date.day),
-      ).inDays;
+      final days = DateTime(end.date.year, end.date.month, end.date.day)
+          .difference(
+            DateTime(point.date.year, point.date.month, point.date.day),
+          )
+          .inDays;
       if (days >= minimumTrendWindowDays) {
         start = point;
         break;
@@ -61,13 +59,9 @@ class ReadinessTrajectoryService {
       return _unavailable(values);
     }
 
-    final windowDays = DateTime(
-      end.date.year,
-      end.date.month,
-      end.date.day,
-    ).difference(
-      DateTime(start.date.year, start.date.month, start.date.day),
-    ).inDays;
+    final windowDays = DateTime(end.date.year, end.date.month, end.date.day)
+        .difference(DateTime(start.date.year, start.date.month, start.date.day))
+        .inDays;
 
     return ReadinessTrajectorySummary(
       startDate: start.date,
@@ -101,8 +95,9 @@ class ReadinessTrajectoryService {
       retention: none,
       coverage: none,
       difficulty: none,
-      latestEvidenceConfidence:
-          values.isEmpty ? EvidenceConfidence.none : values.last.evidenceConfidence,
+      latestEvidenceConfidence: values.isEmpty
+          ? EvidenceConfidence.none
+          : values.last.evidenceConfidence,
       algorithmVersion: algorithmVersion,
     );
   }
@@ -121,8 +116,8 @@ class ReadinessTrajectoryService {
     final direction = delta.abs() < stableDeltaThreshold
         ? ReadinessTrendDirection.stable
         : delta > 0
-            ? ReadinessTrendDirection.improving
-            : ReadinessTrendDirection.declining;
+        ? ReadinessTrendDirection.improving
+        : ReadinessTrendDirection.declining;
 
     return ReadinessDimensionTrend(
       startValue: start,

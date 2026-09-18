@@ -57,13 +57,13 @@ class ReadinessWeightConfiguration {
   }
 
   Map<String, double> asMap() => {
-        'knowledgeMastery': knowledgeMastery,
-        'applicationAbility': applicationAbility,
-        'retention': retention,
-        'blueprintCoverage': blueprintCoverage,
-        'difficultyPerformance': difficultyPerformance,
-        'competencyBreadth': competencyBreadth,
-        'recentPerformance': recentPerformance,
-        'confidenceCalibration': confidenceCalibration,
-      };
+    'knowledgeMastery': knowledgeMastery,
+    'applicationAbility': applicationAbility,
+    'retention': retention,
+    'blueprintCoverage': blueprintCoverage,
+    'difficultyPerformance': difficultyPerformance,
+    'competencyBreadth': competencyBreadth,
+    'recentPerformance': recentPerformance,
+    'confidenceCalibration': confidenceCalibration,
+  };
 }

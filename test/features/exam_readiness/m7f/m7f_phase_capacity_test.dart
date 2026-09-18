@@ -34,17 +34,11 @@ void main() {
     });
 
     test('30 days is readiness', () {
-      expect(
-        service.phaseForDaysRemaining(30),
-        ExamPreparationPhase.readiness,
-      );
+      expect(service.phaseForDaysRemaining(30), ExamPreparationPhase.readiness);
     });
 
     test('15 days is readiness', () {
-      expect(
-        service.phaseForDaysRemaining(15),
-        ExamPreparationPhase.readiness,
-      );
+      expect(service.phaseForDaysRemaining(15), ExamPreparationPhase.readiness);
     });
 
     test('14 days is consolidation', () {
@@ -151,9 +145,7 @@ void main() {
         capacity: m7fCapacity(minutes: 600),
         phase: ExamPreparationPhase.integration,
         profiles: [
-          m7dProfile(
-            gaps: [m7dGap(severity: ReadinessGapSeverity.critical)],
-          ),
+          m7dProfile(gaps: [m7dGap(severity: ReadinessGapSeverity.critical)]),
         ],
       );
       expect(snapshot.criticalGapCount, 1);
@@ -184,24 +176,27 @@ void main() {
       expect(snapshot.estimatedPriorityWorkloadMaxMinutes, 25);
     });
 
-    test('evidence limited gap is not counted as observed poor performance', () {
-      final snapshot = service.calculate(
-        capacity: m7fCapacity(minutes: 600),
-        phase: ExamPreparationPhase.integration,
-        profiles: [
-          m7dProfile(
-            gaps: [
-              m7dGap(
-                severity: ReadinessGapSeverity.high,
-                evidenceLimited: true,
-              ),
-            ],
-          ),
-        ],
-      );
-      expect(snapshot.highGapCount, 0);
-      expect(snapshot.criticalGapCount, 0);
-    });
+    test(
+      'evidence limited gap is not counted as observed poor performance',
+      () {
+        final snapshot = service.calculate(
+          capacity: m7fCapacity(minutes: 600),
+          phase: ExamPreparationPhase.integration,
+          profiles: [
+            m7dProfile(
+              gaps: [
+                m7dGap(
+                  severity: ReadinessGapSeverity.high,
+                  evidenceLimited: true,
+                ),
+              ],
+            ),
+          ],
+        );
+        expect(snapshot.highGapCount, 0);
+        expect(snapshot.criticalGapCount, 0);
+      },
+    );
 
     test('scheduled review debt is added to both workload bounds', () {
       final snapshot = service.calculate(
@@ -310,9 +305,7 @@ void main() {
         capacity: m7fCapacity(minutes: 30),
         phase: ExamPreparationPhase.integration,
         profiles: [
-          m7dProfile(
-            gaps: [m7dGap(severity: ReadinessGapSeverity.critical)],
-          ),
+          m7dProfile(gaps: [m7dGap(severity: ReadinessGapSeverity.critical)]),
         ],
       );
       expect(snapshot.demandExceedsCapacity, isTrue);

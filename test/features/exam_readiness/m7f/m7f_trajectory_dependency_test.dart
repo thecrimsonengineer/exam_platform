@@ -61,25 +61,18 @@ void main() {
     });
 
     test('missing dashboard dimension remains null', () {
-      final result = service.pointFromDashboard(
-        m7fDashboard(retention: null),
-      );
+      final result = service.pointFromDashboard(m7fDashboard(retention: null));
       expect(result.retention, isNull);
     });
 
     test('empty trajectory has unavailable trend', () {
       final result = service.summarize(const []);
       expect(result.hasMeaningfulWindow, isFalse);
-      expect(
-        result.application.direction,
-        ReadinessTrendDirection.unavailable,
-      );
+      expect(result.application.direction, ReadinessTrendDirection.unavailable);
     });
 
     test('one point cannot create a trend', () {
-      final result = service.summarize([
-        point(date: DateTime(2026, 9, 18)),
-      ]);
+      final result = service.summarize([point(date: DateTime(2026, 9, 18))]);
       expect(result.hasMeaningfulWindow, isFalse);
     });
 
@@ -105,10 +98,7 @@ void main() {
         point(date: DateTime(2026, 9, 1), value: 0.6),
         point(date: DateTime(2026, 9, 18), value: 0.8),
       ]);
-      expect(
-        result.knowledge.direction,
-        ReadinessTrendDirection.improving,
-      );
+      expect(result.knowledge.direction, ReadinessTrendDirection.improving);
       expect(result.knowledge.delta, closeTo(0.2, 0.000001));
     });
 
@@ -117,10 +107,7 @@ void main() {
         point(date: DateTime(2026, 9, 1), value: 0.8),
         point(date: DateTime(2026, 9, 18), value: 0.6),
       ]);
-      expect(
-        result.application.direction,
-        ReadinessTrendDirection.declining,
-      );
+      expect(result.application.direction, ReadinessTrendDirection.declining);
     });
 
     test('small delta is stable rather than noisy improvement', () {
@@ -135,19 +122,13 @@ void main() {
       final first = point(date: DateTime(2026, 9, 1), value: null);
       final second = point(date: DateTime(2026, 9, 18), value: 0.8);
       final result = service.summarize([first, second]);
-      expect(
-        result.difficulty.direction,
-        ReadinessTrendDirection.unavailable,
-      );
+      expect(result.difficulty.direction, ReadinessTrendDirection.unavailable);
       expect(result.difficulty.delta, isNull);
     });
 
     test('latest evidence confidence is retained separately', () {
       final result = service.summarize([
-        point(
-          date: DateTime(2026, 9, 1),
-          confidence: EvidenceConfidence.low,
-        ),
+        point(date: DateTime(2026, 9, 1), confidence: EvidenceConfidence.low),
         point(
           date: DateTime(2026, 9, 18),
           confidence: EvidenceConfidence.veryHigh,
@@ -182,10 +163,7 @@ void main() {
     });
 
     test('noncanonical dependency is rejected', () {
-      expect(
-        dependency(prerequisite: 'D3C1').validate,
-        throwsStateError,
-      );
+      expect(dependency(prerequisite: 'D3C1').validate, throwsStateError);
     });
 
     test('self dependency is rejected', () {
@@ -214,10 +192,7 @@ void main() {
           dependency(dependent: 'd03_c03'),
         ],
         profiles: {
-          'd03_c01': m7dProfile(
-            competencyId: 'd03_c01',
-            gaps: const [],
-          ),
+          'd03_c01': m7dProfile(competencyId: 'd03_c01', gaps: const []),
           'd03_c02': m7dProfile(
             competencyId: 'd03_c02',
             gaps: [m7dGap(competencyId: 'd03_c02')],
@@ -246,71 +221,74 @@ void main() {
             competencyId: 'd03_c02',
             gaps: [m7dGap(competencyId: 'd03_c02')],
           ),
-          'd03_c03': m7dProfile(
-            competencyId: 'd03_c03',
-            gaps: const [],
-          ),
+          'd03_c03': m7dProfile(competencyId: 'd03_c03', gaps: const []),
         },
       );
       expect(result, isEmpty);
     });
 
-    test('observed prerequisite plus two observed dependents creates root gap', () {
-      final result = service.identify(
-        dependencies: [
-          dependency(dependent: 'd03_c02', strength: 0.8),
-          dependency(dependent: 'd03_c03', strength: 0.6),
-        ],
-        profiles: {
-          'd03_c01': m7dProfile(
-            competencyId: 'd03_c01',
-            gaps: [m7dGap(competencyId: 'd03_c01')],
-          ),
-          'd03_c02': m7dProfile(
-            competencyId: 'd03_c02',
-            gaps: [m7dGap(competencyId: 'd03_c02')],
-          ),
-          'd03_c03': m7dProfile(
-            competencyId: 'd03_c03',
-            gaps: [m7dGap(competencyId: 'd03_c03')],
-          ),
-        },
-      );
-      expect(result, hasLength(1));
-      expect(result.single.prerequisiteCompetencyId, 'd03_c01');
-      expect(result.single.dependentCompetencyIds, ['d03_c02', 'd03_c03']);
-      expect(result.single.averageDependencyStrength, closeTo(0.7, 0.000001));
-    });
+    test(
+      'observed prerequisite plus two observed dependents creates root gap',
+      () {
+        final result = service.identify(
+          dependencies: [
+            dependency(dependent: 'd03_c02', strength: 0.8),
+            dependency(dependent: 'd03_c03', strength: 0.6),
+          ],
+          profiles: {
+            'd03_c01': m7dProfile(
+              competencyId: 'd03_c01',
+              gaps: [m7dGap(competencyId: 'd03_c01')],
+            ),
+            'd03_c02': m7dProfile(
+              competencyId: 'd03_c02',
+              gaps: [m7dGap(competencyId: 'd03_c02')],
+            ),
+            'd03_c03': m7dProfile(
+              competencyId: 'd03_c03',
+              gaps: [m7dGap(competencyId: 'd03_c03')],
+            ),
+          },
+        );
+        expect(result, hasLength(1));
+        expect(result.single.prerequisiteCompetencyId, 'd03_c01');
+        expect(result.single.dependentCompetencyIds, ['d03_c02', 'd03_c03']);
+        expect(result.single.averageDependencyStrength, closeTo(0.7, 0.000001));
+      },
+    );
 
-    test('evidence-limited prerequisite is not treated as observed root gap', () {
-      final result = service.identify(
-        dependencies: [
-          dependency(dependent: 'd03_c02'),
-          dependency(dependent: 'd03_c03'),
-        ],
-        profiles: {
-          'd03_c01': m7dProfile(
-            competencyId: 'd03_c01',
-            gaps: [
-              m7dGap(
-                competencyId: 'd03_c01',
-                evidenceLimited: true,
-                severity: ReadinessGapSeverity.critical,
-              ),
-            ],
-          ),
-          'd03_c02': m7dProfile(
-            competencyId: 'd03_c02',
-            gaps: [m7dGap(competencyId: 'd03_c02')],
-          ),
-          'd03_c03': m7dProfile(
-            competencyId: 'd03_c03',
-            gaps: [m7dGap(competencyId: 'd03_c03')],
-          ),
-        },
-      );
-      expect(result, isEmpty);
-    });
+    test(
+      'evidence-limited prerequisite is not treated as observed root gap',
+      () {
+        final result = service.identify(
+          dependencies: [
+            dependency(dependent: 'd03_c02'),
+            dependency(dependent: 'd03_c03'),
+          ],
+          profiles: {
+            'd03_c01': m7dProfile(
+              competencyId: 'd03_c01',
+              gaps: [
+                m7dGap(
+                  competencyId: 'd03_c01',
+                  evidenceLimited: true,
+                  severity: ReadinessGapSeverity.critical,
+                ),
+              ],
+            ),
+            'd03_c02': m7dProfile(
+              competencyId: 'd03_c02',
+              gaps: [m7dGap(competencyId: 'd03_c02')],
+            ),
+            'd03_c03': m7dProfile(
+              competencyId: 'd03_c03',
+              gaps: [m7dGap(competencyId: 'd03_c03')],
+            ),
+          },
+        );
+        expect(result, isEmpty);
+      },
+    );
 
     test('missing dependent profile is not invented as weakness', () {
       final result = service.identify(

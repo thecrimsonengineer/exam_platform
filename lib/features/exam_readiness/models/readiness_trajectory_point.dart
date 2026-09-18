@@ -22,15 +22,15 @@ class ReadinessTrajectoryPoint {
   final String algorithmVersion;
 
   Map<String, dynamic> toJson() => {
-        'date': DateTime(date.year, date.month, date.day).toIso8601String(),
-        'knowledge': knowledge,
-        'application': application,
-        'retention': retention,
-        'coverage': coverage,
-        'difficulty': difficulty,
-        'evidenceConfidence': evidenceConfidence.name,
-        'algorithmVersion': algorithmVersion,
-      };
+    'date': DateTime(date.year, date.month, date.day).toIso8601String(),
+    'knowledge': knowledge,
+    'application': application,
+    'retention': retention,
+    'coverage': coverage,
+    'difficulty': difficulty,
+    'evidenceConfidence': evidenceConfidence.name,
+    'algorithmVersion': algorithmVersion,
+  };
 
   factory ReadinessTrajectoryPoint.fromJson(Map<String, dynamic> json) {
     final date = DateTime.tryParse(json['date']?.toString() ?? '');
@@ -51,12 +51,7 @@ class ReadinessTrajectoryPoint {
   }
 }
 
-enum ReadinessTrendDirection {
-  unavailable,
-  declining,
-  stable,
-  improving,
-}
+enum ReadinessTrendDirection { unavailable, declining, stable, improving }
 
 class ReadinessDimensionTrend {
   const ReadinessDimensionTrend({

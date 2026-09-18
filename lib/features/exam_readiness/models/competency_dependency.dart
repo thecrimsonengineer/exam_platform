@@ -37,20 +37,19 @@ class CompetencyDependency {
   }
 
   Map<String, dynamic> toJson() => {
-        'prerequisiteCompetencyId': prerequisiteCompetencyId,
-        'dependentCompetencyId': dependentCompetencyId,
-        'strength': strength,
-        'rationale': rationale,
-        'source': source,
-        'version': version,
-      };
+    'prerequisiteCompetencyId': prerequisiteCompetencyId,
+    'dependentCompetencyId': dependentCompetencyId,
+    'strength': strength,
+    'rationale': rationale,
+    'source': source,
+    'version': version,
+  };
 
   factory CompetencyDependency.fromJson(Map<String, dynamic> json) {
     return CompetencyDependency(
       prerequisiteCompetencyId:
           json['prerequisiteCompetencyId']?.toString() ?? '',
-      dependentCompetencyId:
-          json['dependentCompetencyId']?.toString() ?? '',
+      dependentCompetencyId: json['dependentCompetencyId']?.toString() ?? '',
       strength: _asDouble(json['strength']),
       rationale: json['rationale']?.toString() ?? '',
       source: json['source']?.toString() ?? '',

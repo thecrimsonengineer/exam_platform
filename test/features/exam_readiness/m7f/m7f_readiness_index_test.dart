@@ -100,10 +100,7 @@ void main() {
         ),
       );
       expect(result.score, isNull);
-      expect(
-        result.reasonCodes,
-        contains('INSUFFICIENT_COMPETENCY_COVERAGE'),
-      );
+      expect(result.reasonCodes, contains('INSUFFICIENT_COMPETENCY_COVERAGE'));
     });
 
     test('low total attempts withholds index', () {
@@ -135,10 +132,7 @@ void main() {
         ),
       );
       expect(result.score, isNull);
-      expect(
-        result.reasonCodes,
-        contains('INSUFFICIENT_APPLICATION_EVIDENCE'),
-      );
+      expect(result.reasonCodes, contains('INSUFFICIENT_APPLICATION_EVIDENCE'));
     });
 
     test('low retention breadth withholds index', () {
@@ -154,10 +148,7 @@ void main() {
         ),
       );
       expect(result.score, isNull);
-      expect(
-        result.reasonCodes,
-        contains('INSUFFICIENT_RETENTION_EVIDENCE'),
-      );
+      expect(result.reasonCodes, contains('INSUFFICIENT_RETENTION_EVIDENCE'));
     });
 
     test('critical evidence blind spots can withhold index', () {
@@ -173,17 +164,12 @@ void main() {
         ),
       );
       expect(result.score, isNull);
-      expect(
-        result.reasonCodes,
-        contains('CRITICAL_EVIDENCE_BLIND_SPOTS'),
-      );
+      expect(result.reasonCodes, contains('CRITICAL_EVIDENCE_BLIND_SPOTS'));
     });
 
     test('low overall evidence confidence withholds index', () {
       final result = service.evaluate(
-        dashboard: m7fDashboard(
-          evidenceConfidence: EvidenceConfidence.low,
-        ),
+        dashboard: m7fDashboard(evidenceConfidence: EvidenceConfidence.low),
         evidence: goodEvidence,
       );
       expect(result.score, isNull);
@@ -195,9 +181,7 @@ void main() {
 
     test('multiple evidence failures are all reported', () {
       final result = service.evaluate(
-        dashboard: m7fDashboard(
-          evidenceConfidence: EvidenceConfidence.low,
-        ),
+        dashboard: m7fDashboard(evidenceConfidence: EvidenceConfidence.low),
         evidence: const ReadinessIndexEvidenceSummary(
           totalCompetencies: 10,
           assessedCompetencies: 2,
@@ -217,10 +201,7 @@ void main() {
         evidence: goodEvidence,
       );
       expect(result.score, isNull);
-      expect(
-        result.reasonCodes,
-        contains('READINESS_DIMENSIONS_INCOMPLETE'),
-      );
+      expect(result.reasonCodes, contains('READINESS_DIMENSIONS_INCOMPLETE'));
       expect(result.reasonCodes, contains('MISSING_KNOWLEDGEMASTERY'));
     });
 

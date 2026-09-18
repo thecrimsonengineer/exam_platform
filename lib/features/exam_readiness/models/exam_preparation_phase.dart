@@ -1,9 +1,4 @@
-enum ExamPreparationPhase {
-  foundation,
-  integration,
-  readiness,
-  consolidation,
-}
+enum ExamPreparationPhase { foundation, integration, readiness, consolidation }
 
 class PhaseAllocationProfile {
   const PhaseAllocationProfile({
@@ -32,11 +27,11 @@ class PhaseAllocationProfile {
   }
 
   Map<String, dynamic> toJson() => {
-        'learning': learning,
-        'practice': practice,
-        'review': review,
-        'diagnostics': diagnostics,
-      };
+    'learning': learning,
+    'practice': practice,
+    'review': review,
+    'diagnostics': diagnostics,
+  };
 
   factory PhaseAllocationProfile.fromJson(Map<String, dynamic> json) {
     return PhaseAllocationProfile(
