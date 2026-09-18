@@ -123,7 +123,7 @@ class LabPathSimulator {
         issues.add(
           LabValidationIssue(
             code: 'simulation_unknown_node',
-            message: 'Simulation reached unknown node \${frame.nodeId}.',
+            message: 'Simulation reached unknown node ${frame.nodeId}.',
             path: 'nodes',
           ),
         );
@@ -160,8 +160,8 @@ class LabPathSimulator {
                 LabValidationIssue(
                   code: 'runtime_dead_end',
                   message:
-                      'Decision \${node.id} option \${option.id} has no eligible Story Gate.',
-                  path: 'nodes.\${node.id}.options.\${option.id}',
+                      'Decision ${node.id} option ${option.id} has no eligible Story Gate.',
+                  path: 'nodes.${node.id}.options.${option.id}',
                 ),
               );
               continue;
@@ -186,13 +186,14 @@ class LabPathSimulator {
               issues.add(
                 LabValidationIssue(
                   code: 'runtime_gate_no_target',
-                  message: 'Gate \${gate.gateId} has no runtime destination.',
-                  path: 'gates.\${gate.gateId}',
+                  message: 'Gate ${gate.gateId} has no runtime destination.',
+                  path: 'gates.${gate.gateId}',
                 ),
               );
               continue;
             }
 
+            reachableNodes.add(gate.targetNodeId!);
             queue.add(
               _SimulationFrame(
                 nodeId: gate.targetNodeId!,
@@ -214,7 +215,7 @@ class LabPathSimulator {
               LabValidationIssue(
                 code: 'simulation_failure',
                 message: error.toString(),
-                path: 'nodes.\${node.id}',
+                path: 'nodes.${node.id}',
               ),
             );
           }
@@ -231,8 +232,8 @@ class LabPathSimulator {
             issues.add(
               LabValidationIssue(
                 code: 'runtime_dead_end',
-                message: 'Scene \${node.id} has no eligible Story Gate.',
-                path: 'nodes.\${node.id}',
+                message: 'Scene ${node.id} has no eligible Story Gate.',
+                path: 'nodes.${node.id}',
               ),
             );
             continue;
@@ -249,6 +250,7 @@ class LabPathSimulator {
           if (gate.endingId != null) {
             reachableEndings.add(gate.endingId!);
           } else if (gate.targetNodeId != null) {
+            reachableNodes.add(gate.targetNodeId!);
             queue.add(
               _SimulationFrame(
                 nodeId: gate.targetNodeId!,
@@ -261,8 +263,8 @@ class LabPathSimulator {
             issues.add(
               LabValidationIssue(
                 code: 'runtime_gate_no_target',
-                message: 'Gate \${gate.gateId} has no runtime destination.',
-                path: 'gates.\${gate.gateId}',
+                message: 'Gate ${gate.gateId} has no runtime destination.',
+                path: 'gates.${gate.gateId}',
               ),
             );
           }
@@ -279,7 +281,7 @@ class LabPathSimulator {
             LabValidationIssue(
               code: 'simulation_failure',
               message: error.toString(),
-              path: 'nodes.\${node.id}',
+              path: 'nodes.${node.id}',
             ),
           );
         }
@@ -443,7 +445,7 @@ class LabValidationEngine {
           issues.add(
             LabValidationIssue(
               code: 'gate_source_reference',
-              message: 'Gate \${gate.id} references an unknown source node.',
+              message: 'Gate ${gate.id} references an unknown source node.',
               path: 'gates[$index].fromNodeId',
             ),
           );
@@ -452,7 +454,7 @@ class LabValidationEngine {
           issues.add(
             LabValidationIssue(
               code: 'gate_target_reference',
-              message: 'Gate \${gate.id} references an unknown target node.',
+              message: 'Gate ${gate.id} references an unknown target node.',
               path: 'gates[$index].targetNodeId',
             ),
           );
@@ -463,7 +465,7 @@ class LabValidationEngine {
             LabValidationIssue(
               code: 'critical_event_prerequisite',
               message:
-                  'Critical Event Gate \${gate.id} requires an explicit prerequisite condition.',
+                  'Critical Event Gate ${gate.id} requires an explicit prerequisite condition.',
               path: 'gates[$index].condition',
             ),
           );
@@ -513,7 +515,7 @@ class LabValidationEngine {
         issues.add(
           LabValidationIssue(
             code: 'ending_reference',
-            message: 'Gate \${gate.id} references an unknown ending.',
+            message: 'Gate ${gate.id} references an unknown ending.',
             path: 'gates[$index].endingId',
           ),
         );
@@ -561,8 +563,8 @@ class LabValidationEngine {
             LabValidationIssue(
               code: 'consequence_reference',
               message:
-                  'Option \${option.id} references an unknown consequence.',
-              path: 'nodes.\${node.id}.options.\${option.id}.consequenceId',
+                  'Option ${option.id} references an unknown consequence.',
+              path: 'nodes.${node.id}.options.${option.id}.consequenceId',
             ),
           );
         }
@@ -586,8 +588,8 @@ class LabValidationEngine {
               LabValidationIssue(
                 code: 'state_reference',
                 message:
-                    'Consequence \${consequence.id} references unknown state $stateId.',
-                path: 'consequences.\${consequence.id}',
+                    'Consequence ${consequence.id} references unknown state $stateId.',
+                path: 'consequences.${consequence.id}',
               ),
             );
           }
@@ -599,8 +601,8 @@ class LabValidationEngine {
               LabValidationIssue(
                 code: 'evidence_reference',
                 message:
-                    'Consequence \${consequence.id} unlocks unknown evidence $evidenceId.',
-                path: 'consequences.\${consequence.id}.evidenceUnlocks',
+                    'Consequence ${consequence.id} unlocks unknown evidence $evidenceId.',
+                path: 'consequences.${consequence.id}.evidenceUnlocks',
               ),
             );
           }
@@ -777,8 +779,8 @@ class LabValidationEngine {
         issues.add(
           LabValidationIssue(
             code: 'orphan_node',
-            message: 'Node \${node.id} is unreachable from the starting node.',
-            path: 'nodes.\${node.id}',
+            message: 'Node ${node.id} is unreachable from the starting node.',
+            path: 'nodes.${node.id}',
           ),
         );
       } else if ((adjacency[node.id]?.isEmpty ?? true) &&
@@ -786,8 +788,8 @@ class LabValidationEngine {
         issues.add(
           LabValidationIssue(
             code: 'dead_end',
-            message: 'Reachable node \${node.id} has no authored continuation.',
-            path: 'nodes.\${node.id}',
+            message: 'Reachable node ${node.id} has no authored continuation.',
+            path: 'nodes.${node.id}',
           ),
         );
       }
@@ -863,7 +865,7 @@ class LabValidationEngine {
             LabValidationIssue(
               code: 'gate_ambiguity',
               message:
-                  'Always-true gates \${left.id} and \${right.id} share the same priority.',
+                  'Always-true gates ${left.id} and ${right.id} share the same priority.',
               path: 'gates',
             ),
           );
