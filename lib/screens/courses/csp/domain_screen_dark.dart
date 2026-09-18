@@ -458,7 +458,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
           builder: (context, constraints) {
             final compact = constraints.maxWidth < 680;
 
-            final studyCard = _premiumActionCard(
+            final studyCard = _premiumActionStudentGlassCard(
               icon: Icons.menu_book_rounded,
               title: 'Study Materials',
               subtitle: 'LEARN',
@@ -468,7 +468,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
               onTap: _scrollToLearningAreas,
             );
 
-            final quizCard = _premiumActionCard(
+            final quizCard = _premiumActionStudentGlassCard(
               icon: Icons.quiz_rounded,
               title: 'Practice Quiz',
               subtitle: 'PRACTICE',
@@ -539,7 +539,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
     );
   }
 
-  Widget _premiumActionCard({
+  Widget _premiumActionStudentGlassCard({
     required IconData icon,
     required String title,
     required String subtitle,
@@ -659,11 +659,11 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
           future: _contentFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return _premiumLoadingCard();
+              return _premiumLoadingStudentGlassCard();
             }
 
             if (snapshot.hasError) {
-              return _premiumMessageCard(
+              return _premiumMessageStudentGlassCard(
                 icon: Icons.cloud_off_rounded,
                 title: 'Content Unavailable',
                 message:
@@ -675,7 +675,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
             final content = snapshot.data ?? [];
 
             if (content.isEmpty) {
-              return _premiumMessageCard(
+              return _premiumMessageStudentGlassCard(
                 icon: Icons.auto_stories_outlined,
                 title: 'Content Coming Soon',
                 message:
@@ -691,7 +691,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
                 content.length,
                 (index) => Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: _premiumContentCard(content[index], index),
+                  child: _premiumContentStudentGlassCard(content[index], index),
                 ),
               ),
             );
@@ -701,7 +701,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
     );
   }
 
-  Widget _premiumContentCard(dynamic content, int index) {
+  Widget _premiumContentStudentGlassCard(dynamic content, int index) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -945,7 +945,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
     );
   }
 
-  Widget _premiumLoadingCard() {
+  Widget _premiumLoadingStudentGlassCard() {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
@@ -991,7 +991,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
     );
   }
 
-  Widget _premiumMessageCard({
+  Widget _premiumMessageStudentGlassCard({
     required IconData icon,
     required String title,
     required String message,

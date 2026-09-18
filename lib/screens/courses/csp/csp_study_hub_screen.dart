@@ -519,7 +519,7 @@ class CspStudyHubScreen extends StatelessWidget {
           children: csp11Domains
               .map(
                 (domain) =>
-                    SizedBox(width: width, child: _domainCard(context, domain)),
+                    SizedBox(width: width, child: _domainStudentGlassCard(context, domain)),
               )
               .toList(),
         );
@@ -527,7 +527,7 @@ class CspStudyHubScreen extends StatelessWidget {
     );
   }
 
-  Widget _domainCard(BuildContext context, Csp11Domain domain) {
+  Widget _domainStudentGlassCard(BuildContext context, Csp11Domain domain) {
     return Material(
       color: _surface,
       borderRadius: BorderRadius.circular(21),

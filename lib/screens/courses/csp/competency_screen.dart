@@ -183,7 +183,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
                             padding: const EdgeInsets.only(
                               bottom: AppSpacing.sm,
                             ),
-                            child: _topicCard(subtopic, entry.key, id, title),
+                            child: _topicStudentGlassCard(subtopic, entry.key, id, title),
                           );
                         }),
                     ]),
@@ -258,8 +258,8 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
     );
   }
 
-  Widget _topicCard(dynamic subtopic, int index, String? id, String title) {
-    return Card(
+  Widget _topicStudentGlassCard(dynamic subtopic, int index, String? id, String title) {
+    return StudentGlassCard(
       elevation: 1,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
@@ -331,7 +331,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
   }) {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.page),
-      child: Card(
+      child: StudentGlassCard(
         margin: EdgeInsets.zero,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
