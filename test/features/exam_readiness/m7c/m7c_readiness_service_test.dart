@@ -1,6 +1,7 @@
 import 'package:exam_platform/features/exam_readiness/models/competency_readiness_profile.dart';
 import 'package:exam_platform/features/exam_readiness/models/evidence_confidence.dart';
 import 'package:exam_platform/features/exam_readiness/models/learner_assessment_attempt.dart';
+import 'package:exam_platform/features/exam_readiness/models/readiness_gap.dart';
 import 'package:exam_platform/features/exam_readiness/services/readiness_profile_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
