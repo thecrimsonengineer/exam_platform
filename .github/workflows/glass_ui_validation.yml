@@ -4,11 +4,20 @@ on:
   push:
     branches:
       - ui-glassmorphism-pass
+  pull_request:
+    branches:
+      - phase-m7-closed
   workflow_dispatch:
+
+concurrency:
+  group: glass-ui-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,24 +29,31 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Flutter version
+        run: flutter --version
+
       - name: Resolve packages
         run: flutter pub get
 
       - name: Check formatting
+        shell: bash
         run: |
           git fetch origin phase-m7-closed
           mapfile -t changed < <(
             git diff --name-only origin/phase-m7-closed...HEAD -- '*.dart' |
-            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart)' || true
+            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart|test/screens/)' || true
           )
           if [ "${#changed[@]}" -eq 0 ]; then
             echo "No changed Dart UI files."
             exit 0
           fi
-          dart format "${changed[@]}"
+          dart format --output=none --set-exit-if-changed "${changed[@]}"
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
+
+      - name: Glass surface contract
+        run: flutter test test/screens/glass_ui_student_surface_contract_test.dart
 
       - name: Student-facing regression tests
         run: |
