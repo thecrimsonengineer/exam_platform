@@ -111,7 +111,9 @@ void main() {
     testWidgets('renders areas requiring attention', (tester) async {
       await tester.pumpWidget(_app(await _screenWithEvidence()));
       await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('m7c-attention-card')), findsOneWidget);
+      final attention = find.byKey(const ValueKey('m7c-attention-card'));
+      await tester.scrollUntilVisible(attention, 500);
+      expect(attention, findsOneWidget);
     });
 
     testWidgets('never displays a composite readiness index statement', (
@@ -167,10 +169,16 @@ void main() {
     ) async {
       await tester.pumpWidget(_app(await _screenWithEvidence()));
       await tester.pumpAndSettle();
-      expect(find.text('UNASSESSED'), findsWidgets);
+      final row = find.byKey(const ValueKey('m7c-competency-d01_c01'));
+      await tester.scrollUntilVisible(row, 800);
+      expect(row, findsOneWidget);
+      expect(
+        find.descendant(of: row, matching: find.text('UNASSESSED')),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('tapping assessed competency opens explanation sheet', (
+    testWidgets('tapping assessed competency opens detail screen', (
       tester,
     ) async {
       await tester.pumpWidget(_app(await _screenWithEvidence()));
@@ -180,7 +188,7 @@ void main() {
       await tester.tap(row);
       await tester.pumpAndSettle();
       expect(
-        find.byKey(const ValueKey('m7c-competency-explanation')),
+        find.byKey(const ValueKey('m7c-competency-readiness-screen')),
         findsOneWidget,
       );
     });
