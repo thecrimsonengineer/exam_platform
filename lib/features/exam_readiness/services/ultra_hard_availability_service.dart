@@ -25,23 +25,10 @@ class UltraHardAvailabilityService {
             tag.trim().toLowerCase() ==
             UltraHardQuestionContract.classificationTag,
       );
+      final isCanonicalCompetency =
+          RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId);
 
-      if (!isPublished ||
-          !isUltraHard ||
-          !RegExp(r'^d\d{2}_c\d{2}
-        continue;
-      }
-
-      counts[competencyId] = (counts[competencyId] ?? 0) + 1;
-    }
-
-    return counts.entries
-        .where((entry) => entry.value >= 5)
-        .map((entry) => entry.key)
-        .toSet();
-  }
-}
-).hasMatch(competencyId)) {
+      if (!isPublished || !isUltraHard || !isCanonicalCompetency) {
         continue;
       }
 
