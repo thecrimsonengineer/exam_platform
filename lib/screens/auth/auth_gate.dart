@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme.dart';
+
 import '../../models/app_user.dart';
 import '../../services/auth/auth_state_provider.dart';
 import '../../services/auth/auth_state_service.dart';
@@ -49,9 +51,12 @@ class AuthGate extends StatelessWidget {
 
         if (appUser.isAdmin) {
           LearnerLocalIdentity.clear();
-          return AdminHomeScreen(
-            adminUserId: appUser.uid,
-            authStateProvider: service,
+          return Theme(
+            data: AppTheme.lightTheme,
+            child: AdminHomeScreen(
+              adminUserId: appUser.uid,
+              authStateProvider: service,
+            ),
           );
         }
 

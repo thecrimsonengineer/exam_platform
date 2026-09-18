@@ -23,11 +23,18 @@ class ExamPlatformApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CSP11 Learning Platform',
-      theme: AppTheme.lightTheme,
-      home: const AuthGate(),
+    return ValueListenableBuilder<bool>(
+      valueListenable: ThemeModeService.isDarkMode,
+      builder: (context, isDarkMode, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'CSP11 Learning Platform',
+          theme: AppTheme.studentGlassLightTheme,
+          darkTheme: AppTheme.studentGlassDarkTheme,
+          themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          home: const AuthGate(),
+        );
+      },
     );
   }
 }

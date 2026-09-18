@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme.dart';
+
 import '../../models/app_user.dart';
 import '../../services/auth/auth_state_provider.dart';
 import '../../services/auth/auth_state_service.dart';
@@ -15,7 +17,9 @@ class AdminGate extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthStateProvider service = authStateProvider ?? AuthStateService();
 
-    return StreamBuilder<AppUser?>(
+    return Theme(
+      data: AppTheme.lightTheme,
+      child: StreamBuilder<AppUser?>(
       stream: service.appUserChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -41,6 +45,7 @@ class AdminGate extends StatelessWidget {
           authStateProvider: service,
         );
       },
+    ),
     );
   }
 }

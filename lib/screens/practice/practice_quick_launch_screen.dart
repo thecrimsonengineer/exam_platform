@@ -142,7 +142,9 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = widget.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme;
+    final theme = widget.isDarkMode
+        ? AppTheme.studentGlassDarkTheme
+        : AppTheme.studentGlassLightTheme;
 
     return Theme(
       data: theme,

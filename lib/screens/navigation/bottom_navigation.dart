@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../theme/glass/student_glass.dart';
 import '../../services/settings/theme_mode_service.dart';
 import '../../services/learning_activity_tracker.dart';
 import '../../services/progress_overview_snapshot_service.dart';
@@ -168,8 +169,10 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         final screens = _screensFor(isDarkMode);
 
         return Theme(
-          data: isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
-          child: Scaffold(
+          data: isDarkMode
+              ? AppTheme.studentGlassDarkTheme
+              : AppTheme.studentGlassLightTheme,
+          child: StudentGlassScaffold(
             backgroundColor: isDarkMode ? const Color(0xFF0A111D) : null,
             body: IndexedStack(
               index: _selectedIndex,
