@@ -114,7 +114,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
     });
 
     try {
-      await _repository.savePlan(plan);
+      await _repository.savePlan(plan, syncRemote: false);
       if (!mounted) return;
       Navigator.of(context).pop(plan);
     } catch (error) {
