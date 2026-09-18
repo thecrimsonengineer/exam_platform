@@ -132,9 +132,9 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
                   const SizedBox(height: 14),
                   _ReadinessDimensions(dashboard: dashboard),
                   const SizedBox(height: 14),
-                  _AttentionCard(dashboard: dashboard),
+                  _AttentionStudentGlassCard(dashboard: dashboard),
                   const SizedBox(height: 14),
-                  _LimitationsCard(dashboard: dashboard),
+                  _LimitationsStudentGlassCard(dashboard: dashboard),
                   const SizedBox(height: 18),
                   _CompetencyMatrix(
                     dashboard: dashboard,
@@ -279,7 +279,7 @@ class _ReadinessDimensions extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         for (var index = 0; index < items.length; index++) ...[
-          _DimensionCard(
+          _DimensionStudentGlassCard(
             key: ValueKey('m7c-dimension-$index'),
             label: items[index].label,
             dimension: items[index].dimension,
@@ -287,14 +287,14 @@ class _ReadinessDimensions extends StatelessWidget {
           if (index < items.length - 1) const SizedBox(height: 10),
         ],
         const SizedBox(height: 10),
-        _CoverageCard(summary: dashboard.blueprintCoverage),
+        _CoverageStudentGlassCard(summary: dashboard.blueprintCoverage),
       ],
     );
   }
 }
 
 class _DimensionCard extends StatelessWidget {
-  const _DimensionCard({
+  const _DimensionStudentGlassCard({
     super.key,
     required this.label,
     required this.dimension,
@@ -354,7 +354,7 @@ class _DimensionCard extends StatelessWidget {
 }
 
 class _CoverageCard extends StatelessWidget {
-  const _CoverageCard({required this.summary});
+  const _CoverageStudentGlassCard({required this.summary});
 
   final BlueprintCoverageSummary summary;
 
@@ -410,7 +410,7 @@ class _CoverageCard extends StatelessWidget {
 }
 
 class _AttentionCard extends StatelessWidget {
-  const _AttentionCard({required this.dashboard});
+  const _AttentionStudentGlassCard({required this.dashboard});
 
   final ExamReadinessDashboard dashboard;
 
@@ -461,7 +461,7 @@ class _AttentionCard extends StatelessWidget {
 }
 
 class _LimitationsCard extends StatelessWidget {
-  const _LimitationsCard({required this.dashboard});
+  const _LimitationsStudentGlassCard({required this.dashboard});
 
   final ExamReadinessDashboard dashboard;
 

@@ -214,28 +214,28 @@ class AdvancedReadinessSummaryView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        _IndexCard(snapshot: snapshot),
+        _IndexStudentGlassCard(snapshot: snapshot),
         const SizedBox(height: 14),
-        _CapacityCard(snapshot: snapshot),
+        _CapacityStudentGlassCard(snapshot: snapshot),
         const SizedBox(height: 14),
-        _CountsCard(snapshot: snapshot),
+        _CountsStudentGlassCard(snapshot: snapshot),
         const SizedBox(height: 14),
-        _TrajectoryCard(snapshot: snapshot),
+        _TrajectoryStudentGlassCard(snapshot: snapshot),
         if (snapshot.nextCheckpoint != null) ...[
           const SizedBox(height: 14),
-          _CheckpointCard(snapshot: snapshot),
+          _CheckpointStudentGlassCard(snapshot: snapshot),
         ],
         if (snapshot.recoveryProtection.recommendsChange) ...[
           const SizedBox(height: 14),
-          _RecoveryCard(snapshot: snapshot),
+          _RecoveryStudentGlassCard(snapshot: snapshot),
         ],
         if (snapshot.rootGapCandidates.isNotEmpty) ...[
           const SizedBox(height: 14),
-          _RootGapCard(snapshot: snapshot),
+          _RootGapStudentGlassCard(snapshot: snapshot),
         ],
         if (snapshot.planChangeExplanation != null) ...[
           const SizedBox(height: 14),
-          _PlanExplanationCard(snapshot: snapshot),
+          _PlanExplanationStudentGlassCard(snapshot: snapshot),
         ],
       ],
     );
@@ -243,14 +243,14 @@ class AdvancedReadinessSummaryView extends StatelessWidget {
 }
 
 class _IndexCard extends StatelessWidget {
-  const _IndexCard({required this.snapshot});
+  const _IndexStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
     final index = snapshot.readinessIndex;
     final theme = Theme.of(context);
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-readiness-index'),
       title: 'CSP11 Readiness Index',
       child: Column(
@@ -277,13 +277,13 @@ class _IndexCard extends StatelessWidget {
 }
 
 class _CapacityCard extends StatelessWidget {
-  const _CapacityCard({required this.snapshot});
+  const _CapacityStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
     final pressure = snapshot.capacityPressure;
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-capacity-pressure'),
       title: 'Capacity pressure: ${pressure.state.name.toUpperCase()}',
       child: Column(
@@ -313,12 +313,12 @@ class _CapacityCard extends StatelessWidget {
 }
 
 class _CountsCard extends StatelessWidget {
-  const _CountsCard({required this.snapshot});
+  const _CountsStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-readiness-counts'),
       title: 'Current readiness profile',
       child: Wrap(
@@ -339,14 +339,14 @@ class _CountsCard extends StatelessWidget {
 }
 
 class _TrajectoryCard extends StatelessWidget {
-  const _TrajectoryCard({required this.snapshot});
+  const _TrajectoryStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
     final trajectory = snapshot.trajectory;
     final projection = snapshot.coverageProjection;
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-trajectory'),
       title: 'Readiness trajectory',
       child: Column(
@@ -388,13 +388,13 @@ class _TrajectoryCard extends StatelessWidget {
 }
 
 class _CheckpointCard extends StatelessWidget {
-  const _CheckpointCard({required this.snapshot});
+  const _CheckpointStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
     final checkpoint = snapshot.nextCheckpoint!;
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-checkpoint'),
       title: checkpoint.status.name == 'due'
           ? 'Readiness checkpoint due'
@@ -411,7 +411,7 @@ class _CheckpointCard extends StatelessWidget {
 }
 
 class _RecoveryCard extends StatelessWidget {
-  const _RecoveryCard({required this.snapshot});
+  const _RecoveryStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
@@ -420,7 +420,7 @@ class _RecoveryCard extends StatelessWidget {
     final label = recovery.state == RecoveryProtectionState.recoveryDay
         ? 'Recovery day option'
         : 'Reduced-intensity option';
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-recovery'),
       title: label,
       child: Text(
@@ -434,13 +434,13 @@ class _RecoveryCard extends StatelessWidget {
 }
 
 class _RootGapCard extends StatelessWidget {
-  const _RootGapCard({required this.snapshot});
+  const _RootGapStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
     final root = snapshot.rootGapCandidates.first;
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-root-gap'),
       title: 'Possible root gap',
       child: Text(
@@ -453,12 +453,12 @@ class _RootGapCard extends StatelessWidget {
 }
 
 class _PlanExplanationCard extends StatelessWidget {
-  const _PlanExplanationCard({required this.snapshot});
+  const _PlanExplanationStudentGlassCard({required this.snapshot});
   final AdvancedReadinessSnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
-    return _Card(
+    return _StudentGlassCard(
       key: const ValueKey('m7f-plan-explanation'),
       title: "Why today's plan looks this way",
       child: Text(snapshot.planChangeExplanation!),
@@ -467,7 +467,7 @@ class _PlanExplanationCard extends StatelessWidget {
 }
 
 class _Card extends StatelessWidget {
-  const _Card({super.key, required this.title, required this.child});
+  const _StudentGlassCard({super.key, required this.title, required this.child});
 
   final String title;
   final Widget child;

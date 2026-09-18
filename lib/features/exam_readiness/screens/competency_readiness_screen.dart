@@ -60,11 +60,11 @@ class CompetencyReadinessScreen extends StatelessWidget {
             const SizedBox(height: 14),
             _DimensionList(profile: profile),
             const SizedBox(height: 14),
-            _DifficultyCard(profile: profile),
+            _DifficultyStudentGlassCard(profile: profile),
             const SizedBox(height: 14),
-            _GapCard(profile: profile),
+            _GapStudentGlassCard(profile: profile),
             const SizedBox(height: 14),
-            _ReasonCodeCard(profile: profile),
+            _ReasonCodeStudentGlassCard(profile: profile),
           ],
         ),
       ),
@@ -146,7 +146,7 @@ class _DimensionList extends StatelessWidget {
 }
 
 class _DifficultyCard extends StatelessWidget {
-  const _DifficultyCard({required this.profile});
+  const _DifficultyStudentGlassCard({required this.profile});
 
   final CompetencyReadinessProfile profile;
 
@@ -207,7 +207,7 @@ class _Lane extends StatelessWidget {
 }
 
 class _GapCard extends StatelessWidget {
-  const _GapCard({required this.profile});
+  const _GapStudentGlassCard({required this.profile});
 
   final CompetencyReadinessProfile profile;
 
@@ -246,7 +246,7 @@ class _GapCard extends StatelessWidget {
 }
 
 class _ReasonCodeCard extends StatelessWidget {
-  const _ReasonCodeCard({required this.profile});
+  const _ReasonCodeStudentGlassCard({required this.profile});
 
   final CompetencyReadinessProfile profile;
 

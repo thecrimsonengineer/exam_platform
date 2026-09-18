@@ -374,7 +374,7 @@ class _CapacityGrid extends StatelessWidget {
               .map(
                 (item) => SizedBox(
                   width: width,
-                  child: _CapacityCard(
+                  child: _CapacityStudentGlassCard(
                     key: ValueKey(item.key),
                     icon: item.icon,
                     value: item.value,
@@ -390,7 +390,7 @@ class _CapacityGrid extends StatelessWidget {
 }
 
 class _CapacityCard extends StatelessWidget {
-  const _CapacityCard({
+  const _CapacityStudentGlassCard({
     super.key,
     required this.icon,
     required this.value,
