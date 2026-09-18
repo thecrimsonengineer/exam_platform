@@ -73,11 +73,13 @@ void main() {
       'lib/screens/courses/csp/quiz/widgets/answers/answer_option_card.dart',
     );
     final twin = read('lib/features/learning_twin/ui/learning_twin_card.dart');
+    final overviewHero = read('lib/widgets/csp/hero_card.dart');
 
     expect(question, contains('StudentGlassSurface'));
     expect(question, contains('gradient: QuizColors.questionGradient'));
     expect(answer, contains('StudentGlassSurface'));
     expect(twin, contains('StudentGlassCard'));
+    expect(overviewHero, contains('StudentGlassSurface'));
   });
 
   test('high-frequency learner routes retain glass card surfaces', () {
