@@ -1,0 +1,68 @@
+name: M7D Adaptive Daily Planner
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+jobs:
+  verify-m7d:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen M7 contract and M7D test floor
+        run: python3 tools/verify_m7_contract.py --phase m7d
+
+      - name: Diff and whitespace audit
+        run: |
+          git diff --check origin/ui-premium-csp-logo...HEAD
+          git diff --name-only origin/ui-premium-csp-logo...HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check M7D formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/models/daily_study_plan.dart \
+            lib/features/exam_readiness/models/learning_priority_score.dart \
+            lib/features/exam_readiness/models/study_plan_block.dart \
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+            lib/features/exam_readiness/services/evidence_debt_service.dart \
+            lib/features/exam_readiness/services/learning_priority_engine.dart \
+            lib/features/exam_readiness/services/planner_constraints.dart \
+            lib/features/exam_readiness/services/daily_study_plan_service.dart \
+            lib/features/exam_readiness/services/ultra_hard_availability_service.dart \
+            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+            test/features/exam_readiness/m7d
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run M7D targeted tests
+        run: flutter test test/features/exam_readiness/m7d
+
+      - name: Run Exam Readiness integration regressions
+        run: |
+          flutter test test/features/exam_readiness/m7b/m7b_legacy_progress_bridge_test.dart
+          flutter test test/features/exam_readiness/m7c/m7c_legacy_progress_ui_test.dart
+          flutter test test/features/exam_readiness/exam_readiness_dark_mode_contract_test.dart
+          flutter test test/screens/practice/exam_readiness_entry_contract_test.dart
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release
