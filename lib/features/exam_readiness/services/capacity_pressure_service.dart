@@ -126,7 +126,7 @@ class CapacityPressureService {
 
     final minMinutes = (rawMin * phaseMultiplier).round();
     final maxMinutes = (rawMax * phaseMultiplier).round();
-    final available = capacity.plannedMinutesRemaining.clamp(0, 100000000);
+    final available = capacity.plannedMinutesRemaining.clamp(0, 100000000).toInt();
 
     final state = _state(
       availableMinutes: available,
