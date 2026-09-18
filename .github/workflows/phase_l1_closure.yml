@@ -1,9 +1,6 @@
 name: Phase L1 Closure Gate
 
 on:
-  push:
-    branches:
-      - phase-l-lab-engine
   workflow_dispatch:
 
 permissions:
