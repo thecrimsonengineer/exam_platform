@@ -82,7 +82,7 @@ void main() {
     expect(find.text('Exam Readiness'), findsOneWidget);
 
     await tester.tap(find.text('Exam Readiness'));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.byType(ExamReadinessPlanScreen), findsOneWidget);
   });
