@@ -299,25 +299,42 @@ class _DimensionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: scheme.outlineVariant),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Text(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final value = Text(
             percent == null ? 'INSUFFICIENT EVIDENCE' : '$percent%',
             style: theme.textTheme.labelLarge?.copyWith(
               color: percent == null ? scheme.onSurfaceVariant : scheme.primary,
               fontWeight: FontWeight.w900,
             ),
-          ),
-        ],
+          );
+
+          final labelWidget = Text(
+            label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          );
+
+          if (constraints.maxWidth < 340) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                labelWidget,
+                const SizedBox(height: 8),
+                value,
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              Expanded(child: labelWidget),
+              const SizedBox(width: 12),
+              value,
+            ],
+          );
+        },
       ),
     );
   }
