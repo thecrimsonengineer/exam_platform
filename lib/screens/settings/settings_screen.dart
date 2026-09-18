@@ -419,27 +419,24 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildHero(BuildContext context) {
     final compact = MediaQuery.sizeOf(context).width < 650;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('settings-hero'),
       width: double.infinity,
       constraints: BoxConstraints(minHeight: compact ? 320 : 290),
       padding: EdgeInsets.all(compact ? 22 : 28),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [_navy, _blue, _violet],
-          stops: [0.0, 0.58, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.20),
-            blurRadius: 30,
-            offset: const Offset(0, 16),
-          ),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          _navy.withValues(alpha: 0.82),
+          _blue.withValues(alpha: 0.76),
+          _violet.withValues(alpha: 0.72),
         ],
+        stops: const [0.0, 0.58, 1.0],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.14),
+      shadowColor: AppColors.primary.withValues(alpha: 0.18),
       child: Stack(
         children: [
           Positioned(
@@ -684,23 +681,18 @@ class SettingsScreen extends StatelessWidget {
         key: ValueKey(item.keyName),
         onTap: item.onTap,
         borderRadius: BorderRadius.circular(20),
-        child: Ink(
+        child: StudentGlassSurface(
           padding: const EdgeInsets.all(17),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: item.gradient,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: item.gradient.first.withValues(alpha: 0.15),
-                blurRadius: 17,
-                offset: const Offset(0, 8),
-              ),
-            ],
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: item.gradient
+                .map((color) => color.withValues(alpha: 0.60))
+                .toList(),
           ),
+          borderColor: Colors.white.withValues(alpha: 0.24),
+          shadowColor: item.gradient.first.withValues(alpha: 0.15),
           child: Stack(
             children: [
               Positioned(
@@ -774,20 +766,12 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _settingsGroup({required List<Widget> children}) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(21),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(21),
+      tint: _surface.withValues(alpha: 0.50),
+      borderColor: _border.withValues(alpha: 0.72),
+      shadowColor: _navy.withValues(alpha: 0.07),
       child: Column(
         children: [
           for (var i = 0; i < children.length; i++) ...[
@@ -837,14 +821,12 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildAboutCard() {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFD),
-        borderRadius: BorderRadius.circular(21),
-        border: Border.all(color: _border),
-      ),
+      borderRadius: BorderRadius.circular(21),
+      tint: const Color(0xFFF8FAFD).withValues(alpha: 0.48),
+      borderColor: _border.withValues(alpha: 0.72),
       child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

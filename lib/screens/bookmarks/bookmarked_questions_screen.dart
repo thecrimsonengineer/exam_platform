@@ -159,14 +159,12 @@ class _BookmarkedQuestionsScreenState extends State<BookmarkedQuestionsScreen> {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 920),
-        child: Container(
+        child: StudentGlassSurface(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: _surface,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _border),
-          ),
+          borderRadius: BorderRadius.circular(20),
+          tint: _surface.withValues(alpha: widget.isDarkMode ? 0.58 : 0.50),
+          borderColor: _border.withValues(alpha: 0.72),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -236,22 +234,14 @@ class _BookmarkedQuestionsScreenState extends State<BookmarkedQuestionsScreen> {
             key: ValueKey('bookmarked-question-${question.id}'),
             onTap: () => _openQuestion(question),
             borderRadius: BorderRadius.circular(18),
-            child: Ink(
+            child: StudentGlassSurface(
               width: double.infinity,
               padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: _surface,
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: _border),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: widget.isDarkMode ? 0.16 : 0.04,
-                    ),
-                    blurRadius: 14,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
+              borderRadius: BorderRadius.circular(18),
+              tint: _surface.withValues(alpha: widget.isDarkMode ? 0.58 : 0.50),
+              borderColor: _border.withValues(alpha: 0.72),
+              shadowColor: Colors.black.withValues(
+                alpha: widget.isDarkMode ? 0.16 : 0.07,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,14 +402,12 @@ class _BookmarkedQuestionsScreenState extends State<BookmarkedQuestionsScreen> {
         padding: const EdgeInsets.all(24),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 520),
-          child: Container(
+          child: StudentGlassSurface(
             width: double.infinity,
             padding: const EdgeInsets.all(28),
-            decoration: BoxDecoration(
-              color: _surface,
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(color: _border),
-            ),
+            borderRadius: BorderRadius.circular(22),
+            tint: _surface.withValues(alpha: widget.isDarkMode ? 0.58 : 0.50),
+            borderColor: _border.withValues(alpha: 0.72),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

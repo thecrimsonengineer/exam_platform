@@ -39,14 +39,17 @@ class DarkCspPracticeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  StudentGlassSurface(
+
                     width: double.infinity,
+
                     padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF111B2C),
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color(0xFF25344A)),
-                    ),
+
+                    borderRadius: BorderRadius.circular(18),
+
+                    tint: const Color(0xFF111B2C).withValues(alpha: 0.58),
+
+                    borderColor: const Color(0xFF25344A).withValues(alpha: 0.72),
                     child: Text(
                       description,
                       style: const TextStyle(

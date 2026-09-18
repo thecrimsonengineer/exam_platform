@@ -159,13 +159,7 @@ class LegalDocumentScreen extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFF3F6FC), Color(0xFFF7F9FC), Color(0xFFF8F7FC)],
-          ),
-        ),
+        color: Colors.transparent,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
           children: [
@@ -175,17 +169,20 @@ class LegalDocumentScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    StudentGlassSurface(
                       width: double.infinity,
                       padding: const EdgeInsets.all(22),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [_navy, _blue, _violet],
-                        ),
+                      borderRadius: BorderRadius.circular(22),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          _navy.withValues(alpha: 0.82),
+                          _blue.withValues(alpha: 0.76),
+                          _violet.withValues(alpha: 0.72),
+                        ],
                       ),
+                      borderColor: Colors.white.withValues(alpha: 0.14),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -217,15 +214,13 @@ class LegalDocumentScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 18),
                     ...document.sections.map(
-                      (section) => Container(
+                      (section) => StudentGlassSurface(
                         width: double.infinity,
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(color: _border),
-                        ),
+                        borderRadius: BorderRadius.circular(18),
+                        tint: Colors.white.withValues(alpha: 0.50),
+                        borderColor: _border.withValues(alpha: 0.72),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

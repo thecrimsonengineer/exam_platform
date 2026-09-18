@@ -32,14 +32,17 @@ class CspPracticeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                StudentGlassSurface(
+
                   width: double.infinity,
+
                   padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: const Color(0xFFE3E8F0)),
-                  ),
+
+                  borderRadius: BorderRadius.circular(18),
+
+                  tint: Colors.white.withValues(alpha: 0.50),
+
+                  borderColor: const Color(0xFFE3E8F0).withValues(alpha: 0.72),
                   child: Text(
                     description,
                     style: const TextStyle(

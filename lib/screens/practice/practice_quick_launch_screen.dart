@@ -212,16 +212,12 @@ class _LoadingCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: 0.75),
-        ),
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.52),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.64),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -264,16 +260,12 @@ class _ErrorCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: 0.75),
-        ),
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.52),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.64),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
