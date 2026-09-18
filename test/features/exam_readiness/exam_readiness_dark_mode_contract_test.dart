@@ -3,15 +3,29 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('root MaterialApp follows the persisted learner theme mode', () {
-    final source = File('lib/main.dart').readAsStringSync();
+  test('exam readiness entry preserves the learner theme', () {
+    final source = File(
+      'lib/screens/practice/practice_hub_screen.dart',
+    ).readAsStringSync();
 
-    expect(source, contains('ThemeModeService.isDarkMode'));
-    expect(source, contains('darkTheme: AppTheme.darkTheme'));
+    expect(source, contains('examReadinessRoute<void>'));
     expect(
       source,
-      contains('themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light'),
+      contains("Theme.of(context).brightness == Brightness.dark"),
     );
+  });
+
+  test('nested exam readiness routes preserve the active theme', () {
+    final planSource = File(
+      'lib/features/exam_readiness/screens/exam_readiness_plan_screen.dart',
+    ).readAsStringSync();
+    final profileSource = File(
+      'lib/features/exam_readiness/screens/readiness_profile_screen.dart',
+    ).readAsStringSync();
+
+    expect(planSource, contains('examReadinessRoute<ExamStudyPlan>'));
+    expect(planSource, contains('examReadinessRoute<void>'));
+    expect(profileSource, contains('examReadinessRoute<void>'));
   });
 
   test('new exam readiness screens use theme-derived surfaces', () {
@@ -33,7 +47,7 @@ void main() {
       expect(
         source,
         isNot(contains('backgroundColor: Colors.white')),
-        reason: '$path must not force a light-only scaffold/surface.',
+        reason: '$path must not force a light-only scaffold or surface.',
       );
     }
   });
