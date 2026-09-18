@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 import '../../../theme/study/study_colors_dark.dart';
 import '../../../theme/study/study_icons.dart';
@@ -56,17 +58,13 @@ class DarkStudySubtopicRenderer extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 26),
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
-      decoration: BoxDecoration(
-        color: DarkStudyColors.primaryLight,
-        borderRadius: StudyRadius.large,
-        border: Border.all(
-          color: DarkStudyColors.primary.withValues(alpha: 0.12),
-        ),
-      ),
+      borderRadius: StudyRadius.large,
+      tint: DarkStudyColors.primaryLight.withValues(alpha: 0.52),
+      borderColor: DarkStudyColors.primary.withValues(alpha: 0.18),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -518,15 +516,12 @@ class DarkStudySubtopicRenderer extends StatelessWidget {
     required Color background,
     required Widget child,
   }) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 26),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: accent.withValues(alpha: 0.14)),
-        boxShadow: StudyShadows.soft,
-      ),
+      borderRadius: StudyRadius.large,
+      tint: background.withValues(alpha: 0.54),
+      borderColor: accent.withValues(alpha: 0.18),
       child: ClipRRect(
         borderRadius: StudyRadius.large,
         child: Column(

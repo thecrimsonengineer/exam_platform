@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_competency_guidance.dart';
 import 'package:flutter/material.dart';
 
+import '../../../theme/glass/student_glass.dart';
+
 import '../../../app/theme.dart';
 
 import '../../../models/study_content.dart';
@@ -147,7 +149,7 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
     final subtopicCount = _orderedSubtopics().length;
 
     return Container(
-      color: DarkStudyColors.background,
+      color: Colors.transparent,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -386,15 +388,12 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
     required int topicCount,
     required int subtopicCount,
   }) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: DarkStudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: DarkStudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
+      borderRadius: StudyRadius.large,
+      tint: DarkStudyColors.surface.withValues(alpha: 0.56),
+      borderColor: DarkStudyColors.border.withValues(alpha: 0.72),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -502,27 +501,19 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
     final completionRatio = _topicCompletionRatio(topic);
     final isCompleted = subtopicCount > 0 && completedCount == subtopicCount;
 
-    return Container(
+    return StudentGlassSurface(
       key: _topicKeys.putIfAbsent(topicIndex, () => GlobalKey()),
-      decoration: BoxDecoration(
-        color: DarkStudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(
-          color: isExpanded
-              ? DarkStudyColors.primary.withValues(alpha: 0.34)
-              : DarkStudyColors.border,
-          width: isExpanded ? 1.25 : 1,
-        ),
-        boxShadow: isExpanded ? StudyShadows.soft : const [],
-      ),
+      borderRadius: StudyRadius.large,
+      tint: DarkStudyColors.surface.withValues(alpha: isExpanded ? 0.62 : 0.54),
+      borderColor: isExpanded
+          ? DarkStudyColors.primary.withValues(alpha: 0.34)
+          : DarkStudyColors.border.withValues(alpha: 0.72),
       child: ClipRRect(
         borderRadius: StudyRadius.large,
         child: Column(
           children: [
             Material(
-              color: isExpanded
-                  ? DarkStudyColors.primaryLight.withValues(alpha: 0.42)
-                  : DarkStudyColors.surface,
+              color: Colors.transparent,
               child: InkWell(
                 onTap: () {
                   setState(() {
@@ -775,7 +766,7 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
     final globalIndex = _globalSubtopicIndex(topicIndex, subtopicIndex);
 
     return Material(
-      color: DarkStudyColors.surfaceSoft,
+      color: DarkStudyColors.surfaceSoft.withValues(alpha: 0.42),
       borderRadius: StudyRadius.medium,
       child: InkWell(
         onTap: () async {
