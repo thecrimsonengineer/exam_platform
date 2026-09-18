@@ -24,6 +24,31 @@ Future<ExamStudyPlanRepository> _repositoryWithPlan() async {
   return repository;
 }
 
+class _PermissionDeniedRemote implements ExamStudyPlanRemoteStore {
+  int saveCalls = 0;
+  int deactivateCalls = 0;
+
+  @override
+  Future<List<ExamStudyPlan>> loadPlans(String userId) async {
+    throw StateError('cloud_firestore/permission-denied');
+  }
+
+  @override
+  Future<void> savePlan(ExamStudyPlan plan) async {
+    saveCalls++;
+    throw StateError('cloud_firestore/permission-denied');
+  }
+
+  @override
+  Future<void> deactivateOtherPlans({
+    required String userId,
+    required String activePlanId,
+  }) async {
+    deactivateCalls++;
+    throw StateError('cloud_firestore/permission-denied');
+  }
+}
+
 Widget _app(Widget home, {bool dark = false}) {
   return MaterialApp(
     theme: dark ? ThemeData.dark() : ThemeData.light(),
@@ -294,5 +319,35 @@ void main() {
 
       expect(find.byKey(const ValueKey('m7a-edit-plan')), findsOneWidget);
     });
+
+    testWidgets(
+      'create study plan is local-only even when remote store would deny',
+      (tester) async {
+        final remote = _PermissionDeniedRemote();
+        final repository = ExamStudyPlanRepository(
+          userIdOverride: 'u1',
+          remoteStore: remote,
+        );
+
+        await tester.pumpWidget(
+          _app(
+            ExamPlanSetupScreen(
+              repository: repository,
+              now: () => DateTime(2026, 9, 18, 10),
+            ),
+          ),
+        );
+
+        final save = find.byKey(const ValueKey('m7a-save-plan'));
+        await tester.scrollUntilVisible(save, 300);
+        await tester.tap(save);
+        await tester.pumpAndSettle();
+
+        expect(remote.saveCalls, 0);
+        expect(remote.deactivateCalls, 0);
+        expect(await repository.loadActivePlan(), isNotNull);
+        expect(find.byKey(const ValueKey('m7a-plan-error')), findsNothing);
+      },
+    );
   });
 }
