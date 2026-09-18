@@ -319,11 +319,7 @@ class _DimensionCard extends StatelessWidget {
           if (constraints.maxWidth < 340) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                labelWidget,
-                const SizedBox(height: 8),
-                value,
-              ],
+              children: [labelWidget, const SizedBox(height: 8), value],
             );
           }
 
