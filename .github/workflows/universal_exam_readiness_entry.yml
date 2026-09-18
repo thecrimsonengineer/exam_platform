@@ -1,4 +1,4 @@
-name: Universal Exam Readiness Entry
+name: Home Exam Readiness Entry
 
 on:
   push:
@@ -28,14 +28,17 @@ jobs:
       - name: Check touched-file formatting
         run: |
           dart format --output=none --set-exit-if-changed \
+            lib/screens/home/home_screen.dart \
+            lib/screens/home/home_screen_dark.dart \
             lib/screens/practice/practice_hub_screen.dart \
             test/screens/practice/practice_hub_screen_test.dart \
-            test/screens/practice/exam_readiness_entry_contract_test.dart
+            test/screens/practice/exam_readiness_entry_contract_test.dart \
+            test/features/exam_readiness/exam_readiness_dark_mode_contract_test.dart
 
       - name: Flutter analyze
         run: flutter analyze --no-fatal-infos
 
-      - name: Test universal Practice entry
+      - name: Test Home readiness entry and Practice removal
         run: |
           flutter test test/screens/practice/practice_hub_screen_test.dart
           flutter test test/screens/practice/exam_readiness_entry_contract_test.dart
