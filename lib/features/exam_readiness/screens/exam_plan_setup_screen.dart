@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../services/auth/learner_local_identity.dart';
 import '../models/exam_study_plan.dart';
+import '../models/study_capacity_snapshot.dart';
 import '../repositories/exam_study_plan_repository.dart';
 import '../services/exam_study_capacity_service.dart';
 
@@ -322,7 +323,7 @@ class _PlanCard extends StatelessWidget {
 class _CapacityPreview extends StatelessWidget {
   const _CapacityPreview({required this.snapshot});
 
-  final dynamic snapshot;
+  final StudyCapacitySnapshot snapshot;
 
   @override
   Widget build(BuildContext context) {
