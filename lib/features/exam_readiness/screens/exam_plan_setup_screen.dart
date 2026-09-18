@@ -163,6 +163,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
       appBar: AppBar(title: const Text('Exam Readiness Plan')),
       body: SafeArea(
         child: ListView(
+          key: const ValueKey('m7a-setup-list'),
           padding: const EdgeInsets.fromLTRB(16, 18, 16, 32),
           children: [
             Text(
