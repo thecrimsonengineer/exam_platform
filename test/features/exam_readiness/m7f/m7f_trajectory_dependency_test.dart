@@ -257,6 +257,37 @@ void main() {
       },
     );
 
+    test('evidence gap is never treated as observed root weakness', () {
+      final result = service.identify(
+        dependencies: [
+          dependency(dependent: 'd03_c02'),
+          dependency(dependent: 'd03_c03'),
+        ],
+        profiles: {
+          'd03_c01': m7dProfile(
+            competencyId: 'd03_c01',
+            gaps: [
+              m7dGap(
+                competencyId: 'd03_c01',
+                type: ReadinessGapType.evidenceGap,
+                severity: ReadinessGapSeverity.critical,
+                evidenceLimited: false,
+              ),
+            ],
+          ),
+          'd03_c02': m7dProfile(
+            competencyId: 'd03_c02',
+            gaps: [m7dGap(competencyId: 'd03_c02')],
+          ),
+          'd03_c03': m7dProfile(
+            competencyId: 'd03_c03',
+            gaps: [m7dGap(competencyId: 'd03_c03')],
+          ),
+        },
+      );
+      expect(result, isEmpty);
+    });
+
     test(
       'evidence-limited prerequisite is not treated as observed root gap',
       () {
