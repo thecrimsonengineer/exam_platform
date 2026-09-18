@@ -25,8 +25,7 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
   late Future<_M7APlanViewData> _future;
 
   ExamStudyPlanRepository get _repository =>
-      widget.repository ??
-      ExamStudyPlanRepository(remoteStore: FirebaseExamStudyPlanRemoteStore());
+      widget.repository ?? ExamStudyPlanRepository();
 
   DateTime get _now => widget.now?.call() ?? DateTime.now();
 
@@ -36,31 +35,21 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
     _future = _load();
   }
 
-  Future<_M7APlanViewData> _load({bool refreshRemote = false}) async {
-    ExamStudyPlan? plan;
-    String? syncNotice;
-
-    try {
-      plan = await _repository.loadActivePlan(refreshRemote: refreshRemote);
-    } catch (_) {
-      plan = await _repository.loadActivePlan();
-      syncNotice =
-          'Cloud refresh was unavailable. Showing the latest local plan.';
-    }
+  Future<_M7APlanViewData> _load() async {
+    final plan = await _repository.loadActivePlan();
 
     if (plan == null) {
-      return _M7APlanViewData(plan: null, snapshot: null, notice: syncNotice);
+      return const _M7APlanViewData(plan: null, snapshot: null);
     }
 
     return _M7APlanViewData(
       plan: plan,
       snapshot: _capacityService.calculate(plan: plan, now: _now),
-      notice: syncNotice,
     );
   }
 
-  Future<void> _refresh({bool remote = false}) async {
-    final next = _load(refreshRemote: remote);
+  Future<void> _refresh() async {
+    final next = _load();
     setState(() => _future = next);
     await next;
   }
@@ -93,7 +82,7 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
           IconButton(
             key: const ValueKey('m7a-refresh-cloud'),
             tooltip: 'Refresh plan',
-            onPressed: () => _refresh(remote: true),
+            onPressed: _refresh,
             icon: const Icon(Icons.sync_rounded),
           ),
         ],
