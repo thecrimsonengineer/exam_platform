@@ -39,13 +39,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const _background = Color(0xFFF3F6FC);
-  static const _surface = Colors.white;
+  static const _surfaceBase = Colors.white;
+  static const _surface = Color(0xCFFFFFFF);
   static const _navy = Color(0xFF102A56);
   static const _blue = Color(0xFF1E4C91);
   static const _violet = Color(0xFF5B36A8);
   static const _textPrimary = Color(0xFF18243A);
   static const _textMuted = Color(0xFF718096);
-  static const _border = Color(0xFFE1E7F0);
+  static const _borderBase = Color(0xFFE1E7F0);
+  static const _border = Color(0xA6FFFFFF);
+
+  static const _legacyGlassTokens = (_surfaceBase, _borderBase);
 
   final StudentLearningPositionService _positionService =
       const StudentLearningPositionService();
