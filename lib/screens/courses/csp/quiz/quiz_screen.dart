@@ -7,8 +7,10 @@ import '../../../../models/question.dart';
 import '../../../../services/bookmark_service.dart';
 import '../../../../services/quiz_service.dart';
 import '../../../../services/student_question_progress_service.dart';
+import '../../../../services/settings/theme_mode_service.dart';
 
 import '../study_content_screen.dart';
+import '../study_content_screen_dark.dart';
 
 import 'quiz_domain_label.dart';
 import 'result/result_screen.dart';
@@ -233,16 +235,27 @@ class _QuizScreenState extends State<QuizScreen> {
           : hierarchyTags[2];
     }
 
+    final isDarkMode = ThemeModeService.isDarkMode.value;
+
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => StudyContentScreen(
-          domainId: domainId,
-          competencyId: competencyId,
-          domainTitle: csp11QuizDomainTitle(question.domain),
-          loadingTitle: competencyId.toUpperCase(),
-          initialTopicId: initialTopicId,
-          initialSubtopicId: initialSubtopicId,
-        ),
+        builder: (_) => isDarkMode
+            ? DarkStudyContentScreen(
+                domainId: domainId,
+                competencyId: competencyId,
+                domainTitle: csp11QuizDomainTitle(question.domain),
+                loadingTitle: competencyId.toUpperCase(),
+                initialTopicId: initialTopicId,
+                initialSubtopicId: initialSubtopicId,
+              )
+            : StudyContentScreen(
+                domainId: domainId,
+                competencyId: competencyId,
+                domainTitle: csp11QuizDomainTitle(question.domain),
+                loadingTitle: competencyId.toUpperCase(),
+                initialTopicId: initialTopicId,
+                initialSubtopicId: initialSubtopicId,
+              ),
       ),
     );
   }
