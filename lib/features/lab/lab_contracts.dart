@@ -754,6 +754,7 @@ class LabPackage {
     required this.metadata,
     required this.stateRegistry,
     required Iterable<LabNodeContract> nodes,
+    Iterable<LabConsequence> consequences = const <LabConsequence>[],
     Iterable<Map<String, Object?>> gates = const <Map<String, Object?>>[],
     Iterable<Map<String, Object?>> endings = const <Map<String, Object?>>[],
     Iterable<Map<String, Object?>> characters =
@@ -762,6 +763,7 @@ class LabPackage {
     Map<String, Object?> debrief = const <String, Object?>{},
     Map<String, Object?> learningSignals = const <String, Object?>{},
   })  : nodes = List<LabNodeContract>.unmodifiable(nodes),
+        consequences = List<LabConsequence>.unmodifiable(consequences),
         gates = List<Map<String, Object?>>.unmodifiable(
           gates.map(Map<String, Object?>.unmodifiable),
         ),
@@ -877,6 +879,8 @@ class LabPackage {
           : metadata.sources,
     );
 
+    final consequenceMaps = mapList(json['consequences'], 'consequence');
+
     return LabPackage(
       schemaVersion: kLabSchemaVersion,
       metadata: mergedMetadata,
@@ -884,6 +888,7 @@ class LabPackage {
         stateSchemaRaw.cast<String, Object?>(),
       ),
       nodes: nodes,
+      consequences: consequenceMaps.map(LabConsequence.fromJson),
       gates: mapList(gatesRaw, 'gate'),
       endings: mapList(endingsRaw, 'ending'),
       characters: mapList(json['characters'], 'character'),
@@ -911,6 +916,7 @@ class LabPackage {
   final LabMetadata metadata;
   final LabStateRegistry stateRegistry;
   final List<LabNodeContract> nodes;
+  final List<LabConsequence> consequences;
   final List<Map<String, Object?>> gates;
   final List<Map<String, Object?>> endings;
   final List<Map<String, Object?>> characters;
@@ -924,6 +930,7 @@ class LabPackage {
       metadata: metadata.withLifecycle(next),
       stateRegistry: stateRegistry,
       nodes: nodes,
+      consequences: consequences,
       gates: gates,
       endings: endings,
       characters: characters,
@@ -940,6 +947,7 @@ class LabPackage {
       metadata: metadata,
       stateRegistry: stateRegistry,
       nodes: replacement,
+      consequences: consequences,
       gates: gates,
       endings: endings,
       characters: characters,

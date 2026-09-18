@@ -33,15 +33,20 @@ class LabDeterministicRuntime {
     required String optionId,
     required String applicationKey,
     required Iterable<LabStoryGate> gates,
+    Map<String, LabConsequence> consequenceRegistry =
+        const <String, LabConsequence>{},
   }) {
     node.validate();
 
     final option = node.requireOption(optionId);
-    final consequence = option.consequence;
+    final consequence = option.consequence ??
+        (option.consequenceId == null
+            ? null
+            : consequenceRegistry[option.consequenceId]);
 
     if (consequence == null) {
       throw LabContractException(
-        'L1 runtime cannot execute unresolved consequence reference ' +
+        'Runtime cannot resolve consequence reference ' +
             option.consequenceId.toString() +
             '.',
       );

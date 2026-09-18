@@ -47,6 +47,28 @@ class LabState {
     );
   }
 
+  factory LabState.restore({
+    required LabStateRegistry registry,
+    required Map<String, Object?> values,
+    Iterable<String> evidenceUnlocked = const <String>[],
+    Iterable<String> appliedConsequenceKeys = const <String>[],
+    int simulatedMinutes = 0,
+  }) {
+    if (simulatedMinutes < 0) {
+      throw const LabContractException(
+        'Restored simulated time cannot be negative.',
+      );
+    }
+
+    return LabState._(
+      registry: registry,
+      values: registry.normalizeStartingState(values),
+      evidenceUnlocked: evidenceUnlocked.toSet(),
+      appliedConsequenceKeys: appliedConsequenceKeys.toSet(),
+      simulatedMinutes: simulatedMinutes,
+    );
+  }
+
   final LabStateRegistry registry;
   final Map<String, Object?> _values;
   final Set<String> _evidenceUnlocked;
@@ -55,6 +77,7 @@ class LabState {
 
   Map<String, Object?> get values => _values;
   Set<String> get evidenceUnlocked => _evidenceUnlocked;
+  Set<String> get appliedConsequenceKeys => _appliedConsequenceKeys;
 
   Object? valueOf(String id) {
     registry.require(id);
