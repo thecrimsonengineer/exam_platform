@@ -87,6 +87,7 @@ class RootGapReasoningService {
     return profile.gaps.any(
       (gap) =>
           !gap.evidenceLimited &&
+          gap.type != ReadinessGapType.evidenceGap &&
           (gap.severity == ReadinessGapSeverity.high ||
               gap.severity == ReadinessGapSeverity.critical),
     );
