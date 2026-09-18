@@ -1,9 +1,6 @@
 name: M7A Exam Plan and Capacity
 
 on:
-  push:
-    branches:
-      - phase-m7-exam-readiness
   workflow_dispatch:
 
 jobs:
