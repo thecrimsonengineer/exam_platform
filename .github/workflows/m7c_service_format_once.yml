@@ -1,0 +1,39 @@
+name: M7C Service Formatter
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+
+jobs:
+  format-service:
+    if: ${{ !startsWith(github.event.head_commit.message, 'Format M7C readiness service') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-m7-exam-readiness
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Format service
+        run: dart format lib/features/exam_readiness/services/readiness_profile_service.dart
+
+      - name: Commit formatting
+        run: |
+          if git diff --quiet; then
+            echo "Already formatted."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/features/exam_readiness/services/readiness_profile_service.dart
+          git commit -m "Format M7C readiness service"
+          git push origin HEAD:phase-m7-exam-readiness
