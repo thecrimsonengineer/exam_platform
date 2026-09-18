@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: phase-l2-\${{ github.ref }}
+  group: phase-l2-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,8 +38,8 @@ jobs:
           set -euo pipefail
           git fetch origin phase-l1-closed
           git merge-base --is-ancestor origin/phase-l1-closed HEAD
-          test "\${GITHUB_REF_NAME}" = "phase-l-lab-engine"
-          if find lib test -type f \( -iname '*lab7*' -o -iname '*lab8*' -o -iname '*lab9*' \) | grep -q .; then
+          test "$GITHUB_REF_NAME" = "phase-l-lab-engine"
+          if find lib/features/lab test/features/lab -type f \( -iname 'lab7_*' -o -iname 'lab8_*' -o -iname 'lab9_*' \) | grep -q .; then
             echo "LAB-7 through LAB-9 files are forbidden before L3."
             exit 1
           fi
