@@ -34,7 +34,7 @@ class NoteSectionsScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final section = sections[index];
 
-                return Card(
+                return StudentGlassCard(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),

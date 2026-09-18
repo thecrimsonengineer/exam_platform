@@ -34,7 +34,7 @@ class NotesListScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final note = notes[index];
 
-                return Card(
+                return StudentGlassCard(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
