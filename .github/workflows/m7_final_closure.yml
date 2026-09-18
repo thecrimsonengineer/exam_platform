@@ -1,0 +1,62 @@
+name: M7 Final Closure
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+jobs:
+  verify-m7-final:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen M7 contract through M7F
+        run: python3 tools/verify_m7_contract.py --phase m7f
+
+      - name: Diff and whitespace audit
+        run: |
+          git diff --check origin/ui-premium-csp-logo...HEAD
+          git diff --name-only origin/ui-premium-csp-logo...HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify Exam Readiness formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness \
+            test/features/exam_readiness
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run complete Exam Readiness test tree
+        run: flutter test test/features/exam_readiness
+
+      - name: Run navigation and Practice entry contracts
+        run: |
+          flutter test test/screens/navigation/bottom_navigation_contract_test.dart
+          flutter test test/screens/practice/exam_readiness_entry_contract_test.dart
+          flutter test test/screens/practice/practice_hub_screen_test.dart
+          flutter test test/services/practice_mode_service_test.dart
+
+      - name: Run Learning Twin timed-exam suppression integration
+        run: flutter test test/features/learning_twin/integration/learning_twin_pre_practice_guidance_test.dart
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release
