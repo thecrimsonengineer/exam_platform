@@ -4,8 +4,9 @@ import '../../models/question.dart';
 import '../../models/student_question_progress.dart';
 import '../quiz_service.dart';
 import '../student_question_progress_service.dart';
+import '../ultra_hard_question_contract.dart';
 
-enum PracticeMode { dailyChallenge, randomQuiz, weakAreas }
+enum PracticeMode { dailyChallenge, randomQuiz, weakAreas, ultraHardExamReadiness }
 
 typedef QuestionProgressLoader =
     Future<Map<int, StudentQuestionProgress>> Function();
@@ -43,6 +44,8 @@ class PracticeModeService {
   static const int dailyQuestionCount = 5;
   static const int randomQuestionCount = 10;
   static const int weakQuestionCount = 10;
+  static const int ultraHardQuestionCount = 20;
+  static const int ultraHardMinimumQuestionCount = 5;
 
   // Keep the evidence boundary aligned with the existing M5 weak-domain
   // interpretation: at least five answered questions and mastery below 65%.
@@ -76,7 +79,46 @@ class PracticeModeService {
         return _buildRandomQuiz(published);
       case PracticeMode.weakAreas:
         return _buildWeakAreas(published);
+      case PracticeMode.ultraHardExamReadiness:
+        return _buildUltraHardExamReadiness(published);
     }
+  }
+
+  PracticeSessionPlan _buildUltraHardExamReadiness(
+    List<Question> published,
+  ) {
+    final ultraHard = published
+        .where(
+          (question) => question.tags.any(
+            (tag) =>
+                tag.trim().toLowerCase() ==
+                UltraHardQuestionContract.classificationTag,
+          ),
+        )
+        .toList(growable: true);
+
+    if (ultraHard.length < ultraHardMinimumQuestionCount) {
+      throw StateError(
+        'Ultra Hard Exam Readiness requires at least '
+        '$ultraHardMinimumQuestionCount published DQG300 questions. '
+        'Currently available: ${ultraHard.length}.',
+      );
+    }
+
+    ultraHard.shuffle();
+    final count = min(ultraHardQuestionCount, ultraHard.length);
+    final questions = ultraHard.take(count).toList(growable: false);
+
+    return PracticeSessionPlan(
+      mode: PracticeMode.ultraHardExamReadiness,
+      title: 'Ultra Hard • Exam Readiness',
+      questions: List<Question>.unmodifiable(questions),
+      domainNumber: 0,
+      notice:
+          'This $count-question readiness session uses only questions that '
+          'passed the strict DQG300 300/300 gate with DQS 100.',
+      usedFallback: false,
+    );
   }
 
   PracticeSessionPlan _buildDailyChallenge(List<Question> published) {
