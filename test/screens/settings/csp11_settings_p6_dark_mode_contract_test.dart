@@ -28,20 +28,24 @@ void main() {
 
     expect(navigation, contains('DarkHomeScreen'));
     expect(navigation, contains('DarkCspStudyHubScreen'));
+    expect(navigation, contains('PracticeHubScreen'));
+    expect(navigation, contains('LabLibraryScreen'));
     expect(navigation, contains('DarkFlashcardsScreen'));
-    expect(navigation, contains('DarkProgressScreen'));
     expect(navigation, contains('DarkSettingsScreen'));
 
+    expect(navigation, isNot(contains('DarkProgressScreen')));
     expect(navigation, contains('AppTheme.darkTheme'));
 
     expect(navigation, contains('ThemeModeService.isDarkMode'));
   });
 
-  test('P6 provides dark implementations for all five immediate pages', () {
+  test('P6 supports dark mode across the Phase L learner destinations', () {
     final home = read('lib/screens/home/home_screen_dark.dart');
     final study = read(
       'lib/screens/courses/csp/csp_study_hub_screen_dark.dart',
     );
+    final practice = read('lib/screens/practice/practice_hub_screen.dart');
+    final lab = read('lib/screens/lab/lab_library_screen.dart');
     final flashcards = read(
       'lib/screens/flashcards/flashcards_screen_dark.dart',
     );
@@ -50,6 +54,8 @@ void main() {
 
     expect(home, contains('class DarkHomeScreen'));
     expect(study, contains('class DarkCspStudyHubScreen'));
+    expect(practice, contains('Theme.of(context)'));
+    expect(lab, contains('Theme.of(context).brightness'));
     expect(flashcards, contains('class DarkFlashcardsScreen'));
     expect(progress, contains('class DarkProgressScreen'));
     expect(settings, contains('class DarkSettingsScreen'));
