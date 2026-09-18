@@ -1,9 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/question.dart';
+import '../models/question_quality_evidence.dart';
 import 'cloud_question_repository.dart';
+import 'dqg300_question_quality_validator.dart';
 import 'local_question_repository.dart';
 import 'question_quality_validator.dart';
+import 'ultra_hard_question_contract.dart';
 
 class QuestionDraftBatchResult {
   final int addedCount;
@@ -432,6 +435,147 @@ class QuestionBankService {
         throw StateError(
           'Question ID ${existing.id} uses the same stem but different '
           'answers or metadata. Edit the existing question instead.',
+        );
+      }
+
+      prepared.add(
+        _PreparedBulkQuestion(
+          question: Question.fromJson({
+            ...question.toJson(),
+            'id': existing.id,
+          }),
+          existingStatus: existing.status,
+          reused: true,
+        ),
+      );
+    }
+
+    var reusedQuestionCount = 0;
+
+    for (final item in prepared) {
+      if (item.reused) {
+        reusedQuestionCount++;
+      }
+
+      await _publishPreparedQuestion(
+        item.question,
+        existingStatus: item.existingStatus,
+      );
+    }
+
+    return QuestionPreparedBatchPublishResult(
+      publishedQuestionCount: prepared.length,
+      reusedQuestionCount: reusedQuestionCount,
+    );
+  }
+
+  /// Strict DQG300 bulk publication path for Ultra Hard questions.
+  ///
+  /// This path is intentionally separate from [publishPreparedBatch].
+  /// Legacy bulk publication continues to use the existing H0.3 validator.
+  /// Ultra Hard publication requires complete structured DQG300 evidence for
+  /// every question and fails closed unless each result is exactly 300/300
+  /// with DQS 100 and no failed rules.
+  Future<QuestionPreparedBatchPublishResult> publishPreparedUltraHardBatch(
+    List<Question> questions, {
+    required Map<int, QuestionQualityEvidence> qualityEvidenceByQuestionId,
+  }) async {
+    if (questions.isEmpty) {
+      return const QuestionPreparedBatchPublishResult(
+        publishedQuestionCount: 0,
+        reusedQuestionCount: 0,
+      );
+    }
+
+    await _repository.initialize();
+
+    const validator = Dqg300QuestionQualityValidator();
+    final incomingIds = <int>{};
+    final incomingIdentities = <String>{};
+    final prepared = <_PreparedBulkQuestion>[];
+
+    for (final sourceQuestion in questions) {
+      if (!incomingIds.add(sourceQuestion.id)) {
+        throw StateError(
+          'Ultra Hard bulk publish contains duplicate numeric ID '
+          '${sourceQuestion.id}.',
+        );
+      }
+
+      final identity = _normalizedQuestionStem(sourceQuestion.question);
+      if (identity.isEmpty) {
+        throw StateError(
+          'Ultra Hard bulk publish contains an empty question identity.',
+        );
+      }
+
+      if (!incomingIdentities.add(identity)) {
+        throw StateError(
+          'Ultra Hard bulk publish contains the same normalized question '
+          'stem more than once.',
+        );
+      }
+
+      final evidence = qualityEvidenceByQuestionId[sourceQuestion.id];
+      if (evidence == null) {
+        throw StateError(
+          'Ultra Hard question ${sourceQuestion.id} is missing DQG300 evidence.',
+        );
+      }
+
+      final tags = <String>{
+        ...sourceQuestion.tags,
+        UltraHardQuestionContract.classificationTag,
+      }.toList(growable: false);
+
+      final question = Question.fromJson({
+        ...sourceQuestion.toJson(),
+        'difficulty': 'Hard',
+        'tags': tags,
+      });
+
+      final result = validator.validate(question: question, evidence: evidence);
+
+      if (!result.isPublishable ||
+          result.passedRuleCount != 300 ||
+          result.failedRuleCount != 0 ||
+          result.dqs != 100) {
+        throw StateError(
+          'Ultra Hard question ${question.id} failed DQG300: '
+          '${result.passedRuleCount}/300 rules passed, '
+          '${result.failedRuleCount} failed, DQS ${result.dqs}/100.',
+        );
+      }
+
+      final matches = _repository.questions
+          .where((existing) => _sameQuestionIdentity(existing, question))
+          .toList();
+
+      if (matches.length > 1) {
+        throw StateError(
+          'Question identity conflict: multiple managed questions already '
+          'use the same normalized question stem.',
+        );
+      }
+
+      if (matches.isEmpty) {
+        prepared.add(
+          _PreparedBulkQuestion(
+            question: question,
+            existingStatus: null,
+            reused: false,
+          ),
+        );
+        continue;
+      }
+
+      final existing = matches.single;
+
+      if (!_samePlacement(existing, question)) {
+        throw StateError(
+          'Duplicate Ultra Hard question already exists under '
+          '${existing.competencyId} / ${existing.subtopicId} / '
+          '${existing.topicId}. Bulk publish was stopped before writing.',
         );
       }
 
