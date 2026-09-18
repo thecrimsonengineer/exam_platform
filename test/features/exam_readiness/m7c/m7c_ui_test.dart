@@ -184,7 +184,8 @@ void main() {
       await tester.pumpWidget(_app(await _screenWithEvidence()));
       await tester.pumpAndSettle();
       final row = find.byKey(const ValueKey('m7c-competency-d03_c02'));
-      await tester.scrollUntilVisible(row, 800);
+      await tester.ensureVisible(row);
+      await tester.pumpAndSettle();
       await tester.tap(row);
       await tester.pumpAndSettle();
       expect(
