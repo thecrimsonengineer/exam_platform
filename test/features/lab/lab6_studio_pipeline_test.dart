@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:exam_platform/features/lab/lab_contracts.dart';
+import 'package:exam_platform/features/lab/lab_session.dart';
 import 'package:exam_platform/features/lab/lab_studio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,7 +9,7 @@ import 'lab_l2_test_fixtures.dart';
 
 void main() {
   for (var i = 0; i < 10; i++) {
-    test('LAB-6 JSON file import ' + (i + 1).toString(), () {
+    test('LAB-6 JSON file import ' + (i + 1).toString(), () async {
       final source =
           File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync();
       final service = buildL2StudioService();
@@ -17,6 +18,34 @@ void main() {
       expect(workspace.package.metadata.id, 'l2_lab');
       expect(workspace.lifecycle, LabLifecycleStatus.draft);
       expect(workspace.report.isValid, isTrue);
+
+      if (i == 0) {
+        final review = service.requestReview(workspace);
+        final validated = service.approveReview(
+          review,
+          reviewerId: 'golden-reviewer',
+        );
+        final published = await service.publish(validated);
+        final runnable = LabPackage.decode(
+          published.publishedVersion!.publishedJson,
+        );
+        final sessionEngine = LabSessionEngine(
+          store: InMemoryLabSessionStore(),
+        );
+        final session = await sessionEngine.startAttempt(
+          package: runnable,
+          sessionId: 'golden_runtime_session',
+          userId: 'golden_user',
+          mode: LabMode.professional,
+        );
+        final progressed = await sessionEngine.commitDecision(
+          package: runnable,
+          session: session,
+          optionId: 'o1',
+          responseTimeMs: 100,
+        );
+        expect(progressed.currentNodeId, 'decision_two');
+      }
     });
   }
 
