@@ -219,8 +219,10 @@ class _ExamHero extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.end,
             children: [
               Text(
                 '${snapshot.calendarDaysRemaining}',
@@ -229,7 +231,6 @@ class _ExamHero extends StatelessWidget {
                   height: 0.95,
                 ),
               ),
-              const SizedBox(width: 8),
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
