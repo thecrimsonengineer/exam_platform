@@ -11,7 +11,7 @@ import '../../services/student_question_progress_service.dart';
 import '../../services/settings/settings_external_links.dart';
 import '../../services/settings/theme_mode_service.dart';
 import 'legal_document_screen.dart';
-import 'legal_document_screen_dark.dart';
+import 'legal_document_screen_dark.dart';\nimport '../progress/progress_screen_dark.dart';
 
 typedef DarkSettingsUriLauncher = Future<bool> Function(Uri uri);
 
@@ -161,6 +161,12 @@ class DarkSettingsScreen extends StatelessWidget {
     );
   }
 
+  void _openFullProgress(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const DarkProgressScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StudentGlassScaffold(
@@ -277,6 +283,28 @@ class DarkSettingsScreen extends StatelessWidget {
                                 subtitle:
                                     'Your local progress remains available for this account on this device.',
                                 onTap: () => _signOut(context),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          _buildSectionHeading(
+                            eyebrow: 'LEARNING & PROGRESS',
+                            title: 'Your learning record',
+                            subtitle:
+                                'Open the complete progress workspace with detailed learning analytics.',
+                          ),
+                          const SizedBox(height: 14),
+                          _settingsGroup(
+                            children: [
+                              _SettingsTile(
+                                key: const ValueKey('settings-full-progress'),
+                                icon: Icons.bar_chart_rounded,
+                                iconColor: _blue,
+                                iconBackground: const Color(0xFF14243B),
+                                title: 'Full Progress',
+                                subtitle:
+                                    'View your complete CSP11 progress and detailed learning analytics.',
+                                onTap: () => _openFullProgress(context),
                               ),
                             ],
                           ),

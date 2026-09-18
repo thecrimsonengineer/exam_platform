@@ -6,7 +6,7 @@ import '../../services/auth/auth_state_service.dart';
 import '../../services/auth/learner_local_identity.dart';
 
 import 'content_repository/content_repository_screen.dart';
-import 'study_content/study_content_studio_screen.dart';
+import 'study_content/study_content_studio_screen.dart';\nimport 'lab/lab1000_studio_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -121,6 +121,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
+  void _openLabStudio() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const Lab1000StudioScreen()),
+    );
+  }
+
   void _openRepository() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const ContentRepositoryScreen()),
@@ -208,8 +214,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     } else if (index == 2) {
       _openStudio();
     } else if (index == 3) {
+      _openLabStudio();
+    } else if (index == 4) {
       _openRepository();
-    } else if (index == 5) {
+    } else if (index == 6) {
       _openStudio();
     }
   }

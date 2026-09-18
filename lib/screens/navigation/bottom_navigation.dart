@@ -15,8 +15,7 @@ import '../flashcards/flashcards_screen.dart';
 import '../flashcards/flashcards_screen_dark.dart';
 import '../home/home_screen.dart';
 import '../home/home_screen_dark.dart';
-import '../progress/progress_screen.dart';
-import '../progress/progress_screen_dark.dart';
+import '../lab/lab_library_screen.dart';
 import '../practice/practice_hub_screen.dart';
 import '../settings/settings_screen.dart';
 import '../settings/settings_screen_dark.dart';
@@ -31,11 +30,6 @@ class BottomNavigationScreen extends StatefulWidget {
 class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     with WidgetsBindingObserver {
   int _selectedIndex = 0;
-
-  final GlobalKey<ProgressScreenState> _lightProgressKey =
-      GlobalKey<ProgressScreenState>();
-  final GlobalKey<DarkProgressScreenState> _darkProgressKey =
-      GlobalKey<DarkProgressScreenState>();
 
   final Map<int, Widget> _lightScreens = <int, Widget>{};
   final Map<int, Widget> _darkScreens = <int, Widget>{};
@@ -97,17 +91,17 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         case 0:
           return DarkHomeScreen(
             onOpenStudy: () => _selectTab(1),
-            onOpenFlashcards: () => _selectTab(2),
+            onOpenFlashcards: () => _selectTab(4),
             onOpenSettings: _openSettings,
           );
         case 1:
           return const DarkCspStudyHubScreen();
         case 2:
-          return const DarkFlashcardsScreen();
-        case 3:
-          return DarkProgressScreen(key: _darkProgressKey);
-        case 4:
           return const PracticeHubScreen();
+        case 3:
+          return const LabLibraryScreen();
+        case 4:
+          return const DarkFlashcardsScreen();
         default:
           return const SizedBox.shrink();
       }
@@ -117,17 +111,17 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
       case 0:
         return HomeScreen(
           onOpenStudy: () => _selectTab(1),
-          onOpenFlashcards: () => _selectTab(2),
+          onOpenFlashcards: () => _selectTab(4),
           onOpenSettings: _openSettings,
         );
       case 1:
         return const CspStudyHubScreen();
       case 2:
-        return const FlashcardsScreen();
-      case 3:
-        return ProgressScreen(key: _lightProgressKey);
-      case 4:
         return const PracticeHubScreen();
+      case 3:
+        return const LabLibraryScreen();
+      case 4:
+        return const FlashcardsScreen();
       default:
         return const SizedBox.shrink();
     }
@@ -149,16 +143,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
       _ensureScreenBuilt(index, isDarkMode);
       _selectedIndex = index;
     });
-
-    if (index == 3) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (ThemeModeService.isDarkMode.value) {
-          _darkProgressKey.currentState?.onVisible();
-        } else {
-          _lightProgressKey.currentState?.onVisible();
-        }
-      });
-    }
   }
 
   @override
@@ -200,23 +184,24 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                     NavigationDestination(
                       icon: Icon(Icons.menu_book_outlined),
                       selectedIcon: Icon(Icons.menu_book),
-                      label: 'Study',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.style_outlined),
-                      selectedIcon: Icon(Icons.style_rounded),
-                      label: 'Flashcards',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.bar_chart_outlined),
-                      selectedIcon: Icon(Icons.bar_chart),
-                      label: 'Progress',
+                      label: 'Learn',
                     ),
                     NavigationDestination(
                       key: ValueKey('bottom-nav-practice'),
                       icon: Icon(Icons.quiz_outlined),
                       selectedIcon: Icon(Icons.quiz_rounded),
                       label: 'Practice',
+                    ),
+                    NavigationDestination(
+                      key: ValueKey('bottom-nav-lab'),
+                      icon: Icon(Icons.science_outlined),
+                      selectedIcon: Icon(Icons.science_rounded),
+                      label: 'LAB',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.style_outlined),
+                      selectedIcon: Icon(Icons.style_rounded),
+                      label: 'Flashcards',
                     ),
                   ],
                 ),
