@@ -22,7 +22,7 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('Practice hub renders all four modes in light mode', (
+  testWidgets('Practice hub renders all five modes in light mode', (
     tester,
   ) async {
     await pumpHub(tester, brightness: Brightness.light);
@@ -31,10 +31,15 @@ void main() {
     expect(find.byKey(const ValueKey('practice-hub-weak')), findsOneWidget);
     expect(find.byKey(const ValueKey('practice-hub-random')), findsOneWidget);
     expect(find.byKey(const ValueKey('practice-hub-custom')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('practice-hub-ultra-hard')),
+      findsOneWidget,
+    );
+    expect(find.byType(BackdropFilter), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Practice hub renders all four modes in dark mode', (
+  testWidgets('Practice hub renders all five modes in dark mode', (
     tester,
   ) async {
     await pumpHub(tester, brightness: Brightness.dark);
@@ -43,6 +48,11 @@ void main() {
     expect(find.byKey(const ValueKey('practice-hub-weak')), findsOneWidget);
     expect(find.byKey(const ValueKey('practice-hub-random')), findsOneWidget);
     expect(find.byKey(const ValueKey('practice-hub-custom')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('practice-hub-ultra-hard')),
+      findsOneWidget,
+    );
+    expect(find.byType(BackdropFilter), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 }
