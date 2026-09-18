@@ -1,0 +1,80 @@
+name: M7E Feedback and Replanning
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+jobs:
+  verify-m7e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen M7 contract and M7E test floor
+        run: python3 tools/verify_m7_contract.py --phase m7e
+
+      - name: Diff and whitespace audit
+        run: |
+          git diff --check origin/ui-premium-csp-logo...HEAD
+          git diff --name-only origin/ui-premium-csp-logo...HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check M7E formatting
+        run: |
+          targets=(
+            lib/features/exam_readiness/models/daily_study_plan.dart
+            lib/features/exam_readiness/models/plan_regeneration_reason.dart
+            lib/features/exam_readiness/models/study_plan_block_outcome.dart
+            lib/features/exam_readiness/models/misconception_signal.dart
+            lib/features/exam_readiness/models/learning_state_update_event.dart
+            lib/features/exam_readiness/models/weekly_readiness_review.dart
+            lib/features/exam_readiness/repositories/study_plan_block_outcome_repository.dart
+            lib/features/exam_readiness/repositories/learning_state_audit_repository.dart
+            lib/features/exam_readiness/services/competency_evidence_scope_service.dart
+            lib/features/exam_readiness/services/misconception_signal_service.dart
+            lib/features/exam_readiness/services/plan_staleness_service.dart
+            lib/features/exam_readiness/services/learning_state_update_coordinator.dart
+            lib/features/exam_readiness/services/plan_replanning_service.dart
+            lib/features/exam_readiness/services/weekly_readiness_review_service.dart
+            lib/features/exam_readiness/services/daily_study_plan_service.dart
+            test/features/exam_readiness/m7e
+          )
+          dart format "${targets[@]}"
+          if ! git diff --quiet -- "${targets[@]}"; then
+            echo "M7E formatting drift detected:"
+            git diff -- "${targets[@]}"
+            exit 1
+          fi
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run M7E targeted tests
+        run: flutter test test/features/exam_readiness/m7e
+
+      - name: Run prior Exam Readiness phase regressions
+        run: |
+          flutter test test/features/exam_readiness/m7a
+          flutter test test/features/exam_readiness/m7b
+          flutter test test/features/exam_readiness/m7c
+          flutter test test/features/exam_readiness/m7d
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release

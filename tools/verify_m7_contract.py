@@ -19,6 +19,7 @@ PHASE_TEST_DIRS = {
     "m7b": ROOT / "test/features/exam_readiness/m7b",
     "m7c": ROOT / "test/features/exam_readiness/m7c",
     "m7d": ROOT / "test/features/exam_readiness/m7d",
+    "m7e": ROOT / "test/features/exam_readiness/m7e",
 }
 
 PHASE_MIN_TESTS = {
@@ -26,6 +27,7 @@ PHASE_MIN_TESTS = {
     "m7b": 100,
     "m7c": 100,
     "m7d": 100,
+    "m7e": 40,
 }
 
 PHASE_REQUIRED_FILES = {
@@ -66,6 +68,20 @@ PHASE_REQUIRED_FILES = {
         "lib/features/exam_readiness/services/daily_study_plan_service.dart",
         "lib/features/exam_readiness/services/ultra_hard_availability_service.dart",
         "lib/features/exam_readiness/screens/todays_plan_screen.dart",
+    ],
+    "m7e": [
+        "lib/features/exam_readiness/models/study_plan_block_outcome.dart",
+        "lib/features/exam_readiness/models/plan_regeneration_reason.dart",
+        "lib/features/exam_readiness/models/misconception_signal.dart",
+        "lib/features/exam_readiness/models/learning_state_update_event.dart",
+        "lib/features/exam_readiness/models/weekly_readiness_review.dart",
+        "lib/features/exam_readiness/repositories/study_plan_block_outcome_repository.dart",
+        "lib/features/exam_readiness/repositories/learning_state_audit_repository.dart",
+        "lib/features/exam_readiness/services/learning_state_update_coordinator.dart",
+        "lib/features/exam_readiness/services/plan_staleness_service.dart",
+        "lib/features/exam_readiness/services/plan_replanning_service.dart",
+        "lib/features/exam_readiness/services/misconception_signal_service.dart",
+        "lib/features/exam_readiness/services/weekly_readiness_review_service.dart",
     ],
 }
 
@@ -267,18 +283,85 @@ def verify_phase(phase: str) -> None:
         )
 
 
+
+    if phase == "m7e":
+        coordinator = read(
+            ROOT / "lib/features/exam_readiness/services/learning_state_update_coordinator.dart"
+        )
+        staleness = read(
+            ROOT / "lib/features/exam_readiness/services/plan_staleness_service.dart"
+        )
+        outcome_repository = read(
+            ROOT / "lib/features/exam_readiness/repositories/study_plan_block_outcome_repository.dart"
+        )
+        audit_repository = read(
+            ROOT / "lib/features/exam_readiness/repositories/learning_state_audit_repository.dart"
+        )
+        plan_model = read(
+            ROOT / "lib/features/exam_readiness/models/daily_study_plan.dart"
+        )
+        regeneration = read(
+            ROOT / "lib/features/exam_readiness/models/plan_regeneration_reason.dart"
+        )
+
+        require(
+            "updateCompetencySnapshot" in coordinator
+            and "buildCompetencyProfile" in coordinator,
+            "M7E does not perform incremental competency evidence/readiness updates",
+        )
+        require(
+            "buildAllSnapshots" not in coordinator
+            and "buildDashboard" not in coordinator,
+            "M7E coordinator performs prohibited full-blueprint rebuild per outcome",
+        )
+        require(
+            "syncRemote: false" in coordinator,
+            "M7E coordinator is not explicitly local-first",
+        )
+        require(
+            "DailyStudyPlanStatus.stale" in staleness
+            and "planVersion + 1" in staleness,
+            "M7E future-plan staleness/versioning contract is missing",
+        )
+        require(
+            "previousPlanId" in plan_model and "inputSnapshotVersion" in plan_model,
+            "M7E plan lineage fields are missing",
+        )
+        require(
+            "SharedPreferences" in outcome_repository
+            and "SharedPreferences" in audit_repository,
+            "M7E outcome/audit history is not UID-local",
+        )
+        for token in (
+            "dailyRollover",
+            "assessmentCompleted",
+            "majorPerformanceShift",
+            "examDateChanged",
+            "studyScheduleChanged",
+            "criticalGapDetected",
+            "manualRequest",
+            "missedStudyDay",
+            "capacityChanged",
+        ):
+            require(token in regeneration, f"M7E regeneration reason missing: {token}")
+        require(
+            "pass probability" not in coordinator.lower(),
+            "M7E uses prohibited pass-probability language",
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--phase",
-        choices=("pre", "m7a", "m7b", "m7c", "m7d"),
+        choices=("pre", "m7a", "m7b", "m7c", "m7d", "m7e"),
         default="pre",
     )
     args = parser.parse_args()
 
     verify_frozen_contract()
 
-    ordered = ("m7a", "m7b", "m7c", "m7d")
+    ordered = ("m7a", "m7b", "m7c", "m7d", "m7e")
     if args.phase != "pre":
         target = ordered.index(args.phase)
         for phase in ordered[: target + 1]:
