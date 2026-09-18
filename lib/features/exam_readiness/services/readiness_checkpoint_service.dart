@@ -20,7 +20,11 @@ class ReadinessCheckpointService {
     required DateTime examDate,
     required bool ultraHardAvailable,
   }) {
-    final today = DateTime(currentDate.year, currentDate.month, currentDate.day);
+    final today = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day,
+    );
     final exam = DateTime(examDate.year, examDate.month, examDate.day);
     final daysRemaining = exam.difference(today).inDays;
     if (daysRemaining < 0) return null;

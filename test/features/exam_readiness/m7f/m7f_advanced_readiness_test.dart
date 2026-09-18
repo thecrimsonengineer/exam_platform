@@ -71,10 +71,7 @@ void main() {
 
   test('rich evidence can unlock composite index', () {
     final result = service.build(
-      dashboard: m7fDashboard(
-        competenciesTotal: 42,
-        competenciesAssessed: 30,
-      ),
+      dashboard: m7fDashboard(competenciesTotal: 42, competenciesAssessed: 30),
       evidenceByCompetency: _richEvidence(),
       capacity: m7fCapacity(minutes: 1200, daysRemaining: 27),
       currentDate: DateTime(2026, 9, 18),
@@ -103,10 +100,7 @@ void main() {
     );
 
     expect(result.evidenceConfidence, EvidenceConfidence.high);
-    expect(
-      result.readinessIndex.evidenceConfidence,
-      EvidenceConfidence.high,
-    );
+    expect(result.readinessIndex.evidenceConfidence, EvidenceConfidence.high);
   });
 
   test('advanced snapshot reports current exam phase', () {
@@ -124,24 +118,27 @@ void main() {
     expect(result.reasonCodes, contains('EXAM_PHASE_READINESS'));
   });
 
-  test('advanced snapshot exposes capacity range rather than false precision', () {
-    final result = service.build(
-      dashboard: m7fDashboard(),
-      evidenceByCompetency: const {},
-      capacity: m7fCapacity(minutes: 100, daysRemaining: 27),
-      currentDate: DateTime(2026, 9, 18),
-      examDate: DateTime(2026, 10, 15),
-      trajectoryHistory: const [],
-      dailyPlanHistory: const [],
-    );
+  test(
+    'advanced snapshot exposes capacity range rather than false precision',
+    () {
+      final result = service.build(
+        dashboard: m7fDashboard(),
+        evidenceByCompetency: const {},
+        capacity: m7fCapacity(minutes: 100, daysRemaining: 27),
+        currentDate: DateTime(2026, 9, 18),
+        examDate: DateTime(2026, 10, 15),
+        trajectoryHistory: const [],
+        dailyPlanHistory: const [],
+      );
 
-    expect(
-      result.capacityPressure.estimatedPriorityWorkloadMaxMinutes,
-      greaterThanOrEqualTo(
-        result.capacityPressure.estimatedPriorityWorkloadMinMinutes,
-      ),
-    );
-  });
+      expect(
+        result.capacityPressure.estimatedPriorityWorkloadMaxMinutes,
+        greaterThanOrEqualTo(
+          result.capacityPressure.estimatedPriorityWorkloadMinMinutes,
+        ),
+      );
+    },
+  );
 
   test('today plan summary is traceable to block reason text', () {
     final plan = m7ePlan();
@@ -192,10 +189,7 @@ void main() {
 
   test('safe projection can estimate blueprint coverage with history', () {
     final result = service.build(
-      dashboard: m7fDashboard(
-        competenciesTotal: 10,
-        competenciesAssessed: 8,
-      ),
+      dashboard: m7fDashboard(competenciesTotal: 10, competenciesAssessed: 8),
       evidenceByCompetency: const {},
       capacity: m7fCapacity(daysRemaining: 27),
       currentDate: DateTime(2026, 9, 18),

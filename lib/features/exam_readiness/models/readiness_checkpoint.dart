@@ -31,7 +31,11 @@ class ReadinessCheckpoint {
 
   Map<String, dynamic> toJson() => {
     'milestoneDaysRemaining': milestoneDaysRemaining,
-    'dueDate': DateTime(dueDate.year, dueDate.month, dueDate.day).toIso8601String(),
+    'dueDate': DateTime(
+      dueDate.year,
+      dueDate.month,
+      dueDate.day,
+    ).toIso8601String(),
     'status': status.name,
     'phase': phase.name,
     'questionCount': questionCount,

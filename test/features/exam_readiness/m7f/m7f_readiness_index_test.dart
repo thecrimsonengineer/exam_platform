@@ -225,10 +225,7 @@ void main() {
 
     test('missing blueprint denominator never becomes zero score input', () {
       final result = service.evaluate(
-        dashboard: m7fDashboard(
-          competenciesTotal: 0,
-          competenciesAssessed: 0,
-        ),
+        dashboard: m7fDashboard(competenciesTotal: 0, competenciesAssessed: 0),
         evidence: goodEvidence,
       );
       expect(result.score, isNull);

@@ -44,9 +44,7 @@ AdvancedReadinessSnapshot _snapshot({bool indexAvailable = false}) {
           : ReadinessIndexAvailability.insufficientEvidence,
       score: indexAvailable ? 72 : null,
       evidenceConfidence: EvidenceConfidence.high,
-      components: indexAvailable
-          ? const {'knowledgeMastery': 0.72}
-          : const {},
+      components: indexAvailable ? const {'knowledgeMastery': 0.72} : const {},
       reasonCodes: indexAvailable
           ? const ['READINESS_INDEX_EVIDENCE_GATE_PASSED']
           : const ['INSUFFICIENT_TOTAL_EVIDENCE'],
@@ -125,30 +123,34 @@ void main() {
     expect(find.byKey(const ValueKey('m7f-readiness-counts')), findsOneWidget);
   });
 
-  testWidgets('insufficient evidence displays no numeric index', (tester) async {
+  testWidgets('insufficient evidence displays no numeric index', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _app(AdvancedReadinessSummaryView(snapshot: _snapshot())),
     );
     await tester.pumpAndSettle();
 
     expect(find.text('Not yet available'), findsOneWidget);
-    expect(
-      find.textContaining('More evidence is required'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('More evidence is required'), findsOneWidget);
   });
 
   testWidgets('available index remains separate from evidence confidence', (
     tester,
   ) async {
     await tester.pumpWidget(
-      _app(AdvancedReadinessSummaryView(snapshot: _snapshot(indexAvailable: true))),
+      _app(
+        AdvancedReadinessSummaryView(snapshot: _snapshot(indexAvailable: true)),
+      ),
     );
     await tester.pumpAndSettle();
 
     expect(find.text('72 / 100'), findsOneWidget);
     expect(find.text('Evidence confidence: HIGH'), findsWidgets);
-    expect(find.textContaining('not an exam outcome prediction'), findsOneWidget);
+    expect(
+      find.textContaining('not an exam outcome prediction'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('capacity pressure uses a workload range', (tester) async {
@@ -163,10 +165,7 @@ void main() {
 
   testWidgets('advanced summary renders in dark theme', (tester) async {
     await tester.pumpWidget(
-      _app(
-        AdvancedReadinessSummaryView(snapshot: _snapshot()),
-        dark: true,
-      ),
+      _app(AdvancedReadinessSummaryView(snapshot: _snapshot()), dark: true),
     );
     await tester.pumpAndSettle();
 
@@ -180,7 +179,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      _app(AdvancedReadinessSummaryView(snapshot: _snapshot(indexAvailable: true))),
+      _app(
+        AdvancedReadinessSummaryView(snapshot: _snapshot(indexAvailable: true)),
+      ),
     );
     await tester.pumpAndSettle();
 

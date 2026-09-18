@@ -71,7 +71,9 @@ class _AdvancedReadinessScreenState extends State<AdvancedReadinessScreen> {
   Future<AdvancedReadinessSnapshot> _load() async {
     final plan = await _examPlanRepository.loadActivePlan();
     if (plan == null) {
-      throw StateError('Create an exam plan before opening Advanced Readiness.');
+      throw StateError(
+        'Create an exam plan before opening Advanced Readiness.',
+      );
     }
 
     final now = _now;
@@ -136,7 +138,10 @@ class _AdvancedReadinessScreenState extends State<AdvancedReadinessScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             if (async.hasError) {
-              return _ErrorState(message: async.error.toString(), onRetry: _refresh);
+              return _ErrorState(
+                message: async.error.toString(),
+                onRetry: _refresh,
+              );
             }
             final snapshot = async.data;
             if (snapshot == null) {
@@ -365,9 +370,7 @@ class _TrajectoryCard extends StatelessWidget {
               'At the recent study pace, estimated blueprint coverage by the '
               'exam date is ${projection.projectedPercent}%.',
             ),
-            const Text(
-              'This projects coverage only, not examination outcome.',
-            ),
+            const Text('This projects coverage only, not examination outcome.'),
           ],
         ],
       ),
@@ -463,11 +466,7 @@ class _PlanExplanationCard extends StatelessWidget {
 }
 
 class _Card extends StatelessWidget {
-  const _Card({
-    super.key,
-    required this.title,
-    required this.child,
-  });
+  const _Card({super.key, required this.title, required this.child});
 
   final String title;
   final Widget child;

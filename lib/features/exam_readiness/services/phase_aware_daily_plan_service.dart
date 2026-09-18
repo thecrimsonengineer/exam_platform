@@ -31,10 +31,7 @@ class PhaseAwareDailyPlanService {
     DailyStudyPlanGenerationReason generationReason =
         DailyStudyPlanGenerationReason.initial,
   }) {
-    final phase = phaseService.phaseFor(
-      currentDate: date,
-      examDate: examDate,
-    );
+    final phase = phaseService.phaseFor(currentDate: date, examDate: examDate);
     final allocation = phaseService.configuration.allocationFor(phase);
 
     final base = baseService.generate(
@@ -60,8 +57,9 @@ class PhaseAwareDailyPlanService {
             phase: phase,
             allocation: allocation,
             profile: readinessProfiles[block.competencyId],
-            ultraHardAvailable:
-                ultraHardAvailableCompetencyIds.contains(block.competencyId),
+            ultraHardAvailable: ultraHardAvailableCompetencyIds.contains(
+              block.competencyId,
+            ),
           ),
     ];
 
@@ -95,7 +93,8 @@ class PhaseAwareDailyPlanService {
         if ((type == StudyPlanBlockType.standardPractice ||
                 type == StudyPlanBlockType.mixedRetrieval) &&
             (coverage == null || coverage < 0.75)) {
-          type = profile == null ||
+          type =
+              profile == null ||
                   profile.evidenceConfidence.rank <= EvidenceConfidence.low.rank
               ? StudyPlanBlockType.diagnostic
               : StudyPlanBlockType.continueLearning;

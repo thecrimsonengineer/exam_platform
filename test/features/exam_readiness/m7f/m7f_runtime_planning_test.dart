@@ -204,10 +204,7 @@ void main() {
       );
       final plan = _phasePlan(
         daysToExam: 20,
-        profiles: _stableProfiles(
-          overrideId: 'd01_c01',
-          overrideProfile: weak,
-        ),
+        profiles: _stableProfiles(overrideId: 'd01_c01', overrideProfile: weak),
       );
       expect(
         plan.blocks.any(
@@ -217,31 +214,34 @@ void main() {
       );
     });
 
-    test('readiness phase may use Ultra Hard only when justified and available', () {
-      final weak = m7dProfile(
-        competencyId: 'd01_c01',
-        evidenceConfidence: EvidenceConfidence.high,
-        application: 0.55,
-        ultraHardAccuracy: null,
-      );
-      final plan = _phasePlan(
-        daysToExam: 20,
-        minutes: 120,
-        ultra: const {'d01_c01'},
-        profiles: _stableProfiles(
-          overrideId: 'd01_c01',
-          overrideProfile: weak,
-        ),
-      );
-      expect(
-        plan.blocks.any(
-          (block) =>
-              block.competencyId == 'd01_c01' &&
-              block.type == StudyPlanBlockType.ultraHardPractice,
-        ),
-        isTrue,
-      );
-    });
+    test(
+      'readiness phase may use Ultra Hard only when justified and available',
+      () {
+        final weak = m7dProfile(
+          competencyId: 'd01_c01',
+          evidenceConfidence: EvidenceConfidence.high,
+          application: 0.55,
+          ultraHardAccuracy: null,
+        );
+        final plan = _phasePlan(
+          daysToExam: 20,
+          minutes: 120,
+          ultra: const {'d01_c01'},
+          profiles: _stableProfiles(
+            overrideId: 'd01_c01',
+            overrideProfile: weak,
+          ),
+        );
+        expect(
+          plan.blocks.any(
+            (block) =>
+                block.competencyId == 'd01_c01' &&
+                block.type == StudyPlanBlockType.ultraHardPractice,
+          ),
+          isTrue,
+        );
+      },
+    );
 
     test('started block remains byte-equivalent across phase regeneration', () {
       const base = DailyStudyPlanService();
@@ -450,10 +450,7 @@ void main() {
         planId: 'complete',
         date: DateTime(2026, 9, 17),
         blocks: [
-          m7eBlock(
-            blockId: 'done',
-            status: StudyPlanBlockStatus.completed,
-          ),
+          m7eBlock(blockId: 'done', status: StudyPlanBlockStatus.completed),
         ],
       );
       final result = service.evaluate(

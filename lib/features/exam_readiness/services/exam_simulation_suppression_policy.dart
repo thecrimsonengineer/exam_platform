@@ -13,6 +13,5 @@ class ExamSimulationSuppressionPolicy {
   bool allowPostSubmissionEvidenceUpdate({
     required bool isTimedSimulationActive,
     required bool submitted,
-  }) =>
-      !isTimedSimulationActive || submitted;
+  }) => !isTimedSimulationActive || submitted;
 }

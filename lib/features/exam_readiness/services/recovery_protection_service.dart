@@ -91,6 +91,5 @@ class RecoveryProtectionService {
     );
   }
 
-  String _dayKey(DateTime value) =>
-      '${value.year}-${value.month}-${value.day}';
+  String _dayKey(DateTime value) => '${value.year}-${value.month}-${value.day}';
 }

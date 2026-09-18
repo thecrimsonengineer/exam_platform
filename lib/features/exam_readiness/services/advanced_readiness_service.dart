@@ -60,10 +60,7 @@ class AdvancedReadinessService {
     );
     final exam = DateTime(examDate.year, examDate.month, examDate.day);
     final daysUntilExam = exam.difference(today).inDays;
-    final phase = phaseService.phaseFor(
-      currentDate: today,
-      examDate: exam,
-    );
+    final phase = phaseService.phaseFor(currentDate: today, examDate: exam);
 
     final pressure = capacityPressureService.calculate(
       capacity: capacity,
@@ -72,10 +69,7 @@ class AdvancedReadinessService {
       generatedAt: currentDate,
     );
 
-    final point = trajectoryService.pointFromDashboard(
-      dashboard,
-      date: today,
-    );
+    final point = trajectoryService.pointFromDashboard(dashboard, date: today);
     final combinedHistory = <ReadinessTrajectoryPoint>[
       ...trajectoryHistory.where((item) => !_sameDay(item.date, today)),
       point,
