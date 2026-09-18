@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/theme.dart';
 import '../../features/learning_twin/coaching/learning_twin_practice_context.dart';
 import '../../features/learning_twin/integration/learning_twin_pre_practice_guidance.dart';
@@ -158,7 +160,7 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
 
           final scheme = Theme.of(context).colorScheme;
 
-          return Scaffold(
+          return StudentGlassScaffold(
             key: const ValueKey('practice-quick-launch-screen'),
             backgroundColor: scheme.surface,
             appBar: AppBar(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_colors.dart';
@@ -160,7 +162,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       body: Container(
         decoration: const BoxDecoration(

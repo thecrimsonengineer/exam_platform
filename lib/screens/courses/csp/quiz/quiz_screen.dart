@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../../controllers/quiz_controller.dart';
 import '../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
 
@@ -323,11 +325,11 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isInitializing) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const StudentGlassScaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_initializationError != null) {
-      return Scaffold(
+      return StudentGlassScaffold(
         appBar: AppBar(title: const Text('Quiz')),
         body: Center(
           child: Padding(
@@ -343,7 +345,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
     final quizController = controller;
     if (quizController == null || quizController.questions.isEmpty) {
-      return Scaffold(
+      return StudentGlassScaffold(
         backgroundColor: QuizColors.background,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -361,7 +363,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
     final bool isBookmarked = _bookmarkedQuestions.contains(question.id);
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: QuizColors.background,
 
       // ======================================================

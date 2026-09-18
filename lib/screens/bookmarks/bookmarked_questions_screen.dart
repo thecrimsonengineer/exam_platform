@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../models/question.dart';
 import '../../services/bookmark_service.dart';
 import '../courses/csp/quiz/quiz_domain_label.dart';
@@ -85,7 +87,7 @@ class _BookmarkedQuestionsScreenState extends State<BookmarkedQuestionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       appBar: AppBar(
         elevation: 0,

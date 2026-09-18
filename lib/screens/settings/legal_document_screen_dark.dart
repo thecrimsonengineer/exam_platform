@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'legal_document_screen.dart';
 
 class DarkLegalDocumentScreen extends StatelessWidget {
@@ -18,7 +20,7 @@ class DarkLegalDocumentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       appBar: AppBar(
         title: Text(document.title),
