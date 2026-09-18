@@ -562,8 +562,7 @@ class LabValidationEngine {
           issues.add(
             LabValidationIssue(
               code: 'consequence_reference',
-              message:
-                  'Option ${option.id} references an unknown consequence.',
+              message: 'Option ${option.id} references an unknown consequence.',
               path: 'nodes.${node.id}.options.${option.id}.consequenceId',
             ),
           );
