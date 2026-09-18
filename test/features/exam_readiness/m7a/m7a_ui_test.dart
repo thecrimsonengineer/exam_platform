@@ -139,6 +139,81 @@ void main() {
       expect(chip.selected, isTrue);
     });
 
+    testWidgets('setup offers study-time choices above 120 minutes', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          ExamPlanSetupScreen(
+            repository: ExamStudyPlanRepository(userIdOverride: 'u1'),
+            now: () => DateTime(2026, 9, 18, 10),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const ValueKey('m7a-minutes-180')), findsOneWidget);
+      expect(find.byKey(const ValueKey('m7a-minutes-240')), findsOneWidget);
+    });
+
+    testWidgets('custom daily capacity above 240 minutes is saved', (
+      tester,
+    ) async {
+      final repository = ExamStudyPlanRepository(userIdOverride: 'u1');
+
+      await tester.pumpWidget(
+        _app(
+          ExamPlanSetupScreen(
+            repository: repository,
+            now: () => DateTime(2026, 9, 18, 10),
+          ),
+        ),
+      );
+
+      final custom = find.byKey(const ValueKey('m7a-custom-minutes'));
+      await tester.scrollUntilVisible(custom, 260);
+      await tester.enterText(custom, '360');
+      await tester.pump();
+
+      final save = find.byKey(const ValueKey('m7a-save-plan'));
+      await tester.scrollUntilVisible(save, 260);
+      await tester.tap(save);
+      await tester.pumpAndSettle();
+
+      final plan = await repository.loadActivePlan();
+      expect(plan, isNotNull);
+      expect(plan!.defaultMinutesPerStudyDay, 360);
+      expect(plan.maxDailyMinutes, greaterThanOrEqualTo(360));
+    });
+
+    testWidgets('invalid custom daily capacity is rejected', (tester) async {
+      final repository = ExamStudyPlanRepository(userIdOverride: 'u1');
+
+      await tester.pumpWidget(
+        _app(
+          ExamPlanSetupScreen(
+            repository: repository,
+            now: () => DateTime(2026, 9, 18, 10),
+          ),
+        ),
+      );
+
+      final custom = find.byKey(const ValueKey('m7a-custom-minutes'));
+      await tester.scrollUntilVisible(custom, 260);
+      await tester.enterText(custom, '1441');
+      await tester.pump();
+
+      final save = find.byKey(const ValueKey('m7a-save-plan'));
+      await tester.scrollUntilVisible(save, 260);
+      await tester.tap(save);
+      await tester.pump();
+
+      expect(
+        find.text('Daily study time must be between 1 and 1440 minutes.'),
+        findsOneWidget,
+      );
+      expect(await repository.loadActivePlan(), isNull);
+    });
+
     testWidgets('setup allows deselecting a study day', (tester) async {
       await tester.pumpWidget(
         _app(
