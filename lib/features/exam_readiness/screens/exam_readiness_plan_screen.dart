@@ -117,24 +117,6 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(16, 18, 16, 32),
                 children: [
-                  if (data.notice != null) ...[
-                    Container(
-                      key: const ValueKey('m7a-local-cache-notice'),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: scheme.tertiaryContainer,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Text(
-                        data.notice!,
-                        style: TextStyle(
-                          color: scheme.onTertiaryContainer,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                  ],
                   _ExamHero(plan: plan, snapshot: snapshot),
                   const SizedBox(height: 14),
                   _CapacityGrid(snapshot: snapshot),
@@ -529,9 +511,8 @@ class _ErrorState extends StatelessWidget {
 }
 
 class _M7APlanViewData {
-  const _M7APlanViewData({this.plan, this.snapshot, this.notice});
+  const _M7APlanViewData({this.plan, this.snapshot});
 
   final ExamStudyPlan? plan;
   final StudyCapacitySnapshot? snapshot;
-  final String? notice;
 }
