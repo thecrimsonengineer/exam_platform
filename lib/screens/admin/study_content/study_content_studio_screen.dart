@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/question.dart';
 import '../../../services/studio/studio_question_service.dart';
 import '../../../services/studio/studio_bulk_question_publish_service.dart';
+import '../../../services/studio/studio_ultra_hard_question_publish_service.dart';
 import '../../../services/quiz_service.dart';
 import '../../../services/study_content/content_import_service.dart';
 import '../../../services/study_content/content_repository_service.dart';
@@ -17,6 +18,7 @@ import '../../../widgets/admin/study_content/content_import_panel.dart';
 import '../../../widgets/admin/study_content/content_preview_panel.dart';
 import '../../../widgets/admin/study_content/content_validation_panel.dart';
 import '../../../widgets/admin/study_content/studio_question_authoring_widgets.dart';
+import '../../../widgets/admin/study_content/studio_ultra_hard_question_dialog.dart';
 import '../../../widgets/admin/study_content/editor/subtopic/subtopic_editor_panel.dart';
 import '../../../widgets/admin/study_content/structure/content_structure_panel.dart';
 import '../../courses/csp/study_content_screen.dart';
@@ -55,6 +57,7 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
   bool _overviewQuizReady = false;
   bool _answerLengthCheckEnabled = true;
   bool _bulkQuestionPublishing = false;
+  bool _ultraHardQuestionPublishing = false;
 
   int? _selectedTopicIndex;
   int? _selectedSubtopicIndex;
@@ -1042,31 +1045,54 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
               'least five published questions.',
         ),
         const SizedBox(height: 16),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: FilledButton.icon(
-            onPressed: _bulkQuestionPublishing
-                ? null
-                : _openBulkQuestionPublish,
-            icon: _bulkQuestionPublishing
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.rocket_launch_rounded),
-            label: Text(
-              _bulkQuestionPublishing
-                  ? 'Publishing competency question bank...'
-                  : 'Bulk 120 JSON • Publish • Auto-Link',
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            FilledButton.icon(
+              key: const ValueKey('legacy-bulk-question-import'),
+              onPressed: _bulkQuestionPublishing
+                  ? null
+                  : _openBulkQuestionPublish,
+              icon: _bulkQuestionPublishing
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.rocket_launch_rounded),
+              label: Text(
+                _bulkQuestionPublishing
+                    ? 'Publishing standard question bank...'
+                    : 'Bulk 120 JSON • H0.3 • Publish • Auto-Link',
+              ),
             ),
-          ),
+            FilledButton.tonalIcon(
+              key: const ValueKey('ultra-hard-bulk-question-import'),
+              onPressed: _ultraHardQuestionPublishing
+                  ? null
+                  : _openUltraHardQuestionPublish,
+              icon: _ultraHardQuestionPublishing
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.workspace_premium_rounded),
+              label: Text(
+                _ultraHardQuestionPublishing
+                    ? 'Validating Ultra Hard bank...'
+                    : 'Ultra Hard JSON • DQG300 • 300/300',
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         Text(
-          'Use this competency-wide importer for multi-Subtopic packages. '
-          'Each question is routed by its own topicId and subtopicId, so the '
-          'currently selected Subtopic does not control bulk placement.',
+          'Standard Bulk 120 remains on the existing H0.3 quiz-engine path. '
+          'Ultra Hard is a separate fail-closed importer and requires '
+          'complete DQG300 evidence with 300/300 rules and DQS 100 before '
+          'publication.',
           style: StudyTypography.bodySecondary,
         ),
         const SizedBox(height: 22),
@@ -1378,6 +1404,103 @@ class _StudyContentStudioScreenState extends State<StudyContentStudioScreen> {
 
       _showPracticeMessage(
         'Bulk publish/link failed.\n'
+        '${error.toString().replaceFirst('Bad state: ', '').replaceFirst('FormatException: ', '')}',
+      );
+    }
+  }
+
+  Future<void> _openUltraHardQuestionPublish() async {
+    final content = _importedContent;
+
+    if (content == null) {
+      _showPracticeMessage(
+        'Open a competency before importing an Ultra Hard question package.',
+      );
+      return;
+    }
+
+    final bulkService = StudioUltraHardQuestionPublishService(
+      questionService: _questionService,
+      contentRepositoryService: _contentRepositoryService,
+    );
+
+    final plan = await showDialog<StudioUltraHardQuestionPlan>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => StudioUltraHardQuestionJsonDialog(
+        content: content,
+        bulkService: bulkService,
+      ),
+    );
+
+    if (plan == null || !mounted) {
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Publish Ultra Hard exam-readiness bank?'),
+        content: Text(
+          '${plan.questionCount} questions have passed DQG300 at 300/300 '
+          'with DQS 100. They will be published with the Ultra Hard '
+          'classification and linked across ${plan.subtopicCount} Subtopics. '
+          'This does not alter the legacy H0.3 bulk importer.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).pop(true),
+            icon: const Icon(Icons.verified_user_rounded),
+            label: const Text('Publish Ultra Hard'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
+    setState(() => _ultraHardQuestionPublishing = true);
+
+    try {
+      final result = await bulkService.publishAndLink(plan);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _importedContent = result.publishedContent;
+        _ultraHardQuestionPublishing = false;
+        _resolvedPracticeQuizId = null;
+      });
+
+      await _loadRepositoryContent();
+      await _refreshPracticeQuestions();
+
+      if (!mounted) {
+        return;
+      }
+
+      _showPracticeMessage(
+        '${result.questionCount} Ultra Hard questions published at '
+        'DQG300 300/300 and linked across '
+        '${result.linkedSubtopicCount} Subtopics. '
+        '${result.reusedQuestionCount} existing question '
+        'ID${result.reusedQuestionCount == 1 ? '' : 's'} preserved.',
+      );
+    } catch (error) {
+      if (mounted) {
+        setState(() => _ultraHardQuestionPublishing = false);
+      }
+
+      _showPracticeMessage(
+        'Ultra Hard DQG300 publish failed.\n'
         '${error.toString().replaceFirst('Bad state: ', '').replaceFirst('FormatException: ', '')}',
       );
     }
