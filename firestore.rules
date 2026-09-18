@@ -81,6 +81,88 @@ service cloud.firestore {
           .hasOnly(learnerMutableKeys());
     }
 
+    function examPlanAllowedKeys() {
+      return [
+        'id',
+        'userId',
+        'examDate',
+        'timezone',
+        'createdAt',
+        'updatedAt',
+        'active',
+        'planVersion',
+        'studyDaysOfWeek',
+        'defaultMinutesPerStudyDay',
+        'daySpecificMinutes',
+        'preferredRestDays',
+        'allowWeekendExtension',
+        'maxDailyMinutes',
+        'intensity',
+        'preferredSessionLength',
+        'preferredStartPeriod',
+        'adaptiveSchedulingEnabled',
+        'source',
+        'schemaVersion',
+        'serverUpdatedAt'
+      ];
+    }
+
+    function validOwnedExamPlan(uid, planId) {
+      return request.resource.data.keys().hasOnly(examPlanAllowedKeys())
+        && request.resource.data.keys().hasAll([
+          'id',
+          'userId',
+          'examDate',
+          'timezone',
+          'createdAt',
+          'updatedAt',
+          'active',
+          'planVersion',
+          'studyDaysOfWeek',
+          'defaultMinutesPerStudyDay',
+          'daySpecificMinutes',
+          'preferredRestDays',
+          'allowWeekendExtension',
+          'maxDailyMinutes',
+          'intensity',
+          'preferredSessionLength',
+          'preferredStartPeriod',
+          'adaptiveSchedulingEnabled',
+          'source',
+          'schemaVersion'
+        ])
+        && request.resource.data.id == planId
+        && request.resource.data.userId == uid
+        && request.resource.data.id is string
+        && request.resource.data.userId is string
+        && request.resource.data.examDate is string
+        && request.resource.data.timezone is string
+        && request.resource.data.createdAt is string
+        && request.resource.data.updatedAt is string
+        && request.resource.data.active is bool
+        && request.resource.data.planVersion is int
+        && request.resource.data.studyDaysOfWeek is list
+        && request.resource.data.defaultMinutesPerStudyDay is int
+        && request.resource.data.daySpecificMinutes is map
+        && request.resource.data.preferredRestDays is list
+        && request.resource.data.allowWeekendExtension is bool
+        && request.resource.data.maxDailyMinutes is int
+        && request.resource.data.intensity is string
+        && request.resource.data.preferredSessionLength is int
+        && request.resource.data.preferredStartPeriod is string
+        && request.resource.data.adaptiveSchedulingEnabled is bool
+        && request.resource.data.source is string
+        && request.resource.data.schemaVersion is int;
+    }
+
+    function validOwnedExamPlanUpdate(uid, planId) {
+      return validOwnedExamPlan(uid, planId)
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.id == resource.data.id
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.schemaVersion == resource.data.schemaVersion;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -92,6 +174,18 @@ service cloud.firestore {
         || (isSelf(uid) && validLearnerUpdate());
 
       allow delete: if isAdmin();
+
+      match /examPlans/{planId} {
+        allow get, list: if isSelf(uid) || isAdmin();
+
+        allow create: if isAdmin()
+          || (isSelf(uid) && validOwnedExamPlan(uid, planId));
+
+        allow update: if isAdmin()
+          || (isSelf(uid) && validOwnedExamPlanUpdate(uid, planId));
+
+        allow delete: if isAdmin() || isSelf(uid);
+      }
     }
 
     match /questions/{questionId} {
