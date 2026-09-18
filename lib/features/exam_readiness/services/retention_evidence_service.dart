@@ -60,18 +60,22 @@ class RetentionEvidenceService {
             break;
           case RetentionDelayBand.immediate:
             immediateAttempts++;
+            break;
           case RetentionDelayBand.shortDelay:
             delayedAttempts++;
             shortDelayAttempts++;
             if (attempt.correct) delayedCorrect++;
+            break;
           case RetentionDelayBand.mediumDelay:
             delayedAttempts++;
             mediumDelayAttempts++;
             if (attempt.correct) delayedCorrect++;
+            break;
           case RetentionDelayBand.longDelay:
             delayedAttempts++;
             longDelayAttempts++;
             if (attempt.correct) delayedCorrect++;
+            break;
         }
       }
     }
