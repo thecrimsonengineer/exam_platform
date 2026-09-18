@@ -11,6 +11,7 @@ class QuizColors {
   static const Color navy = Color(0xFF172554);
   static const Color primary = Color(0xFF2563EB);
   static const Color primaryDark = Color(0xFF1D4ED8);
+  static const Color darkBackgroundBase = Color(0xFF0A111D);
 
   // PURPLE ACCENT
   static const Color purple = Color(0xFF7C3AED);
@@ -58,8 +59,9 @@ class QuizColors {
   static Color get questionMuted => _dark ? const Color(0xFF9AA8BC) : textMuted;
 
   // QUESTION / SURFACE
-  static Color get background =>
-      _dark ? const Color(0xB307101B) : const Color(0xBFF4F8FF);
+  static Color get background => _dark
+      ? darkBackgroundBase.withValues(alpha: 0.70)
+      : const Color(0xBFF4F8FF);
   static Color get surface =>
       _dark ? const Color(0x8F14233B) : const Color(0xBFFFFFFF);
   static Color get surfaceAlt =>
