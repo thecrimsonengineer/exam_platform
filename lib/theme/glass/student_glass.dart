@@ -154,6 +154,10 @@ class StudentGlassSurface extends StatelessWidget {
     this.borderColor,
     this.shadowColor,
     this.clipBehavior = Clip.antiAlias,
+    this.width,
+    this.height,
+    this.constraints,
+    this.alignment,
   });
 
   final Widget child;
@@ -166,6 +170,10 @@ class StudentGlassSurface extends StatelessWidget {
   final Color? borderColor;
   final Color? shadowColor;
   final Clip clipBehavior;
+  final double? width;
+  final double? height;
+  final BoxConstraints? constraints;
+  final AlignmentGeometry? alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -218,6 +226,16 @@ class StudentGlassSurface extends StatelessWidget {
         ),
       ),
     );
+
+    if (width != null || height != null || constraints != null || alignment != null) {
+      glass = Container(
+        width: width,
+        height: height,
+        constraints: constraints,
+        alignment: alignment,
+        child: glass,
+      );
+    }
 
     if (margin != null) {
       glass = Padding(padding: margin!, child: glass);
