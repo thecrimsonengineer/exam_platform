@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/csp11_blueprint.dart';
-import '../../../models/question.dart';
-import '../../../services/quiz_service.dart';
 import '../../../services/student_question_progress_service.dart';
 import '../../../services/study_content/student_content_cache_repository.dart';
 import '../models/competency_evidence_snapshot.dart';
@@ -34,6 +32,7 @@ class ReadinessEvidenceBootstrapResult {
 /// - the legacy attempt uses only the stored last-known answer
 /// - attemptCount is never expanded into invented historical attempts
 /// - confidence and retention evidence are never fabricated
+/// - current cloud question metadata is never retrofitted onto old attempts
 /// - a question that already has a real M7B attempt is never bridged again
 class ReadinessEvidenceBootstrapService {
   const ReadinessEvidenceBootstrapService({
@@ -159,11 +158,6 @@ class ReadinessEvidenceBootstrapService {
         .map((attempt) => attempt.questionId)
         .toSet();
 
-    final currentQuestions = <int, Question>{
-      for (final question in QuizService.shared.getAllQuestions())
-        if (question.id > 0) question.id: question,
-    };
-
     final records = progress.values.toList(growable: false)
       ..sort(
         (left, right) => left.lastAnsweredAt.compareTo(right.lastAnsweredAt),
@@ -185,31 +179,22 @@ class ReadinessEvidenceBootstrapService {
         continue;
       }
 
-      final currentQuestion = currentQuestions[record.questionId];
-      final attempt = currentQuestion == null
-          ? LearnerAssessmentAttempt(
-              attemptId: 'legacy-question-progress-v1-${record.questionId}',
-              questionId: record.questionId,
-              domainNumber: record.domainNumber,
-              competencyId: competencyId,
-              topicId: record.topicId.trim(),
-              subtopicId: record.subtopicId.trim(),
-              correct: record.lastCorrect,
-              answeredAt: record.lastAnsweredAt,
-              cognitiveLevel: 'legacy_unclassified',
-              questionType: 'legacy_progress',
-              difficultyLane: AttemptDifficultyLane.standard,
-              publishedAtAttempt: true,
-              questionVersion: 1,
-              sessionKind: 'legacy_progress_bridge',
-            )
-          : LearnerAssessmentAttempt.fromQuestion(
-              question: currentQuestion,
-              correct: record.lastCorrect,
-              answeredAt: record.lastAnsweredAt,
-              attemptId: 'legacy-question-progress-v1-${record.questionId}',
-              sessionKind: 'legacy_progress_bridge',
-            );
+      final attempt = LearnerAssessmentAttempt(
+        attemptId: 'legacy-question-progress-v1-${record.questionId}',
+        questionId: record.questionId,
+        domainNumber: record.domainNumber,
+        competencyId: competencyId,
+        topicId: record.topicId.trim(),
+        subtopicId: record.subtopicId.trim(),
+        correct: record.lastCorrect,
+        answeredAt: record.lastAnsweredAt,
+        cognitiveLevel: 'legacy_unclassified',
+        questionType: 'legacy_progress',
+        difficultyLane: AttemptDifficultyLane.standard,
+        publishedAtAttempt: true,
+        questionVersion: 1,
+        sessionKind: 'legacy_progress_bridge',
+      );
 
       if (await attemptRepository.append(attempt)) {
         imported++;
