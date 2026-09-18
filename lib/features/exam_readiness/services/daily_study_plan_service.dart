@@ -226,6 +226,9 @@ class DailyStudyPlanService {
       generationReason: generationReason,
       sourceEvidenceVersion: _sourceEvidenceVersion(readinessProfiles),
       sourceReadinessVersion: _sourceReadinessVersion(readinessProfiles),
+      inputSnapshotVersion:
+          'e:${_sourceEvidenceVersion(readinessProfiles)}|'
+          'r:${_sourceReadinessVersion(readinessProfiles)}',
       blocks: List<StudyPlanBlock>.unmodifiable(blocks),
       status: DailyStudyPlanStatus.active,
       schemaVersion: DailyStudyPlan.currentSchemaVersion,

@@ -8,6 +8,12 @@ enum DailyStudyPlanGenerationReason {
   capacityChanged,
   scheduleChanged,
   dailyRollover,
+  assessmentCompleted,
+  majorPerformanceShift,
+  examDateChanged,
+  studyScheduleChanged,
+  criticalGapDetected,
+  missedStudyDay,
 }
 
 class DailyStudyPlan {
@@ -26,6 +32,8 @@ class DailyStudyPlan {
     required this.blocks,
     required this.status,
     required this.schemaVersion,
+    this.previousPlanId,
+    this.inputSnapshotVersion = '',
   });
 
   static const int currentSchemaVersion = 1;
@@ -45,6 +53,8 @@ class DailyStudyPlan {
   final List<StudyPlanBlock> blocks;
   final DailyStudyPlanStatus status;
   final int schemaVersion;
+  final String? previousPlanId;
+  final String inputSnapshotVersion;
 
   bool get hasStartedBlock => blocks.any((block) => block.isLocked);
 
@@ -63,6 +73,9 @@ class DailyStudyPlan {
     List<StudyPlanBlock>? blocks,
     DailyStudyPlanStatus? status,
     int? schemaVersion,
+    String? previousPlanId,
+    bool clearPreviousPlanId = false,
+    String? inputSnapshotVersion,
   }) {
     return DailyStudyPlan(
       planId: planId ?? this.planId,
@@ -82,6 +95,11 @@ class DailyStudyPlan {
       blocks: List<StudyPlanBlock>.unmodifiable(blocks ?? this.blocks),
       status: status ?? this.status,
       schemaVersion: schemaVersion ?? this.schemaVersion,
+      previousPlanId: clearPreviousPlanId
+          ? null
+          : (previousPlanId ?? this.previousPlanId),
+      inputSnapshotVersion:
+          inputSnapshotVersion ?? this.inputSnapshotVersion,
     );
   }
 
@@ -106,6 +124,9 @@ class DailyStudyPlan {
       sourceReadinessVersion: sourceReadinessVersion,
       blocks: blocks,
       status: DailyStudyPlanStatus.active,
+      previousPlanId: '$planId:v$planVersion',
+      inputSnapshotVersion:
+          'e:$sourceEvidenceVersion|r:$sourceReadinessVersion',
     );
   }
 
@@ -155,6 +176,8 @@ class DailyStudyPlan {
     'blocks': blocks.map((block) => block.toJson()).toList(growable: false),
     'status': status.name,
     'schemaVersion': schemaVersion,
+    'previousPlanId': previousPlanId,
+    'inputSnapshotVersion': inputSnapshotVersion,
   };
 
   factory DailyStudyPlan.fromJson(Map<String, dynamic> json) {
@@ -197,6 +220,8 @@ class DailyStudyPlan {
         orElse: () => DailyStudyPlanStatus.active,
       ),
       schemaVersion: _int(json['schemaVersion'], currentSchemaVersion),
+      previousPlanId: json['previousPlanId']?.toString(),
+      inputSnapshotVersion: json['inputSnapshotVersion']?.toString() ?? '',
     );
 
     plan.validate();
