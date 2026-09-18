@@ -28,6 +28,16 @@ M7E now adds:
 - inputSnapshotVersion lineage
 - UID-scoped local learning-state audit trail
 - weekly readiness review data model and service
+- learner-facing Complete action for started daily-plan blocks
+- StudyPlanOutcomeService that summarizes only real published attempts made
+  during the block's started-to-completed window
+- automatic incremental readiness update on block completion
+- automatic future-plan staleness after new outcome evidence
+- automatic regeneration when a stale plan is opened on its study day
+- missed-study-day detection without blindly carrying missed blocks forward
+- exam-date, study-schedule and capacity-change invalidation
+- confidence-calibration blocks for high-confidence/performance misalignment
+- deterministic retry-safe learning-state audit event IDs
 
 ## Evidence safety
 
@@ -70,28 +80,45 @@ and UID-scoped. Normal M7E state transitions do not require Firestore writes.
 
 ## Closure evidence
 
-M7E closed against tested runtime checkpoint:
+M7E was first closed at service-layer checkpoint
+`298e793dec6a128b698635382c728dd7b687524c`.
 
-`298e793dec6a128b698635382c728dd7b687524c`
+A reviewed post-closure runtime extension then wired the feedback loop into the
+learner-facing Exam Readiness flow. The revised authoritative M7E runtime
+checkpoint is:
 
-Final validation:
+`9f6c00268f719db8bc6921861d99aced525e5a0d`
 
-- workflow run `35336913234`
-- job `105573746939`
-- M7E targeted tests: 51 / 51 PASS
+Revised final validation:
+
+- workflow run `35338819708`
+- job `105579795785`
+- M7E targeted tests: 60 / 60 PASS
 - M7A regressions: 93 PASS
 - M7B regressions: 159 PASS
 - M7C regressions: 154 PASS
 - M7D regressions: 149 PASS
-- complete Flutter suite: 1125 / 1125 PASS
+- complete Flutter suite: 1219 / 1219 PASS
 - Flutter analyzer: PASS
+- canonical formatting: PASS
 - production web release build: PASS
 
-Frozen sequences A-E and the defining baseline-plus-new-evidence adaptive-plan
-proof all pass.
+The revised closure additionally proves:
 
-M7E also closes with immutable regeneration lineage through `previousPlanId`
-and lazy Ultra Hard availability resolution so deterministic local replanning
-does not require Firebase initialization when availability is already known.
+- a started block can be completed from Today's Plan
+- completion records a real local outcome without manufacturing question data
+- attempts outside the block window or competency are excluded
+- the affected competency is recalculated incrementally
+- future plans can be marked stale from the outcome
+- stale plans regenerate when opened
+- missed-day replanning uses current capacity instead of backlog dumping
+- exam-date, schedule and capacity changes invalidate future plans explicitly
+- high-confidence misalignment can schedule a confidence-calibration block
+- repeated outcome processing does not duplicate the audit trail
+
+Frozen sequences A-E and the defining baseline-plus-new-evidence adaptive-plan
+proof continue to pass.
+
+M7E remains CLOSED / PASS at the revised learner-integrated checkpoint.
 
 **Next authoritative slice: M7F - Advanced Readiness Intelligence.**
