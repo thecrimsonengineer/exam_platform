@@ -1,5 +1,7 @@
 import 'package:exam_platform/features/exam_readiness/models/evidence_confidence.dart';
 import 'package:exam_platform/features/exam_readiness/models/learning_state_update_event.dart';
+import 'package:exam_platform/features/exam_readiness/models/learner_assessment_attempt.dart';
+import 'package:exam_platform/features/exam_readiness/models/readiness_gap.dart';
 import 'package:exam_platform/features/exam_readiness/models/plan_regeneration_reason.dart';
 import 'package:exam_platform/features/exam_readiness/repositories/daily_study_plan_repository.dart';
 import 'package:exam_platform/features/exam_readiness/repositories/evidence_snapshot_repository.dart';
