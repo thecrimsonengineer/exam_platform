@@ -57,12 +57,11 @@ class AppTheme {
     ),
   );
 
-  /// Dark theme used by the P6 immediate learner shell only.
+  /// App-wide dark theme for learner routes.
   ///
-  /// The root MaterialApp remains on [lightTheme]. BottomNavigationScreen wraps
-  /// only Home, Study, Flashcards, Progress and Settings with this theme when
-  /// the persisted dark-mode switch is enabled. Pushed deeper routes therefore
-  /// keep their existing light-mode styling for this phase.
+  /// The root MaterialApp follows ThemeModeService so pushed routes such as
+  /// Exam Readiness, readiness details and adaptive daily plans inherit the
+  /// same persisted light/dark preference as the learner shell.
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
