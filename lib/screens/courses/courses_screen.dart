@@ -227,20 +227,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Widget _topBadge() {
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE4E8F0)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x08000000),
-            blurRadius: 16,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(14),
+      tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.50),
+      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.60),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -288,24 +279,21 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget _hero(BuildContext context, double width, bool wide) {
     final desktop = width >= 1050;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: EdgeInsets.all(wide ? 28 : 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF0D1A31), Color(0xFF173E76), Color(0xFF2B5FB0)],
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x20101D36),
-            blurRadius: 34,
-            offset: Offset(0, 18),
-          ),
+      borderRadius: BorderRadius.circular(28),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          const Color(0xFF0D1A31).withValues(alpha: 0.84),
+          const Color(0xFF173E76).withValues(alpha: 0.78),
+          const Color(0xFF2B5FB0).withValues(alpha: 0.72),
         ],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.12),
+      shadowColor: const Color(0xFF101D36).withValues(alpha: 0.20),
       child: Stack(
         children: [
           Positioned(
@@ -683,13 +671,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
             return _continueLoading();
           }
 
-          return Container(
+          return StudentGlassSurface(
             padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF6F8FC),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: const Color(0xFFE4E9F1)),
-            ),
+            borderRadius: BorderRadius.circular(18),
+            tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.48),
+            borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.62),
             child: wide
                 ? Row(
                     children: [
@@ -720,13 +706,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Widget _continueLoading() {
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF6F8FC),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE4E9F1)),
-      ),
+      borderRadius: BorderRadius.circular(18),
+      tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.48),
+      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: const Row(
         children: [
           SizedBox(
@@ -1244,13 +1228,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Widget _readinessInsight() {
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(17),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F6FC),
-        borderRadius: BorderRadius.circular(17),
-        border: Border.all(color: const Color(0xFFE1E7F1)),
-      ),
+      borderRadius: BorderRadius.circular(17),
+      tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.46),
+      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.60),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1400,21 +1382,12 @@ class _CoursesScreenState extends State<CoursesScreen> {
     required Widget child,
     Widget? trailing,
   }) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(21),
-        border: Border.all(color: const Color(0xFFE3E8F0)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x06000000),
-            blurRadius: 20,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(21),
+      tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.50),
+      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

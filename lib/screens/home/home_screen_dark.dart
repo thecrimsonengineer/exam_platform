@@ -349,26 +349,23 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     final completed = data.completedCount;
     final inProgress = data.inProgressCount;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('home-hero'),
       constraints: BoxConstraints(minHeight: compact ? 360 : 330),
       padding: EdgeInsets.all(compact ? 22 : 28),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF102A56), Color(0xFF1E4C91), Color(0xFF5B36A8)],
-          stops: [0.0, 0.58, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.20),
-            blurRadius: 30,
-            offset: const Offset(0, 16),
-          ),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          const Color(0xFF102A56).withValues(alpha: 0.82),
+          const Color(0xFF1E4C91).withValues(alpha: 0.76),
+          const Color(0xFF5B36A8).withValues(alpha: 0.72),
         ],
+        stops: const [0.0, 0.58, 1.0],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.12),
+      shadowColor: AppColors.primary.withValues(alpha: 0.20),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -624,22 +621,14 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
   ) {
     final position = data.position;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('home-continue-card'),
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.055),
-            blurRadius: 20,
-            offset: const Offset(0, 9),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: _surface.withValues(alpha: 0.58),
+      borderColor: _border.withValues(alpha: 0.74),
+      shadowColor: _navy.withValues(alpha: 0.16),
       child: snapshot.connectionState == ConnectionState.waiting
           ? const _HomeInlineLoading()
           : snapshot.hasError
@@ -1209,22 +1198,14 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     final inProgress = data.inProgressCount;
     final tracked = data.trackedCount;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('home-progress-panel'),
       width: double.infinity,
       padding: const EdgeInsets.all(21),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.045),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: _surface.withValues(alpha: 0.58),
+      borderColor: _border.withValues(alpha: 0.74),
+      shadowColor: _navy.withValues(alpha: 0.16),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final compact = constraints.maxWidth < 680;

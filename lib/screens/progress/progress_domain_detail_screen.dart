@@ -326,13 +326,11 @@ class _ProgressDomainDetailScreenState
   ) {
     final scheme = Theme.of(context).colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(18),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.52),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.64),
       child: Row(
         children: [
           CircleAvatar(
