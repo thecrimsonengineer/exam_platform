@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../data/csp11_blueprint.dart';
 import '../../models/content_repository.dart';

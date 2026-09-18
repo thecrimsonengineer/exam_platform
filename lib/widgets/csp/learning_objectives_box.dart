@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../../models/note.dart';
 
 class LearningObjectivesBox extends StatelessWidget {
