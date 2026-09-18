@@ -133,6 +133,20 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
                   _AttentionCard(dashboard: dashboard),
                   const SizedBox(height: 14),
                   _LimitationsCard(dashboard: dashboard),
+                  const SizedBox(height: 18),
+                  _CompetencyMatrix(
+                    dashboard: dashboard,
+                    onTap: (profile) {
+                      final isDarkMode =
+                          Theme.of(context).brightness == Brightness.dark;
+                      Navigator.of(context).push(
+                        examReadinessRoute<void>(
+                          isDarkMode: isDarkMode,
+                          child: CompetencyReadinessScreen(profile: profile),
+                        ),
+                      );
+                    },
+                  ),
                   const SizedBox(height: 14),
                   FilledButton.tonalIcon(
                     key: const ValueKey('m7f-open-advanced-readiness'),
@@ -153,26 +167,12 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
                     label: const Text('Open advanced readiness'),
                   ),
                   const SizedBox(height: 18),
-                  _CompetencyMatrix(
-                    dashboard: dashboard,
-                    onTap: (profile) {
-                      final isDarkMode =
-                          Theme.of(context).brightness == Brightness.dark;
-                      Navigator.of(context).push(
-                        examReadinessRoute<void>(
-                          isDarkMode: isDarkMode,
-                          child: CompetencyReadinessScreen(profile: profile),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 18),
                   Text(
-                    'The competency profile above keeps readiness dimensions '
-                    'separate and does not calculate a single exam-readiness '
-                    'percentage. Advanced Readiness may show a separate '
-                    'evidence-gated CSP11 Readiness Index when minimum evidence '
-                    'conditions are met. That index is not an exam outcome prediction.',
+                    'CSP11 shows separate readiness dimensions. It does not '
+                    'calculate a single exam-readiness percentage or predict '
+                    'whether you will pass the exam. Advanced Readiness can '
+                    'show a separate evidence-gated CSP11 Readiness Index when '
+                    'minimum evidence conditions are met.',
                     key: const ValueKey('m7c-no-composite-index'),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
