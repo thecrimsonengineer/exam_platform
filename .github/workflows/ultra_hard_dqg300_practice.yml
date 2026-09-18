@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature-ultra-hard-dqg300-practice
+      - phase-m7-exam-readiness
   workflow_dispatch:
 
 jobs:
