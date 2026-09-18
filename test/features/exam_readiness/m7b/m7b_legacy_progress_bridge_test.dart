@@ -52,50 +52,56 @@ void main() {
   test(
     'legacy question progress is bridged into readiness evidence once',
     () async {
-    await _seedLegacyProgress([
-      _legacyProgress(questionId: 101, correct: true),
-      _legacyProgress(questionId: 102, correct: false),
-      _legacyProgress(questionId: 103, correct: true),
-    ]);
+      await _seedLegacyProgress([
+        _legacyProgress(questionId: 101, correct: true),
+        _legacyProgress(questionId: 102, correct: false),
+        _legacyProgress(questionId: 103, correct: true),
+      ]);
 
-    const service = ReadinessEvidenceBootstrapService();
-    final evidenceRepository = EvidenceSnapshotRepository(
-      userIdOverride: 'u1',
-    );
-    const attemptRepository = LearnerAssessmentAttemptRepository(
-      userIdOverride: 'u1',
-    );
-    const progressService = StudentQuestionProgressService(
-      userIdOverride: 'u1',
-    );
+      const service = ReadinessEvidenceBootstrapService();
+      final evidenceRepository = EvidenceSnapshotRepository(
+        userIdOverride: 'u1',
+      );
+      const attemptRepository = LearnerAssessmentAttemptRepository(
+        userIdOverride: 'u1',
+      );
+      const progressService = StudentQuestionProgressService(
+        userIdOverride: 'u1',
+      );
 
       final first = await service.rebuildLocal(
-      evidenceRepository: evidenceRepository,
-      attemptRepository: attemptRepository,
-      questionProgressService: progressService,
-      now: DateTime(2026, 9, 18, 12),
-    );
+        evidenceRepository: evidenceRepository,
+        attemptRepository: attemptRepository,
+        questionProgressService: progressService,
+        now: DateTime(2026, 9, 18, 12),
+      );
 
       expect(first.importedLegacyQuestionCount, 3);
       expect(first.attempts, hasLength(3));
-      expect(first.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
+      expect(
+        first.evidenceByCompetency['d03_c02']?.sourceAttemptCount,
+        3,
+      );
       expect(
         first.attempts.every(
-        (attempt) => attempt.sessionKind == 'legacy_progress_bridge',
-      ),
-      isTrue,
-    );
+          (attempt) => attempt.sessionKind == 'legacy_progress_bridge',
+        ),
+        isTrue,
+      );
 
       final second = await service.rebuildLocal(
-      evidenceRepository: evidenceRepository,
-      attemptRepository: attemptRepository,
-      questionProgressService: progressService,
-      now: DateTime(2026, 9, 18, 12, 5),
-    );
+        evidenceRepository: evidenceRepository,
+        attemptRepository: attemptRepository,
+        questionProgressService: progressService,
+        now: DateTime(2026, 9, 18, 12, 5),
+      );
 
       expect(second.importedLegacyQuestionCount, 0);
       expect(second.attempts, hasLength(3));
-      expect(second.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
+      expect(
+        second.evidenceByCompetency['d03_c02']?.sourceAttemptCount,
+        3,
+      );
     },
   );
 
@@ -107,35 +113,38 @@ void main() {
       ]);
 
       const attemptRepository = LearnerAssessmentAttemptRepository(
-      userIdOverride: 'u1',
-    );
+        userIdOverride: 'u1',
+      );
       await attemptRepository.append(
-      LearnerAssessmentAttempt(
-        attemptId: 'real-101',
-        questionId: 101,
-        domainNumber: 3,
-        competencyId: 'd03_c02',
-        topicId: 'topic-1',
-        subtopicId: 'subtopic-101',
-        correct: true,
-        answeredAt: DateTime(2026, 9, 12, 12),
-        cognitiveLevel: 'application',
-        questionType: 'scenario_mcq',
-        difficultyLane: AttemptDifficultyLane.hard,
-        publishedAtAttempt: true,
-        questionVersion: 1,
-        sessionKind: 'practice',
-      ),
-    );
+        LearnerAssessmentAttempt(
+          attemptId: 'real-101',
+          questionId: 101,
+          domainNumber: 3,
+          competencyId: 'd03_c02',
+          topicId: 'topic-1',
+          subtopicId: 'subtopic-101',
+          correct: true,
+          answeredAt: DateTime(2026, 9, 12, 12),
+          cognitiveLevel: 'application',
+          questionType: 'scenario_mcq',
+          difficultyLane: AttemptDifficultyLane.hard,
+          publishedAtAttempt: true,
+          questionVersion: 1,
+          sessionKind: 'practice',
+        ),
+      );
 
       const service = ReadinessEvidenceBootstrapService();
       final result = await service.rebuildLocal(
-      evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-      attemptRepository: attemptRepository,
-      questionProgressService:
-          const StudentQuestionProgressService(userIdOverride: 'u1'),
-      now: DateTime(2026, 9, 18, 12),
-    );
+        evidenceRepository: EvidenceSnapshotRepository(
+          userIdOverride: 'u1',
+        ),
+        attemptRepository: attemptRepository,
+        questionProgressService: const StudentQuestionProgressService(
+          userIdOverride: 'u1',
+        ),
+        now: DateTime(2026, 9, 18, 12),
+      );
 
       expect(result.importedLegacyQuestionCount, 0);
       expect(result.attempts, hasLength(1));
