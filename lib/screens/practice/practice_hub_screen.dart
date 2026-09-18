@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
+import '../../features/exam_readiness/screens/exam_readiness_route.dart';
 import '../../services/practice/practice_mode_service.dart';
 import '../courses/csp/csp_practice_screen.dart';
 import '../courses/csp/csp_practice_screen_dark.dart';
@@ -39,8 +40,13 @@ class PracticeHubScreen extends StatelessWidget {
   }
 
   void _openExamReadiness(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const ExamReadinessPlanScreen()),
+      examReadinessRoute<void>(
+        child: const ExamReadinessPlanScreen(),
+        isDarkMode: isDarkMode,
+      ),
     );
   }
 
