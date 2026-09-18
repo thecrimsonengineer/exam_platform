@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_study_hub_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../app/app_colors.dart';
 import '../../../data/csp11_blueprint.dart';
 import 'domain_screen.dart';
@@ -19,7 +21,7 @@ class CspStudyHubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       body: Container(
         decoration: const BoxDecoration(

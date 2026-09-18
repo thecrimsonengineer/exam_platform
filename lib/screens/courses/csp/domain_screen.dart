@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_domain_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 
 import '../../../data/csp11_blueprint.dart';
@@ -98,7 +100,7 @@ class _DomainScreenState extends State<DomainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: CustomScrollView(
