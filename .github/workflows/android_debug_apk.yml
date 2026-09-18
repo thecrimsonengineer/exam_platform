@@ -1,0 +1,75 @@
+name: Android Debug APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ui-glassmorphism-pass
+    paths:
+      - '.github/workflows/android_debug_apk.yml'
+      - 'android/**'
+      - 'lib/**'
+      - 'assets/**'
+      - 'content/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-debug-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug-apk:
+    name: Build debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout glassmorphism branch
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+
+      - name: Prepare phone-test artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f build/app/outputs/flutter-apk/app-debug.apk
+          cp build/app/outputs/flutter-apk/app-debug.apk CSP11-glass-debug.apk
+          sha256sum CSP11-glass-debug.apk > CSP11-glass-debug.apk.sha256
+          ls -lh CSP11-glass-debug.apk CSP11-glass-debug.apk.sha256
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-glass-debug-apk
+          path: |
+            CSP11-glass-debug.apk
+            CSP11-glass-debug.apk.sha256
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
