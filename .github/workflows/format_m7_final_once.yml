@@ -1,0 +1,45 @@
+name: Format M7 Final Once
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-m7-exam-readiness
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Format complete Exam Readiness tree
+        run: |
+          dart format \
+            lib/features/exam_readiness \
+            test/features/exam_readiness
+
+      - name: Commit formatter result
+        run: |
+          if git diff --quiet -- lib/features/exam_readiness test/features/exam_readiness; then
+            echo "Already formatted."
+            exit 0
+          fi
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/features/exam_readiness test/features/exam_readiness
+          git commit -m "Format complete M7 Exam Readiness tree"
+          git push origin HEAD:phase-m7-exam-readiness
