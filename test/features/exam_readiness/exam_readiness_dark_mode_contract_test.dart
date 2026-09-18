@@ -3,16 +3,22 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('exam readiness entry preserves the learner theme', () {
-    final source = File(
-      'lib/screens/practice/practice_hub_screen.dart',
+  test('Home exam readiness entry preserves the learner theme', () {
+    final lightHome = File(
+      'lib/screens/home/home_screen.dart',
+    ).readAsStringSync();
+    final darkHome = File(
+      'lib/screens/home/home_screen_dark.dart',
     ).readAsStringSync();
 
-    expect(source, contains('examReadinessRoute<void>'));
-    expect(
-      source,
-      contains("Theme.of(context).brightness == Brightness.dark"),
-    );
+    for (final source in [lightHome, darkHome]) {
+      expect(source, contains('examReadinessRoute<void>'));
+      expect(
+        source,
+        contains("Theme.of(context).brightness == Brightness.dark"),
+      );
+      expect(source, contains("ValueKey('home-exam-readiness')"));
+    }
   });
 
   test('nested exam readiness routes preserve the active theme', () {
