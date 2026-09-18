@@ -40,7 +40,7 @@ jobs:
           git fetch origin phase-m7-closed
           mapfile -t changed < <(
             git diff --name-only origin/phase-m7-closed...HEAD -- '*.dart' |
-            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart|test/screens/)' || true
+            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/widgets/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart|test/screens/)' || true
           )
           if [ "${#changed[@]}" -eq 0 ]; then
             echo "No changed Dart UI files."
