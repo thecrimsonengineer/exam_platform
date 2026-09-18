@@ -183,7 +183,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
                             padding: const EdgeInsets.only(
                               bottom: AppSpacing.sm,
                             ),
-                            child: _topicStudentGlassCard(subtopic, entry.key, id, title),
+                            child: _topicCard(subtopic, entry.key, id, title),
                           );
                         }),
                     ]),
@@ -258,7 +258,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
     );
   }
 
-  Widget _topicStudentGlassCard(dynamic subtopic, int index, String? id, String title) {
+  Widget _topicCard(dynamic subtopic, int index, String? id, String title) {
     return StudentGlassCard(
       elevation: 1,
       margin: EdgeInsets.zero,

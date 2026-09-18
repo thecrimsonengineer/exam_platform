@@ -76,7 +76,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   if (note.learningObjectives.isNotEmpty)
-                    _listStudentGlassCard(
+                    _listCard(
                       title: 'Learning Objectives',
                       icon: Icons.check_circle_outline,
                       accent: const Color(0xFF4CC38A),
@@ -84,14 +84,14 @@ class DarkNoteReaderScreen extends StatelessWidget {
                     ),
                   if (note.mainContent.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    _paragraphStudentGlassCard(
+                    _paragraphCard(
                       title: 'Main Content',
                       values: note.mainContent,
                     ),
                   ],
                   if (note.keyPoints.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    _listStudentGlassCard(
+                    _listCard(
                       title: 'Key Points',
                       icon: Icons.check_circle,
                       accent: _blue,
@@ -100,7 +100,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
                   ],
                   if (note.examples.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    _listStudentGlassCard(
+                    _listCard(
                       title: 'Examples',
                       icon: Icons.lightbulb_outline,
                       accent: const Color(0xFF78AEF3),
@@ -110,7 +110,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
                   ],
                   if (note.examTips.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    _listStudentGlassCard(
+                    _listCard(
                       title: 'CSP Exam Tips',
                       icon: Icons.emoji_events,
                       accent: const Color(0xFFF0B44D),
@@ -120,7 +120,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
                   ],
                   if (note.commonMistakes.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    _listStudentGlassCard(
+                    _listCard(
                       title: 'Common Mistakes',
                       icon: Icons.warning_amber_rounded,
                       accent: const Color(0xFFFF8A65),
@@ -130,7 +130,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
                   ],
                   if (note.references.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    _listStudentGlassCard(
+                    _listCard(
                       title: 'References',
                       icon: Icons.menu_book_rounded,
                       accent: const Color(0xFF9FA8FF),
@@ -141,7 +141,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
                   ],
                   if (note.keyTakeaways.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    _listStudentGlassCard(
+                    _listCard(
                       title: 'Key Takeaways',
                       icon: Icons.flag_circle,
                       accent: const Color(0xFF4CC38A),
@@ -175,8 +175,8 @@ class DarkNoteReaderScreen extends StatelessWidget {
     );
   }
 
-  Widget _paragraphStudentGlassCard({required String title, required List<String> values}) {
-    return _baseStudentGlassCard(
+  Widget _paragraphCard({required String title, required List<String> values}) {
+    return _baseCard(
       title: title,
       icon: Icons.menu_book_rounded,
       accent: _blue,
@@ -201,7 +201,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
     );
   }
 
-  Widget _listStudentGlassCard({
+  Widget _listCard({
     required String title,
     required IconData icon,
     required Color accent,
@@ -209,7 +209,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
     Color? tinted,
     bool selectable = false,
   }) {
-    return _baseStudentGlassCard(
+    return _baseCard(
       title: title,
       icon: icon,
       accent: accent,
@@ -252,7 +252,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
     );
   }
 
-  Widget _baseStudentGlassCard({
+  Widget _baseCard({
     required String title,
     required IconData icon,
     required Color accent,
