@@ -75,7 +75,10 @@ M7A may close only after:
 - targeted M7A tests PASS
 - complete Flutter regression PASS
 - web build PASS
-- Android debug build PASS
 - git diff --check PASS
 
 M7B implementation must not be committed before the M7A gate passes.
+
+## Validation policy update
+
+Per the M7 execution decision on 18 September 2026, Android debug/APK building is not a phase closure gate for M7A-M7F. Phase quality is enforced through frozen-contract verification, explicit targeted tests, formatting, analyzer, complete Flutter regression and the web build where configured.
