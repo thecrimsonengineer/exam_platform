@@ -80,7 +80,6 @@ void main() {
     expect(twin, contains('StudentGlassCard'));
   });
 
-
   test('high-frequency learner routes retain glass card surfaces', () {
     const paths = <String>[
       'lib/screens/home/home_screen.dart',

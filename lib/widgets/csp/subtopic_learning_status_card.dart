@@ -10,10 +10,7 @@ import '../../theme/study/study_typography.dart';
 class SubtopicLearningStatusCard extends StatelessWidget {
   final SubtopicLearningStatus status;
 
-  const SubtopicLearningStatusCard({
-    super.key,
-    required this.status,
-  });
+  const SubtopicLearningStatusCard({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -36,34 +33,19 @@ class SubtopicLearningStatusCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _row(
-            'Study',
-            status.studyCompleted ? 'Completed' : 'In progress',
-          ),
+          _row('Study', status.studyCompleted ? 'Completed' : 'In progress'),
           const SizedBox(height: 8),
-          _row(
-            'Topics',
-            '${status.completedTopics}/${status.totalTopics}',
-          ),
+          _row('Topics', '${status.completedTopics}/${status.totalTopics}'),
           const SizedBox(height: 8),
-          _row(
-            'Quiz',
-            status.quizCompleted ? 'Completed' : 'Not completed',
-          ),
+          _row('Quiz', status.quizCompleted ? 'Completed' : 'Not completed'),
           if (score != null) ...[
             const SizedBox(height: 8),
-            _row(
-              'Score',
-              '${(score * 100).round()}%',
-            ),
+            _row('Score', '${(score * 100).round()}%'),
           ],
           const SizedBox(height: 14),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: StudyColors.primaryLight,
               borderRadius: StudyRadius.medium,
@@ -85,17 +67,9 @@ class SubtopicLearningStatusCard extends StatelessWidget {
   Widget _row(String label, String value) {
     return Row(
       children: [
-        Text(
-          label,
-          style: StudyTypography.bodySecondary,
-        ),
+        Text(label, style: StudyTypography.bodySecondary),
         const Spacer(),
-        Text(
-          value,
-          style: StudyTypography.cardTitle.copyWith(
-            fontSize: 13,
-          ),
-        ),
+        Text(value, style: StudyTypography.cardTitle.copyWith(fontSize: 13)),
       ],
     );
   }

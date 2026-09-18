@@ -20,8 +20,7 @@ class SubtopicQuizEntryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final score = status.score;
-    final scoreText =
-        score == null ? null : '${(score * 100).round()}%';
+    final scoreText = score == null ? null : '${(score * 100).round()}%';
 
     return StudentGlassSurface(
       width: double.infinity,
@@ -50,8 +49,7 @@ class SubtopicQuizEntryCard extends StatelessWidget {
               Text(
                 status.statusLabel,
                 style: StudyTypography.eyebrow.copyWith(
-                  color: status.status ==
-                          SubtopicQuizStatusType.completed
+                  color: status.status == SubtopicQuizStatusType.completed
                       ? const Color(0xFF1F8A4C)
                       : StudyColors.textSecondary,
                   fontSize: 8,
@@ -74,8 +72,7 @@ class SubtopicQuizEntryCard extends StatelessWidget {
             child: FilledButton(
               onPressed: onOpenQuiz,
               child: Text(
-                status.status ==
-                        SubtopicQuizStatusType.completed
+                status.status == SubtopicQuizStatusType.completed
                     ? 'REVIEW QUIZ'
                     : 'START QUIZ',
               ),

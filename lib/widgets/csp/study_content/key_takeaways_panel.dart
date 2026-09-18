@@ -56,10 +56,7 @@ class KeyTakeawaysPanel extends StatelessWidget {
                   ),
                   const SizedBox(width: 9),
                   Expanded(
-                    child: Text(
-                      item,
-                      style: StudyTypography.bodySecondary,
-                    ),
+                    child: Text(item, style: StudyTypography.bodySecondary),
                   ),
                 ],
               ),

@@ -6,13 +6,7 @@ import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_typography.dart';
 
-enum StudyCalloutType {
-  keyPoint,
-  example,
-  examTip,
-  important,
-  caution,
-}
+enum StudyCalloutType { keyPoint, example, examTip, important, caution }
 
 class StudyContentCallout extends StatelessWidget {
   final StudyCalloutType type;
@@ -53,11 +47,7 @@ class StudyContentCallout extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            _icon,
-            color: StudyColors.primary,
-            size: 21,
-          ),
+          Icon(_icon, color: StudyColors.primary, size: 21),
           const SizedBox(width: 11),
           Expanded(
             child: Column(
@@ -65,15 +55,10 @@ class StudyContentCallout extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: StudyTypography.cardTitle.copyWith(
-                    fontSize: 14,
-                  ),
+                  style: StudyTypography.cardTitle.copyWith(fontSize: 14),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  content,
-                  style: StudyTypography.bodySecondary,
-                ),
+                Text(content, style: StudyTypography.bodySecondary),
               ],
             ),
           ),
