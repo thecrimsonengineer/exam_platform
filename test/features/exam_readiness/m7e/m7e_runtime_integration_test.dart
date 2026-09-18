@@ -264,42 +264,43 @@ void main() {
             block.competencyId == 'd01_c01' &&
             block.type == StudyPlanBlockType.confidenceCalibration,
       );
-      expect(
-        calibrationBlock.reasonCodes,
-        contains('CONFIDENCE_MISALIGNMENT'),
-      );
-      expect(
-        calibrationBlock.reasonCodes,
-        contains('CONFIDENCE_CALIBRATION'),
-      );
+      expect(calibrationBlock.reasonCodes, contains('CONFIDENCE_MISALIGNMENT'));
+      expect(calibrationBlock.reasonCodes, contains('CONFIDENCE_CALIBRATION'));
     });
   });
 
   group('M7E retry safety', () {
-    test('processing the same outcome does not duplicate audit history', () async {
-      const attempts = LearnerAssessmentAttemptRepository(userIdOverride: 'u1');
-      await attempts.append(m7eAttempt());
-
-      const audit = LearningStateAuditRepository(userIdOverride: 'u1');
-      final coordinator = const LearningStateUpdateCoordinator();
-      final outcome = m7eOutcome();
-
-      for (var index = 0; index < 2; index++) {
-        await coordinator.processOutcome(
-          outcome: outcome,
-          now: DateTime(2026, 9, 18, 12 + index),
-          markFuturePlansStale: false,
-          attemptRepository: attempts,
-          evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-          readinessRepository: ReadinessSnapshotRepository(
-            userIdOverride: 'u1',
-          ),
-          planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
-          auditRepository: audit,
+    test(
+      'processing the same outcome does not duplicate audit history',
+      () async {
+        const attempts = LearnerAssessmentAttemptRepository(
+          userIdOverride: 'u1',
         );
-      }
+        await attempts.append(m7eAttempt());
 
-      expect(await audit.loadAll(), hasLength(1));
-    });
+        const audit = LearningStateAuditRepository(userIdOverride: 'u1');
+        final coordinator = const LearningStateUpdateCoordinator();
+        final outcome = m7eOutcome();
+
+        for (var index = 0; index < 2; index++) {
+          await coordinator.processOutcome(
+            outcome: outcome,
+            now: DateTime(2026, 9, 18, 12 + index),
+            markFuturePlansStale: false,
+            attemptRepository: attempts,
+            evidenceRepository: EvidenceSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            readinessRepository: ReadinessSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
+            auditRepository: audit,
+          );
+        }
+
+        expect(await audit.loadAll(), hasLength(1));
+      },
+    );
   });
 }
