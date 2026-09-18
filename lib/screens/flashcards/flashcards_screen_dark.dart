@@ -26,14 +26,9 @@ class DarkFlashcardsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 720),
-              child: Container(
-                width: double.infinity,
+              child: StudentGlassSurface(
                 padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111B2C),
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: const Color(0xFF25344A)),
-                ),
+                borderRadius: BorderRadius.circular(22),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

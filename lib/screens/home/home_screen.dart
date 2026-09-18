@@ -170,14 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return StudentGlassScaffold(
       backgroundColor: _background,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFF3F6FC), Color(0xFFF7F9FC), Color(0xFFF8F7FC)],
-            stops: [0.0, 0.55, 1.0],
-          ),
-        ),
+        color: Colors.transparent,
         child: SafeArea(
           child: RefreshIndicator(
             onRefresh: _refreshHome,
@@ -264,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
       pinned: true,
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: _background.withValues(alpha: 0.96),
+      backgroundColor: _background.withValues(alpha: 0.72),
       surfaceTintColor: Colors.transparent,
       automaticallyImplyLeading: false,
       titleSpacing: 18,

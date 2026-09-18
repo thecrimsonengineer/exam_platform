@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -181,10 +182,13 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                 (index) => screens[index] ?? const SizedBox.shrink(),
               ),
             ),
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _selectTab,
-              destinations: const [
+            bottomNavigationBar: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                child: NavigationBar(
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: _selectTab,
+                  destinations: const [
                 NavigationDestination(
                   icon: Icon(Icons.home_outlined),
                   selectedIcon: Icon(Icons.home),
@@ -211,7 +215,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                   selectedIcon: Icon(Icons.quiz_rounded),
                   label: 'Practice',
                 ),
-              ],
+                  ],
+                ),
+              ),
             ),
           ),
         );
