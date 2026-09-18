@@ -26,12 +26,10 @@ class ReadinessProfileScreen extends StatefulWidget {
   final DateTime Function()? now;
 
   @override
-  State<ReadinessProfileScreen> createState() =>
-      _ReadinessProfileScreenState();
+  State<ReadinessProfileScreen> createState() => _ReadinessProfileScreenState();
 }
 
-class _ReadinessProfileScreenState
-    extends State<ReadinessProfileScreen> {
+class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
   late Future<ExamReadinessDashboard> _future;
 
   EvidenceSnapshotRepository get _evidenceRepository =>
@@ -315,9 +313,7 @@ class _DimensionCard extends StatelessWidget {
           Text(
             percent == null ? 'INSUFFICIENT EVIDENCE' : '$percent%',
             style: theme.textTheme.labelLarge?.copyWith(
-              color: percent == null
-                  ? scheme.onSurfaceVariant
-                  : scheme.primary,
+              color: percent == null ? scheme.onSurfaceVariant : scheme.primary,
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -486,10 +482,7 @@ class _LimitationsCard extends StatelessWidget {
 }
 
 class _CompetencyMatrix extends StatelessWidget {
-  const _CompetencyMatrix({
-    required this.dashboard,
-    required this.onTap,
-  });
+  const _CompetencyMatrix({required this.dashboard, required this.onTap});
 
   final ExamReadinessDashboard dashboard;
   final ValueChanged<CompetencyReadinessProfile> onTap;

@@ -18,15 +18,16 @@ class ReadinessProfileService {
     Iterable<LearnerAssessmentAttempt> attempts = const [],
     required DateTime now,
   }) {
-    final relevantAttempts = attempts
-        .where(
-          (attempt) =>
-              attempt.publishedAtAttempt &&
-              attempt.competencyId.trim().toLowerCase() ==
-                  evidence.competencyId.trim().toLowerCase(),
-        )
-        .toList(growable: false)
-      ..sort((left, right) => left.answeredAt.compareTo(right.answeredAt));
+    final relevantAttempts =
+        attempts
+            .where(
+              (attempt) =>
+                  attempt.publishedAtAttempt &&
+                  attempt.competencyId.trim().toLowerCase() ==
+                      evidence.competencyId.trim().toLowerCase(),
+            )
+            .toList(growable: false)
+          ..sort((left, right) => left.answeredAt.compareTo(right.answeredAt));
 
     final knowledge = _knowledgeMastery(evidence);
     final application = _applicationAbility(evidence);
@@ -194,14 +195,13 @@ class ReadinessProfileService {
           .where((profile) => profile.readinessState == ReadinessState.stale)
           .length,
       profiles: Map<String, CompetencyReadinessProfile>.unmodifiable(profiles),
-      domainCoverage:
-          Map<String, BlueprintCoverageSummary>.unmodifiable(domainCoverage),
+      domainCoverage: Map<String, BlueprintCoverageSummary>.unmodifiable(
+        domainCoverage,
+      ),
     );
   }
 
-  ReadinessDimension _knowledgeMastery(
-    CompetencyEvidenceSnapshot evidence,
-  ) {
+  ReadinessDimension _knowledgeMastery(CompetencyEvidenceSnapshot evidence) {
     if (!_performanceEvidenceSufficient(evidence)) {
       return ReadinessDimension(
         code: 'KNOWLEDGE_MASTERY',
@@ -232,9 +232,7 @@ class ReadinessProfileService {
     );
   }
 
-  ReadinessDimension _applicationAbility(
-    CompetencyEvidenceSnapshot evidence,
-  ) {
+  ReadinessDimension _applicationAbility(CompetencyEvidenceSnapshot evidence) {
     final attempts =
         evidence.cognition.applicationAttempts +
         evidence.cognition.analysisAttempts;
@@ -289,8 +287,10 @@ class ReadinessProfileService {
       );
     }
 
-    final volumeFactor =
-        (evidence.retention.delayedAttempts / 8).clamp(0.25, 1.0);
+    final volumeFactor = (evidence.retention.delayedAttempts / 8).clamp(
+      0.25,
+      1.0,
+    );
     final score =
         evidence.retention.delayedAccuracy! * 0.85 + volumeFactor * 0.15;
 
@@ -311,9 +311,7 @@ class ReadinessProfileService {
     );
   }
 
-  DifficultyReadinessProfile _difficulty(
-    CompetencyEvidenceSnapshot evidence,
-  ) {
+  DifficultyReadinessProfile _difficulty(CompetencyEvidenceSnapshot evidence) {
     final values = <(double, double)>[];
 
     if (evidence.difficulty.standardAccuracy != null) {
@@ -394,10 +392,9 @@ class ReadinessProfileService {
   ) {
     final recent = attempts
         .where(
-          (attempt) =>
-              !attempt.answeredAt.isBefore(
-                now.subtract(const Duration(days: 30)),
-              ),
+          (attempt) => !attempt.answeredAt.isBefore(
+            now.subtract(const Duration(days: 30)),
+          ),
         )
         .toList(growable: false);
 
@@ -515,8 +512,7 @@ class ReadinessProfileService {
       return ReadinessState.stable;
     }
 
-    if (mean >= 0.75 &&
-        confidence.rank >= EvidenceConfidence.moderate.rank) {
+    if (mean >= 0.75 && confidence.rank >= EvidenceConfidence.moderate.rank) {
       return ReadinessState.strong;
     }
 
@@ -575,7 +571,8 @@ class ReadinessProfileService {
       (sum, domain) => sum + domain.competencies.length,
     );
     final represented = profiles.length / canonicalTotal;
-    final averageRank = profiles
+    final averageRank =
+        profiles
             .map((profile) => profile.evidenceConfidence.rank)
             .fold<int>(0, (sum, rank) => sum + rank) /
         profiles.length;
@@ -587,9 +584,10 @@ class ReadinessProfileService {
       rank = rank.clamp(0, EvidenceConfidence.moderate.rank);
     }
 
-    return EvidenceConfidence.values[
-      rank.clamp(0, EvidenceConfidence.veryHigh.rank)
-    ];
+    return EvidenceConfidence.values[rank.clamp(
+      0,
+      EvidenceConfidence.veryHigh.rank,
+    )];
   }
 
   ReadinessDimension _aggregateDimension({

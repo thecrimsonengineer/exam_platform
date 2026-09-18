@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/competency_readiness_profile.dart';
 
 class CompetencyReadinessScreen extends StatelessWidget {
-  const CompetencyReadinessScreen({
-    super.key,
-    required this.profile,
-  });
+  const CompetencyReadinessScreen({super.key, required this.profile});
 
   final CompetencyReadinessProfile profile;
 
@@ -17,9 +14,7 @@ class CompetencyReadinessScreen extends StatelessWidget {
 
     return Scaffold(
       key: const ValueKey('m7c-competency-readiness-screen'),
-      appBar: AppBar(
-        title: Text(profile.competencyId.toUpperCase()),
-      ),
+      appBar: AppBar(title: Text(profile.competencyId.toUpperCase())),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 18, 16, 32),

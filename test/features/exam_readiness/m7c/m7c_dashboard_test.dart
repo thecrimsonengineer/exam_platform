@@ -45,9 +45,7 @@ void main() {
 
     test('canonical competency evidence creates profile', () {
       final dashboard = service.buildDashboard(
-        evidenceByCompetency: {
-          'd03_c02': m7cEvidence(),
-        },
+        evidenceByCompetency: {'d03_c02': m7cEvidence()},
         now: now,
       );
       expect(dashboard.profiles.containsKey('d03_c02'), isTrue);
@@ -63,9 +61,7 @@ void main() {
 
     test('assessed competency count uses source attempt count', () {
       final dashboard = service.buildDashboard(
-        evidenceByCompetency: {
-          'd03_c02': m7cEvidence(),
-        },
+        evidenceByCompetency: {'d03_c02': m7cEvidence()},
         now: now,
       );
       expect(dashboard.blueprintCoverage.competenciesAssessed, 1);
@@ -143,9 +139,7 @@ void main() {
 
     test('Domain 6 coverage counts one assessed competency', () {
       final dashboard = service.buildDashboard(
-        evidenceByCompetency: {
-          'd06_c06': m7cEvidence(competencyId: 'd06_c06'),
-        },
+        evidenceByCompetency: {'d06_c06': m7cEvidence(competencyId: 'd06_c06')},
         now: now,
       );
       expect(dashboard.domainCoverage['d06']?.competenciesAssessed, 1);

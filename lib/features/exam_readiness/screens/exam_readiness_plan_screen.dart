@@ -156,9 +156,8 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => ReadinessProfileScreen(
-                            now: widget.now,
-                          ),
+                          builder: (_) =>
+                              ReadinessProfileScreen(now: widget.now),
                         ),
                       );
                     },

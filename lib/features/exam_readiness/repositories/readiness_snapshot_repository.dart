@@ -46,7 +46,9 @@ class FirebaseReadinessSnapshotRemoteStore
       }
     }
 
-    result.sort((left, right) => left.competencyId.compareTo(right.competencyId));
+    result.sort(
+      (left, right) => left.competencyId.compareTo(right.competencyId),
+    );
     return result;
   }
 
@@ -193,11 +195,7 @@ class ReadinessSnapshotRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       storageKeyForUser(userId),
-      jsonEncode(
-        profiles.map(
-          (key, value) => MapEntry(key, value.toJson()),
-        ),
-      ),
+      jsonEncode(profiles.map((key, value) => MapEntry(key, value.toJson()))),
     );
   }
 }

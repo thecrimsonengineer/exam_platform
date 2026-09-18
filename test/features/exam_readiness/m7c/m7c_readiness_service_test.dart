@@ -54,7 +54,10 @@ void main() {
     test('higher correctness improves knowledge score', () {
       final high = profile(evidence: m7cEvidence(correct: 11));
       final low = profile(evidence: m7cEvidence(correct: 4));
-      expect(high.knowledgeMastery.value!, greaterThan(low.knowledgeMastery.value!));
+      expect(
+        high.knowledgeMastery.value!,
+        greaterThan(low.knowledgeMastery.value!),
+      );
     });
 
     test('broader coverage improves knowledge score', () {
@@ -64,7 +67,10 @@ void main() {
       final narrow = profile(
         evidence: m7cEvidence(subtopicsAssessed: 1, topicsAssessed: 1),
       );
-      expect(broad.knowledgeMastery.value!, greaterThan(narrow.knowledgeMastery.value!));
+      expect(
+        broad.knowledgeMastery.value!,
+        greaterThan(narrow.knowledgeMastery.value!),
+      );
     });
 
     test('very recent evidence improves knowledge versus stale evidence', () {
@@ -77,7 +83,10 @@ void main() {
           evidenceState: EvidenceState.robust,
         ),
       );
-      expect(fresh.knowledgeMastery.value!, greaterThan(stale.knowledgeMastery.value!));
+      expect(
+        fresh.knowledgeMastery.value!,
+        greaterThan(stale.knowledgeMastery.value!),
+      );
     });
 
     test('heavy repeated-attempt concentration reduces knowledge score', () {
@@ -87,7 +96,10 @@ void main() {
       final repeated = profile(
         evidence: m7cEvidence(repeatedAttemptConcentration: 0.9),
       );
-      expect(diverse.knowledgeMastery.value!, greaterThan(repeated.knowledgeMastery.value!));
+      expect(
+        diverse.knowledgeMastery.value!,
+        greaterThan(repeated.knowledgeMastery.value!),
+      );
     });
   });
 
@@ -133,15 +145,15 @@ void main() {
           analysisCorrect: 1,
         ),
       );
-      expect(high.applicationAbility.value!, greaterThan(low.applicationAbility.value!));
+      expect(
+        high.applicationAbility.value!,
+        greaterThan(low.applicationAbility.value!),
+      );
     });
 
     test('Ultra Hard evidence contributes when available', () {
       final result = profile(
-        evidence: m7cEvidence(
-          ultraHardAttempts: 4,
-          ultraHardCorrect: 4,
-        ),
+        evidence: m7cEvidence(ultraHardAttempts: 4, ultraHardCorrect: 4),
       );
       expect(result.applicationAbility.value, isNotNull);
       expect(
@@ -182,7 +194,10 @@ void main() {
         evidence: m7cEvidence(delayedAttempts: 0, delayedCorrect: 0),
       );
       expect(result.retention.value, isNull);
-      expect(result.retention.reasonCodes, contains('RETENTION_EVIDENCE_MISSING'));
+      expect(
+        result.retention.reasonCodes,
+        contains('RETENTION_EVIDENCE_MISSING'),
+      );
     });
 
     test('delayed retrieval exposes retention', () {
@@ -224,7 +239,10 @@ void main() {
           ultraHardCorrect: 0,
         ),
       );
-      expect(result.difficultyPerformance.state, DifficultyReadinessState.unavailable);
+      expect(
+        result.difficultyPerformance.state,
+        DifficultyReadinessState.unavailable,
+      );
       expect(result.difficultyPerformance.dimension.value, isNull);
     });
 
@@ -258,10 +276,7 @@ void main() {
 
     test('Ultra Hard lane remains visible separately', () {
       final result = profile(
-        evidence: m7cEvidence(
-          ultraHardAttempts: 4,
-          ultraHardCorrect: 1,
-        ),
+        evidence: m7cEvidence(ultraHardAttempts: 4, ultraHardCorrect: 1),
       );
       expect(result.difficultyPerformance.ultraHardAccuracy, 0.25);
     });
@@ -274,7 +289,10 @@ void main() {
           ultraHardCorrect: 4,
         ),
       );
-      expect(result.difficultyPerformance.state, DifficultyReadinessState.strong);
+      expect(
+        result.difficultyPerformance.state,
+        DifficultyReadinessState.strong,
+      );
     });
 
     test('weak difficulty score becomes emerging state', () {
@@ -285,36 +303,31 @@ void main() {
           ultraHardCorrect: 0,
         ),
       );
-      expect(result.difficultyPerformance.state, DifficultyReadinessState.emerging);
+      expect(
+        result.difficultyPerformance.state,
+        DifficultyReadinessState.emerging,
+      );
     });
   });
 
   group('M7C confidence calibration', () {
     test('fewer than three confidence samples hides calibration', () {
-      final result = profile(
-        evidence: m7cEvidence(confidenceSamples: 2),
-      );
+      final result = profile(evidence: m7cEvidence(confidenceSamples: 2));
       expect(result.confidenceCalibration.value, isNull);
     });
 
     test('three samples expose calibration', () {
-      final result = profile(
-        evidence: m7cEvidence(confidenceSamples: 3),
-      );
+      final result = profile(evidence: m7cEvidence(confidenceSamples: 3));
       expect(result.confidenceCalibration.value, isNotNull);
     });
 
     test('low calibration error gives high calibration score', () {
-      final result = profile(
-        evidence: m7cEvidence(calibrationError: 0.1),
-      );
+      final result = profile(evidence: m7cEvidence(calibrationError: 0.1));
       expect(result.confidenceCalibration.value, closeTo(0.9, 0.001));
     });
 
     test('high calibration error gives low calibration score', () {
-      final result = profile(
-        evidence: m7cEvidence(calibrationError: 0.8),
-      );
+      final result = profile(evidence: m7cEvidence(calibrationError: 0.8));
       expect(result.confidenceCalibration.value, closeTo(0.2, 0.001));
     });
 
@@ -401,7 +414,10 @@ void main() {
         evidence: m7cEvidence(repeatedAttemptConcentration: 0),
         attempts: driftingAttempts,
       );
-      expect(stable.stability.value!, greaterThanOrEqualTo(drifting.stability.value!));
+      expect(
+        stable.stability.value!,
+        greaterThanOrEqualTo(drifting.stability.value!),
+      );
     });
 
     test('repeat concentration penalizes stability', () {
@@ -557,9 +573,7 @@ void main() {
     });
 
     test('very low coverage creates high coverage gap', () {
-      final result = profile(
-        evidence: m7cEvidence(subtopicsAssessed: 1),
-      );
+      final result = profile(evidence: m7cEvidence(subtopicsAssessed: 1));
       final gap = result.gaps.firstWhere(
         (item) => item.type == ReadinessGapType.coverageGap,
       );
@@ -567,9 +581,7 @@ void main() {
     });
 
     test('weak knowledge can create mastery gap', () {
-      final result = profile(
-        evidence: m7cEvidence(correct: 1),
-      );
+      final result = profile(evidence: m7cEvidence(correct: 1));
       expect(
         result.gaps.any((gap) => gap.type == ReadinessGapType.masteryGap),
         isTrue,
@@ -578,10 +590,7 @@ void main() {
 
     test('missing application evidence creates evidence-limited gap', () {
       final result = profile(
-        evidence: m7cEvidence(
-          applicationAttempts: 1,
-          analysisAttempts: 0,
-        ),
+        evidence: m7cEvidence(applicationAttempts: 1, analysisAttempts: 0),
       );
       expect(
         result.gaps.any(
@@ -615,8 +624,7 @@ void main() {
       expect(
         result.gaps.any(
           (gap) =>
-              gap.type == ReadinessGapType.retentionGap &&
-              gap.evidenceLimited,
+              gap.type == ReadinessGapType.retentionGap && gap.evidenceLimited,
         ),
         isTrue,
       );
@@ -628,8 +636,7 @@ void main() {
       );
       expect(
         result.gaps.any(
-          (gap) =>
-              gap.reasonCode == 'RETENTION_GAP' && !gap.evidenceLimited,
+          (gap) => gap.reasonCode == 'RETENTION_GAP' && !gap.evidenceLimited,
         ),
         isTrue,
       );
@@ -650,9 +657,7 @@ void main() {
     });
 
     test('poor calibration creates confidence gap', () {
-      final result = profile(
-        evidence: m7cEvidence(calibrationError: 0.8),
-      );
+      final result = profile(evidence: m7cEvidence(calibrationError: 0.8));
       expect(
         result.gaps.any((gap) => gap.type == ReadinessGapType.confidenceGap),
         isTrue,

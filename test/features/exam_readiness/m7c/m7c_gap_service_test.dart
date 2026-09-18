@@ -49,10 +49,7 @@ void main() {
   group('M7C ReadinessGapService', () {
     test('strong profile can have no performance gaps', () {
       final gaps = build();
-      expect(
-        gaps.where((gap) => !gap.evidenceLimited),
-        isEmpty,
-      );
+      expect(gaps.where((gap) => !gap.evidenceLimited), isEmpty);
     });
 
     test('low evidence creates assessment evidence gap', () {
@@ -63,9 +60,7 @@ void main() {
         ),
       );
       expect(
-        gaps.any(
-          (gap) => gap.reasonCode == 'INSUFFICIENT_ASSESSMENT_EVIDENCE',
-        ),
+        gaps.any((gap) => gap.reasonCode == 'INSUFFICIENT_ASSESSMENT_EVIDENCE'),
         isTrue,
       );
     });
@@ -79,61 +74,61 @@ void main() {
     });
 
     test('critical knowledge creates critical mastery gap', () {
-      final gap = build(knowledge: 0.2).firstWhere(
-        (gap) => gap.type == ReadinessGapType.masteryGap,
-      );
+      final gap = build(
+        knowledge: 0.2,
+      ).firstWhere((gap) => gap.type == ReadinessGapType.masteryGap);
       expect(gap.severity, ReadinessGapSeverity.critical);
     });
 
     test('moderately weak knowledge creates high mastery gap', () {
-      final gap = build(knowledge: 0.5).firstWhere(
-        (gap) => gap.type == ReadinessGapType.masteryGap,
-      );
+      final gap = build(
+        knowledge: 0.5,
+      ).firstWhere((gap) => gap.type == ReadinessGapType.masteryGap);
       expect(gap.severity, ReadinessGapSeverity.high);
     });
 
     test('missing application creates evidence-limited gap', () {
-      final gap = build(application: null).firstWhere(
-        (gap) => gap.reasonCode == 'APPLICATION_EVIDENCE_MISSING',
-      );
+      final gap = build(
+        application: null,
+      ).firstWhere((gap) => gap.reasonCode == 'APPLICATION_EVIDENCE_MISSING');
       expect(gap.evidenceLimited, isTrue);
     });
 
     test('weak application creates performance gap', () {
-      final gap = build(application: 0.3).firstWhere(
-        (gap) => gap.type == ReadinessGapType.applicationGap,
-      );
+      final gap = build(
+        application: 0.3,
+      ).firstWhere((gap) => gap.type == ReadinessGapType.applicationGap);
       expect(gap.evidenceLimited, isFalse);
     });
 
     test('missing retention creates evidence-limited retention gap', () {
-      final gap = build(retention: null).firstWhere(
-        (gap) => gap.type == ReadinessGapType.retentionGap,
-      );
+      final gap = build(
+        retention: null,
+      ).firstWhere((gap) => gap.type == ReadinessGapType.retentionGap);
       expect(gap.evidenceLimited, isTrue);
     });
 
     test('weak retention creates performance retention gap', () {
-      final gap = build(retention: 0.3).firstWhere(
-        (gap) => gap.reasonCode == 'RETENTION_GAP',
-      );
+      final gap = build(
+        retention: 0.3,
+      ).firstWhere((gap) => gap.reasonCode == 'RETENTION_GAP');
       expect(gap.evidenceLimited, isFalse);
     });
 
     test('weak difficulty creates difficulty gap', () {
       expect(
-        build(difficultyValue: 0.3).any(
-          (gap) => gap.type == ReadinessGapType.difficultyGap,
-        ),
+        build(
+          difficultyValue: 0.3,
+        ).any((gap) => gap.type == ReadinessGapType.difficultyGap),
         isTrue,
       );
     });
 
     test('poor calibration creates confidence gap', () {
       expect(
-        build(calibration: 0.3).any(
-          (gap) => gap.type == ReadinessGapType.confidenceGap,
-        ),
+        build(
+          calibration: 0.3,
+        ).any((gap) => gap.type == ReadinessGapType.confidenceGap),
         isTrue,
       );
     });
@@ -153,10 +148,7 @@ void main() {
 
     test('gap collection is unmodifiable', () {
       final gaps = build(knowledge: 0.2);
-      expect(
-        () => gaps.add(gaps.first),
-        throwsUnsupportedError,
-      );
+      expect(() => gaps.add(gaps.first), throwsUnsupportedError);
     });
   });
 }

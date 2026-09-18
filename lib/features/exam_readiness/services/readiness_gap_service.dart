@@ -23,7 +23,8 @@ class ReadinessGapService {
       gaps.add(
         ReadinessGap(
           type: ReadinessGapType.evidenceGap,
-          severity: confidence == EvidenceConfidence.none ||
+          severity:
+              confidence == EvidenceConfidence.none ||
                   confidence == EvidenceConfidence.veryLow
               ? ReadinessGapSeverity.high
               : ReadinessGapSeverity.moderate,

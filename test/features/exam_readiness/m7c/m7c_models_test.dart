@@ -142,11 +142,7 @@ void main() {
 
     test('unknown difficulty state falls back unavailable', () {
       final decoded = DifficultyReadinessProfile.fromJson({
-        'dimension': {
-          'code': 'D',
-          'value': null,
-          'evidenceConfidence': 'none',
-        },
+        'dimension': {'code': 'D', 'value': null, 'evidenceConfidence': 'none'},
         'state': 'mystery',
       });
       expect(decoded.state, DifficultyReadinessState.unavailable);

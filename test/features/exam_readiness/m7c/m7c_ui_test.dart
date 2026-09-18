@@ -42,8 +42,9 @@ Future<ReadinessProfileScreen> _screenWithEvidence({
           )
         : m7cEvidence(
             evidenceState: stale ? EvidenceState.stale : EvidenceState.robust,
-            recencyBand:
-                stale ? EvidenceRecencyBand.stale : EvidenceRecencyBand.recent,
+            recencyBand: stale
+                ? EvidenceRecencyBand.stale
+                : EvidenceRecencyBand.recent,
           ),
     syncRemote: false,
   );
@@ -73,7 +74,10 @@ void main() {
     testWidgets('renders readiness screen scaffold', (tester) async {
       await tester.pumpWidget(_app(await _screenWithEvidence()));
       await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('m7c-readiness-screen')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('m7c-readiness-screen')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders evidence confidence hero', (tester) async {
@@ -123,7 +127,10 @@ void main() {
         find.byKey(const ValueKey('m7c-no-composite-index')),
         findsOneWidget,
       );
-      expect(find.textContaining('single exam-readiness percentage'), findsOneWidget);
+      expect(
+        find.textContaining('single exam-readiness percentage'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('sparse evidence hides inappropriate dimension percentages', (
@@ -184,7 +191,9 @@ void main() {
       expect(find.byKey(const ValueKey('m7c-refresh')), findsOneWidget);
     });
 
-    testWidgets('empty evidence displays NONE confidence safely', (tester) async {
+    testWidgets('empty evidence displays NONE confidence safely', (
+      tester,
+    ) async {
       final screen = ReadinessProfileScreen(
         evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
         attemptRepository: const LearnerAssessmentAttemptRepository(

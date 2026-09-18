@@ -13,19 +13,9 @@ enum ReadinessState {
   stale,
 }
 
-enum ConfidenceCalibrationState {
-  unavailable,
-  good,
-  watch,
-  needsAttention,
-}
+enum ConfidenceCalibrationState { unavailable, good, watch, needsAttention }
 
-enum DifficultyReadinessState {
-  unavailable,
-  emerging,
-  developing,
-  strong,
-}
+enum DifficultyReadinessState { unavailable, emerging, developing, strong }
 
 class ReadinessDimension {
   const ReadinessDimension({
