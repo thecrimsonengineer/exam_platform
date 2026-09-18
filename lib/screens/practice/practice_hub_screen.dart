@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
 import '../../services/practice/practice_mode_service.dart';
 import '../courses/csp/csp_practice_screen.dart';
 import '../courses/csp/csp_practice_screen_dark.dart';
@@ -33,6 +34,14 @@ class PracticeHubScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         builder: (_) =>
             PracticeQuickLaunchScreen(mode: mode, isDarkMode: isDarkMode),
+      ),
+    );
+  }
+
+  void _openExamReadiness(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const ExamReadinessPlanScreen(),
       ),
     );
   }
@@ -99,6 +108,18 @@ class PracticeHubScreen extends StatelessWidget {
         featured: true,
         onTap: () =>
             _openQuickPractice(context, PracticeMode.ultraHardExamReadiness),
+      ),
+      _PracticeMode(
+        keyName: 'practice-hub-exam-readiness',
+        icon: Icons.event_available_rounded,
+        title: 'Exam Readiness',
+        subtitle:
+            'Set your exam date, study capacity, readiness profile, and adaptive daily plan.',
+        accent: const Color(0xFF0F8F83),
+        actionLabel: 'OPEN PLAN',
+        badge: 'LEARNING TWIN',
+        featured: true,
+        onTap: () => _openExamReadiness(context),
       ),
     ];
 
@@ -167,7 +188,7 @@ class PracticeHubScreen extends StatelessWidget {
                                 scheme: scheme,
                                 title: 'Choose your training mode',
                                 subtitle:
-                                    'Move from daily reps to a DQG300 readiness stress-test without leaving the same practice hub.',
+                                    'Move from daily reps to DQG300 testing and your full exam-readiness plan without leaving the same practice hub.',
                               ),
                               const SizedBox(height: 16),
                               LayoutBuilder(
