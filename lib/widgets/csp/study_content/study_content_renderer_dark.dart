@@ -25,12 +25,14 @@ import '../../../theme/study/study_typography_dark.dart';
 /// persisted unit; topic completion is always derived from child subtopics.
 class DarkStudyContentRenderer extends StatefulWidget {
   final StudyContent content;
+  final String? initialTopicId;
   final String? initialSubtopicId;
   final String? domainTitle;
 
   const DarkStudyContentRenderer({
     super.key,
     required this.content,
+    this.initialTopicId,
     this.initialSubtopicId,
     this.domainTitle,
   });
@@ -45,6 +47,8 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
   bool _topicSelectionInitialized = false;
   int _expandedTopicIndex = 0;
 
+  final Map<int, GlobalKey> _topicKeys = <int, GlobalKey>{};
+
   final StudentLearningProgressService _progressService =
       const StudentLearningProgressService();
 
@@ -55,9 +59,18 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
   void initState() {
     super.initState();
 
+    final requestedTopicIndex = _requestedTopicIndex();
+
+    if (requestedTopicIndex != null) {
+      _expandedTopicIndex = requestedTopicIndex;
+      _topicSelectionInitialized = true;
+    }
+
     if (!_applyCachedProgress()) {
       _loadProgress();
     }
+
+    _scheduleRequestedTopicScroll();
   }
 
   @override
@@ -69,6 +82,7 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
         oldWidget.content.version != widget.content.version;
 
     final resumeTargetChanged =
+        oldWidget.initialTopicId != widget.initialTopicId ||
         oldWidget.initialSubtopicId != widget.initialSubtopicId;
 
     if (contentChanged) {
@@ -489,6 +503,7 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
     final isCompleted = subtopicCount > 0 && completedCount == subtopicCount;
 
     return Container(
+      key: _topicKeys.putIfAbsent(topicIndex, () => GlobalKey()),
       decoration: BoxDecoration(
         color: DarkStudyColors.surface,
         borderRadius: StudyRadius.large,
@@ -942,6 +957,92 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
         ),
       ),
     );
+  }
+
+  int? _requestedTopicIndex() {
+    final topics = widget.content.topics;
+    final requestedTopicId = widget.initialTopicId?.trim() ?? '';
+
+    if (requestedTopicId.isNotEmpty) {
+      final exactIndex = topics.indexWhere(
+        (topic) => topic.id.trim() == requestedTopicId,
+      );
+
+      if (exactIndex >= 0) {
+        return exactIndex;
+      }
+
+      final topicNumber = _topicNumberFromId(requestedTopicId);
+
+      if (topicNumber != null &&
+          topicNumber >= 1 &&
+          topicNumber <= topics.length) {
+        return topicNumber - 1;
+      }
+    }
+
+    final requestedSubtopicId = widget.initialSubtopicId?.trim() ?? '';
+
+    if (requestedSubtopicId.isNotEmpty) {
+      for (var topicIndex = 0; topicIndex < topics.length; topicIndex++) {
+        if (topics[topicIndex].subtopics.any(
+          (subtopic) => subtopic.id.trim() == requestedSubtopicId,
+        )) {
+          return topicIndex;
+        }
+      }
+
+      final topicNumber = _topicNumberFromId(requestedSubtopicId);
+
+      if (topicNumber != null &&
+          topicNumber >= 1 &&
+          topicNumber <= topics.length) {
+        return topicNumber - 1;
+      }
+    }
+
+    return null;
+  }
+
+  int? _topicNumberFromId(String value) {
+    final match = RegExp(
+      r'(?:^|_)t(\d+)(?:_|$)',
+      caseSensitive: false,
+    ).firstMatch(value.trim());
+
+    return int.tryParse(match?.group(1) ?? '');
+  }
+
+  void _scheduleRequestedTopicScroll() {
+    if ((widget.initialTopicId?.trim().isEmpty ?? true) &&
+        (widget.initialSubtopicId?.trim().isEmpty ?? true)) {
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      final topicIndex = _requestedTopicIndex();
+
+      if (topicIndex == null) {
+        return;
+      }
+
+      final targetContext = _topicKeys[topicIndex]?.currentContext;
+
+      if (targetContext == null) {
+        return;
+      }
+
+      Scrollable.ensureVisible(
+        targetContext,
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutCubic,
+        alignment: 0.08,
+      );
+    });
   }
 
   int _preferredTopicIndex(Map<String, StudentSubtopicProgress> progress) {
