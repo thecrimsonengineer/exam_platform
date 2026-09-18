@@ -150,6 +150,7 @@ class StudentGlassSurface extends StatelessWidget {
     this.borderRadius = const BorderRadius.all(Radius.circular(22)),
     this.blurSigma = 18,
     this.tint,
+    this.gradient,
     this.borderColor,
     this.shadowColor,
     this.clipBehavior = Clip.antiAlias,
@@ -161,6 +162,7 @@ class StudentGlassSurface extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
   final double blurSigma;
   final Color? tint;
+  final Gradient? gradient;
   final Color? borderColor;
   final Color? shadowColor;
   final Clip clipBehavior;
@@ -177,18 +179,20 @@ class StudentGlassSurface extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                (tint ?? palette.surfaceStrong),
-                Color.lerp(
-                  tint ?? palette.surfaceStrong,
-                  palette.surface,
-                  0.72,
-                )!,
-              ],
-            ),
+            gradient:
+                gradient ??
+                LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    (tint ?? palette.surfaceStrong),
+                    Color.lerp(
+                      tint ?? palette.surfaceStrong,
+                      palette.surface,
+                      0.72,
+                    )!,
+                  ],
+                ),
             borderRadius: resolvedRadius,
             border: Border.all(
               color: borderColor ?? palette.border,
