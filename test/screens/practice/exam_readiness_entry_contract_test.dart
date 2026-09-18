@@ -43,6 +43,8 @@ void main() {
       expect(darkHome, isNot(contains("ValueKey('home-progress')")));
       expect(lightHome, isNot(contains("'See domain and topic progress'")));
       expect(darkHome, isNot(contains("'See domain and topic progress'")));
+      expect(lightHome, isNot(contains('onOpenProgress')));
+      expect(darkHome, isNot(contains('onOpenProgress')));
     });
 
     test('Practice hub no longer contains the Exam Readiness planner', () {
