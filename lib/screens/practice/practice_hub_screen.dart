@@ -40,9 +40,7 @@ class PracticeHubScreen extends StatelessWidget {
 
   void _openExamReadiness(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const ExamReadinessPlanScreen(),
-      ),
+      MaterialPageRoute<void>(builder: (_) => const ExamReadinessPlanScreen()),
     );
   }
 

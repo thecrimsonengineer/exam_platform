@@ -72,9 +72,7 @@ void main() {
   ) async {
     await pumpHub(tester, brightness: Brightness.light);
 
-    final entry = find.byKey(
-      const ValueKey('practice-hub-exam-readiness'),
-    );
+    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
     await tester.scrollUntilVisible(entry, 500);
     await tester.pump();
 
@@ -89,14 +87,11 @@ void main() {
   ) async {
     await pumpHub(tester, brightness: Brightness.dark);
 
-    final entry = find.byKey(
-      const ValueKey('practice-hub-exam-readiness'),
-    );
+    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
     await tester.scrollUntilVisible(entry, 500);
     await tester.pump();
 
     expect(entry, findsOneWidget);
     expect(tester.takeException(), isNull);
   });
-
 }
