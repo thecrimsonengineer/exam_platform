@@ -2,6 +2,7 @@ import '../../../data/csp11_blueprint.dart';
 import '../models/competency_readiness_profile.dart';
 import '../models/daily_study_plan.dart';
 import '../models/evidence_confidence.dart';
+import '../models/learning_priority_score.dart';
 import '../models/readiness_gap.dart';
 import '../models/study_plan_block.dart';
 import 'learning_priority_engine.dart';
