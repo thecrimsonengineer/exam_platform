@@ -133,25 +133,20 @@ class ResultScreen extends StatelessWidget {
   Widget _buildHeroCard(double percentage, int score, int totalQuestions) {
     final performance = _performanceLabel(percentage);
 
-    return Container(
-      width: double.infinity,
+    return StudentGlassSurface(
       padding: const EdgeInsets.fromLTRB(22, 25, 22, 24),
-      decoration: BoxDecoration(
-        gradient: QuizColors.headerGradient,
-        borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: QuizColors.navy.withValues(alpha: 0.16),
-            blurRadius: 24,
-            offset: const Offset(0, 9),
-          ),
-          BoxShadow(
-            color: QuizColors.purple.withValues(alpha: 0.07),
-            blurRadius: 32,
-            offset: const Offset(7, 0),
-          ),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          QuizColors.navy.withValues(alpha: 0.82),
+          QuizColors.primary.withValues(alpha: 0.78),
+          QuizColors.purple.withValues(alpha: 0.76),
         ],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.18),
+      shadowColor: QuizColors.navy.withValues(alpha: 0.14),
       child: Column(
         children: [
           Container(
@@ -281,21 +276,12 @@ class ResultScreen extends StatelessWidget {
   // ==========================================================
 
   Widget _buildPerformanceCard(int correct, int incorrect, int bookmarked) {
-    return Container(
-      width: double.infinity,
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(QuizSpacing.cardPadding),
-      decoration: BoxDecoration(
-        color: QuizColors.surface,
-        borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
-        border: Border.all(color: QuizColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: QuizColors.navy.withValues(alpha: 0.03),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+      tint: QuizColors.surface.withValues(alpha: 0.54),
+      borderColor: QuizColors.border.withValues(alpha: 0.72),
+      shadowColor: QuizColors.navy.withValues(alpha: 0.03),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -406,14 +392,11 @@ class ResultScreen extends StatelessWidget {
   Widget _buildReviewCard(int incorrectCount) {
     final bool hasMistakes = incorrectCount > 0;
 
-    return Container(
-      width: double.infinity,
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(QuizSpacing.cardPadding),
-      decoration: BoxDecoration(
-        color: QuizColors.surfaceAlt.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
-        border: Border.all(color: QuizColors.border.withValues(alpha: 0.80)),
-      ),
+      borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+      tint: QuizColors.surfaceAlt.withValues(alpha: 0.50),
+      borderColor: QuizColors.border.withValues(alpha: 0.68),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

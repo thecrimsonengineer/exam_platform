@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_spacing.dart';
 
@@ -27,34 +29,20 @@ class QuizHeader extends StatelessWidget {
     final int percentage =
         (normalizedProgress * 100).round();
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(
-        24,
-        22,
-        24,
-        23,
-      ),
-      decoration: BoxDecoration(
-        gradient: QuizColors.headerGradient,
-        borderRadius: BorderRadius.circular(26),
-        boxShadow: [
-          BoxShadow(
-            color: QuizColors.navy.withValues(
-              alpha: 0.17,
-            ),
-            blurRadius: 26,
-            offset: const Offset(0, 10),
-          ),
-          BoxShadow(
-            color: QuizColors.purple.withValues(
-              alpha: 0.07,
-            ),
-            blurRadius: 32,
-            offset: const Offset(8, 0),
-          ),
+    return StudentGlassSurface(
+      padding: const EdgeInsets.fromLTRB(24, 22, 24, 23),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          QuizColors.navy.withValues(alpha: 0.82),
+          QuizColors.primary.withValues(alpha: 0.78),
+          QuizColors.purple.withValues(alpha: 0.76),
         ],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.18),
+      shadowColor: QuizColors.navy.withValues(alpha: 0.15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
