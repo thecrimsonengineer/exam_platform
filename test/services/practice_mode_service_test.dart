@@ -12,15 +12,18 @@ Question _question({
   required int id,
   required int domain,
   bool ultraHard = false,
+  String? competencyId,
 }) {
   final domainId = domain.toString().padLeft(2, '0');
+  final resolvedCompetencyId =
+      competencyId ?? 'd${domainId}_c01';
 
   return Question(
     id: id,
     domain: domain,
-    competencyId: 'd${domainId}_c01',
-    subtopicId: 'd${domainId}_c01_st01',
-    topicId: 'd${domainId}_c01_t01',
+    competencyId: resolvedCompetencyId,
+    subtopicId: '${resolvedCompetencyId}_st01',
+    topicId: '${resolvedCompetencyId}_t01',
     quizId: 'practice_$domainId',
     contentPackageId: 'content_$domainId',
     question:
@@ -166,6 +169,81 @@ void main() {
       expect(plan.title, contains('Exam Readiness'));
       expect(plan.notice, contains('300/300'));
       expect(plan.usedFallback, isFalse);
+    },
+  );
+
+  test(
+    'Ultra Hard refresh sees newly published D01 C01 and D06 C04 questions',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      final questionRepository = CloudQuestionRepository(firestore: firestore);
+      final contentRepository = CloudContentRepository(firestore: firestore);
+      final quizService = QuizService(
+        questionRepository: questionRepository,
+        contentRepository: contentRepository,
+      );
+
+      // Prime the shared-style catalogue before the Ultra Hard batches exist.
+      await questionRepository.save(
+        _question(id: 1, domain: 1, ultraHard: false),
+      );
+      await quizService.initialize();
+
+      expect(
+        quizService.getAllQuestions().where(
+          (question) => question.tags.contains(
+            UltraHardQuestionContract.classificationTag,
+          ),
+        ),
+        isEmpty,
+      );
+
+      var id = 100;
+      for (var index = 0; index < 5; index++) {
+        await questionRepository.save(
+          _question(
+            id: id++,
+            domain: 1,
+            competencyId: 'd01_c01',
+            ultraHard: true,
+          ),
+        );
+      }
+      for (var index = 0; index < 5; index++) {
+        await questionRepository.save(
+          _question(
+            id: id++,
+            domain: 6,
+            competencyId: 'd06_c04',
+            ultraHard: true,
+          ),
+        );
+      }
+
+      final plan = await PracticeModeService(
+        quizService: quizService,
+        questionProgressLoader: () async => <int, StudentQuestionProgress>{},
+      ).build(PracticeMode.ultraHardExamReadiness);
+
+      expect(plan.questions, hasLength(10));
+      expect(
+        plan.questions
+            .where((question) => question.competencyId == 'd01_c01'),
+        hasLength(5),
+      );
+      expect(
+        plan.questions
+            .where((question) => question.competencyId == 'd06_c04'),
+        hasLength(5),
+      );
+      expect(
+        plan.questions.every(
+          (question) => question.tags.contains(
+            UltraHardQuestionContract.classificationTag,
+          ),
+        ),
+        isTrue,
+      );
     },
   );
 
