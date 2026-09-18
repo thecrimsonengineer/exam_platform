@@ -64,7 +64,12 @@ jobs:
               line = line.strip()
               if not line:
                   continue
-              event = json.loads(line)
+              if not line.startswith('{'):
+                  continue
+              try:
+                  event = json.loads(line)
+              except json.JSONDecodeError:
+                  continue
               if event.get('type') != 'testStart':
                   continue
               name = event.get('test', {}).get('name', '')
