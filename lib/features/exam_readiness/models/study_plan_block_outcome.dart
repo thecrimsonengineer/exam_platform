@@ -70,8 +70,7 @@ class StudyPlanBlockOutcome {
         throw StateError('Outcome accuracy must be between zero and one.');
       }
     }
-    if (learnerRating != null &&
-        (learnerRating! < 1 || learnerRating! > 5)) {
+    if (learnerRating != null && (learnerRating! < 1 || learnerRating! > 5)) {
       throw StateError('Learner rating must be between 1 and 5.');
     }
   }

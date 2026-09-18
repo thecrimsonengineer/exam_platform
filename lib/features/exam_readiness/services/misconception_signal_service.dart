@@ -10,14 +10,15 @@ class MisconceptionSignalService {
     required DateTime now,
   }) {
     final normalized = competencyId.trim().toLowerCase();
-    final relevant = attempts
-        .where(
-          (attempt) =>
-              attempt.publishedAtAttempt &&
-              attempt.competencyId.trim().toLowerCase() == normalized,
-        )
-        .toList(growable: false)
-      ..sort((left, right) => left.answeredAt.compareTo(right.answeredAt));
+    final relevant =
+        attempts
+            .where(
+              (attempt) =>
+                  attempt.publishedAtAttempt &&
+                  attempt.competencyId.trim().toLowerCase() == normalized,
+            )
+            .toList(growable: false)
+          ..sort((left, right) => left.answeredAt.compareTo(right.answeredAt));
 
     final recent = relevant.length <= 12
         ? relevant
@@ -36,8 +37,10 @@ class MisconceptionSignalService {
         MisconceptionSignal(
           competencyId: normalized,
           type: MisconceptionSignalType.highConfidenceIncorrect,
-          strength: (highConfidenceIncorrect.length / recent.length)
-              .clamp(0, 1),
+          strength: (highConfidenceIncorrect.length / recent.length).clamp(
+            0,
+            1,
+          ),
           sampleCount: highConfidenceIncorrect.length,
           reasonCodes: const [
             'HIGH_CONFIDENCE_INCORRECT_PATTERN',
@@ -86,7 +89,8 @@ class MisconceptionSignalService {
 
     final ultra = recent
         .where(
-          (attempt) => attempt.difficultyLane == AttemptDifficultyLane.ultraHard,
+          (attempt) =>
+              attempt.difficultyLane == AttemptDifficultyLane.ultraHard,
         )
         .toList();
     final ultraCorrect = ultra.where((item) => item.correct).length;

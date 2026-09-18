@@ -122,7 +122,10 @@ DailyStudyPlan m7ePlan({
     planVersion: version,
     plannerAlgorithmVersion: DailyStudyPlan.currentAlgorithmVersion,
     availableMinutes: availableMinutes,
-    allocatedMinutes: values.fold(0, (sum, block) => sum + block.plannedMinutes),
+    allocatedMinutes: values.fold(
+      0,
+      (sum, block) => sum + block.plannedMinutes,
+    ),
     generationReason: reason,
     sourceEvidenceVersion: 'e1',
     sourceReadinessVersion: 'r1',

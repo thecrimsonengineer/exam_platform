@@ -102,7 +102,8 @@ class LearningStateUpdateCoordinator {
       now: at,
     );
     final reason =
-        explicitReason ?? _reason(previous: previous, next: profile, signals: signals);
+        explicitReason ??
+        _reason(previous: previous, next: profile, signals: signals);
 
     final staleCount = markFuturePlansStale
         ? await stalenessService.markFuturePlansStale(

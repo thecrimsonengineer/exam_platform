@@ -33,17 +33,25 @@ void main() {
       const attempts = LearnerAssessmentAttemptRepository(userIdOverride: 'u1');
       await attempts.append(m7eAttempt());
 
-      final result = await const LearningStateUpdateCoordinator().processOutcome(
-        outcome: m7eOutcome(),
-        markFuturePlansStale: false,
-        attemptRepository: attempts,
-        outcomeRepository:
-            const StudyPlanBlockOutcomeRepository(userIdOverride: 'u1'),
-        evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-        readinessRepository: ReadinessSnapshotRepository(userIdOverride: 'u1'),
-        planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
-        auditRepository: const LearningStateAuditRepository(userIdOverride: 'u1'),
-      );
+      final result = await const LearningStateUpdateCoordinator()
+          .processOutcome(
+            outcome: m7eOutcome(),
+            markFuturePlansStale: false,
+            attemptRepository: attempts,
+            outcomeRepository: const StudyPlanBlockOutcomeRepository(
+              userIdOverride: 'u1',
+            ),
+            evidenceRepository: EvidenceSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            readinessRepository: ReadinessSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
+            auditRepository: const LearningStateAuditRepository(
+              userIdOverride: 'u1',
+            ),
+          );
 
       expect(result.outcomeRecorded, isTrue);
     });
@@ -70,11 +78,7 @@ void main() {
       const attempts = LearnerAssessmentAttemptRepository(userIdOverride: 'u1');
       for (var i = 0; i < 4; i++) {
         await attempts.append(
-          m7eAttempt(
-            attemptId: 'a$i',
-            questionId: i + 1,
-            correct: i > 0,
-          ),
+          m7eAttempt(attemptId: 'a$i', questionId: i + 1, correct: i > 0),
         );
       }
       final readinessRepo = ReadinessSnapshotRepository(userIdOverride: 'u1');
@@ -117,15 +121,20 @@ void main() {
       const attempts = LearnerAssessmentAttemptRepository(userIdOverride: 'u1');
       await attempts.append(m7eAttempt());
 
-      final result = await const LearningStateUpdateCoordinator().processOutcome(
-        outcome: m7eOutcome(),
-        explicitReason: PlanRegenerationReason.manualRequest,
-        markFuturePlansStale: false,
-        attemptRepository: attempts,
-        evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-        readinessRepository: ReadinessSnapshotRepository(userIdOverride: 'u1'),
-        planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
-      );
+      final result = await const LearningStateUpdateCoordinator()
+          .processOutcome(
+            outcome: m7eOutcome(),
+            explicitReason: PlanRegenerationReason.manualRequest,
+            markFuturePlansStale: false,
+            attemptRepository: attempts,
+            evidenceRepository: EvidenceSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            readinessRepository: ReadinessSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
+          );
 
       expect(result.regenerationReason, PlanRegenerationReason.manualRequest);
     });
@@ -143,14 +152,19 @@ void main() {
         );
       }
 
-      final result = await const LearningStateUpdateCoordinator().processOutcome(
-        outcome: m7eOutcome(),
-        markFuturePlansStale: false,
-        attemptRepository: attempts,
-        evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-        readinessRepository: ReadinessSnapshotRepository(userIdOverride: 'u1'),
-        planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
-      );
+      final result = await const LearningStateUpdateCoordinator()
+          .processOutcome(
+            outcome: m7eOutcome(),
+            markFuturePlansStale: false,
+            attemptRepository: attempts,
+            evidenceRepository: EvidenceSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            readinessRepository: ReadinessSnapshotRepository(
+              userIdOverride: 'u1',
+            ),
+            planRepository: DailyStudyPlanRepository(userIdOverride: 'u1'),
+          );
 
       expect(result.misconceptionSignals, isNotEmpty);
     });
@@ -173,77 +187,95 @@ void main() {
       expect(await audit.loadAll(), hasLength(1));
     });
 
-    test('future plan is made stale at controlled outcome checkpoint', () async {
-      const attempts = LearnerAssessmentAttemptRepository(userIdOverride: 'u1');
-      await attempts.append(m7eAttempt());
-      final plans = DailyStudyPlanRepository(userIdOverride: 'u1');
-      await plans.savePlan(
-        m7ePlan(date: DateTime(2026, 9, 19)),
-        syncRemote: false,
-      );
+    test(
+      'future plan is made stale at controlled outcome checkpoint',
+      () async {
+        const attempts = LearnerAssessmentAttemptRepository(
+          userIdOverride: 'u1',
+        );
+        await attempts.append(m7eAttempt());
+        final plans = DailyStudyPlanRepository(userIdOverride: 'u1');
+        await plans.savePlan(
+          m7ePlan(date: DateTime(2026, 9, 19)),
+          syncRemote: false,
+        );
 
-      final result = await const LearningStateUpdateCoordinator().processOutcome(
-        outcome: m7eOutcome(completedAt: DateTime(2026, 9, 18, 11)),
-        now: DateTime(2026, 9, 18, 11),
-        attemptRepository: attempts,
-        evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-        readinessRepository: ReadinessSnapshotRepository(userIdOverride: 'u1'),
-        planRepository: plans,
-      );
+        final result = await const LearningStateUpdateCoordinator()
+            .processOutcome(
+              outcome: m7eOutcome(completedAt: DateTime(2026, 9, 18, 11)),
+              now: DateTime(2026, 9, 18, 11),
+              attemptRepository: attempts,
+              evidenceRepository: EvidenceSnapshotRepository(
+                userIdOverride: 'u1',
+              ),
+              readinessRepository: ReadinessSnapshotRepository(
+                userIdOverride: 'u1',
+              ),
+              planRepository: plans,
+            );
 
-      expect(result.stalePlanVersionsCreated, 1);
-    });
+        expect(result.stalePlanVersionsCreated, 1);
+      },
+    );
 
-    test('staleness can be deferred instead of recalculating every event', () async {
-      const attempts = LearnerAssessmentAttemptRepository(userIdOverride: 'u1');
-      await attempts.append(m7eAttempt());
-      final plans = DailyStudyPlanRepository(userIdOverride: 'u1');
-      await plans.savePlan(
-        m7ePlan(date: DateTime(2026, 9, 19)),
-        syncRemote: false,
-      );
+    test(
+      'staleness can be deferred instead of recalculating every event',
+      () async {
+        const attempts = LearnerAssessmentAttemptRepository(
+          userIdOverride: 'u1',
+        );
+        await attempts.append(m7eAttempt());
+        final plans = DailyStudyPlanRepository(userIdOverride: 'u1');
+        await plans.savePlan(
+          m7ePlan(date: DateTime(2026, 9, 19)),
+          syncRemote: false,
+        );
 
-      final result = await const LearningStateUpdateCoordinator().processOutcome(
-        outcome: m7eOutcome(),
-        markFuturePlansStale: false,
-        attemptRepository: attempts,
-        evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-        readinessRepository: ReadinessSnapshotRepository(userIdOverride: 'u1'),
-        planRepository: plans,
-      );
+        final result = await const LearningStateUpdateCoordinator()
+            .processOutcome(
+              outcome: m7eOutcome(),
+              markFuturePlansStale: false,
+              attemptRepository: attempts,
+              evidenceRepository: EvidenceSnapshotRepository(
+                userIdOverride: 'u1',
+              ),
+              readinessRepository: ReadinessSnapshotRepository(
+                userIdOverride: 'u1',
+              ),
+              planRepository: plans,
+            );
 
-      expect(result.stalePlanVersionsCreated, 0);
-      expect(
-        (await plans.loadLatestForDate(DateTime(2026, 9, 19)))?.status.name,
-        'active',
-      );
-    });
+        expect(result.stalePlanVersionsCreated, 0);
+        expect(
+          (await plans.loadLatestForDate(DateTime(2026, 9, 19)))?.status.name,
+          'active',
+        );
+      },
+    );
   });
 
   group('M7E weekly review', () {
     const service = WeeklyReadinessReviewService();
 
-    LearningStateUpdateEvent event({
-      double before = 0.5,
-      double after = 0.7,
-    }) => LearningStateUpdateEvent(
-      eventId: 'e1',
-      outcomeId: 'o1',
-      competencyId: 'd03_c02',
-      occurredAt: DateTime(2026, 9, 18, 12),
-      regenerationReason: PlanRegenerationReason.assessmentCompleted,
-      previousReadinessState: 'developing',
-      nextReadinessState: 'strong',
-      previousKnowledge: before,
-      nextKnowledge: after,
-      previousApplication: before,
-      nextApplication: after,
-      previousRetention: before,
-      nextRetention: after,
-      stalePlanVersionsCreated: 0,
-      misconceptionCodes: const [],
-      reasonCodes: const ['IMPROVED'],
-    );
+    LearningStateUpdateEvent event({double before = 0.5, double after = 0.7}) =>
+        LearningStateUpdateEvent(
+          eventId: 'e1',
+          outcomeId: 'o1',
+          competencyId: 'd03_c02',
+          occurredAt: DateTime(2026, 9, 18, 12),
+          regenerationReason: PlanRegenerationReason.assessmentCompleted,
+          previousReadinessState: 'developing',
+          nextReadinessState: 'strong',
+          previousKnowledge: before,
+          nextKnowledge: after,
+          previousApplication: before,
+          nextApplication: after,
+          previousRetention: before,
+          nextRetention: after,
+          stalePlanVersionsCreated: 0,
+          misconceptionCodes: const [],
+          reasonCodes: const ['IMPROVED'],
+        );
 
     test('uses only latest immutable plan version for planned minutes', () {
       final review = service.build(
@@ -270,11 +302,7 @@ void main() {
         plans: const [],
         outcomes: [
           m7eOutcome(minutesSpent: 20),
-          m7eOutcome(
-            outcomeId: 'o2',
-            minutesSpent: 10,
-            abandoned: true,
-          ),
+          m7eOutcome(outcomeId: 'o2', minutesSpent: 10, abandoned: true),
         ],
         auditEvents: const [],
         readinessProfiles: const {},

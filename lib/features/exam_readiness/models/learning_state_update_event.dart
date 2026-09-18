@@ -62,9 +62,7 @@ class LearningStateUpdateEvent {
   };
 
   factory LearningStateUpdateEvent.fromJson(Map<String, dynamic> json) {
-    final occurredAt = DateTime.tryParse(
-      json['occurredAt']?.toString() ?? '',
-    );
+    final occurredAt = DateTime.tryParse(json['occurredAt']?.toString() ?? '');
     if (occurredAt == null) {
       throw const FormatException('Invalid learning-state event timestamp.');
     }
@@ -78,8 +76,7 @@ class LearningStateUpdateEvent {
         (item) => item.name == json['regenerationReason']?.toString(),
         orElse: () => PlanRegenerationReason.assessmentCompleted,
       ),
-      previousReadinessState:
-          json['previousReadinessState']?.toString(),
+      previousReadinessState: json['previousReadinessState']?.toString(),
       nextReadinessState: json['nextReadinessState']?.toString() ?? '',
       previousKnowledge: _nullableDouble(json['previousKnowledge']),
       nextKnowledge: _nullableDouble(json['nextKnowledge']),
@@ -95,8 +92,9 @@ class LearningStateUpdateEvent {
   }
 }
 
-int _int(dynamic value, [int fallback = 0]) =>
-    value is num ? value.toInt() : int.tryParse(value?.toString() ?? '') ?? fallback;
+int _int(dynamic value, [int fallback = 0]) => value is num
+    ? value.toInt()
+    : int.tryParse(value?.toString() ?? '') ?? fallback;
 
 double? _nullableDouble(dynamic value) {
   if (value == null) return null;

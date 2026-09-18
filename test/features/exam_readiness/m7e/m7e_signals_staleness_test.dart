@@ -59,11 +59,7 @@ void main() {
     test('repeated incorrect pattern creates misconception signal', () {
       final attempts = [
         for (var i = 0; i < 4; i++)
-          m7eAttempt(
-            attemptId: 'a$i',
-            questionId: i + 1,
-            correct: i == 3,
-          ),
+          m7eAttempt(attemptId: 'a$i', questionId: i + 1, correct: i == 3),
       ];
 
       final signals = service.detect(
@@ -239,8 +235,14 @@ void main() {
 
       final history = await repo.loadHistory();
       expect(history.where((item) => item.date.day == 19), hasLength(2));
-      expect(history.any((item) => item.status == DailyStudyPlanStatus.active), isTrue);
-      expect(history.any((item) => item.status == DailyStudyPlanStatus.stale), isTrue);
+      expect(
+        history.any((item) => item.status == DailyStudyPlanStatus.active),
+        isTrue,
+      );
+      expect(
+        history.any((item) => item.status == DailyStudyPlanStatus.stale),
+        isTrue,
+      );
     });
 
     test('stale version points to previous plan version', () async {

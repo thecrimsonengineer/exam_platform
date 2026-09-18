@@ -18,7 +18,9 @@ class WeeklyReadinessReviewService {
     final end = start.add(const Duration(days: 7));
 
     final latestPlans = <String, DailyStudyPlan>{};
-    for (final plan in plans.where((plan) => _inWindow(plan.date, start, end))) {
+    for (final plan in plans.where(
+      (plan) => _inWindow(plan.date, start, end),
+    )) {
       final key =
           '${plan.date.year}-${plan.date.month}-${plan.date.day}:${plan.planId}';
       final existing = latestPlans[key];
@@ -49,11 +51,13 @@ class WeeklyReadinessReviewService {
 
     final focus = readinessProfiles.values.toList(growable: false)
       ..sort((left, right) {
-        final criticalOrder =
-            (right.hasCriticalGap ? 1 : 0).compareTo(left.hasCriticalGap ? 1 : 0);
+        final criticalOrder = (right.hasCriticalGap ? 1 : 0).compareTo(
+          left.hasCriticalGap ? 1 : 0,
+        );
         if (criticalOrder != 0) return criticalOrder;
-        final evidenceOrder =
-            (right.hasEvidenceGap ? 1 : 0).compareTo(left.hasEvidenceGap ? 1 : 0);
+        final evidenceOrder = (right.hasEvidenceGap ? 1 : 0).compareTo(
+          left.hasEvidenceGap ? 1 : 0,
+        );
         if (evidenceOrder != 0) return evidenceOrder;
         return left.competencyId.compareTo(right.competencyId);
       });
@@ -84,7 +88,8 @@ class WeeklyReadinessReviewService {
       reasonCodes: <String>[
         if (critical > 0) 'CRITICAL_GAPS_REMAIN',
         if (evidenceGaps > 0) 'EVIDENCE_GAPS_REMAIN',
-        if (weekOutcomes.any((item) => item.abandoned)) 'MISSED_OR_ABANDONED_WORK',
+        if (weekOutcomes.any((item) => item.abandoned))
+          'MISSED_OR_ABANDONED_WORK',
         if (improved.isNotEmpty) 'COMPETENCIES_IMPROVED',
       ],
     );
@@ -105,8 +110,7 @@ class WeeklyReadinessReviewService {
         knowledge += event.nextKnowledge! - event.previousKnowledge!;
         knowledgeSamples++;
       }
-      if (event.previousApplication != null &&
-          event.nextApplication != null) {
+      if (event.previousApplication != null && event.nextApplication != null) {
         application += event.nextApplication! - event.previousApplication!;
         applicationSamples++;
       }
@@ -128,8 +132,7 @@ class WeeklyReadinessReviewService {
     if (event.previousKnowledge != null && event.nextKnowledge != null) {
       deltas.add(event.nextKnowledge! - event.previousKnowledge!);
     }
-    if (event.previousApplication != null &&
-        event.nextApplication != null) {
+    if (event.previousApplication != null && event.nextApplication != null) {
       deltas.add(event.nextApplication! - event.previousApplication!);
     }
     if (event.previousRetention != null && event.nextRetention != null) {

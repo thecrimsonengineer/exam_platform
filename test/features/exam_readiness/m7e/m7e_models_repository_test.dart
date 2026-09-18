@@ -26,7 +26,10 @@ void main() {
     });
 
     test('overall accuracy is derived from attempted questions', () {
-      expect(m7eOutcome(questionsAttempted: 5, questionsCorrect: 3).overallAccuracy, 0.6);
+      expect(
+        m7eOutcome(questionsAttempted: 5, questionsCorrect: 3).overallAccuracy,
+        0.6,
+      );
     });
 
     test('zero attempted questions leaves overall accuracy unavailable', () {
@@ -63,10 +66,7 @@ void main() {
 
     test('correct count cannot exceed attempts', () {
       expect(
-        () => m7eOutcome(
-          questionsAttempted: 2,
-          questionsCorrect: 3,
-        ).validate(),
+        () => m7eOutcome(questionsAttempted: 2, questionsCorrect: 3).validate(),
         throwsStateError,
       );
     });
@@ -79,10 +79,7 @@ void main() {
     });
 
     test('learner rating outside one to five is rejected', () {
-      expect(
-        () => m7eOutcome(learnerRating: 6).validate(),
-        throwsStateError,
-      );
+      expect(() => m7eOutcome(learnerRating: 6).validate(), throwsStateError);
     });
   });
 

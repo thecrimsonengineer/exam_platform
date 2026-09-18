@@ -98,8 +98,7 @@ class DailyStudyPlan {
       previousPlanId: clearPreviousPlanId
           ? null
           : (previousPlanId ?? this.previousPlanId),
-      inputSnapshotVersion:
-          inputSnapshotVersion ?? this.inputSnapshotVersion,
+      inputSnapshotVersion: inputSnapshotVersion ?? this.inputSnapshotVersion,
     );
   }
 
