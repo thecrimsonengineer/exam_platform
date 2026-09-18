@@ -229,6 +229,9 @@ class DailyStudyPlanService {
       inputSnapshotVersion:
           'e:${_sourceEvidenceVersion(readinessProfiles)}|'
           'r:${_sourceReadinessVersion(readinessProfiles)}',
+      previousPlanId: existingPlan == null
+          ? null
+          : '${existingPlan.planId}:v${existingPlan.planVersion}',
       blocks: List<StudyPlanBlock>.unmodifiable(blocks),
       status: DailyStudyPlanStatus.active,
       schemaVersion: DailyStudyPlan.currentSchemaVersion,
