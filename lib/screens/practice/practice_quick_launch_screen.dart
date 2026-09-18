@@ -83,6 +83,8 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
         return 'Random Quiz';
       case PracticeMode.weakAreas:
         return 'Weak Areas';
+      case PracticeMode.ultraHardExamReadiness:
+        return 'Ultra Hard • Exam Readiness';
     }
   }
 
@@ -94,6 +96,8 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
         return 'Mixing published CSP11 questions...';
       case PracticeMode.weakAreas:
         return 'Checking your question history for an evidence-backed focus area...';
+      case PracticeMode.ultraHardExamReadiness:
+        return 'Loading only published DQG300 300/300 readiness questions...';
     }
   }
 
@@ -104,6 +108,8 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
       PracticeMode.dailyChallenge => LearningTwinPracticeMode.dailyChallenge,
       PracticeMode.randomQuiz => LearningTwinPracticeMode.randomQuiz,
       PracticeMode.weakAreas => LearningTwinPracticeMode.weakAreas,
+      PracticeMode.ultraHardExamReadiness =>
+        LearningTwinPracticeMode.ultraHardExamReadiness,
     };
 
     return LearningTwinPracticeContext(
