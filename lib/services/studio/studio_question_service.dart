@@ -124,8 +124,7 @@ class StudioQuestionService {
     List<Question> questions,
   ) => _questionBankService.publishPreparedBatch(questions);
 
-  Future<QuestionPreparedBatchPublishResult>
-  publishPreparedUltraHardBatch(
+  Future<QuestionPreparedBatchPublishResult> publishPreparedUltraHardBatch(
     List<Question> questions, {
     required Map<int, QuestionQualityEvidence> qualityEvidenceByQuestionId,
   }) => _questionBankService.publishPreparedUltraHardBatch(

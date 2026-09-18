@@ -6,7 +6,12 @@ import '../quiz_service.dart';
 import '../student_question_progress_service.dart';
 import '../ultra_hard_question_contract.dart';
 
-enum PracticeMode { dailyChallenge, randomQuiz, weakAreas, ultraHardExamReadiness }
+enum PracticeMode {
+  dailyChallenge,
+  randomQuiz,
+  weakAreas,
+  ultraHardExamReadiness,
+}
 
 typedef QuestionProgressLoader =
     Future<Map<int, StudentQuestionProgress>> Function();
@@ -84,9 +89,7 @@ class PracticeModeService {
     }
   }
 
-  PracticeSessionPlan _buildUltraHardExamReadiness(
-    List<Question> published,
-  ) {
+  PracticeSessionPlan _buildUltraHardExamReadiness(List<Question> published) {
     final ultraHard = published
         .where(
           (question) => question.tags.any(

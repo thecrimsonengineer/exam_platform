@@ -97,10 +97,8 @@ class PracticeHubScreen extends StatelessWidget {
         actionLabel: 'TEST READINESS',
         badge: 'DQG300',
         featured: true,
-        onTap: () => _openQuickPractice(
-          context,
-          PracticeMode.ultraHardExamReadiness,
-        ),
+        onTap: () =>
+            _openQuickPractice(context, PracticeMode.ultraHardExamReadiness),
       ),
     ];
 
@@ -132,7 +130,9 @@ class PracticeHubScreen extends StatelessWidget {
               right: -70,
               child: _AmbientOrb(
                 size: 290,
-                color: scheme.primary.withValues(alpha: isDarkMode ? 0.20 : 0.12),
+                color: scheme.primary.withValues(
+                  alpha: isDarkMode ? 0.20 : 0.12,
+                ),
               ),
             ),
             Positioned(
@@ -140,8 +140,9 @@ class PracticeHubScreen extends StatelessWidget {
               left: -110,
               child: _AmbientOrb(
                 size: 320,
-                color: const Color(0xFFA855F7)
-                    .withValues(alpha: isDarkMode ? 0.16 : 0.09),
+                color: const Color(
+                  0xFFA855F7,
+                ).withValues(alpha: isDarkMode ? 0.16 : 0.09),
               ),
             ),
             SafeArea(
@@ -171,8 +172,9 @@ class PracticeHubScreen extends StatelessWidget {
                               const SizedBox(height: 16),
                               LayoutBuilder(
                                 builder: (context, constraints) {
-                                  final columns =
-                                      constraints.maxWidth >= 820 ? 2 : 1;
+                                  final columns = constraints.maxWidth >= 820
+                                      ? 2
+                                      : 1;
                                   const gap = 14.0;
                                   final width = columns == 1
                                       ? constraints.maxWidth
@@ -460,9 +462,7 @@ class _PracticeModeCard extends StatelessWidget {
       key: ValueKey<String>(mode.keyName),
       isDarkMode: isDarkMode,
       padding: EdgeInsets.zero,
-      borderColor: mode.featured
-          ? mode.accent.withValues(alpha: 0.42)
-          : null,
+      borderColor: mode.featured ? mode.accent.withValues(alpha: 0.42) : null,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -602,9 +602,7 @@ class _GlassPanel extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(
-                  alpha: isDarkMode ? 0.22 : 0.07,
-                ),
+                color: Colors.black.withValues(alpha: isDarkMode ? 0.22 : 0.07),
                 blurRadius: 26,
                 offset: const Offset(0, 12),
               ),

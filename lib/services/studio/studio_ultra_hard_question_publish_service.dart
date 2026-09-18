@@ -115,9 +115,7 @@ class StudioUltraHardQuestionPublishService {
 
     final questions = <Question>[];
     final evidenceById = <int, QuestionQualityEvidence>{};
-    final counts = <String, int>{
-      for (final id in subtopicsById.keys) id: 0,
-    };
+    final counts = <String, int>{for (final id in subtopicsById.keys) id: 0};
     final normalizedStems = <String>{};
 
     for (var index = 0; index < rawQuestions.length; index++) {
@@ -161,10 +159,9 @@ class StudioUltraHardQuestionPublishService {
             content: content,
             topic: topic,
             subtopic: subtopic,
-            quizId:
-                StudioBulkQuestionPublishService.stableQuizIdForSubtopicId(
-                  subtopicId,
-                ),
+            quizId: StudioBulkQuestionPublishService.stableQuizIdForSubtopicId(
+              subtopicId,
+            ),
           )
           .single;
 
@@ -319,9 +316,10 @@ class StudioUltraHardQuestionPublishService {
   QuestionQualityEvidence _parseEvidence(Map<String, dynamic> map) {
     return QuestionQualityEvidence(
       difficultyLevel: _requiredString(map, 'difficultyLevel'),
-      distractors: _objectList(map['distractors'], label: 'distractors')
-          .map(_parseDistractor)
-          .toList(growable: false),
+      distractors: _objectList(
+        map['distractors'],
+        label: 'distractors',
+      ).map(_parseDistractor).toList(growable: false),
       decisiveScenarioFacts: _stringList(map['decisiveScenarioFacts']),
       materialCriteria: _stringList(map['materialCriteria']),
       keySatisfiedCriteria: _stringList(map['keySatisfiedCriteria']),
@@ -331,19 +329,22 @@ class StudioUltraHardQuestionPublishService {
       criterionMatrixComplete: _requiredBool(map, 'criterionMatrixComplete'),
       keySuperiorityProof: _intStringMap(map['keySuperiorityProof']),
       keyCompleteness: _stringBoolMap(map['keyCompleteness']),
-      defensibleBestAnswerCount:
-          _requiredInt(map, 'defensibleBestAnswerCount'),
+      defensibleBestAnswerCount: _requiredInt(map, 'defensibleBestAnswerCount'),
       reviewComplete: _requiredBool(map, 'reviewComplete'),
       manualOverrideRequested: _requiredBool(map, 'manualOverrideRequested'),
       unresolvedBlockCount: _requiredInt(map, 'unresolvedBlockCount'),
       unresolvedFailCount: _requiredInt(map, 'unresolvedFailCount'),
       unresolvedWarningCount: _requiredInt(map, 'unresolvedWarningCount'),
-      keyRequiresNoUnstatedAssumption:
-          _requiredBool(map, 'keyRequiresNoUnstatedAssumption'),
+      keyRequiresNoUnstatedAssumption: _requiredBool(
+        map,
+        'keyRequiresNoUnstatedAssumption',
+      ),
       assumptionsDocumented: _requiredBool(map, 'assumptionsDocumented'),
       keyAssumptionsSupported: _requiredBool(map, 'keyAssumptionsSupported'),
-      noEquivalenceFromUnstatedAssumption:
-          _requiredBool(map, 'noEquivalenceFromUnstatedAssumption'),
+      noEquivalenceFromUnstatedAssumption: _requiredBool(
+        map,
+        'noEquivalenceFromUnstatedAssumption',
+      ),
       assumptions: _objectList(map['assumptions'], label: 'assumptions')
           .map(
             (item) => AssumptionEvidence(
@@ -351,50 +352,65 @@ class StudioUltraHardQuestionPublishService {
               assumptionUsed: _requiredString(item, 'assumptionUsed'),
               scenarioSupport: _requiredString(item, 'scenarioSupport'),
               supported: _requiredBool(item, 'supported'),
-              intentionalDistractorTrap:
-                  _requiredBool(item, 'intentionalDistractorTrap'),
+              intentionalDistractorTrap: _requiredBool(
+                item,
+                'intentionalDistractorTrap',
+              ),
             ),
           )
           .toList(growable: false),
       authoritativeSources: _stringList(map['authoritativeSources']),
       sourceAuthorityVerified: _requiredBool(map, 'sourceAuthorityVerified'),
       sourceSupportsKey: _requiredBool(map, 'sourceSupportsKey'),
-      noUnsupportedMicroscopicDistinction:
-          _requiredBool(map, 'noUnsupportedMicroscopicDistinction'),
+      noUnsupportedMicroscopicDistinction: _requiredBool(
+        map,
+        'noUnsupportedMicroscopicDistinction',
+      ),
       ambiguityDetected: _requiredBool(map, 'ambiguityDetected'),
-      semanticDuplicateOptionsDetected:
-          _requiredBool(map, 'semanticDuplicateOptionsDetected'),
-      answerPositionCueDetected:
-          _requiredBool(map, 'answerPositionCueDetected'),
+      semanticDuplicateOptionsDetected: _requiredBool(
+        map,
+        'semanticDuplicateOptionsDetected',
+      ),
+      answerPositionCueDetected: _requiredBool(
+        map,
+        'answerPositionCueDetected',
+      ),
       answerKeyVerified: _requiredBool(map, 'answerKeyVerified'),
       stemSufficient: _requiredBool(map, 'stemSufficient'),
       testsIntendedCompetency: _requiredBool(map, 'testsIntendedCompetency'),
       numericQuestion: _requiredBool(map, 'numericQuestion'),
-      wrongLevelCorrectnessApplicable:
-          _requiredBool(map, 'wrongLevelCorrectnessApplicable'),
-      wrongLevelDistinctionDocumented:
-          _requiredBool(map, 'wrongLevelDistinctionDocumented'),
-      sophisticationParityApplicable:
-          _requiredBool(map, 'sophisticationParityApplicable'),
-      sophisticationParitySatisfied:
-          _requiredBool(map, 'sophisticationParitySatisfied'),
-      advancedDistractorPresentWhenApplicable:
-          _requiredBool(map, 'advancedDistractorPresentWhenApplicable'),
+      wrongLevelCorrectnessApplicable: _requiredBool(
+        map,
+        'wrongLevelCorrectnessApplicable',
+      ),
+      wrongLevelDistinctionDocumented: _requiredBool(
+        map,
+        'wrongLevelDistinctionDocumented',
+      ),
+      sophisticationParityApplicable: _requiredBool(
+        map,
+        'sophisticationParityApplicable',
+      ),
+      sophisticationParitySatisfied: _requiredBool(
+        map,
+        'sophisticationParitySatisfied',
+      ),
+      advancedDistractorPresentWhenApplicable: _requiredBool(
+        map,
+        'advancedDistractorPresentWhenApplicable',
+      ),
       optionSurfaceMetrics:
           _objectList(
-            map['optionSurfaceMetrics'],
-            label: 'optionSurfaceMetrics',
-          )
+                map['optionSurfaceMetrics'],
+                label: 'optionSurfaceMetrics',
+              )
               .map(
                 (item) => OptionSurfaceMetrics(
                   optionIndex: _requiredInt(item, 'optionIndex'),
                   characterCount: _requiredInt(item, 'characterCount'),
                   wordCount: _requiredInt(item, 'wordCount'),
                   clauseCount: _requiredInt(item, 'clauseCount'),
-                  technicalTermCount: _requiredInt(
-                    item,
-                    'technicalTermCount',
-                  ),
+                  technicalTermCount: _requiredInt(item, 'technicalTermCount'),
                   qualifierCount: _requiredInt(item, 'qualifierCount'),
                 ),
               )
@@ -414,8 +430,10 @@ class StudioUltraHardQuestionPublishService {
       confusabilityScore: _requiredInt(map, 'confusabilityScore'),
       family: _requiredString(map, 'family'),
       familyJustification: _string(map['familyJustification']),
-      misconceptionFingerprint:
-          _requiredString(map, 'misconceptionFingerprint'),
+      misconceptionFingerprint: _requiredString(
+        map,
+        'misconceptionFingerprint',
+      ),
       targetedMisconception: _requiredString(map, 'targetedMisconception'),
       whyTempting: _requiredString(map, 'whyTempting'),
       fatalFlaw: _requiredString(map, 'fatalFlaw'),
@@ -423,41 +441,69 @@ class StudioUltraHardQuestionPublishService {
       scenarioAnchorsValid: _requiredBool(map, 'scenarioAnchorsValid'),
       technicalTruth: _requiredString(map, 'technicalTruth'),
       keyDifference: _requiredString(map, 'keyDifference'),
-      counterfactualToBecomeCorrect:
-          _requiredString(map, 'counterfactualToBecomeCorrect'),
+      counterfactualToBecomeCorrect: _requiredString(
+        map,
+        'counterfactualToBecomeCorrect',
+      ),
       sameTechnicalUniverse: _requiredBool(map, 'sameTechnicalUniverse'),
       sameProfessionalLevel: _requiredBool(map, 'sameProfessionalLevel'),
-      substantiallyTechnicallyCorrect:
-          _requiredBool(map, 'substantiallyTechnicallyCorrect'),
-      professionalTerminologyValid:
-          _requiredBool(map, 'professionalTerminologyValid'),
-      addressesActualDecisionOrHazard:
-          _requiredBool(map, 'addressesActualDecisionOrHazard'),
-      credibleInProfessionalPractice:
-          _requiredBool(map, 'credibleInProfessionalPractice'),
+      substantiallyTechnicallyCorrect: _requiredBool(
+        map,
+        'substantiallyTechnicallyCorrect',
+      ),
+      professionalTerminologyValid: _requiredBool(
+        map,
+        'professionalTerminologyValid',
+      ),
+      addressesActualDecisionOrHazard: _requiredBool(
+        map,
+        'addressesActualDecisionOrHazard',
+      ),
+      credibleInProfessionalPractice: _requiredBool(
+        map,
+        'credibleInProfessionalPractice',
+      ),
       singleFatalFlaw: _requiredBool(map, 'singleFatalFlaw'),
-      multipleUnrelatedDefectsDetected:
-          _requiredBool(map, 'multipleUnrelatedDefectsDetected'),
-      sophisticatedReasoningPath:
-          _requiredBool(map, 'sophisticatedReasoningPath'),
-      counterfactualMinimalAndPlausible:
-          _requiredBool(map, 'counterfactualMinimalAndPlausible'),
+      multipleUnrelatedDefectsDetected: _requiredBool(
+        map,
+        'multipleUnrelatedDefectsDetected',
+      ),
+      sophisticatedReasoningPath: _requiredBool(
+        map,
+        'sophisticatedReasoningPath',
+      ),
+      counterfactualMinimalAndPlausible: _requiredBool(
+        map,
+        'counterfactualMinimalAndPlausible',
+      ),
       grammarParallel: _requiredBool(map, 'grammarParallel'),
-      specificityAndDetailParallel:
-          _requiredBool(map, 'specificityAndDetailParallel'),
+      specificityAndDetailParallel: _requiredBool(
+        map,
+        'specificityAndDetailParallel',
+      ),
       lengthAndClauseParallel: _requiredBool(map, 'lengthAndClauseParallel'),
-      terminologyUnitsPrecisionParallel:
-          _requiredBool(map, 'terminologyUnitsPrecisionParallel'),
-      conditionalWordingParallel:
-          _requiredBool(map, 'conditionalWordingParallel'),
+      terminologyUnitsPrecisionParallel: _requiredBool(
+        map,
+        'terminologyUnitsPrecisionParallel',
+      ),
+      conditionalWordingParallel: _requiredBool(
+        map,
+        'conditionalWordingParallel',
+      ),
       linguisticCueDetected: _requiredBool(map, 'linguisticCueDetected'),
       keywordLeakageDetected: _requiredBool(map, 'keywordLeakageDetected'),
-      absoluteLanguageShortcutDetected:
-          _requiredBool(map, 'absoluteLanguageShortcutDetected'),
-      nonTechnicalEliminationShortcutDetected:
-          _requiredBool(map, 'nonTechnicalEliminationShortcutDetected'),
-      sourceSupportsRejectionDistinction:
-          _requiredBool(map, 'sourceSupportsRejectionDistinction'),
+      absoluteLanguageShortcutDetected: _requiredBool(
+        map,
+        'absoluteLanguageShortcutDetected',
+      ),
+      nonTechnicalEliminationShortcutDetected: _requiredBool(
+        map,
+        'nonTechnicalEliminationShortcutDetected',
+      ),
+      sourceSupportsRejectionDistinction: _requiredBool(
+        map,
+        'sourceSupportsRejectionDistinction',
+      ),
       smeRejectionProof: _requiredString(map, 'smeRejectionProof'),
       distractorCalculationPath: _string(map['distractorCalculationPath']),
       calculationConsistent: _requiredBool(map, 'calculationConsistent'),
@@ -497,12 +543,14 @@ class StudioUltraHardQuestionPublishService {
       throw FormatException('$label must be a JSON array.');
     }
 
-    return value.map((item) {
-      if (item is! Map) {
-        throw FormatException('$label contains a non-object item.');
-      }
-      return Map<String, dynamic>.from(item);
-    }).toList(growable: false);
+    return value
+        .map((item) {
+          if (item is! Map) {
+            throw FormatException('$label contains a non-object item.');
+          }
+          return Map<String, dynamic>.from(item);
+        })
+        .toList(growable: false);
   }
 
   String _requiredString(Map<String, dynamic> map, String key) {
@@ -550,7 +598,8 @@ class StudioUltraHardQuestionPublishService {
   Map<int, String> _intStringMap(dynamic value) {
     final map = _asMap(value, label: 'keySuperiorityProof');
     return {
-      for (final entry in map.entries) int.parse(entry.key): _string(entry.value),
+      for (final entry in map.entries)
+        int.parse(entry.key): _string(entry.value),
     };
   }
 

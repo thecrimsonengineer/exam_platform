@@ -82,7 +82,6 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-
   testWidgets('Ultra Hard quick launch keeps its readiness identity', (
     tester,
   ) async {
@@ -120,7 +119,6 @@ void main() {
     expect(find.text('Ultra Hard • Exam Readiness'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
-
 
   testWidgets('quick launch session handoff renders in light mode', (
     tester,

@@ -34,14 +34,8 @@ void main() {
       'lib/screens/admin/study_content/study_content_studio_screen.dart',
     );
 
-    expect(
-      source,
-      contains("ValueKey('legacy-bulk-question-import')"),
-    );
-    expect(
-      source,
-      contains("ValueKey('ultra-hard-bulk-question-import')"),
-    );
+    expect(source, contains("ValueKey('legacy-bulk-question-import')"));
+    expect(source, contains("ValueKey('ultra-hard-bulk-question-import')"));
     expect(source, contains('Bulk 120 JSON • H0.3 • Publish • Auto-Link'));
     expect(source, contains('Ultra Hard JSON • DQG300 • 300/300'));
   });

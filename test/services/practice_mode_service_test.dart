@@ -8,7 +8,11 @@ import 'package:exam_platform/services/study_content/cloud_content_repository.da
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Question _question({required int id, required int domain, bool ultraHard = false}) {
+Question _question({
+  required int id,
+  required int domain,
+  bool ultraHard = false,
+}) {
   final domainId = domain.toString().padLeft(2, '0');
 
   return Question(
@@ -135,50 +139,55 @@ void main() {
     expect(plan.domainNumber, 0);
   });
 
+  test(
+    'Ultra Hard mode uses only DQG300-classified published questions',
+    () async {
+      final quizService = await _quizService(
+        questionsPerDomain: const {1: 8, 2: 8},
+        ultraHardQuestionIds: const {1, 2, 3, 4, 5, 9, 10},
+      );
 
-  test('Ultra Hard mode uses only DQG300-classified published questions', () async {
-    final quizService = await _quizService(
-      questionsPerDomain: const {1: 8, 2: 8},
-      ultraHardQuestionIds: const {1, 2, 3, 4, 5, 9, 10},
-    );
+      final service = PracticeModeService(
+        quizService: quizService,
+        questionProgressLoader: () async => <int, StudentQuestionProgress>{},
+      );
 
-    final service = PracticeModeService(
-      quizService: quizService,
-      questionProgressLoader: () async => <int, StudentQuestionProgress>{},
-    );
+      final plan = await service.build(PracticeMode.ultraHardExamReadiness);
 
-    final plan = await service.build(PracticeMode.ultraHardExamReadiness);
-
-    expect(plan.questions, hasLength(7));
-    expect(
-      plan.questions.every(
-        (question) => question.tags.contains(
-          UltraHardQuestionContract.classificationTag,
+      expect(plan.questions, hasLength(7));
+      expect(
+        plan.questions.every(
+          (question) => question.tags.contains(
+            UltraHardQuestionContract.classificationTag,
+          ),
         ),
-      ),
-      isTrue,
-    );
-    expect(plan.title, contains('Exam Readiness'));
-    expect(plan.notice, contains('300/300'));
-    expect(plan.usedFallback, isFalse);
-  });
+        isTrue,
+      );
+      expect(plan.title, contains('Exam Readiness'));
+      expect(plan.notice, contains('300/300'));
+      expect(plan.usedFallback, isFalse);
+    },
+  );
 
-  test('Ultra Hard mode fails closed when fewer than five are available', () async {
-    final quizService = await _quizService(
-      questionsPerDomain: const {1: 10},
-      ultraHardQuestionIds: const {1, 2, 3, 4},
-    );
+  test(
+    'Ultra Hard mode fails closed when fewer than five are available',
+    () async {
+      final quizService = await _quizService(
+        questionsPerDomain: const {1: 10},
+        ultraHardQuestionIds: const {1, 2, 3, 4},
+      );
 
-    final service = PracticeModeService(
-      quizService: quizService,
-      questionProgressLoader: () async => <int, StudentQuestionProgress>{},
-    );
+      final service = PracticeModeService(
+        quizService: quizService,
+        questionProgressLoader: () async => <int, StudentQuestionProgress>{},
+      );
 
-    expect(
-      () => service.build(PracticeMode.ultraHardExamReadiness),
-      throwsA(isA<StateError>()),
-    );
-  });
+      expect(
+        () => service.build(PracticeMode.ultraHardExamReadiness),
+        throwsA(isA<StateError>()),
+      );
+    },
+  );
 
   test('Weak Areas selects the lowest evidence-backed weak domain', () async {
     final quizService = await _quizService(

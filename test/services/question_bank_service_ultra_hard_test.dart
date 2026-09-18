@@ -18,9 +18,7 @@ void main() {
   });
 
   QuestionBankService service() {
-    return QuestionBankService(
-      repository: LocalQuestionRepository.instance,
-    );
+    return QuestionBankService(repository: LocalQuestionRepository.instance);
   }
 
   test('Ultra Hard batch publishes only after exact DQG300 pass', () async {
@@ -47,10 +45,7 @@ void main() {
 
   test('Ultra Hard batch blocks when one atomic DQG fails', () async {
     final question = perfectDqg300Question();
-    final evidence = failRuleProof(
-      perfectDqg300Evidence(),
-      'DQG-101',
-    );
+    final evidence = failRuleProof(perfectDqg300Evidence(), 'DQG-101');
     final bank = service();
 
     expect(
@@ -69,10 +64,9 @@ void main() {
     final bank = service();
 
     expect(
-      () => bank.publishPreparedUltraHardBatch(
-        [question],
-        qualityEvidenceByQuestionId: const {},
-      ),
+      () => bank.publishPreparedUltraHardBatch([
+        question,
+      ], qualityEvidenceByQuestionId: const {}),
       throwsA(isA<StateError>()),
     );
 

@@ -113,16 +113,10 @@ class _StudioUltraHardQuestionJsonDialogState
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF24124D),
-                      Color(0xFF49206E),
-                    ],
+                    colors: [Color(0xFF24124D), Color(0xFF49206E)],
                   ),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: Color(0xFFB99CFF),
-                    width: 0.8,
-                  ),
+                  border: Border.all(color: Color(0xFFB99CFF), width: 0.8),
                 ),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +150,9 @@ class _StudioUltraHardQuestionJsonDialogState
                     key: const ValueKey('ultra-hard-choose-json'),
                     onPressed: _busy ? null : _selectFile,
                     icon: const Icon(Icons.upload_file_rounded),
-                    label: Text(_busy ? 'Validating...' : 'Choose Ultra Hard JSON'),
+                    label: Text(
+                      _busy ? 'Validating...' : 'Choose Ultra Hard JSON',
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
