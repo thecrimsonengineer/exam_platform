@@ -20,7 +20,7 @@ class QuestionCard extends StatelessWidget {
     return StudentGlassSurface(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       borderRadius: BorderRadius.circular(22),
-      tint: QuizColors.surface.withValues(alpha: 0.56),
+      gradient: QuizColors.questionGradient,
       borderColor: QuizColors.borderStrong.withValues(alpha: 0.72),
       shadowColor: QuizColors.navy.withValues(alpha: 0.08),
       child: Column(
