@@ -34,7 +34,7 @@ jobs:
             echo "No changed Dart UI files."
             exit 0
           fi
-          dart format --output=none --set-exit-if-changed "${changed[@]}"
+          dart format "${changed[@]}"
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
