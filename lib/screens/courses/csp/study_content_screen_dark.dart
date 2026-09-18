@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 import '../../../services/study_content_loader.dart';
 import '../../../theme/study/study_colors_dark.dart';
@@ -69,7 +71,7 @@ class _DarkStudyContentScreenState extends State<DarkStudyContentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: DarkStudyColors.background,
       appBar: _buildAppBar(context),
       body: FutureBuilder<StudyContent>(

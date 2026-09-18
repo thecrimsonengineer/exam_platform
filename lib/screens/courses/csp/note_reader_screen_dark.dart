@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../controllers/note_controller.dart';
 import '../../../models/note.dart';
 
@@ -21,7 +23,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
     final Note? note = controller.selectedNote;
 
     if (note == null) {
-      return const Scaffold(
+      return const StudentGlassScaffold(
         backgroundColor: _bg,
         body: Center(
           child: Text(
@@ -32,7 +34,7 @@ class DarkNoteReaderScreen extends StatelessWidget {
       );
     }
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _bg,
       appBar: AppBar(
         title: Text(note.title),

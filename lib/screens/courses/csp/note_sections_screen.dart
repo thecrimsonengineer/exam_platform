@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../controllers/note_controller.dart';
 import '../../../models/note_section.dart';
 import 'notes_list_screen.dart';
@@ -13,7 +15,7 @@ class NoteSectionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<NoteSection> sections = controller.getSections();
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(
         title: Text(controller.selectedDomain?.title ?? 'Study Notes'),
         centerTitle: true,

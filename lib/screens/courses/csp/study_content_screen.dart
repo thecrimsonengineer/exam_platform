@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 import '../../../services/study_content_loader.dart';
 import '../../../theme/study/study_colors.dart';
@@ -131,7 +133,7 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: StudyColors.background,
       appBar: _buildAppBar(context),
       body: _visibleContent != null
