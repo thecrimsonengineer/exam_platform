@@ -116,13 +116,19 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
       return;
     }
 
-    if (_minutesPerDay <= 0 || _minutesPerDay > 1440) {
+    final declaredMinutes = int.tryParse(
+      _customMinutesController.text.trim(),
+    );
+    if (declaredMinutes == null ||
+        declaredMinutes <= 0 ||
+        declaredMinutes > 1440) {
       setState(
         () => _error =
             'Daily study time must be between 1 and 1440 minutes.',
       );
       return;
     }
+    _minutesPerDay = declaredMinutes;
 
     final plan = _draftPlan();
     final today = ExamStudyPlan.dateOnly(_now);
