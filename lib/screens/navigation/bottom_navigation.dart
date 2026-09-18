@@ -205,6 +205,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                   label: 'Progress',
                 ),
                 NavigationDestination(
+                  key: ValueKey('bottom-nav-practice'),
                   icon: Icon(Icons.quiz_outlined),
                   selectedIcon: Icon(Icons.quiz_rounded),
                   label: 'Practice',
