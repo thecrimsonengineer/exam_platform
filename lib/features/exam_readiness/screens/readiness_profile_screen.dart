@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../data/csp11_blueprint.dart';
 import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
@@ -83,7 +85,7 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       key: const ValueKey('m7c-readiness-screen'),
       appBar: AppBar(
         title: const Text('Exam Readiness'),

@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import 'package:flutter/services.dart';
 
 import '../../../services/auth/learner_local_identity.dart';
@@ -159,7 +161,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
     final plan = _draftPlan();
     final snapshot = _capacityService.calculate(plan: plan, now: _now);
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(title: const Text('Exam Readiness Plan')),
       body: SafeArea(
         child: ListView(

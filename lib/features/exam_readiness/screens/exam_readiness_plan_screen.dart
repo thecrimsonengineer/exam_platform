@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../models/exam_study_plan.dart';
 import '../models/plan_regeneration_reason.dart';
 import '../models/study_capacity_snapshot.dart';
@@ -132,7 +134,7 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(
         title: const Text('Exam Readiness Plan'),
         actions: [

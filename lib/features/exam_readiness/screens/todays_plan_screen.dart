@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../models/daily_study_plan.dart';
 import '../models/study_plan_block.dart';
 import '../repositories/daily_study_plan_repository.dart';
@@ -288,7 +290,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       key: const ValueKey('m7d-todays-plan-screen'),
       appBar: AppBar(
         title: const Text("Today's Plan"),

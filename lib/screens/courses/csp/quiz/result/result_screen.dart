@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
 import '../../../../../features/learning_twin/coaching/learning_twin_practice_result_context.dart';
 import '../../../../../features/learning_twin/integration/learning_twin_post_practice_guidance.dart';
@@ -41,7 +43,7 @@ class ResultScreen extends StatelessWidget {
 
     final int incorrectCount = totalQuestions - score;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: QuizColors.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,

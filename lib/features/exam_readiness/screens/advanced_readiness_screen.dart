@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../models/advanced_readiness_snapshot.dart';
 import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
@@ -115,7 +117,7 @@ class _AdvancedReadinessScreenState extends State<AdvancedReadinessScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       key: const ValueKey('m7f-advanced-readiness-screen'),
       appBar: AppBar(
         title: const Text('Advanced Readiness'),

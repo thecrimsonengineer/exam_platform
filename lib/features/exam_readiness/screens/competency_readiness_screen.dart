@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
 
@@ -13,7 +15,7 @@ class CompetencyReadinessScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       key: const ValueKey('m7c-competency-readiness-screen'),
       appBar: AppBar(title: Text(profile.competencyId.toUpperCase())),
       body: SafeArea(
