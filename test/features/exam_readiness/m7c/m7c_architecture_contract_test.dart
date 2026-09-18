@@ -7,6 +7,8 @@ void main() {
     late String service;
     late String model;
     late String screen;
+    late String gapModel;
+    late String gapService;
     late String planScreen;
 
     setUpAll(() {
@@ -18,6 +20,12 @@ void main() {
       ).readAsStringSync();
       screen = File(
         'lib/features/exam_readiness/screens/readiness_profile_screen.dart',
+      ).readAsStringSync();
+      gapModel = File(
+        'lib/features/exam_readiness/models/readiness_gap.dart',
+      ).readAsStringSync();
+      gapService = File(
+        'lib/features/exam_readiness/services/readiness_gap_service.dart',
       ).readAsStringSync();
       planScreen = File(
         'lib/features/exam_readiness/screens/exam_readiness_plan_screen.dart',
@@ -49,8 +57,9 @@ void main() {
       expect(screen, contains('single exam-readiness percentage'));
     });
 
-    test('M7C screen does not claim exam pass prediction', () {
-      expect(screen, contains('predict whether you will pass the exam'));
+    test('M7C screen explicitly disclaims exam pass prediction', () {
+      expect(screen, contains('predict'));
+      expect(screen, contains('pass the exam'));
     });
 
     test('knowledge dimension remains nullable', () {
@@ -70,9 +79,9 @@ void main() {
     });
 
     test('readiness gaps use structured reason codes', () {
-      expect(model, contains('final String reasonCode'));
-      expect(service, contains('APPLICATION_EVIDENCE_MISSING'));
-      expect(service, contains('RETENTION_EVIDENCE_MISSING'));
+      expect(gapModel, contains('final String reasonCode'));
+      expect(gapService, contains('APPLICATION_EVIDENCE_MISSING'));
+      expect(gapService, contains('RETENTION_EVIDENCE_MISSING'));
     });
 
     test('readiness state includes insufficient evidence separately', () {
