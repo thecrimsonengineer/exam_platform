@@ -181,13 +181,19 @@ void main() {
     testWidgets('tapping assessed competency opens detail screen', (
       tester,
     ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(800, 2200);
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(_app(await _screenWithEvidence()));
       await tester.pumpAndSettle();
+
       final row = find.byKey(const ValueKey('m7c-competency-d03_c02'));
-      await tester.ensureVisible(row);
-      await tester.pumpAndSettle();
+      expect(row, findsOneWidget);
       await tester.tap(row);
       await tester.pumpAndSettle();
+
       expect(
         find.byKey(const ValueKey('m7c-competency-readiness-screen')),
         findsOneWidget,
