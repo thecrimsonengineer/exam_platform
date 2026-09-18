@@ -18,14 +18,30 @@ class UltraHardAvailabilityService {
 
     for (final question in questions) {
       final competencyId = question.competencyId.trim().toLowerCase();
+      final isPublished =
+          question.status.trim().toLowerCase() == 'published';
       final isUltraHard = question.tags.any(
         (tag) =>
             tag.trim().toLowerCase() ==
             UltraHardQuestionContract.classificationTag,
       );
 
-      if (!isUltraHard ||
-          !RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId)) {
+      if (!isPublished ||
+          !isUltraHard ||
+          !RegExp(r'^d\d{2}_c\d{2}
+        continue;
+      }
+
+      counts[competencyId] = (counts[competencyId] ?? 0) + 1;
+    }
+
+    return counts.entries
+        .where((entry) => entry.value >= 5)
+        .map((entry) => entry.key)
+        .toSet();
+  }
+}
+).hasMatch(competencyId)) {
         continue;
       }
 
