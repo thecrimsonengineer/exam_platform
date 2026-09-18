@@ -115,7 +115,7 @@ class LearningStateUpdateCoordinator {
         : 0;
 
     final event = LearningStateUpdateEvent(
-      eventId: 'm7e-${outcome.outcomeId}-${at.microsecondsSinceEpoch}',
+      eventId: 'm7e-${outcome.outcomeId}',
       outcomeId: outcome.outcomeId,
       competencyId: profile.competencyId,
       occurredAt: at,

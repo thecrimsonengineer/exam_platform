@@ -258,6 +258,43 @@ class DailyStudyPlanService {
     );
   }
 
+  DailyStudyPlan completeBlock(
+    DailyStudyPlan plan,
+    String blockId, {
+    required DateTime at,
+  }) {
+    final target = _findBlock(plan, blockId);
+
+    if (target.status == StudyPlanBlockStatus.completed) {
+      return plan;
+    }
+    if (target.status != StudyPlanBlockStatus.started) {
+      throw StateError('A study-plan block must be started before completion.');
+    }
+
+    final changed = target.copyWith(
+      status: StudyPlanBlockStatus.completed,
+      completedAt: at,
+      manualChanges: [
+        ...target.manualChanges,
+        StudyPlanManualChange(
+          action: StudyPlanManualAction.complete,
+          changedAt: at,
+          note: 'Learner completed block.',
+          previousMinutes: target.plannedMinutes,
+          newMinutes: target.plannedMinutes,
+        ),
+      ],
+    );
+
+    final blocks = [
+      for (final block in plan.blocks)
+        if (block.blockId == blockId) changed else block,
+    ];
+
+    return _nextManualVersion(plan, blocks, at);
+  }
+
   DailyStudyPlan skipBlock(
     DailyStudyPlan plan,
     String blockId, {
@@ -448,6 +485,9 @@ class DailyStudyPlanService {
     if (profile.readinessState == ReadinessState.stale) {
       return StudyPlanBlockType.competencyRecheck;
     }
+    if (_hasConfidenceGap(profile)) {
+      return StudyPlanBlockType.confidenceCalibration;
+    }
     if (_hasPerformanceGap(profile)) {
       return StudyPlanBlockType.repair;
     }
@@ -460,6 +500,16 @@ class DailyStudyPlanService {
       return StudyPlanBlockType.continueLearning;
     }
     return StudyPlanBlockType.standardPractice;
+  }
+
+  bool _hasConfidenceGap(CompetencyReadinessProfile profile) {
+    return profile.gaps.any(
+      (gap) =>
+          !gap.evidenceLimited &&
+          gap.type == ReadinessGapType.confidenceGap &&
+          (gap.severity == ReadinessGapSeverity.high ||
+              gap.severity == ReadinessGapSeverity.critical),
+    );
   }
 
   bool _hasPerformanceGap(CompetencyReadinessProfile profile) {
@@ -580,6 +630,7 @@ class DailyStudyPlanService {
 
     final reasonCodes = <String>{
       ...candidate.priority.reasonCodes,
+      ...?candidate.profile?.gaps.map((gap) => gap.reasonCode),
       if (extraReason != null) extraReason,
       _typeReason(type),
     }.toList(growable: false);
@@ -629,6 +680,8 @@ class DailyStudyPlanService {
         return 'RETENTION_DUE';
       case StudyPlanBlockType.ultraHardPractice:
         return 'ULTRA_HARD_GAP';
+      case StudyPlanBlockType.confidenceCalibration:
+        return 'CONFIDENCE_CALIBRATION';
       case StudyPlanBlockType.learn:
       case StudyPlanBlockType.continueLearning:
         return 'FORWARD_LEARNING';
@@ -656,6 +709,10 @@ class DailyStudyPlanService {
     }
     if (reasonCodes.contains('ULTRA_HARD_GAP')) {
       parts.add('Ultra Hard readiness evidence is limited');
+    }
+    if (reasonCodes.contains('CONFIDENCE_MISALIGNMENT') ||
+        reasonCodes.contains('CONFIDENCE_CALIBRATION')) {
+      parts.add('confidence and recent performance are misaligned');
     }
     if (parts.isEmpty) {
       parts.add('this is the highest current learning priority');

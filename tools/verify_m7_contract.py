@@ -80,6 +80,7 @@ PHASE_REQUIRED_FILES = {
         "lib/features/exam_readiness/repositories/study_plan_block_outcome_repository.dart",
         "lib/features/exam_readiness/repositories/learning_state_audit_repository.dart",
         "lib/features/exam_readiness/services/learning_state_update_coordinator.dart",
+        "lib/features/exam_readiness/services/study_plan_outcome_service.dart",
         "lib/features/exam_readiness/services/plan_staleness_service.dart",
         "lib/features/exam_readiness/services/plan_replanning_service.dart",
         "lib/features/exam_readiness/services/misconception_signal_service.dart",

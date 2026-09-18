@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
 
 import '../models/exam_study_plan.dart';
+import '../models/plan_regeneration_reason.dart';
 import '../models/study_capacity_snapshot.dart';
+import '../repositories/daily_study_plan_repository.dart';
 import '../repositories/exam_study_plan_repository.dart';
 import '../services/exam_study_capacity_service.dart';
+import '../services/plan_staleness_service.dart';
 import 'exam_plan_setup_screen.dart';
 import 'exam_readiness_route.dart';
 import 'readiness_profile_screen.dart';
 import 'todays_plan_screen.dart';
 
 class ExamReadinessPlanScreen extends StatefulWidget {
-  const ExamReadinessPlanScreen({super.key, this.repository, this.now});
+  const ExamReadinessPlanScreen({
+    super.key,
+    this.repository,
+    this.dailyPlanRepository,
+    this.stalenessService = const PlanStalenessService(),
+    this.now,
+  });
 
   final ExamStudyPlanRepository? repository;
+  final DailyStudyPlanRepository? dailyPlanRepository;
+  final PlanStalenessService stalenessService;
   final DateTime Function()? now;
 
   @override
@@ -27,6 +38,9 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
 
   ExamStudyPlanRepository get _repository =>
       widget.repository ?? ExamStudyPlanRepository();
+
+  DailyStudyPlanRepository get _dailyPlanRepository =>
+      widget.dailyPlanRepository ?? DailyStudyPlanRepository();
 
   DateTime get _now => widget.now?.call() ?? DateTime.now();
 
@@ -69,9 +83,49 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
     );
 
     if (result != null && mounted) {
+      final reason = current == null ? null : _changeReason(current, result);
+      if (reason != null) {
+        final today = ExamStudyPlan.dateOnly(_now);
+        await widget.stalenessService.markFuturePlansStale(
+          afterDate: today.subtract(const Duration(days: 1)),
+          reason: reason,
+          at: _now,
+          repository: _dailyPlanRepository,
+        );
+      }
       await _refresh();
     }
   }
+
+  PlanRegenerationReason? _changeReason(
+    ExamStudyPlan previous,
+    ExamStudyPlan next,
+  ) {
+    if (ExamStudyPlan.dateOnly(previous.examDate) !=
+        ExamStudyPlan.dateOnly(next.examDate)) {
+      return PlanRegenerationReason.examDateChanged;
+    }
+
+    if (!_sameSet(previous.studyDaysOfWeek, next.studyDaysOfWeek) ||
+        !_sameSet(previous.preferredRestDays, next.preferredRestDays) ||
+        !_sameMap(previous.daySpecificMinutes, next.daySpecificMinutes)) {
+      return PlanRegenerationReason.studyScheduleChanged;
+    }
+
+    if (previous.defaultMinutesPerStudyDay != next.defaultMinutesPerStudyDay ||
+        previous.maxDailyMinutes != next.maxDailyMinutes) {
+      return PlanRegenerationReason.capacityChanged;
+    }
+
+    return null;
+  }
+
+  bool _sameSet(Set<int> left, Set<int> right) =>
+      left.length == right.length && left.every(right.contains);
+
+  bool _sameMap(Map<int, int> left, Map<int, int> right) =>
+      left.length == right.length &&
+      left.entries.every((entry) => right[entry.key] == entry.value);
 
   @override
   Widget build(BuildContext context) {

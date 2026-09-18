@@ -28,6 +28,7 @@ enum StudyPlanBlockStatus {
 
 enum StudyPlanManualAction {
   start,
+  complete,
   skip,
   moveToTomorrow,
   replace,

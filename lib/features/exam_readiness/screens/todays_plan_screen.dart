@@ -8,7 +8,9 @@ import '../repositories/exam_study_plan_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
 import '../services/daily_study_plan_service.dart';
+import '../services/learning_state_update_coordinator.dart';
 import '../services/readiness_evidence_bootstrap_service.dart';
+import '../services/study_plan_outcome_service.dart';
 import '../services/readiness_profile_service.dart';
 import '../services/exam_study_capacity_service.dart';
 import '../services/ultra_hard_availability_service.dart';
@@ -22,6 +24,9 @@ class TodaysPlanScreen extends StatefulWidget {
     this.planService = const DailyStudyPlanService(),
     this.capacityService = const ExamStudyCapacityService(),
     this.ultraHardAvailabilityService,
+    this.attemptRepository,
+    this.outcomeService = const StudyPlanOutcomeService(),
+    this.learningStateCoordinator = const LearningStateUpdateCoordinator(),
     this.now,
   });
 
@@ -31,6 +36,9 @@ class TodaysPlanScreen extends StatefulWidget {
   final DailyStudyPlanService planService;
   final ExamStudyCapacityService capacityService;
   final UltraHardAvailabilityService? ultraHardAvailabilityService;
+  final LearnerAssessmentAttemptRepository? attemptRepository;
+  final StudyPlanOutcomeService outcomeService;
+  final LearningStateUpdateCoordinator learningStateCoordinator;
   final DateTime Function()? now;
 
   @override
@@ -48,6 +56,9 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
   DailyStudyPlanRepository get _dailyPlanRepository =>
       widget.dailyPlanRepository ?? DailyStudyPlanRepository();
+
+  LearnerAssessmentAttemptRepository get _attemptRepository =>
+      widget.attemptRepository ?? const LearnerAssessmentAttemptRepository();
 
   UltraHardAvailabilityService get _ultraHardAvailabilityService =>
       widget.ultraHardAvailabilityService ?? UltraHardAvailabilityService();
@@ -81,16 +92,20 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     );
     final readiness = await _readinessRepository.loadLocal();
     final existing = await _dailyPlanRepository.loadLatestForDate(now);
+    final capacityChanged =
+        existing != null && existing.availableMinutes != availableMinutes;
+    final stale = existing?.status == DailyStudyPlanStatus.stale;
 
-    if (!regenerate &&
-        existing != null &&
-        existing.availableMinutes == availableMinutes) {
+    if (!regenerate && existing != null && !capacityChanged && !stale) {
       return _TodayPlanViewData(
         plan: existing,
         hasExamPlan: true,
         notice: null,
       );
     }
+
+    final missedStudyDay =
+        existing == null && await _hasMissedStudyDay(examPlan, now);
 
     Set<String> ultraHardAvailable = const <String>{};
     String? notice;
@@ -112,9 +127,15 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
       availableMinutes: availableMinutes,
       readinessProfiles: readiness,
       ultraHardAvailableCompetencyIds: ultraHardAvailable,
-      existingPlan: regenerate ? existing : null,
+      existingPlan: existing,
       generationReason: regenerate
           ? DailyStudyPlanGenerationReason.manualRequest
+          : stale
+          ? existing!.generationReason
+          : capacityChanged
+          ? DailyStudyPlanGenerationReason.capacityChanged
+          : missedStudyDay
+          ? DailyStudyPlanGenerationReason.missedStudyDay
           : DailyStudyPlanGenerationReason.initial,
     );
 
@@ -126,7 +147,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   Future<void> _refreshLocalReadiness() async {
     try {
       final evidenceRepository = EvidenceSnapshotRepository();
-      const attemptRepository = LearnerAssessmentAttemptRepository();
+      final attemptRepository = _attemptRepository;
       const bootstrapService = ReadinessEvidenceBootstrapService();
       const profileService = ReadinessProfileService();
 
@@ -155,6 +176,96 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     final next = _load(regenerate: true);
     setState(() => _future = next);
     await next;
+  }
+
+  Future<bool> _hasMissedStudyDay(
+    dynamic examPlan,
+    DateTime now,
+  ) async {
+    final today = DateTime(now.year, now.month, now.day);
+    final created = DateTime(
+      examPlan.createdAt.year,
+      examPlan.createdAt.month,
+      examPlan.createdAt.day,
+    );
+
+    for (var offset = 1; offset <= 7; offset++) {
+      final date = today.subtract(Duration(days: offset));
+      if (date.isBefore(created)) break;
+
+      final minutes = widget.capacityService.minutesForDate(
+        plan: examPlan,
+        date: date,
+      );
+      if (minutes <= 0) continue;
+
+      final prior = await _dailyPlanRepository.loadLatestForDate(date);
+      if (prior == null) return true;
+      if (prior.blocks.isEmpty) return false;
+
+      return !prior.blocks.any(
+        (block) => block.status == StudyPlanBlockStatus.completed,
+      );
+    }
+
+    return false;
+  }
+
+  Future<void> _complete(String blockId) async {
+    final data = await _future;
+    final plan = data.plan;
+    if (plan == null) return;
+
+    final block = plan.blocks.firstWhere(
+      (item) => item.blockId == blockId,
+      orElse: () => throw StateError('Study-plan block not found.'),
+    );
+    if (block.status != StudyPlanBlockStatus.started) {
+      return;
+    }
+
+    final at = _now;
+    final attempts = await _attemptRepository.loadAll();
+    final outcome = widget.outcomeService.build(
+      plan: plan,
+      block: block,
+      attempts: attempts,
+      completedAt: at,
+    );
+
+    final update = await widget.learningStateCoordinator.processOutcome(
+      outcome: outcome,
+      now: at,
+      attemptRepository: _attemptRepository,
+      readinessRepository: _readinessRepository,
+      planRepository: _dailyPlanRepository,
+    );
+
+    final changed = widget.planService.completeBlock(
+      plan,
+      blockId,
+      at: at,
+    );
+    await _dailyPlanRepository.savePlan(changed, syncRemote: false);
+
+    final signalNotice = update.misconceptionSignals.isEmpty
+        ? ''
+        : ' A misconception or confidence pattern was detected.';
+    final staleNotice = update.stalePlanVersionsCreated == 0
+        ? ' Future planning will use the updated evidence.'
+        : ' ${update.stalePlanVersionsCreated} future plan version(s) were marked for adaptation.';
+
+    if (!mounted) return;
+    setState(
+      () => _future = Future.value(
+        _TodayPlanViewData(
+          plan: changed,
+          hasExamPlan: true,
+          notice:
+              'Readiness updated for ${block.competencyId.toUpperCase()}.$signalNotice$staleNotice',
+        ),
+      ),
+    );
   }
 
   Future<void> _apply(
@@ -253,6 +364,8 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                             at: at,
                           ),
                         ),
+                        onComplete: () =>
+                            _complete(plan.blocks[index].blockId),
                         onSkip: () => _apply(
                           (current, at) => widget.planService.skipBlock(
                             current,
@@ -373,6 +486,7 @@ class _PlanBlockCard extends StatelessWidget {
     required this.block,
     required this.index,
     required this.onStart,
+    required this.onComplete,
     required this.onSkip,
     required this.onMove,
     required this.onReplace,
@@ -383,6 +497,7 @@ class _PlanBlockCard extends StatelessWidget {
   final StudyPlanBlock block;
   final int index;
   final VoidCallback onStart;
+  final VoidCallback onComplete;
   final VoidCallback onSkip;
   final VoidCallback onMove;
   final VoidCallback onReplace;
@@ -393,8 +508,6 @@ class _PlanBlockCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final locked = block.isLocked;
-
     return Container(
       key: ValueKey('m7d-block-$index'),
       padding: const EdgeInsets.all(18),
@@ -451,13 +564,21 @@ class _PlanBlockCard extends StatelessWidget {
             style: theme.textTheme.bodyMedium?.copyWith(height: 1.4),
           ),
           const SizedBox(height: 12),
-          if (locked)
+          if (block.status == StudyPlanBlockStatus.completed)
             Text(
-              'This block is locked because it has already started.',
+              'Completed. This historical block is locked.',
+              key: ValueKey('m7e-completed-$index'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: scheme.onSurfaceVariant,
                 fontWeight: FontWeight.w700,
               ),
+            )
+          else if (block.status == StudyPlanBlockStatus.started)
+            FilledButton.icon(
+              key: ValueKey('m7e-complete-$index'),
+              onPressed: onComplete,
+              icon: const Icon(Icons.check_circle_rounded),
+              label: const Text('Complete'),
             )
           else
             Wrap(
