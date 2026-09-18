@@ -178,15 +178,17 @@ class AdvancedReadinessSummaryView extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 32),
       children: [
-        Container(
+        StudentGlassSurface(
           key: const ValueKey('m7f-phase-hero'),
           padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [scheme.primaryContainer, scheme.secondaryContainer],
-            ),
-            borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24),
+          gradient: LinearGradient(
+            colors: [
+              scheme.primaryContainer.withValues(alpha: 0.68),
+              scheme.secondaryContainer.withValues(alpha: 0.58),
+            ],
           ),
+          borderColor: scheme.primary.withValues(alpha: 0.16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -476,13 +478,11 @@ class _Card extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
