@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import '../models/daily_study_plan.dart';
 import '../models/study_plan_block.dart';
 import '../repositories/daily_study_plan_repository.dart';
+import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/exam_study_plan_repository.dart';
+import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
 import '../services/daily_study_plan_service.dart';
+import '../services/readiness_evidence_bootstrap_service.dart';
+import '../services/readiness_profile_service.dart';
 import '../services/exam_study_capacity_service.dart';
 import '../services/ultra_hard_availability_service.dart';
 
@@ -57,6 +61,10 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   }
 
   Future<_TodayPlanViewData> _load({bool regenerate = false}) async {
+    if (widget.readinessRepository == null) {
+      await _refreshLocalReadiness();
+    }
+
     final examPlan = await _examPlanRepository.loadActivePlan();
     if (examPlan == null) {
       return const _TodayPlanViewData(
@@ -117,6 +125,34 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
       hasExamPlan: true,
       notice: notice,
     );
+  }
+
+  Future<void> _refreshLocalReadiness() async {
+    try {
+      final evidenceRepository = EvidenceSnapshotRepository();
+      const attemptRepository = LearnerAssessmentAttemptRepository();
+      const bootstrapService = ReadinessEvidenceBootstrapService();
+      const profileService = ReadinessProfileService();
+
+      final bootstrap = await bootstrapService.rebuildLocal(
+        evidenceRepository: evidenceRepository,
+        attemptRepository: attemptRepository,
+        now: _now,
+      );
+
+      final dashboard = profileService.buildDashboard(
+        evidenceByCompetency: bootstrap.evidenceByCompetency,
+        attempts: bootstrap.attempts,
+        now: _now,
+      );
+
+      await _readinessRepository.saveMany(
+        dashboard.profiles.values,
+        syncRemote: false,
+      );
+    } catch (_) {
+      // A readiness refresh must never block opening the learner's daily plan.
+    }
   }
 
   Future<void> _regenerate() async {
