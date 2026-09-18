@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../controllers/note_controller.dart';
 import '../../../models/note_domain.dart';
 import '../../../services/settings/theme_mode_service.dart';
@@ -19,7 +21,7 @@ class StudyNotesScreen extends StatelessWidget {
 
     final List<NoteDomain> domains = _controller.domains;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(title: const Text('Study Notes'), centerTitle: true),
       body: domains.isEmpty
           ? const Center(
@@ -36,7 +38,7 @@ class StudyNotesScreen extends StatelessWidget {
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: Card(
+                  child: StudentGlassCard(
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),

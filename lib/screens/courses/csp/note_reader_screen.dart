@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../controllers/note_controller.dart';
 import '../../../models/note.dart';
 
@@ -23,13 +25,13 @@ class NoteReaderScreen extends StatelessWidget {
     final Note? note = controller.selectedNote;
 
     if (note == null) {
-      return Scaffold(
+      return StudentGlassScaffold(
         appBar: AppBar(title: const Text('Study Note')),
         body: const Center(child: Text('Study note not found.')),
       );
     }
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(
         title: Text(note.title),
         centerTitle: true,

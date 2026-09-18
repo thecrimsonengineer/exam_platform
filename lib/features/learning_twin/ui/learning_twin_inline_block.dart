@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
@@ -46,39 +48,35 @@ class LearningTwinInlineBlock extends StatelessWidget {
 
     return Semantics(
       container: true,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: colors.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colors.outlineVariant),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 300;
+      child: StudentGlassSurface(
+        padding: const EdgeInsets.all(14),
+        borderRadius: BorderRadius.circular(16),
+        tint: colors.surfaceContainerLow.withValues(alpha: 0.54),
+        borderColor: colors.outlineVariant.withValues(alpha: 0.62),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final compact = constraints.maxWidth < 300;
 
-              if (compact) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    LearningTwinAvatar(asset: asset, size: 48),
-                    const SizedBox(height: 8),
-                    copy,
-                  ],
-                );
-              }
-
-              return Row(
+            if (compact) {
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   LearningTwinAvatar(asset: asset, size: 48),
-                  const SizedBox(width: 12),
-                  Expanded(child: copy),
+                  const SizedBox(height: 8),
+                  copy,
                 ],
               );
-            },
-          ),
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LearningTwinAvatar(asset: asset, size: 48),
+                const SizedBox(width: 12),
+                Expanded(child: copy),
+              ],
+            );
+          },
         ),
       ),
     );

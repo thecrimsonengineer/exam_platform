@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'legal_document_screen.dart';
 
 class DarkLegalDocumentScreen extends StatelessWidget {
@@ -18,7 +20,7 @@ class DarkLegalDocumentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       appBar: AppBar(
         title: Text(document.title),
@@ -27,13 +29,7 @@ class DarkLegalDocumentScreen extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF0A111D), Color(0xFF0D1624), Color(0xFF111827)],
-          ),
-        ),
+        color: Colors.transparent,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
           children: [
@@ -43,17 +39,20 @@ class DarkLegalDocumentScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    StudentGlassSurface(
                       width: double.infinity,
                       padding: const EdgeInsets.all(22),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [_navy, _blue, _violet],
-                        ),
+                      borderRadius: BorderRadius.circular(22),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          _navy.withValues(alpha: 0.82),
+                          _blue.withValues(alpha: 0.76),
+                          _violet.withValues(alpha: 0.72),
+                        ],
                       ),
+                      borderColor: Colors.white.withValues(alpha: 0.12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -85,15 +84,13 @@ class DarkLegalDocumentScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 18),
                     ...document.sections.map(
-                      (section) => Container(
+                      (section) => StudentGlassSurface(
                         width: double.infinity,
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          color: _surface,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(color: _border),
-                        ),
+                        borderRadius: BorderRadius.circular(18),
+                        tint: _surface.withValues(alpha: 0.58),
+                        borderColor: _border.withValues(alpha: 0.72),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

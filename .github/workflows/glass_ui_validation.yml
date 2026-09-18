@@ -1,0 +1,78 @@
+name: Glass UI Validation
+
+on:
+  pull_request:
+    branches:
+      - phase-m7-closed
+  workflow_dispatch:
+
+concurrency:
+  group: glass-ui-${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check formatting
+        shell: bash
+        run: |
+          git fetch origin phase-m7-closed
+          mapfile -t changed < <(
+            git diff --name-only origin/phase-m7-closed...HEAD -- '*.dart' |
+            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/widgets/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart|test/screens/)' || true
+          )
+          if [ "${#changed[@]}" -eq 0 ]; then
+            echo "No changed Dart UI files."
+            exit 0
+          fi
+          dart format --output=none --set-exit-if-changed "${changed[@]}"
+
+      - name: Glass import contract
+        shell: bash
+        run: |
+          bad_imports="$(
+            grep -R --include='*.dart' -n "theme/glass/student_glass.dart" lib |
+            grep -v "package:exam_platform/theme/glass/student_glass.dart" || true
+          )"
+          if [ -n "$bad_imports" ]; then
+            echo "Non-package glass imports found:"
+            echo "$bad_imports"
+            exit 1
+          fi
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Glass surface contract
+        run: flutter test test/screens/glass_ui_student_surface_contract_test.dart
+
+      - name: Student-facing regression tests
+        run: |
+          flutter test test/screens
+          flutter test test/features/exam_readiness
+          flutter test test/features/learning_twin
+
+      - name: Full regression suite
+        run: flutter test
+
+      - name: Production web build
+        run: flutter build web --release

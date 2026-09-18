@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 class ContinueLearningCard extends StatelessWidget {
   final String course;
   final String subtitle;
@@ -20,7 +22,7 @@ class ContinueLearningCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(

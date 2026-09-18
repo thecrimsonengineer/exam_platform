@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/app_colors.dart';
 
 class DarkFlashcardsScreen extends StatelessWidget {
@@ -7,7 +9,7 @@ class DarkFlashcardsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: const Color(0xFF0A111D),
       appBar: AppBar(
         backgroundColor: const Color(0xFF0A111D),
@@ -24,14 +26,9 @@ class DarkFlashcardsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 720),
-              child: Container(
-                width: double.infinity,
+              child: StudentGlassSurface(
                 padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111B2C),
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: const Color(0xFF25344A)),
-                ),
+                borderRadius: BorderRadius.circular(22),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

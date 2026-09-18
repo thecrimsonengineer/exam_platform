@@ -11,6 +11,8 @@ class QuizColors {
   static const Color navy = Color(0xFF172554);
   static const Color primary = Color(0xFF2563EB);
   static const Color primaryDark = Color(0xFF1D4ED8);
+  static const Color darkBackgroundBase = Color(0xFF0A111D);
+  static const Color darkSurfaceBase = Color(0xFF111B2C);
 
   // PURPLE ACCENT
   static const Color purple = Color(0xFF7C3AED);
@@ -27,8 +29,8 @@ class QuizColors {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: _dark
-        ? const [Color(0xFF0A111D), Color(0xFF0D1624), Color(0xFF111827)]
-        : const [Color(0xFFF3F6FC), Color(0xFFF7F9FC), Color(0xFFF8F7FC)],
+        ? const [Color(0xB30A111D), Color(0xAD0D1624), Color(0xB3111827)]
+        : const [Color(0xBFF3F6FC), Color(0xB8F7F9FC), Color(0xB8F8F7FC)],
     stops: const [0.0, 0.55, 1.0],
   );
 
@@ -45,8 +47,8 @@ class QuizColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: _dark
-        ? const [Color(0xFF111B2C), Color(0xFF14243B), Color(0xFF1D1934)]
-        : const [Color(0xFFFFFFFF), Color(0xFFF8FAFF), Color(0xFFFAF8FF)],
+        ? const [Color(0xB3111B2C), Color(0xA614243B), Color(0x9E1D1934)]
+        : const [Color(0xD9FFFFFF), Color(0xCFF8FAFF), Color(0xC7FAF8FF)],
     stops: const [0.0, 0.58, 1.0],
   );
 
@@ -58,15 +60,17 @@ class QuizColors {
   static Color get questionMuted => _dark ? const Color(0xFF9AA8BC) : textMuted;
 
   // QUESTION / SURFACE
-  static Color get background =>
-      _dark ? const Color(0xFF0A111D) : const Color(0xFFF7F8FC);
-  static Color get surface => _dark ? const Color(0xFF111B2C) : Colors.white;
+  static Color get background => _dark
+      ? darkBackgroundBase.withValues(alpha: 0.70)
+      : const Color(0xBFF4F8FF);
+  static Color get surface =>
+      _dark ? darkSurfaceBase.withValues(alpha: 0.56) : const Color(0xBFFFFFFF);
   static Color get surfaceAlt =>
-      _dark ? const Color(0xFF162238) : const Color(0xFFF1F5F9);
+      _dark ? const Color(0x801A2B46) : const Color(0x99FFFFFF);
   static Color get border =>
-      _dark ? const Color(0xFF25344A) : const Color(0xFFE2E8F0);
+      _dark ? const Color(0x42FFFFFF) : const Color(0x8FFFFFFF);
   static Color get borderStrong =>
-      _dark ? const Color(0xFF314159) : const Color(0xFFCBD5E1);
+      _dark ? const Color(0x59FFFFFF) : const Color(0xB3FFFFFF);
 
   // TEXT
   static Color get textPrimary =>

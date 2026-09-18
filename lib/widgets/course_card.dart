@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../app/app_colors.dart';
 import '../app/app_text_styles.dart';
 import '../app/app_spacing.dart';
@@ -24,7 +26,7 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return StudentGlassCard(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.large),

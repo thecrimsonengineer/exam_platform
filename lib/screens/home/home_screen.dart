@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/app_colors.dart';
 import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
 import '../../features/exam_readiness/screens/exam_readiness_route.dart';
@@ -37,13 +39,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const _background = Color(0xFFF3F6FC);
-  static const _surface = Colors.white;
+  static const _surface = Color(0xCFFFFFFF);
   static const _navy = Color(0xFF102A56);
   static const _blue = Color(0xFF1E4C91);
   static const _violet = Color(0xFF5B36A8);
   static const _textPrimary = Color(0xFF18243A);
   static const _textMuted = Color(0xFF718096);
-  static const _border = Color(0xFFE1E7F0);
+  static const _border = Color(0xA6FFFFFF);
 
   final StudentLearningPositionService _positionService =
       const StudentLearningPositionService();
@@ -165,17 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFF3F6FC), Color(0xFFF7F9FC), Color(0xFFF8F7FC)],
-            stops: [0.0, 0.55, 1.0],
-          ),
-        ),
+        color: Colors.transparent,
         child: SafeArea(
           child: RefreshIndicator(
             onRefresh: _refreshHome,
@@ -262,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
       pinned: true,
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: _background.withValues(alpha: 0.96),
+      backgroundColor: _background.withValues(alpha: 0.72),
       surfaceTintColor: Colors.transparent,
       automaticallyImplyLeading: false,
       titleSpacing: 18,
@@ -350,26 +345,23 @@ class _HomeScreenState extends State<HomeScreen> {
     final completed = data.completedCount;
     final inProgress = data.inProgressCount;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('home-hero'),
       constraints: BoxConstraints(minHeight: compact ? 360 : 330),
       padding: EdgeInsets.all(compact ? 22 : 28),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [_navy, _blue, _violet],
-          stops: [0.0, 0.58, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.20),
-            blurRadius: 30,
-            offset: const Offset(0, 16),
-          ),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          _navy.withValues(alpha: 0.82),
+          _blue.withValues(alpha: 0.76),
+          _violet.withValues(alpha: 0.72),
         ],
+        stops: const [0.0, 0.58, 1.0],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.14),
+      shadowColor: AppColors.primary.withValues(alpha: 0.18),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -625,22 +617,14 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     final position = data.position;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('home-continue-card'),
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.055),
-            blurRadius: 20,
-            offset: const Offset(0, 9),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: _surface.withValues(alpha: 0.50),
+      borderColor: _border.withValues(alpha: 0.74),
+      shadowColor: _navy.withValues(alpha: 0.08),
       child: snapshot.connectionState == ConnectionState.waiting
           ? const _HomeInlineLoading()
           : snapshot.hasError
@@ -956,22 +940,17 @@ class _HomeScreenState extends State<HomeScreen> {
         key: ValueKey(action.keyName),
         onTap: action.onTap,
         borderRadius: BorderRadius.circular(22),
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: action.gradient,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: action.gradient.first.withValues(alpha: 0.16),
-                blurRadius: 18,
-                offset: const Offset(0, 9),
-              ),
-            ],
+        child: StudentGlassSurface(
+          borderRadius: BorderRadius.circular(22),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: action.gradient
+                .map((color) => color.withValues(alpha: 0.66))
+                .toList(),
           ),
+          borderColor: Colors.white.withValues(alpha: 0.22),
+          shadowColor: action.gradient.first.withValues(alpha: 0.16),
           child: Stack(
             children: [
               Positioned(
@@ -1138,19 +1117,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildQuickPracticeCard(_QuickActionData item) {
     return Material(
-      color: _surface,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         key: ValueKey(item.keyName),
         onTap: item.onTap,
         borderRadius: BorderRadius.circular(18),
-        child: Container(
+        child: StudentGlassSurface(
           constraints: const BoxConstraints(minHeight: 104),
           padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: _border),
-          ),
+          borderRadius: BorderRadius.circular(18),
+          tint: _surface.withValues(alpha: 0.50),
+          borderColor: _border.withValues(alpha: 0.72),
           child: Row(
             children: [
               Container(
@@ -1210,22 +1188,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final inProgress = data.inProgressCount;
     final tracked = data.trackedCount;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('home-progress-panel'),
       width: double.infinity,
       padding: const EdgeInsets.all(21),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.045),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: _surface.withValues(alpha: 0.50),
+      borderColor: _border.withValues(alpha: 0.74),
+      shadowColor: _navy.withValues(alpha: 0.08),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final compact = constraints.maxWidth < 680;

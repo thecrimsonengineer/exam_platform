@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_domain_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 
 import '../../../data/csp11_blueprint.dart';
@@ -98,7 +100,7 @@ class _DomainScreenState extends State<DomainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: CustomScrollView(
@@ -196,25 +198,22 @@ class _DomainScreenState extends State<DomainScreen> {
   Widget _buildHero() {
     final domainNumber = widget.domainNumber.toString().padLeft(2, '0');
 
-    return Container(
+    return StudentGlassSurface(
       constraints: const BoxConstraints(minHeight: 340),
       padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF102A56), Color(0xFF1E4C91), Color(0xFF5B36A8)],
-          stops: [0.0, 0.58, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.20),
-            blurRadius: 30,
-            offset: const Offset(0, 16),
-          ),
+      borderRadius: BorderRadius.circular(AppRadius.large),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          const Color(0xFF102A56).withValues(alpha: 0.82),
+          const Color(0xFF1E4C91).withValues(alpha: 0.76),
+          const Color(0xFF5B36A8).withValues(alpha: 0.72),
         ],
+        stops: const [0.0, 0.58, 1.0],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.14),
+      shadowColor: AppColors.primary.withValues(alpha: 0.18),
       child: Stack(
         children: [
           Positioned(
@@ -544,19 +543,11 @@ class _DomainScreenState extends State<DomainScreen> {
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.card),
         onTap: onTap,
-        child: Ink(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.card),
-            border: Border.all(color: color.withValues(alpha: 0.10)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.035),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
+        child: StudentGlassSurface(
+          borderRadius: BorderRadius.circular(AppRadius.card),
+          tint: Colors.white.withValues(alpha: 0.50),
+          borderColor: color.withValues(alpha: 0.16),
+          shadowColor: Colors.black.withValues(alpha: 0.07),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.card),
             child: Row(
@@ -704,21 +695,11 @@ class _DomainScreenState extends State<DomainScreen> {
             title: content.title,
           );
         },
-        child: Ink(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.card),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.07),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.025),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
+        child: StudentGlassSurface(
+          borderRadius: BorderRadius.circular(AppRadius.card),
+          tint: Colors.white.withValues(alpha: 0.50),
+          borderColor: AppColors.primary.withValues(alpha: 0.12),
+          shadowColor: Colors.black.withValues(alpha: 0.06),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.card),
             child: Row(
@@ -833,27 +814,19 @@ class _DomainScreenState extends State<DomainScreen> {
   }
 
   Widget _buildPracticeSection() {
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withValues(alpha: 0.075),
-            const Color(0xFF7C3AED).withValues(alpha: 0.035),
-          ],
-        ),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.10)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.06),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
-          ),
+      borderRadius: BorderRadius.circular(AppRadius.large),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          AppColors.primary.withValues(alpha: 0.10),
+          const Color(0xFF7C3AED).withValues(alpha: 0.06),
         ],
       ),
+      borderColor: AppColors.primary.withValues(alpha: 0.14),
+      shadowColor: AppColors.primary.withValues(alpha: 0.08),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -935,13 +908,11 @@ class _DomainScreenState extends State<DomainScreen> {
   }
 
   Widget _premiumLoadingCard() {
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.card),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.07)),
-      ),
+      borderRadius: BorderRadius.circular(AppRadius.card),
+      tint: Colors.white.withValues(alpha: 0.50),
+      borderColor: AppColors.primary.withValues(alpha: 0.12),
       child: Row(
         children: [
           const SizedBox(
@@ -982,13 +953,11 @@ class _DomainScreenState extends State<DomainScreen> {
     required String message,
     required Color color,
   }) {
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.card),
-        border: Border.all(color: color.withValues(alpha: 0.12)),
-      ),
+      borderRadius: BorderRadius.circular(AppRadius.card),
+      tint: Colors.white.withValues(alpha: 0.50),
+      borderColor: color.withValues(alpha: 0.18),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

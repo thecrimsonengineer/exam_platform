@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_competency_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 import '../../../models/student_learning_progress.dart';
 import '../../../services/student_learning_progress_service.dart';
@@ -10,7 +12,6 @@ import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_gradients.dart';
 import '../../../theme/study/study_icons.dart';
 import '../../../theme/study/study_radius.dart';
-import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography.dart';
 
@@ -143,7 +144,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     final subtopicCount = _orderedSubtopics().length;
 
     return Container(
-      color: StudyColors.background,
+      color: Colors.transparent,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -376,15 +377,12 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     required int topicCount,
     required int subtopicCount,
   }) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: StudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
+      borderRadius: StudyRadius.large,
+      tint: StudyColors.surface.withValues(alpha: 0.50),
+      borderColor: StudyColors.border.withValues(alpha: 0.72),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -483,27 +481,19 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     final completionRatio = _topicCompletionRatio(topic);
     final isCompleted = subtopicCount > 0 && completedCount == subtopicCount;
 
-    return Container(
+    return StudentGlassSurface(
       key: _topicKeys.putIfAbsent(topicIndex, () => GlobalKey()),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(
-          color: isExpanded
-              ? StudyColors.primary.withValues(alpha: 0.34)
-              : StudyColors.border,
-          width: isExpanded ? 1.25 : 1,
-        ),
-        boxShadow: isExpanded ? StudyShadows.soft : const [],
-      ),
+      borderRadius: StudyRadius.large,
+      tint: StudyColors.surface.withValues(alpha: isExpanded ? 0.62 : 0.48),
+      borderColor: isExpanded
+          ? StudyColors.primary.withValues(alpha: 0.34)
+          : StudyColors.border.withValues(alpha: 0.72),
       child: ClipRRect(
         borderRadius: StudyRadius.large,
         child: Column(
           children: [
             Material(
-              color: isExpanded
-                  ? StudyColors.primaryLight.withValues(alpha: 0.42)
-                  : StudyColors.surface,
+              color: Colors.transparent,
               child: InkWell(
                 onTap: () {
                   setState(() {
@@ -752,7 +742,7 @@ class _StudyContentRendererState extends State<StudyContentRenderer> {
     final globalIndex = _globalSubtopicIndex(topicIndex, subtopicIndex);
 
     return Material(
-      color: StudyColors.surfaceSoft,
+      color: StudyColors.surfaceSoft.withValues(alpha: 0.42),
       borderRadius: StudyRadius.medium,
       child: InkWell(
         onTap: () async {

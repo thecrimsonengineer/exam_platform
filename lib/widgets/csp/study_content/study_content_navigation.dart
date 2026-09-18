@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_icons.dart';
 import '../../../theme/study/study_radius.dart';
@@ -26,13 +28,11 @@ class StudyContentNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     final safeProgress = progress.clamp(0.0, 1.0);
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        border: Border(top: BorderSide(color: StudyColors.border)),
-        boxShadow: StudyShadows.soft,
-      ),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+      tint: StudyColors.surface.withValues(alpha: 0.56),
+      borderColor: StudyColors.border.withValues(alpha: 0.72),
       child: SafeArea(
         top: false,
         child: Padding(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme.dart';
+
 import '../../models/app_user.dart';
 import '../../services/auth/auth_state_provider.dart';
 import '../../services/auth/auth_state_service.dart';
@@ -15,32 +17,35 @@ class AdminGate extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthStateProvider service = authStateProvider ?? AuthStateService();
 
-    return StreamBuilder<AppUser?>(
-      stream: service.appUserChanges,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _AdminGateLoadingScreen();
-        }
+    return Theme(
+      data: AppTheme.lightTheme,
+      child: StreamBuilder<AppUser?>(
+        stream: service.appUserChanges,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const _AdminGateLoadingScreen();
+          }
 
-        if (snapshot.hasError) {
-          return const _AdminGateErrorScreen();
-        }
+          if (snapshot.hasError) {
+            return const _AdminGateErrorScreen();
+          }
 
-        final appUser = snapshot.data;
+          final appUser = snapshot.data;
 
-        if (appUser == null) {
-          return const AppRootScreen();
-        }
+          if (appUser == null) {
+            return const AppRootScreen();
+          }
 
-        if (!appUser.isAdmin) {
-          return const _AccessDeniedScreen();
-        }
+          if (!appUser.isAdmin) {
+            return const _AccessDeniedScreen();
+          }
 
-        return AdminHomeScreen(
-          adminUserId: appUser.uid,
-          authStateProvider: service,
-        );
-      },
+          return AdminHomeScreen(
+            adminUserId: appUser.uid,
+            authStateProvider: service,
+          );
+        },
+      ),
     );
   }
 }

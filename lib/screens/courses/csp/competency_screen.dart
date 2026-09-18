@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../app/app_colors.dart';
 import '../../../app/app_radius.dart';
 import '../../../app/app_spacing.dart';
@@ -95,7 +97,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
@@ -257,7 +259,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
   }
 
   Widget _topicCard(dynamic subtopic, int index, String? id, String title) {
-    return Card(
+    return StudentGlassCard(
       elevation: 1,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
@@ -329,7 +331,7 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
   }) {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.page),
-      child: Card(
+      child: StudentGlassCard(
         margin: EdgeInsets.zero,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),

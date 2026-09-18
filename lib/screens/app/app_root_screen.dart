@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../auth/admin_gate.dart';
 import '../navigation/bottom_navigation.dart';
 
@@ -8,7 +10,7 @@ class AppRootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       body: SafeArea(
         child: Center(
@@ -117,7 +119,7 @@ class _PortalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       clipBehavior: Clip.antiAlias,
       child: InkWell(

@@ -8,7 +8,9 @@ MaterialPageRoute<T> examReadinessRoute<T>({
 }) {
   return MaterialPageRoute<T>(
     builder: (_) => Theme(
-      data: isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+      data: isDarkMode
+          ? AppTheme.studentGlassDarkTheme
+          : AppTheme.studentGlassLightTheme,
       child: child,
     ),
   );

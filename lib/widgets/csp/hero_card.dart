@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/app_colors.dart';
 import '../../app/app_radius.dart';
 import '../../app/app_spacing.dart';
@@ -10,29 +12,20 @@ class HeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
-
       padding: const EdgeInsets.all(AppSpacing.card),
-
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, Color(0xFF1976D2)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-
-        borderRadius: BorderRadius.circular(AppRadius.card),
-
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.25),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
+      borderRadius: BorderRadius.circular(AppRadius.card),
+      gradient: LinearGradient(
+        colors: [
+          AppColors.primary.withValues(alpha: 0.80),
+          const Color(0xFF1976D2).withValues(alpha: 0.72),
         ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-
+      borderColor: Colors.white.withValues(alpha: 0.16),
+      shadowColor: AppColors.primary.withValues(alpha: 0.20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
 

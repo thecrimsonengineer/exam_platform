@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_typography.dart';
 
-enum StudyCalloutType {
-  keyPoint,
-  example,
-  examTip,
-  important,
-  caution,
-}
+enum StudyCalloutType { keyPoint, example, examTip, important, caution }
 
 class StudyContentCallout extends StatelessWidget {
   final StudyCalloutType type;
@@ -41,23 +37,17 @@ class StudyContentCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(color: StudyColors.border),
-      ),
+      borderRadius: StudyRadius.medium,
+      tint: StudyColors.surface.withValues(alpha: 0.52),
+      borderColor: StudyColors.border.withValues(alpha: 0.70),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            _icon,
-            color: StudyColors.primary,
-            size: 21,
-          ),
+          Icon(_icon, color: StudyColors.primary, size: 21),
           const SizedBox(width: 11),
           Expanded(
             child: Column(
@@ -65,15 +55,10 @@ class StudyContentCallout extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: StudyTypography.cardTitle.copyWith(
-                    fontSize: 14,
-                  ),
+                  style: StudyTypography.cardTitle.copyWith(fontSize: 14),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  content,
-                  style: StudyTypography.bodySecondary,
-                ),
+                Text(content, style: StudyTypography.bodySecondary),
               ],
             ),
           ),

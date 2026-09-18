@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../controllers/note_controller.dart';
 import '../../../models/note.dart';
 import 'note_reader_screen.dart';
@@ -13,7 +15,7 @@ class NotesListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Note> notes = controller.getNotes();
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(
         title: Text(controller.selectedSection?.title ?? 'Topics'),
         centerTitle: true,
@@ -32,7 +34,7 @@ class NotesListScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final note = notes[index];
 
-                return Card(
+                return StudentGlassCard(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),

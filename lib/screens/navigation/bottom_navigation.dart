@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../../services/settings/theme_mode_service.dart';
 import '../../services/learning_activity_tracker.dart';
 import '../../services/progress_overview_snapshot_service.dart';
@@ -167,9 +169,14 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         _ensureScreenBuilt(_selectedIndex, isDarkMode);
         final screens = _screensFor(isDarkMode);
 
+        final baseTheme = isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme;
+        final glassTheme = isDarkMode
+            ? AppTheme.studentGlassDarkTheme
+            : AppTheme.studentGlassLightTheme;
+
         return Theme(
-          data: isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
-          child: Scaffold(
+          data: glassTheme.copyWith(textTheme: baseTheme.textTheme),
+          child: StudentGlassScaffold(
             backgroundColor: isDarkMode ? const Color(0xFF0A111D) : null,
             body: IndexedStack(
               index: _selectedIndex,
@@ -178,37 +185,42 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                 (index) => screens[index] ?? const SizedBox.shrink(),
               ),
             ),
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _selectTab,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home),
-                  label: 'Home',
+            bottomNavigationBar: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                child: NavigationBar(
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: _selectTab,
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.home_outlined),
+                      selectedIcon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.menu_book_outlined),
+                      selectedIcon: Icon(Icons.menu_book),
+                      label: 'Study',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.style_outlined),
+                      selectedIcon: Icon(Icons.style_rounded),
+                      label: 'Flashcards',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.bar_chart_outlined),
+                      selectedIcon: Icon(Icons.bar_chart),
+                      label: 'Progress',
+                    ),
+                    NavigationDestination(
+                      key: ValueKey('bottom-nav-practice'),
+                      icon: Icon(Icons.quiz_outlined),
+                      selectedIcon: Icon(Icons.quiz_rounded),
+                      label: 'Practice',
+                    ),
+                  ],
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.menu_book_outlined),
-                  selectedIcon: Icon(Icons.menu_book),
-                  label: 'Study',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.style_outlined),
-                  selectedIcon: Icon(Icons.style_rounded),
-                  label: 'Flashcards',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.bar_chart_outlined),
-                  selectedIcon: Icon(Icons.bar_chart),
-                  label: 'Progress',
-                ),
-                NavigationDestination(
-                  key: ValueKey('bottom-nav-practice'),
-                  icon: Icon(Icons.quiz_outlined),
-                  selectedIcon: Icon(Icons.quiz_rounded),
-                  label: 'Practice',
-                ),
-              ],
+              ),
             ),
           ),
         );

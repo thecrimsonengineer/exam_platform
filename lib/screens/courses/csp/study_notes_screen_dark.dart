@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../controllers/note_controller.dart';
 import '../../../models/note_domain.dart';
 import 'note_sections_screen_dark.dart';
@@ -22,7 +24,7 @@ class DarkStudyNotesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<NoteDomain> domains = controller.domains;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _bg,
       appBar: AppBar(
         title: const Text('Study Notes'),
@@ -47,7 +49,7 @@ class DarkStudyNotesScreen extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Material(
-                    color: _surface,
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(18),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(18),
@@ -61,12 +63,11 @@ class DarkStudyNotesScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Container(
+                      child: StudentGlassSurface(
                         padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(color: _border),
-                        ),
+                        borderRadius: BorderRadius.circular(18),
+                        tint: _surface.withValues(alpha: 0.58),
+                        borderColor: _border.withValues(alpha: 0.72),
                         child: Row(
                           children: [
                             CircleAvatar(

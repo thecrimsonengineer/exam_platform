@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../app/app_spacing.dart';
 
 import '../../../widgets/csp/hero_card.dart';
@@ -14,7 +16,7 @@ class CSPOverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(
         title: const Text('CSP 11'),
         leading: IconButton(

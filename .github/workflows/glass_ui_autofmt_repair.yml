@@ -1,0 +1,80 @@
+name: Glass UI Autoformat Repair
+
+on:
+  push:
+    branches:
+      - ui-glassmorphism-pass
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: glass-ui-autofmt-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ui-glassmorphism-pass
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Format changed Dart UI files
+        shell: bash
+        run: |
+          git fetch origin phase-m7-closed
+          mapfile -t changed < <(
+            git diff --name-only origin/phase-m7-closed...HEAD -- '*.dart' |
+            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/widgets/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart|test/screens/)' || true
+          )
+          if [ "${#changed[@]}" -eq 0 ]; then
+            echo "No changed Dart UI files."
+            exit 0
+          fi
+          dart format "${changed[@]}"
+
+      - name: Commit canonical formatting
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Formatting already canonical."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.dart'
+          git commit -m "Format glass UI with Dart 3.12.2"
+          git push origin HEAD:ui-glassmorphism-pass
+
+      - name: Analyze formatted tree
+        run: flutter analyze --no-fatal-infos
+
+      - name: Glass surface contract
+        run: flutter test test/screens/glass_ui_student_surface_contract_test.dart
+
+      - name: Student-facing regression tests
+        run: |
+          flutter test test/screens
+          flutter test test/features/exam_readiness
+          flutter test test/features/learning_twin
+
+      - name: Full regression suite
+        run: flutter test
+
+      - name: Production web build
+        run: flutter build web --release

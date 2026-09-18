@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../services/practice/practice_mode_service.dart';
 import '../courses/csp/csp_practice_screen.dart';
 import '../courses/csp/csp_practice_screen_dark.dart';
@@ -102,7 +104,7 @@ class PracticeHubScreen extends StatelessWidget {
       ),
     ];
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: Colors.transparent,
       body: Container(
         key: const ValueKey('practice-hub-glass-background'),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/app_colors.dart';
 import '../../app/app_radius.dart';
 import '../../app/app_spacing.dart';
@@ -10,7 +12,7 @@ class StudyResourcesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.card),

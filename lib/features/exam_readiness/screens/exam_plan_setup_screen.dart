@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import 'package:flutter/services.dart';
 
 import '../../../services/auth/learner_local_identity.dart';
@@ -159,7 +161,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
     final plan = _draftPlan();
     final snapshot = _capacityService.calculate(plan: plan, now: _now);
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(title: const Text('Exam Readiness Plan')),
       body: SafeArea(
         child: ListView(
@@ -362,13 +364,11 @@ class _PlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: child,
     );
   }
@@ -384,15 +384,17 @@ class _CapacityPreview extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7a-capacity-preview'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [scheme.primaryContainer, scheme.secondaryContainer],
-        ),
-        borderRadius: BorderRadius.circular(22),
+      borderRadius: BorderRadius.circular(22),
+      gradient: LinearGradient(
+        colors: [
+          scheme.primaryContainer.withValues(alpha: 0.68),
+          scheme.secondaryContainer.withValues(alpha: 0.58),
+        ],
       ),
+      borderColor: scheme.primary.withValues(alpha: 0.16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

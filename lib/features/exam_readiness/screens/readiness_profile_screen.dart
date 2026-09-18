@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../data/csp11_blueprint.dart';
 import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
@@ -83,7 +85,7 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       key: const ValueKey('m7c-readiness-screen'),
       appBar: AppBar(
         title: const Text('Exam Readiness'),
@@ -199,17 +201,19 @@ class _EvidenceHero extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7c-evidence-hero'),
       padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [scheme.primaryContainer, scheme.secondaryContainer],
-        ),
-        borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(24),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          scheme.primaryContainer.withValues(alpha: 0.68),
+          scheme.secondaryContainer.withValues(alpha: 0.58),
+        ],
       ),
+      borderColor: scheme.primary.withValues(alpha: 0.16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -307,13 +311,11 @@ class _DimensionCard extends StatelessWidget {
     final scheme = theme.colorScheme;
     final percent = dimension.percent;
 
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(18),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final value = Text(
@@ -361,14 +363,12 @@ class _CoverageCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7c-blueprint-coverage'),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(18),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -421,14 +421,13 @@ class _AttentionCard extends StatelessWidget {
       ('Stale competencies', dashboard.staleCompetencyCount),
     ];
 
-    return Container(
+    final scheme = Theme.of(context).colorScheme;
+    return StudentGlassSurface(
       key: const ValueKey('m7c-attention-card'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -481,13 +480,13 @@ class _LimitationsCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Container(
+    final scheme = Theme.of(context).colorScheme;
+    return StudentGlassSurface(
       key: const ValueKey('m7c-limitations-card'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiaryContainer,
-        borderRadius: BorderRadius.circular(20),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.tertiaryContainer.withValues(alpha: 0.56),
+      borderColor: scheme.tertiary.withValues(alpha: 0.18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

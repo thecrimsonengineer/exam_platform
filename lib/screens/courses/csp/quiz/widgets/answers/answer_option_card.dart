@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_spacing.dart';
 
@@ -25,55 +27,40 @@ class AnswerOptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final decoration = _getDecoration();
     final icon = _getIcon();
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 220),
-      curve: Curves.easeOut,
-      width: double.infinity,
-      decoration: decoration,
+    return StudentGlassSurface(
+      borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+      tint: _surfaceTint(),
+      borderColor: _surfaceBorderColor(),
+      shadowColor: _surfaceShadowColor(),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: submitted ? null : onTap,
-          borderRadius: BorderRadius.circular(
-            QuizSpacing.cardRadius,
-          ),
+          borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 15,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _buildIndicator(icon),
-
-                const SizedBox(
-                  width: QuizSpacing.md,
-                ),
-
+                const SizedBox(width: QuizSpacing.md),
                 Expanded(
                   child: Text(
                     text,
                     style: TextStyle(
                       color: _textColor(),
                       fontSize: 16,
-                      fontWeight:
-                          isSelected ||
-                                  isCorrect ||
-                                  isIncorrect
-                              ? FontWeight.w600
-                              : FontWeight.w500,
+                      fontWeight: isSelected || isCorrect || isIncorrect
+                          ? FontWeight.w600
+                          : FontWeight.w500,
                       height: 1.48,
                       letterSpacing: 0.03,
                     ),
                   ),
                 ),
-
-                if (submitted &&
-                    (isCorrect || isIncorrect)) ...[
+                if (submitted && (isCorrect || isIncorrect)) ...[
                   const SizedBox(width: 8),
                   _buildStateIcon(),
                 ],
@@ -85,108 +72,43 @@ class AnswerOptionCard extends StatelessWidget {
     );
   }
 
-  // ==========================================================
-  // CARD DECORATION
-  // ==========================================================
-
-  BoxDecoration _getDecoration() {
+  Color _surfaceTint() {
     if (submitted && isCorrect) {
-      return BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            QuizColors.correctBackground,
-            QuizColors.correctBackground.withValues(
-              alpha: 0.55,
-            ),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(
-          QuizSpacing.cardRadius,
-        ),
-        border: Border.all(
-          color: QuizColors.correct.withValues(
-            alpha: 0.70,
-          ),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: QuizColors.correct.withValues(
-              alpha: 0.08,
-            ),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      );
+      return QuizColors.correctBackground.withValues(alpha: 0.66);
     }
-
     if (submitted && isIncorrect) {
-      return BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            QuizColors.incorrectBackground,
-            QuizColors.incorrectBackground.withValues(
-              alpha: 0.55,
-            ),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(
-          QuizSpacing.cardRadius,
-        ),
-        border: Border.all(
-          color: QuizColors.incorrect.withValues(
-            alpha: 0.65,
-          ),
-          width: 1.5,
-        ),
-      );
+      return QuizColors.incorrectBackground.withValues(alpha: 0.66);
     }
-
     if (!submitted && isSelected) {
-      return BoxDecoration(
-        gradient: QuizColors.selectedGradient,
-        borderRadius: BorderRadius.circular(
-          QuizSpacing.cardRadius,
-        ),
-        border: Border.all(
-          color: QuizColors.purple,
-          width: 1.7,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: QuizColors.purple.withValues(
-              alpha: 0.10,
-            ),
-            blurRadius: 16,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      );
+      return QuizColors.purple.withValues(alpha: 0.14);
     }
+    return QuizColors.surface.withValues(alpha: 0.52);
+  }
 
-    return BoxDecoration(
-      color: QuizColors.surface,
-      borderRadius: BorderRadius.circular(
-        QuizSpacing.cardRadius,
-      ),
-      border: Border.all(
-        color: QuizColors.border,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: QuizColors.navy.withValues(
-            alpha: 0.025,
-          ),
-          blurRadius: 8,
-          offset: const Offset(0, 3),
-        ),
-      ],
-    );
+  Color _surfaceBorderColor() {
+    if (submitted && isCorrect) {
+      return QuizColors.correct.withValues(alpha: 0.68);
+    }
+    if (submitted && isIncorrect) {
+      return QuizColors.incorrect.withValues(alpha: 0.64);
+    }
+    if (!submitted && isSelected) {
+      return QuizColors.purple.withValues(alpha: 0.82);
+    }
+    return QuizColors.border.withValues(alpha: 0.72);
+  }
+
+  Color _surfaceShadowColor() {
+    if (submitted && isCorrect) {
+      return QuizColors.correct.withValues(alpha: 0.06);
+    }
+    if (submitted && isIncorrect) {
+      return QuizColors.incorrect.withValues(alpha: 0.05);
+    }
+    if (!submitted && isSelected) {
+      return QuizColors.purple.withValues(alpha: 0.08);
+    }
+    return QuizColors.navy.withValues(alpha: 0.025);
   }
 
   // ==========================================================
@@ -201,16 +123,9 @@ class AnswerOptionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: _indicatorBackground(),
           shape: BoxShape.circle,
-          border: Border.all(
-            color: _indicatorBorderColor(),
-            width: 1,
-          ),
+          border: Border.all(color: _indicatorBorderColor(), width: 1),
         ),
-        child: Icon(
-          icon,
-          color: _indicatorColor(),
-          size: 20,
-        ),
+        child: Icon(icon, color: _indicatorColor(), size: 20),
       );
     }
 
@@ -219,15 +134,11 @@ class AnswerOptionCard extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         color: isSelected
-            ? QuizColors.purple.withValues(
-                alpha: 0.10,
-              )
+            ? QuizColors.purple.withValues(alpha: 0.10)
             : QuizColors.surfaceAlt,
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected
-              ? QuizColors.purple
-              : QuizColors.borderStrong,
+          color: isSelected ? QuizColors.purple : QuizColors.borderStrong,
           width: isSelected ? 1.5 : 1,
         ),
       ),
@@ -235,9 +146,7 @@ class AnswerOptionCard extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          color: isSelected
-              ? QuizColors.purple
-              : QuizColors.textSecondary,
+          color: isSelected ? QuizColors.purple : QuizColors.textSecondary,
           fontSize: 14,
           fontWeight: FontWeight.w800,
         ),
@@ -250,28 +159,18 @@ class AnswerOptionCard extends StatelessWidget {
   // ==========================================================
 
   Widget _buildStateIcon() {
-    final Color color = isCorrect
-        ? QuizColors.correct
-        : QuizColors.incorrect;
+    final Color color = isCorrect ? QuizColors.correct : QuizColors.incorrect;
 
-    final IconData icon = isCorrect
-        ? Icons.check_rounded
-        : Icons.close_rounded;
+    final IconData icon = isCorrect ? Icons.check_rounded : Icons.close_rounded;
 
     return Container(
       width: 30,
       height: 30,
       decoration: BoxDecoration(
-        color: color.withValues(
-          alpha: 0.10,
-        ),
+        color: color.withValues(alpha: 0.10),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 18,
-      ),
+      child: Icon(icon, color: color, size: 18),
     );
   }
 
@@ -293,15 +192,11 @@ class AnswerOptionCard extends StatelessWidget {
 
   Color _indicatorBackground() {
     if (isCorrect) {
-      return QuizColors.correct.withValues(
-        alpha: 0.12,
-      );
+      return QuizColors.correct.withValues(alpha: 0.12);
     }
 
     if (isIncorrect) {
-      return QuizColors.incorrect.withValues(
-        alpha: 0.12,
-      );
+      return QuizColors.incorrect.withValues(alpha: 0.12);
     }
 
     return QuizColors.surfaceAlt;
@@ -309,15 +204,11 @@ class AnswerOptionCard extends StatelessWidget {
 
   Color _indicatorBorderColor() {
     if (isCorrect) {
-      return QuizColors.correct.withValues(
-        alpha: 0.25,
-      );
+      return QuizColors.correct.withValues(alpha: 0.25);
     }
 
     if (isIncorrect) {
-      return QuizColors.incorrect.withValues(
-        alpha: 0.25,
-      );
+      return QuizColors.incorrect.withValues(alpha: 0.25);
     }
 
     return QuizColors.border;

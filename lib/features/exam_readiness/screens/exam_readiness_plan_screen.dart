@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../models/exam_study_plan.dart';
 import '../models/plan_regeneration_reason.dart';
 import '../models/study_capacity_snapshot.dart';
@@ -132,7 +134,7 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       appBar: AppBar(
         title: const Text('Exam Readiness Plan'),
         actions: [
@@ -251,17 +253,19 @@ class _ExamHero extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7a-exam-hero'),
       padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [scheme.primaryContainer, scheme.secondaryContainer],
-        ),
-        borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(24),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          scheme.primaryContainer.withValues(alpha: 0.68),
+          scheme.secondaryContainer.withValues(alpha: 0.58),
+        ],
       ),
+      borderColor: scheme.primary.withValues(alpha: 0.16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -404,13 +408,11 @@ class _CapacityCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(18),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: Row(
         children: [
           Icon(icon, color: scheme.primary),
@@ -452,14 +454,12 @@ class _PlanDetails extends StatelessWidget {
 
     final weekdays = plan.studyDaysOfWeek.toList()..sort();
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7a-plan-details'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

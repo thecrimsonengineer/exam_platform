@@ -237,7 +237,7 @@ class ContentBlockRenderer extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.only(top: 8, bottom: 18),
       decoration: BoxDecoration(
-        color: StudyColors.surfaceSoft,
+        color: StudyColors.surfaceSoft.withValues(alpha: 0.46),
         borderRadius: StudyRadius.large,
         border: Border.all(color: StudyColors.border),
         boxShadow: StudyShadows.soft,
@@ -246,7 +246,7 @@ class ContentBlockRenderer extends StatelessWidget {
         borderRadius: StudyRadius.large,
         child: Container(
           padding: const EdgeInsets.all(10),
-          color: StudyColors.surfaceSoft,
+          color: StudyColors.surfaceSoft.withValues(alpha: 0.46),
           child: Image.asset(
             imagePath,
             width: double.infinity,
@@ -266,7 +266,7 @@ class ContentBlockRenderer extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 20),
       decoration: BoxDecoration(
-        color: StudyColors.surface,
+        color: StudyColors.surface.withValues(alpha: 0.52),
         borderRadius: StudyRadius.medium,
       ),
       child: Column(
@@ -309,7 +309,7 @@ class ContentBlockRenderer extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.only(top: 8, bottom: 18),
       decoration: BoxDecoration(
-        color: StudyColors.surface,
+        color: StudyColors.surface.withValues(alpha: 0.52),
         borderRadius: StudyRadius.large,
         border: Border.all(color: StudyColors.border),
         boxShadow: StudyShadows.soft,
@@ -442,7 +442,7 @@ class ContentBlockRenderer extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
             decoration: BoxDecoration(
-              color: StudyColors.surface,
+              color: StudyColors.surface.withValues(alpha: 0.52),
               borderRadius: StudyRadius.medium,
               border: Border.all(color: StudyColors.border),
             ),
@@ -679,7 +679,7 @@ class ContentBlockRenderer extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8, bottom: 18),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: StudyColors.surface,
+        color: StudyColors.surface.withValues(alpha: 0.52),
         borderRadius: StudyRadius.large,
         border: Border.all(color: StudyColors.success.withValues(alpha: 0.18)),
         boxShadow: StudyShadows.soft,

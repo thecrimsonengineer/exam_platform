@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
 
@@ -13,7 +15,7 @@ class CompetencyReadinessScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       key: const ValueKey('m7c-competency-readiness-screen'),
       appBar: AppBar(title: Text(profile.competencyId.toUpperCase())),
       body: SafeArea(
@@ -104,14 +106,16 @@ class _DimensionList extends StatelessWidget {
       (label: 'Stability', dimension: profile.stability),
     ];
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7c-competency-dimensions'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         children: [
           for (var i = 0; i < dimensions.length; i++) ...[
@@ -152,14 +156,16 @@ class _DifficultyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final difficulty = profile.difficultyPerformance;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7c-difficulty-lanes'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -211,14 +217,16 @@ class _GapCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7c-gap-card'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -250,14 +258,16 @@ class _ReasonCodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7c-reason-code-card'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

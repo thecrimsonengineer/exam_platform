@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/theme.dart';
 import '../courses/csp/domain_screen.dart';
 import '../courses/csp/domain_screen_dark.dart';
@@ -166,7 +168,7 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         ? const Color(0xFF0A111D)
         : const Color(0xFFF6F8FC);
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: background,
       body: DecoratedBox(
         decoration: BoxDecoration(
@@ -333,19 +335,26 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
   Widget _hero(BuildContext context, ProgressAnalyticsSnapshot snapshot) {
     final percent = (snapshot.overallProgress * 100).round();
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: widget.isDarkMode
-              ? const [Color(0xFF102A56), Color(0xFF1E4C91), Color(0xFF4B318B)]
-              : const [Color(0xFF0B63CE), Color(0xFF2C77D8), Color(0xFF6A4CC3)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(26),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        colors: widget.isDarkMode
+            ? [
+                const Color(0xFF102A56).withValues(alpha: 0.82),
+                const Color(0xFF1E4C91).withValues(alpha: 0.76),
+                const Color(0xFF4B318B).withValues(alpha: 0.72),
+              ]
+            : [
+                const Color(0xFF0B63CE).withValues(alpha: 0.82),
+                const Color(0xFF2C77D8).withValues(alpha: 0.74),
+                const Color(0xFF6A4CC3).withValues(alpha: 0.70),
+              ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
+      borderColor: Colors.white.withValues(alpha: 0.14),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final compact = constraints.maxWidth < 620;
@@ -505,13 +514,11 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
   ) {
     final scheme = Theme.of(context).colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(18),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.52),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.64),
       child: Row(
         children: [
           CircleAvatar(

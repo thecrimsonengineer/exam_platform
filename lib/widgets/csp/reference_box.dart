@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../models/note.dart';
 
 class ReferenceBox extends StatelessWidget {
@@ -13,7 +15,7 @@ class ReferenceBox extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       color: Colors.indigo.shade50,
       shape: RoundedRectangleBorder(

@@ -237,7 +237,7 @@ class DarkContentBlockRenderer extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.only(top: 8, bottom: 18),
       decoration: BoxDecoration(
-        color: DarkStudyColors.surfaceSoft,
+        color: DarkStudyColors.surfaceSoft.withValues(alpha: 0.54),
         borderRadius: StudyRadius.large,
         border: Border.all(color: DarkStudyColors.border),
         boxShadow: StudyShadows.soft,
@@ -246,7 +246,7 @@ class DarkContentBlockRenderer extends StatelessWidget {
         borderRadius: StudyRadius.large,
         child: Container(
           padding: const EdgeInsets.all(10),
-          color: DarkStudyColors.surfaceSoft,
+          color: DarkStudyColors.surfaceSoft.withValues(alpha: 0.54),
           child: Image.asset(
             imagePath,
             width: double.infinity,
@@ -266,7 +266,7 @@ class DarkContentBlockRenderer extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 20),
       decoration: BoxDecoration(
-        color: DarkStudyColors.surface,
+        color: DarkStudyColors.surface.withValues(alpha: 0.58),
         borderRadius: StudyRadius.medium,
       ),
       child: Column(
@@ -309,7 +309,7 @@ class DarkContentBlockRenderer extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.only(top: 8, bottom: 18),
       decoration: BoxDecoration(
-        color: DarkStudyColors.surface,
+        color: DarkStudyColors.surface.withValues(alpha: 0.58),
         borderRadius: StudyRadius.large,
         border: Border.all(color: DarkStudyColors.border),
         boxShadow: StudyShadows.soft,
@@ -444,7 +444,7 @@ class DarkContentBlockRenderer extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
             decoration: BoxDecoration(
-              color: DarkStudyColors.surface,
+              color: DarkStudyColors.surface.withValues(alpha: 0.58),
               borderRadius: StudyRadius.medium,
               border: Border.all(color: DarkStudyColors.border),
             ),
@@ -681,7 +681,7 @@ class DarkContentBlockRenderer extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8, bottom: 18),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: DarkStudyColors.surface,
+        color: DarkStudyColors.surface.withValues(alpha: 0.58),
         borderRadius: StudyRadius.large,
         border: Border.all(
           color: DarkStudyColors.success.withValues(alpha: 0.18),

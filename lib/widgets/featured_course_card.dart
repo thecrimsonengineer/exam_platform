@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 class FeaturedCourseCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -20,22 +22,18 @@ class FeaturedCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1565C0), Color(0xFF1976D2)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withValues(alpha: 0.25),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
+    return StudentGlassSurface(
+      borderRadius: BorderRadius.circular(24),
+      gradient: LinearGradient(
+        colors: [
+          const Color(0xFF1565C0).withValues(alpha: 0.78),
+          const Color(0xFF1976D2).withValues(alpha: 0.70),
         ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
+      borderColor: Colors.white.withValues(alpha: 0.20),
+      shadowColor: Colors.blue.withValues(alpha: 0.20),
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(

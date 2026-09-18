@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../app/theme.dart';
 import '../../../widgets/csp/student_quiz_builder.dart';
 
@@ -17,7 +19,7 @@ class DarkCspPracticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: AppTheme.darkTheme,
-      child: Scaffold(
+      child: StudentGlassScaffold(
         backgroundColor: const Color(0xFF0A111D),
         appBar: AppBar(
           backgroundColor: const Color(0xFF0A111D),
@@ -37,14 +39,18 @@ class DarkCspPracticeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  StudentGlassSurface(
                     width: double.infinity,
+
                     padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF111B2C),
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color(0xFF25344A)),
-                    ),
+
+                    borderRadius: BorderRadius.circular(18),
+
+                    tint: const Color(0xFF111B2C).withValues(alpha: 0.58),
+
+                    borderColor: const Color(
+                      0xFF25344A,
+                    ).withValues(alpha: 0.72),
                     child: Text(
                       description,
                       style: const TextStyle(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_colors.dart';
@@ -161,7 +163,7 @@ class DarkSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       body: Container(
         decoration: const BoxDecoration(
@@ -418,27 +420,24 @@ class DarkSettingsScreen extends StatelessWidget {
   Widget _buildHero(BuildContext context) {
     final compact = MediaQuery.sizeOf(context).width < 650;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('settings-hero'),
       width: double.infinity,
       constraints: BoxConstraints(minHeight: compact ? 320 : 290),
       padding: EdgeInsets.all(compact ? 22 : 28),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF102A56), Color(0xFF1E4C91), Color(0xFF5B36A8)],
-          stops: [0.0, 0.58, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.20),
-            blurRadius: 30,
-            offset: const Offset(0, 16),
-          ),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          const Color(0xFF102A56).withValues(alpha: 0.82),
+          const Color(0xFF1E4C91).withValues(alpha: 0.76),
+          const Color(0xFF5B36A8).withValues(alpha: 0.72),
         ],
+        stops: const [0.0, 0.58, 1.0],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.12),
+      shadowColor: AppColors.primary.withValues(alpha: 0.20),
       child: Stack(
         children: [
           Positioned(
@@ -683,23 +682,18 @@ class DarkSettingsScreen extends StatelessWidget {
         key: ValueKey(item.keyName),
         onTap: item.onTap,
         borderRadius: BorderRadius.circular(20),
-        child: Ink(
+        child: StudentGlassSurface(
           padding: const EdgeInsets.all(17),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: item.gradient,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: item.gradient.first.withValues(alpha: 0.15),
-                blurRadius: 17,
-                offset: const Offset(0, 8),
-              ),
-            ],
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: item.gradient
+                .map((color) => color.withValues(alpha: 0.66))
+                .toList(),
           ),
+          borderColor: Colors.white.withValues(alpha: 0.12),
+          shadowColor: item.gradient.first.withValues(alpha: 0.15),
           child: Stack(
             children: [
               Positioned(
@@ -773,20 +767,12 @@ class DarkSettingsScreen extends StatelessWidget {
   }
 
   Widget _settingsGroup({required List<Widget> children}) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(21),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(21),
+      tint: _surface.withValues(alpha: 0.58),
+      borderColor: _border.withValues(alpha: 0.72),
+      shadowColor: _navy.withValues(alpha: 0.15),
       child: Column(
         children: [
           for (var i = 0; i < children.length; i++) ...[
@@ -836,14 +822,12 @@ class DarkSettingsScreen extends StatelessWidget {
   }
 
   Widget _buildAboutCard() {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF101A2A),
-        borderRadius: BorderRadius.circular(21),
-        border: Border.all(color: _border),
-      ),
+      borderRadius: BorderRadius.circular(21),
+      tint: const Color(0xFF101A2A).withValues(alpha: 0.58),
+      borderColor: _border.withValues(alpha: 0.72),
       child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

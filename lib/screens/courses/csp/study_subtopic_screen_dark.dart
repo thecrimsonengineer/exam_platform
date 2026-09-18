@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 import '../../../models/student_learning_progress.dart';
 import '../../../services/student_learning_progress_service.dart';
@@ -7,7 +9,6 @@ import '../../../theme/study/study_colors_dark.dart';
 import '../../../theme/study/study_gradients.dart';
 import '../../../theme/study/study_icons.dart';
 import '../../../theme/study/study_radius.dart';
-import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography_dark.dart';
 import '../../../widgets/csp/study_content/study_content_navigation_dark.dart';
@@ -133,7 +134,7 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
     if (subtopics.isEmpty ||
         widget.subtopicIndex < 0 ||
         widget.subtopicIndex >= subtopics.length) {
-      return const Scaffold(
+      return const StudentGlassScaffold(
         body: Center(child: Text('Study subtopic is unavailable.')),
       );
     }
@@ -144,7 +145,7 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
     final hasNext = widget.subtopicIndex < subtopics.length - 1;
     final progress = (widget.subtopicIndex + 1) / subtopics.length;
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: DarkStudyColors.background,
       appBar: _buildAppBar(context, subtopic),
       body: Column(
@@ -191,14 +192,15 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
                             isDesktop: isDesktop,
                           ),
                           const SizedBox(height: 24),
-                          Container(
+                          StudentGlassSurface(
                             width: double.infinity,
                             padding: EdgeInsets.all(contentShellPadding),
-                            decoration: BoxDecoration(
-                              color: DarkStudyColors.surface,
-                              borderRadius: StudyRadius.large,
-                              border: Border.all(color: DarkStudyColors.border),
-                              boxShadow: StudyShadows.soft,
+                            borderRadius: StudyRadius.large,
+                            tint: DarkStudyColors.surface.withValues(
+                              alpha: 0.58,
+                            ),
+                            borderColor: DarkStudyColors.border.withValues(
+                              alpha: 0.72,
                             ),
                             child: DarkStudySubtopicRenderer(
                               subtopic: subtopic,
@@ -319,21 +321,18 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
           ),
         );
 
-        return Container(
+        return StudentGlassSurface(
           width: double.infinity,
           padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: completed
-                ? DarkStudyColors.successLight
-                : DarkStudyColors.surface,
-            borderRadius: StudyRadius.large,
-            border: Border.all(
-              color: completed
-                  ? DarkStudyColors.success
-                  : DarkStudyColors.border,
-            ),
-            boxShadow: completed ? null : StudyShadows.soft,
-          ),
+          borderRadius: StudyRadius.large,
+          tint:
+              (completed
+                      ? DarkStudyColors.successLight
+                      : DarkStudyColors.surface)
+                  .withValues(alpha: 0.58),
+          borderColor:
+              (completed ? DarkStudyColors.success : DarkStudyColors.border)
+                  .withValues(alpha: completed ? 0.46 : 0.72),
           child: compact
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -369,7 +368,7 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: DarkStudyColors.surface,
+      backgroundColor: Colors.transparent,
       foregroundColor: DarkStudyColors.textPrimary,
       titleSpacing: StudySpacing.pageHorizontal,
       leading: IconButton(
@@ -420,13 +419,17 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
         ? 'Study Subtopic'
         : subtopic.title.trim();
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: StudyGradients.hero,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
-        boxShadow: StudyShadows.soft,
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+      gradient: LinearGradient(
+        begin: StudyGradients.hero.begin,
+        end: StudyGradients.hero.end,
+        colors: StudyGradients.hero.colors
+            .map((color) => color.withValues(alpha: 0.78))
+            .toList(),
       ),
+      borderColor: Colors.white.withValues(alpha: 0.12),
       child: Padding(
         padding: EdgeInsets.fromLTRB(
           isDesktop ? 30 : 22,

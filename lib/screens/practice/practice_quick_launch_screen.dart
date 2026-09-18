@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/theme.dart';
 import '../../features/learning_twin/coaching/learning_twin_practice_context.dart';
 import '../../features/learning_twin/integration/learning_twin_pre_practice_guidance.dart';
@@ -142,7 +144,9 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = widget.isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme;
+    final theme = widget.isDarkMode
+        ? AppTheme.studentGlassDarkTheme
+        : AppTheme.studentGlassLightTheme;
 
     return Theme(
       data: theme,
@@ -156,7 +160,7 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
 
           final scheme = Theme.of(context).colorScheme;
 
-          return Scaffold(
+          return StudentGlassScaffold(
             key: const ValueKey('practice-quick-launch-screen'),
             backgroundColor: scheme.surface,
             appBar: AppBar(
@@ -208,16 +212,12 @@ class _LoadingCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: 0.75),
-        ),
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.52),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.64),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -260,16 +260,12 @@ class _ErrorCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: 0.75),
-        ),
-      ),
+      borderRadius: BorderRadius.circular(22),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.52),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.64),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

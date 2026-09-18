@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
@@ -107,12 +109,12 @@ class LearningTwinCoachSheet extends StatelessWidget {
     return Semantics(
       container: true,
       label: 'Learning guide coaching',
-      child: Material(
-        color: colors.surfaceContainer,
-        elevation: 1,
+      child: StudentGlassSurface(
+        padding: const EdgeInsets.all(20),
         borderRadius: BorderRadius.circular(24),
-        clipBehavior: Clip.antiAlias,
-        child: Padding(padding: const EdgeInsets.all(20), child: body),
+        tint: colors.surfaceContainer.withValues(alpha: 0.56),
+        borderColor: colors.outlineVariant.withValues(alpha: 0.62),
+        child: body,
       ),
     );
   }

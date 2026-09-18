@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
@@ -44,7 +46,7 @@ class LearningTwinCard extends StatelessWidget {
       ],
     );
 
-    return Card(
+    return StudentGlassCard(
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(16),

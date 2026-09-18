@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 class AuthExperienceShell extends StatelessWidget {
   const AuthExperienceShell({
     super.key,
@@ -15,90 +17,58 @@ class AuthExperienceShell extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  static const _navy = Color(0xFF071A2B);
-  static const _deepBlue = Color(0xFF0D2D48);
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [_navy, _deepBlue, Color(0xFF102F43)],
-              ),
-            ),
-          ),
-          const Positioned(
-            left: -130,
-            top: -120,
-            child: _GlowOrb(size: 360, color: Color(0x3323D8C0)),
-          ),
-          const Positioned(
-            right: -100,
-            bottom: -140,
-            child: _GlowOrb(size: 420, color: Color(0x332B7FFF)),
-          ),
-          SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final wide = constraints.maxWidth >= 900;
+    return StudentGlassScaffold(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final wide = constraints.maxWidth >= 900;
 
-                final content = ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1180),
-                  child: wide
-                      ? Row(
-                          children: [
-                            Expanded(
-                              child: _HeroPanel(
-                                eyebrow: eyebrow,
-                                title: title,
-                                subtitle: subtitle,
-                              ),
-                            ),
-                            const SizedBox(width: 44),
-                            SizedBox(width: 470, child: child),
-                          ],
-                        )
-                      : SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(vertical: 28),
-                          child: Column(
-                            children: [
-                              _HeroPanel(
-                                eyebrow: eyebrow,
-                                title: title,
-                                subtitle: subtitle,
-                                compact: true,
-                              ),
-                              const SizedBox(height: 26),
-                              ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 520,
-                                ),
-                                child: child,
-                              ),
-                            ],
+            final content = ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1180),
+              child: wide
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: _HeroPanel(
+                            eyebrow: eyebrow,
+                            title: title,
+                            subtitle: subtitle,
                           ),
                         ),
-                );
-
-                return Center(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: wide ? 44 : 20,
-                      vertical: 24,
+                        const SizedBox(width: 44),
+                        SizedBox(width: 470, child: child),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        _HeroPanel(
+                          eyebrow: eyebrow,
+                          title: title,
+                          subtitle: subtitle,
+                          compact: true,
+                        ),
+                        const SizedBox(height: 26),
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 520),
+                          child: child,
+                        ),
+                      ],
                     ),
-                    child: content,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+            );
+
+            return Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: wide ? 44 : 20,
+                  vertical: 24,
+                ),
+                child: content,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -118,47 +88,39 @@ class AuthCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(30),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.97),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.75)),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 60,
-            offset: Offset(0, 24),
-            color: Color(0x55000000),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(28),
+      tint: scheme.surface.withValues(alpha: 0.58),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Container(
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0C2B45),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(
+              StudentGlassSurface(
+                padding: const EdgeInsets.all(12),
+                borderRadius: BorderRadius.circular(14),
+                tint: scheme.primary.withValues(alpha: 0.14),
+                borderColor: scheme.primary.withValues(alpha: 0.20),
+                child: Icon(
                   Icons.school_rounded,
-                  color: Color(0xFF55E1CE),
+                  color: scheme.primary,
+                  size: 22,
                 ),
               ),
               const SizedBox(width: 14),
-              const Expanded(
+              Expanded(
                 child: Text(
                   'CSP11',
-                  style: TextStyle(
-                    fontSize: 22,
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.8,
-                    color: Color(0xFF0A2135),
+                    color: scheme.onSurface,
                   ),
                 ),
               ),
@@ -168,16 +130,18 @@ class AuthCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8F8F5),
+                  color: scheme.primary.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(999),
+                  border: Border.all(
+                    color: scheme.primary.withValues(alpha: 0.16),
+                  ),
                 ),
-                child: const Text(
+                child: Text(
                   'SECURE ACCESS',
-                  style: TextStyle(
-                    fontSize: 10,
+                  style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.6,
-                    color: Color(0xFF087D70),
+                    color: scheme.primary,
                   ),
                 ),
               ),
@@ -186,17 +150,19 @@ class AuthCard extends StatelessWidget {
           const SizedBox(height: 26),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 30,
-              height: 1.08,
+            style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w900,
-              color: Color(0xFF0A2135),
+              height: 1.08,
+              color: scheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: const TextStyle(height: 1.45, color: Color(0xFF5B6B78)),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              height: 1.45,
+              color: scheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: 24),
           ...children,
@@ -221,6 +187,9 @@ class _HeroPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Padding(
       padding: EdgeInsets.all(compact ? 8 : 24),
       child: Column(
@@ -232,9 +201,8 @@ class _HeroPanel extends StatelessWidget {
           Text(
             eyebrow,
             textAlign: compact ? TextAlign.center : TextAlign.left,
-            style: const TextStyle(
-              color: Color(0xFF67E4D3),
-              fontSize: 12,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: scheme.primary,
               fontWeight: FontWeight.w900,
               letterSpacing: 2.2,
             ),
@@ -243,8 +211,8 @@ class _HeroPanel extends StatelessWidget {
           Text(
             title,
             textAlign: compact ? TextAlign.center : TextAlign.left,
-            style: TextStyle(
-              color: Colors.white,
+            style: theme.textTheme.displaySmall?.copyWith(
+              color: scheme.onSurface,
               fontSize: compact ? 38 : 58,
               height: 1.02,
               fontWeight: FontWeight.w900,
@@ -255,8 +223,8 @@ class _HeroPanel extends StatelessWidget {
           Text(
             subtitle,
             textAlign: compact ? TextAlign.center : TextAlign.left,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.74),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: scheme.onSurfaceVariant,
               fontSize: compact ? 16 : 18,
               height: 1.55,
             ),
@@ -292,44 +260,28 @@ class _TrustChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return StudentGlassSurface(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-      ),
+      borderRadius: BorderRadius.circular(999),
+      tint: scheme.surface.withValues(alpha: 0.44),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.56),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: const Color(0xFF67E4D3)),
+          Icon(icon, size: 16, color: scheme.primary),
           const SizedBox(width: 7),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: scheme.onSurface,
               fontWeight: FontWeight.w700,
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _GlowOrb extends StatelessWidget {
-  const _GlowOrb({required this.size, required this.color});
-
-  final double size;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
@@ -37,11 +39,14 @@ class LearningTwinCompactTip extends StatelessWidget {
     return Semantics(
       container: true,
       button: onTap != null,
-      child: Material(
-        color: colors.surfaceContainerHigh,
+      child: StudentGlassSurface(
         borderRadius: BorderRadius.circular(16),
-        clipBehavior: Clip.antiAlias,
-        child: onTap == null ? child : InkWell(onTap: onTap, child: child),
+        tint: colors.surfaceContainerHigh.withValues(alpha: 0.52),
+        borderColor: colors.outlineVariant.withValues(alpha: 0.60),
+        child: Material(
+          color: Colors.transparent,
+          child: onTap == null ? child : InkWell(onTap: onTap, child: child),
+        ),
       ),
     );
   }

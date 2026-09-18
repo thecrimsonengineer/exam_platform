@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../models/student_progress_dashboard.dart';
 import '../../theme/study/study_colors.dart';
 import '../../theme/study/study_radius.dart';
-import '../../theme/study/study_shadows.dart';
 import '../../theme/study/study_typography.dart';
 
 /// Learner-facing progress card for one CSP11 domain.
@@ -19,15 +20,12 @@ class DomainProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final percentage = (domain.subtopicProgress * 100).round();
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: StudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
+      borderRadius: StudyRadius.large,
+      tint: StudyColors.surface.withValues(alpha: 0.58),
+      borderColor: StudyColors.border.withValues(alpha: 0.72),
       child: Row(
         children: [
           Container(

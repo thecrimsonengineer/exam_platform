@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/theme.dart';
 import '../../models/student_progress_dashboard.dart';
 import '../../services/progress_domain_detail_service.dart';
@@ -112,7 +114,7 @@ class _ProgressDomainDetailScreenState
         ? const Color(0xFF0A111D)
         : const Color(0xFFF6F8FC);
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: background,
       appBar: AppBar(
         backgroundColor: background,
@@ -324,13 +326,11 @@ class _ProgressDomainDetailScreenState
   ) {
     final scheme = Theme.of(context).colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(18),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.52),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.64),
       child: Row(
         children: [
           CircleAvatar(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/study_content.dart';
 import '../../../services/study_content_loader.dart';
 import 'study_content_screen.dart';
@@ -80,13 +82,13 @@ class _ContentTestScreenState extends State<ContentTestScreen> {
       future: _contentFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
+          return const StudentGlassScaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
         if (snapshot.hasError) {
-          return Scaffold(
+          return StudentGlassScaffold(
             appBar: AppBar(title: const Text('CSP11 Study Content')),
             body: Center(
               child: Container(
@@ -128,7 +130,7 @@ class _ContentTestScreenState extends State<ContentTestScreen> {
         final content = snapshot.data;
 
         if (content == null) {
-          return const Scaffold(
+          return const StudentGlassScaffold(
             body: Center(
               child: Text('No published study content is available.'),
             ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../../models/subtopic_quiz_status.dart';
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
-import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_typography.dart';
 
 class SubtopicQuizEntryCard extends StatelessWidget {
@@ -19,18 +20,14 @@ class SubtopicQuizEntryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final score = status.score;
-    final scoreText =
-        score == null ? null : '${(score * 100).round()}%';
+    final scoreText = score == null ? null : '${(score * 100).round()}%';
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(color: StudyColors.border),
-        boxShadow: StudyShadows.soft,
-      ),
+      borderRadius: StudyRadius.large,
+      tint: StudyColors.surface.withValues(alpha: 0.56),
+      borderColor: StudyColors.border.withValues(alpha: 0.72),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -52,8 +49,7 @@ class SubtopicQuizEntryCard extends StatelessWidget {
               Text(
                 status.statusLabel,
                 style: StudyTypography.eyebrow.copyWith(
-                  color: status.status ==
-                          SubtopicQuizStatusType.completed
+                  color: status.status == SubtopicQuizStatusType.completed
                       ? const Color(0xFF1F8A4C)
                       : StudyColors.textSecondary,
                   fontSize: 8,
@@ -76,8 +72,7 @@ class SubtopicQuizEntryCard extends StatelessWidget {
             child: FilledButton(
               onPressed: onOpenQuiz,
               child: Text(
-                status.status ==
-                        SubtopicQuizStatusType.completed
+                status.status == SubtopicQuizStatusType.completed
                     ? 'REVIEW QUIZ'
                     : 'START QUIZ',
               ),

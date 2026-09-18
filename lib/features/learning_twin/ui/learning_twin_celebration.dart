@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
@@ -44,42 +46,41 @@ class LearningTwinCelebration extends StatelessWidget {
       container: true,
       liveRegion: true,
       label: 'Learning milestone',
-      child: Card(
-        color: colors.tertiaryContainer,
-        clipBehavior: Clip.antiAlias,
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 420;
+      child: StudentGlassSurface(
+        padding: const EdgeInsets.all(18),
+        borderRadius: BorderRadius.circular(24),
+        tint: colors.tertiaryContainer.withValues(alpha: 0.58),
+        borderColor: colors.tertiary.withValues(alpha: 0.22),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final compact = constraints.maxWidth < 420;
 
-              if (compact) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const LearningTwinAvatar(
-                      asset: LearningTwinAsset.success,
-                      size: 72,
-                    ),
-                    const SizedBox(height: 10),
-                    copy,
-                  ],
-                );
-              }
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            if (compact) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const LearningTwinAvatar(
                     asset: LearningTwinAsset.success,
-                    size: 88,
+                    size: 72,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(child: copy),
+                  const SizedBox(height: 10),
+                  copy,
                 ],
               );
-            },
-          ),
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const LearningTwinAvatar(
+                  asset: LearningTwinAsset.success,
+                  size: 88,
+                ),
+                const SizedBox(width: 16),
+                Expanded(child: copy),
+              ],
+            );
+          },
         ),
       ),
     );

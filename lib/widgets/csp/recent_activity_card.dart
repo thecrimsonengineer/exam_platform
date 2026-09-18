@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../models/student_recent_activity.dart';
 import '../../theme/study/study_colors.dart';
 import '../../theme/study/study_radius.dart';
@@ -8,37 +10,28 @@ import '../../theme/study/study_typography.dart';
 class RecentActivityCard extends StatelessWidget {
   final StudentRecentActivity activity;
 
-  const RecentActivityCard({
-    super.key,
-    required this.activity,
-  });
+  const RecentActivityCard({super.key, required this.activity});
 
   @override
   Widget build(BuildContext context) {
     final icon = switch (activity.type) {
-      StudentRecentActivityType.subtopicOpened =>
-        Icons.menu_book_rounded,
-      StudentRecentActivityType.subtopicCompleted =>
-        Icons.check_circle_rounded,
-      StudentRecentActivityType.topicCompleted =>
-        Icons.task_alt_rounded,
+      StudentRecentActivityType.subtopicOpened => Icons.menu_book_rounded,
+      StudentRecentActivityType.subtopicCompleted => Icons.check_circle_rounded,
+      StudentRecentActivityType.topicCompleted => Icons.task_alt_rounded,
     };
 
     final color =
         activity.type == StudentRecentActivityType.subtopicCompleted ||
-                activity.type ==
-                    StudentRecentActivityType.topicCompleted
-            ? const Color(0xFF1F8A4C)
-            : StudyColors.primary;
+            activity.type == StudentRecentActivityType.topicCompleted
+        ? const Color(0xFF1F8A4C)
+        : StudyColors.primary;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(color: StudyColors.border),
-      ),
+      borderRadius: StudyRadius.medium,
+      tint: StudyColors.surface.withValues(alpha: 0.54),
+      borderColor: StudyColors.border.withValues(alpha: 0.70),
       child: Row(
         children: [
           Container(
@@ -60,9 +53,7 @@ class RecentActivityCard extends StatelessWidget {
                   activity.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: StudyTypography.cardTitle.copyWith(
-                    fontSize: 14,
-                  ),
+                  style: StudyTypography.cardTitle.copyWith(fontSize: 14),
                 ),
                 const SizedBox(height: 3),
                 Text(
@@ -77,10 +68,7 @@ class RecentActivityCard extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             activity.label,
-            style: StudyTypography.eyebrow.copyWith(
-              color: color,
-              fontSize: 7,
-            ),
+            style: StudyTypography.eyebrow.copyWith(color: color, fontSize: 7),
           ),
         ],
       ),
