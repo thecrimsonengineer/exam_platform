@@ -165,6 +165,21 @@ void main() {
       expect(next.createdAt, plan.createdAt);
     });
 
+    test('nextVersion can raise learner-declared daily maximum', () {
+      final plan = _plan(minutes: 120, maxDailyMinutes: 240);
+      final updatedAt = DateTime(2026, 9, 19, 12);
+
+      final next = plan.nextVersion(
+        updatedAt: updatedAt,
+        defaultMinutesPerStudyDay: 360,
+        maxDailyMinutes: 360,
+      );
+
+      expect(next.defaultMinutesPerStudyDay, 360);
+      expect(next.maxDailyMinutes, 360);
+      expect(next.minutesForWeekday(DateTime.monday), 360);
+    });
+
     test('copyWith can deactivate without changing ownership', () {
       final plan = _plan();
 
