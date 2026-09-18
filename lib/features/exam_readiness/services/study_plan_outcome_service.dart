@@ -16,7 +16,9 @@ class StudyPlanOutcomeService {
   }) {
     final startedAt = block.startedAt;
     if (startedAt == null) {
-      throw StateError('A study-plan block must be started before outcome capture.');
+      throw StateError(
+        'A study-plan block must be started before outcome capture.',
+      );
     }
     if (completedAt.isBefore(startedAt)) {
       throw StateError('Block completion cannot precede its start time.');
@@ -46,8 +48,7 @@ class StudyPlanOutcomeService {
     final minutesSpent = elapsed < 0 ? 0 : elapsed;
 
     return StudyPlanBlockOutcome(
-      outcomeId:
-          'm7e-${plan.planId}-v${plan.planVersion}-${block.blockId}',
+      outcomeId: 'm7e-${plan.planId}-v${plan.planVersion}-${block.blockId}',
       planId: plan.planId,
       planVersion: plan.planVersion,
       blockId: block.blockId,
@@ -82,6 +83,7 @@ class StudyPlanOutcomeService {
 
   double? _accuracy(List<LearnerAssessmentAttempt> attempts) {
     if (attempts.isEmpty) return null;
-    return attempts.where((attempt) => attempt.correct).length / attempts.length;
+    return attempts.where((attempt) => attempt.correct).length /
+        attempts.length;
   }
 }

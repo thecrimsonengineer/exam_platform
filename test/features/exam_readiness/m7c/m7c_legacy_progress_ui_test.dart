@@ -11,9 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 StudentQuestionProgress _legacyRecord(int questionId, bool correct) {
-  final answeredAt = DateTime(2026, 9, 10, 12).add(
-    Duration(minutes: questionId),
-  );
+  final answeredAt = DateTime(
+    2026,
+    9,
+    10,
+    12,
+  ).add(Duration(minutes: questionId));
 
   return StudentQuestionProgress(
     questionId: questionId,
@@ -54,38 +57,34 @@ void main() {
 
   tearDown(LearnerLocalIdentity.clear);
 
-  testWidgets(
-    'legacy learner question progress appears in readiness profile',
-    (tester) async {
-      final screen = ReadinessProfileScreen(
-        evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
-        attemptRepository: const LearnerAssessmentAttemptRepository(
-          userIdOverride: 'u1',
-        ),
-        now: () => DateTime(2026, 9, 18, 12),
-      );
+  testWidgets('legacy learner question progress appears in readiness profile', (
+    tester,
+  ) async {
+    final screen = ReadinessProfileScreen(
+      evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
+      attemptRepository: const LearnerAssessmentAttemptRepository(
+        userIdOverride: 'u1',
+      ),
+      now: () => DateTime(2026, 9, 18, 12),
+    );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData.light(),
-          home: screen,
-        ),
-      );
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      MaterialApp(theme: ThemeData.light(), home: screen),
+    );
+    await tester.pumpAndSettle();
 
-      expect(
-        find.text('1/47 competencies currently have assessment evidence.'),
-        findsOneWidget,
-      );
+    expect(
+      find.text('1/47 competencies currently have assessment evidence.'),
+      findsOneWidget,
+    );
 
-      final row = find.byKey(const ValueKey('m7c-competency-d03_c02'));
-      await tester.scrollUntilVisible(row, 800);
+    final row = find.byKey(const ValueKey('m7c-competency-d03_c02'));
+    await tester.scrollUntilVisible(row, 800);
 
-      expect(row, findsOneWidget);
-      expect(
-        find.descendant(of: row, matching: find.text('UNASSESSED')),
-        findsNothing,
-      );
-    },
-  );
+    expect(row, findsOneWidget);
+    expect(
+      find.descendant(of: row, matching: find.text('UNASSESSED')),
+      findsNothing,
+    );
+  });
 }

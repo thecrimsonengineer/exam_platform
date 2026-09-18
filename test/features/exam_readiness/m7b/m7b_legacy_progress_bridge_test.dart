@@ -29,9 +29,7 @@ StudentQuestionProgress _legacyProgress({
   );
 }
 
-Future<void> _seedLegacyProgress(
-  List<StudentQuestionProgress> records,
-) async {
+Future<void> _seedLegacyProgress(List<StudentQuestionProgress> records) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString(
     StudentQuestionProgressService.storageKeyForUser('u1'),
@@ -78,10 +76,7 @@ void main() {
 
       expect(first.importedLegacyQuestionCount, 3);
       expect(first.attempts, hasLength(3));
-      expect(
-        first.evidenceByCompetency['d03_c02']?.sourceAttemptCount,
-        3,
-      );
+      expect(first.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
       expect(
         first.attempts.every(
           (attempt) => attempt.sessionKind == 'legacy_progress_bridge',
@@ -98,10 +93,7 @@ void main() {
 
       expect(second.importedLegacyQuestionCount, 0);
       expect(second.attempts, hasLength(3));
-      expect(
-        second.evidenceByCompetency['d03_c02']?.sourceAttemptCount,
-        3,
-      );
+      expect(second.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
     },
   );
 
@@ -136,9 +128,7 @@ void main() {
 
       const service = ReadinessEvidenceBootstrapService();
       final result = await service.rebuildLocal(
-        evidenceRepository: EvidenceSnapshotRepository(
-          userIdOverride: 'u1',
-        ),
+        evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
         attemptRepository: attemptRepository,
         questionProgressService: const StudentQuestionProgressService(
           userIdOverride: 'u1',

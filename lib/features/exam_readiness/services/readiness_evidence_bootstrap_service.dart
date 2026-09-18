@@ -81,10 +81,7 @@ class ReadinessEvidenceBootstrapService {
 
     await evidenceRepository.clearLocal();
     if (snapshots.isNotEmpty) {
-      await evidenceRepository.saveMany(
-        snapshots.values,
-        syncRemote: false,
-      );
+      await evidenceRepository.saveMany(snapshots.values, syncRemote: false);
     }
 
     return ReadinessEvidenceBootstrapResult(

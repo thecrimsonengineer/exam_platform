@@ -232,9 +232,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final disclaimer = find.byKey(
-        const ValueKey('m7a-no-readiness-claim'),
-      );
+      final disclaimer = find.byKey(const ValueKey('m7a-no-readiness-claim'));
       await tester.scrollUntilVisible(disclaimer, 400);
       await tester.pump();
 

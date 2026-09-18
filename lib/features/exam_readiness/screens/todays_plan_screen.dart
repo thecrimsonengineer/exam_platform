@@ -181,10 +181,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     await next;
   }
 
-  Future<bool> _hasMissedStudyDay(
-    dynamic examPlan,
-    DateTime now,
-  ) async {
+  Future<bool> _hasMissedStudyDay(dynamic examPlan, DateTime now) async {
     final today = DateTime(now.year, now.month, now.day);
     final created = DateTime(
       examPlan.createdAt.year,
@@ -244,11 +241,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
       planRepository: _dailyPlanRepository,
     );
 
-    final changed = widget.planService.completeBlock(
-      plan,
-      blockId,
-      at: at,
-    );
+    final changed = widget.planService.completeBlock(plan, blockId, at: at);
     await _dailyPlanRepository.savePlan(changed, syncRemote: false);
 
     final signalNotice = update.misconceptionSignals.isEmpty
@@ -367,8 +360,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                             at: at,
                           ),
                         ),
-                        onComplete: () =>
-                            _complete(plan.blocks[index].blockId),
+                        onComplete: () => _complete(plan.blocks[index].blockId),
                         onSkip: () => _apply(
                           (current, at) => widget.planService.skipBlock(
                             current,
