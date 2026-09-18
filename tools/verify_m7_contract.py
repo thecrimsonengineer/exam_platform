@@ -93,11 +93,23 @@ PHASE_REQUIRED_FILES = {
         "lib/features/exam_readiness/models/competency_dependency.dart",
         "lib/features/exam_readiness/models/readiness_weight_configuration.dart",
         "lib/features/exam_readiness/models/readiness_index_snapshot.dart",
+        "lib/features/exam_readiness/models/readiness_checkpoint.dart",
+        "lib/features/exam_readiness/models/recovery_protection_snapshot.dart",
+        "lib/features/exam_readiness/models/coverage_projection.dart",
+        "lib/features/exam_readiness/models/advanced_readiness_snapshot.dart",
+        "lib/features/exam_readiness/repositories/readiness_history_repository.dart",
         "lib/features/exam_readiness/services/exam_preparation_phase_service.dart",
         "lib/features/exam_readiness/services/capacity_pressure_service.dart",
         "lib/features/exam_readiness/services/readiness_trajectory_service.dart",
         "lib/features/exam_readiness/services/root_gap_reasoning_service.dart",
         "lib/features/exam_readiness/services/readiness_index_service.dart",
+        "lib/features/exam_readiness/services/readiness_checkpoint_service.dart",
+        "lib/features/exam_readiness/services/coverage_projection_service.dart",
+        "lib/features/exam_readiness/services/recovery_protection_service.dart",
+        "lib/features/exam_readiness/services/phase_aware_daily_plan_service.dart",
+        "lib/features/exam_readiness/services/exam_simulation_suppression_policy.dart",
+        "lib/features/exam_readiness/services/advanced_readiness_service.dart",
+        "lib/features/exam_readiness/screens/advanced_readiness_screen.dart",
         "docs/learning_twin/PHASE_M7F_IMPLEMENTATION.md",
         "docs/learning_twin/PHASE_M7F_VALIDATION.md",
     ],
@@ -425,6 +437,61 @@ def verify_phase(phase: str) -> None:
         require(
             "READINESS_DIMENSIONS_INCOMPLETE" in index_service,
             "M7F Readiness Index can silently score missing readiness dimensions",
+        )
+
+        phase_aware = read(
+            ROOT / "lib/features/exam_readiness/services/phase_aware_daily_plan_service.dart"
+        )
+        checkpoints = read(
+            ROOT / "lib/features/exam_readiness/services/readiness_checkpoint_service.dart"
+        )
+        recovery = read(
+            ROOT / "lib/features/exam_readiness/services/recovery_protection_service.dart"
+        )
+        projection = read(
+            ROOT / "lib/features/exam_readiness/services/coverage_projection_service.dart"
+        )
+        simulation = read(
+            ROOT / "lib/features/exam_readiness/services/exam_simulation_suppression_policy.dart"
+        )
+        advanced_screen = read(
+            ROOT / "lib/features/exam_readiness/screens/advanced_readiness_screen.dart"
+        )
+
+        require(
+            "DailyStudyPlanService" in phase_aware
+            and "EXAM_PHASE_" in phase_aware,
+            "M7F phase-aware planner is not layered on the frozen M7D planner",
+        )
+        for milestone in ("90", "60", "30", "14", "7"):
+            require(
+                milestone in checkpoints,
+                f"M7F readiness checkpoint milestone missing: {milestone}",
+            )
+        require(
+            "reducedIntensityDay" in recovery
+            and "recoveryDay" in recovery
+            and "NO_BACKLOG_DUMPING" in recovery,
+            "M7F recovery protection is incomplete",
+        )
+        require(
+            "PROCESS_VARIABLE_NOT_EXAM_OUTCOME" in projection,
+            "M7F safe projection does not identify its process-variable boundary",
+        )
+        require(
+            "suppressLearningTwin" in simulation
+            and "suppressHints" in simulation
+            and "suppressReadinessPrompts" in simulation,
+            "M7F timed-simulation suppression policy is incomplete",
+        )
+        require(
+            "Not yet available" in advanced_screen
+            and "not an exam outcome prediction" in advanced_screen,
+            "M7F learner UI does not fail closed or explain index limits",
+        )
+        require(
+            "pass probability" not in advanced_screen.lower(),
+            "M7F learner UI contains prohibited pass-probability wording",
         )
 
 
