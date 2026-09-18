@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/advanced_readiness_snapshot.dart';
 import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
-import '../models/readiness_trajectory_point.dart';
 import '../models/recovery_protection_snapshot.dart';
 import '../repositories/daily_study_plan_repository.dart';
 import '../repositories/evidence_snapshot_repository.dart';
