@@ -9,6 +9,7 @@ import '../repositories/readiness_snapshot_repository.dart';
 import '../services/readiness_evidence_bootstrap_service.dart';
 import '../services/readiness_profile_service.dart';
 import 'competency_readiness_screen.dart';
+import 'exam_readiness_route.dart';
 
 class ReadinessProfileScreen extends StatefulWidget {
   const ReadinessProfileScreen({
@@ -135,10 +136,12 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
                   _CompetencyMatrix(
                     dashboard: dashboard,
                     onTap: (profile) {
+                      final isDarkMode =
+                          Theme.of(context).brightness == Brightness.dark;
                       Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              CompetencyReadinessScreen(profile: profile),
+                        examReadinessRoute<void>(
+                          isDarkMode: isDarkMode,
+                          child: CompetencyReadinessScreen(profile: profile),
                         ),
                       );
                     },
