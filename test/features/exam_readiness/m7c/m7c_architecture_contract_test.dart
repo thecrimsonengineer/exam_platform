@@ -17,7 +17,7 @@ void main() {
         'lib/features/exam_readiness/models/competency_readiness_profile.dart',
       ).readAsStringSync();
       screen = File(
-        'lib/features/exam_readiness/screens/exam_readiness_profile_screen.dart',
+        'lib/features/exam_readiness/screens/readiness_profile_screen.dart',
       ).readAsStringSync();
       planScreen = File(
         'lib/features/exam_readiness/screens/exam_readiness_plan_screen.dart',
@@ -88,7 +88,7 @@ void main() {
     });
 
     test('exam plan links to readiness profile screen', () {
-      expect(planScreen, contains('ExamReadinessProfileScreen'));
+      expect(planScreen, contains('ReadinessProfileScreen'));
       expect(planScreen, contains('m7c-open-readiness-profile'));
     });
 
