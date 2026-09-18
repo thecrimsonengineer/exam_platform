@@ -2,8 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
-import '../../features/exam_readiness/screens/exam_readiness_route.dart';
 import '../../services/practice/practice_mode_service.dart';
 import '../courses/csp/csp_practice_screen.dart';
 import '../courses/csp/csp_practice_screen_dark.dart';
@@ -35,17 +33,6 @@ class PracticeHubScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         builder: (_) =>
             PracticeQuickLaunchScreen(mode: mode, isDarkMode: isDarkMode),
-      ),
-    );
-  }
-
-  void _openExamReadiness(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    Navigator.of(context).push(
-      examReadinessRoute<void>(
-        child: const ExamReadinessPlanScreen(),
-        isDarkMode: isDarkMode,
       ),
     );
   }
@@ -103,7 +90,7 @@ class PracticeHubScreen extends StatelessWidget {
       _PracticeMode(
         keyName: 'practice-hub-ultra-hard',
         icon: Icons.workspace_premium_rounded,
-        title: 'Ultra Hard • Exam Readiness',
+        title: 'Ultra Hard • DQG300',
         subtitle:
             'Readiness stress-test using only questions that passed DQG300 at 300/300 with DQS 100.',
         accent: const Color(0xFFA855F7),
@@ -112,18 +99,6 @@ class PracticeHubScreen extends StatelessWidget {
         featured: true,
         onTap: () =>
             _openQuickPractice(context, PracticeMode.ultraHardExamReadiness),
-      ),
-      _PracticeMode(
-        keyName: 'practice-hub-exam-readiness',
-        icon: Icons.event_available_rounded,
-        title: 'Exam Readiness',
-        subtitle:
-            'Set your exam date, study capacity, readiness profile, and adaptive daily plan.',
-        accent: const Color(0xFF0F8F83),
-        actionLabel: 'OPEN PLAN',
-        badge: 'LEARNING TWIN',
-        featured: true,
-        onTap: () => _openExamReadiness(context),
       ),
     ];
 
@@ -192,7 +167,7 @@ class PracticeHubScreen extends StatelessWidget {
                                 scheme: scheme,
                                 title: 'Choose your training mode',
                                 subtitle:
-                                    'Move from daily reps to DQG300 testing and your full exam-readiness plan without leaving the same practice hub.',
+                                    'Move from daily reps to focused DQG300 testing without leaving the same practice hub.',
                               ),
                               const SizedBox(height: 16),
                               LayoutBuilder(
@@ -368,7 +343,7 @@ class _PracticeHero extends StatelessWidget {
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 690),
                 child: Text(
-                  'Train by habit, weakness, randomness, custom scope, or push into Ultra Hard Exam Readiness when you want the strictest question set.',
+                  'Train by habit, weakness, randomness, custom scope, or push into Ultra Hard DQG300 when you want the strictest question set.',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: scheme.onSurfaceVariant,
                     height: 1.55,
