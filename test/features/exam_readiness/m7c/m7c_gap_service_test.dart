@@ -1,4 +1,5 @@
 import 'package:exam_platform/features/exam_readiness/models/competency_readiness_profile.dart';
+import 'package:exam_platform/features/exam_readiness/models/evidence_confidence.dart';
 import 'package:exam_platform/features/exam_readiness/models/readiness_gap.dart';
 import 'package:exam_platform/features/exam_readiness/services/readiness_gap_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -57,16 +58,16 @@ void main() {
     test('low evidence creates assessment evidence gap', () {
       final gaps = build(
         evidence: m7cEvidence(
-          overallConfidence:
-              m7cEvidence().evidenceQuality.confidenceLevel == null
-                  ? throw StateError('unreachable')
-                  : m7cEvidence(
-                      overallConfidence:
-                          m7cEvidence().evidenceQuality.confidenceLevel,
-                    ).evidenceQuality.confidenceLevel,
+          overallConfidence: EvidenceConfidence.low,
+          evidenceState: EvidenceState.emerging,
         ),
       );
-      expect(gaps, isA<List<ReadinessGap>>());
+      expect(
+        gaps.any(
+          (gap) => gap.reasonCode == 'INSUFFICIENT_ASSESSMENT_EVIDENCE',
+        ),
+        isTrue,
+      );
     });
 
     test('very low coverage creates coverage gap', () {
@@ -140,15 +141,14 @@ void main() {
     test('stale evidence creates staleness gap', () {
       final gaps = build(
         evidence: m7cEvidence(
-          recencyBand:
-              const [
-                null,
-              ].isEmpty
-                  ? throw StateError('unreachable')
-                  : m7cEvidence().recency.band,
+          recencyBand: EvidenceRecencyBand.stale,
+          evidenceState: EvidenceState.stale,
         ),
       );
-      expect(gaps, isA<List<ReadinessGap>>());
+      expect(
+        gaps.any((gap) => gap.type == ReadinessGapType.stalenessGap),
+        isTrue,
+      );
     });
 
     test('gap collection is unmodifiable', () {
