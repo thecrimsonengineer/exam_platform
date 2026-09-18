@@ -317,7 +317,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const ValueKey('m7a-edit-plan')), findsOneWidget);
+      final edit = find.byKey(const ValueKey('m7a-edit-plan'));
+      await tester.scrollUntilVisible(edit, 300);
+
+      expect(edit, findsOneWidget);
     });
 
     testWidgets(
