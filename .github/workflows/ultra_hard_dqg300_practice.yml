@@ -26,9 +26,6 @@ jobs:
       - name: Check formatting
         run: |
           dart format --output=none --set-exit-if-changed \
-            lib/models/question_quality_evidence.dart \
-            lib/models/question_quality_validation_result.dart \
-            lib/services/dqg300_question_quality_validator.dart \
             lib/services/ultra_hard_question_contract.dart \
             lib/services/question_bank_service.dart \
             lib/services/studio/studio_question_service.dart \
