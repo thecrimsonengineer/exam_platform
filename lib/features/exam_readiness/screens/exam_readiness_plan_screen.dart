@@ -5,6 +5,7 @@ import '../models/study_capacity_snapshot.dart';
 import '../repositories/exam_study_plan_repository.dart';
 import '../services/exam_study_capacity_service.dart';
 import 'exam_plan_setup_screen.dart';
+import 'exam_readiness_profile_screen.dart';
 
 class ExamReadinessPlanScreen extends StatefulWidget {
   const ExamReadinessPlanScreen({super.key, this.repository, this.now});
@@ -150,6 +151,21 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
                   const SizedBox(height: 14),
                   _PlanDetails(plan: plan),
                   const SizedBox(height: 18),
+                  FilledButton.icon(
+                    key: const ValueKey('m7c-open-readiness-profile'),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => ExamReadinessProfileScreen(
+                            now: widget.now,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.insights_rounded),
+                    label: const Text('View readiness profile'),
+                  ),
+                  const SizedBox(height: 10),
                   FilledButton.tonalIcon(
                     key: const ValueKey('m7a-edit-plan'),
                     onPressed: () => _openSetup(plan),
