@@ -72,16 +72,11 @@ void main() {
   ) async {
     await pumpHub(tester, brightness: Brightness.light);
 
-    final entry = find.byKey(
-      const ValueKey('practice-hub-exam-readiness'),
-    );
+    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
     await tester.scrollUntilVisible(entry, 500);
     await tester.pump();
 
-    final tappable = find.descendant(
-      of: entry,
-      matching: find.byType(InkWell),
-    );
+    final tappable = find.descendant(of: entry, matching: find.byType(InkWell));
     expect(tappable, findsOneWidget);
 
     await tester.tap(tappable);
@@ -95,9 +90,7 @@ void main() {
   ) async {
     await pumpHub(tester, brightness: Brightness.dark);
 
-    final entry = find.byKey(
-      const ValueKey('practice-hub-exam-readiness'),
-    );
+    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
     await tester.scrollUntilVisible(entry, 500);
     await tester.pump();
 
