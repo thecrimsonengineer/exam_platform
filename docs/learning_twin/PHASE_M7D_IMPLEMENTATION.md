@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTED / VALIDATION PENDING
+CLOSED / PASS
 
 ## Frozen parent
 
@@ -114,4 +114,4 @@ M7D closes only after:
 - complete Flutter regression PASS
 - production web build PASS
 
-M7E must not be treated as authoritative until this gate passes.
+M7D closed at checkpoint `910def967bcde96d887f6e8b0edef20caff86b0d` under GitHub Actions run `35333834441`. M7E is now the authoritative next phase.
