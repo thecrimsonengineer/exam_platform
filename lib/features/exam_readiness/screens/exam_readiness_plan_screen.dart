@@ -5,7 +5,7 @@ import '../models/study_capacity_snapshot.dart';
 import '../repositories/exam_study_plan_repository.dart';
 import '../services/exam_study_capacity_service.dart';
 import 'exam_plan_setup_screen.dart';
-import 'exam_readiness_profile_screen.dart';
+import 'readiness_profile_screen.dart';
 
 class ExamReadinessPlanScreen extends StatefulWidget {
   const ExamReadinessPlanScreen({super.key, this.repository, this.now});
@@ -156,7 +156,7 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => ExamReadinessProfileScreen(
+                          builder: (_) => ReadinessProfileScreen(
                             now: widget.now,
                           ),
                         ),
