@@ -42,11 +42,23 @@ jobs:
             lib/features/exam_readiness/models/competency_dependency.dart
             lib/features/exam_readiness/models/readiness_weight_configuration.dart
             lib/features/exam_readiness/models/readiness_index_snapshot.dart
+            lib/features/exam_readiness/models/readiness_checkpoint.dart
+            lib/features/exam_readiness/models/recovery_protection_snapshot.dart
+            lib/features/exam_readiness/models/coverage_projection.dart
+            lib/features/exam_readiness/models/advanced_readiness_snapshot.dart
+            lib/features/exam_readiness/repositories/readiness_history_repository.dart
             lib/features/exam_readiness/services/exam_preparation_phase_service.dart
             lib/features/exam_readiness/services/capacity_pressure_service.dart
             lib/features/exam_readiness/services/readiness_trajectory_service.dart
             lib/features/exam_readiness/services/root_gap_reasoning_service.dart
             lib/features/exam_readiness/services/readiness_index_service.dart
+            lib/features/exam_readiness/services/readiness_checkpoint_service.dart
+            lib/features/exam_readiness/services/coverage_projection_service.dart
+            lib/features/exam_readiness/services/recovery_protection_service.dart
+            lib/features/exam_readiness/services/phase_aware_daily_plan_service.dart
+            lib/features/exam_readiness/services/exam_simulation_suppression_policy.dart
+            lib/features/exam_readiness/services/advanced_readiness_service.dart
+            lib/features/exam_readiness/screens/advanced_readiness_screen.dart
             test/features/exam_readiness/m7f
           )
           dart format "${targets[@]}"

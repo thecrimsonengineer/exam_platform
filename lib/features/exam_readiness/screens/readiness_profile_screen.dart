@@ -8,6 +8,7 @@ import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
 import '../services/readiness_evidence_bootstrap_service.dart';
 import '../services/readiness_profile_service.dart';
+import 'advanced_readiness_screen.dart';
 import 'competency_readiness_screen.dart';
 import 'exam_readiness_route.dart';
 
@@ -132,6 +133,25 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
                   _AttentionCard(dashboard: dashboard),
                   const SizedBox(height: 14),
                   _LimitationsCard(dashboard: dashboard),
+                  const SizedBox(height: 14),
+                  FilledButton.tonalIcon(
+                    key: const ValueKey('m7f-open-advanced-readiness'),
+                    onPressed: () {
+                      final isDarkMode =
+                          Theme.of(context).brightness == Brightness.dark;
+                      Navigator.of(context).push(
+                        examReadinessRoute<void>(
+                          isDarkMode: isDarkMode,
+                          child: AdvancedReadinessScreen(
+                            dashboard: dashboard,
+                            now: widget.now,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.auto_graph_rounded),
+                    label: const Text('Open advanced readiness'),
+                  ),
                   const SizedBox(height: 18),
                   _CompetencyMatrix(
                     dashboard: dashboard,
@@ -148,9 +168,11 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    'CSP11 shows separate readiness dimensions. It does not '
-                    'calculate a single exam-readiness percentage or predict '
-                    'whether you will pass the exam.',
+                    'The competency profile above keeps readiness dimensions '
+                    'separate and does not calculate a single exam-readiness '
+                    'percentage. Advanced Readiness may show a separate '
+                    'evidence-gated CSP11 Readiness Index when minimum evidence '
+                    'conditions are met. That index is not an exam outcome prediction.',
                     key: const ValueKey('m7c-no-composite-index'),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,

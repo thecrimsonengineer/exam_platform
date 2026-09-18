@@ -1,4 +1,5 @@
 import 'capacity_pressure_snapshot.dart';
+import 'competency_dependency.dart';
 import 'coverage_projection.dart';
 import 'evidence_confidence.dart';
 import 'exam_preparation_phase.dart';
@@ -15,6 +16,7 @@ class AdvancedReadinessSnapshot {
     required this.capacityPressure,
     required this.readinessIndex,
     required this.trajectory,
+    required this.latestTrajectoryPoint,
     required this.coverageProjection,
     required this.nextCheckpoint,
     required this.recoveryProtection,
@@ -26,6 +28,7 @@ class AdvancedReadinessSnapshot {
     required this.todayPlanMinutes,
     required this.todayBlockCount,
     required this.planChangeExplanation,
+    required this.rootGapCandidates,
     required this.reasonCodes,
     required this.algorithmVersion,
   });
@@ -36,6 +39,7 @@ class AdvancedReadinessSnapshot {
   final CapacityPressureSnapshot capacityPressure;
   final ReadinessIndexSnapshot readinessIndex;
   final ReadinessTrajectorySummary trajectory;
+  final ReadinessTrajectoryPoint latestTrajectoryPoint;
   final CoverageProjection coverageProjection;
   final ReadinessCheckpoint? nextCheckpoint;
   final RecoveryProtectionSnapshot recoveryProtection;
@@ -47,6 +51,7 @@ class AdvancedReadinessSnapshot {
   final int todayPlanMinutes;
   final int todayBlockCount;
   final String? planChangeExplanation;
+  final List<RootGapCandidate> rootGapCandidates;
   final List<String> reasonCodes;
   final String algorithmVersion;
 }

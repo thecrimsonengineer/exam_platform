@@ -9,6 +9,7 @@ import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
 import '../services/daily_study_plan_service.dart';
 import '../services/learning_state_update_coordinator.dart';
+import '../services/phase_aware_daily_plan_service.dart';
 import '../services/readiness_evidence_bootstrap_service.dart';
 import '../services/study_plan_outcome_service.dart';
 import '../services/readiness_profile_service.dart';
@@ -22,6 +23,7 @@ class TodaysPlanScreen extends StatefulWidget {
     this.readinessRepository,
     this.dailyPlanRepository,
     this.planService = const DailyStudyPlanService(),
+    this.phaseAwarePlanService = const PhaseAwareDailyPlanService(),
     this.capacityService = const ExamStudyCapacityService(),
     this.ultraHardAvailabilityService,
     this.attemptRepository,
@@ -34,6 +36,7 @@ class TodaysPlanScreen extends StatefulWidget {
   final ReadinessSnapshotRepository? readinessRepository;
   final DailyStudyPlanRepository? dailyPlanRepository;
   final DailyStudyPlanService planService;
+  final PhaseAwareDailyPlanService phaseAwarePlanService;
   final ExamStudyCapacityService capacityService;
   final UltraHardAvailabilityService? ultraHardAvailabilityService;
   final LearnerAssessmentAttemptRepository? attemptRepository;
@@ -119,7 +122,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
           'No new Ultra Hard block will be scheduled.';
     }
 
-    final plan = widget.planService.generate(
+    final plan = widget.phaseAwarePlanService.generate(
       userId: examPlan.userId,
       date: now,
       generatedAt: now,
