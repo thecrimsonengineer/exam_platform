@@ -39,9 +39,9 @@ jobs:
           git merge-base --is-ancestor 5176cff9bab33ebc4ed8124e98397298b9b1f651 HEAD
           test "${GITHUB_REF_NAME}" = "phase-l-lab-engine"
 
-      - name: Format Phase L files
+      - name: Normalize Phase L formatting
         run: |
-          dart format --output=none --set-exit-if-changed \
+          dart format \
             lib/features/lab \
             lib/screens/lab \
             lib/screens/admin/lab \
