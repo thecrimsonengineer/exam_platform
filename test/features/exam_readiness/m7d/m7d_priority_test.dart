@@ -1,3 +1,4 @@
+import 'package:exam_platform/features/exam_readiness/models/competency_readiness_profile.dart';
 import 'package:exam_platform/features/exam_readiness/models/evidence_confidence.dart';
 import 'package:exam_platform/features/exam_readiness/models/learning_priority_score.dart';
 import 'package:exam_platform/features/exam_readiness/models/readiness_gap.dart';
