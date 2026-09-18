@@ -223,6 +223,18 @@ void main() {
       expect(result.reasonCodes, contains('MISSING_RETENTION'));
     });
 
+    test('missing blueprint denominator never becomes zero score input', () {
+      final result = service.evaluate(
+        dashboard: m7fDashboard(
+          competenciesTotal: 0,
+          competenciesAssessed: 0,
+        ),
+        evidence: goodEvidence,
+      );
+      expect(result.score, isNull);
+      expect(result.reasonCodes, contains('MISSING_BLUEPRINTCOVERAGE'));
+    });
+
     test('missing difficulty never becomes zero score input', () {
       final result = service.evaluate(
         dashboard: m7fDashboard(difficulty: null),
