@@ -36,10 +36,10 @@ The final M7E validation gate passed all required checks:
 
 The final targeted suite proves all required M7E adaptation sequences:
 
-A. poor new evidence changes the next plan toward targeted repair  
-B. excellent evidence reduces unnecessary repair repetition  
-C. a missed study day replans within declared next-day capacity  
-D. poor Ultra Hard evidence creates a targeted Ultra Hard recheck opportunity when the DQG300 bank and capacity allow it  
+A. poor new evidence changes the next plan toward targeted repair
+B. excellent evidence reduces unnecessary repair repetition
+C. a missed study day replans within declared next-day capacity
+D. poor Ultra Hard evidence creates a targeted Ultra Hard recheck opportunity when the DQG300 bank and capacity allow it
 E. repeated high-confidence incorrect answers create a calibration / misconception repair signal
 
 ## Defining closed-loop proof
