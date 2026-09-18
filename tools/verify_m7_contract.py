@@ -20,6 +20,7 @@ PHASE_TEST_DIRS = {
     "m7c": ROOT / "test/features/exam_readiness/m7c",
     "m7d": ROOT / "test/features/exam_readiness/m7d",
     "m7e": ROOT / "test/features/exam_readiness/m7e",
+    "m7f": ROOT / "test/features/exam_readiness/m7f",
 }
 
 PHASE_MIN_TESTS = {
@@ -28,6 +29,7 @@ PHASE_MIN_TESTS = {
     "m7c": 100,
     "m7d": 100,
     "m7e": 40,
+    "m7f": 80,
 }
 
 PHASE_REQUIRED_FILES = {
@@ -82,6 +84,21 @@ PHASE_REQUIRED_FILES = {
         "lib/features/exam_readiness/services/plan_replanning_service.dart",
         "lib/features/exam_readiness/services/misconception_signal_service.dart",
         "lib/features/exam_readiness/services/weekly_readiness_review_service.dart",
+    ],
+    "m7f": [
+        "lib/features/exam_readiness/models/exam_preparation_phase.dart",
+        "lib/features/exam_readiness/models/capacity_pressure_snapshot.dart",
+        "lib/features/exam_readiness/models/readiness_trajectory_point.dart",
+        "lib/features/exam_readiness/models/competency_dependency.dart",
+        "lib/features/exam_readiness/models/readiness_weight_configuration.dart",
+        "lib/features/exam_readiness/models/readiness_index_snapshot.dart",
+        "lib/features/exam_readiness/services/exam_preparation_phase_service.dart",
+        "lib/features/exam_readiness/services/capacity_pressure_service.dart",
+        "lib/features/exam_readiness/services/readiness_trajectory_service.dart",
+        "lib/features/exam_readiness/services/root_gap_reasoning_service.dart",
+        "lib/features/exam_readiness/services/readiness_index_service.dart",
+        "docs/learning_twin/PHASE_M7F_IMPLEMENTATION.md",
+        "docs/learning_twin/PHASE_M7F_VALIDATION.md",
     ],
 }
 
@@ -349,19 +366,79 @@ def verify_phase(phase: str) -> None:
             "M7E uses prohibited pass-probability language",
         )
 
+    if phase == "m7f":
+        phase_model = read(
+            ROOT / "lib/features/exam_readiness/models/exam_preparation_phase.dart"
+        )
+        pressure = read(
+            ROOT / "lib/features/exam_readiness/services/capacity_pressure_service.dart"
+        )
+        trajectory = read(
+            ROOT / "lib/features/exam_readiness/services/readiness_trajectory_service.dart"
+        )
+        dependency = read(
+            ROOT / "lib/features/exam_readiness/services/root_gap_reasoning_service.dart"
+        )
+        index_model = read(
+            ROOT / "lib/features/exam_readiness/models/readiness_index_snapshot.dart"
+        )
+        index_service = read(
+            ROOT / "lib/features/exam_readiness/services/readiness_index_service.dart"
+        )
+
+        require(
+            "foundationMinimumDays = 61" in phase_model
+            and "integrationMinimumDays = 31" in phase_model
+            and "readinessMinimumDays = 15" in phase_model,
+            "M7F initial exam-phase boundaries changed unexpectedly",
+        )
+        require(
+            "estimatedPriorityWorkloadMinMinutes" in pressure
+            and "estimatedPriorityWorkloadMaxMinutes" in pressure,
+            "M7F capacity pressure does not expose an uncertainty range",
+        )
+        require(
+            "minimumTrendWindowDays" in trajectory
+            and "ReadinessTrendDirection.unavailable" in trajectory,
+            "M7F trajectory service does not protect short/missing evidence windows",
+        )
+        require(
+            "dependency.validate()" in dependency
+            and "evidenceLimited" in dependency,
+            "M7F root-gap reasoning is not grounded in explicit dependencies and observed evidence",
+        )
+        require(
+            "EvidenceConfidence evidenceConfidence" in index_model,
+            "M7F Readiness Index does not preserve evidence confidence separately",
+        )
+        require(
+            "score: null" in index_service
+            and "ReadinessIndexAvailability.insufficientEvidence" in index_service,
+            "M7F Readiness Index does not fail closed on insufficient evidence",
+        )
+        require(
+            "pass probability" not in index_service.lower()
+            and "passProbability" not in index_service,
+            "M7F Readiness Index contains prohibited pass-probability logic",
+        )
+        require(
+            "READINESS_DIMENSIONS_INCOMPLETE" in index_service,
+            "M7F Readiness Index can silently score missing readiness dimensions",
+        )
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--phase",
-        choices=("pre", "m7a", "m7b", "m7c", "m7d", "m7e"),
+        choices=("pre", "m7a", "m7b", "m7c", "m7d", "m7e", "m7f"),
         default="pre",
     )
     args = parser.parse_args()
 
     verify_frozen_contract()
 
-    ordered = ("m7a", "m7b", "m7c", "m7d", "m7e")
+    ordered = ("m7a", "m7b", "m7c", "m7d", "m7e", "m7f")
     if args.phase != "pre":
         target = ordered.index(args.phase)
         for phase in ordered[: target + 1]:
