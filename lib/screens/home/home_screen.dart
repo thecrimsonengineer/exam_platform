@@ -49,8 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _borderBase = Color(0xFFE1E7F0);
   static const _border = Color(0xA6FFFFFF);
 
-  static const _legacyGlassTokens = (_surfaceBase, _borderBase);
-
   final StudentLearningPositionService _positionService =
       const StudentLearningPositionService();
   final StudentLearningProgressService _progressService =

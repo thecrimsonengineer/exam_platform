@@ -49,8 +49,6 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
   static const _borderBase = Color(0xFF25344A);
   static const _border = Color(0x4DFFFFFF);
 
-  static const _legacyGlassTokens = (_surfaceBase, _borderBase);
-
   final StudentLearningPositionService _positionService =
       const StudentLearningPositionService();
   final StudentLearningProgressService _progressService =

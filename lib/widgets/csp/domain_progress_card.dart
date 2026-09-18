@@ -5,7 +5,6 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../../models/student_progress_dashboard.dart';
 import '../../theme/study/study_colors.dart';
 import '../../theme/study/study_radius.dart';
-import '../../theme/study/study_shadows.dart';
 import '../../theme/study/study_typography.dart';
 
 /// Learner-facing progress card for one CSP11 domain.

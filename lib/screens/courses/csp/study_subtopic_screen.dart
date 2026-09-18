@@ -9,7 +9,6 @@ import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_gradients.dart';
 import '../../../theme/study/study_icons.dart';
 import '../../../theme/study/study_radius.dart';
-import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography.dart';
 import '../../../widgets/csp/study_content/study_content_navigation.dart';

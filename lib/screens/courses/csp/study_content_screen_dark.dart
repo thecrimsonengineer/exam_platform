@@ -6,7 +6,6 @@ import '../../../models/study_content.dart';
 import '../../../services/study_content_loader.dart';
 import '../../../theme/study/study_colors_dark.dart';
 import '../../../theme/study/study_radius.dart';
-import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography.dart';
 import '../../../widgets/csp/study_content/study_content_renderer_dark.dart';
