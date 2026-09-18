@@ -56,6 +56,3 @@ jobs:
 
       - name: Build production web
         run: flutter build web --release
-
-      - name: Build Android debug APK
-        run: flutter build apk --debug
