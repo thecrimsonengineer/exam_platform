@@ -163,6 +163,61 @@ service cloud.firestore {
         && request.resource.data.schemaVersion == resource.data.schemaVersion;
     }
 
+    function evidenceSnapshotAllowedKeys() {
+      return [
+        'competencyId',
+        'generatedAt',
+        'schemaVersion',
+        'algorithmVersion',
+        'sourceAttemptCount',
+        'coverage',
+        'attempts',
+        'cognition',
+        'difficulty',
+        'retention',
+        'confidence',
+        'recency',
+        'evidenceQuality',
+        'traceability',
+        'serverUpdatedAt'
+      ];
+    }
+
+    function validOwnedEvidenceSnapshot(competencyId) {
+      return request.resource.data.keys().hasOnly(evidenceSnapshotAllowedKeys())
+        && request.resource.data.keys().hasAll([
+          'competencyId',
+          'generatedAt',
+          'schemaVersion',
+          'algorithmVersion',
+          'sourceAttemptCount',
+          'coverage',
+          'attempts',
+          'cognition',
+          'difficulty',
+          'retention',
+          'confidence',
+          'recency',
+          'evidenceQuality',
+          'traceability'
+        ])
+        && request.resource.data.competencyId == competencyId
+        && request.resource.data.competencyId is string
+        && request.resource.data.generatedAt is string
+        && request.resource.data.schemaVersion is int
+        && request.resource.data.algorithmVersion is string
+        && request.resource.data.sourceAttemptCount is int
+        && request.resource.data.coverage is map
+        && request.resource.data.attempts is map
+        && request.resource.data.cognition is map
+        && request.resource.data.difficulty is map
+        && request.resource.data.retention is map
+        && request.resource.data.confidence is map
+        && request.resource.data.recency is map
+        && request.resource.data.evidenceQuality is map
+        && request.resource.data.traceability is list;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -183,6 +238,15 @@ service cloud.firestore {
 
         allow update: if isAdmin()
           || (isSelf(uid) && validOwnedExamPlanUpdate(uid, planId));
+
+        allow delete: if isAdmin() || isSelf(uid);
+      }
+
+      match /evidenceSnapshots/{competencyId} {
+        allow get, list: if isSelf(uid) || isAdmin();
+
+        allow create, update: if isAdmin()
+          || (isSelf(uid) && validOwnedEvidenceSnapshot(competencyId));
 
         allow delete: if isAdmin() || isSelf(uid);
       }
