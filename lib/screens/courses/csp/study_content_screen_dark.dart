@@ -16,6 +16,7 @@ class DarkStudyContentScreen extends StatefulWidget {
 
   final String? loadingTitle;
 
+  final String? initialTopicId;
   final String? initialSubtopicId;
 
   const DarkStudyContentScreen({
@@ -24,6 +25,7 @@ class DarkStudyContentScreen extends StatefulWidget {
     required this.competencyId,
     this.domainTitle,
     this.loadingTitle,
+    this.initialTopicId,
     this.initialSubtopicId,
   });
 
@@ -48,6 +50,7 @@ class _DarkStudyContentScreenState extends State<DarkStudyContentScreen> {
 
     if (oldWidget.domainId != widget.domainId ||
         oldWidget.competencyId != widget.competencyId ||
+        oldWidget.initialTopicId != widget.initialTopicId ||
         oldWidget.initialSubtopicId != widget.initialSubtopicId) {
       _loadContent();
     }
@@ -161,6 +164,7 @@ class _DarkStudyContentScreenState extends State<DarkStudyContentScreen> {
 
     return DarkStudyContentRenderer(
       content: content,
+      initialTopicId: widget.initialTopicId,
       initialSubtopicId: widget.initialSubtopicId,
       domainTitle: widget.domainTitle,
     );
