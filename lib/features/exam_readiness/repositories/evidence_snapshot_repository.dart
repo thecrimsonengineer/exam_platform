@@ -15,14 +15,18 @@ abstract interface class EvidenceSnapshotRemoteStore {
   });
 }
 
-class FirebaseEvidenceSnapshotRemoteStore implements EvidenceSnapshotRemoteStore {
+class FirebaseEvidenceSnapshotRemoteStore
+    implements EvidenceSnapshotRemoteStore {
   FirebaseEvidenceSnapshotRemoteStore({FirebaseFirestore? firestore})
     : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
   CollectionReference<Map<String, dynamic>> _collection(String userId) =>
-      _firestore.collection('users').doc(userId).collection('evidenceSnapshots');
+      _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('evidenceSnapshots');
 
   @override
   Future<List<CompetencyEvidenceSnapshot>> loadAll(String userId) async {
@@ -42,7 +46,9 @@ class FirebaseEvidenceSnapshotRemoteStore implements EvidenceSnapshotRemoteStore
       }
     }
 
-    result.sort((left, right) => left.competencyId.compareTo(right.competencyId));
+    result.sort(
+      (left, right) => left.competencyId.compareTo(right.competencyId),
+    );
     return result;
   }
 
@@ -157,9 +163,7 @@ class EvidenceSnapshotRepository {
       throw StateError('Evidence snapshot competency ID is not canonical.');
     }
 
-    final all = Map<String, CompetencyEvidenceSnapshot>.from(
-      await loadLocal(),
-    );
+    final all = Map<String, CompetencyEvidenceSnapshot>.from(await loadLocal());
     all[competencyId] = snapshot;
     await _saveLocal(userId, all);
 
@@ -190,11 +194,7 @@ class EvidenceSnapshotRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       storageKeyForUser(userId),
-      jsonEncode(
-        snapshots.map(
-          (key, value) => MapEntry(key, value.toJson()),
-        ),
-      ),
+      jsonEncode(snapshots.map((key, value) => MapEntry(key, value.toJson()))),
     );
   }
 }

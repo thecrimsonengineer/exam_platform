@@ -96,8 +96,9 @@ class CognitionEvidenceStats {
 
   double? get recallAccuracy =>
       recallAttempts == 0 ? null : recallCorrect / recallAttempts;
-  double? get applicationAccuracy =>
-      applicationAttempts == 0 ? null : applicationCorrect / applicationAttempts;
+  double? get applicationAccuracy => applicationAttempts == 0
+      ? null
+      : applicationCorrect / applicationAttempts;
   double? get analysisAccuracy =>
       analysisAttempts == 0 ? null : analysisCorrect / analysisAttempts;
 
@@ -222,7 +223,9 @@ class RetentionEvidenceStats {
       shortDelayAttempts: _int(json['shortDelayAttempts']),
       mediumDelayAttempts: _int(json['mediumDelayAttempts']),
       longDelayAttempts: _int(json['longDelayAttempts']),
-      lastReviewedAt: DateTime.tryParse(json['lastReviewedAt']?.toString() ?? ''),
+      lastReviewedAt: DateTime.tryParse(
+        json['lastReviewedAt']?.toString() ?? '',
+      ),
       daysSinceReview: json['daysSinceReview'] == null
           ? null
           : _int(json['daysSinceReview']),
@@ -330,9 +333,7 @@ class EvidenceQualitySnapshot {
       recency: _confidence(json['recency']),
       diversity: _confidence(json['diversity']),
       confidenceLevel: _confidence(json['confidenceLevel']),
-      breakdown: EvidenceConfidenceBreakdown.fromJson(
-        _map(json['breakdown']),
-      ),
+      breakdown: EvidenceConfidenceBreakdown.fromJson(_map(json['breakdown'])),
       state: _state(json['state']),
     );
   }
@@ -402,7 +403,10 @@ class CompetencyEvidenceSnapshot {
     return CompetencyEvidenceSnapshot(
       competencyId: json['competencyId']?.toString() ?? '',
       generatedAt: generatedAt,
-      schemaVersion: _int(json['schemaVersion'], fallback: currentSchemaVersion),
+      schemaVersion: _int(
+        json['schemaVersion'],
+        fallback: currentSchemaVersion,
+      ),
       algorithmVersion:
           json['algorithmVersion']?.toString() ?? currentAlgorithmVersion,
       sourceAttemptCount: _int(json['sourceAttemptCount']),
@@ -411,17 +415,15 @@ class CompetencyEvidenceSnapshot {
       cognition: CognitionEvidenceStats.fromJson(_map(json['cognition'])),
       difficulty: DifficultyEvidenceStats.fromJson(_map(json['difficulty'])),
       retention: RetentionEvidenceStats.fromJson(_map(json['retention'])),
-      confidence: ConfidenceCalibrationStats.fromJson(
-        _map(json['confidence']),
-      ),
+      confidence: ConfidenceCalibrationStats.fromJson(_map(json['confidence'])),
       recency: RecencyEvidenceStats.fromJson(_map(json['recency'])),
       evidenceQuality: EvidenceQualitySnapshot.fromJson(
         _map(json['evidenceQuality']),
       ),
       traceability: (json['traceability'] is List)
           ? (json['traceability'] as List)
-              .map((item) => item.toString())
-              .toList(growable: false)
+                .map((item) => item.toString())
+                .toList(growable: false)
           : const [],
     );
   }

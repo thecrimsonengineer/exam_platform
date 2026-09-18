@@ -83,10 +83,7 @@ void main() {
     });
 
     test('one attempt is not delayed evidence', () {
-      final result = service.build(
-        attempts: [m7bAttempt()],
-        now: now,
-      );
+      final result = service.build(attempts: [m7bAttempt()], now: now);
 
       expect(result.delayedAttempts, 0);
       expect(result.delayedAccuracy, isNull);
@@ -96,14 +93,8 @@ void main() {
     test('same question within 23 hours counts immediate only', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 17, 12),
-          ),
-          m7bAttempt(
-            attemptId: 'a2',
-            answeredAt: DateTime(2026, 9, 18, 11),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 17, 12)),
+          m7bAttempt(attemptId: 'a2', answeredAt: DateTime(2026, 9, 18, 11)),
         ],
         now: now,
       );
@@ -115,14 +106,8 @@ void main() {
     test('same question after one day counts short delay', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 16, 10),
-          ),
-          m7bAttempt(
-            attemptId: 'a2',
-            answeredAt: DateTime(2026, 9, 17, 10),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 16, 10)),
+          m7bAttempt(attemptId: 'a2', answeredAt: DateTime(2026, 9, 17, 10)),
         ],
         now: now,
       );
@@ -134,14 +119,8 @@ void main() {
     test('eight-day retrieval counts medium delay', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 1),
-          ),
-          m7bAttempt(
-            attemptId: 'a2',
-            answeredAt: DateTime(2026, 9, 9),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 1)),
+          m7bAttempt(attemptId: 'a2', answeredAt: DateTime(2026, 9, 9)),
         ],
         now: now,
       );
@@ -153,14 +132,8 @@ void main() {
     test('31-day retrieval counts long delay', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 7, 1),
-          ),
-          m7bAttempt(
-            attemptId: 'a2',
-            answeredAt: DateTime(2026, 8, 1),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 7, 1)),
+          m7bAttempt(attemptId: 'a2', answeredAt: DateTime(2026, 8, 1)),
         ],
         now: now,
       );
@@ -234,10 +207,7 @@ void main() {
     test('unpublished attempts are excluded from retention evidence', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 1),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 1)),
           m7bAttempt(
             attemptId: 'a2',
             publishedAtAttempt: false,
@@ -274,14 +244,8 @@ void main() {
     test('attempts are sorted before delay calculation', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'later',
-            answeredAt: DateTime(2026, 9, 10),
-          ),
-          m7bAttempt(
-            attemptId: 'earlier',
-            answeredAt: DateTime(2026, 9, 1),
-          ),
+          m7bAttempt(attemptId: 'later', answeredAt: DateTime(2026, 9, 10)),
+          m7bAttempt(attemptId: 'earlier', answeredAt: DateTime(2026, 9, 1)),
         ],
         now: now,
       );
@@ -292,10 +256,7 @@ void main() {
     test('last reviewed is latest eligible attempt', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 1),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 1)),
           m7bAttempt(
             attemptId: 'a2',
             questionId: 2,
@@ -311,10 +272,7 @@ void main() {
     test('days since review uses latest attempt date', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 10, 12),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 10, 12)),
         ],
         now: now,
       );
@@ -325,10 +283,7 @@ void main() {
     test('future timestamp does not create negative days since review', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 19),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 19)),
         ],
         now: now,
       );
@@ -339,22 +294,10 @@ void main() {
     test('mixed delay windows remain separately traceable', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 6, 1),
-          ),
-          m7bAttempt(
-            attemptId: 'a2',
-            answeredAt: DateTime(2026, 7, 5),
-          ),
-          m7bAttempt(
-            attemptId: 'a3',
-            answeredAt: DateTime(2026, 7, 15),
-          ),
-          m7bAttempt(
-            attemptId: 'a4',
-            answeredAt: DateTime(2026, 7, 16),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 6, 1)),
+          m7bAttempt(attemptId: 'a2', answeredAt: DateTime(2026, 7, 5)),
+          m7bAttempt(attemptId: 'a3', answeredAt: DateTime(2026, 7, 15)),
+          m7bAttempt(attemptId: 'a4', answeredAt: DateTime(2026, 7, 16)),
         ],
         now: now,
       );
@@ -368,14 +311,8 @@ void main() {
     test('immediate retrieval never enters delayed denominator', () {
       final result = service.build(
         attempts: [
-          m7bAttempt(
-            attemptId: 'a1',
-            answeredAt: DateTime(2026, 9, 18, 8),
-          ),
-          m7bAttempt(
-            attemptId: 'a2',
-            answeredAt: DateTime(2026, 9, 18, 10),
-          ),
+          m7bAttempt(attemptId: 'a1', answeredAt: DateTime(2026, 9, 18, 8)),
+          m7bAttempt(attemptId: 'a2', answeredAt: DateTime(2026, 9, 18, 10)),
         ],
         now: now,
       );
@@ -448,23 +385,20 @@ void main() {
       expect(result.delayedAccuracy, 0.5);
     });
 
-    test('source question removal does not erase historical attempt snapshot', () {
-      final result = service.build(
-        attempts: [
-          m7bAttempt(
-            attemptId: 'old',
-            answeredAt: DateTime(2026, 9, 1),
-          ),
-          m7bAttempt(
-            attemptId: 'later',
-            answeredAt: DateTime(2026, 9, 10),
-          ),
-        ],
-        now: now,
-      );
+    test(
+      'source question removal does not erase historical attempt snapshot',
+      () {
+        final result = service.build(
+          attempts: [
+            m7bAttempt(attemptId: 'old', answeredAt: DateTime(2026, 9, 1)),
+            m7bAttempt(attemptId: 'later', answeredAt: DateTime(2026, 9, 10)),
+          ],
+          now: now,
+        );
 
-      expect(result.delayedAttempts, 1);
-      expect(result.lastReviewedAt, DateTime(2026, 9, 10));
-    });
+        expect(result.delayedAttempts, 1);
+        expect(result.lastReviewedAt, DateTime(2026, 9, 10));
+      },
+    );
   });
 }

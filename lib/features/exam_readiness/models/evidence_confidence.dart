@@ -1,11 +1,4 @@
-enum EvidenceConfidence {
-  none,
-  veryLow,
-  low,
-  moderate,
-  high,
-  veryHigh,
-}
+enum EvidenceConfidence { none, veryLow, low, moderate, high, veryHigh }
 
 enum EvidenceState {
   unassessed,

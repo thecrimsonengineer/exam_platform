@@ -115,10 +115,7 @@ void main() {
         userIdOverride: 'u1',
       );
       await repo.append(
-        m7bAttempt(
-          attemptId: 'later',
-          answeredAt: DateTime(2026, 9, 18, 12),
-        ),
+        m7bAttempt(attemptId: 'later', answeredAt: DateTime(2026, 9, 18, 12)),
       );
       await repo.append(
         m7bAttempt(
@@ -146,12 +143,8 @@ void main() {
     });
 
     test('clearing one learner does not clear another learner', () async {
-      final u1 = const LearnerAssessmentAttemptRepository(
-        userIdOverride: 'u1',
-      );
-      final u2 = const LearnerAssessmentAttemptRepository(
-        userIdOverride: 'u2',
-      );
+      final u1 = const LearnerAssessmentAttemptRepository(userIdOverride: 'u1');
+      final u2 = const LearnerAssessmentAttemptRepository(userIdOverride: 'u2');
       await u1.append(m7bAttempt(attemptId: 'u1'));
       await u2.append(m7bAttempt(attemptId: 'u2'));
 
@@ -235,10 +228,7 @@ void main() {
       final repo = EvidenceSnapshotRepository(userIdOverride: 'u1');
 
       expect(
-        () => repo.save(
-          _snapshot(competencyId: 'bad'),
-          syncRemote: false,
-        ),
+        () => repo.save(_snapshot(competencyId: 'bad'), syncRemote: false),
         throwsA(isA<StateError>()),
       );
     });
@@ -323,13 +313,10 @@ void main() {
     test('saveMany persists multiple competency snapshots', () async {
       final repo = EvidenceSnapshotRepository(userIdOverride: 'u1');
 
-      await repo.saveMany(
-        [
-          _snapshot(competencyId: 'd03_c02'),
-          _snapshot(competencyId: 'd01_c01'),
-        ],
-        syncRemote: false,
-      );
+      await repo.saveMany([
+        _snapshot(competencyId: 'd03_c02'),
+        _snapshot(competencyId: 'd01_c01'),
+      ], syncRemote: false);
 
       expect(await repo.loadLocal(), hasLength(2));
     });
@@ -362,10 +349,7 @@ void main() {
         userIdOverride: 'u1',
       );
 
-      await progress.recordAnswer(
-        question: m7bQuestion(),
-        correct: true,
-      );
+      await progress.recordAnswer(question: m7bQuestion(), correct: true);
 
       final stored = await attempts.loadAll();
 

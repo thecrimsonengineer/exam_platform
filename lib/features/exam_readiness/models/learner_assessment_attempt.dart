@@ -52,18 +52,16 @@ class LearnerAssessmentAttempt {
         .map((tag) => tag.trim().toLowerCase())
         .toSet();
 
-    final lane = normalizedTags.contains(
-      UltraHardQuestionContract.classificationTag,
-    )
+    final lane =
+        normalizedTags.contains(UltraHardQuestionContract.classificationTag)
         ? AttemptDifficultyLane.ultraHard
         : question.difficulty.trim().toLowerCase().contains('hard')
         ? AttemptDifficultyLane.hard
         : AttemptDifficultyLane.standard;
 
-    final generatedId =
-        attemptId?.trim().isNotEmpty == true
-            ? attemptId!.trim()
-            : '${question.id}-${answeredAt.microsecondsSinceEpoch}';
+    final generatedId = attemptId?.trim().isNotEmpty == true
+        ? attemptId!.trim()
+        : '${question.id}-${answeredAt.microsecondsSinceEpoch}';
 
     return LearnerAssessmentAttempt(
       attemptId: generatedId,
@@ -108,9 +106,7 @@ class LearnerAssessmentAttempt {
   }
 
   factory LearnerAssessmentAttempt.fromJson(Map<String, dynamic> json) {
-    final answeredAt = DateTime.tryParse(
-      json['answeredAt']?.toString() ?? '',
-    );
+    final answeredAt = DateTime.tryParse(json['answeredAt']?.toString() ?? '');
     if (answeredAt == null) {
       throw const FormatException('Invalid assessment-attempt timestamp.');
     }

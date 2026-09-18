@@ -126,16 +126,19 @@ void main() {
       expect(snapshot.attempts.total, 0);
     });
 
-    test('source question can disappear after attempt without losing evidence', () {
-      final snapshot = service.buildSnapshot(
-        competencyId: 'd03_c02',
-        attempts: [m7bAttempt(questionId: 9999)],
-        scope: m7bScope(),
-        now: now,
-      );
-      expect(snapshot.attempts.total, 1);
-      expect(snapshot.attempts.uniqueQuestions, 1);
-    });
+    test(
+      'source question can disappear after attempt without losing evidence',
+      () {
+        final snapshot = service.buildSnapshot(
+          competencyId: 'd03_c02',
+          attempts: [m7bAttempt(questionId: 9999)],
+          scope: m7bScope(),
+          now: now,
+        );
+        expect(snapshot.attempts.total, 1);
+        expect(snapshot.attempts.uniqueQuestions, 1);
+      },
+    );
   });
 
   group('M7B coverage and breadth', () {
@@ -351,9 +354,7 @@ void main() {
     test('standard lane remains separate', () {
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
-        attempts: [
-          m7bAttempt(difficultyLane: AttemptDifficultyLane.standard),
-        ],
+        attempts: [m7bAttempt(difficultyLane: AttemptDifficultyLane.standard)],
         scope: m7bScope(),
         now: now,
       );
@@ -376,9 +377,7 @@ void main() {
     test('Ultra Hard lane remains distinct from Hard', () {
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
-        attempts: [
-          m7bAttempt(difficultyLane: AttemptDifficultyLane.ultraHard),
-        ],
+        attempts: [m7bAttempt(difficultyLane: AttemptDifficultyLane.ultraHard)],
         scope: m7bScope(),
         now: now,
       );
@@ -573,10 +572,7 @@ void main() {
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
         attempts: [
-          m7bAttempt(
-            correct: false,
-            confidence: LearnerConfidenceLevel.high,
-          ),
+          m7bAttempt(correct: false, confidence: LearnerConfidenceLevel.high),
         ],
         scope: m7bScope(),
         now: now,
@@ -589,10 +585,7 @@ void main() {
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
         attempts: [
-          m7bAttempt(
-            correct: true,
-            confidence: LearnerConfidenceLevel.low,
-          ),
+          m7bAttempt(correct: true, confidence: LearnerConfidenceLevel.low),
         ],
         scope: m7bScope(),
         now: now,
@@ -604,10 +597,7 @@ void main() {
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
         attempts: [
-          m7bAttempt(
-            correct: true,
-            confidence: LearnerConfidenceLevel.high,
-          ),
+          m7bAttempt(correct: true, confidence: LearnerConfidenceLevel.high),
         ],
         scope: m7bScope(),
         now: now,
@@ -619,10 +609,7 @@ void main() {
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
         attempts: [
-          m7bAttempt(
-            correct: false,
-            confidence: LearnerConfidenceLevel.high,
-          ),
+          m7bAttempt(correct: false, confidence: LearnerConfidenceLevel.high),
         ],
         scope: m7bScope(),
         now: now,
@@ -679,10 +666,7 @@ void main() {
     test('repeated same-question concentration is recorded', () {
       final attempts = [
         for (var i = 1; i <= 10; i++)
-          m7bAttempt(
-            attemptId: 'a${i}',
-            questionId: 1,
-          ),
+          m7bAttempt(attemptId: 'a${i}', questionId: 1),
       ];
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
@@ -728,9 +712,7 @@ void main() {
     test('traceability reports Ultra Hard count', () {
       final snapshot = service.buildSnapshot(
         competencyId: 'd03_c02',
-        attempts: [
-          m7bAttempt(difficultyLane: AttemptDifficultyLane.ultraHard),
-        ],
+        attempts: [m7bAttempt(difficultyLane: AttemptDifficultyLane.ultraHard)],
         scope: m7bScope(),
         now: now,
       );
@@ -764,11 +746,7 @@ void main() {
       final snapshots = service.buildAllSnapshots(
         attempts: [
           m7bAttempt(competencyId: 'd03_c02'),
-          m7bAttempt(
-            attemptId: 'd1',
-            questionId: 2,
-            competencyId: 'd01_c01',
-          ),
+          m7bAttempt(attemptId: 'd1', questionId: 2, competencyId: 'd01_c01'),
         ],
         scopes: [
           m7bScope(competencyId: 'd03_c02'),

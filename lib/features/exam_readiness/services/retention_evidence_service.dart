@@ -43,7 +43,8 @@ class RetentionEvidenceService {
       for (var index = 0; index < questionAttempts.length; index++) {
         final attempt = questionAttempts[index];
 
-        if (lastReviewedAt == null || attempt.answeredAt.isAfter(lastReviewedAt)) {
+        if (lastReviewedAt == null ||
+            attempt.answeredAt.isAfter(lastReviewedAt)) {
           lastReviewedAt = attempt.answeredAt;
         }
 

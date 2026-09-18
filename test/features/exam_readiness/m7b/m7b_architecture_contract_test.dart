@@ -67,11 +67,11 @@ void main() {
     });
 
     test('quiz progress service writes immutable M7B attempt record', () {
-      expect(progressService, contains('LearnerAssessmentAttempt.fromQuestion'));
       expect(
         progressService,
-        contains('LearnerAssessmentAttemptRepository'),
+        contains('LearnerAssessmentAttempt.fromQuestion'),
       );
+      expect(progressService, contains('LearnerAssessmentAttemptRepository'));
     });
 
     test('evidence snapshot Firestore path is UID nested', () {
@@ -80,18 +80,13 @@ void main() {
     });
 
     test('evidence snapshots require self or admin reads', () {
-      expect(
-        rules,
-        contains('allow get, list: if isSelf(uid) || isAdmin();'),
-      );
+      expect(rules, contains('allow get, list: if isSelf(uid) || isAdmin();'));
     });
 
     test('evidence snapshot write validates document competency ID', () {
       expect(
         rules,
-        contains(
-          'request.resource.data.competencyId == competencyId',
-        ),
+        contains('request.resource.data.competencyId == competencyId'),
       );
     });
 

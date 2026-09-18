@@ -59,7 +59,9 @@ class LearnerEvidenceAggregationService {
     final assessedTopics = evidence
         .map((item) => item.topicId.trim())
         .where((item) => item.isNotEmpty)
-        .where((item) => availableTopics.isEmpty || availableTopics.contains(item))
+        .where(
+          (item) => availableTopics.isEmpty || availableTopics.contains(item),
+        )
         .toSet();
 
     final assessedSubtopics = evidence
@@ -325,10 +327,7 @@ class LearnerEvidenceAggregationService {
     );
     final repository = snapshotRepository ?? EvidenceSnapshotRepository();
 
-    await repository.saveMany(
-      snapshots.values,
-      syncRemote: syncRemote,
-    );
+    await repository.saveMany(snapshots.values, syncRemote: syncRemote);
 
     return snapshots;
   }
@@ -401,8 +400,9 @@ class LearnerEvidenceAggregationService {
 
     final attempts7d = attempts
         .where(
-          (attempt) =>
-              !attempt.answeredAt.isBefore(now.subtract(const Duration(days: 7))),
+          (attempt) => !attempt.answeredAt.isBefore(
+            now.subtract(const Duration(days: 7)),
+          ),
         )
         .length;
     final attempts30d = attempts
@@ -515,7 +515,7 @@ class LearnerEvidenceAggregationService {
 
     var average =
         nonNone.map((level) => level.rank).reduce((a, b) => a + b) /
-            nonNone.length;
+        nonNone.length;
 
     if (repeatedAttemptConcentration > 0.60) {
       average -= 1;

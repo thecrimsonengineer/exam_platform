@@ -44,12 +44,8 @@ CompetencyEvidenceScope m7bScope({
 }) {
   return CompetencyEvidenceScope(
     competencyId: competencyId,
-    topicIds: {
-      for (var i = 1; i <= topics; i++) 't$i',
-    },
-    subtopicIds: {
-      for (var i = 1; i <= subtopics; i++) 's$i',
-    },
+    topicIds: {for (var i = 1; i <= topics; i++) 't$i'},
+    subtopicIds: {for (var i = 1; i <= subtopics; i++) 's$i'},
   );
 }
 

@@ -80,9 +80,7 @@ void main() {
 
     test('Ultra Hard classification is case-insensitive', () {
       final attempt = LearnerAssessmentAttempt.fromQuestion(
-        question: m7bQuestion(
-          tags: const ['ULTRA-HARD-DQG300'],
-        ),
+        question: m7bQuestion(tags: const ['ULTRA-HARD-DQG300']),
         correct: true,
         answeredAt: DateTime(2026, 9, 18),
         attemptId: 'a1',
@@ -200,8 +198,9 @@ void main() {
 
     test('rejects malformed competency identifier shape', () {
       expect(
-        m7bAttempt(competencyId: 'domain3-competency2')
-            .hasCanonicalCompetencyId,
+        m7bAttempt(
+          competencyId: 'domain3-competency2',
+        ).hasCanonicalCompetencyId,
         isFalse,
       );
     });
