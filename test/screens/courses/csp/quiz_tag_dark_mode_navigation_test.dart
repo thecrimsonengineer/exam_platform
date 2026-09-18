@@ -56,7 +56,10 @@ void main() {
       'lib/screens/courses/csp/quiz/quiz_screen.dart',
     ).readAsStringSync();
 
-    expect(source, contains('final isDarkMode = ThemeModeService.isDarkMode.value;'));
+    expect(
+      source,
+      contains('final isDarkMode = ThemeModeService.isDarkMode.value;'),
+    );
     expect(source, contains('builder: (_) => buildCsp11QuizTagDestination('));
     expect(source, contains('isDarkMode: isDarkMode,'));
     expect(source, isNot(contains('builder: (_) => StudyContentScreen(')));
