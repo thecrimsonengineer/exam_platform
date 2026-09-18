@@ -226,13 +226,11 @@ void main() {
 
       expect(plan.questions, hasLength(10));
       expect(
-        plan.questions
-            .where((question) => question.competencyId == 'd01_c01'),
+        plan.questions.where((question) => question.competencyId == 'd01_c01'),
         hasLength(5),
       );
       expect(
-        plan.questions
-            .where((question) => question.competencyId == 'd06_c04'),
+        plan.questions.where((question) => question.competencyId == 'd06_c04'),
         hasLength(5),
       );
       expect(
