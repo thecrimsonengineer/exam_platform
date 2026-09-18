@@ -444,9 +444,7 @@ class ReadinessProfileService {
     final drift = (accuracy(first) - accuracy(second)).abs();
     final repeatPenalty =
         evidence.evidenceQuality.breakdown.repeatedAttemptConcentration * 0.25;
-    final score = (1 - drift - repeatPenalty)
-        .clamp(0.0, 1.0)
-        .toDouble();
+    final score = (1 - drift - repeatPenalty).clamp(0.0, 1.0).toDouble();
 
     return ReadinessDimension(
       code: 'STABILITY',
