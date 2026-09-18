@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../features/exam_readiness/models/learner_assessment_attempt.dart';
+import '../features/exam_readiness/repositories/learner_assessment_attempt_repository.dart';
 import '../models/question.dart';
 import '../models/student_question_progress.dart';
 import 'auth/learner_local_identity.dart';
@@ -76,6 +78,8 @@ class StudentQuestionProgressService {
   Future<void> recordAnswer({
     required Question question,
     required bool correct,
+    LearnerConfidenceLevel? confidence,
+    String sessionKind = 'practice',
   }) async {
     if (question.id <= 0) {
       return;
@@ -121,6 +125,21 @@ class StudentQuestionProgressService {
         ),
       ),
     );
+
+    try {
+      final attempt = LearnerAssessmentAttempt.fromQuestion(
+        question: question,
+        correct: correct,
+        answeredAt: now,
+        confidence: confidence,
+        sessionKind: sessionKind,
+      );
+      await LearnerAssessmentAttemptRepository(
+        userIdOverride: userId,
+      ).append(attempt);
+    } catch (_) {
+      // M7B evidence capture must never interrupt active quiz persistence.
+    }
 
     ProgressAnalyticsEventBus.markDirty();
   }
