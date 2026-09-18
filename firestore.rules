@@ -279,6 +279,63 @@ service cloud.firestore {
         && request.resource.data.explanationCodes is list;
     }
 
+    function dailyStudyPlanAllowedKeys() {
+      return [
+        'planId',
+        'userId',
+        'date',
+        'generatedAt',
+        'planVersion',
+        'plannerAlgorithmVersion',
+        'availableMinutes',
+        'allocatedMinutes',
+        'generationReason',
+        'sourceEvidenceVersion',
+        'sourceReadinessVersion',
+        'blocks',
+        'status',
+        'schemaVersion',
+        'serverUpdatedAt'
+      ];
+    }
+
+    function validOwnedDailyStudyPlan(uid) {
+      return request.resource.data.keys().hasOnly(dailyStudyPlanAllowedKeys())
+        && request.resource.data.keys().hasAll([
+          'planId',
+          'userId',
+          'date',
+          'generatedAt',
+          'planVersion',
+          'plannerAlgorithmVersion',
+          'availableMinutes',
+          'allocatedMinutes',
+          'generationReason',
+          'sourceEvidenceVersion',
+          'sourceReadinessVersion',
+          'blocks',
+          'status',
+          'schemaVersion'
+        ])
+        && request.resource.data.userId == uid
+        && request.resource.data.planId is string
+        && request.resource.data.userId is string
+        && request.resource.data.date is string
+        && request.resource.data.generatedAt is string
+        && request.resource.data.planVersion is int
+        && request.resource.data.plannerAlgorithmVersion is string
+        && request.resource.data.availableMinutes is int
+        && request.resource.data.allocatedMinutes is int
+        && request.resource.data.allocatedMinutes
+          <= request.resource.data.availableMinutes
+        && request.resource.data.generationReason is string
+        && request.resource.data.sourceEvidenceVersion is string
+        && request.resource.data.sourceReadinessVersion is string
+        && request.resource.data.blocks is list
+        && request.resource.data.status is string
+        && request.resource.data.schemaVersion is int;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -319,6 +376,16 @@ service cloud.firestore {
           || (isSelf(uid) && validOwnedReadinessSnapshot(competencyId));
 
         allow delete: if isAdmin() || isSelf(uid);
+      }
+
+      match /dailyStudyPlans/{planVersionId} {
+        allow get, list: if isSelf(uid) || isAdmin();
+
+        allow create: if isAdmin()
+          || (isSelf(uid) && validOwnedDailyStudyPlan(uid));
+
+        // Historical plan versions are immutable for learners.
+        allow update, delete: if isAdmin();
       }
     }
 
