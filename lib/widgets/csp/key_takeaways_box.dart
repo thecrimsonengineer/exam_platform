@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/glass/student_glass.dart';
+
 import '../../models/note.dart';
 
 class KeyTakeawaysBox extends StatelessWidget {
@@ -13,7 +15,7 @@ class KeyTakeawaysBox extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       color: Colors.green.shade50,
       shape: RoundedRectangleBorder(

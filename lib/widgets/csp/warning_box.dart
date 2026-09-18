@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/glass/student_glass.dart';
+
 import '../../models/note.dart';
 
 class WarningBox extends StatelessWidget {
@@ -13,7 +15,7 @@ class WarningBox extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       color: Colors.orange.shade50,
       shape: RoundedRectangleBorder(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/glass/student_glass.dart';
+
 import '../../app/app_colors.dart';
 import '../../app/app_radius.dart';
 import '../../app/app_spacing.dart';
@@ -13,7 +15,7 @@ class DomainListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.card),
@@ -38,7 +40,7 @@ class DomainListCard extends StatelessWidget {
   }
 
   Widget _domainTile(BuildContext context, Csp11Domain domain) {
-    return Card(
+    return StudentGlassCard(
       elevation: 0,
       color: AppColors.background,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),

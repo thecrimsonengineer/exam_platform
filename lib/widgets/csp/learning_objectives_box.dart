@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../theme/glass/student_glass.dart';
 import '../../models/note.dart';
 
 class LearningObjectivesBox extends StatelessWidget {
@@ -12,7 +14,7 @@ class LearningObjectivesBox extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
