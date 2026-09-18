@@ -248,7 +248,8 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                                     .clamp(
                                       5,
                                       plan.blocks[index].plannedMinutes,
-                                    ),
+                                    )
+                                    .toInt(),
                             at: at,
                           ),
                         ),
