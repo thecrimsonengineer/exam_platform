@@ -3,9 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Persists and broadcasts the learner-facing dark-mode choice.
 ///
-/// P6.2 covers the five immediate bottom-navigation pages plus Domain, Topic
-/// navigation, Quiz and Result. Deeper Subtopic reading pages remain on their
-/// existing light presentation until a later phase.
+/// The root MaterialApp follows this notifier, so learner pages and pushed
+/// routes inherit the same persisted light/dark preference. Individual screens
+/// should use Theme.of(context) and the active ColorScheme rather than forcing
+/// light-only surface colors.
 class ThemeModeService {
   ThemeModeService._();
 
