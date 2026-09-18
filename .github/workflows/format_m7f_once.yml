@@ -1,0 +1,54 @@
+name: Format M7F Once
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-m7-exam-readiness
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Format M7F Dart targets
+        run: |
+          dart format \
+            lib/features/exam_readiness/models/exam_preparation_phase.dart \
+            lib/features/exam_readiness/models/capacity_pressure_snapshot.dart \
+            lib/features/exam_readiness/models/readiness_trajectory_point.dart \
+            lib/features/exam_readiness/models/competency_dependency.dart \
+            lib/features/exam_readiness/models/readiness_weight_configuration.dart \
+            lib/features/exam_readiness/models/readiness_index_snapshot.dart \
+            lib/features/exam_readiness/services/exam_preparation_phase_service.dart \
+            lib/features/exam_readiness/services/capacity_pressure_service.dart \
+            lib/features/exam_readiness/services/readiness_trajectory_service.dart \
+            lib/features/exam_readiness/services/root_gap_reasoning_service.dart \
+            lib/features/exam_readiness/services/readiness_index_service.dart \
+            test/features/exam_readiness/m7f
+
+      - name: Commit formatter result
+        run: |
+          if git diff --quiet; then
+            echo "Already formatted."
+            exit 0
+          fi
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/features/exam_readiness test/features/exam_readiness/m7f
+          git commit -m "Format M7F core"
+          git push origin HEAD:phase-m7-exam-readiness
