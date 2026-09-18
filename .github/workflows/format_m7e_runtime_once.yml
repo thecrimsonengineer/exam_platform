@@ -1,0 +1,42 @@
+name: Format M7E Runtime Once
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-m7-exam-readiness
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Format M7E runtime test
+        run: dart format test/features/exam_readiness/m7e/m7e_runtime_integration_test.dart
+
+      - name: Commit formatter result
+        run: |
+          if git diff --quiet -- test/features/exam_readiness/m7e/m7e_runtime_integration_test.dart; then
+            echo "Already formatted."
+            exit 0
+          fi
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add test/features/exam_readiness/m7e/m7e_runtime_integration_test.dart
+          git commit -m "Format M7E runtime integration test"
+          git push origin HEAD:phase-m7-exam-readiness
