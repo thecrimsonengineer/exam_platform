@@ -173,18 +173,41 @@ The coach may explain patterns after an attempt where appropriate.
 
 The coach must not expose protected answers through hints or intervention logic.
 
-## M7 - Exam Simulator Boundaries
+## M7 - Exam Readiness System
 
 Status:
-PLANNED
+FROZEN IMPLEMENTATION PLAN / PLANNED
+
+Frozen specification:
+`docs/learning_twin/PHASE_M7_EXAM_READINESS_FROZEN_IMPLEMENTATION_PLAN.md`
 
 Purpose:
-Enforce exam-mode safety at the decision layer.
+Build an evidence-aware exam-readiness system that combines exam-date planning,
+realistic study-capacity calculation, competency evidence, multidimensional
+readiness, adaptive daily planning, closed-loop replanning and advanced
+readiness intelligence.
+
+Frozen implementation order:
+- M7A - Exam Plan Foundation and Capacity Engine
+- M7B - Learner Evidence Engine
+- M7C - Multidimensional Readiness Profile
+- M7D - Adaptive Daily Planner
+- M7E - Closed Feedback Loop and Dynamic Replanning
+- M7F - Advanced Readiness Intelligence
+
+Permanent safety prerequisite:
+The previously planned Exam Simulator boundary remains authoritative throughout
+M7A-M7F.
 
 Hard rule:
-When an active timed Exam Simulator session is running, `LearningTwinDecisionService` returns no intervention.
+When an active timed Exam Simulator session is running,
+`LearningTwinDecisionService` returns no learner-facing intervention.
 
-Pre-exam and post-exam interactions are allowed.
+No M7 planning prompt, hint, readiness prompt, adaptive suggestion or answer
+leakage is allowed during an active timed exam.
+
+Pre-exam and post-exam interactions are allowed under the applicable M7
+evidence and safety rules.
 
 Do not rely only on hiding the Twin widget.
 
