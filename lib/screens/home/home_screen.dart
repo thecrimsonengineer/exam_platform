@@ -1289,7 +1289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: const Row(
                   children: [
-                    _ProgressOrb(),
+                    _ReadinessOrb(),
                     SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -1524,8 +1524,8 @@ class _HomeInlineLoading extends StatelessWidget {
   }
 }
 
-class _ProgressOrb extends StatelessWidget {
-  const _ProgressOrb();
+class _ReadinessOrb extends StatelessWidget {
+  const _ReadinessOrb();
 
   @override
   Widget build(BuildContext context) {
