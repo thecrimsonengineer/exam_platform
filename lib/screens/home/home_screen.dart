@@ -942,7 +942,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 (action) => SizedBox(
                   width: width,
                   height: 190,
-                  child: _buildPrimaryActionCard(action),
+                  child: _buildPrimaryActionStudentGlassCard(action),
                 ),
               )
               .toList(),
@@ -951,7 +951,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPrimaryActionCard(_PrimaryActionData action) {
+  Widget _buildPrimaryActionStudentGlassCard(_PrimaryActionData action) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -1129,7 +1129,7 @@ class _HomeScreenState extends State<HomeScreen> {
               .map(
                 (item) => SizedBox(
                   width: width,
-                  child: _buildQuickPracticeCard(item),
+                  child: _buildQuickPracticeStudentGlassCard(item),
                 ),
               )
               .toList(),
@@ -1138,7 +1138,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildQuickPracticeCard(_QuickActionData item) {
+  Widget _buildQuickPracticeStudentGlassCard(_QuickActionData item) {
     return Material(
       color: _surface,
       borderRadius: BorderRadius.circular(18),
