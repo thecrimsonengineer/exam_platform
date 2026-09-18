@@ -67,7 +67,15 @@ class PracticeModeService {
   }
 
   Future<PracticeSessionPlan> build(PracticeMode mode) async {
-    await _quizService.initialize();
+    if (mode == PracticeMode.ultraHardExamReadiness) {
+      // Ultra Hard questions can be published from the Admin Studio while
+      // QuizService.shared is already initialized. Refresh this strict lane
+      // before enforcing the five-question gate so newly published DQG300
+      // questions are visible immediately without restarting the app.
+      await _quizService.refresh();
+    } else {
+      await _quizService.initialize();
+    }
 
     final published = _quizService.getAllQuestions();
 
