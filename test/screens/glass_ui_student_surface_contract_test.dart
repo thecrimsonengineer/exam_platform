@@ -80,6 +80,61 @@ void main() {
     expect(twin, contains('StudentGlassCard'));
   });
 
+
+  test('high-frequency learner routes retain glass card surfaces', () {
+    const paths = <String>[
+      'lib/screens/home/home_screen.dart',
+      'lib/screens/home/home_screen_dark.dart',
+      'lib/screens/courses/courses_screen.dart',
+      'lib/screens/courses/csp/csp_study_hub_screen.dart',
+      'lib/screens/courses/csp/csp_study_hub_screen_dark.dart',
+      'lib/screens/courses/csp/domain_screen.dart',
+      'lib/screens/courses/csp/domain_screen_dark.dart',
+      'lib/screens/courses/csp/study_content_screen.dart',
+      'lib/screens/courses/csp/study_content_screen_dark.dart',
+      'lib/screens/courses/csp/study_subtopic_screen.dart',
+      'lib/screens/courses/csp/study_subtopic_screen_dark.dart',
+      'lib/screens/courses/csp/csp_practice_screen.dart',
+      'lib/screens/courses/csp/csp_practice_screen_dark.dart',
+      'lib/screens/bookmarks/bookmarked_questions_screen.dart',
+      'lib/screens/progress/progress_analytics_screen.dart',
+      'lib/screens/settings/settings_screen.dart',
+      'lib/screens/settings/settings_screen_dark.dart',
+    ];
+
+    for (final path in paths) {
+      expect(
+        read(path),
+        contains('StudentGlassSurface'),
+        reason: '$path must keep blur-backed learner surfaces.',
+      );
+    }
+  });
+
+  test('glass consumers use the package import contract', () {
+    const paths = <String>[
+      'lib/screens/home/home_screen.dart',
+      'lib/screens/navigation/bottom_navigation.dart',
+      'lib/screens/progress/widgets/progress_charts.dart',
+      'lib/widgets/continue_learning_card.dart',
+      'lib/widgets/csp/home/study_content_search_panel.dart',
+      'lib/widgets/csp/study_content/study_content_renderer.dart',
+      'lib/widgets/csp/study_content/study_subtopic_renderer.dart',
+      'lib/widgets/featured_course_card.dart',
+    ];
+
+    const expected =
+        "import 'package:exam_platform/theme/glass/student_glass.dart';";
+
+    for (final path in paths) {
+      expect(
+        read(path),
+        contains(expected),
+        reason: '$path must use the stable package glass import.',
+      );
+    }
+  });
+
   test('student auth shell is glass while admin remains legacy themed', () {
     final auth = read('lib/screens/auth/auth_experience_shell.dart');
     final gate = read('lib/screens/auth/auth_gate.dart');
