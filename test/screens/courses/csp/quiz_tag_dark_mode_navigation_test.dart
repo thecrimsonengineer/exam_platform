@@ -51,7 +51,9 @@ void main() {
     expect(ThemeModeService.isDarkMode.value, isFalse);
   });
 
-  test('quiz hierarchy tag tap reads learner theme instead of forcing light', () {
+  test(
+    'quiz hierarchy tag tap reads learner theme instead of forcing light',
+    () {
     final source = File(
       'lib/screens/courses/csp/quiz/quiz_screen.dart',
     ).readAsStringSync();
@@ -62,10 +64,13 @@ void main() {
     );
     expect(source, contains('builder: (_) => buildCsp11QuizTagDestination('));
     expect(source, contains('isDarkMode: isDarkMode,'));
-    expect(source, isNot(contains('builder: (_) => StudyContentScreen(')));
-  });
+      expect(source, isNot(contains('builder: (_) => StudyContentScreen(')));
+    },
+  );
 
-  test('dark study destination supports the same topic and subtopic target', () {
+  test(
+    'dark study destination supports the same topic and subtopic target',
+    () {
     final screen = File(
       'lib/screens/courses/csp/study_content_screen_dark.dart',
     ).readAsStringSync();
@@ -78,6 +83,7 @@ void main() {
     expect(renderer, contains('final String? initialTopicId;'));
     expect(renderer, contains('final Map<int, GlobalKey> _topicKeys'));
     expect(renderer, contains('int? _requestedTopicIndex()'));
-    expect(renderer, contains('Scrollable.ensureVisible('));
-  });
+      expect(renderer, contains('Scrollable.ensureVisible('));
+    },
+  );
 }
