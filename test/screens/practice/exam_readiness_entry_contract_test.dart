@@ -3,11 +3,17 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Exam Readiness universal learner entry contract', () {
+  group('Exam Readiness learner entry contract', () {
+    late String lightHome;
+    late String darkHome;
     late String practiceHub;
     late String bottomNavigation;
 
     setUpAll(() {
+      lightHome = File('lib/screens/home/home_screen.dart').readAsStringSync();
+      darkHome = File(
+        'lib/screens/home/home_screen_dark.dart',
+      ).readAsStringSync();
       practiceHub = File(
         'lib/screens/practice/practice_hub_screen.dart',
       ).readAsStringSync();
@@ -16,52 +22,49 @@ void main() {
       ).readAsStringSync();
     });
 
-    test('Practice hub contains an unconditional Exam Readiness entry', () {
-      expect(practiceHub, contains('practice-hub-exam-readiness'));
-      expect(practiceHub, contains("title: 'Exam Readiness'"));
-      expect(practiceHub, contains('ExamReadinessPlanScreen'));
+    test('light Home exposes Exam Readiness in learning footprint', () {
+      expect(lightHome, contains("ValueKey('home-exam-readiness')"));
+      expect(lightHome, contains("const _Eyebrow('PROGRESS INTELLIGENCE')"));
+      expect(lightHome, contains("'Your learning footprint'"));
+      expect(lightHome, contains('ExamReadinessPlanScreen'));
+      expect(lightHome, contains('examReadinessRoute<void>'));
     });
 
-    test('Practice hub does not gate Exam Readiness on learner identity', () {
-      expect(practiceHub, isNot(contains('LearnerLocalIdentity')));
-      expect(practiceHub, isNot(contains('FirebaseAuth')));
+    test('dark Home exposes the same Exam Readiness entry', () {
+      expect(darkHome, contains("ValueKey('home-exam-readiness')"));
+      expect(darkHome, contains("const _Eyebrow('PROGRESS INTELLIGENCE')"));
+      expect(darkHome, contains("'Your learning footprint'"));
+      expect(darkHome, contains('ExamReadinessPlanScreen'));
+      expect(darkHome, contains('examReadinessRoute<void>'));
     });
 
-    test(
-      'Practice hub does not gate Exam Readiness on saved plan existence',
-      () {
-        expect(practiceHub, isNot(contains('ExamStudyPlanRepository')));
-        expect(practiceHub, isNot(contains('loadActivePlan')));
-      },
-    );
-
-    test('Practice hub does not gate Exam Readiness on progress history', () {
-      expect(practiceHub, isNot(contains('StudentLearningProgress')));
-      expect(practiceHub, isNot(contains('StudentQuestionProgress')));
-      expect(practiceHub, isNot(contains('StudentLearningPosition')));
+    test('Home learning-footprint action no longer opens Progress', () {
+      expect(lightHome, isNot(contains("ValueKey('home-progress')")));
+      expect(darkHome, isNot(contains("ValueKey('home-progress')")));
+      expect(lightHome, isNot(contains("'See domain and topic progress'")));
+      expect(darkHome, isNot(contains("'See domain and topic progress'")));
     });
 
-    test('shared Practice hub is used for light learner navigation', () {
-      expect(bottomNavigation, contains('return const PracticeHubScreen();'));
-    });
-
-    test('shared Practice hub is used for dark learner navigation', () {
-      final occurrences = 'return const PracticeHubScreen();'.allMatches(
-        bottomNavigation,
+    test('Practice hub no longer contains the Exam Readiness planner', () {
+      expect(
+        practiceHub,
+        isNot(contains("keyName: 'practice-hub-exam-readiness'")),
       );
-      expect(occurrences.length, greaterThanOrEqualTo(2));
+      expect(practiceHub, isNot(contains('ExamReadinessPlanScreen')));
+      expect(practiceHub, isNot(contains('_openExamReadiness')));
     });
 
-    test(
-      'Practice remains a permanent learner bottom-navigation destination',
-      () {
-        expect(bottomNavigation, contains("label: 'Practice'"));
-      },
-    );
+    test('Ultra Hard DQG300 remains a Practice mode', () {
+      expect(practiceHub, contains("keyName: 'practice-hub-ultra-hard'"));
+      expect(practiceHub, contains("title: 'Ultra Hard • DQG300'"));
+    });
 
-    test('universal entry does not depend on admin role checks', () {
-      expect(practiceHub, isNot(contains('isAdmin')));
-      expect(practiceHub, isNot(contains('AdminGate')));
+    test('Practice remains a permanent bottom-navigation destination', () {
+      expect(bottomNavigation, contains("label: 'Practice'"));
+    });
+
+    test('Progress remains a dedicated bottom-navigation destination', () {
+      expect(bottomNavigation, contains("label: 'Progress'"));
     });
   });
 }
