@@ -1,10 +1,124 @@
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
-class Lab1000StudioScreen extends StatelessWidget {
+import '../../../features/lab/lab_studio.dart';
+
+class Lab1000StudioScreen extends StatefulWidget {
   const Lab1000StudioScreen({super.key});
 
   @override
+  State<Lab1000StudioScreen> createState() => _Lab1000StudioScreenState();
+}
+
+class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
+  final TextEditingController _jsonController = TextEditingController();
+  final Lab1000StudioService _service = Lab1000StudioService(
+    repository: InMemoryLabPublishedRepository(),
+  );
+
+  LabStudioWorkspace? _workspace;
+  String? _message;
+
+  @override
+  void dispose() {
+    _jsonController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _importFile() async {
+    final file = await openFile(
+      acceptedTypeGroups: const <XTypeGroup>[
+        XTypeGroup(label: 'LAB JSON', extensions: <String>['json']),
+      ],
+    );
+    if (file == null) return;
+    _jsonController.text = await file.readAsString();
+    _importText();
+  }
+
+  void _importText() {
+    try {
+      final workspace = _service.importJson(_jsonController.text);
+      setState(() {
+        _workspace = workspace;
+        _message = workspace.report.isValid
+            ? 'LAB JSON imported and validation passed.'
+            : 'LAB JSON imported with validation issues.';
+      });
+    } catch (error) {
+      setState(() {
+        _message = error.toString();
+      });
+    }
+  }
+
+  void _validate() {
+    final workspace = _workspace;
+    if (workspace == null) return;
+    setState(() {
+      _workspace = _service.validate(workspace);
+      _message = _workspace!.report.isValid
+          ? 'LAB1000 validation passed.'
+          : 'Validation found blocking issues.';
+    });
+  }
+
+  void _requestReview() {
+    final workspace = _workspace;
+    if (workspace == null) return;
+    try {
+      setState(() {
+        _workspace = _service.requestReview(workspace);
+        _jsonController.text = _workspace!.sourceJson;
+        _message = 'LAB moved to REVIEW.';
+      });
+    } catch (error) {
+      setState(() => _message = error.toString());
+    }
+  }
+
+  void _approve() {
+    final workspace = _workspace;
+    if (workspace == null) return;
+    try {
+      setState(() {
+        _workspace = _service.approveReview(
+          workspace,
+          reviewerId: 'admin-reviewer',
+        );
+        _jsonController.text = _workspace!.sourceJson;
+        _message = 'LAB moved to VALIDATED.';
+      });
+    } catch (error) {
+      setState(() => _message = error.toString());
+    }
+  }
+
+  Future<void> _publish() async {
+    final workspace = _workspace;
+    if (workspace == null) return;
+    try {
+      final published = await _service.publish(workspace);
+      if (!mounted) return;
+      setState(() {
+        _workspace = published;
+        _jsonController.text = published.sourceJson;
+        _message = 'Immutable LAB version published.';
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _message = error.toString());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final workspace = _workspace;
+    final preview =
+        workspace == null ? null : _service.createPreview(workspace);
+    final inspection =
+        workspace == null ? null : _service.inspect(workspace);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
@@ -17,26 +131,130 @@ class Lab1000StudioScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            _StudioPanel(
+            const _StudioPanel(
               icon: Icons.data_object_rounded,
-              title: 'JSON-first LAB authoring',
+              title: 'Single-JSON authoring',
               body:
-                  'One portable LAB JSON package is the authoritative version representation. L1 establishes the shell and contracts. Import, exhaustive validation, preview, review and immutable publish are completed in L2.',
+                  'Import or paste one LAB JSON package, validate the deterministic graph, inspect the authored state and routes, preview the package, review it and publish an immutable version.',
             ),
             const SizedBox(height: 14),
-            _StudioPanel(
-              icon: Icons.account_tree_rounded,
-              title: 'Deterministic runtime contract',
-              body:
-                  'Scene → Decision → Option → Consequence → State Mutation → Story Gate → Next Scene / Event / Ending. Runtime LLM branching and executable JSON are forbidden.',
+            TextField(
+              key: const ValueKey('lab1000-json-editor'),
+              controller: _jsonController,
+              minLines: 10,
+              maxLines: 24,
+              decoration: const InputDecoration(
+                labelText: 'LAB JSON',
+                alignLabelWithHint: true,
+                border: OutlineInputBorder(),
+              ),
             ),
-            const SizedBox(height: 14),
-            _StudioPanel(
-              icon: Icons.verified_user_rounded,
-              title: 'L1 boundary',
-              body:
-                  'LAB-0 through LAB-3 only: contracts, navigation shells, typed state, consequence engine and all six Story Gate types. Session persistence and publishing remain outside this step.',
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                OutlinedButton.icon(
+                  key: const ValueKey('lab1000-import-file'),
+                  onPressed: _importFile,
+                  icon: const Icon(Icons.upload_file_rounded),
+                  label: const Text('IMPORT FILE'),
+                ),
+                FilledButton.icon(
+                  key: const ValueKey('lab1000-paste-import'),
+                  onPressed: _importText,
+                  icon: const Icon(Icons.content_paste_rounded),
+                  label: const Text('IMPORT / PASTE'),
+                ),
+                OutlinedButton.icon(
+                  key: const ValueKey('lab1000-validate'),
+                  onPressed: workspace == null ? null : _validate,
+                  icon: const Icon(Icons.fact_check_rounded),
+                  label: const Text('VALIDATE'),
+                ),
+              ],
             ),
+            if (_message != null) ...[
+              const SizedBox(height: 12),
+              Text(_message!, key: const ValueKey('lab1000-message')),
+            ],
+            if (workspace != null && preview != null && inspection != null) ...[
+              const SizedBox(height: 18),
+              _StudioPanel(
+                icon: Icons.preview_rounded,
+                title: preview.title,
+                body:
+                    'LAB ' +
+                    preview.labId +
+                    ' • Version ' +
+                    preview.versionId +
+                    ' • ' +
+                    preview.nodeCount.toString() +
+                    ' nodes • ' +
+                    preview.gateCount.toString() +
+                    ' gates • ' +
+                    preview.endingCount.toString() +
+                    ' endings',
+              ),
+              const SizedBox(height: 14),
+              _StudioPanel(
+                icon: Icons.account_tree_rounded,
+                title: 'Inspection',
+                body:
+                    'State: ' +
+                    inspection.stateVariableIds.join(', ') +
+                    '\nNodes: ' +
+                    inspection.nodeIds.join(', ') +
+                    '\nGates: ' +
+                    inspection.gateIds.join(', ') +
+                    '\nEndings: ' +
+                    inspection.endingIds.join(', '),
+              ),
+              const SizedBox(height: 14),
+              _StudioPanel(
+                icon: workspace.report.isValid
+                    ? Icons.verified_rounded
+                    : Icons.warning_amber_rounded,
+                title: 'Validation evidence',
+                body:
+                    'Lifecycle: ' +
+                    workspace.lifecycle.name.toUpperCase() +
+                    ' • Errors: ' +
+                    workspace.report.errorCount.toString() +
+                    ' • Warnings: ' +
+                    workspace.report.warningCount.toString() +
+                    ' • Deterministic simulations: ' +
+                    workspace.report.simulationCount.toString(),
+              ),
+              const SizedBox(height: 14),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  FilledButton(
+                    key: const ValueKey('lab1000-review'),
+                    onPressed: workspace.lifecycle.name == 'draft'
+                        ? _requestReview
+                        : null,
+                    child: const Text('SEND TO REVIEW'),
+                  ),
+                  FilledButton(
+                    key: const ValueKey('lab1000-approve'),
+                    onPressed: workspace.lifecycle.name == 'review'
+                        ? _approve
+                        : null,
+                    child: const Text('APPROVE / VALIDATE'),
+                  ),
+                  FilledButton(
+                    key: const ValueKey('lab1000-publish'),
+                    onPressed: workspace.lifecycle.name == 'validated'
+                        ? _publish
+                        : null,
+                    child: const Text('PUBLISH IMMUTABLE VERSION'),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

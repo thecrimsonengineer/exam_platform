@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "l2_lab",
+    "versionId": "v1",
+    "title": "L2 deterministic validation LAB",
+    "description": "A compact two-decision LAB used to validate the L2 engine.",
+    "lifecycle": "DRAFT",
+    "supportedModes": ["GUIDED", "PROFESSIONAL", "ASSESSMENT"],
+    "startingNodeId": "decision_one",
+    "startingState": {
+      "isolated": false,
+      "risk": 0,
+      "route": "start",
+      "notes": []
+    }
+  },
+  "stateSchema": {
+    "isolated": {"type": "BOOLEAN", "irreversible": true},
+    "risk": {"type": "BOUNDED_NUMERIC", "min": 0, "max": 10},
+    "route": {"type": "ENUM", "allowedValues": ["start", "safe", "critical"]},
+    "notes": {"type": "STRING_SET"}
+  },
+  "characters": [],
+  "evidence": [{"id": "permit", "type": "permit", "required": false}],
+  "consequences": [
+    {"id":"c_safe","mutations":[{"op":"SET","stateId":"route","value":"safe"},{"op":"SET","stateId":"risk","value":1}],"evidenceUnlocks":["permit"],"simulatedMinutes":2},
+    {"id":"c_defensible","mutations":[{"op":"SET","stateId":"route","value":"safe"},{"op":"SET","stateId":"risk","value":2}],"evidenceUnlocks":[],"simulatedMinutes":2},
+    {"id":"c_weak","mutations":[{"op":"SET","stateId":"route","value":"safe"},{"op":"SET","stateId":"risk","value":3}],"evidenceUnlocks":[],"simulatedMinutes":2},
+    {"id":"c_critical","mutations":[{"op":"SET","stateId":"route","value":"critical"},{"op":"SET","stateId":"risk","value":9}],"evidenceUnlocks":[],"simulatedMinutes":2},
+    {"id":"c_end_best","mutations":[{"op":"SET","stateId":"route","value":"safe"},{"op":"SET","stateId":"risk","value":0}],"evidenceUnlocks":[],"simulatedMinutes":2},
+    {"id":"c_end_defensible","mutations":[{"op":"SET","stateId":"route","value":"safe"},{"op":"SET","stateId":"risk","value":1}],"evidenceUnlocks":[],"simulatedMinutes":2},
+    {"id":"c_end_weak","mutations":[{"op":"SET","stateId":"route","value":"safe"},{"op":"SET","stateId":"risk","value":2}],"evidenceUnlocks":[],"simulatedMinutes":2},
+    {"id":"c_end_critical","mutations":[{"op":"SET","stateId":"route","value":"critical"},{"op":"SET","stateId":"risk","value":8}],"evidenceUnlocks":[],"simulatedMinutes":2}
+  ],
+  "nodes": [
+    {
+      "id":"decision_one","type":"DECISION","prompt":"What should you do first?",
+      "options":[
+        {"id":"o1","text":"Authored option o1","isBest":true,"quality":"OPTIMAL","consequenceId":"c_safe"},
+        {"id":"o2","text":"Authored option o2","isBest":false,"quality":"DEFENSIBLE","consequenceId":"c_defensible"},
+        {"id":"o3","text":"Authored option o3","isBest":false,"quality":"WEAK","consequenceId":"c_weak"},
+        {"id":"o4","text":"Authored option o4","isBest":false,"quality":"CRITICAL","consequenceId":"c_critical"}
+      ]
+    },
+    {
+      "id":"decision_two","type":"DECISION","prompt":"How should the situation be closed out?",
+      "options":[
+        {"id":"o5","text":"Authored option o5","isBest":true,"quality":"OPTIMAL","consequenceId":"c_end_best"},
+        {"id":"o6","text":"Authored option o6","isBest":false,"quality":"DEFENSIBLE","consequenceId":"c_end_defensible"},
+        {"id":"o7","text":"Authored option o7","isBest":false,"quality":"WEAK","consequenceId":"c_end_weak"},
+        {"id":"o8","text":"Authored option o8","isBest":false,"quality":"CRITICAL","consequenceId":"c_end_critical"}
+      ]
+    }
+  ],
+  "gates": [
+    {"id":"critical_route","type":"CRITICAL_EVENT","priority":100,"fromNodeId":"decision_one","targetNodeId":"decision_two","condition":{"op":"ENUM","stateId":"route","equals":"critical"}},
+    {"id":"normal_route","type":"ROUTE","priority":10,"fromNodeId":"decision_one","targetNodeId":"decision_two","condition":{"op":"ALWAYS"}},
+    {"id":"complete","type":"COMPLETION","priority":10,"fromNodeId":"decision_two","endingId":"safe_end","condition":{"op":"ALWAYS"}}
+  ],
+  "endings": [{"id":"safe_end","family":"SAFE_COMPLETION","title":"Safe completion"}],
+  "competencyMappings": ["d07_c01"],
+  "sources": ["HSE L101"],
+  "debrief": {},
+  "learningSignals": {}
+}
