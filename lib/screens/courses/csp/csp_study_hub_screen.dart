@@ -149,27 +149,24 @@ class CspStudyHubScreen extends StatelessWidget {
 
     final compact = MediaQuery.sizeOf(context).width < 650;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('study-hub-hero'),
       width: double.infinity,
       constraints: BoxConstraints(minHeight: compact ? 350 : 320),
       padding: EdgeInsets.all(compact ? 22 : 28),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [_navy, _blue, _violet],
-          stops: [0.0, 0.58, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.20),
-            blurRadius: 30,
-            offset: const Offset(0, 16),
-          ),
+      borderRadius: BorderRadius.circular(26),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          _navy.withValues(alpha: 0.82),
+          _blue.withValues(alpha: 0.76),
+          _violet.withValues(alpha: 0.72),
         ],
+        stops: const [0.0, 0.58, 1.0],
       ),
+      borderColor: Colors.white.withValues(alpha: 0.14),
+      shadowColor: AppColors.primary.withValues(alpha: 0.18),
       child: Stack(
         children: [
           Positioned(
@@ -355,21 +352,13 @@ class CspStudyHubScreen extends StatelessWidget {
       ('05', 'Learn', Icons.auto_stories_outlined),
     ];
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(17),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(21),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.045),
-            blurRadius: 16,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(21),
+      tint: _surface.withValues(alpha: 0.50),
+      borderColor: _border.withValues(alpha: 0.72),
+      shadowColor: _navy.withValues(alpha: 0.07),
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 660) {
@@ -529,7 +518,7 @@ class CspStudyHubScreen extends StatelessWidget {
 
   Widget _domainCard(BuildContext context, Csp11Domain domain) {
     return Material(
-      color: _surface,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(21),
       child: InkWell(
         key: ValueKey('study-domain-${domain.number}'),
@@ -541,20 +530,13 @@ class CspStudyHubScreen extends StatelessWidget {
           );
         },
         borderRadius: BorderRadius.circular(21),
-        child: Container(
+        child: StudentGlassSurface(
           constraints: const BoxConstraints(minHeight: 178),
           padding: const EdgeInsets.all(17),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(21),
-            border: Border.all(color: _border),
-            boxShadow: [
-              BoxShadow(
-                color: _navy.withValues(alpha: 0.04),
-                blurRadius: 15,
-                offset: const Offset(0, 7),
-              ),
-            ],
-          ),
+          borderRadius: BorderRadius.circular(21),
+          tint: _surface.withValues(alpha: 0.50),
+          borderColor: _border.withValues(alpha: 0.72),
+          shadowColor: _navy.withValues(alpha: 0.07),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
