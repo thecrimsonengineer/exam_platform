@@ -57,11 +57,11 @@ class AppTheme {
     ),
   );
 
-  /// App-wide dark theme for learner routes.
+  /// Dark theme used by the learner shell and learner route wrappers.
   ///
-  /// The root MaterialApp follows ThemeModeService so pushed routes such as
-  /// Exam Readiness, readiness details and adaptive daily plans inherit the
-  /// same persisted light/dark preference as the learner shell.
+  /// BottomNavigationScreen applies this theme to the learner workspace.
+  /// Pushed Exam Readiness routes explicitly preserve the active learner
+  /// theme so setup, readiness details and adaptive plans stay consistent.
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
