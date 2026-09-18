@@ -1,0 +1,94 @@
+name: Phase L1 Closure Gate
+
+on:
+  push:
+    branches:
+      - phase-l-lab-engine
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-l1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-l1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify L1 branch ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 5176cff9bab33ebc4ed8124e98397298b9b1f651 HEAD
+          test "${GITHUB_REF_NAME}" = "phase-l-lab-engine"
+
+      - name: Format Phase L files
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/lab \
+            lib/screens/lab \
+            lib/screens/admin/lab \
+            test/features/lab
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run exact Phase L1 test budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test test/features/lab --reporter json > /tmp/phase_l1_tests.jsonl
+          python3 - <<'PY'
+          import json
+          from collections import Counter
+
+          counts = Counter()
+          for line in open('/tmp/phase_l1_tests.jsonl', encoding='utf-8'):
+              line = line.strip()
+              if not line:
+                  continue
+              event = json.loads(line)
+              if event.get('type') != 'testStart':
+                  continue
+              name = event.get('test', {}).get('name', '')
+              for prefix in ('LAB-0', 'LAB-1', 'LAB-2', 'LAB-3'):
+                  if name.startswith(prefix):
+                      counts[prefix] += 1
+                      break
+
+          expected = {'LAB-0': 50, 'LAB-1': 50, 'LAB-2': 150, 'LAB-3': 170}
+          print('Phase L1 executed tests:', dict(counts))
+          if dict(counts) != expected:
+              raise SystemExit(f'Expected {expected}, got {dict(counts)}')
+          if sum(counts.values()) != 420:
+              raise SystemExit(f'Expected exactly 420 L1 tests, got {sum(counts.values())}')
+          PY
+
+      - name: Navigation and settings regression
+        run: |
+          flutter test test/screens/navigation
+          flutter test test/screens/settings
+          flutter test test/screens/auth/admin_gate_test.dart
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
