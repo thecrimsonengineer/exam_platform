@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../services/auth/learner_local_identity.dart';
 import '../models/exam_study_plan.dart';
@@ -28,6 +31,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
   late DateTime _examDate;
   late Set<int> _studyDays;
   late int _minutesPerDay;
+  late TextEditingController _customMinutesController;
   bool _saving = false;
   String? _error;
 
@@ -53,6 +57,15 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
           },
     );
     _minutesPerDay = existing?.defaultMinutesPerStudyDay ?? 60;
+    _customMinutesController = TextEditingController(
+      text: _minutesPerDay.toString(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _customMinutesController.dispose();
+    super.dispose();
   }
 
   Future<void> _pickExamDate() async {
@@ -82,6 +95,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
         examDate: _examDate,
         studyDaysOfWeek: _studyDays,
         defaultMinutesPerStudyDay: _minutesPerDay,
+        maxDailyMinutes: math.max(existing.maxDailyMinutes, _minutesPerDay),
       );
     }
 
@@ -91,6 +105,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
       examDate: _examDate,
       studyDaysOfWeek: _studyDays,
       defaultMinutesPerStudyDay: _minutesPerDay,
+      maxDailyMinutes: math.max(240, _minutesPerDay),
       now: now,
     );
   }
@@ -98,6 +113,14 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
   Future<void> _save() async {
     if (_studyDays.isEmpty) {
       setState(() => _error = 'Select at least one study day.');
+      return;
+    }
+
+    if (_minutesPerDay <= 0 || _minutesPerDay > 1440) {
+      setState(
+        () => _error =
+            'Daily study time must be between 1 and 1440 minutes.',
+      );
       return;
     }
 
@@ -225,7 +248,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: [30, 45, 60, 90, 120]
+                    children: [30, 45, 60, 90, 120, 180, 240]
                         .map(
                           (minutes) => ChoiceChip(
                             key: ValueKey('m7a-minutes-$minutes'),
@@ -233,11 +256,44 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
                             selected: _minutesPerDay == minutes,
                             onSelected: _saving
                                 ? null
-                                : (_) =>
-                                      setState(() => _minutesPerDay = minutes),
+                                : (_) {
+                                    setState(() {
+                                      _minutesPerDay = minutes;
+                                      _customMinutesController.text =
+                                          minutes.toString();
+                                    });
+                                  },
                           ),
                         )
                         .toList(),
+                  ),
+                  const SizedBox(height: 14),
+                  TextField(
+                    key: const ValueKey('m7a-custom-minutes'),
+                    controller: _customMinutesController,
+                    enabled: !_saving,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: 'Custom daily capacity',
+                      hintText: 'Enter minutes',
+                      suffixText: 'min',
+                      helperText:
+                          '120 minutes is a common choice, not a limit. '
+                          'You can declare more time if you genuinely have it.',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      final minutes = int.tryParse(value);
+                      if (minutes == null ||
+                          minutes <= 0 ||
+                          minutes > 1440) {
+                        return;
+                      }
+                      setState(() => _minutesPerDay = minutes);
+                    },
                   ),
                 ],
               ),
