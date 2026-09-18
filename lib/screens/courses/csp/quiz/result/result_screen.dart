@@ -77,7 +77,7 @@ class ResultScreen extends StatelessWidget {
                         constraints: const BoxConstraints(maxWidth: 1000),
                         child: Column(
                           children: [
-                            _buildHeroStudentGlassCard(percentage, score, totalQuestions),
+                            _buildHeroCard(percentage, score, totalQuestions),
 
                             if (learningTwinPracticeContext != null) ...[
                               const SizedBox(height: 16),
@@ -94,7 +94,7 @@ class ResultScreen extends StatelessWidget {
 
                             const SizedBox(height: 16),
 
-                            _buildPerformanceStudentGlassCard(
+                            _buildPerformanceCard(
                               score,
                               incorrectCount,
                               bookmarkedCount,
@@ -102,7 +102,7 @@ class ResultScreen extends StatelessWidget {
 
                             const SizedBox(height: 16),
 
-                            _buildReviewStudentGlassCard(incorrectCount),
+                            _buildReviewCard(incorrectCount),
                           ],
                         ),
                       ),
@@ -130,7 +130,7 @@ class ResultScreen extends StatelessWidget {
   // HERO
   // ==========================================================
 
-  Widget _buildHeroStudentGlassCard(double percentage, int score, int totalQuestions) {
+  Widget _buildHeroCard(double percentage, int score, int totalQuestions) {
     final performance = _performanceLabel(percentage);
 
     return Container(
@@ -280,7 +280,7 @@ class ResultScreen extends StatelessWidget {
   // PERFORMANCE
   // ==========================================================
 
-  Widget _buildPerformanceStudentGlassCard(int correct, int incorrect, int bookmarked) {
+  Widget _buildPerformanceCard(int correct, int incorrect, int bookmarked) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(QuizSpacing.cardPadding),
@@ -403,7 +403,7 @@ class ResultScreen extends StatelessWidget {
   // REVIEW MESSAGE
   // ==========================================================
 
-  Widget _buildReviewStudentGlassCard(int incorrectCount) {
+  Widget _buildReviewCard(int incorrectCount) {
     final bool hasMistakes = incorrectCount > 0;
 
     return Container(

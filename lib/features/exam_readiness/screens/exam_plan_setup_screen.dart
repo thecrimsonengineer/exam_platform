@@ -185,7 +185,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            _PlanStudentGlassCard(
+            _PlanCard(
               key: const ValueKey('m7a-exam-date-card'),
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -200,7 +200,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
               ),
             ),
             const SizedBox(height: 14),
-            _PlanStudentGlassCard(
+            _PlanCard(
               key: const ValueKey('m7a-study-days-card'),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +239,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
               ),
             ),
             const SizedBox(height: 14),
-            _PlanStudentGlassCard(
+            _PlanCard(
               key: const ValueKey('m7a-minutes-card'),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +357,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
 }
 
 class _PlanCard extends StatelessWidget {
-  const _PlanStudentGlassCard({super.key, required this.child});
+  const _PlanCard({super.key, required this.child});
 
   final Widget child;
 

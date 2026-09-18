@@ -336,7 +336,7 @@ class DarkSettingsScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 30),
-                          _buildAboutStudentGlassCard(),
+                          _buildAboutCard(),
                         ],
                       ),
                     ),
@@ -669,7 +669,7 @@ class DarkSettingsScreen extends StatelessWidget {
                 (item) => SizedBox(
                   width: width,
                   height: 156,
-                  child: _contactStudentGlassCard(item),
+                  child: _contactCard(item),
                 ),
               )
               .toList(),
@@ -678,7 +678,7 @@ class DarkSettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _contactStudentGlassCard(_ContactData item) {
+  Widget _contactCard(_ContactData item) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -837,7 +837,7 @@ class DarkSettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAboutStudentGlassCard() {
+  Widget _buildAboutCard() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),

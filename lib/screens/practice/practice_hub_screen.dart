@@ -189,7 +189,7 @@ class PracticeHubScreen extends StatelessWidget {
                                         .map(
                                           (mode) => SizedBox(
                                             width: width,
-                                            child: _PracticeModeStudentGlassCard(
+                                            child: _PracticeModeCard(
                                               mode: mode,
                                               scheme: scheme,
                                               isDarkMode: isDarkMode,
@@ -446,7 +446,7 @@ class _HeroPill extends StatelessWidget {
 }
 
 class _PracticeModeCard extends StatelessWidget {
-  const _PracticeModeStudentGlassCard({
+  const _PracticeModeCard({
     required this.mode,
     required this.scheme,
     required this.isDarkMode,
