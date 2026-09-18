@@ -5,6 +5,7 @@ import '../models/study_capacity_snapshot.dart';
 import '../repositories/exam_study_plan_repository.dart';
 import '../services/exam_study_capacity_service.dart';
 import 'exam_plan_setup_screen.dart';
+import 'exam_readiness_route.dart';
 import 'readiness_profile_screen.dart';
 import 'todays_plan_screen.dart';
 
@@ -55,9 +56,11 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
   }
 
   Future<void> _openSetup(ExamStudyPlan? current) async {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final result = await Navigator.of(context).push<ExamStudyPlan>(
-      MaterialPageRoute(
-        builder: (_) => ExamPlanSetupScreen(
+      examReadinessRoute<ExamStudyPlan>(
+        isDarkMode: isDarkMode,
+        child: ExamPlanSetupScreen(
           repository: _repository,
           initialPlan: current,
           now: widget.now,
@@ -126,9 +129,12 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
                   FilledButton.icon(
                     key: const ValueKey('m7d-open-today-plan'),
                     onPressed: () {
+                      final isDarkMode =
+                          Theme.of(context).brightness == Brightness.dark;
                       Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => TodaysPlanScreen(now: widget.now),
+                        examReadinessRoute<void>(
+                          isDarkMode: isDarkMode,
+                          child: TodaysPlanScreen(now: widget.now),
                         ),
                       );
                     },
@@ -139,10 +145,12 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
                   FilledButton.icon(
                     key: const ValueKey('m7c-open-readiness-profile'),
                     onPressed: () {
+                      final isDarkMode =
+                          Theme.of(context).brightness == Brightness.dark;
                       Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              ReadinessProfileScreen(now: widget.now),
+                        examReadinessRoute<void>(
+                          isDarkMode: isDarkMode,
+                          child: ReadinessProfileScreen(now: widget.now),
                         ),
                       );
                     },
