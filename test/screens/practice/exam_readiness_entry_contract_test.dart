@@ -65,8 +65,15 @@ void main() {
       expect(bottomNavigation, contains("label: 'Practice'"));
     });
 
-    test('Progress remains a dedicated bottom-navigation destination', () {
-      expect(bottomNavigation, contains("label: 'Progress'"));
+    test('Phase L moves Full Progress out of bottom navigation', () {
+      final settings = File(
+        'lib/screens/settings/settings_screen.dart',
+      ).readAsStringSync();
+
+      expect(bottomNavigation, isNot(contains("label: 'Progress'")));
+      expect(bottomNavigation, contains("label: 'LAB'"));
+      expect(settings, contains("title: 'Full Progress'"));
+      expect(settings, contains("ValueKey('settings-full-progress')"));
     });
   });
 }
