@@ -1,7 +1,7 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_competency_guidance.dart';
 import 'package:flutter/material.dart';
 
-import '../../../theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../app/theme.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../app/app_colors.dart';
 import '../../app/app_radius.dart';
