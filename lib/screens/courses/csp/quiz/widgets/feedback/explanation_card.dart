@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_spacing.dart';
 
@@ -10,34 +12,13 @@ class ExplanationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            QuizColors.explanationBackground,
-            QuizColors.explanation.withValues(alpha: 0.032),
-            QuizColors.purple.withValues(alpha: 0.028),
-          ],
-          stops: const [0.0, 0.60, 1.0],
-        ),
-        borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
-        border: Border.all(
-          color: QuizColors.explanation.withValues(alpha: 0.18),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: QuizColors.explanation.withValues(alpha: 0.045),
-            blurRadius: 16,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 19, 20, 21),
-        child: Column(
+    return StudentGlassSurface(
+      padding: const EdgeInsets.fromLTRB(20, 19, 20, 21),
+      borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+      tint: QuizColors.explanationBackground.withValues(alpha: 0.48),
+      borderColor: QuizColors.explanation.withValues(alpha: 0.22),
+      shadowColor: QuizColors.explanation.withValues(alpha: 0.04),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
@@ -47,7 +28,6 @@ class ExplanationCard extends StatelessWidget {
             _buildExplanation(),
           ],
         ),
-      ),
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_spacing.dart';
 
@@ -15,30 +17,13 @@ class QuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: QuizColors.questionGradient,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: QuizColors.borderStrong.withValues(alpha: 0.92),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: QuizColors.navy.withValues(alpha: 0.10),
-            blurRadius: 20,
-            offset: const Offset(0, 7),
-          ),
-          BoxShadow(
-            color: QuizColors.purple.withValues(alpha: 0.04),
-            blurRadius: 28,
-            offset: const Offset(7, 0),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-        child: Column(
+    return StudentGlassSurface(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+      borderRadius: BorderRadius.circular(22),
+      tint: QuizColors.surface.withValues(alpha: 0.56),
+      borderColor: QuizColors.borderStrong.withValues(alpha: 0.72),
+      shadowColor: QuizColors.navy.withValues(alpha: 0.08),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
@@ -48,7 +33,6 @@ class QuestionCard extends StatelessWidget {
             _buildQuestion(),
           ],
         ),
-      ),
     );
   }
 

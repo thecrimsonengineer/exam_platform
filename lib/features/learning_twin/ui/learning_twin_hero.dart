@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
@@ -41,12 +43,12 @@ class LearningTwinHero extends StatelessWidget {
       ],
     );
 
-    return Card(
-      color: colors.secondaryContainer,
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: LayoutBuilder(
+    return StudentGlassSurface(
+      padding: const EdgeInsets.all(20),
+      borderRadius: BorderRadius.circular(24),
+      tint: colors.secondaryContainer.withValues(alpha: 0.58),
+      borderColor: colors.secondary.withValues(alpha: 0.20),
+      child: LayoutBuilder(
           builder: (context, constraints) {
             final compact = constraints.maxWidth < 560;
 
@@ -80,7 +82,6 @@ class LearningTwinHero extends StatelessWidget {
             );
           },
         ),
-      ),
     );
   }
 }
