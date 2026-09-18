@@ -18,7 +18,6 @@ import '../practice/practice_quick_launch_screen.dart';
 class HomeScreen extends StatefulWidget {
   final VoidCallback? onOpenStudy;
   final VoidCallback? onOpenFlashcards;
-  final VoidCallback? onOpenProgress;
   final VoidCallback? onOpenSettings;
   final Future<StudentLearningPosition?> Function()? loadLearningPosition;
   final Future<Map<String, StudentSubtopicProgress>> Function()? loadProgress;
@@ -27,7 +26,6 @@ class HomeScreen extends StatefulWidget {
     super.key,
     this.onOpenStudy,
     this.onOpenFlashcards,
-    this.onOpenProgress,
     this.onOpenSettings,
     this.loadLearningPosition,
     this.loadProgress,
