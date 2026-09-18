@@ -39,14 +39,12 @@ class DarkHomeScreen extends StatefulWidget {
 
 class _DarkHomeScreenState extends State<DarkHomeScreen> {
   static const _background = Color(0xFF0A111D);
-  static const _surfaceBase = Color(0xFF111B2C);
   static const _surface = Color(0xA314233B);
   static const _navy = Color(0xFF5F93D8);
   static const _blue = Color(0xFF6EA8FF);
   static const _violet = Color(0xFF9A7CF4);
   static const _textPrimary = Color(0xFFF4F7FB);
   static const _textMuted = Color(0xFFA5B1C4);
-  static const _borderBase = Color(0xFF25344A);
   static const _border = Color(0x4DFFFFFF);
 
   final StudentLearningPositionService _positionService =
