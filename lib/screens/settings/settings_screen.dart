@@ -10,7 +10,8 @@ import '../../services/student_learning_progress_service.dart';
 import '../../services/student_question_progress_service.dart';
 import '../../services/settings/settings_external_links.dart';
 import '../../services/settings/theme_mode_service.dart';
-import 'legal_document_screen.dart';\nimport '../progress/progress_screen.dart';
+import 'legal_document_screen.dart';
+import '../progress/progress_screen.dart';
 
 typedef SettingsUriLauncher = Future<bool> Function(Uri uri);
 

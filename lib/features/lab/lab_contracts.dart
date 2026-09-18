@@ -269,7 +269,7 @@ class LabStateVariableDefinition {
     String id,
     Map<String, Object?> json,
   ) {
-    final allowed = (json['allowedValues'] ?? json['allowed']) as Object?;
+    final allowed = json['allowedValues'] ?? json['allowed'];
     return LabStateVariableDefinition(
       id: id,
       kind: parseStateKind(json['type']),

@@ -11,7 +11,8 @@ import '../../services/student_question_progress_service.dart';
 import '../../services/settings/settings_external_links.dart';
 import '../../services/settings/theme_mode_service.dart';
 import 'legal_document_screen.dart';
-import 'legal_document_screen_dark.dart';\nimport '../progress/progress_screen_dark.dart';
+import 'legal_document_screen_dark.dart';
+import '../progress/progress_screen_dark.dart';
 
 typedef DarkSettingsUriLauncher = Future<bool> Function(Uri uri);
 
