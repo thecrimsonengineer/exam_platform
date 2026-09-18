@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
@@ -44,12 +46,12 @@ class LearningTwinCelebration extends StatelessWidget {
       container: true,
       liveRegion: true,
       label: 'Learning milestone',
-      child: Card(
-        color: colors.tertiaryContainer,
-        clipBehavior: Clip.antiAlias,
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: LayoutBuilder(
+      child: StudentGlassSurface(
+        padding: const EdgeInsets.all(18),
+        borderRadius: BorderRadius.circular(24),
+        tint: colors.tertiaryContainer.withValues(alpha: 0.58),
+        borderColor: colors.tertiary.withValues(alpha: 0.22),
+        child: LayoutBuilder(
             builder: (context, constraints) {
               final compact = constraints.maxWidth < 420;
 
@@ -80,7 +82,6 @@ class LearningTwinCelebration extends StatelessWidget {
               );
             },
           ),
-        ),
       ),
     );
   }
