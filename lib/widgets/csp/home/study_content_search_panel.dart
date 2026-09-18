@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../services/study_content_search_service.dart';
 

@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../models/progress_analytics_snapshot.dart';
 

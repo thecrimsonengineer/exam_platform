@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
-import '../../theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../../services/settings/theme_mode_service.dart';
 import '../../services/learning_activity_tracker.dart';
 import '../../services/progress_overview_snapshot_service.dart';
