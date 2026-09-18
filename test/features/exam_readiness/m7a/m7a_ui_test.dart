@@ -69,9 +69,7 @@ void main() {
         ),
       );
 
-      final preview = find.byKey(
-        const ValueKey('m7a-capacity-preview'),
-      );
+      final preview = find.byKey(const ValueKey('m7a-capacity-preview'));
       await tester.scrollUntilVisible(preview, 260);
       await tester.pump();
 
