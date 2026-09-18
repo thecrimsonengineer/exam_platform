@@ -77,9 +77,7 @@ void main() {
 
     await pumpHub(tester, brightness: Brightness.light);
 
-    final entry = find.byKey(
-      const ValueKey('practice-hub-exam-readiness'),
-    );
+    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
     expect(entry, findsOneWidget);
     expect(find.text('Exam Readiness'), findsOneWidget);
 
