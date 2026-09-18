@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTED CORE / VALIDATION PENDING
+CLOSED / PASS
 
 ## Frozen parent
 
@@ -68,16 +68,30 @@ A future plan becoming stale creates a new version with:
 M7E outcome, audit, evidence, readiness and daily-plan updates are local-first
 and UID-scoped. Normal M7E state transitions do not require Firestore writes.
 
-## Validation target
+## Closure evidence
 
-M7E must prove at least 40 explicit tests and the frozen sequences:
+M7E closed against tested runtime checkpoint:
 
-A. poor diagnostic -> evidence update -> targeted repair
-B. excellent performance -> lower repetition need
-C. missed day -> capacity-safe replan
-D. poor Ultra Hard -> difficulty response / recheck
-E. high-confidence incorrect -> calibration/misconception response
+`298e793dec6a128b698635382c728dd7b687524c`
 
-The defining closure proof remains:
+Final validation:
 
-same learner baseline + new evidence = different justified next-day plan.
+- workflow run `35336913234`
+- job `105573746939`
+- M7E targeted tests: 51 / 51 PASS
+- M7A regressions: 93 PASS
+- M7B regressions: 159 PASS
+- M7C regressions: 154 PASS
+- M7D regressions: 149 PASS
+- complete Flutter suite: 1125 / 1125 PASS
+- Flutter analyzer: PASS
+- production web release build: PASS
+
+Frozen sequences A-E and the defining baseline-plus-new-evidence adaptive-plan
+proof all pass.
+
+M7E also closes with immutable regeneration lineage through `previousPlanId`
+and lazy Ultra Hard availability resolution so deterministic local replanning
+does not require Firebase initialization when availability is already known.
+
+**Next authoritative slice: M7F - Advanced Readiness Intelligence.**
