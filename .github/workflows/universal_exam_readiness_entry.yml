@@ -1,0 +1,50 @@
+name: Universal Exam Readiness Entry
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+jobs:
+  verify-universal-readiness-entry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check touched-file formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/screens/practice/practice_hub_screen.dart \
+            test/screens/practice/practice_hub_screen_test.dart \
+            test/screens/practice/exam_readiness_entry_contract_test.dart
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Test universal Practice entry
+        run: |
+          flutter test test/screens/practice/practice_hub_screen_test.dart
+          flutter test test/screens/practice/exam_readiness_entry_contract_test.dart
+
+      - name: Test fresh and existing learner readiness states
+        run: flutter test test/features/exam_readiness/m7a/m7a_ui_test.dart
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release
