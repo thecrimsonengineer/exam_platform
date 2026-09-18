@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../theme/glass/student_glass.dart';
+
 import 'package:exam_platform/screens/courses/csp/quiz/quiz_screen.dart';
 import '../../../models/study_content.dart';
 import '../../../theme/study/study_colors_dark.dart';
@@ -16,17 +18,12 @@ class DarkQuizBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 12),
-      decoration: BoxDecoration(
-        color: DarkStudyColors.surface,
-        borderRadius: StudyRadius.large,
-        border: Border.all(
-          color: DarkStudyColors.primary.withValues(alpha: 0.14),
-        ),
-        boxShadow: StudyShadows.soft,
-      ),
+      borderRadius: StudyRadius.large,
+      tint: DarkStudyColors.surface.withValues(alpha: 0.56),
+      borderColor: DarkStudyColors.primary.withValues(alpha: 0.18),
       child: ClipRRect(
         borderRadius: StudyRadius.large,
         child: Column(
@@ -46,7 +43,7 @@ class DarkQuizBlock extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
       decoration: BoxDecoration(
-        color: DarkStudyColors.primaryLight,
+        color: DarkStudyColors.primaryLight.withValues(alpha: 0.46),
         border: Border(
           bottom: BorderSide(
             color: DarkStudyColors.primary.withValues(alpha: 0.10),
@@ -100,7 +97,7 @@ class DarkQuizBlock extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: DarkStudyColors.surface,
+        color: DarkStudyColors.surface.withValues(alpha: 0.58),
         borderRadius: StudyRadius.pillRadius,
         border: Border.all(
           color: DarkStudyColors.primary.withValues(alpha: 0.14),
@@ -134,7 +131,7 @@ class DarkQuizBlock extends StatelessWidget {
                 height: 34,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: DarkStudyColors.surfaceSoft,
+                  color: DarkStudyColors.surfaceSoft.withValues(alpha: 0.54),
                   borderRadius: StudyRadius.small,
                 ),
                 child: const Icon(
@@ -170,7 +167,7 @@ class DarkQuizBlock extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: DarkStudyColors.surfaceSoft,
+        color: DarkStudyColors.surfaceSoft.withValues(alpha: 0.54),
         borderRadius: StudyRadius.medium,
         border: Border.all(color: DarkStudyColors.border),
       ),
