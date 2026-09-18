@@ -1,4 +1,5 @@
 import '../../models/question.dart';
+import '../../models/question_quality_evidence.dart';
 import '../../models/studio_question_context.dart';
 import '../../models/study_content.dart';
 import '../question_bank_service.dart';
@@ -122,6 +123,15 @@ class StudioQuestionService {
   Future<QuestionPreparedBatchPublishResult> publishPreparedBatch(
     List<Question> questions,
   ) => _questionBankService.publishPreparedBatch(questions);
+
+  Future<QuestionPreparedBatchPublishResult>
+  publishPreparedUltraHardBatch(
+    List<Question> questions, {
+    required Map<int, QuestionQualityEvidence> qualityEvidenceByQuestionId,
+  }) => _questionBankService.publishPreparedUltraHardBatch(
+    questions,
+    qualityEvidenceByQuestionId: qualityEvidenceByQuestionId,
+  );
 
   Future<void> sendToReview(Question question) =>
       _questionBankService.sendToReview(question);
