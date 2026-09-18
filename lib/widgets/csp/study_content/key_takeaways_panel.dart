@@ -4,7 +4,6 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
-import '../../../theme/study/study_shadows.dart';
 import '../../../theme/study/study_typography.dart';
 
 class KeyTakeawaysPanel extends StatelessWidget {
