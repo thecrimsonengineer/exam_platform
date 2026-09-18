@@ -82,6 +82,46 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+
+  testWidgets('Ultra Hard quick launch keeps its readiness identity', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PracticeQuickLaunchScreen(
+          mode: PracticeMode.ultraHardExamReadiness,
+          isDarkMode: true,
+          planBuilder: (_) async => PracticeSessionPlan(
+            mode: PracticeMode.ultraHardExamReadiness,
+            title: 'Ultra Hard • Exam Readiness',
+            questions: [_question()],
+            domainNumber: 0,
+            notice: 'DQG300 300/300 readiness session.',
+            usedFallback: false,
+          ),
+          sessionBuilder: (plan) => Scaffold(
+            body: Center(
+              child: Text(
+                plan.title,
+                key: const ValueKey('ultra-hard-session-title'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('ultra-hard-session-title')),
+      findsOneWidget,
+    );
+    expect(find.text('Ultra Hard • Exam Readiness'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+
   testWidgets('quick launch session handoff renders in light mode', (
     tester,
   ) async {
