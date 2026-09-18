@@ -1,0 +1,43 @@
+name: Glass UI Validation
+
+on:
+  push:
+    branches:
+      - ui-glassmorphism-pass
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check formatting
+        run: |
+          dart format --output=none --set-exit-if-changed             lib/app             lib/theme/glass             lib/screens/home             lib/screens/navigation             lib/screens/courses             lib/screens/flashcards             lib/screens/practice             lib/screens/progress             lib/screens/bookmarks             lib/screens/settings             lib/features/exam_readiness/screens             lib/features/learning_twin/ui
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Student-facing regression tests
+        run: |
+          flutter test test/screens
+          flutter test test/features/exam_readiness
+          flutter test test/features/learning_twin
+
+      - name: Full regression suite
+        run: flutter test
+
+      - name: Production web build
+        run: flutter build web --release
