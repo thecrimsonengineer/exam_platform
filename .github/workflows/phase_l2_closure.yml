@@ -59,7 +59,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          set +e
           flutter test test/features/lab --reporter json > /tmp/phase_l_tests.jsonl
+          test_status=$?
+          set -e
+          if [ "$test_status" -ne 0 ]; then
+            echo "Phase L tests failed. Re-running with expanded output."
+            flutter test test/features/lab --reporter expanded
+            exit "$test_status"
+          fi
           python3 - <<'PY'
           import json
           from collections import Counter
