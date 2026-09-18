@@ -69,10 +69,13 @@ void main() {
         ),
       );
 
-      expect(
-        find.byKey(const ValueKey('m7a-capacity-preview')),
-        findsOneWidget,
+      final preview = find.byKey(
+        const ValueKey('m7a-capacity-preview'),
       );
+      await tester.scrollUntilVisible(preview, 260);
+      await tester.pump();
+
+      expect(preview, findsOneWidget);
       expect(find.text('YOUR STUDY CAPACITY'), findsOneWidget);
     });
 
