@@ -6,6 +6,7 @@ import '../models/evidence_confidence.dart';
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
+import '../services/readiness_evidence_bootstrap_service.dart';
 import '../services/readiness_profile_service.dart';
 import 'competency_readiness_screen.dart';
 
@@ -15,6 +16,7 @@ class ReadinessProfileScreen extends StatefulWidget {
     this.evidenceRepository,
     this.attemptRepository,
     this.readinessService = const ReadinessProfileService(),
+    this.bootstrapService = const ReadinessEvidenceBootstrapService(),
     this.readinessRepository,
     this.now,
   });
@@ -22,6 +24,7 @@ class ReadinessProfileScreen extends StatefulWidget {
   final EvidenceSnapshotRepository? evidenceRepository;
   final LearnerAssessmentAttemptRepository? attemptRepository;
   final ReadinessProfileService readinessService;
+  final ReadinessEvidenceBootstrapService bootstrapService;
   final ReadinessSnapshotRepository? readinessRepository;
   final DateTime Function()? now;
 
@@ -33,10 +36,7 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
   late Future<ExamReadinessDashboard> _future;
 
   EvidenceSnapshotRepository get _evidenceRepository =>
-      widget.evidenceRepository ??
-      EvidenceSnapshotRepository(
-        remoteStore: FirebaseEvidenceSnapshotRemoteStore(),
-      );
+      widget.evidenceRepository ?? EvidenceSnapshotRepository();
 
   LearnerAssessmentAttemptRepository get _attemptRepository =>
       widget.attemptRepository ?? const LearnerAssessmentAttemptRepository();
@@ -52,39 +52,29 @@ class _ReadinessProfileScreenState extends State<ReadinessProfileScreen> {
     _future = _load();
   }
 
-  Future<ExamReadinessDashboard> _load({bool refreshRemote = false}) async {
-    var evidence = await _evidenceRepository.loadLocal();
-
-    if (refreshRemote) {
-      try {
-        evidence = await _evidenceRepository.refreshFromRemote();
-      } catch (_) {
-        // Local evidence remains the safe fallback.
-      }
-    }
-
-    final attempts = await _attemptRepository.loadAll();
-
-    final dashboard = widget.readinessService.buildDashboard(
-      evidenceByCompetency: evidence,
-      attempts: attempts,
+  Future<ExamReadinessDashboard> _load() async {
+    final bootstrap = await widget.bootstrapService.rebuildLocal(
+      evidenceRepository: _evidenceRepository,
+      attemptRepository: _attemptRepository,
       now: _now,
     );
 
-    try {
-      await _readinessRepository.saveMany(dashboard.profiles.values);
-    } catch (_) {
-      await _readinessRepository.saveMany(
-        dashboard.profiles.values,
-        syncRemote: false,
-      );
-    }
+    final dashboard = widget.readinessService.buildDashboard(
+      evidenceByCompetency: bootstrap.evidenceByCompetency,
+      attempts: bootstrap.attempts,
+      now: _now,
+    );
+
+    await _readinessRepository.saveMany(
+      dashboard.profiles.values,
+      syncRemote: false,
+    );
 
     return dashboard;
   }
 
   Future<void> _refresh() async {
-    final future = _load(refreshRemote: true);
+    final future = _load();
     setState(() => _future = future);
     await future;
   }
