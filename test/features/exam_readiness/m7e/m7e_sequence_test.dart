@@ -1,6 +1,5 @@
 import 'package:exam_platform/features/exam_readiness/models/daily_study_plan.dart';
 import 'package:exam_platform/features/exam_readiness/models/competency_readiness_profile.dart';
-import 'package:exam_platform/features/exam_readiness/models/evidence_confidence.dart';
 import 'package:exam_platform/features/exam_readiness/models/learner_assessment_attempt.dart';
 import 'package:exam_platform/features/exam_readiness/models/plan_regeneration_reason.dart';
 import 'package:exam_platform/features/exam_readiness/models/readiness_gap.dart';
