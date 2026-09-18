@@ -218,6 +218,67 @@ service cloud.firestore {
         && request.resource.data.traceability is list;
     }
 
+    function readinessSnapshotAllowedKeys() {
+      return [
+        'competencyId',
+        'generatedAt',
+        'readinessAlgorithmVersion',
+        'knowledgeMastery',
+        'applicationAbility',
+        'retention',
+        'difficultyPerformance',
+        'blueprintCoverage',
+        'confidenceCalibration',
+        'recentPerformance',
+        'stability',
+        'evidenceConfidence',
+        'readinessState',
+        'gaps',
+        'limitingFactors',
+        'explanationCodes',
+        'serverUpdatedAt'
+      ];
+    }
+
+    function validOwnedReadinessSnapshot(competencyId) {
+      return request.resource.data.keys().hasOnly(readinessSnapshotAllowedKeys())
+        && request.resource.data.keys().hasAll([
+          'competencyId',
+          'generatedAt',
+          'readinessAlgorithmVersion',
+          'knowledgeMastery',
+          'applicationAbility',
+          'retention',
+          'difficultyPerformance',
+          'blueprintCoverage',
+          'confidenceCalibration',
+          'recentPerformance',
+          'stability',
+          'evidenceConfidence',
+          'readinessState',
+          'gaps',
+          'limitingFactors',
+          'explanationCodes'
+        ])
+        && request.resource.data.competencyId == competencyId
+        && request.resource.data.competencyId is string
+        && request.resource.data.generatedAt is string
+        && request.resource.data.readinessAlgorithmVersion is string
+        && request.resource.data.knowledgeMastery is map
+        && request.resource.data.applicationAbility is map
+        && request.resource.data.retention is map
+        && request.resource.data.difficultyPerformance is map
+        && request.resource.data.blueprintCoverage is map
+        && request.resource.data.confidenceCalibration is map
+        && request.resource.data.recentPerformance is map
+        && request.resource.data.stability is map
+        && request.resource.data.evidenceConfidence is string
+        && request.resource.data.readinessState is string
+        && request.resource.data.gaps is list
+        && request.resource.data.limitingFactors is list
+        && request.resource.data.explanationCodes is list;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -247,6 +308,15 @@ service cloud.firestore {
 
         allow create, update: if isAdmin()
           || (isSelf(uid) && validOwnedEvidenceSnapshot(competencyId));
+
+        allow delete: if isAdmin() || isSelf(uid);
+      }
+
+      match /readinessSnapshots/{competencyId} {
+        allow get, list: if isSelf(uid) || isAdmin();
+
+        allow create, update: if isAdmin()
+          || (isSelf(uid) && validOwnedReadinessSnapshot(competencyId));
 
         allow delete: if isAdmin() || isSelf(uid);
       }
