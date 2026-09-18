@@ -248,6 +248,7 @@ class ExamStudyPlan {
     int? defaultMinutesPerStudyDay,
     Map<int, int>? daySpecificMinutes,
     Set<int>? preferredRestDays,
+    int? maxDailyMinutes,
   }) {
     return copyWith(
       examDate: examDate,
@@ -255,6 +256,7 @@ class ExamStudyPlan {
       defaultMinutesPerStudyDay: defaultMinutesPerStudyDay,
       daySpecificMinutes: daySpecificMinutes,
       preferredRestDays: preferredRestDays,
+      maxDailyMinutes: maxDailyMinutes,
       updatedAt: updatedAt,
       planVersion: planVersion + 1,
     );
