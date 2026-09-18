@@ -46,7 +46,7 @@ class DarkNotesListScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final note = notes[index];
                 return Material(
-                  color: _surface,
+                  color: Colors.transparent,
                   borderRadius: BorderRadius.circular(18),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(18),
@@ -60,12 +60,11 @@ class DarkNotesListScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Container(
+                    child: StudentGlassSurface(
                       padding: const EdgeInsets.all(18),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: _border),
-                      ),
+                      borderRadius: BorderRadius.circular(18),
+                      tint: _surface.withValues(alpha: 0.58),
+                      borderColor: _border.withValues(alpha: 0.72),
                       child: Row(
                         children: [
                           CircleAvatar(

@@ -944,22 +944,17 @@ class _HomeScreenState extends State<HomeScreen> {
         key: ValueKey(action.keyName),
         onTap: action.onTap,
         borderRadius: BorderRadius.circular(22),
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: action.gradient,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: action.gradient.first.withValues(alpha: 0.16),
-                blurRadius: 18,
-                offset: const Offset(0, 9),
-              ),
-            ],
+        child: StudentGlassSurface(
+          borderRadius: BorderRadius.circular(22),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: action.gradient
+                .map((color) => color.withValues(alpha: 0.66))
+                .toList(),
           ),
+          borderColor: Colors.white.withValues(alpha: 0.22),
+          shadowColor: action.gradient.first.withValues(alpha: 0.16),
           child: Stack(
             children: [
               Positioned(
@@ -1126,19 +1121,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildQuickPracticeCard(_QuickActionData item) {
     return Material(
-      color: _surface,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         key: ValueKey(item.keyName),
         onTap: item.onTap,
         borderRadius: BorderRadius.circular(18),
-        child: Container(
+        child: StudentGlassSurface(
           constraints: const BoxConstraints(minHeight: 104),
           padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: _border),
-          ),
+          borderRadius: BorderRadius.circular(18),
+          tint: _surface.withValues(alpha: 0.50),
+          borderColor: _border.withValues(alpha: 0.72),
           child: Row(
             children: [
               Container(

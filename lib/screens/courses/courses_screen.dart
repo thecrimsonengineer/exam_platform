@@ -842,20 +842,12 @@ class _CoursesScreenState extends State<CoursesScreen> {
           );
         },
         borderRadius: BorderRadius.circular(18),
-        child: Ink(
+        child: StudentGlassSurface(
           padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: domain.color.withValues(alpha: .11)),
-            boxShadow: [
-              BoxShadow(
-                color: domain.color.withValues(alpha: .05),
-                blurRadius: 18,
-                offset: const Offset(0, 7),
-              ),
-            ],
-          ),
+          borderRadius: BorderRadius.circular(18),
+          tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.50),
+          borderColor: domain.color.withValues(alpha: .14),
+          shadowColor: domain.color.withValues(alpha: .07),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1045,13 +1037,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
           );
         },
         borderRadius: BorderRadius.circular(18),
-        child: Ink(
+        child: StudentGlassSurface(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: color.withValues(alpha: .10)),
-          ),
+          borderRadius: BorderRadius.circular(18),
+          tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.50),
+          borderColor: color.withValues(alpha: .14),
           child: Row(
             children: [
               Container(
