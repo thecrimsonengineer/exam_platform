@@ -12,12 +12,11 @@ class PlanReplanningService {
     this.planService = const DailyStudyPlanService(),
     this.capacityService = const ExamStudyCapacityService(),
     UltraHardAvailabilityService? ultraHardAvailabilityService,
-  }) : ultraHardAvailabilityService =
-           ultraHardAvailabilityService ?? UltraHardAvailabilityService();
+  }) : _ultraHardAvailabilityService = ultraHardAvailabilityService;
 
   final DailyStudyPlanService planService;
   final ExamStudyCapacityService capacityService;
-  final UltraHardAvailabilityService ultraHardAvailabilityService;
+  final UltraHardAvailabilityService? _ultraHardAvailabilityService;
 
   Future<DailyStudyPlan?> regenerateForDate({
     required DateTime date,
@@ -46,8 +45,9 @@ class PlanReplanningService {
     var ultraAvailable = ultraHardAvailableCompetencyIds;
     if (ultraAvailable == null) {
       try {
-        ultraAvailable =
-            await ultraHardAvailabilityService.loadAvailableCompetencyIds();
+        final availability =
+            _ultraHardAvailabilityService ?? UltraHardAvailabilityService();
+        ultraAvailable = await availability.loadAvailableCompetencyIds();
       } catch (_) {
         ultraAvailable = const <String>{};
       }
