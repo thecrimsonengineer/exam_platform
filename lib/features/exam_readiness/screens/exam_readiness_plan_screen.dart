@@ -6,6 +6,7 @@ import '../repositories/exam_study_plan_repository.dart';
 import '../services/exam_study_capacity_service.dart';
 import 'exam_plan_setup_screen.dart';
 import 'readiness_profile_screen.dart';
+import 'todays_plan_screen.dart';
 
 class ExamReadinessPlanScreen extends StatefulWidget {
   const ExamReadinessPlanScreen({super.key, this.repository, this.now});
@@ -151,6 +152,19 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
                   const SizedBox(height: 14),
                   _PlanDetails(plan: plan),
                   const SizedBox(height: 18),
+                  FilledButton.icon(
+                    key: const ValueKey('m7d-open-today-plan'),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => TodaysPlanScreen(now: widget.now),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.today_rounded),
+                    label: const Text("Open today's adaptive plan"),
+                  ),
+                  const SizedBox(height: 10),
                   FilledButton.icon(
                     key: const ValueKey('m7c-open-readiness-profile'),
                     onPressed: () {
