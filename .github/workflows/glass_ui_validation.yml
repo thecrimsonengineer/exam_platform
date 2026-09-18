@@ -1,16 +1,13 @@
 name: Glass UI Validation
 
 on:
-  push:
-    branches:
-      - ui-glassmorphism-pass
   pull_request:
     branches:
       - phase-m7-closed
   workflow_dispatch:
 
 concurrency:
-  group: glass-ui-${{ github.workflow }}-${{ github.ref }}
+  group: glass-ui-${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -41,13 +38,26 @@ jobs:
           git fetch origin phase-m7-closed
           mapfile -t changed < <(
             git diff --name-only origin/phase-m7-closed...HEAD -- '*.dart' |
-            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart|test/screens/)' || true
+            grep -E '^(lib/app/|lib/theme/glass/|lib/screens/|lib/widgets/|lib/features/exam_readiness/screens/|lib/features/learning_twin/ui/|lib/main.dart|test/screens/)' || true
           )
           if [ "${#changed[@]}" -eq 0 ]; then
             echo "No changed Dart UI files."
             exit 0
           fi
           dart format --output=none --set-exit-if-changed "${changed[@]}"
+
+      - name: Glass import contract
+        shell: bash
+        run: |
+          bad_imports="$(
+            grep -R --include='*.dart' -n "theme/glass/student_glass.dart" lib |
+            grep -v "package:exam_platform/theme/glass/student_glass.dart" || true
+          )"
+          if [ -n "$bad_imports" ]; then
+            echo "Non-package glass imports found:"
+            echo "$bad_imports"
+            exit 1
+          fi
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
