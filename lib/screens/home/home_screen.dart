@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/app_colors.dart';
 import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
 import '../../features/exam_readiness/screens/exam_readiness_route.dart';
@@ -165,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: _background,
       body: Container(
         decoration: const BoxDecoration(

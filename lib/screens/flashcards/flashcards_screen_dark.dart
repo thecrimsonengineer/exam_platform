@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/app_colors.dart';
 
 class DarkFlashcardsScreen extends StatelessWidget {
@@ -7,7 +9,7 @@ class DarkFlashcardsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: const Color(0xFF0A111D),
       appBar: AppBar(
         backgroundColor: const Color(0xFF0A111D),

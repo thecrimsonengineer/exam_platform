@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/theme/glass/student_glass.dart';
+
 import '../../app/theme.dart';
 import '../courses/csp/domain_screen.dart';
 import '../courses/csp/domain_screen_dark.dart';
@@ -166,7 +168,7 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
         ? const Color(0xFF0A111D)
         : const Color(0xFFF6F8FC);
 
-    return Scaffold(
+    return StudentGlassScaffold(
       backgroundColor: background,
       body: DecoratedBox(
         decoration: BoxDecoration(
