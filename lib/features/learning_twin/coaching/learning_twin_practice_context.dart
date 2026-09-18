@@ -3,6 +3,7 @@ enum LearningTwinPracticeMode {
   randomQuiz,
   weakAreas,
   customQuiz,
+  ultraHardExamReadiness,
 }
 
 /// Sanitized pre-practice contract for the Learning Twin.
