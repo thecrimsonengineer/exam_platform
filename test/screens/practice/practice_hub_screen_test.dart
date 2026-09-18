@@ -76,7 +76,13 @@ void main() {
     await tester.scrollUntilVisible(entry, 500);
     await tester.pump();
 
-    await tester.tap(entry);
+    final tappable = find.descendant(
+      of: entry,
+      matching: find.byType(InkWell),
+    );
+    expect(tappable, findsOneWidget);
+
+    await tester.tap(tappable);
     await tester.pump();
 
     expect(find.byType(ExamReadinessPlanScreen), findsOneWidget);
