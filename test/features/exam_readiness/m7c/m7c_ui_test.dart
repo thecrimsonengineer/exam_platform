@@ -1,7 +1,7 @@
 import 'package:exam_platform/features/exam_readiness/models/evidence_confidence.dart';
 import 'package:exam_platform/features/exam_readiness/repositories/evidence_snapshot_repository.dart';
 import 'package:exam_platform/features/exam_readiness/repositories/learner_assessment_attempt_repository.dart';
-import 'package:exam_platform/features/exam_readiness/screens/exam_readiness_profile_screen.dart';
+import 'package:exam_platform/features/exam_readiness/screens/readiness_profile_screen.dart';
 import 'package:exam_platform/services/auth/learner_local_identity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +16,7 @@ Widget _app(Widget home, {bool dark = false}) {
   );
 }
 
-Future<ExamReadinessProfileScreen> _screenWithEvidence({
+Future<ReadinessProfileScreen> _screenWithEvidence({
   bool sparse = false,
   bool stale = false,
 }) async {
@@ -52,7 +52,7 @@ Future<ExamReadinessProfileScreen> _screenWithEvidence({
     await attemptRepository.append(attempt);
   }
 
-  return ExamReadinessProfileScreen(
+  return ReadinessProfileScreen(
     evidenceRepository: evidenceRepository,
     attemptRepository: attemptRepository,
     now: () => DateTime(2026, 9, 18, 12),
@@ -185,7 +185,7 @@ void main() {
     });
 
     testWidgets('empty evidence displays NONE confidence safely', (tester) async {
-      final screen = ExamReadinessProfileScreen(
+      final screen = ReadinessProfileScreen(
         evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
         attemptRepository: const LearnerAssessmentAttemptRepository(
           userIdOverride: 'u1',
