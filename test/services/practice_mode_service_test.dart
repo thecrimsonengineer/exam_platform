@@ -15,8 +15,7 @@ Question _question({
   String? competencyId,
 }) {
   final domainId = domain.toString().padLeft(2, '0');
-  final resolvedCompetencyId =
-      competencyId ?? 'd${domainId}_c01';
+  final resolvedCompetencyId = competencyId ?? 'd${domainId}_c01';
 
   return Question(
     id: id,
