@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../theme/glass/student_glass.dart';
+
 import '../../../theme/study/study_colors.dart';
 import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_typography.dart';
@@ -41,15 +43,13 @@ class StudyContentCallout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(color: StudyColors.border),
-      ),
+      borderRadius: StudyRadius.medium,
+      tint: StudyColors.surface.withValues(alpha: 0.52),
+      borderColor: StudyColors.border.withValues(alpha: 0.70),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

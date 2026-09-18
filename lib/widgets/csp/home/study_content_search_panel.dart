@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../theme/glass/student_glass.dart';
+
 import '../../../services/study_content_search_service.dart';
 
 class StudyContentSearchPanel extends StatefulWidget {
@@ -176,23 +178,15 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
         _query.length >= 2 &&
         (_loading || _error != null || _results.isNotEmpty || !_loading);
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('home-study-content-search'),
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: _surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(
-              alpha: widget.isDarkMode ? 0.20 : 0.045,
-            ),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
+      borderRadius: BorderRadius.circular(20),
+      tint: _surface.withValues(alpha: widget.isDarkMode ? 0.58 : 0.50),
+      borderColor: _border.withValues(alpha: 0.74),
+      shadowColor: Colors.black.withValues(
+        alpha: widget.isDarkMode ? 0.20 : 0.08,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

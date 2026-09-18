@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/glass/student_glass.dart';
+
 import '../../data/csp11_blueprint.dart';
 import '../../models/content_repository.dart';
 import '../../services/quiz_service.dart';
@@ -307,7 +309,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return Card(
+      return StudentGlassCard(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Row(
@@ -325,7 +327,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       );
     }
 
-    return Card(
+    return StudentGlassCard(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: Padding(

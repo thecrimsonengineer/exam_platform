@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../theme/glass/student_glass.dart';
+
 import '../../../models/progress_analytics_snapshot.dart';
 
 class ProgressPanel extends StatelessWidget {
@@ -21,23 +23,13 @@ class ProgressPanel extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: scheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: 0.55),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: scheme.shadow.withValues(alpha: 0.05),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surface.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.42),
+      shadowColor: scheme.shadow.withValues(alpha: 0.10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

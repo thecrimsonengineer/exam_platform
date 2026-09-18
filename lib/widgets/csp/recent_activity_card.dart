@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/glass/student_glass.dart';
+
 import '../../models/student_recent_activity.dart';
 import '../../theme/study/study_colors.dart';
 import '../../theme/study/study_radius.dart';
@@ -31,14 +33,12 @@ class RecentActivityCard extends StatelessWidget {
             ? const Color(0xFF1F8A4C)
             : StudyColors.primary;
 
-    return Container(
+    return StudentGlassSurface(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: StudyColors.surface,
-        borderRadius: StudyRadius.medium,
-        border: Border.all(color: StudyColors.border),
-      ),
+      borderRadius: StudyRadius.medium,
+      tint: StudyColors.surface.withValues(alpha: 0.54),
+      borderColor: StudyColors.border.withValues(alpha: 0.70),
       child: Row(
         children: [
           Container(
