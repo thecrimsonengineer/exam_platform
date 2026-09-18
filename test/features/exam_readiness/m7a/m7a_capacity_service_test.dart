@@ -254,7 +254,7 @@ void main() {
         plan: _plan(maxDaily: 180),
         date: DateTime(2026, 9, 21),
         exceptions: [
-          const StudyScheduleException(
+          StudyScheduleException(
             date: DateTime(2026, 9, 21),
             type: StudyScheduleExceptionType.intensiveRevisionDay,
             overrideMinutes: 150,
@@ -289,7 +289,7 @@ void main() {
       final minutes = service.minutesForDate(
         plan: _plan(maxDaily: 120),
         date: DateTime(2026, 9, 21),
-        exceptions: const [
+        exceptions: [
           StudyScheduleException(
             date: DateTime(2026, 9, 21),
             type: StudyScheduleExceptionType.overrideMinutes,
