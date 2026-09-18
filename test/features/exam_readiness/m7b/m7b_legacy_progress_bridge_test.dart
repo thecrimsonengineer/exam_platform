@@ -49,7 +49,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  test('legacy question progress is bridged into readiness evidence once', () async {
+  test(
+    'legacy question progress is bridged into readiness evidence once',
+    () async {
     await _seedLegacyProgress([
       _legacyProgress(questionId: 101, correct: true),
       _legacyProgress(questionId: 102, correct: false),
@@ -67,44 +69,47 @@ void main() {
       userIdOverride: 'u1',
     );
 
-    final first = await service.rebuildLocal(
+      final first = await service.rebuildLocal(
       evidenceRepository: evidenceRepository,
       attemptRepository: attemptRepository,
       questionProgressService: progressService,
       now: DateTime(2026, 9, 18, 12),
     );
 
-    expect(first.importedLegacyQuestionCount, 3);
-    expect(first.attempts, hasLength(3));
-    expect(first.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
-    expect(
-      first.attempts.every(
+      expect(first.importedLegacyQuestionCount, 3);
+      expect(first.attempts, hasLength(3));
+      expect(first.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
+      expect(
+        first.attempts.every(
         (attempt) => attempt.sessionKind == 'legacy_progress_bridge',
       ),
       isTrue,
     );
 
-    final second = await service.rebuildLocal(
+      final second = await service.rebuildLocal(
       evidenceRepository: evidenceRepository,
       attemptRepository: attemptRepository,
       questionProgressService: progressService,
       now: DateTime(2026, 9, 18, 12, 5),
     );
 
-    expect(second.importedLegacyQuestionCount, 0);
-    expect(second.attempts, hasLength(3));
-    expect(second.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
-  });
+      expect(second.importedLegacyQuestionCount, 0);
+      expect(second.attempts, hasLength(3));
+      expect(second.evidenceByCompetency['d03_c02']?.sourceAttemptCount, 3);
+    },
+  );
 
-  test('real M7 attempt prevents duplicate legacy bridge for same question', () async {
-    await _seedLegacyProgress([
-      _legacyProgress(questionId: 101, correct: true),
-    ]);
+  test(
+    'real M7 attempt prevents duplicate legacy bridge for same question',
+    () async {
+      await _seedLegacyProgress([
+        _legacyProgress(questionId: 101, correct: true),
+      ]);
 
-    const attemptRepository = LearnerAssessmentAttemptRepository(
+      const attemptRepository = LearnerAssessmentAttemptRepository(
       userIdOverride: 'u1',
     );
-    await attemptRepository.append(
+      await attemptRepository.append(
       LearnerAssessmentAttempt(
         attemptId: 'real-101',
         questionId: 101,
@@ -123,8 +128,8 @@ void main() {
       ),
     );
 
-    const service = ReadinessEvidenceBootstrapService();
-    final result = await service.rebuildLocal(
+      const service = ReadinessEvidenceBootstrapService();
+      final result = await service.rebuildLocal(
       evidenceRepository: EvidenceSnapshotRepository(userIdOverride: 'u1'),
       attemptRepository: attemptRepository,
       questionProgressService:
@@ -132,8 +137,9 @@ void main() {
       now: DateTime(2026, 9, 18, 12),
     );
 
-    expect(result.importedLegacyQuestionCount, 0);
-    expect(result.attempts, hasLength(1));
-    expect(result.attempts.single.attemptId, 'real-101');
-  });
+      expect(result.importedLegacyQuestionCount, 0);
+      expect(result.attempts, hasLength(1));
+      expect(result.attempts.single.attemptId, 'real-101');
+    },
+  );
 }
