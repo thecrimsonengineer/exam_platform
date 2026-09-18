@@ -110,14 +110,12 @@ class _DimensionList extends StatelessWidget {
       key: const ValueKey('m7c-competency-dimensions'),
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(20),
-      tint: Theme.of(context)
-          .colorScheme
-          .surfaceContainerLow
-          .withValues(alpha: 0.54),
-      borderColor: Theme.of(context)
-          .colorScheme
-          .outlineVariant
-          .withValues(alpha: 0.62),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         children: [
           for (var i = 0; i < dimensions.length; i++) ...[
@@ -162,14 +160,12 @@ class _DifficultyCard extends StatelessWidget {
       key: const ValueKey('m7c-difficulty-lanes'),
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(20),
-      tint: Theme.of(context)
-          .colorScheme
-          .surfaceContainerLow
-          .withValues(alpha: 0.54),
-      borderColor: Theme.of(context)
-          .colorScheme
-          .outlineVariant
-          .withValues(alpha: 0.62),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -225,14 +221,12 @@ class _GapCard extends StatelessWidget {
       key: const ValueKey('m7c-gap-card'),
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(20),
-      tint: Theme.of(context)
-          .colorScheme
-          .surfaceContainerLow
-          .withValues(alpha: 0.54),
-      borderColor: Theme.of(context)
-          .colorScheme
-          .outlineVariant
-          .withValues(alpha: 0.62),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -268,14 +262,12 @@ class _ReasonCodeCard extends StatelessWidget {
       key: const ValueKey('m7c-reason-code-card'),
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(20),
-      tint: Theme.of(context)
-          .colorScheme
-          .surfaceContainerLow
-          .withValues(alpha: 0.54),
-      borderColor: Theme.of(context)
-          .colorScheme
-          .outlineVariant
-          .withValues(alpha: 0.62),
+      tint: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

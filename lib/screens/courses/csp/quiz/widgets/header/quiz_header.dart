@@ -23,11 +23,9 @@ class QuizHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double normalizedProgress =
-        progress.clamp(0.0, 1.0);
+    final double normalizedProgress = progress.clamp(0.0, 1.0);
 
-    final int percentage =
-        (normalizedProgress * 100).round();
+    final int percentage = (normalizedProgress * 100).round();
 
     return StudentGlassSurface(
       padding: const EdgeInsets.fromLTRB(24, 22, 24, 23),
@@ -50,10 +48,7 @@ class QuizHeader extends StatelessWidget {
           const SizedBox(height: 21),
           _buildTitle(),
           const SizedBox(height: 23),
-          _buildProgress(
-            normalizedProgress,
-            percentage,
-          ),
+          _buildProgress(normalizedProgress, percentage),
         ],
       ),
     );
@@ -67,15 +62,9 @@ class QuizHeader extends StatelessWidget {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(
-              alpha: 0.12,
-            ),
+            color: Colors.white.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(13),
-            border: Border.all(
-              color: Colors.white.withValues(
-                alpha: 0.17,
-              ),
-            ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.17)),
           ),
           child: const Icon(
             Icons.psychology_outlined,
@@ -83,9 +72,7 @@ class QuizHeader extends StatelessWidget {
             size: 22,
           ),
         ),
-        const SizedBox(
-          width: QuizSpacing.md,
-        ),
+        const SizedBox(width: QuizSpacing.md),
         const Expanded(
           child: Text(
             'CSP11 PRACTICE',
@@ -97,9 +84,7 @@ class QuizHeader extends StatelessWidget {
             ),
           ),
         ),
-        _DifficultyBadge(
-          difficulty: difficulty,
-        ),
+        _DifficultyBadge(difficulty: difficulty),
       ],
     );
   }
@@ -122,9 +107,7 @@ class QuizHeader extends StatelessWidget {
         Text(
           'Test your knowledge and build exam readiness.',
           style: TextStyle(
-            color: Colors.white.withValues(
-              alpha: 0.70,
-            ),
+            color: Colors.white.withValues(alpha: 0.70),
             fontSize: 13,
             fontWeight: FontWeight.w400,
             height: 1.4,
@@ -134,10 +117,7 @@ class QuizHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildProgress(
-    double normalizedProgress,
-    int percentage,
-  ) {
+  Widget _buildProgress(double normalizedProgress, int percentage) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,9 +136,7 @@ class QuizHeader extends StatelessWidget {
             Text(
               '$questionNumber / $totalQuestions',
               style: TextStyle(
-                color: Colors.white.withValues(
-                  alpha: 0.76,
-                ),
+                color: Colors.white.withValues(alpha: 0.76),
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
               ),
@@ -173,9 +151,7 @@ class QuizHeader extends StatelessWidget {
             Text(
               '$percentage% complete',
               style: TextStyle(
-                color: Colors.white.withValues(
-                  alpha: 0.64,
-                ),
+                color: Colors.white.withValues(alpha: 0.64),
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),
@@ -190,9 +166,7 @@ class QuizHeader extends StatelessWidget {
             Text(
               'Keep going',
               style: TextStyle(
-                color: Colors.white.withValues(
-                  alpha: 0.64,
-                ),
+                color: Colors.white.withValues(alpha: 0.64),
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),
@@ -212,17 +186,14 @@ class QuizHeader extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              color: Colors.white.withValues(
-                alpha: 0.14,
-              ),
+              color: Colors.white.withValues(alpha: 0.14),
             ),
             FractionallySizedBox(
               widthFactor: progress,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius:
-                      BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20),
                 ),
               ),
             ),
@@ -236,36 +207,21 @@ class QuizHeader extends StatelessWidget {
 class _DifficultyBadge extends StatelessWidget {
   final String difficulty;
 
-  const _DifficultyBadge({
-    required this.difficulty,
-  });
+  const _DifficultyBadge({required this.difficulty});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 7,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(
-          alpha: 0.11,
-        ),
+        color: Colors.white.withValues(alpha: 0.11),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.white.withValues(
-            alpha: 0.18,
-          ),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.speed_outlined,
-            color: Colors.white,
-            size: 14,
-          ),
+          const Icon(Icons.speed_outlined, color: Colors.white, size: 14),
           const SizedBox(width: 5),
           Text(
             difficulty.toUpperCase(),

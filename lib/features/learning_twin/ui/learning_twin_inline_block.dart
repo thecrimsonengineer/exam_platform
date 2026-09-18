@@ -54,30 +54,30 @@ class LearningTwinInlineBlock extends StatelessWidget {
         tint: colors.surfaceContainerLow.withValues(alpha: 0.54),
         borderColor: colors.outlineVariant.withValues(alpha: 0.62),
         child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 300;
+          builder: (context, constraints) {
+            final compact = constraints.maxWidth < 300;
 
-              if (compact) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    LearningTwinAvatar(asset: asset, size: 48),
-                    const SizedBox(height: 8),
-                    copy,
-                  ],
-                );
-              }
-
-              return Row(
+            if (compact) {
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   LearningTwinAvatar(asset: asset, size: 48),
-                  const SizedBox(width: 12),
-                  Expanded(child: copy),
+                  const SizedBox(height: 8),
+                  copy,
                 ],
               );
-            },
-          ),
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LearningTwinAvatar(asset: asset, size: 48),
+                const SizedBox(width: 12),
+                Expanded(child: copy),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

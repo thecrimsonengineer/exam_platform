@@ -19,15 +19,15 @@ class ExplanationCard extends StatelessWidget {
       borderColor: QuizColors.explanation.withValues(alpha: 0.22),
       shadowColor: QuizColors.explanation.withValues(alpha: 0.04),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 17),
-            _buildDivider(),
-            const SizedBox(height: 17),
-            _buildExplanation(),
-          ],
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 17),
+          _buildDivider(),
+          const SizedBox(height: 17),
+          _buildExplanation(),
+        ],
+      ),
     );
   }
 

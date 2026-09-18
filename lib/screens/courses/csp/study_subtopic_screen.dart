@@ -197,7 +197,9 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
                             padding: EdgeInsets.all(contentShellPadding),
                             borderRadius: StudyRadius.large,
                             tint: StudyColors.surface.withValues(alpha: 0.50),
-                            borderColor: StudyColors.border.withValues(alpha: 0.72),
+                            borderColor: StudyColors.border.withValues(
+                              alpha: 0.72,
+                            ),
                             child: StudySubtopicRenderer(
                               subtopic: subtopic,
                               domain: domain,
@@ -323,11 +325,10 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
           borderRadius: StudyRadius.large,
           tint: (completed ? const Color(0xFFEAF8F0) : StudyColors.surface)
               .withValues(alpha: 0.52),
-          borderColor: (completed
-                  ? const Color(0xFFB9E7CA)
-                  : StudyColors.border)
-              .withValues(alpha: 0.72),
-      child: compact
+          borderColor:
+              (completed ? const Color(0xFFB9E7CA) : StudyColors.border)
+                  .withValues(alpha: 0.72),
+          child: compact
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

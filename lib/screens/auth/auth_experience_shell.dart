@@ -239,10 +239,7 @@ class _HeroPanel extends StatelessWidget {
                 icon: Icons.verified_user_rounded,
                 label: 'Verified learners',
               ),
-              _TrustChip(
-                icon: Icons.route_rounded,
-                label: 'Guided study path',
-              ),
+              _TrustChip(icon: Icons.route_rounded, label: 'Guided study path'),
               _TrustChip(
                 icon: Icons.insights_rounded,
                 label: 'Progress tracking',

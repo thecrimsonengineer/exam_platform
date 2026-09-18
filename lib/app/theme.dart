@@ -154,7 +154,6 @@ class AppTheme {
     ),
   );
 
-
   static final ThemeData studentGlassLightTheme = _studentGlassTheme(
     lightTheme,
     brightness: Brightness.light,
@@ -170,22 +169,17 @@ class AppTheme {
     required Brightness brightness,
   }) {
     final dark = brightness == Brightness.dark;
-    final surface = dark
-        ? const Color(0x9914233B)
-        : const Color(0xBFFFFFFF);
+    final surface = dark ? const Color(0x9914233B) : const Color(0xBFFFFFFF);
     final strongSurface = dark
         ? const Color(0xC21A2B46)
         : const Color(0xE6FFFFFF);
-    final border = dark
-        ? const Color(0x42FFFFFF)
-        : const Color(0xA6FFFFFF);
-    final baseText = dark
-        ? const Color(0xFFF4F7FB)
-        : const Color(0xFF18243A);
+    final border = dark ? const Color(0x42FFFFFF) : const Color(0xA6FFFFFF);
+    final baseText = dark ? const Color(0xFFF4F7FB) : const Color(0xFF18243A);
 
     return base.copyWith(
-      scaffoldBackgroundColor:
-          dark ? const Color(0xFF07101B) : const Color(0xFFF4F8FF),
+      scaffoldBackgroundColor: dark
+          ? const Color(0xFF07101B)
+          : const Color(0xFFF4F8FF),
       canvasColor: Colors.transparent,
       appBarTheme: base.appBarTheme.copyWith(
         elevation: 0,
@@ -263,14 +257,10 @@ class AppTheme {
         backgroundColor: surface,
         selectedColor: base.colorScheme.primary.withValues(alpha: 0.16),
         side: BorderSide(color: border),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
       dividerTheme: DividerThemeData(
-        color: dark
-            ? const Color(0x33FFFFFF)
-            : const Color(0x4D6F86A8),
+        color: dark ? const Color(0x33FFFFFF) : const Color(0x4D6F86A8),
         thickness: 1,
       ),
     );

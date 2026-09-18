@@ -49,39 +49,39 @@ class LearningTwinHero extends StatelessWidget {
       tint: colors.secondaryContainer.withValues(alpha: 0.58),
       borderColor: colors.secondary.withValues(alpha: 0.20),
       child: LayoutBuilder(
-          builder: (context, constraints) {
-            final compact = constraints.maxWidth < 560;
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < 560;
 
-            if (compact) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Center(
-                    child: LearningTwinAvatar(
-                      asset: LearningTwinAsset.hero,
-                      size: 150,
-                      compactCrop: false,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  copy,
-                ],
-              );
-            }
-
-            return Row(
+          if (compact) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const LearningTwinAvatar(
-                  asset: LearningTwinAsset.hero,
-                  size: 180,
-                  compactCrop: false,
+                const Center(
+                  child: LearningTwinAvatar(
+                    asset: LearningTwinAsset.hero,
+                    size: 150,
+                    compactCrop: false,
+                  ),
                 ),
-                const SizedBox(width: 24),
-                Expanded(child: copy),
+                const SizedBox(height: 14),
+                copy,
               ],
             );
-          },
-        ),
+          }
+
+          return Row(
+            children: [
+              const LearningTwinAvatar(
+                asset: LearningTwinAsset.hero,
+                size: 180,
+                compactCrop: false,
+              ),
+              const SizedBox(width: 24),
+              Expanded(child: copy),
+            ],
+          );
+        },
+      ),
     );
   }
 }

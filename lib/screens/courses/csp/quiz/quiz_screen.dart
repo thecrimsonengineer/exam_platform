@@ -325,7 +325,9 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isInitializing) {
-      return const StudentGlassScaffold(body: Center(child: CircularProgressIndicator()));
+      return const StudentGlassScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     if (_initializationError != null) {

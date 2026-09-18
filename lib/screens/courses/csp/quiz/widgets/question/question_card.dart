@@ -24,15 +24,15 @@ class QuestionCard extends StatelessWidget {
       borderColor: QuizColors.borderStrong.withValues(alpha: 0.72),
       shadowColor: QuizColors.navy.withValues(alpha: 0.08),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 18),
-            _buildDivider(),
-            const SizedBox(height: 19),
-            _buildQuestion(),
-          ],
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 18),
+          _buildDivider(),
+          const SizedBox(height: 19),
+          _buildQuestion(),
+        ],
+      ),
     );
   }
 

@@ -231,7 +231,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
       borderRadius: BorderRadius.circular(14),
       tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.50),
-      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.60),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.60),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -675,7 +677,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
             padding: const EdgeInsets.all(18),
             borderRadius: BorderRadius.circular(18),
             tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.48),
-            borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.62),
+            borderColor: Theme.of(
+              context,
+            ).colorScheme.outlineVariant.withValues(alpha: 0.62),
             child: wide
                 ? Row(
                     children: [
@@ -710,7 +714,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(18),
       tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.48),
-      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.62),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: const Row(
         children: [
           SizedBox(
@@ -1222,7 +1228,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
       padding: const EdgeInsets.all(17),
       borderRadius: BorderRadius.circular(17),
       tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.46),
-      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.60),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.60),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1377,7 +1385,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
       padding: const EdgeInsets.all(18),
       borderRadius: BorderRadius.circular(21),
       tint: Theme.of(context).colorScheme.surface.withValues(alpha: 0.50),
-      borderColor: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.62),
+      borderColor: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -72,9 +72,7 @@ void main() {
     final answer = read(
       'lib/screens/courses/csp/quiz/widgets/answers/answer_option_card.dart',
     );
-    final twin = read(
-      'lib/features/learning_twin/ui/learning_twin_card.dart',
-    );
+    final twin = read('lib/features/learning_twin/ui/learning_twin_card.dart');
 
     expect(question, contains('StudentGlassSurface'));
     expect(question, contains('gradient: QuizColors.questionGradient'));

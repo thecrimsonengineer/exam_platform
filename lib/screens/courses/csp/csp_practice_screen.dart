@@ -33,7 +33,6 @@ class CspPracticeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 StudentGlassSurface(
-
                   width: double.infinity,
 
                   padding: const EdgeInsets.all(18),

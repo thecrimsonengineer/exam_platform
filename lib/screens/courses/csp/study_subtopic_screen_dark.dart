@@ -197,8 +197,12 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
                             width: double.infinity,
                             padding: EdgeInsets.all(contentShellPadding),
                             borderRadius: StudyRadius.large,
-                            tint: DarkStudyColors.surface.withValues(alpha: 0.58),
-                            borderColor: DarkStudyColors.border.withValues(alpha: 0.72),
+                            tint: DarkStudyColors.surface.withValues(
+                              alpha: 0.58,
+                            ),
+                            borderColor: DarkStudyColors.border.withValues(
+                              alpha: 0.72,
+                            ),
                             child: DarkStudySubtopicRenderer(
                               subtopic: subtopic,
                               domain: domain,
@@ -322,15 +326,15 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(18),
           borderRadius: StudyRadius.large,
-          tint: (completed
-                  ? DarkStudyColors.successLight
-                  : DarkStudyColors.surface)
-              .withValues(alpha: 0.58),
-          borderColor: (completed
-                  ? DarkStudyColors.success
-                  : DarkStudyColors.border)
-              .withValues(alpha: completed ? 0.46 : 0.72),
-      child: compact
+          tint:
+              (completed
+                      ? DarkStudyColors.successLight
+                      : DarkStudyColors.surface)
+                  .withValues(alpha: 0.58),
+          borderColor:
+              (completed ? DarkStudyColors.success : DarkStudyColors.border)
+                  .withValues(alpha: completed ? 0.46 : 0.72),
+          child: compact
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

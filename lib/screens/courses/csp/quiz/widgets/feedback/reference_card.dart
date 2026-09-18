@@ -19,15 +19,15 @@ class ReferenceCard extends StatelessWidget {
       borderColor: QuizColors.border.withValues(alpha: 0.72),
       shadowColor: QuizColors.navy.withValues(alpha: 0.025),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 16),
-            _buildDivider(),
-            const SizedBox(height: 16),
-            _buildReference(),
-          ],
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          const SizedBox(height: 16),
+          _buildDivider(),
+          const SizedBox(height: 16),
+          _buildReference(),
+        ],
+      ),
     );
   }
 

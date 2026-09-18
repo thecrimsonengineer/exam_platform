@@ -169,9 +169,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         _ensureScreenBuilt(_selectedIndex, isDarkMode);
         final screens = _screensFor(isDarkMode);
 
-        final baseTheme = isDarkMode
-            ? AppTheme.darkTheme
-            : AppTheme.lightTheme;
+        final baseTheme = isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme;
         final glassTheme = isDarkMode
             ? AppTheme.studentGlassDarkTheme
             : AppTheme.studentGlassLightTheme;
@@ -194,32 +192,32 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                   selectedIndex: _selectedIndex,
                   onDestinationSelected: _selectTab,
                   destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.home_outlined),
-                  selectedIcon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.menu_book_outlined),
-                  selectedIcon: Icon(Icons.menu_book),
-                  label: 'Study',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.style_outlined),
-                  selectedIcon: Icon(Icons.style_rounded),
-                  label: 'Flashcards',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.bar_chart_outlined),
-                  selectedIcon: Icon(Icons.bar_chart),
-                  label: 'Progress',
-                ),
-                NavigationDestination(
-                  key: ValueKey('bottom-nav-practice'),
-                  icon: Icon(Icons.quiz_outlined),
-                  selectedIcon: Icon(Icons.quiz_rounded),
-                  label: 'Practice',
-                ),
+                    NavigationDestination(
+                      icon: Icon(Icons.home_outlined),
+                      selectedIcon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.menu_book_outlined),
+                      selectedIcon: Icon(Icons.menu_book),
+                      label: 'Study',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.style_outlined),
+                      selectedIcon: Icon(Icons.style_rounded),
+                      label: 'Flashcards',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.bar_chart_outlined),
+                      selectedIcon: Icon(Icons.bar_chart),
+                      label: 'Progress',
+                    ),
+                    NavigationDestination(
+                      key: ValueKey('bottom-nav-practice'),
+                      icon: Icon(Icons.quiz_outlined),
+                      selectedIcon: Icon(Icons.quiz_rounded),
+                      label: 'Practice',
+                    ),
                   ],
                 ),
               ),

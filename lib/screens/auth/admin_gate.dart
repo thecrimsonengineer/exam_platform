@@ -20,32 +20,32 @@ class AdminGate extends StatelessWidget {
     return Theme(
       data: AppTheme.lightTheme,
       child: StreamBuilder<AppUser?>(
-      stream: service.appUserChanges,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _AdminGateLoadingScreen();
-        }
+        stream: service.appUserChanges,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const _AdminGateLoadingScreen();
+          }
 
-        if (snapshot.hasError) {
-          return const _AdminGateErrorScreen();
-        }
+          if (snapshot.hasError) {
+            return const _AdminGateErrorScreen();
+          }
 
-        final appUser = snapshot.data;
+          final appUser = snapshot.data;
 
-        if (appUser == null) {
-          return const AppRootScreen();
-        }
+          if (appUser == null) {
+            return const AppRootScreen();
+          }
 
-        if (!appUser.isAdmin) {
-          return const _AccessDeniedScreen();
-        }
+          if (!appUser.isAdmin) {
+            return const _AccessDeniedScreen();
+          }
 
-        return AdminHomeScreen(
-          adminUserId: appUser.uid,
-          authStateProvider: service,
-        );
-      },
-    ),
+          return AdminHomeScreen(
+            adminUserId: appUser.uid,
+            authStateProvider: service,
+          );
+        },
+      ),
     );
   }
 }

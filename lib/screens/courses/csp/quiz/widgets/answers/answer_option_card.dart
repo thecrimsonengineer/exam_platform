@@ -52,8 +52,7 @@ class AnswerOptionCard extends StatelessWidget {
                     style: TextStyle(
                       color: _textColor(),
                       fontSize: 16,
-                      fontWeight:
-                          isSelected || isCorrect || isIncorrect
+                      fontWeight: isSelected || isCorrect || isIncorrect
                           ? FontWeight.w600
                           : FontWeight.w500,
                       height: 1.48,
@@ -124,16 +123,9 @@ class AnswerOptionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: _indicatorBackground(),
           shape: BoxShape.circle,
-          border: Border.all(
-            color: _indicatorBorderColor(),
-            width: 1,
-          ),
+          border: Border.all(color: _indicatorBorderColor(), width: 1),
         ),
-        child: Icon(
-          icon,
-          color: _indicatorColor(),
-          size: 20,
-        ),
+        child: Icon(icon, color: _indicatorColor(), size: 20),
       );
     }
 
@@ -142,15 +134,11 @@ class AnswerOptionCard extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         color: isSelected
-            ? QuizColors.purple.withValues(
-                alpha: 0.10,
-              )
+            ? QuizColors.purple.withValues(alpha: 0.10)
             : QuizColors.surfaceAlt,
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected
-              ? QuizColors.purple
-              : QuizColors.borderStrong,
+          color: isSelected ? QuizColors.purple : QuizColors.borderStrong,
           width: isSelected ? 1.5 : 1,
         ),
       ),
@@ -158,9 +146,7 @@ class AnswerOptionCard extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          color: isSelected
-              ? QuizColors.purple
-              : QuizColors.textSecondary,
+          color: isSelected ? QuizColors.purple : QuizColors.textSecondary,
           fontSize: 14,
           fontWeight: FontWeight.w800,
         ),
@@ -173,28 +159,18 @@ class AnswerOptionCard extends StatelessWidget {
   // ==========================================================
 
   Widget _buildStateIcon() {
-    final Color color = isCorrect
-        ? QuizColors.correct
-        : QuizColors.incorrect;
+    final Color color = isCorrect ? QuizColors.correct : QuizColors.incorrect;
 
-    final IconData icon = isCorrect
-        ? Icons.check_rounded
-        : Icons.close_rounded;
+    final IconData icon = isCorrect ? Icons.check_rounded : Icons.close_rounded;
 
     return Container(
       width: 30,
       height: 30,
       decoration: BoxDecoration(
-        color: color.withValues(
-          alpha: 0.10,
-        ),
+        color: color.withValues(alpha: 0.10),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 18,
-      ),
+      child: Icon(icon, color: color, size: 18),
     );
   }
 
@@ -216,15 +192,11 @@ class AnswerOptionCard extends StatelessWidget {
 
   Color _indicatorBackground() {
     if (isCorrect) {
-      return QuizColors.correct.withValues(
-        alpha: 0.12,
-      );
+      return QuizColors.correct.withValues(alpha: 0.12);
     }
 
     if (isIncorrect) {
-      return QuizColors.incorrect.withValues(
-        alpha: 0.12,
-      );
+      return QuizColors.incorrect.withValues(alpha: 0.12);
     }
 
     return QuizColors.surfaceAlt;
@@ -232,15 +204,11 @@ class AnswerOptionCard extends StatelessWidget {
 
   Color _indicatorBorderColor() {
     if (isCorrect) {
-      return QuizColors.correct.withValues(
-        alpha: 0.25,
-      );
+      return QuizColors.correct.withValues(alpha: 0.25);
     }
 
     if (isIncorrect) {
-      return QuizColors.incorrect.withValues(
-        alpha: 0.25,
-      );
+      return QuizColors.incorrect.withValues(alpha: 0.25);
     }
 
     return QuizColors.border;

@@ -131,10 +131,7 @@ class _GlassOrb extends StatelessWidget {
         child: Container(
           width: primary ? 330 : 290,
           height: primary ? 330 : 290,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
       ),
     );
@@ -202,10 +199,7 @@ class StudentGlassSurface extends StatelessWidget {
                   ],
                 ),
             borderRadius: resolvedRadius,
-            border: Border.all(
-              color: borderColor ?? palette.border,
-              width: 1,
-            ),
+            border: Border.all(color: borderColor ?? palette.border, width: 1),
             boxShadow: [
               BoxShadow(
                 color: shadowColor ?? palette.shadow,
@@ -227,7 +221,10 @@ class StudentGlassSurface extends StatelessWidget {
       ),
     );
 
-    if (width != null || height != null || constraints != null || alignment != null) {
+    if (width != null ||
+        height != null ||
+        constraints != null ||
+        alignment != null) {
       glass = Container(
         width: width,
         height: height,

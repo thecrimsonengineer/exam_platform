@@ -52,36 +52,36 @@ class LearningTwinCelebration extends StatelessWidget {
         tint: colors.tertiaryContainer.withValues(alpha: 0.58),
         borderColor: colors.tertiary.withValues(alpha: 0.22),
         child: LayoutBuilder(
-            builder: (context, constraints) {
-              final compact = constraints.maxWidth < 420;
+          builder: (context, constraints) {
+            final compact = constraints.maxWidth < 420;
 
-              if (compact) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const LearningTwinAvatar(
-                      asset: LearningTwinAsset.success,
-                      size: 72,
-                    ),
-                    const SizedBox(height: 10),
-                    copy,
-                  ],
-                );
-              }
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            if (compact) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const LearningTwinAvatar(
                     asset: LearningTwinAsset.success,
-                    size: 88,
+                    size: 72,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(child: copy),
+                  const SizedBox(height: 10),
+                  copy,
                 ],
               );
-            },
-          ),
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const LearningTwinAvatar(
+                  asset: LearningTwinAsset.success,
+                  size: 88,
+                ),
+                const SizedBox(width: 16),
+                Expanded(child: copy),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

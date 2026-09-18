@@ -40,7 +40,6 @@ class DarkCspPracticeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   StudentGlassSurface(
-
                     width: double.infinity,
 
                     padding: const EdgeInsets.all(18),
@@ -49,7 +48,9 @@ class DarkCspPracticeScreen extends StatelessWidget {
 
                     tint: const Color(0xFF111B2C).withValues(alpha: 0.58),
 
-                    borderColor: const Color(0xFF25344A).withValues(alpha: 0.72),
+                    borderColor: const Color(
+                      0xFF25344A,
+                    ).withValues(alpha: 0.72),
                     child: Text(
                       description,
                       style: const TextStyle(

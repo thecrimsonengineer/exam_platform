@@ -63,9 +63,8 @@ class QuizColors {
   static Color get background => _dark
       ? darkBackgroundBase.withValues(alpha: 0.70)
       : const Color(0xBFF4F8FF);
-  static Color get surface => _dark
-      ? darkSurfaceBase.withValues(alpha: 0.56)
-      : const Color(0xBFFFFFFF);
+  static Color get surface =>
+      _dark ? darkSurfaceBase.withValues(alpha: 0.56) : const Color(0xBFFFFFFF);
   static Color get surfaceAlt =>
       _dark ? const Color(0x801A2B46) : const Color(0x99FFFFFF);
   static Color get border =>
