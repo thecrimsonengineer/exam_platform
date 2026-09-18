@@ -447,6 +447,22 @@ class LabSessionEngine {
       );
     }
 
+    final persisted = await store.load(session.sessionId);
+    if (persisted != null && persisted.revision != session.revision) {
+      final committed = persisted.eventForNode(session.currentNodeId);
+      if (committed != null) {
+        if (committed.selectedOptionId == optionId) {
+          return persisted;
+        }
+        throw const LabSessionException(
+          'Committed LAB decisions are irreversible.',
+        );
+      }
+      throw const LabStaleSessionWriteException(
+        'LAB session changed before this decision could be committed.',
+      );
+    }
+
     final existing = session.eventForNode(session.currentNodeId);
     if (existing != null) {
       if (existing.selectedOptionId == optionId) {
