@@ -207,10 +207,13 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const ValueKey('m7a-no-readiness-claim')),
-        findsOneWidget,
+      final disclaimer = find.byKey(
+        const ValueKey('m7a-no-readiness-claim'),
       );
+      await tester.scrollUntilVisible(disclaimer, 400);
+      await tester.pump();
+
+      expect(disclaimer, findsOneWidget);
       expect(
         find.textContaining('calculates time and capacity only'),
         findsOneWidget,
