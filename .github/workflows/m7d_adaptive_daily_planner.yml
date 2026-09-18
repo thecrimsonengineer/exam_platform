@@ -35,18 +35,25 @@ jobs:
 
       - name: Check M7D formatting
         run: |
-          dart format --output=none --set-exit-if-changed \
-            lib/features/exam_readiness/models/daily_study_plan.dart \
-            lib/features/exam_readiness/models/learning_priority_score.dart \
-            lib/features/exam_readiness/models/study_plan_block.dart \
-            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
-            lib/features/exam_readiness/services/evidence_debt_service.dart \
-            lib/features/exam_readiness/services/learning_priority_engine.dart \
-            lib/features/exam_readiness/services/planner_constraints.dart \
-            lib/features/exam_readiness/services/daily_study_plan_service.dart \
-            lib/features/exam_readiness/services/ultra_hard_availability_service.dart \
-            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+          targets=(
+            lib/features/exam_readiness/models/daily_study_plan.dart
+            lib/features/exam_readiness/models/learning_priority_score.dart
+            lib/features/exam_readiness/models/study_plan_block.dart
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart
+            lib/features/exam_readiness/services/evidence_debt_service.dart
+            lib/features/exam_readiness/services/learning_priority_engine.dart
+            lib/features/exam_readiness/services/planner_constraints.dart
+            lib/features/exam_readiness/services/daily_study_plan_service.dart
+            lib/features/exam_readiness/services/ultra_hard_availability_service.dart
+            lib/features/exam_readiness/screens/todays_plan_screen.dart
             test/features/exam_readiness/m7d
+          )
+          dart format "${targets[@]}"
+          if ! git diff --quiet -- "${targets[@]}"; then
+            echo "M7D formatting drift detected:"
+            git diff -- "${targets[@]}"
+            exit 1
+          fi
 
       - name: Flutter analyze
         run: flutter analyze --no-fatal-infos
