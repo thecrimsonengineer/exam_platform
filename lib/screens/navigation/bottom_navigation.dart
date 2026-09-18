@@ -169,10 +169,15 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         _ensureScreenBuilt(_selectedIndex, isDarkMode);
         final screens = _screensFor(isDarkMode);
 
+        final baseTheme = isDarkMode
+            ? AppTheme.darkTheme
+            : AppTheme.lightTheme;
+        final glassTheme = isDarkMode
+            ? AppTheme.studentGlassDarkTheme
+            : AppTheme.studentGlassLightTheme;
+
         return Theme(
-          data: isDarkMode
-              ? AppTheme.studentGlassDarkTheme
-              : AppTheme.studentGlassLightTheme,
+          data: glassTheme.copyWith(textTheme: baseTheme.textTheme),
           child: StudentGlassScaffold(
             backgroundColor: isDarkMode ? const Color(0xFF0A111D) : null,
             body: IndexedStack(
