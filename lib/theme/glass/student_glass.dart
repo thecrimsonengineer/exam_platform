@@ -226,18 +226,26 @@ class StudentGlassSurface extends StatelessWidget {
 class StudentGlassCard extends StatelessWidget {
   const StudentGlassCard({
     super.key,
-    required this.child,
+    this.child,
     this.color,
-    this.margin,
+    this.shadowColor,
+    this.surfaceTintColor,
+    this.elevation,
     this.shape,
+    this.borderOnForeground = true,
+    this.margin,
     this.clipBehavior = Clip.antiAlias,
     this.semanticContainer = true,
   });
 
-  final Widget child;
+  final Widget? child;
   final Color? color;
-  final EdgeInsetsGeometry? margin;
+  final Color? shadowColor;
+  final Color? surfaceTintColor;
+  final double? elevation;
   final ShapeBorder? shape;
+  final bool borderOnForeground;
+  final EdgeInsetsGeometry? margin;
   final Clip clipBehavior;
   final bool semanticContainer;
 
@@ -256,7 +264,8 @@ class StudentGlassCard extends StatelessWidget {
         borderRadius: radius,
         tint: color,
         clipBehavior: clipBehavior,
-        child: child,
+        shadowColor: shadowColor,
+        child: child ?? const SizedBox.shrink(),
       ),
     );
   }
