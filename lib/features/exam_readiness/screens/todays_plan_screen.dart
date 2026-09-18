@@ -430,15 +430,17 @@ class _TodayHero extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
+    return StudentGlassSurface(
       key: const ValueKey('m7d-today-hero'),
       padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [scheme.primaryContainer, scheme.secondaryContainer],
-        ),
-        borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(24),
+      gradient: LinearGradient(
+        colors: [
+          scheme.primaryContainer.withValues(alpha: 0.68),
+          scheme.secondaryContainer.withValues(alpha: 0.58),
+        ],
       ),
+      borderColor: scheme.primary.withValues(alpha: 0.16),
       child: Wrap(
         spacing: 20,
         runSpacing: 12,
@@ -505,14 +507,12 @@ class _PlanBlockCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Container(
+    return StudentGlassSurface(
       key: ValueKey('m7d-block-$index'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.62),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -664,13 +664,13 @@ class _WhyThisPlan extends StatelessWidget {
       if (reasons.length >= 4) break;
     }
 
-    return Container(
+    final scheme = Theme.of(context).colorScheme;
+    return StudentGlassSurface(
       key: const ValueKey('m7d-why-this-plan'),
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiaryContainer,
-        borderRadius: BorderRadius.circular(20),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.tertiaryContainer.withValues(alpha: 0.56),
+      borderColor: scheme.tertiary.withValues(alpha: 0.18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -699,13 +699,13 @@ class _NoStudyToday extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final scheme = Theme.of(context).colorScheme;
+    return StudentGlassSurface(
       key: const ValueKey('m7d-no-study-today'),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
-      ),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.60),
       child: Text(
         availableMinutes == 0
             ? 'No study minutes are scheduled for today.'
@@ -740,13 +740,13 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final scheme = Theme.of(context).colorScheme;
+    return StudentGlassSurface(
       key: const ValueKey('m7d-notice'),
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiaryContainer,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      borderRadius: BorderRadius.circular(16),
+      tint: scheme.tertiaryContainer.withValues(alpha: 0.52),
+      borderColor: scheme.tertiary.withValues(alpha: 0.16),
       child: Text(text),
     );
   }
