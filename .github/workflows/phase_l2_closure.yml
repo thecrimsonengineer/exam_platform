@@ -1,0 +1,125 @@
+name: Phase L2 Closure Gate
+
+on:
+  push:
+    branches:
+      - phase-l-lab-engine
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-l2-\${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-l2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify L2 ancestry and scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin phase-l1-closed
+          git merge-base --is-ancestor origin/phase-l1-closed HEAD
+          test "\${GITHUB_REF_NAME}" = "phase-l-lab-engine"
+          if find lib test -type f \( -iname '*lab7*' -o -iname '*lab8*' -o -iname '*lab9*' \) | grep -q .; then
+            echo "LAB-7 through LAB-9 files are forbidden before L3."
+            exit 1
+          fi
+
+      - name: Strict Phase L formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/lab \
+            lib/screens/lab \
+            lib/screens/admin/lab \
+            test/features/lab
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run exact Phase L0-L6 budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test test/features/lab --reporter json > /tmp/phase_l_tests.jsonl
+          python3 - <<'PY'
+          import json
+          from collections import Counter
+
+          counts = Counter()
+          for line in open('/tmp/phase_l_tests.jsonl', encoding='utf-8'):
+              line = line.strip()
+              if not line or not line.startswith('{'):
+                  continue
+              try:
+                  event = json.loads(line)
+              except json.JSONDecodeError:
+                  continue
+              if event.get('type') != 'testStart':
+                  continue
+              name = event.get('test', {}).get('name', '')
+              for prefix in tuple(f'LAB-{i}' for i in range(7)):
+                  if name.startswith(prefix):
+                      counts[prefix] += 1
+                      break
+
+          expected = {
+              'LAB-0': 50,
+              'LAB-1': 50,
+              'LAB-2': 150,
+              'LAB-3': 170,
+              'LAB-4': 110,
+              'LAB-5': 170,
+              'LAB-6': 110,
+          }
+          print('Executed Phase L tests:', dict(counts))
+          if dict(counts) != expected:
+              raise SystemExit(f'Expected {expected}, got {dict(counts)}')
+          if sum(counts[p] for p in ('LAB-4', 'LAB-5', 'LAB-6')) != 390:
+              raise SystemExit('STEP L2 must contain exactly 390 tests.')
+          if sum(counts.values()) != 810:
+              raise SystemExit('L2 closure must preserve exactly 810 cumulative Phase L tests.')
+          PY
+
+      - name: Golden single JSON pipeline
+        run: |
+          flutter test test/features/lab/lab6_studio_pipeline_test.dart \
+            --plain-name "LAB-6 JSON file import 1"
+
+      - name: Admin and learner boundary regressions
+        run: |
+          flutter test test/screens/auth/admin_gate_test.dart
+          flutter test test/screens/navigation
+          flutter test test/screens/settings
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Android debug build
+        run: flutter build apk --debug
+
+      - name: Production web build
+        run: flutter build web --release
+
+      - name: Diff hygiene
+        run: |
+          git diff --check
+          git status --short
