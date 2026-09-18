@@ -1,0 +1,60 @@
+name: Ultra Hard DQG300 Practice
+
+on:
+  push:
+    branches:
+      - feature-ultra-hard-dqg300-practice
+  workflow_dispatch:
+
+jobs:
+  verify-ultra-hard-practice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/models/question_quality_evidence.dart \
+            lib/models/question_quality_validation_result.dart \
+            lib/services/dqg300_question_quality_validator.dart \
+            lib/services/ultra_hard_question_contract.dart \
+            lib/services/question_bank_service.dart \
+            lib/services/studio/studio_question_service.dart \
+            lib/services/studio/studio_ultra_hard_question_publish_service.dart \
+            lib/widgets/admin/study_content/studio_ultra_hard_question_dialog.dart \
+            lib/screens/admin/study_content/study_content_studio_screen.dart \
+            lib/services/practice/practice_mode_service.dart \
+            lib/features/learning_twin/coaching/learning_twin_practice_context.dart \
+            lib/screens/practice/practice_quick_launch_screen.dart \
+            lib/screens/practice/practice_hub_screen.dart \
+            test/services/question_bank_service_ultra_hard_test.dart \
+            test/services/studio_ultra_hard_separation_contract_test.dart \
+            test/services/practice_mode_service_test.dart \
+            test/screens/practice/practice_hub_screen_test.dart \
+            test/screens/practice/practice_quick_launch_screen_test.dart
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run Ultra Hard feature tests
+        run: |
+          flutter test test/services/question_bank_service_ultra_hard_test.dart
+          flutter test test/services/studio_ultra_hard_separation_contract_test.dart
+          flutter test test/services/practice_mode_service_test.dart
+          flutter test test/screens/practice/practice_hub_screen_test.dart
+          flutter test test/screens/practice/practice_quick_launch_screen_test.dart
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
