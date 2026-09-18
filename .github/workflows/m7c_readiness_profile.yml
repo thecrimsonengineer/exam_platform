@@ -1,9 +1,6 @@
 name: M7C Multidimensional Readiness
 
 on:
-  push:
-    branches:
-      - phase-m7-exam-readiness
   workflow_dispatch:
 
 jobs:
