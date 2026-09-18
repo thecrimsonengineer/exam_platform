@@ -187,7 +187,7 @@ void main() {
       date: DateTime(2026, 9, 19),
       generatedAt: DateTime(2026, 9, 18),
       examDate: DateTime(2026, 10, 1),
-      availableMinutes: 90,
+      availableMinutes: 120,
       readinessProfiles: _stableM7eBaseline(
         overrideId: 'd01_c01',
         overrideProfile: m7dProfile(
@@ -274,15 +274,18 @@ void main() {
       );
 
       final readinessRepo = ReadinessSnapshotRepository(userIdOverride: 'u1');
-      await readinessRepo.save(
-        m7dProfile(
+      final baselineProfiles = _stableM7eBaseline(
+        overrideId: 'd03_c02',
+        overrideProfile: m7dProfile(
           readinessState: ReadinessState.strong,
           application: 0.85,
           knowledge: 0.85,
           retention: 0.8,
         ),
-        syncRemote: false,
       );
+      for (final profile in baselineProfiles.values) {
+        await readinessRepo.save(profile, syncRemote: false);
+      }
 
       final dailyRepo = DailyStudyPlanRepository(userIdOverride: 'u1');
       final replanner = PlanReplanningService();
