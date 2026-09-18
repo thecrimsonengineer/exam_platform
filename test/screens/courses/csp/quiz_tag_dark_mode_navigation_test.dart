@@ -54,16 +54,16 @@ void main() {
   test(
     'quiz hierarchy tag tap reads learner theme instead of forcing light',
     () {
-    final source = File(
-      'lib/screens/courses/csp/quiz/quiz_screen.dart',
-    ).readAsStringSync();
+      final source = File(
+        'lib/screens/courses/csp/quiz/quiz_screen.dart',
+      ).readAsStringSync();
 
-    expect(
-      source,
-      contains('final isDarkMode = ThemeModeService.isDarkMode.value;'),
-    );
-    expect(source, contains('builder: (_) => buildCsp11QuizTagDestination('));
-    expect(source, contains('isDarkMode: isDarkMode,'));
+      expect(
+        source,
+        contains('final isDarkMode = ThemeModeService.isDarkMode.value;'),
+      );
+      expect(source, contains('builder: (_) => buildCsp11QuizTagDestination('));
+      expect(source, contains('isDarkMode: isDarkMode,'));
       expect(source, isNot(contains('builder: (_) => StudyContentScreen(')));
     },
   );
@@ -71,18 +71,18 @@ void main() {
   test(
     'dark study destination supports the same topic and subtopic target',
     () {
-    final screen = File(
-      'lib/screens/courses/csp/study_content_screen_dark.dart',
-    ).readAsStringSync();
-    final renderer = File(
-      'lib/widgets/csp/study_content/study_content_renderer_dark.dart',
-    ).readAsStringSync();
+      final screen = File(
+        'lib/screens/courses/csp/study_content_screen_dark.dart',
+      ).readAsStringSync();
+      final renderer = File(
+        'lib/widgets/csp/study_content/study_content_renderer_dark.dart',
+      ).readAsStringSync();
 
-    expect(screen, contains('final String? initialTopicId;'));
-    expect(screen, contains('initialTopicId: widget.initialTopicId'));
-    expect(renderer, contains('final String? initialTopicId;'));
-    expect(renderer, contains('final Map<int, GlobalKey> _topicKeys'));
-    expect(renderer, contains('int? _requestedTopicIndex()'));
+      expect(screen, contains('final String? initialTopicId;'));
+      expect(screen, contains('initialTopicId: widget.initialTopicId'));
+      expect(renderer, contains('final String? initialTopicId;'));
+      expect(renderer, contains('final Map<int, GlobalKey> _topicKeys'));
+      expect(renderer, contains('int? _requestedTopicIndex()'));
       expect(renderer, contains('Scrollable.ensureVisible('));
     },
   );
