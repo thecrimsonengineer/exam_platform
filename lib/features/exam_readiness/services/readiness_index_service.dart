@@ -41,11 +41,18 @@ class ReadinessIndexService {
       ),
     );
 
+    final hasBlueprintCoverageDenominator =
+        dashboard.blueprintCoverage.competenciesTotal > 0 ||
+        dashboard.blueprintCoverage.topicsTotal > 0 ||
+        dashboard.blueprintCoverage.subtopicsTotal > 0;
+
     final components = <String, double?>{
       'knowledgeMastery': dashboard.knowledgeMastery.value,
       'applicationAbility': dashboard.applicationAbility.value,
       'retention': dashboard.retention.value,
-      'blueprintCoverage': dashboard.blueprintCoverage.ratio,
+      'blueprintCoverage': hasBlueprintCoverageDenominator
+          ? dashboard.blueprintCoverage.ratio
+          : null,
       'difficultyPerformance': dashboard.difficultyPerformance.value,
       'competencyBreadth': evidence.assessedCompetencyRatio,
       'recentPerformance': recentPerformance,
