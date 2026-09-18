@@ -1,0 +1,55 @@
+name: M7C Multidimensional Readiness
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+jobs:
+  verify-m7c:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen M7 contract and M7C test floor
+        run: python3 tools/verify_m7_contract.py --phase m7c
+
+      - name: Diff and whitespace audit
+        run: |
+          git diff --check origin/ui-premium-csp-logo...HEAD
+          git diff --name-only origin/ui-premium-csp-logo...HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check M7C formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/models/competency_readiness_profile.dart \
+            lib/features/exam_readiness/services/readiness_profile_service.dart \
+            lib/features/exam_readiness/screens/exam_readiness_profile_screen.dart \
+            lib/features/exam_readiness/screens/exam_readiness_plan_screen.dart \
+            test/features/exam_readiness/m7c
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run M7C targeted tests
+        run: flutter test test/features/exam_readiness/m7c
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release
