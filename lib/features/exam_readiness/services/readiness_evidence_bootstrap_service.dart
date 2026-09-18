@@ -57,12 +57,27 @@ class ReadinessEvidenceBootstrapService {
     );
 
     final attempts = await attemptRepository.loadAll();
-    final scopes = await _buildScopes(attempts);
+    final effectiveNow = now ?? DateTime.now();
+    final existingEvidence = await evidenceRepository.loadLocal();
 
+    if (!_needsRebuild(
+      importedLegacyQuestionCount: imported,
+      attempts: attempts,
+      evidenceByCompetency: existingEvidence,
+      now: effectiveNow,
+    )) {
+      return ReadinessEvidenceBootstrapResult(
+        evidenceByCompetency: existingEvidence,
+        attempts: attempts,
+        importedLegacyQuestionCount: imported,
+      );
+    }
+
+    final scopes = await _buildScopes(attempts);
     final snapshots = aggregationService.buildAllSnapshots(
       attempts: attempts,
       scopes: scopes,
-      now: now ?? DateTime.now(),
+      now: effectiveNow,
     );
 
     await evidenceRepository.clearLocal();
@@ -78,6 +93,58 @@ class ReadinessEvidenceBootstrapService {
       attempts: attempts,
       importedLegacyQuestionCount: imported,
     );
+  }
+
+  bool _needsRebuild({
+    required int importedLegacyQuestionCount,
+    required List<LearnerAssessmentAttempt> attempts,
+    required Map<String, CompetencyEvidenceSnapshot> evidenceByCompetency,
+    required DateTime now,
+  }) {
+    if (importedLegacyQuestionCount > 0) {
+      return true;
+    }
+
+    final represented = <String, List<LearnerAssessmentAttempt>>{};
+    for (final attempt in attempts) {
+      if (!attempt.publishedAtAttempt || !attempt.hasCanonicalCompetencyId) {
+        continue;
+      }
+
+      final competencyId = attempt.competencyId.trim().toLowerCase();
+      if (competencyForId(competencyId) == null) {
+        continue;
+      }
+
+      represented
+          .putIfAbsent(competencyId, () => <LearnerAssessmentAttempt>[])
+          .add(attempt);
+    }
+
+    if (represented.isEmpty) {
+      return false;
+    }
+
+    for (final entry in represented.entries) {
+      final snapshot = evidenceByCompetency[entry.key];
+      if (snapshot == null) {
+        return true;
+      }
+
+      final latestAttempt = entry.value
+          .map((attempt) => attempt.answeredAt)
+          .reduce((left, right) => left.isAfter(right) ? left : right);
+
+      if (latestAttempt.isAfter(snapshot.generatedAt)) {
+        return true;
+      }
+
+      if (now.difference(snapshot.generatedAt).inHours >= 24) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   Future<int> _bridgeLegacyQuestionProgress({
