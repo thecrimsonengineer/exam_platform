@@ -71,16 +71,16 @@ abstract class LabCondition {
             'Compound gate condition requires conditions.',
           );
         }
-        final conditions = rawConditions.map((item) {
-          if (item is! Map) {
-            throw const LabContractException(
-              'Compound gate child must be an object.',
-            );
-          }
-          return LabCondition.fromJson(
-            item.cast<String, Object?>(),
-          );
-        }).toList(growable: false);
+        final conditions = rawConditions
+            .map((item) {
+              if (item is! Map) {
+                throw const LabContractException(
+                  'Compound gate child must be an object.',
+                );
+              }
+              return LabCondition.fromJson(item.cast<String, Object?>());
+            })
+            .toList(growable: false);
         return op == 'AND'
             ? LabAllCondition(conditions)
             : LabAnyCondition(conditions);
@@ -110,10 +110,8 @@ class LabAlwaysCondition extends LabCondition {
 }
 
 class LabBooleanCondition extends LabCondition {
-  LabBooleanCondition({
-    required String stateId,
-    required this.expected,
-  }) : stateId = LabIds.requireCanonical(stateId, 'gate state ID');
+  LabBooleanCondition({required String stateId, required this.expected})
+    : stateId = LabIds.requireCanonical(stateId, 'gate state ID');
 
   final String stateId;
   final bool expected;
@@ -122,9 +120,7 @@ class LabBooleanCondition extends LabCondition {
   bool evaluate(LabState state) {
     final value = state.valueOf(stateId);
     if (value is! bool) {
-      throw LabContractException(
-        '$stateId is not a Boolean state variable.',
-      );
+      throw LabContractException('$stateId is not a Boolean state variable.');
     }
     return value == expected;
   }
@@ -145,9 +141,7 @@ class LabNumericCondition extends LabCondition {
   bool evaluate(LabState state) {
     final current = state.valueOf(stateId);
     if (current is! num) {
-      throw LabContractException(
-        '$stateId is not a numeric state variable.',
-      );
+      throw LabContractException('$stateId is not a numeric state variable.');
     }
 
     return switch (operator) {
@@ -161,11 +155,9 @@ class LabNumericCondition extends LabCondition {
 }
 
 class LabEnumCondition extends LabCondition {
-  LabEnumCondition({
-    required String stateId,
-    required String expected,
-  })  : stateId = LabIds.requireCanonical(stateId, 'gate state ID'),
-        expected = expected.trim() {
+  LabEnumCondition({required String stateId, required String expected})
+    : stateId = LabIds.requireCanonical(stateId, 'gate state ID'),
+      expected = expected.trim() {
     if (this.expected.isEmpty) {
       throw const LabContractException(
         'Enum gate condition requires an expected value.',
@@ -181,15 +173,11 @@ class LabEnumCondition extends LabCondition {
 }
 
 class LabSetContainsCondition extends LabCondition {
-  LabSetContainsCondition({
-    required String stateId,
-    required String member,
-  })  : stateId = LabIds.requireCanonical(stateId, 'gate state ID'),
-        member = member.trim() {
+  LabSetContainsCondition({required String stateId, required String member})
+    : stateId = LabIds.requireCanonical(stateId, 'gate state ID'),
+      member = member.trim() {
     if (this.member.isEmpty) {
-      throw const LabContractException(
-        'Set gate condition requires a member.',
-      );
+      throw const LabContractException('Set gate condition requires a member.');
     }
   }
 
@@ -200,9 +188,7 @@ class LabSetContainsCondition extends LabCondition {
   bool evaluate(LabState state) {
     final value = state.valueOf(stateId);
     if (value is! Iterable) {
-      throw LabContractException(
-        '$stateId is not a set/list state variable.',
-      );
+      throw LabContractException('$stateId is not a set/list state variable.');
     }
     return value.map((item) => item.toString()).contains(member);
   }
@@ -210,7 +196,7 @@ class LabSetContainsCondition extends LabCondition {
 
 class LabAllCondition extends LabCondition {
   LabAllCondition(Iterable<LabCondition> conditions)
-      : conditions = List<LabCondition>.unmodifiable(conditions) {
+    : conditions = List<LabCondition>.unmodifiable(conditions) {
     if (this.conditions.isEmpty) {
       throw const LabContractException(
         'AND condition requires at least one child.',
@@ -227,7 +213,7 @@ class LabAllCondition extends LabCondition {
 
 class LabAnyCondition extends LabCondition {
   LabAnyCondition(Iterable<LabCondition> conditions)
-      : conditions = List<LabCondition>.unmodifiable(conditions) {
+    : conditions = List<LabCondition>.unmodifiable(conditions) {
     if (this.conditions.isEmpty) {
       throw const LabContractException(
         'OR condition requires at least one child.',
@@ -286,9 +272,7 @@ class LabStoryGate {
             type == LabGateType.criticalEvent ||
             type == LabGateType.convergence) &&
         targetNodeId == null) {
-      throw LabContractException(
-        type.toString() + ' requires a target node.',
-      );
+      throw LabContractException(type.toString() + ' requires a target node.');
     }
   }
 
@@ -311,9 +295,7 @@ class LabStoryGate {
       id: json['id']?.toString() ?? '',
       type: parseGateType(json['type']),
       priority: priorityValue,
-      condition: LabCondition.fromJson(
-        rawCondition.cast<String, Object?>(),
-      ),
+      condition: LabCondition.fromJson(rawCondition.cast<String, Object?>()),
       fromNodeId: json['fromNodeId']?.toString(),
       targetNodeId: json['targetNodeId']?.toString(),
       endingId: json['endingId']?.toString(),
@@ -328,10 +310,7 @@ class LabStoryGate {
   final String? targetNodeId;
   final String? endingId;
 
-  bool isEligible({
-    required LabState state,
-    required String currentNodeId,
-  }) {
+  bool isEligible({required LabState state, required String currentNodeId}) {
     if (fromNodeId != null && fromNodeId != currentNodeId) {
       return false;
     }
@@ -371,10 +350,7 @@ class LabGateEvaluator {
 
     final eligible = gates
         .where(
-          (gate) => gate.isEligible(
-            state: state,
-            currentNodeId: currentNodeId,
-          ),
+          (gate) => gate.isEligible(state: state, currentNodeId: currentNodeId),
         )
         .toList(growable: false);
 
@@ -385,14 +361,12 @@ class LabGateEvaluator {
       if (gate.priority > highest) highest = gate.priority;
     }
 
-    final winners =
-        eligible.where((gate) => gate.priority == highest).toList();
+    final winners = eligible.where((gate) => gate.priority == highest).toList();
 
     if (winners.length != 1) {
       final ids = winners.map((gate) => gate.id).toList()..sort();
       throw LabGateAmbiguityException(
-        'Reachable LAB state activates equal-priority gates: ' +
-            ids.join(', '),
+        'Reachable LAB state activates equal-priority gates: ' + ids.join(', '),
       );
     }
 

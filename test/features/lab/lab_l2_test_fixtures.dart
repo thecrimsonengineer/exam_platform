@@ -12,39 +12,28 @@ Map<String, Object?> buildL2Root({
     String route,
     int risk, {
     bool unlockPermit = false,
-  }) =>
-      <String, Object?>{
-        'id': id,
-        'mutations': <Object?>[
-          <String, Object?>{
-            'op': 'SET',
-            'stateId': 'route',
-            'value': route,
-          },
-          <String, Object?>{
-            'op': 'SET',
-            'stateId': 'risk',
-            'value': risk,
-          },
-        ],
-        'evidenceUnlocks':
-            unlockPermit ? <String>['permit'] : <String>[],
-        'simulatedMinutes': 2,
-      };
+  }) => <String, Object?>{
+    'id': id,
+    'mutations': <Object?>[
+      <String, Object?>{'op': 'SET', 'stateId': 'route', 'value': route},
+      <String, Object?>{'op': 'SET', 'stateId': 'risk', 'value': risk},
+    ],
+    'evidenceUnlocks': unlockPermit ? <String>['permit'] : <String>[],
+    'simulatedMinutes': 2,
+  };
 
   Map<String, Object?> option(
     String id,
     String consequenceId,
     String quality, {
     bool best = false,
-  }) =>
-      <String, Object?>{
-        'id': id,
-        'text': 'Authored option ' + id,
-        'isBest': best,
-        'quality': quality,
-        'consequenceId': consequenceId,
-      };
+  }) => <String, Object?>{
+    'id': id,
+    'text': 'Authored option ' + id,
+    'isBest': best,
+    'quality': quality,
+    'consequenceId': consequenceId,
+  };
 
   return <String, Object?>{
     'schemaVersion': 'csp11.lab.v1',
@@ -52,13 +41,10 @@ Map<String, Object?> buildL2Root({
       'id': 'l2_lab',
       'versionId': versionId,
       'title': 'L2 deterministic validation LAB',
-      'description': 'A compact two-decision LAB used to validate the L2 engine.',
+      'description':
+          'A compact two-decision LAB used to validate the L2 engine.',
       'lifecycle': lifecycle,
-      'supportedModes': <String>[
-        'GUIDED',
-        'PROFESSIONAL',
-        'ASSESSMENT',
-      ],
+      'supportedModes': <String>['GUIDED', 'PROFESSIONAL', 'ASSESSMENT'],
       'startingNodeId': 'decision_one',
       'startingState': <String, Object?>{
         'isolated': false,
@@ -68,30 +54,17 @@ Map<String, Object?> buildL2Root({
       },
     },
     'stateSchema': <String, Object?>{
-      'isolated': <String, Object?>{
-        'type': 'BOOLEAN',
-        'irreversible': true,
-      },
-      'risk': <String, Object?>{
-        'type': 'BOUNDED_NUMERIC',
-        'min': 0,
-        'max': 10,
-      },
+      'isolated': <String, Object?>{'type': 'BOOLEAN', 'irreversible': true},
+      'risk': <String, Object?>{'type': 'BOUNDED_NUMERIC', 'min': 0, 'max': 10},
       'route': <String, Object?>{
         'type': 'ENUM',
         'allowedValues': <String>['start', 'safe', 'critical'],
       },
-      'notes': <String, Object?>{
-        'type': 'STRING_SET',
-      },
+      'notes': <String, Object?>{'type': 'STRING_SET'},
     },
     'characters': <Object?>[],
     'evidence': <Object?>[
-      <String, Object?>{
-        'id': 'permit',
-        'type': 'permit',
-        'required': false,
-      },
+      <String, Object?>{'id': 'permit', 'type': 'permit', 'required': false},
     ],
     'consequences': <Object?>[
       consequence('c_safe', 'safe', 1, unlockPermit: true),
@@ -171,27 +144,20 @@ Map<String, Object?> buildL2Root({
   };
 }
 
-String buildL2Source({
-  String versionId = 'v1',
-  String lifecycle = 'DRAFT',
-}) =>
-    jsonEncode(
-      buildL2Root(versionId: versionId, lifecycle: lifecycle),
-    );
+String buildL2Source({String versionId = 'v1', String lifecycle = 'DRAFT'}) =>
+    jsonEncode(buildL2Root(versionId: versionId, lifecycle: lifecycle));
 
 LabPackage buildL2Package({
   String versionId = 'v1',
   String lifecycle = 'DRAFT',
-}) =>
-    LabPackage.decode(
-      buildL2Source(versionId: versionId, lifecycle: lifecycle),
-    );
+}) => LabPackage.decode(
+  buildL2Source(versionId: versionId, lifecycle: lifecycle),
+);
 
 Map<String, Object?> copyL2Root() {
   final decoded = jsonDecode(jsonEncode(buildL2Root()));
   return (decoded as Map).cast<String, Object?>();
 }
 
-Lab1000StudioService buildL2StudioService() => Lab1000StudioService(
-      repository: InMemoryLabPublishedRepository(),
-    );
+Lab1000StudioService buildL2StudioService() =>
+    Lab1000StudioService(repository: InMemoryLabPublishedRepository());

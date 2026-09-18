@@ -54,54 +54,58 @@ void main() {
       expect(committed.decisionHistory, hasLength(1));
       expect(committed.decisionHistory.single.selectedOptionId, option);
       expect(committed.decisionHistory.single.stateBefore['route'], 'start');
-      expect(committed.decisionHistory.single.stateAfter['route'],
-          option == 'o4' ? 'critical' : 'safe');
+      expect(
+        committed.decisionHistory.single.stateAfter['route'],
+        option == 'o4' ? 'critical' : 'safe',
+      );
       expect(committed.revision, 1);
     });
   }
 
   for (var i = 0; i < 10; i++) {
-    test('LAB-4 irreversible duplicate submission ' + (i + 1).toString(),
-        () async {
-      final store = InMemoryLabSessionStore();
-      final engine = LabSessionEngine(store: store);
-      final package = buildL2Package();
-      final original = await engine.startAttempt(
-        package: package,
-        sessionId: 'session_irreversible_' + i.toString(),
-        userId: 'user_1',
-        mode: LabMode.professional,
-      );
+    test(
+      'LAB-4 irreversible duplicate submission ' + (i + 1).toString(),
+      () async {
+        final store = InMemoryLabSessionStore();
+        final engine = LabSessionEngine(store: store);
+        final package = buildL2Package();
+        final original = await engine.startAttempt(
+          package: package,
+          sessionId: 'session_irreversible_' + i.toString(),
+          userId: 'user_1',
+          mode: LabMode.professional,
+        );
 
-      final first = await engine.commitDecision(
-        package: package,
-        session: original,
-        optionId: 'o1',
-        responseTimeMs: 100,
-      );
-      expect(first.decisionHistory, hasLength(1));
-
-      if (i.isEven) {
-        final retry = await engine.commitDecision(
+        final first = await engine.commitDecision(
           package: package,
           session: original,
           optionId: 'o1',
           responseTimeMs: 100,
         );
-        expect(retry.decisionHistory, hasLength(1));
-        expect(retry.revision, 1);
-      } else {
-        await expectLater(
-          engine.commitDecision(
+        expect(first.decisionHistory, hasLength(1));
+
+        if (i.isEven) {
+          final retry = await engine.commitDecision(
             package: package,
             session: original,
-            optionId: 'o2',
+            optionId: 'o1',
             responseTimeMs: 100,
-          ),
-          throwsA(isA<LabSessionException>()),
-        );
-      }
-    });
+          );
+          expect(retry.decisionHistory, hasLength(1));
+          expect(retry.revision, 1);
+        } else {
+          await expectLater(
+            engine.commitDecision(
+              package: package,
+              session: original,
+              optionId: 'o2',
+              responseTimeMs: 100,
+            ),
+            throwsA(isA<LabSessionException>()),
+          );
+        }
+      },
+    );
   }
 
   for (var i = 0; i < 10; i++) {
@@ -226,13 +230,18 @@ void main() {
         timestamp: DateTime.utc(2026, 9, 18, 10, 1),
       );
 
-      expect(session.decisionHistory[0].eventId,
-          session.sessionId + ':event:1');
-      expect(session.decisionHistory[1].eventId,
-          session.sessionId + ':event:2');
       expect(
-        session.decisionHistory[0].timestamp
-            .isBefore(session.decisionHistory[1].timestamp),
+        session.decisionHistory[0].eventId,
+        session.sessionId + ':event:1',
+      );
+      expect(
+        session.decisionHistory[1].eventId,
+        session.sessionId + ':event:2',
+      );
+      expect(
+        session.decisionHistory[0].timestamp.isBefore(
+          session.decisionHistory[1].timestamp,
+        ),
         isTrue,
       );
     });
@@ -292,28 +301,30 @@ void main() {
   }
 
   for (var i = 0; i < 10; i++) {
-    test('LAB-4 idempotent transaction behaviour ' + (i + 1).toString(),
-        () async {
-      final store = InMemoryLabSessionStore();
-      final engine = LabSessionEngine(store: store);
-      final package = buildL2Package();
-      final session = await engine.startAttempt(
-        package: package,
-        sessionId: 'session_idempotent_' + i.toString(),
-        userId: 'user_1',
-        mode: LabMode.professional,
-      );
+    test(
+      'LAB-4 idempotent transaction behaviour ' + (i + 1).toString(),
+      () async {
+        final store = InMemoryLabSessionStore();
+        final engine = LabSessionEngine(store: store);
+        final package = buildL2Package();
+        final session = await engine.startAttempt(
+          package: package,
+          sessionId: 'session_idempotent_' + i.toString(),
+          userId: 'user_1',
+          mode: LabMode.professional,
+        );
 
-      final update = session.copyWith(
-        revision: 1,
-        status: LabSessionStatus.interrupted,
-      );
-      final saved = await store.save(update, expectedRevision: 0);
-      final retry = await store.save(saved, expectedRevision: 0);
+        final update = session.copyWith(
+          revision: 1,
+          status: LabSessionStatus.interrupted,
+        );
+        final saved = await store.save(update, expectedRevision: 0);
+        final retry = await store.save(saved, expectedRevision: 0);
 
-      expect(retry.revision, 1);
-      expect(retry.status, LabSessionStatus.interrupted);
-      expect((await store.load(session.sessionId))!.revision, 1);
-    });
+        expect(retry.revision, 1);
+        expect(retry.status, LabSessionStatus.interrupted);
+        expect((await store.load(session.sessionId))!.revision, 1);
+      },
+    );
   }
 }

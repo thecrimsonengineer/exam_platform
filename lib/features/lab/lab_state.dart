@@ -13,10 +13,7 @@ class LabStateSnapshot {
 }
 
 class LabValueChange {
-  const LabValueChange({
-    required this.before,
-    required this.after,
-  });
+  const LabValueChange({required this.before, required this.after});
 
   final Object? before;
   final Object? after;
@@ -29,10 +26,11 @@ class LabState {
     required Set<String> evidenceUnlocked,
     required Set<String> appliedConsequenceKeys,
     required this.simulatedMinutes,
-  })  : _values = Map<String, Object?>.unmodifiable(values),
-        _evidenceUnlocked = Set<String>.unmodifiable(evidenceUnlocked),
-        _appliedConsequenceKeys =
-            Set<String>.unmodifiable(appliedConsequenceKeys);
+  }) : _values = Map<String, Object?>.unmodifiable(values),
+       _evidenceUnlocked = Set<String>.unmodifiable(evidenceUnlocked),
+       _appliedConsequenceKeys = Set<String>.unmodifiable(
+         appliedConsequenceKeys,
+       );
 
   factory LabState.initial({
     required LabStateRegistry registry,
@@ -88,10 +86,10 @@ class LabState {
       _appliedConsequenceKeys.contains(applicationKey);
 
   LabStateSnapshot get snapshot => LabStateSnapshot(
-        values: Map<String, Object?>.unmodifiable(_values),
-        evidenceUnlocked: Set<String>.unmodifiable(_evidenceUnlocked),
-        simulatedMinutes: simulatedMinutes,
-      );
+    values: Map<String, Object?>.unmodifiable(_values),
+    evidenceUnlocked: Set<String>.unmodifiable(_evidenceUnlocked),
+    simulatedMinutes: simulatedMinutes,
+  );
 
   LabState _replace({
     required Map<String, Object?> values,
@@ -188,10 +186,7 @@ class LabConsequenceEngine {
       }
 
       working[stateId] = normalized;
-      changes[stateId] = LabValueChange(
-        before: beforeValue,
-        after: normalized,
-      );
+      changes[stateId] = LabValueChange(before: beforeValue, after: normalized);
     }
 
     final evidence = Set<String>.from(state.evidenceUnlocked)
@@ -203,8 +198,7 @@ class LabConsequenceEngine {
       values: working,
       evidenceUnlocked: evidence,
       appliedConsequenceKeys: applied,
-      simulatedMinutes:
-          state.simulatedMinutes + consequence.simulatedMinutes,
+      simulatedMinutes: state.simulatedMinutes + consequence.simulatedMinutes,
     );
 
     return LabConsequenceResult(
@@ -264,9 +258,7 @@ class LabConsequenceEngine {
       case LabStateKind.stringList:
         return <String>[...current, value.trim()];
       default:
-        throw LabContractException(
-          definition.id + ' does not support ADD.',
-        );
+        throw LabContractException(definition.id + ' does not support ADD.');
     }
   }
 
@@ -294,9 +286,7 @@ class LabConsequenceEngine {
         current.removeWhere((item) => item == value.trim());
         return current;
       default:
-        throw LabContractException(
-          definition.id + ' does not support REMOVE.',
-        );
+        throw LabContractException(definition.id + ' does not support REMOVE.');
     }
   }
 }

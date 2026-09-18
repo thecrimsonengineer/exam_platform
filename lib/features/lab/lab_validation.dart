@@ -42,11 +42,13 @@ class LabValidationReport {
   bool get hasBlockingIssues => issues.any((issue) => issue.isBlocking);
   bool get isValid => !hasBlockingIssues && deterministic;
 
-  int get errorCount =>
-      issues.where((issue) => issue.severity == LabValidationSeverity.error).length;
+  int get errorCount => issues
+      .where((issue) => issue.severity == LabValidationSeverity.error)
+      .length;
 
-  int get warningCount =>
-      issues.where((issue) => issue.severity == LabValidationSeverity.warning).length;
+  int get warningCount => issues
+      .where((issue) => issue.severity == LabValidationSeverity.warning)
+      .length;
 
   bool hasCode(String code) => issues.any((issue) => issue.code == code);
 }
@@ -68,16 +70,11 @@ class LabSimulationResult {
 }
 
 class LabPathSimulator {
-  const LabPathSimulator({
-    this.runtime = const LabDeterministicRuntime(),
-  });
+  const LabPathSimulator({this.runtime = const LabDeterministicRuntime()});
 
   final LabDeterministicRuntime runtime;
 
-  LabSimulationResult run(
-    LabPackage package, {
-    int limit = 1000,
-  }) {
+  LabSimulationResult run(LabPackage package, {int limit = 1000}) {
     if (limit <= 0) {
       throw const LabContractException(
         'Simulation limit must be greater than zero.',
@@ -153,8 +150,7 @@ class LabPathSimulator {
               state: frame.state,
               node: node,
               optionId: option.id,
-              applicationKey:
-                  frame.pathKey + ':' + node.id + ':' + option.id,
+              applicationKey: frame.pathKey + ':' + node.id + ':' + option.id,
               gates: gates,
               consequenceRegistry: consequences,
             );
@@ -163,7 +159,8 @@ class LabPathSimulator {
               issues.add(
                 LabValidationIssue(
                   code: 'runtime_dead_end',
-                  message: 'Decision \${node.id} option \${option.id} has no eligible Story Gate.',
+                  message:
+                      'Decision \${node.id} option \${option.id} has no eligible Story Gate.',
                   path: 'nodes.\${node.id}.options.\${option.id}',
                 ),
               );
@@ -201,8 +198,7 @@ class LabPathSimulator {
                 nodeId: gate.targetNodeId!,
                 state: result.state,
                 depth: frame.depth + 1,
-                pathKey:
-                    frame.pathKey + '>' + node.id + ':' + option.id,
+                pathKey: frame.pathKey + '>' + node.id + ':' + option.id,
               ),
             );
           } on LabGateAmbiguityException catch (error) {
@@ -332,9 +328,7 @@ class _SimulationFrame {
 }
 
 class LabValidationEngine {
-  const LabValidationEngine({
-    this.simulator = const LabPathSimulator(),
-  });
+  const LabValidationEngine({this.simulator = const LabPathSimulator()});
 
   final LabPathSimulator simulator;
 
@@ -417,16 +411,16 @@ class LabValidationEngine {
   LabValidationReport validatePackage(
     LabPackage package, {
     Map<String, Object?>? root,
-    Iterable<LabValidationIssue> initialIssues =
-        const <LabValidationIssue>[],
+    Iterable<LabValidationIssue> initialIssues = const <LabValidationIssue>[],
     Set<String>? availableAssetIds,
     Set<String>? allowedCompetencyIds,
     int simulationLimit = 1000,
   }) {
     final issues = <LabValidationIssue>[...initialIssues];
     final nodeIds = package.nodes.map((node) => node.id).toSet();
-    final consequenceIds =
-        package.consequences.map((consequence) => consequence.id).toSet();
+    final consequenceIds = package.consequences
+        .map((consequence) => consequence.id)
+        .toSet();
 
     if (consequenceIds.length != package.consequences.length) {
       issues.add(
@@ -468,7 +462,8 @@ class LabValidationEngine {
           issues.add(
             LabValidationIssue(
               code: 'critical_event_prerequisite',
-              message: 'Critical Event Gate \${gate.id} requires an explicit prerequisite condition.',
+              message:
+                  'Critical Event Gate \${gate.id} requires an explicit prerequisite condition.',
               path: 'gates[$index].condition',
             ),
           );
@@ -565,7 +560,8 @@ class LabValidationEngine {
           issues.add(
             LabValidationIssue(
               code: 'consequence_reference',
-              message: 'Option \${option.id} references an unknown consequence.',
+              message:
+                  'Option \${option.id} references an unknown consequence.',
               path: 'nodes.\${node.id}.options.\${option.id}.consequenceId',
             ),
           );
@@ -589,7 +585,8 @@ class LabValidationEngine {
             issues.add(
               LabValidationIssue(
                 code: 'state_reference',
-                message: 'Consequence \${consequence.id} references unknown state $stateId.',
+                message:
+                    'Consequence \${consequence.id} references unknown state $stateId.',
                 path: 'consequences.\${consequence.id}',
               ),
             );
@@ -601,7 +598,8 @@ class LabValidationEngine {
             issues.add(
               LabValidationIssue(
                 code: 'evidence_reference',
-                message: 'Consequence \${consequence.id} unlocks unknown evidence $evidenceId.',
+                message:
+                    'Consequence \${consequence.id} unlocks unknown evidence $evidenceId.',
                 path: 'consequences.\${consequence.id}.evidenceUnlocks',
               ),
             );
@@ -664,16 +662,11 @@ class LabValidationEngine {
         first = simulator.run(package, limit: simulationLimit);
         final second = simulator.run(package, limit: simulationLimit);
         issues.addAll(first.issues);
-        deterministic = first.fingerprint == second.fingerprint &&
+        deterministic =
+            first.fingerprint == second.fingerprint &&
             first.traversalCount == second.traversalCount &&
-            _setEquals(
-              first.reachableNodeIds,
-              second.reachableNodeIds,
-            ) &&
-            _setEquals(
-              first.reachableEndingIds,
-              second.reachableEndingIds,
-            );
+            _setEquals(first.reachableNodeIds, second.reachableNodeIds) &&
+            _setEquals(first.reachableEndingIds, second.reachableEndingIds);
         if (!deterministic) {
           issues.add(
             const LabValidationIssue(
@@ -724,9 +717,9 @@ class LabValidationEngine {
             ),
           );
         } else {
-          final best = options.where(
-            (option) => option is Map && option['isBest'] == true,
-          ).length;
+          final best = options
+              .where((option) => option is Map && option['isBest'] == true)
+              .length;
           if (best != 1) {
             issues.add(
               LabValidationIssue(
@@ -800,8 +793,9 @@ class LabValidationEngine {
       }
     }
 
-    final reachableCompletionSources =
-        completionSources.where(reachable.contains).toSet();
+    final reachableCompletionSources = completionSources
+        .where(reachable.contains)
+        .toSet();
     if (reachableCompletionSources.isEmpty) {
       issues.add(
         const LabValidationIssue(
@@ -823,8 +817,9 @@ class LabValidationEngine {
             : stack.sublist(cycleStart).toSet();
         final hasCompletion = cycle.any(completionSources.contains);
         final exits = cycle.any(
-          (member) => (adjacency[member] ?? const <String>{})
-              .any((target) => !cycle.contains(target)),
+          (member) => (adjacency[member] ?? const <String>{}).any(
+            (target) => !cycle.contains(target),
+          ),
         );
         return !hasCompletion && !exits;
       }
@@ -844,7 +839,8 @@ class LabValidationEngine {
       issues.add(
         const LabValidationIssue(
           code: 'unsafe_cycle',
-          message: 'Reachable graph contains a cycle with no authored exit or ending.',
+          message:
+              'Reachable graph contains a cycle with no authored exit or ending.',
           path: 'gates',
         ),
       );
@@ -866,7 +862,8 @@ class LabValidationEngine {
           issues.add(
             LabValidationIssue(
               code: 'gate_ambiguity',
-              message: 'Always-true gates \${left.id} and \${right.id} share the same priority.',
+              message:
+                  'Always-true gates \${left.id} and \${right.id} share the same priority.',
               path: 'gates',
             ),
           );

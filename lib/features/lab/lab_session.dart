@@ -85,21 +85,21 @@ class LabDecisionEvent {
   final DateTime timestamp;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'eventId': eventId,
-        'nodeId': nodeId,
-        'selectedOptionId': selectedOptionId,
-        if (confidence != null) 'confidence': confidence,
-        'responseTimeMs': responseTimeMs,
-        'stateBefore': stateBefore,
-        'stateDelta': stateDelta,
-        'stateAfter': stateAfter,
-        'consequenceId': consequenceId,
-        'gateTriggered': gateTriggered,
-        'nextNodeId': nextNodeId,
-        'endingId': endingId,
-        'simulatedMinutes': simulatedMinutes,
-        'timestamp': timestamp.toUtc().toIso8601String(),
-      };
+    'eventId': eventId,
+    'nodeId': nodeId,
+    'selectedOptionId': selectedOptionId,
+    if (confidence != null) 'confidence': confidence,
+    'responseTimeMs': responseTimeMs,
+    'stateBefore': stateBefore,
+    'stateDelta': stateDelta,
+    'stateAfter': stateAfter,
+    'consequenceId': consequenceId,
+    'gateTriggered': gateTriggered,
+    'nextNodeId': nextNodeId,
+    'endingId': endingId,
+    'simulatedMinutes': simulatedMinutes,
+    'timestamp': timestamp.toUtc().toIso8601String(),
+  };
 }
 
 class LabSession {
@@ -119,11 +119,12 @@ class LabSession {
     required Iterable<String> appliedConsequenceKeys,
     this.endingId,
     this.revision = 0,
-  })  : stateValues = Map<String, Object?>.unmodifiable(stateValues),
-        evidenceUnlocked = Set<String>.unmodifiable(evidenceUnlocked),
-        decisionHistory = List<LabDecisionEvent>.unmodifiable(decisionHistory),
-        appliedConsequenceKeys =
-            Set<String>.unmodifiable(appliedConsequenceKeys) {
+  }) : stateValues = Map<String, Object?>.unmodifiable(stateValues),
+       evidenceUnlocked = Set<String>.unmodifiable(evidenceUnlocked),
+       decisionHistory = List<LabDecisionEvent>.unmodifiable(decisionHistory),
+       appliedConsequenceKeys = Set<String>.unmodifiable(
+         appliedConsequenceKeys,
+       ) {
     if (sessionId.trim().isEmpty ||
         userId.trim().isEmpty ||
         labId.trim().isEmpty ||
@@ -169,9 +170,8 @@ class LabSession {
       simulatedMinutes: (json['simulatedMinutes'] as num?)?.toInt() ?? 0,
       status: LabSessionStatus.values.firstWhere(
         (item) => item.name == json['status']?.toString(),
-        orElse: () => throw const LabSessionException(
-          'Unknown LAB session status.',
-        ),
+        orElse: () =>
+            throw const LabSessionException('Unknown LAB session status.'),
       ),
       decisionHistory: history.map((item) {
         if (item is! Map) {
@@ -204,23 +204,22 @@ class LabSession {
   final int revision;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'sessionId': sessionId,
-        'userId': userId,
-        'labId': labId,
-        'labVersionId': labVersionId,
-        'mode': mode.name.toUpperCase(),
-        'startedAt': startedAt.toUtc().toIso8601String(),
-        'currentNodeId': currentNodeId,
-        'stateValues': stateValues,
-        'evidenceUnlocked': evidenceUnlocked.toList()..sort(),
-        'simulatedMinutes': simulatedMinutes,
-        'status': status.name,
-        'decisionHistory':
-            decisionHistory.map((event) => event.toJson()).toList(),
-        'appliedConsequenceKeys': appliedConsequenceKeys.toList()..sort(),
-        'endingId': endingId,
-        'revision': revision,
-      };
+    'sessionId': sessionId,
+    'userId': userId,
+    'labId': labId,
+    'labVersionId': labVersionId,
+    'mode': mode.name.toUpperCase(),
+    'startedAt': startedAt.toUtc().toIso8601String(),
+    'currentNodeId': currentNodeId,
+    'stateValues': stateValues,
+    'evidenceUnlocked': evidenceUnlocked.toList()..sort(),
+    'simulatedMinutes': simulatedMinutes,
+    'status': status.name,
+    'decisionHistory': decisionHistory.map((event) => event.toJson()).toList(),
+    'appliedConsequenceKeys': appliedConsequenceKeys.toList()..sort(),
+    'endingId': endingId,
+    'revision': revision,
+  };
 
   String encodeCheckpoint() => jsonEncode(toJson());
 
@@ -267,10 +266,7 @@ class LabSession {
 abstract class LabSessionStore {
   Future<LabSession?> load(String sessionId);
 
-  Future<LabSession> save(
-    LabSession session, {
-    required int? expectedRevision,
-  });
+  Future<LabSession> save(LabSession session, {required int? expectedRevision});
 }
 
 class InMemoryLabSessionStore implements LabSessionStore {
@@ -490,8 +486,7 @@ class LabSessionEngine {
       simulatedMinutes: session.simulatedMinutes,
     );
 
-    final applicationKey =
-        session.sessionId + ':' + session.currentNodeId;
+    final applicationKey = session.sessionId + ':' + session.currentNodeId;
     final resolution = runtime.resolveDecision(
       state: labState,
       node: node,
@@ -530,7 +525,8 @@ class LabSessionEngine {
     };
 
     final event = LabDecisionEvent(
-      eventId: session.sessionId +
+      eventId:
+          session.sessionId +
           ':event:' +
           (session.decisionHistory.length + 1).toString(),
       nodeId: session.currentNodeId,
@@ -559,10 +555,7 @@ class LabSessionEngine {
       evidenceUnlocked: resolution.state.evidenceUnlocked,
       simulatedMinutes: resolution.state.simulatedMinutes,
       status: nextStatus,
-      decisionHistory: <LabDecisionEvent>[
-        ...session.decisionHistory,
-        event,
-      ],
+      decisionHistory: <LabDecisionEvent>[...session.decisionHistory, event],
       appliedConsequenceKeys: resolution.state.appliedConsequenceKeys,
       endingId: gate.endingId,
       revision: session.revision + 1,
@@ -571,10 +564,7 @@ class LabSessionEngine {
     return store.save(updated, expectedRevision: session.revision);
   }
 
-  LabDecisionNode _requireDecisionNode(
-    LabPackage package,
-    String nodeId,
-  ) {
+  LabDecisionNode _requireDecisionNode(LabPackage package, String nodeId) {
     for (final node in package.nodes) {
       if (node.id == nodeId) {
         if (node is LabDecisionNode) return node;

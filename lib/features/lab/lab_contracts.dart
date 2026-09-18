@@ -14,8 +14,9 @@ class LabContractException implements Exception {
 class LabIds {
   LabIds._();
 
-  static final RegExp _canonical =
-      RegExp(r'^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$');
+  static final RegExp _canonical = RegExp(
+    r'^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$',
+  );
 
   static bool isCanonical(String value) => _canonical.hasMatch(value);
 
@@ -183,10 +184,7 @@ LabEndingFamily parseEndingFamily(Object? value) {
 class LabLifecyclePolicy {
   LabLifecyclePolicy._();
 
-  static bool canTransition(
-    LabLifecycleStatus from,
-    LabLifecycleStatus to,
-  ) {
+  static bool canTransition(LabLifecycleStatus from, LabLifecycleStatus to) {
     if (from == to) return true;
     if (from == LabLifecycleStatus.published) return false;
 
@@ -211,9 +209,7 @@ class LabLifecyclePolicy {
 
   static void requireRuntimeMutable(LabLifecycleStatus lifecycle) {
     if (lifecycle == LabLifecycleStatus.published) {
-      throw const LabContractException(
-        'Published LAB versions are immutable.',
-      );
+      throw const LabContractException('Published LAB versions are immutable.');
     }
   }
 }
@@ -238,7 +234,9 @@ class LabStateVariableDefinition {
   }) {
     final canonicalId = LabIds.requireCanonical(id, 'state variable ID');
     final allowed = Set<String>.unmodifiable(
-      allowedValues.map((value) => value.trim()).where((value) => value.isNotEmpty),
+      allowedValues
+          .map((value) => value.trim())
+          .where((value) => value.isNotEmpty),
     );
 
     if (kind == LabStateKind.boundedNumeric) {
@@ -322,24 +320,30 @@ class LabStateVariableDefinition {
         if (value is! Iterable) {
           throw LabContractException('$id requires a string set/list.');
         }
-        final values = value.map((item) {
-          if (item is! String || item.trim().isEmpty) {
-            throw LabContractException('$id requires string members.');
-          }
-          return item.trim();
-        }).toSet().toList()
-          ..sort();
+        final values =
+            value
+                .map((item) {
+                  if (item is! String || item.trim().isEmpty) {
+                    throw LabContractException('$id requires string members.');
+                  }
+                  return item.trim();
+                })
+                .toSet()
+                .toList()
+              ..sort();
         return List<String>.unmodifiable(values);
       case LabStateKind.stringList:
         if (value is! Iterable) {
           throw LabContractException('$id requires a string list.');
         }
-        final values = value.map((item) {
-          if (item is! String || item.trim().isEmpty) {
-            throw LabContractException('$id requires string members.');
-          }
-          return item.trim();
-        }).toList(growable: false);
+        final values = value
+            .map((item) {
+              if (item is! String || item.trim().isEmpty) {
+                throw LabContractException('$id requires string members.');
+              }
+              return item.trim();
+            })
+            .toList(growable: false);
         return List<String>.unmodifiable(values);
     }
   }
@@ -347,11 +351,11 @@ class LabStateVariableDefinition {
 
 class LabStateRegistry {
   LabStateRegistry(Iterable<LabStateVariableDefinition> definitions)
-      : definitions = Map<String, LabStateVariableDefinition>.unmodifiable(
-          <String, LabStateVariableDefinition>{
-            for (final definition in definitions) definition.id: definition,
-          },
-        ) {
+    : definitions = Map<String, LabStateVariableDefinition>.unmodifiable(
+        <String, LabStateVariableDefinition>{
+          for (final definition in definitions) definition.id: definition,
+        },
+      ) {
     if (this.definitions.length != definitions.length) {
       throw const LabContractException(
         'LAB state variable IDs must be unique.',
@@ -406,11 +410,7 @@ class LabStateRegistry {
 }
 
 class LabStateMutation {
-  const LabStateMutation({
-    required this.kind,
-    this.stateId,
-    this.value,
-  });
+  const LabStateMutation({required this.kind, this.stateId, this.value});
 
   factory LabStateMutation.fromJson(Map<String, Object?> json) {
     final kind = parseMutationKind(json['op'] ?? json['kind']);
@@ -437,17 +437,15 @@ class LabConsequence {
     Iterable<String> evidenceUnlocks = const <String>[],
     this.simulatedMinutes = 0,
     this.explicitNoOp = false,
-  })  : id = LabIds.requireCanonical(id, 'consequence ID'),
-        mutations = List<LabStateMutation>.unmodifiable(mutations),
-        evidenceUnlocks = Set<String>.unmodifiable(
-          evidenceUnlocks.map(
-            (value) => LabIds.requireCanonical(value, 'evidence ID'),
-          ),
-        ) {
+  }) : id = LabIds.requireCanonical(id, 'consequence ID'),
+       mutations = List<LabStateMutation>.unmodifiable(mutations),
+       evidenceUnlocks = Set<String>.unmodifiable(
+         evidenceUnlocks.map(
+           (value) => LabIds.requireCanonical(value, 'evidence ID'),
+         ),
+       ) {
     if (simulatedMinutes < 0) {
-      throw const LabContractException(
-        'Simulated time cannot move backwards.',
-      );
+      throw const LabContractException('Simulated time cannot move backwards.');
     }
     if (this.mutations.isEmpty && !explicitNoOp) {
       throw const LabContractException(
@@ -459,16 +457,16 @@ class LabConsequence {
   factory LabConsequence.fromJson(Map<String, Object?> json) {
     final rawMutations = json['mutations'];
     final mutations = rawMutations is Iterable
-        ? rawMutations.map((item) {
-            if (item is! Map) {
-              throw const LabContractException(
-                'Consequence mutation must be an object.',
-              );
-            }
-            return LabStateMutation.fromJson(
-              item.cast<String, Object?>(),
-            );
-          }).toList(growable: false)
+        ? rawMutations
+              .map((item) {
+                if (item is! Map) {
+                  throw const LabContractException(
+                    'Consequence mutation must be an object.',
+                  );
+                }
+                return LabStateMutation.fromJson(item.cast<String, Object?>());
+              })
+              .toList(growable: false)
         : const <LabStateMutation>[];
 
     final evidence = json['evidenceUnlocks'];
@@ -500,10 +498,10 @@ class LabDecisionOption {
     this.consequence,
     Iterable<String> mistakeTags = const <String>[],
     Iterable<String> competencyEvidence = const <String>[],
-  })  : id = LabIds.requireCanonical(id, 'option ID'),
-        text = text.trim(),
-        mistakeTags = Set<String>.unmodifiable(mistakeTags),
-        competencyEvidence = Set<String>.unmodifiable(competencyEvidence) {
+  }) : id = LabIds.requireCanonical(id, 'option ID'),
+       text = text.trim(),
+       mistakeTags = Set<String>.unmodifiable(mistakeTags),
+       competencyEvidence = Set<String>.unmodifiable(competencyEvidence) {
     if (this.text.isEmpty) {
       throw const LabContractException('Decision option text is required.');
     }
@@ -531,9 +529,7 @@ class LabDecisionOption {
           ? json['consequenceId']?.toString()
           : null,
       consequence: consequencePayload is Map
-          ? LabConsequence.fromJson(
-              consequencePayload.cast<String, Object?>(),
-            )
+          ? LabConsequence.fromJson(consequencePayload.cast<String, Object?>())
           : null,
       mistakeTags: mistakeTags is Iterable
           ? mistakeTags.map((item) => item.toString())
@@ -560,11 +556,9 @@ abstract class LabNodeContract {
 }
 
 class LabSceneNode implements LabNodeContract {
-  LabSceneNode({
-    required String id,
-    required String text,
-  })  : id = LabIds.requireCanonical(id, 'scene node ID'),
-        text = text.trim() {
+  LabSceneNode({required String id, required String text})
+    : id = LabIds.requireCanonical(id, 'scene node ID'),
+      text = text.trim() {
     if (this.text.isEmpty) {
       throw const LabContractException('Scene text is required.');
     }
@@ -584,9 +578,9 @@ class LabDecisionNode implements LabNodeContract {
     required String id,
     required String prompt,
     required Iterable<LabDecisionOption> options,
-  })  : id = LabIds.requireCanonical(id, 'decision node ID'),
-        prompt = prompt.trim(),
-        options = List<LabDecisionOption>.unmodifiable(options) {
+  }) : id = LabIds.requireCanonical(id, 'decision node ID'),
+       prompt = prompt.trim(),
+       options = List<LabDecisionOption>.unmodifiable(options) {
     validate();
   }
 
@@ -607,9 +601,7 @@ class LabDecisionNode implements LabNodeContract {
             'Decision option must be an object.',
           );
         }
-        return LabDecisionOption.fromJson(
-          item.cast<String, Object?>(),
-        );
+        return LabDecisionOption.fromJson(item.cast<String, Object?>());
       }),
     );
   }
@@ -666,18 +658,18 @@ class LabMetadata {
     required Map<String, Object?> startingState,
     Iterable<String> competencyMappings = const <String>[],
     Iterable<String> sources = const <String>[],
-  })  : id = LabIds.requireCanonical(id, 'LAB ID'),
-        versionId = LabIds.requireCanonical(versionId, 'LAB version ID'),
-        title = title.trim(),
-        description = description.trim(),
-        supportedModes = Set<LabMode>.unmodifiable(supportedModes),
-        startingNodeId =
-            LabIds.requireCanonical(startingNodeId, 'starting node ID'),
-        startingState =
-            Map<String, Object?>.unmodifiable(startingState),
-        competencyMappings =
-            List<String>.unmodifiable(competencyMappings),
-        sources = List<String>.unmodifiable(sources) {
+  }) : id = LabIds.requireCanonical(id, 'LAB ID'),
+       versionId = LabIds.requireCanonical(versionId, 'LAB version ID'),
+       title = title.trim(),
+       description = description.trim(),
+       supportedModes = Set<LabMode>.unmodifiable(supportedModes),
+       startingNodeId = LabIds.requireCanonical(
+         startingNodeId,
+         'starting node ID',
+       ),
+       startingState = Map<String, Object?>.unmodifiable(startingState),
+       competencyMappings = List<String>.unmodifiable(competencyMappings),
+       sources = List<String>.unmodifiable(sources) {
     if (this.title.isEmpty || this.description.isEmpty) {
       throw const LabContractException(
         'LAB title and description are required.',
@@ -757,28 +749,26 @@ class LabPackage {
     Iterable<LabConsequence> consequences = const <LabConsequence>[],
     Iterable<Map<String, Object?>> gates = const <Map<String, Object?>>[],
     Iterable<Map<String, Object?>> endings = const <Map<String, Object?>>[],
-    Iterable<Map<String, Object?>> characters =
-        const <Map<String, Object?>>[],
+    Iterable<Map<String, Object?>> characters = const <Map<String, Object?>>[],
     Iterable<Map<String, Object?>> evidence = const <Map<String, Object?>>[],
     Map<String, Object?> debrief = const <String, Object?>{},
     Map<String, Object?> learningSignals = const <String, Object?>{},
-  })  : nodes = List<LabNodeContract>.unmodifiable(nodes),
-        consequences = List<LabConsequence>.unmodifiable(consequences),
-        gates = List<Map<String, Object?>>.unmodifiable(
-          gates.map(Map<String, Object?>.unmodifiable),
-        ),
-        endings = List<Map<String, Object?>>.unmodifiable(
-          endings.map(Map<String, Object?>.unmodifiable),
-        ),
-        characters = List<Map<String, Object?>>.unmodifiable(
-          characters.map(Map<String, Object?>.unmodifiable),
-        ),
-        evidence = List<Map<String, Object?>>.unmodifiable(
-          evidence.map(Map<String, Object?>.unmodifiable),
-        ),
-        debrief = Map<String, Object?>.unmodifiable(debrief),
-        learningSignals =
-            Map<String, Object?>.unmodifiable(learningSignals) {
+  }) : nodes = List<LabNodeContract>.unmodifiable(nodes),
+       consequences = List<LabConsequence>.unmodifiable(consequences),
+       gates = List<Map<String, Object?>>.unmodifiable(
+         gates.map(Map<String, Object?>.unmodifiable),
+       ),
+       endings = List<Map<String, Object?>>.unmodifiable(
+         endings.map(Map<String, Object?>.unmodifiable),
+       ),
+       characters = List<Map<String, Object?>>.unmodifiable(
+         characters.map(Map<String, Object?>.unmodifiable),
+       ),
+       evidence = List<Map<String, Object?>>.unmodifiable(
+         evidence.map(Map<String, Object?>.unmodifiable),
+       ),
+       debrief = Map<String, Object?>.unmodifiable(debrief),
+       learningSignals = Map<String, Object?>.unmodifiable(learningSignals) {
     if (schemaVersion != kLabSchemaVersion) {
       throw LabContractException(
         'Unsupported LAB schema version: $schemaVersion',
@@ -831,33 +821,35 @@ class LabPackage {
       return value.cast<String, Object?>();
     }
 
-    final nodes = nodesRaw.map((item) {
-      final node = mapObject(item, 'node');
-      switch (_wireToken(node['type']?.toString() ?? '')) {
-        case 'SCENE':
-          return LabSceneNode(
-            id: node['id']?.toString() ?? '',
-            text: node['text']?.toString() ?? '',
+    final nodes = nodesRaw
+        .map((item) {
+          final node = mapObject(item, 'node');
+          switch (_wireToken(node['type']?.toString() ?? '')) {
+            case 'SCENE':
+              return LabSceneNode(
+                id: node['id']?.toString() ?? '',
+                text: node['text']?.toString() ?? '',
+              );
+            case 'DECISION':
+              return LabDecisionNode.fromJson(node);
+          }
+          throw LabContractException(
+            'Unknown LAB node type: ' + node['type'].toString(),
           );
-        case 'DECISION':
-          return LabDecisionNode.fromJson(node);
-      }
-      throw LabContractException(
-        'Unknown LAB node type: ' + node['type'].toString(),
-      );
-    }).toList(growable: false);
+        })
+        .toList(growable: false);
 
     List<Map<String, Object?>> mapList(Object? value, String label) {
       if (value == null) return const <Map<String, Object?>>[];
       if (value is! Iterable) {
         throw LabContractException('$label must be an array.');
       }
-      return value.map((item) => mapObject(item, label)).toList(growable: false);
+      return value
+          .map((item) => mapObject(item, label))
+          .toList(growable: false);
     }
 
-    final metadata = LabMetadata.fromJson(
-      metadataRaw.cast<String, Object?>(),
-    );
+    final metadata = LabMetadata.fromJson(metadataRaw.cast<String, Object?>());
 
     final topMappings = json['competencyMappings'];
     final topSources = json['sources'];
@@ -905,9 +897,7 @@ class LabPackage {
   factory LabPackage.decode(String source) {
     final decoded = jsonDecode(source);
     if (decoded is! Map) {
-      throw const LabContractException(
-        'LAB JSON root must be an object.',
-      );
+      throw const LabContractException('LAB JSON root must be an object.');
     }
     return LabPackage.fromJson(decoded.cast<String, Object?>());
   }

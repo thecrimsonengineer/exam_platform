@@ -39,7 +39,8 @@ class LabDeterministicRuntime {
     node.validate();
 
     final option = node.requireOption(optionId);
-    final consequence = option.consequence ??
+    final consequence =
+        option.consequence ??
         (option.consequenceId == null
             ? null
             : consequenceRegistry[option.consequenceId]);

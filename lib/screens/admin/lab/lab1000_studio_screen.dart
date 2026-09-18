@@ -114,10 +114,10 @@ class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
   @override
   Widget build(BuildContext context) {
     final workspace = _workspace;
-    final preview =
-        workspace == null ? null : _service.createPreview(workspace);
-    final inspection =
-        workspace == null ? null : _service.inspect(workspace);
+    final preview = workspace == null
+        ? null
+        : _service.createPreview(workspace);
+    final inspection = workspace == null ? null : _service.inspect(workspace);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),

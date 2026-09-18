@@ -141,15 +141,16 @@ void main() {
         state: buildState(),
         consequence: consequence(
           id: 'time_' + i.toString(),
-          mutations: const [
-            LabStateMutation(kind: LabMutationKind.noOp),
-          ],
+          mutations: const [LabStateMutation(kind: LabMutationKind.noOp)],
           evidenceUnlocks: ['evidence_' + i.toString()],
           simulatedMinutes: i,
         ),
         applicationKey: 'time_key_' + i.toString(),
       );
-      expect(result.state.evidenceUnlocked, contains('evidence_' + i.toString()));
+      expect(
+        result.state.evidenceUnlocked,
+        contains('evidence_' + i.toString()),
+      );
       expect(result.state.simulatedMinutes, i);
     });
   }

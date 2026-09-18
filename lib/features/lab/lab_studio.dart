@@ -87,8 +87,7 @@ class LabStudioWorkspace {
       root: root ?? this.root,
       package: package ?? this.package,
       report: report ?? this.report,
-      reviewerId:
-          clearReviewer ? null : (reviewerId ?? this.reviewerId),
+      reviewerId: clearReviewer ? null : (reviewerId ?? this.reviewerId),
       publishedVersion: clearPublishedVersion
           ? null
           : (publishedVersion ?? this.publishedVersion),
@@ -179,12 +178,11 @@ class Lab1000StudioService {
     String source, {
     Set<String>? availableAssetIds,
     Set<String>? allowedCompetencyIds,
-  }) =>
-      importJson(
-        source,
-        availableAssetIds: availableAssetIds,
-        allowedCompetencyIds: allowedCompetencyIds,
-      );
+  }) => importJson(
+    source,
+    availableAssetIds: availableAssetIds,
+    allowedCompetencyIds: allowedCompetencyIds,
+  );
 
   LabStudioWorkspace validate(
     LabStudioWorkspace workspace, {
@@ -201,8 +199,7 @@ class Lab1000StudioService {
   }
 
   LabStudioInspection inspect(LabStudioWorkspace workspace) {
-    String idOf(Map<String, Object?> item) =>
-        item['id']?.toString() ?? '';
+    String idOf(Map<String, Object?> item) => item['id']?.toString() ?? '';
 
     return LabStudioInspection(
       metadata: workspace.package.metadata,
@@ -244,9 +241,7 @@ class Lab1000StudioService {
 
   LabStudioWorkspace requestReview(LabStudioWorkspace workspace) {
     if (workspace.lifecycle != LabLifecycleStatus.draft) {
-      throw const LabStudioException(
-        'Only a DRAFT LAB can enter REVIEW.',
-      );
+      throw const LabStudioException('Only a DRAFT LAB can enter REVIEW.');
     }
     final checked = validate(workspace);
     if (checked.report.hasBlockingIssues) {
@@ -289,9 +284,7 @@ class Lab1000StudioService {
     DateTime? publishedAt,
   }) async {
     if (workspace.lifecycle != LabLifecycleStatus.validated) {
-      throw const LabStudioException(
-        'Only a VALIDATED LAB can be published.',
-      );
+      throw const LabStudioException('Only a VALIDATED LAB can be published.');
     }
     if (workspace.reviewerId == null || workspace.reviewerId!.isEmpty) {
       throw const LabStudioException(
@@ -306,8 +299,10 @@ class Lab1000StudioService {
       );
     }
 
-    final publishedWorkspace =
-        _withLifecycle(checked, LabLifecycleStatus.published);
+    final publishedWorkspace = _withLifecycle(
+      checked,
+      LabLifecycleStatus.published,
+    );
     final version = LabPublishedVersion(
       labId: publishedWorkspace.package.metadata.id,
       versionId: publishedWorkspace.package.metadata.versionId,
@@ -345,10 +340,9 @@ class Lab1000StudioService {
     labMap['lifecycle'] = 'DRAFT';
     mutable['lab'] = labMap;
 
-    return importJson(jsonEncode(mutable)).copyWith(
-      clearReviewer: true,
-      clearPublishedVersion: true,
-    );
+    return importJson(
+      jsonEncode(mutable),
+    ).copyWith(clearReviewer: true, clearPublishedVersion: true);
   }
 
   LabStudioWorkspace _withLifecycle(

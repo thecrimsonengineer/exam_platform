@@ -96,10 +96,10 @@ LabPackage buildPackage({
       quality: index == 0
           ? LabDecisionQuality.optimal
           : index == 1
-              ? LabDecisionQuality.defensible
-              : index == 2
-                  ? LabDecisionQuality.weak
-                  : LabDecisionQuality.critical,
+          ? LabDecisionQuality.defensible
+          : index == 2
+          ? LabDecisionQuality.weak
+          : LabDecisionQuality.critical,
       consequence: LabConsequence(
         id: 'consequence_' + (index + 1).toString(),
         explicitNoOp: true,

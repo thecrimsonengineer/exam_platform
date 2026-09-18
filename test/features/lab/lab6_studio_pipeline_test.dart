@@ -10,8 +10,9 @@ import 'lab_l2_test_fixtures.dart';
 void main() {
   for (var i = 0; i < 10; i++) {
     test('LAB-6 JSON file import ' + (i + 1).toString(), () async {
-      final source =
-          File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync();
+      final source = File(
+        'test/fixtures/lab/l2_valid_lab.json',
+      ).readAsStringSync();
       final service = buildL2StudioService();
       final workspace = service.importJson(source);
 
@@ -67,10 +68,10 @@ void main() {
 
       expect(inspection.metadata.id, 'l2_lab');
       expect(inspection.stateVariableIds, contains('risk'));
-      expect(inspection.nodeIds, containsAll(<String>[
-        'decision_one',
-        'decision_two',
-      ]));
+      expect(
+        inspection.nodeIds,
+        containsAll(<String>['decision_one', 'decision_two']),
+      );
       expect(inspection.gateIds, contains('complete'));
       expect(inspection.endingIds, contains('safe_end'));
     });
@@ -149,13 +150,8 @@ void main() {
   for (var i = 0; i < 10; i++) {
     test('LAB-6 immutable publish ' + (i + 1).toString(), () async {
       final service = buildL2StudioService();
-      final review = service.requestReview(
-        service.importJson(buildL2Source()),
-      );
-      final validated = service.approveReview(
-        review,
-        reviewerId: 'reviewer',
-      );
+      final review = service.requestReview(service.importJson(buildL2Source()));
+      final validated = service.approveReview(review, reviewerId: 'reviewer');
       final published = await service.publish(
         validated,
         publishedAt: DateTime.utc(2026, 9, 18, 15, i),
@@ -175,13 +171,8 @@ void main() {
   for (var i = 0; i < 10; i++) {
     test('LAB-6 version creation ' + (i + 1).toString(), () async {
       final service = buildL2StudioService();
-      final review = service.requestReview(
-        service.importJson(buildL2Source()),
-      );
-      final validated = service.approveReview(
-        review,
-        reviewerId: 'reviewer',
-      );
+      final review = service.requestReview(service.importJson(buildL2Source()));
+      final validated = service.approveReview(review, reviewerId: 'reviewer');
       final published = await service.publish(validated);
       final revision = service.createRevision(
         published,

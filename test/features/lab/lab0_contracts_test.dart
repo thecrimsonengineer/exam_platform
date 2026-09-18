@@ -5,8 +5,16 @@ import 'lab_test_fixtures.dart';
 
 void main() {
   final validIds = [
-    'lab', 'lab_1', 'd01_c01', 'scene.start', 'route-a',
-    'gate_001', 'evidence.sds', 'worker_1', 'state_flag', 'v1',
+    'lab',
+    'lab_1',
+    'd01_c01',
+    'scene.start',
+    'route-a',
+    'gate_001',
+    'evidence.sds',
+    'worker_1',
+    'state_flag',
+    'v1',
   ];
 
   for (var i = 0; i < validIds.length; i++) {
@@ -16,8 +24,16 @@ void main() {
   }
 
   final invalidIds = [
-    '', 'LAB', 'Has Space', '_starts', '-starts',
-    '.starts', 'two..dots', 'slash/id', 'emoji_🧪', 'white space',
+    '',
+    'LAB',
+    'Has Space',
+    '_starts',
+    '-starts',
+    '.starts',
+    'two..dots',
+    'slash/id',
+    'emoji_🧪',
+    'white space',
   ];
 
   for (var i = 0; i < invalidIds.length; i++) {
@@ -74,8 +90,12 @@ void main() {
   }
 
   final stateKinds = [
-    'BOOLEAN', 'BOUNDED_NUMERIC', 'ENUM',
-    'STRING_ID', 'STRING_SET', 'STRING_LIST',
+    'BOOLEAN',
+    'BOUNDED_NUMERIC',
+    'ENUM',
+    'STRING_ID',
+    'STRING_SET',
+    'STRING_LIST',
   ];
   for (var i = 0; i < stateKinds.length; i++) {
     test('LAB-0 state kind ' + (i + 1).toString(), () {

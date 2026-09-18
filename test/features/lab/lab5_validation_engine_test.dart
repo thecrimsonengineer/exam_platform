@@ -13,12 +13,11 @@ List<Object?> _list(Object? value) => (value as List).cast<Object?>();
 LabValidationReport _validate(
   Map<String, Object?> root, {
   Set<String>? assets,
-}) =>
-    const LabValidationEngine().validateSource(
-      jsonEncode(root),
-      availableAssetIds: assets,
-      allowedCompetencyIds: const <String>{'d07_c01'},
-    );
+}) => const LabValidationEngine().validateSource(
+  jsonEncode(root),
+  availableAssetIds: assets,
+  allowedCompetencyIds: const <String>{'d07_c01'},
+);
 
 void main() {
   for (var i = 0; i < 20; i++) {
@@ -80,13 +79,11 @@ void main() {
     test('LAB-5 graph reachability and dead end ' + (i + 1).toString(), () {
       final root = copyL2Root();
       if (i < 10) {
-        _list(root['nodes']).add(
-          <String, Object?>{
-            'id': 'orphan_scene',
-            'type': 'SCENE',
-            'text': 'Unreachable authored scene.',
-          },
-        );
+        _list(root['nodes']).add(<String, Object?>{
+          'id': 'orphan_scene',
+          'type': 'SCENE',
+          'text': 'Unreachable authored scene.',
+        });
         expect(_validate(root).hasCode('orphan_node'), isTrue);
       } else {
         _list(root['gates']).removeAt(2);
@@ -114,16 +111,14 @@ void main() {
   for (var i = 0; i < 20; i++) {
     test('LAB-5 gate ambiguity and priority ' + (i + 1).toString(), () {
       final root = copyL2Root();
-      _list(root['gates']).add(
-        <String, Object?>{
-          'id': 'extra_route',
-          'type': 'ROUTE',
-          'priority': i < 10 ? 10 : 1,
-          'fromNodeId': 'decision_one',
-          'targetNodeId': 'decision_two',
-          'condition': <String, Object?>{'op': 'ALWAYS'},
-        },
-      );
+      _list(root['gates']).add(<String, Object?>{
+        'id': 'extra_route',
+        'type': 'ROUTE',
+        'priority': i < 10 ? 10 : 1,
+        'fromNodeId': 'decision_one',
+        'targetNodeId': 'decision_two',
+        'condition': <String, Object?>{'op': 'ALWAYS'},
+      });
 
       final report = _validate(root);
       if (i < 10) {
@@ -136,31 +131,35 @@ void main() {
   }
 
   for (var i = 0; i < 20; i++) {
-    test('LAB-5 evidence asset competency source validation ' +
-        (i + 1).toString(), () {
-      final root = copyL2Root();
-      final bucket = i % 4;
+    test(
+      'LAB-5 evidence asset competency source validation ' + (i + 1).toString(),
+      () {
+        final root = copyL2Root();
+        final bucket = i % 4;
 
-      if (bucket == 0) {
-        root['evidence'] = <Object?>[];
-        expect(_validate(root).hasCode('evidence_reference'), isTrue);
-      } else if (bucket == 1) {
-        final evidence = _map(_list(root['evidence']).first);
-        evidence['assetId'] = 'permit_asset';
-        evidence['required'] = true;
-        expect(
-          _validate(root, assets: const <String>{})
-              .hasCode('asset_unavailable'),
-          isTrue,
-        );
-      } else if (bucket == 2) {
-        root['competencyMappings'] = <String>['invalid_mapping'];
-        expect(_validate(root).hasCode('competency_mapping'), isTrue);
-      } else {
-        root['sources'] = <String>[];
-        expect(_validate(root).hasCode('source_reference'), isTrue);
-      }
-    });
+        if (bucket == 0) {
+          root['evidence'] = <Object?>[];
+          expect(_validate(root).hasCode('evidence_reference'), isTrue);
+        } else if (bucket == 1) {
+          final evidence = _map(_list(root['evidence']).first);
+          evidence['assetId'] = 'permit_asset';
+          evidence['required'] = true;
+          expect(
+            _validate(
+              root,
+              assets: const <String>{},
+            ).hasCode('asset_unavailable'),
+            isTrue,
+          );
+        } else if (bucket == 2) {
+          root['competencyMappings'] = <String>['invalid_mapping'];
+          expect(_validate(root).hasCode('competency_mapping'), isTrue);
+        } else {
+          root['sources'] = <String>[];
+          expect(_validate(root).hasCode('source_reference'), isTrue);
+        }
+      },
+    );
   }
 
   for (var i = 0; i < 30; i++) {
