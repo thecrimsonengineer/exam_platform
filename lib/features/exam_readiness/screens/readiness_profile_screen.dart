@@ -5,6 +5,7 @@ import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
+import '../repositories/readiness_snapshot_repository.dart';
 import '../services/readiness_profile_service.dart';
 import 'competency_readiness_screen.dart';
 
@@ -14,12 +15,14 @@ class ReadinessProfileScreen extends StatefulWidget {
     this.evidenceRepository,
     this.attemptRepository,
     this.readinessService = const ReadinessProfileService(),
+    this.readinessRepository,
     this.now,
   });
 
   final EvidenceSnapshotRepository? evidenceRepository;
   final LearnerAssessmentAttemptRepository? attemptRepository;
   final ReadinessProfileService readinessService;
+  final ReadinessSnapshotRepository? readinessRepository;
   final DateTime Function()? now;
 
   @override
@@ -39,6 +42,12 @@ class _ReadinessProfileScreenState
 
   LearnerAssessmentAttemptRepository get _attemptRepository =>
       widget.attemptRepository ?? const LearnerAssessmentAttemptRepository();
+
+  ReadinessSnapshotRepository get _readinessRepository =>
+      widget.readinessRepository ??
+      ReadinessSnapshotRepository(
+        remoteStore: FirebaseReadinessSnapshotRemoteStore(),
+      );
 
   DateTime get _now => widget.now?.call() ?? DateTime.now();
 
@@ -61,11 +70,22 @@ class _ReadinessProfileScreenState
 
     final attempts = await _attemptRepository.loadAll();
 
-    return widget.readinessService.buildDashboard(
+    final dashboard = widget.readinessService.buildDashboard(
       evidenceByCompetency: evidence,
       attempts: attempts,
       now: _now,
     );
+
+    try {
+      await _readinessRepository.saveMany(dashboard.profiles.values);
+    } catch (_) {
+      await _readinessRepository.saveMany(
+        dashboard.profiles.values,
+        syncRemote: false,
+      );
+    }
+
+    return dashboard;
   }
 
   Future<void> _refresh() async {
