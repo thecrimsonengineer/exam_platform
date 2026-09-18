@@ -1,0 +1,61 @@
+name: M7A Exam Plan and Capacity
+
+on:
+  push:
+    branches:
+      - phase-m7-exam-readiness
+  workflow_dispatch:
+
+jobs:
+  verify-m7a:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen M7 contract and M7A test floor
+        run: python3 tools/verify_m7_contract.py --phase m7a
+
+      - name: Diff and whitespace audit
+        run: |
+          git diff --check origin/ui-premium-csp-logo...HEAD
+          git diff --name-only origin/ui-premium-csp-logo...HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check M7A formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/models/exam_study_plan.dart \
+            lib/features/exam_readiness/models/study_schedule_exception.dart \
+            lib/features/exam_readiness/models/study_capacity_snapshot.dart \
+            lib/features/exam_readiness/repositories/exam_study_plan_repository.dart \
+            lib/features/exam_readiness/services/exam_study_capacity_service.dart \
+            lib/features/exam_readiness/screens/exam_plan_setup_screen.dart \
+            lib/features/exam_readiness/screens/exam_readiness_plan_screen.dart \
+            test/features/exam_readiness/m7a
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run M7A targeted tests
+        run: flutter test test/features/exam_readiness/m7a
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
