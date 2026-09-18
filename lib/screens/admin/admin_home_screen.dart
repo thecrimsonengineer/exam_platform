@@ -6,7 +6,8 @@ import '../../services/auth/auth_state_service.dart';
 import '../../services/auth/learner_local_identity.dart';
 
 import 'content_repository/content_repository_screen.dart';
-import 'study_content/study_content_studio_screen.dart';\nimport 'lab/lab1000_studio_screen.dart';
+import 'study_content/study_content_studio_screen.dart';
+import 'lab/lab1000_studio_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -38,6 +39,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     _NavItem(Icons.grid_view_rounded, 'Command Center', 'OVERVIEW'),
     _NavItem(Icons.school_rounded, 'Student Portal', 'LEARNING'),
     _NavItem(Icons.auto_awesome_rounded, 'Content Studio', 'CONTENT'),
+    _NavItem(Icons.science_rounded, 'LAB1000 Studio', 'CONTENT'),
     _NavItem(Icons.storage_rounded, 'Repository', 'CONTENT'),
     _NavItem(Icons.publish_rounded, 'Publishing', 'CONTENT'),
     _NavItem(Icons.quiz_rounded, 'Question Bank', 'ASSESSMENT'),
