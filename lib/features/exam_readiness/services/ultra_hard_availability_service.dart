@@ -9,7 +9,10 @@ class UltraHardAvailabilityService {
   final QuizService _quizService;
 
   Future<Set<String>> loadAvailableCompetencyIds() async {
-    await _quizService.initialize();
+    // The learner may publish new DQG300 questions after the shared quiz
+    // catalogue was first initialized. Ultra Hard availability must use the
+    // current published cloud catalogue rather than a stale in-memory copy.
+    await _quizService.refresh();
     return fromQuestions(_quizService.getAllQuestions());
   }
 
