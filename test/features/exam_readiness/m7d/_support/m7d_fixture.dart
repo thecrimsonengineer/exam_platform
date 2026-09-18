@@ -68,9 +68,7 @@ CompetencyReadinessProfile m7dProfile({
         )
         .map((gap) => gap.reasonCode)
         .toList(growable: false),
-    explanationCodes: gaps
-        .map((gap) => gap.reasonCode)
-        .toList(growable: false),
+    explanationCodes: gaps.map((gap) => gap.reasonCode).toList(growable: false),
   );
 }
 

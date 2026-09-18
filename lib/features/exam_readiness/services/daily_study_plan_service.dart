@@ -67,8 +67,7 @@ class DailyStudyPlanService {
           daysUntilExam: daysUntilExam,
           profile: profile,
           ultraHardAvailable: ultraAvailable,
-          recentlyStudied:
-              recentlyStudiedCompetencyIds.contains(competency.id),
+          recentlyStudied: recentlyStudiedCompetencyIds.contains(competency.id),
         );
 
         candidates.add(
@@ -94,9 +93,7 @@ class DailyStudyPlanService {
     final selected = <_Candidate>[];
     for (final candidate in candidates) {
       if (selected.length >= constraints.maxCompetenciesPerDay) break;
-      if (locked.any(
-        (block) => block.competencyId == candidate.competencyId,
-      )) {
+      if (locked.any((block) => block.competencyId == candidate.competencyId)) {
         continue;
       }
       selected.add(candidate);
@@ -138,10 +135,7 @@ class DailyStudyPlanService {
         orElse: () => selected.first,
       );
       final minutes = remaining
-          .clamp(
-            constraints.reviewMinMinutes,
-            constraints.reviewMaxMinutes,
-          )
+          .clamp(constraints.reviewMinMinutes, constraints.reviewMaxMinutes)
           .toInt();
       blocks.add(
         _buildBlock(
@@ -175,10 +169,7 @@ class DailyStudyPlanService {
           ? StudyPlanBlockType.standardPractice
           : StudyPlanBlockType.ultraHardPractice;
       final minutes = remaining
-          .clamp(
-            constraints.practiceMinMinutes,
-            constraints.practiceMaxMinutes,
-          )
+          .clamp(constraints.practiceMinMinutes, constraints.practiceMaxMinutes)
           .toInt();
 
       blocks.add(
@@ -203,10 +194,7 @@ class DailyStudyPlanService {
         selected.isNotEmpty) {
       final candidate = selected[slot % selected.length];
       final minutes = remaining
-          .clamp(
-            constraints.practiceMinMinutes,
-            constraints.practiceMaxMinutes,
-          )
+          .clamp(constraints.practiceMinMinutes, constraints.practiceMaxMinutes)
           .toInt();
       blocks.add(
         _buildBlock(
@@ -340,14 +328,12 @@ class DailyStudyPlanService {
       throw StateError('Started/completed blocks cannot be replaced.');
     }
 
-    final alternativeType =
-        target.type == StudyPlanBlockType.standardPractice
+    final alternativeType = target.type == StudyPlanBlockType.standardPractice
         ? StudyPlanBlockType.mixedRetrieval
         : StudyPlanBlockType.standardPractice;
 
     final replacement = target.copyWith(
-      blockId:
-          '${target.blockId}-replacement-v${plan.planVersion + 1}',
+      blockId: '${target.blockId}-replacement-v${plan.planVersion + 1}',
       type: alternativeType,
       status: StudyPlanBlockStatus.planned,
       createdAt: at,
@@ -517,11 +503,7 @@ class DailyStudyPlanService {
     }
   }
 
-  int _minutesForType(
-    StudyPlanBlockType type,
-    int remaining,
-    int available,
-  ) {
+  int _minutesForType(StudyPlanBlockType type, int remaining, int available) {
     switch (type) {
       case StudyPlanBlockType.learn:
       case StudyPlanBlockType.continueLearning:
@@ -689,11 +671,12 @@ class DailyStudyPlanService {
   String _sourceReadinessVersion(
     Map<String, CompetencyReadinessProfile> profiles,
   ) {
-    final versions = profiles.values
-        .map((profile) => profile.readinessAlgorithmVersion)
-        .toSet()
-        .toList()
-      ..sort();
+    final versions =
+        profiles.values
+            .map((profile) => profile.readinessAlgorithmVersion)
+            .toSet()
+            .toList()
+          ..sort();
     return versions.isEmpty ? 'none' : versions.join('+');
   }
 

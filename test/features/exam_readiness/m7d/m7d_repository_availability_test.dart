@@ -29,10 +29,7 @@ class _FakeRemote implements DailyStudyPlanRemoteStore {
   }
 }
 
-DailyStudyPlan generated({
-  int minutes = 60,
-  DailyStudyPlan? existing,
-}) {
+DailyStudyPlan generated({int minutes = 60, DailyStudyPlan? existing}) {
   const service = DailyStudyPlanService();
   return service.generate(
     userId: 'u1',
@@ -60,19 +57,12 @@ void main() {
 
   group('M7D Ultra Hard availability', () {
     test('four published Ultra Hard questions are insufficient', () {
-      final questions = [
-        for (var i = 0; i < 4; i++) m7dQuestion(id: i + 1),
-      ];
-      expect(
-        UltraHardAvailabilityService.fromQuestions(questions),
-        isEmpty,
-      );
+      final questions = [for (var i = 0; i < 4; i++) m7dQuestion(id: i + 1)];
+      expect(UltraHardAvailabilityService.fromQuestions(questions), isEmpty);
     });
 
     test('five published Ultra Hard questions unlock competency', () {
-      final questions = [
-        for (var i = 0; i < 5; i++) m7dQuestion(id: i + 1),
-      ];
+      final questions = [for (var i = 0; i < 5; i++) m7dQuestion(id: i + 1)];
       expect(
         UltraHardAvailabilityService.fromQuestions(questions),
         contains('d03_c02'),
@@ -81,24 +71,16 @@ void main() {
 
     test('unpublished Ultra Hard questions do not count', () {
       final questions = [
-        for (var i = 0; i < 5; i++)
-          m7dQuestion(id: i + 1, status: 'draft'),
+        for (var i = 0; i < 5; i++) m7dQuestion(id: i + 1, status: 'draft'),
       ];
-      expect(
-        UltraHardAvailabilityService.fromQuestions(questions),
-        isEmpty,
-      );
+      expect(UltraHardAvailabilityService.fromQuestions(questions), isEmpty);
     });
 
     test('ordinary Hard questions do not count as Ultra Hard', () {
       final questions = [
-        for (var i = 0; i < 5; i++)
-          m7dQuestion(id: i + 1, ultraHard: false),
+        for (var i = 0; i < 5; i++) m7dQuestion(id: i + 1, ultraHard: false),
       ];
-      expect(
-        UltraHardAvailabilityService.fromQuestions(questions),
-        isEmpty,
-      );
+      expect(UltraHardAvailabilityService.fromQuestions(questions), isEmpty);
     });
 
     test('four Ultra Hard plus one ordinary Hard remains insufficient', () {
@@ -106,10 +88,7 @@ void main() {
         for (var i = 0; i < 4; i++) m7dQuestion(id: i + 1),
         m7dQuestion(id: 99, ultraHard: false),
       ];
-      expect(
-        UltraHardAvailabilityService.fromQuestions(questions),
-        isEmpty,
-      );
+      expect(UltraHardAvailabilityService.fromQuestions(questions), isEmpty);
     });
 
     test('availability is counted independently by competency', () {
@@ -119,8 +98,7 @@ void main() {
         for (var i = 0; i < 4; i++)
           m7dQuestion(id: 20 + i, competencyId: 'd06_c06'),
       ];
-      final available =
-          UltraHardAvailabilityService.fromQuestions(questions);
+      final available = UltraHardAvailabilityService.fromQuestions(questions);
       expect(available, contains('d03_c02'));
       expect(available, isNot(contains('d06_c06')));
     });
@@ -132,20 +110,15 @@ void main() {
         for (var i = 0; i < 5; i++)
           m7dQuestion(id: 20 + i, competencyId: 'd06_c06'),
       ];
-      final available =
-          UltraHardAvailabilityService.fromQuestions(questions);
+      final available = UltraHardAvailabilityService.fromQuestions(questions);
       expect(available, containsAll(['d03_c02', 'd06_c06']));
     });
 
     test('malformed competency ID cannot become available', () {
       final questions = [
-        for (var i = 0; i < 5; i++)
-          m7dQuestion(id: i + 1, competencyId: 'bad'),
+        for (var i = 0; i < 5; i++) m7dQuestion(id: i + 1, competencyId: 'bad'),
       ];
-      expect(
-        UltraHardAvailabilityService.fromQuestions(questions),
-        isEmpty,
-      );
+      expect(UltraHardAvailabilityService.fromQuestions(questions), isEmpty);
     });
 
     test('classification tag comparison is case-insensitive', () {
@@ -211,19 +184,14 @@ void main() {
       final second = generated(existing: first);
       await repository.savePlan(first, syncRemote: false);
       await repository.savePlan(second, syncRemote: false);
-      final latest = await repository.loadLatestForDate(
-        DateTime(2026, 9, 18),
-      );
+      final latest = await repository.loadLatestForDate(DateTime(2026, 9, 18));
       expect(latest?.planVersion, second.planVersion);
     });
 
     test('latest for another date returns null', () async {
       final repository = DailyStudyPlanRepository(userIdOverride: 'u1');
       await repository.savePlan(generated(), syncRemote: false);
-      expect(
-        await repository.loadLatestForDate(DateTime(2026, 9, 19)),
-        isNull,
-      );
+      expect(await repository.loadLatestForDate(DateTime(2026, 9, 19)), isNull);
     });
 
     test('ownership mismatch is rejected', () async {
@@ -318,10 +286,7 @@ void main() {
       final repository = DailyStudyPlanRepository(userIdOverride: 'u1');
       await repository.savePlan(generated(), syncRemote: false);
       final history = await repository.loadHistory();
-      expect(
-        () => history.add(generated()),
-        throwsUnsupportedError,
-      );
+      expect(() => history.add(generated()), throwsUnsupportedError);
     });
   });
 }

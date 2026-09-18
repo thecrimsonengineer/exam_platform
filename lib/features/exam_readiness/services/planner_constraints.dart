@@ -42,10 +42,7 @@ class DailyPlannerConstraints {
       throw StateError('Planner day limits must be positive.');
     }
     final sum =
-        forwardLearningShare +
-        repairShare +
-        retentionShare +
-        assessmentShare;
+        forwardLearningShare + repairShare + retentionShare + assessmentShare;
     if ((sum - 1.0).abs() > 0.000001) {
       throw StateError('Planner target shares must sum to 1.0.');
     }

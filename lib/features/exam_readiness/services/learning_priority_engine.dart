@@ -98,9 +98,7 @@ class LearningPriorityEngine {
   double _staleness(CompetencyReadinessProfile? profile) {
     if (profile == null) return 0.0;
     if (profile.readinessState == ReadinessState.stale) return 1.0;
-    if (profile.gaps.any(
-      (gap) => gap.type == ReadinessGapType.stalenessGap,
-    )) {
+    if (profile.gaps.any((gap) => gap.type == ReadinessGapType.stalenessGap)) {
       return 0.75;
     }
     return 0.0;

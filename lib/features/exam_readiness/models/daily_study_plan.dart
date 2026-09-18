@@ -181,10 +181,8 @@ class DailyStudyPlan {
         (item) => item.name == json['generationReason']?.toString(),
         orElse: () => DailyStudyPlanGenerationReason.initial,
       ),
-      sourceEvidenceVersion:
-          json['sourceEvidenceVersion']?.toString() ?? '',
-      sourceReadinessVersion:
-          json['sourceReadinessVersion']?.toString() ?? '',
+      sourceEvidenceVersion: json['sourceEvidenceVersion']?.toString() ?? '',
+      sourceReadinessVersion: json['sourceReadinessVersion']?.toString() ?? '',
       blocks: (json['blocks'] is Iterable)
           ? (json['blocks'] as Iterable)
                 .whereType<Map>()

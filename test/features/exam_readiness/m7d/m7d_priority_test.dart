@@ -22,18 +22,14 @@ void main() {
 
     test('very low confidence creates critical debt', () {
       final result = debtService.assess(
-        profile: m7dProfile(
-          evidenceConfidence: EvidenceConfidence.veryLow,
-        ),
+        profile: m7dProfile(evidenceConfidence: EvidenceConfidence.veryLow),
       );
       expect(result.level, EvidenceDebtLevel.critical);
     });
 
     test('low confidence creates high debt', () {
       final result = debtService.assess(
-        profile: m7dProfile(
-          evidenceConfidence: EvidenceConfidence.low,
-        ),
+        profile: m7dProfile(evidenceConfidence: EvidenceConfidence.low),
       );
       expect(
         result.level,
@@ -43,21 +39,14 @@ void main() {
     });
 
     test('missing application evidence creates strong debt signal', () {
-      final result = debtService.assess(
-        profile: m7dProfile(application: null),
-      );
+      final result = debtService.assess(profile: m7dProfile(application: null));
       expect(result.score, greaterThanOrEqualTo(0.9));
       expect(result.reasonCodes, contains('NO_APPLICATION_EVIDENCE'));
     });
 
     test('missing retention evidence creates retention debt reason', () {
-      final result = debtService.assess(
-        profile: m7dProfile(retention: null),
-      );
-      expect(
-        result.reasonCodes,
-        contains('NO_DELAYED_RETENTION_EVIDENCE'),
-      );
+      final result = debtService.assess(profile: m7dProfile(retention: null));
+      expect(result.reasonCodes, contains('NO_DELAYED_RETENTION_EVIDENCE'));
     });
 
     test('missing hard evidence creates hard debt reason', () {
@@ -91,9 +80,7 @@ void main() {
     });
 
     test('low blueprint breadth creates breadth debt reason', () {
-      final result = debtService.assess(
-        profile: m7dProfile(coverage: 0.2),
-      );
+      final result = debtService.assess(profile: m7dProfile(coverage: 0.2));
       expect(result.reasonCodes, contains('INADEQUATE_BLUEPRINT_BREADTH'));
     });
 
@@ -201,19 +188,22 @@ void main() {
       expect(score.reasonCodes, contains('COVERAGE_GAP'));
     });
 
-    test('missing profile contributes evidence debt without fake performance gap', () {
-      final score = engine.score(
-        competencyId: 'd03_c02',
-        domainWeightPercent: 15,
-        daysUntilExam: 60,
-        profile: null,
-        ultraHardAvailable: false,
-      );
-      expect(score.evidenceDebt, 1);
-      expect(score.masteryGap, 0);
-      expect(score.applicationGap, 0);
-      expect(score.retentionRisk, 0);
-    });
+    test(
+      'missing profile contributes evidence debt without fake performance gap',
+      () {
+        final score = engine.score(
+          competencyId: 'd03_c02',
+          domainWeightPercent: 15,
+          daysUntilExam: 60,
+          profile: null,
+          ultraHardAvailable: false,
+        );
+        expect(score.evidenceDebt, 1);
+        expect(score.masteryGap, 0);
+        expect(score.applicationGap, 0);
+        expect(score.retentionRisk, 0);
+      },
+    );
 
     test('stale state contributes staleness', () {
       final score = engine.score(
@@ -313,16 +303,19 @@ void main() {
       expect(score.prerequisiteImportance, 0.8);
     });
 
-    test('Ultra Hard bank plus missing Ultra evidence creates Ultra Hard gap reason', () {
-      final score = engine.score(
-        competencyId: 'd03_c02',
-        domainWeightPercent: 15,
-        daysUntilExam: 60,
-        profile: m7dProfile(ultraHardAccuracy: null),
-        ultraHardAvailable: true,
-      );
-      expect(score.reasonCodes, contains('ULTRA_HARD_GAP'));
-    });
+    test(
+      'Ultra Hard bank plus missing Ultra evidence creates Ultra Hard gap reason',
+      () {
+        final score = engine.score(
+          competencyId: 'd03_c02',
+          domainWeightPercent: 15,
+          daysUntilExam: 60,
+          profile: m7dProfile(ultraHardAccuracy: null),
+          ultraHardAvailable: true,
+        );
+        expect(score.reasonCodes, contains('ULTRA_HARD_GAP'));
+      },
+    );
 
     test('no Ultra Hard bank does not create Ultra Hard gap reason', () {
       final score = engine.score(

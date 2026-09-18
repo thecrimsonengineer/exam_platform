@@ -159,9 +159,7 @@ class StudyPlanBlock {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       startedAt: clearStartedAt ? null : (startedAt ?? this.startedAt),
-      completedAt: clearCompletedAt
-          ? null
-          : (completedAt ?? this.completedAt),
+      completedAt: clearCompletedAt ? null : (completedAt ?? this.completedAt),
       manualChanges: List<StudyPlanManualChange>.unmodifiable(
         manualChanges ?? this.manualChanges,
       ),

@@ -96,8 +96,8 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     String? notice;
 
     try {
-      ultraHardAvailable =
-          await _ultraHardAvailabilityService.loadAvailableCompetencyIds();
+      ultraHardAvailable = await _ultraHardAvailabilityService
+          .loadAvailableCompetencyIds();
     } catch (_) {
       notice =
           'Ultra Hard availability could not be refreshed. '
@@ -120,11 +120,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
     await _dailyPlanRepository.savePlan(plan, syncRemote: false);
 
-    return _TodayPlanViewData(
-      plan: plan,
-      hasExamPlan: true,
-      notice: notice,
-    );
+    return _TodayPlanViewData(plan: plan, hasExamPlan: true, notice: notice);
   }
 
   Future<void> _refreshLocalReadiness() async {
@@ -242,7 +238,11 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                   if (plan.blocks.isEmpty)
                     _NoStudyToday(availableMinutes: plan.availableMinutes)
                   else
-                    for (var index = 0; index < plan.blocks.length; index++) ...[
+                    for (
+                      var index = 0;
+                      index < plan.blocks.length;
+                      index++
+                    ) ...[
                       _PlanBlockCard(
                         block: plan.blocks[index],
                         index: index,
@@ -279,23 +279,18 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                           (current, at) => widget.planService.shortenBlock(
                             current,
                             plan.blocks[index].blockId,
-                            newMinutes:
-                                (plan.blocks[index].plannedMinutes - 5)
-                                    .clamp(
-                                      5,
-                                      plan.blocks[index].plannedMinutes,
-                                    )
-                                    .toInt(),
+                            newMinutes: (plan.blocks[index].plannedMinutes - 5)
+                                .clamp(5, plan.blocks[index].plannedMinutes)
+                                .toInt(),
                             at: at,
                           ),
                         ),
                         onUnavailable: () => _apply(
-                          (current, at) =>
-                              widget.planService.markUnavailable(
-                                current,
-                                plan.blocks[index].blockId,
-                                at: at,
-                              ),
+                          (current, at) => widget.planService.markUnavailable(
+                            current,
+                            plan.blocks[index].blockId,
+                            at: at,
+                          ),
                         ),
                       ),
                       if (index < plan.blocks.length - 1)
@@ -565,9 +560,7 @@ class _WhyThisPlan extends StatelessWidget {
             'WHY THIS PLAN?',
             style: Theme.of(
               context,
-            ).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 10),
           for (var i = 0; i < reasons.length; i++)
@@ -659,10 +652,7 @@ class _ErrorState extends StatelessWidget {
             const SizedBox(height: 12),
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 12),
-            FilledButton.tonal(
-              onPressed: onRetry,
-              child: const Text('Retry'),
-            ),
+            FilledButton.tonal(onPressed: onRetry, child: const Text('Retry')),
           ],
         ),
       ),

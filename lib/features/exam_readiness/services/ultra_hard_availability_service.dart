@@ -18,15 +18,15 @@ class UltraHardAvailabilityService {
 
     for (final question in questions) {
       final competencyId = question.competencyId.trim().toLowerCase();
-      final isPublished =
-          question.status.trim().toLowerCase() == 'published';
+      final isPublished = question.status.trim().toLowerCase() == 'published';
       final isUltraHard = question.tags.any(
         (tag) =>
             tag.trim().toLowerCase() ==
             UltraHardQuestionContract.classificationTag,
       );
-      final isCanonicalCompetency =
-          RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId);
+      final isCanonicalCompetency = RegExp(
+        r'^d\d{2}_c\d{2}$',
+      ).hasMatch(competencyId);
 
       if (!isPublished || !isUltraHard || !isCanonicalCompetency) {
         continue;

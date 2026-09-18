@@ -115,7 +115,10 @@ void main() {
 
     test('every generated block has reason codes', () {
       final plan = generate(minutes: 120);
-      expect(plan.blocks.every((block) => block.reasonCodes.isNotEmpty), isTrue);
+      expect(
+        plan.blocks.every((block) => block.reasonCodes.isNotEmpty),
+        isTrue,
+      );
     });
 
     test('every generated block has reason text', () {
@@ -187,10 +190,7 @@ void main() {
       );
       final plan = generate(
         minutes: 60,
-        profiles: stableProfiles(
-          overrideId: 'd01_c01',
-          overrideProfile: weak,
-        ),
+        profiles: stableProfiles(overrideId: 'd01_c01', overrideProfile: weak),
       );
       final blocks = plan.blocks.where(
         (block) => block.competencyId == 'd01_c01',
@@ -222,10 +222,7 @@ void main() {
       );
       final plan = generate(
         minutes: 60,
-        profiles: stableProfiles(
-          overrideId: 'd01_c01',
-          overrideProfile: weak,
-        ),
+        profiles: stableProfiles(overrideId: 'd01_c01', overrideProfile: weak),
       );
       expect(
         plan.blocks.any(
@@ -281,10 +278,7 @@ void main() {
         ],
       );
       final plan = generate(
-        profiles: stableProfiles(
-          overrideId: 'd01_c01',
-          overrideProfile: stale,
-        ),
+        profiles: stableProfiles(overrideId: 'd01_c01', overrideProfile: stale),
       );
       expect(
         plan.blocks.any(
@@ -396,10 +390,7 @@ void main() {
       );
       final plan = generate(
         minutes: 120,
-        profiles: stableProfiles(
-          overrideId: 'd01_c01',
-          overrideProfile: weak,
-        ),
+        profiles: stableProfiles(overrideId: 'd01_c01', overrideProfile: weak),
       );
       expect(
         plan.blocks.map((block) => block.competencyId).toSet().length,
@@ -408,10 +399,7 @@ void main() {
     });
 
     test('recent-study penalty can move a competency down the plan', () {
-      final normal = generate(
-        minutes: 60,
-        profiles: stableProfiles(),
-      );
+      final normal = generate(minutes: 60, profiles: stableProfiles());
       final recent = generate(
         minutes: 60,
         profiles: stableProfiles(),
@@ -512,29 +500,32 @@ void main() {
       expect(block.reasonCodes, contains('ULTRA_HARD_GAP'));
     });
 
-    test('strong Ultra Hard performance need not schedule Ultra Hard block', () {
-      final profile = m7dProfile(
-        competencyId: 'd01_c01',
-        ultraHardAccuracy: 0.95,
-        application: 0.95,
-      );
-      final plan = generate(
-        minutes: 120,
-        profiles: stableProfiles(
-          overrideId: 'd01_c01',
-          overrideProfile: profile,
-        ),
-        ultra: const {'d01_c01'},
-      );
-      expect(
-        plan.blocks.where(
-          (block) =>
-              block.competencyId == 'd01_c01' &&
-              block.type == StudyPlanBlockType.ultraHardPractice,
-        ),
-        isEmpty,
-      );
-    });
+    test(
+      'strong Ultra Hard performance need not schedule Ultra Hard block',
+      () {
+        final profile = m7dProfile(
+          competencyId: 'd01_c01',
+          ultraHardAccuracy: 0.95,
+          application: 0.95,
+        );
+        final plan = generate(
+          minutes: 120,
+          profiles: stableProfiles(
+            overrideId: 'd01_c01',
+            overrideProfile: profile,
+          ),
+          ultra: const {'d01_c01'},
+        );
+        expect(
+          plan.blocks.where(
+            (block) =>
+                block.competencyId == 'd01_c01' &&
+                block.type == StudyPlanBlockType.ultraHardPractice,
+          ),
+          isEmpty,
+        );
+      },
+    );
   });
 
   group('M7D manual controls and locking', () {
@@ -584,10 +575,7 @@ void main() {
         initial.blocks.first.blockId,
         at: DateTime(2026, 9, 18, 9),
       );
-      expect(
-        changed.blocks.first.status,
-        StudyPlanBlockStatus.movedToTomorrow,
-      );
+      expect(changed.blocks.first.status, StudyPlanBlockStatus.movedToTomorrow);
     });
 
     test('mark unavailable records state', () {
@@ -743,11 +731,7 @@ void main() {
         at: DateTime(2026, 9, 18, 9),
       );
       expect(
-        () => generate(
-          minutes: 5,
-          existing: started,
-          service: service,
-        ),
+        () => generate(minutes: 5, existing: started, service: service),
         throwsStateError,
       );
     });
@@ -756,11 +740,8 @@ void main() {
       const service = DailyStudyPlanService();
       final initial = generate(service: service);
       expect(
-        () => service.skipBlock(
-          initial,
-          'missing',
-          at: DateTime(2026, 9, 18, 9),
-        ),
+        () =>
+            service.skipBlock(initial, 'missing', at: DateTime(2026, 9, 18, 9)),
         throwsStateError,
       );
     });
@@ -768,17 +749,13 @@ void main() {
 
   group('M7D centralized constraints', () {
     test('default constraints validate', () {
-      expect(
-        () => const DailyPlannerConstraints().validate(),
-        returnsNormally,
-      );
+      expect(() => const DailyPlannerConstraints().validate(), returnsNormally);
     });
 
     test('invalid share sum is rejected', () {
       expect(
-        () => const DailyPlannerConstraints(
-          forwardLearningShare: 0.5,
-        ).validate(),
+        () =>
+            const DailyPlannerConstraints(forwardLearningShare: 0.5).validate(),
         throwsStateError,
       );
     });
@@ -795,24 +772,18 @@ void main() {
 
     test('zero max competencies is rejected', () {
       expect(
-        () => const DailyPlannerConstraints(
-          maxCompetenciesPerDay: 0,
-        ).validate(),
+        () =>
+            const DailyPlannerConstraints(maxCompetenciesPerDay: 0).validate(),
         throwsStateError,
       );
     });
 
     test('custom maximum competencies is honored', () {
       const service = DailyStudyPlanService(
-        constraints: DailyPlannerConstraints(
-          maxCompetenciesPerDay: 1,
-        ),
+        constraints: DailyPlannerConstraints(maxCompetenciesPerDay: 1),
       );
       final plan = generate(minutes: 60, service: service);
-      expect(
-        plan.blocks.map((block) => block.competencyId).toSet().length,
-        1,
-      );
+      expect(plan.blocks.map((block) => block.competencyId).toSet().length, 1);
     });
   });
 }

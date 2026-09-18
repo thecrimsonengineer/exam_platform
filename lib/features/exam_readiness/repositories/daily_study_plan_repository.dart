@@ -75,9 +75,7 @@ class DailyStudyPlanRepository {
       'csp11.student.$userId.exam_readiness.daily_study_plans.v1';
 
   String _requireUserId() =>
-      LearnerLocalIdentity.requireCurrentUserId(
-        userIdOverride: userIdOverride,
-      );
+      LearnerLocalIdentity.requireCurrentUserId(userIdOverride: userIdOverride);
 
   Future<List<DailyStudyPlan>> loadHistory() async {
     final userId = _requireUserId();
@@ -96,9 +94,7 @@ class DailyStudyPlanRepository {
       for (final item in decoded) {
         if (item is! Map) continue;
         try {
-          final plan = DailyStudyPlan.fromJson(
-            Map<String, dynamic>.from(item),
-          );
+          final plan = DailyStudyPlan.fromJson(Map<String, dynamic>.from(item));
           if (plan.userId == userId) plans.add(plan);
         } catch (_) {
           // Preserve other valid local versions.
@@ -120,10 +116,11 @@ class DailyStudyPlanRepository {
       await refreshFromRemote();
     }
 
-    final matches = (await loadHistory())
-        .where((plan) => _sameDay(plan.date, date))
-        .toList()
-      ..sort(_newestFirst);
+    final matches =
+        (await loadHistory())
+            .where((plan) => _sameDay(plan.date, date))
+            .toList()
+          ..sort(_newestFirst);
 
     return matches.isEmpty ? null : matches.first;
   }
@@ -138,10 +135,7 @@ class DailyStudyPlanRepository {
     return plans;
   }
 
-  Future<void> savePlan(
-    DailyStudyPlan plan, {
-    bool syncRemote = true,
-  }) async {
+  Future<void> savePlan(DailyStudyPlan plan, {bool syncRemote = true}) async {
     plan.validate();
 
     final userId = _requireUserId();
@@ -152,13 +146,11 @@ class DailyStudyPlanRepository {
     final history = (await loadHistory()).toList();
     final sameVersion = history.where(
       (item) =>
-          item.planId == plan.planId &&
-          item.planVersion == plan.planVersion,
+          item.planId == plan.planId && item.planVersion == plan.planVersion,
     );
 
     if (sameVersion.isNotEmpty) {
-      if (jsonEncode(sameVersion.first.toJson()) !=
-          jsonEncode(plan.toJson())) {
+      if (jsonEncode(sameVersion.first.toJson()) != jsonEncode(plan.toJson())) {
         throw StateError('Daily plan history is immutable.');
       }
       return;
@@ -179,10 +171,7 @@ class DailyStudyPlanRepository {
     await prefs.remove(storageKeyForUser(userId));
   }
 
-  Future<void> _saveLocal(
-    String userId,
-    Iterable<DailyStudyPlan> plans,
-  ) async {
+  Future<void> _saveLocal(String userId, Iterable<DailyStudyPlan> plans) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       storageKeyForUser(userId),

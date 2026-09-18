@@ -43,7 +43,8 @@ DailyStudyPlan plan({
 }) {
   final values = blocks ?? [block(minutes: 15), block(id: 'b2', minutes: 10)];
   final minutes =
-      allocated ?? values.fold<int>(0, (sum, item) => sum + item.plannedMinutes);
+      allocated ??
+      values.fold<int>(0, (sum, item) => sum + item.plannedMinutes);
   return DailyStudyPlan(
     planId: 'm7d-u1-20260918',
     userId: 'u1',
@@ -117,17 +118,11 @@ void main() {
     });
 
     test('started block is locked', () {
-      expect(
-        block(status: StudyPlanBlockStatus.started).isLocked,
-        isTrue,
-      );
+      expect(block(status: StudyPlanBlockStatus.started).isLocked, isTrue);
     });
 
     test('completed block is locked', () {
-      expect(
-        block(status: StudyPlanBlockStatus.completed).isLocked,
-        isTrue,
-      );
+      expect(block(status: StudyPlanBlockStatus.completed).isLocked, isTrue);
     });
 
     test('skipped block remains editable history state', () {
@@ -149,10 +144,7 @@ void main() {
     test('block preserves started timestamp through JSON', () {
       final at = DateTime(2026, 9, 18, 9);
       final decoded = StudyPlanBlock.fromJson(
-        block(
-          status: StudyPlanBlockStatus.started,
-          startedAt: at,
-        ).toJson(),
+        block(status: StudyPlanBlockStatus.started, startedAt: at).toJson(),
       );
       expect(decoded.startedAt, at);
     });
@@ -160,20 +152,14 @@ void main() {
     test('block preserves completed timestamp through JSON', () {
       final at = DateTime(2026, 9, 18, 10);
       final decoded = StudyPlanBlock.fromJson(
-        block(
-          status: StudyPlanBlockStatus.completed,
-          completedAt: at,
-        ).toJson(),
+        block(status: StudyPlanBlockStatus.completed, completedAt: at).toJson(),
       );
       expect(decoded.completedAt, at);
     });
 
     test('unknown block type falls back to recovery', () {
       final json = block().toJson()..['type'] = 'mystery';
-      expect(
-        StudyPlanBlock.fromJson(json).type,
-        StudyPlanBlockType.recovery,
-      );
+      expect(StudyPlanBlock.fromJson(json).type, StudyPlanBlockType.recovery);
     });
 
     test('unknown block status falls back to planned', () {
@@ -190,7 +176,10 @@ void main() {
     });
 
     test('copyWith can shorten minutes', () {
-      expect(block(minutes: 20).copyWith(plannedMinutes: 10).plannedMinutes, 10);
+      expect(
+        block(minutes: 20).copyWith(plannedMinutes: 10).plannedMinutes,
+        10,
+      );
     });
 
     test('copyWith can add manual changes', () {
@@ -244,18 +233,12 @@ void main() {
     });
 
     test('negative available minutes are rejected', () {
-      expect(
-        () => plan(available: -1).validate(),
-        throwsStateError,
-      );
+      expect(() => plan(available: -1).validate(), throwsStateError);
     });
 
     test('duplicate block IDs are rejected', () {
       final duplicate = [block(id: 'same'), block(id: 'same')];
-      expect(
-        () => plan(blocks: duplicate).validate(),
-        throwsStateError,
-      );
+      expect(() => plan(blocks: duplicate).validate(), throwsStateError);
     });
 
     test('empty reason codes are rejected', () {
@@ -273,10 +256,7 @@ void main() {
     });
 
     test('allocated sum mismatch is rejected', () {
-      expect(
-        () => plan(allocated: 50).validate(),
-        throwsStateError,
-      );
+      expect(() => plan(allocated: 50).validate(), throwsStateError);
     });
 
     test('plan round trips through JSON', () {
