@@ -116,15 +116,12 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
       return;
     }
 
-    final declaredMinutes = int.tryParse(
-      _customMinutesController.text.trim(),
-    );
+    final declaredMinutes = int.tryParse(_customMinutesController.text.trim());
     if (declaredMinutes == null ||
         declaredMinutes <= 0 ||
         declaredMinutes > 1440) {
       setState(
-        () => _error =
-            'Daily study time must be between 1 and 1440 minutes.',
+        () => _error = 'Daily study time must be between 1 and 1440 minutes.',
       );
       return;
     }
@@ -265,8 +262,8 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
                                 : (_) {
                                     setState(() {
                                       _minutesPerDay = minutes;
-                                      _customMinutesController.text =
-                                          minutes.toString();
+                                      _customMinutesController.text = minutes
+                                          .toString();
                                     });
                                   },
                           ),
@@ -279,9 +276,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
                     controller: _customMinutesController,
                     enabled: !_saving,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(
                       labelText: 'Custom daily capacity',
                       hintText: 'Enter minutes',
@@ -293,9 +288,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
                     ),
                     onChanged: (value) {
                       final minutes = int.tryParse(value);
-                      if (minutes == null ||
-                          minutes <= 0 ||
-                          minutes > 1440) {
+                      if (minutes == null || minutes <= 0 || minutes > 1440) {
                         return;
                       }
                       setState(() => _minutesPerDay = minutes);
