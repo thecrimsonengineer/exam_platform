@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:exam_platform/features/exam_readiness/models/daily_study_plan.dart';
-import 'package:exam_platform/features/exam_readiness/models/study_plan_block.dart';
 import 'package:exam_platform/features/exam_readiness/repositories/daily_study_plan_repository.dart';
 import 'package:exam_platform/features/exam_readiness/services/daily_study_plan_service.dart';
 import 'package:exam_platform/features/exam_readiness/services/ultra_hard_availability_service.dart';
