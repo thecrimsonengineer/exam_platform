@@ -38,9 +38,7 @@ class StudyScheduleException {
     if ((type == StudyScheduleExceptionType.overrideMinutes ||
             type == StudyScheduleExceptionType.extraStudyDay) &&
         overrideMinutes == null) {
-      throw ArgumentError(
-        '${type.name} requires overrideMinutes.',
-      );
+      throw ArgumentError('${type.name} requires overrideMinutes.');
     }
 
     return StudyScheduleException(
@@ -84,9 +82,7 @@ class StudyScheduleException {
     }
 
     if (type == null) {
-      throw FormatException(
-        'Unknown study schedule exception type: $rawType',
-      );
+      throw FormatException('Unknown study schedule exception type: $rawType');
     }
 
     final rawOverride = json['overrideMinutes'];

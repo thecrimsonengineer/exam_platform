@@ -124,9 +124,7 @@ class ExamStudyPlanRepository {
         }
 
         try {
-          final plan = ExamStudyPlan.fromJson(
-            Map<String, dynamic>.from(item),
-          );
+          final plan = ExamStudyPlan.fromJson(Map<String, dynamic>.from(item));
           if (plan.userId == userId && plan.id.isNotEmpty) {
             plans.add(plan);
           }
@@ -142,9 +140,7 @@ class ExamStudyPlanRepository {
     }
   }
 
-  Future<ExamStudyPlan?> loadActivePlan({
-    bool refreshRemote = false,
-  }) async {
+  Future<ExamStudyPlan?> loadActivePlan({bool refreshRemote = false}) async {
     if (refreshRemote && _remoteStore != null) {
       await refreshFromRemote();
     }
@@ -165,10 +161,7 @@ class ExamStudyPlanRepository {
     return _newestActive(remotePlans);
   }
 
-  Future<void> savePlan(
-    ExamStudyPlan plan, {
-    bool syncRemote = true,
-  }) async {
+  Future<void> savePlan(ExamStudyPlan plan, {bool syncRemote = true}) async {
     final userId = _requireUserId();
     if (plan.userId != userId) {
       throw StateError(
@@ -185,12 +178,7 @@ class ExamStudyPlanRepository {
       }
 
       if (plan.active && existing.active) {
-        next.add(
-          existing.copyWith(
-            active: false,
-            updatedAt: plan.updatedAt,
-          ),
-        );
+        next.add(existing.copyWith(active: false, updatedAt: plan.updatedAt));
       } else {
         next.add(existing);
       }

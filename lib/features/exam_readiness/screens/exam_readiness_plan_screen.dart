@@ -7,11 +7,7 @@ import '../services/exam_study_capacity_service.dart';
 import 'exam_plan_setup_screen.dart';
 
 class ExamReadinessPlanScreen extends StatefulWidget {
-  const ExamReadinessPlanScreen({
-    super.key,
-    this.repository,
-    this.now,
-  });
+  const ExamReadinessPlanScreen({super.key, this.repository, this.now});
 
   final ExamStudyPlanRepository? repository;
   final DateTime Function()? now;
@@ -28,9 +24,7 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
 
   ExamStudyPlanRepository get _repository =>
       widget.repository ??
-      ExamStudyPlanRepository(
-        remoteStore: FirebaseExamStudyPlanRemoteStore(),
-      );
+      ExamStudyPlanRepository(remoteStore: FirebaseExamStudyPlanRemoteStore());
 
   DateTime get _now => widget.now?.call() ?? DateTime.now();
 
@@ -45,9 +39,7 @@ class _ExamReadinessPlanScreenState extends State<ExamReadinessPlanScreen> {
     String? syncNotice;
 
     try {
-      plan = await _repository.loadActivePlan(
-        refreshRemote: refreshRemote,
-      );
+      plan = await _repository.loadActivePlan(refreshRemote: refreshRemote);
     } catch (_) {
       plan = await _repository.loadActivePlan();
       syncNotice =
@@ -204,10 +196,7 @@ class _ExamHero extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            scheme.primaryContainer,
-            scheme.secondaryContainer,
-          ],
+          colors: [scheme.primaryContainer, scheme.secondaryContainer],
         ),
         borderRadius: BorderRadius.circular(24),
       ),
@@ -418,13 +407,9 @@ class _PlanDetails extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Text(
-            'Days: ${weekdays.map(_weekday).join(', ')}',
-          ),
+          Text('Days: ${weekdays.map(_weekday).join(', ')}'),
           const SizedBox(height: 6),
-          Text(
-            'Default: ${plan.defaultMinutesPerStudyDay} min per study day',
-          ),
+          Text('Default: ${plan.defaultMinutesPerStudyDay} min per study day'),
           const SizedBox(height: 6),
           Text('Plan version: ${plan.planVersion}'),
         ],
@@ -516,10 +501,7 @@ class _ErrorState extends StatelessWidget {
               key: const ValueKey('m7a-plan-load-error'),
             ),
             const SizedBox(height: 12),
-            FilledButton.tonal(
-              onPressed: onRetry,
-              child: const Text('Retry'),
-            ),
+            FilledButton.tonal(onPressed: onRetry, child: const Text('Retry')),
           ],
         ),
       ),
@@ -528,11 +510,7 @@ class _ErrorState extends StatelessWidget {
 }
 
 class _M7APlanViewData {
-  const _M7APlanViewData({
-    this.plan,
-    this.snapshot,
-    this.notice,
-  });
+  const _M7APlanViewData({this.plan, this.snapshot, this.notice});
 
   final ExamStudyPlan? plan;
   final StudyCapacitySnapshot? snapshot;

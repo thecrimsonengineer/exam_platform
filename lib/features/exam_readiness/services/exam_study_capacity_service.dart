@@ -79,8 +79,7 @@ class ExamStudyCapacityService {
       plannedMinutesRemaining: totalMinutes,
       studyDaysThisWeek: studyDaysThisWeek,
       minutesThisWeek: minutesThisWeek,
-      averageMinutesPerStudyDay:
-          studyDays == 0 ? 0 : totalMinutes / studyDays,
+      averageMinutesPerStudyDay: studyDays == 0 ? 0 : totalMinutes / studyDays,
       weeksRemaining: daysRemaining / 7,
       examTimeHorizon: _horizon(daysRemaining),
       schemaVersion: StudyCapacitySnapshot.currentSchemaVersion,
@@ -94,9 +93,7 @@ class ExamStudyCapacityService {
   }) {
     final day = ExamStudyPlan.dateOnly(date);
     final dailyExceptions = exceptions
-        .where(
-          (exception) => _dateKey(exception.date) == _dateKey(day),
-        )
+        .where((exception) => _dateKey(exception.date) == _dateKey(day))
         .toList(growable: false);
 
     if (dailyExceptions.any((exception) => exception.removesStudy)) {
@@ -121,8 +118,7 @@ class ExamStudyCapacityService {
     final intensive = dailyExceptions
         .where(
           (exception) =>
-              exception.type ==
-              StudyScheduleExceptionType.intensiveRevisionDay,
+              exception.type == StudyScheduleExceptionType.intensiveRevisionDay,
         )
         .toList(growable: false);
 

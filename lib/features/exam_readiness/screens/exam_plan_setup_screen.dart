@@ -41,8 +41,7 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
     super.initState();
     final existing = widget.initialPlan;
     final today = ExamStudyPlan.dateOnly(_now);
-    _examDate =
-        existing?.examDate ?? today.add(const Duration(days: 90));
+    _examDate = existing?.examDate ?? today.add(const Duration(days: 90));
     _studyDays = Set<int>.from(
       existing?.studyDaysOfWeek ??
           const {
@@ -74,8 +73,8 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
   ExamStudyPlan _draftPlan() {
     final existing = widget.initialPlan;
     final now = _now;
-    final userId = existing?.userId ??
-        LearnerLocalIdentity.requireCurrentUserId();
+    final userId =
+        existing?.userId ?? LearnerLocalIdentity.requireCurrentUserId();
 
     if (existing != null) {
       return existing.nextVersion(
@@ -234,9 +233,8 @@ class _ExamPlanSetupScreenState extends State<ExamPlanSetupScreen> {
                             selected: _minutesPerDay == minutes,
                             onSelected: _saving
                                 ? null
-                                : (_) => setState(
-                                    () => _minutesPerDay = minutes,
-                                  ),
+                                : (_) =>
+                                      setState(() => _minutesPerDay = minutes),
                           ),
                         )
                         .toList(),
@@ -335,10 +333,7 @@ class _CapacityPreview extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            scheme.primaryContainer,
-            scheme.secondaryContainer,
-          ],
+          colors: [scheme.primaryContainer, scheme.secondaryContainer],
         ),
         borderRadius: BorderRadius.circular(22),
       ),

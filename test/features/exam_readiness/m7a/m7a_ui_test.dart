@@ -143,10 +143,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const ValueKey('m7a-create-plan')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const ValueKey('m7a-create-plan')), findsOneWidget);
       expect(find.text('Create your exam readiness plan'), findsOneWidget);
     });
 
@@ -213,7 +210,10 @@ void main() {
         find.byKey(const ValueKey('m7a-no-readiness-claim')),
         findsOneWidget,
       );
-      expect(find.textContaining('calculates time and capacity only'), findsOneWidget);
+      expect(
+        find.textContaining('calculates time and capacity only'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('saved plan screen supports dark theme', (tester) async {

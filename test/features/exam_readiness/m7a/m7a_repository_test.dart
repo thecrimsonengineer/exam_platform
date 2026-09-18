@@ -35,9 +35,7 @@ class _FakeRemote implements ExamStudyPlanRemoteStore {
     plans = plans
         .map(
           (plan) =>
-              plan.userId == userId &&
-                  plan.id != activePlanId &&
-                  plan.active
+              plan.userId == userId && plan.id != activePlanId && plan.active
               ? plan.copyWith(active: false)
               : plan,
         )
@@ -59,10 +57,7 @@ ExamStudyPlan _plan({
     defaultMinutesPerStudyDay: 60,
     now: updatedAt ?? DateTime(2026, 9, 18, 10),
   );
-  return plan.copyWith(
-    active: active,
-    updatedAt: updatedAt ?? plan.updatedAt,
-  );
+  return plan.copyWith(active: active, updatedAt: updatedAt ?? plan.updatedAt);
 }
 
 void main() {
@@ -161,10 +156,7 @@ void main() {
       final r1 = ExamStudyPlanRepository(userIdOverride: 'u1');
       final r2 = ExamStudyPlanRepository(userIdOverride: 'u2');
       await r1.savePlan(_plan(userId: 'u1'), syncRemote: false);
-      await r2.savePlan(
-        _plan(id: 'u2-plan', userId: 'u2'),
-        syncRemote: false,
-      );
+      await r2.savePlan(_plan(id: 'u2-plan', userId: 'u2'), syncRemote: false);
 
       await r1.clearLocalPlans();
 
@@ -174,12 +166,7 @@ void main() {
 
     test('refreshFromRemote writes remote plans into local cache', () async {
       final remote = _FakeRemote()
-        ..plans = [
-          _plan(
-            id: 'remote',
-            updatedAt: DateTime(2026, 9, 20),
-          ),
-        ];
+        ..plans = [_plan(id: 'remote', updatedAt: DateTime(2026, 9, 20))];
       final repository = ExamStudyPlanRepository(
         userIdOverride: 'u1',
         remoteStore: remote,
@@ -192,16 +179,19 @@ void main() {
       expect((await repository.loadLocalPlans()).single.id, 'remote');
     });
 
-    test('loadActivePlan does not hit remote unless refresh requested', () async {
-      final remote = _FakeRemote()..plans = [_plan(id: 'remote')];
-      final repository = ExamStudyPlanRepository(
-        userIdOverride: 'u1',
-        remoteStore: remote,
-      );
+    test(
+      'loadActivePlan does not hit remote unless refresh requested',
+      () async {
+        final remote = _FakeRemote()..plans = [_plan(id: 'remote')];
+        final repository = ExamStudyPlanRepository(
+          userIdOverride: 'u1',
+          remoteStore: remote,
+        );
 
-      expect(await repository.loadActivePlan(), isNull);
-      expect(remote.loadCalls, 0);
-    });
+        expect(await repository.loadActivePlan(), isNull);
+        expect(remote.loadCalls, 0);
+      },
+    );
 
     test('loadActivePlan refresh flag explicitly hits remote', () async {
       final remote = _FakeRemote()..plans = [_plan(id: 'remote')];

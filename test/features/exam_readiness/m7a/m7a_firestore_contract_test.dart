@@ -16,17 +16,11 @@ void main() {
     });
 
     test('exam plan reads require self or admin', () {
-      expect(
-        rules,
-        contains('allow get, list: if isSelf(uid) || isAdmin();'),
-      );
+      expect(rules, contains('allow get, list: if isSelf(uid) || isAdmin();'));
     });
 
     test('learner create requires owned exam-plan validation', () {
-      expect(
-        rules,
-        contains('isSelf(uid) && validOwnedExamPlan(uid, planId)'),
-      );
+      expect(rules, contains('isSelf(uid) && validOwnedExamPlan(uid, planId)'));
     });
 
     test('learner update preserves immutable ownership fields', () {
@@ -34,10 +28,7 @@ void main() {
         rules,
         contains('request.resource.data.userId == resource.data.userId'),
       );
-      expect(
-        rules,
-        contains('request.resource.data.id == resource.data.id'),
-      );
+      expect(rules, contains('request.resource.data.id == resource.data.id'));
       expect(
         rules,
         contains('request.resource.data.createdAt == resource.data.createdAt'),
@@ -55,10 +46,7 @@ void main() {
     });
 
     test('global Firestore fallback remains fail closed', () {
-      expect(
-        rules,
-        contains('allow read, write: if false;'),
-      );
+      expect(rules, contains('allow read, write: if false;'));
     });
   });
 }

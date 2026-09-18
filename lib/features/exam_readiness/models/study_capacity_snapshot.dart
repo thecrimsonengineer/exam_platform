@@ -84,9 +84,7 @@ class StudyCapacitySnapshot {
       plannedMinutesRemaining: _asInt(json['plannedMinutesRemaining']),
       studyDaysThisWeek: _asInt(json['studyDaysThisWeek']),
       minutesThisWeek: _asInt(json['minutesThisWeek']),
-      averageMinutesPerStudyDay: _asDouble(
-        json['averageMinutesPerStudyDay'],
-      ),
+      averageMinutesPerStudyDay: _asDouble(json['averageMinutesPerStudyDay']),
       weeksRemaining: _asDouble(json['weeksRemaining']),
       examTimeHorizon: horizon,
       schemaVersion: _asInt(

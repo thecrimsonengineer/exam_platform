@@ -233,8 +233,7 @@ class ExamStudyPlan {
       intensity: intensity ?? this.intensity,
       preferredSessionLength:
           preferredSessionLength ?? this.preferredSessionLength,
-      preferredStartPeriod:
-          preferredStartPeriod ?? this.preferredStartPeriod,
+      preferredStartPeriod: preferredStartPeriod ?? this.preferredStartPeriod,
       adaptiveSchedulingEnabled:
           adaptiveSchedulingEnabled ?? this.adaptiveSchedulingEnabled,
       source: source ?? this.source,

@@ -171,10 +171,7 @@ void main() {
         plan: _plan(),
         date: DateTime(2026, 9, 21),
         exceptions: [
-          _exception(
-            DateTime(2026, 9, 21),
-            StudyScheduleExceptionType.travel,
-          ),
+          _exception(DateTime(2026, 9, 21), StudyScheduleExceptionType.travel),
         ],
       );
 
@@ -186,10 +183,7 @@ void main() {
         plan: _plan(),
         date: DateTime(2026, 9, 21),
         exceptions: [
-          _exception(
-            DateTime(2026, 9, 21),
-            StudyScheduleExceptionType.leave,
-          ),
+          _exception(DateTime(2026, 9, 21), StudyScheduleExceptionType.leave),
         ],
       );
 
@@ -201,10 +195,7 @@ void main() {
         plan: _plan(),
         date: DateTime(2026, 9, 21),
         exceptions: [
-          _exception(
-            DateTime(2026, 9, 21),
-            StudyScheduleExceptionType.holiday,
-          ),
+          _exception(DateTime(2026, 9, 21), StudyScheduleExceptionType.holiday),
         ],
       );
 
@@ -433,10 +424,7 @@ void main() {
       );
 
       expect(evening.calendarDaysRemaining, morning.calendarDaysRemaining);
-      expect(
-        evening.plannedMinutesRemaining,
-        morning.plannedMinutesRemaining,
-      );
+      expect(evening.plannedMinutesRemaining, morning.plannedMinutesRemaining);
     });
 
     test('snapshot round trips through JSON', () {
@@ -448,10 +436,7 @@ void main() {
       final decoded = StudyCapacitySnapshot.fromJson(snapshot.toJson());
 
       expect(decoded.calendarDaysRemaining, snapshot.calendarDaysRemaining);
-      expect(
-        decoded.plannedMinutesRemaining,
-        snapshot.plannedMinutesRemaining,
-      );
+      expect(decoded.plannedMinutesRemaining, snapshot.plannedMinutesRemaining);
       expect(decoded.examTimeHorizon, snapshot.examTimeHorizon);
     });
   });

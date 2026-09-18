@@ -91,17 +91,11 @@ void main() {
     });
 
     test('rejects invalid day-specific weekday', () {
-      expect(
-        () => _plan(daySpecific: const {8: 45}),
-        throwsArgumentError,
-      );
+      expect(() => _plan(daySpecific: const {8: 45}), throwsArgumentError);
     });
 
     test('rejects non-positive day-specific minutes', () {
-      expect(
-        () => _plan(daySpecific: const {1: 0}),
-        throwsArgumentError,
-      );
+      expect(() => _plan(daySpecific: const {1: 0}), throwsArgumentError);
     });
 
     test('uses default minutes on selected study day', () {
