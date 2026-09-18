@@ -73,7 +73,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('1/47 competencies'), findsOneWidget);
+      expect(
+        find.text('1/47 competencies currently have assessment evidence.'),
+        findsOneWidget,
+      );
 
       final row = find.byKey(const ValueKey('m7c-competency-d03_c02'));
       await tester.scrollUntilVisible(row, 800);
