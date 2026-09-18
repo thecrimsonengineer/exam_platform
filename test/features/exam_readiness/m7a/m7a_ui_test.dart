@@ -49,6 +49,11 @@ class _PermissionDeniedRemote implements ExamStudyPlanRemoteStore {
   }
 }
 
+Finder _setupScrollable() => find.descendant(
+  of: find.byKey(const ValueKey('m7a-setup-list')),
+  matching: find.byType(Scrollable),
+);
+
 Widget _app(Widget home, {bool dark = false}) {
   return MaterialApp(
     theme: dark ? ThemeData.dark() : ThemeData.light(),
@@ -95,7 +100,11 @@ void main() {
       );
 
       final preview = find.byKey(const ValueKey('m7a-capacity-preview'));
-      await tester.scrollUntilVisible(preview, 260);
+      await tester.scrollUntilVisible(
+        preview,
+        260,
+        scrollable: _setupScrollable(),
+      );
       await tester.pump();
 
       expect(preview, findsOneWidget);
@@ -170,12 +179,20 @@ void main() {
       );
 
       final custom = find.byKey(const ValueKey('m7a-custom-minutes'));
-      await tester.scrollUntilVisible(custom, 260);
+      await tester.scrollUntilVisible(
+        custom,
+        260,
+        scrollable: _setupScrollable(),
+      );
       await tester.enterText(custom, '360');
       await tester.pump();
 
       final save = find.byKey(const ValueKey('m7a-save-plan'));
-      await tester.scrollUntilVisible(save, 260);
+      await tester.scrollUntilVisible(
+        save,
+        260,
+        scrollable: _setupScrollable(),
+      );
       await tester.tap(save);
       await tester.pumpAndSettle();
 
@@ -198,12 +215,20 @@ void main() {
       );
 
       final custom = find.byKey(const ValueKey('m7a-custom-minutes'));
-      await tester.scrollUntilVisible(custom, 260);
+      await tester.scrollUntilVisible(
+        custom,
+        260,
+        scrollable: _setupScrollable(),
+      );
       await tester.enterText(custom, '1441');
       await tester.pump();
 
       final save = find.byKey(const ValueKey('m7a-save-plan'));
-      await tester.scrollUntilVisible(save, 260);
+      await tester.scrollUntilVisible(
+        save,
+        260,
+        scrollable: _setupScrollable(),
+      );
       await tester.tap(save);
       await tester.pump();
 
@@ -415,7 +440,11 @@ void main() {
         );
 
         final save = find.byKey(const ValueKey('m7a-save-plan'));
-        await tester.scrollUntilVisible(save, 300);
+        await tester.scrollUntilVisible(
+          save,
+          300,
+          scrollable: _setupScrollable(),
+        );
         await tester.tap(save);
         await tester.pumpAndSettle();
 
