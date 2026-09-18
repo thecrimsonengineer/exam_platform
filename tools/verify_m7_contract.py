@@ -18,12 +18,14 @@ PHASE_TEST_DIRS = {
     "m7a": ROOT / "test/features/exam_readiness/m7a",
     "m7b": ROOT / "test/features/exam_readiness/m7b",
     "m7c": ROOT / "test/features/exam_readiness/m7c",
+    "m7d": ROOT / "test/features/exam_readiness/m7d",
 }
 
 PHASE_MIN_TESTS = {
     "m7a": 40,
     "m7b": 100,
     "m7c": 100,
+    "m7d": 100,
 }
 
 PHASE_REQUIRED_FILES = {
@@ -52,6 +54,18 @@ PHASE_REQUIRED_FILES = {
         "lib/features/exam_readiness/services/readiness_gap_service.dart",
         "lib/features/exam_readiness/screens/readiness_profile_screen.dart",
         "lib/features/exam_readiness/screens/competency_readiness_screen.dart",
+    ],
+    "m7d": [
+        "lib/features/exam_readiness/models/daily_study_plan.dart",
+        "lib/features/exam_readiness/models/study_plan_block.dart",
+        "lib/features/exam_readiness/models/learning_priority_score.dart",
+        "lib/features/exam_readiness/repositories/daily_study_plan_repository.dart",
+        "lib/features/exam_readiness/services/evidence_debt_service.dart",
+        "lib/features/exam_readiness/services/learning_priority_engine.dart",
+        "lib/features/exam_readiness/services/planner_constraints.dart",
+        "lib/features/exam_readiness/services/daily_study_plan_service.dart",
+        "lib/features/exam_readiness/services/ultra_hard_availability_service.dart",
+        "lib/features/exam_readiness/screens/todays_plan_screen.dart",
     ],
 }
 
@@ -200,18 +214,71 @@ def verify_phase(phase: str) -> None:
         )
 
 
+    if phase == "m7d":
+        planner = read(
+            ROOT / "lib/features/exam_readiness/services/daily_study_plan_service.dart"
+        )
+        block_model = read(
+            ROOT / "lib/features/exam_readiness/models/study_plan_block.dart"
+        )
+        plan_model = read(
+            ROOT / "lib/features/exam_readiness/models/daily_study_plan.dart"
+        )
+        availability = read(
+            ROOT / "lib/features/exam_readiness/services/ultra_hard_availability_service.dart"
+        )
+        repository = read(
+            ROOT / "lib/features/exam_readiness/repositories/daily_study_plan_repository.dart"
+        )
+
+        require(
+            "StudyPlanBlockType.diagnostic" in planner
+            and "Repair cannot be scheduled for unknown evidence" in planner,
+            "M7D diagnostic-vs-repair safety gate is missing",
+        )
+        require(
+            "Ultra Hard block requires a published DQG300 Ultra Hard bank" in planner,
+            "M7D Ultra Hard generation gate is missing",
+        )
+        require(
+            "UltraHardQuestionContract.classificationTag" in availability
+            and "entry.value >= 5" in availability,
+            "M7D Ultra Hard availability is not tied to the published DQG300 lane",
+        )
+        require(
+            "reasonCodes" in block_model and "reasonText" in block_model,
+            "M7D blocks are not explainable",
+        )
+        require(
+            "bool get isLocked" in block_model,
+            "M7D block locking contract is missing",
+        )
+        require(
+            "allocatedMinutes > availableMinutes" in plan_model,
+            "M7D capacity invariant is missing",
+        )
+        require(
+            "Daily plan history is immutable" in repository,
+            "M7D immutable plan history guard is missing",
+        )
+        require(
+            "Started/completed block was silently replaced" in planner,
+            "M7D started-block regeneration guard is missing",
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--phase",
-        choices=("pre", "m7a", "m7b", "m7c"),
+        choices=("pre", "m7a", "m7b", "m7c", "m7d"),
         default="pre",
     )
     args = parser.parse_args()
 
     verify_frozen_contract()
 
-    ordered = ("m7a", "m7b", "m7c")
+    ordered = ("m7a", "m7b", "m7c", "m7d")
     if args.phase != "pre":
         target = ordered.index(args.phase)
         for phase in ordered[: target + 1]:
