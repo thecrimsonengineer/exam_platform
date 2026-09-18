@@ -70,16 +70,20 @@ void main() {
   testWidgets('Exam Readiness entry opens the readiness plan route', (
     tester,
   ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1200, 2200);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await pumpHub(tester, brightness: Brightness.light);
 
-    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
-    await tester.scrollUntilVisible(entry, 500);
-    await tester.pump();
+    final entry = find.byKey(
+      const ValueKey('practice-hub-exam-readiness'),
+    );
+    expect(entry, findsOneWidget);
+    expect(find.text('Exam Readiness'), findsOneWidget);
 
-    final tappable = find.descendant(of: entry, matching: find.byType(InkWell));
-    expect(tappable, findsOneWidget);
-
-    await tester.tap(tappable);
+    await tester.tap(find.text('Exam Readiness'));
     await tester.pump();
 
     expect(find.byType(ExamReadinessPlanScreen), findsOneWidget);
