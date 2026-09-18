@@ -38,7 +38,7 @@ class StudyNotesScreen extends StatelessWidget {
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: Card(
+                  child: StudentGlassCard(
                     elevation: 3,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
