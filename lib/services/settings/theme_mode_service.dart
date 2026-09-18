@@ -3,10 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Persists and broadcasts the learner-facing dark-mode choice.
 ///
-/// The root MaterialApp follows this notifier, so learner pages and pushed
-/// routes inherit the same persisted light/dark preference. Individual screens
-/// should use Theme.of(context) and the active ColorScheme rather than forcing
-/// light-only surface colors.
+/// BottomNavigationScreen follows this notifier for the learner workspace.
+/// Pushed learner routes that support dark mode preserve the active ThemeData.
+/// Individual screens should use Theme.of(context) and the active ColorScheme
+/// rather than forcing light-only surface colors.
 class ThemeModeService {
   ThemeModeService._();
 
