@@ -6,7 +6,7 @@ import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 
 class LearningTwinCard extends StatelessWidget {
-  const LearningTwinStudentGlassCard({
+  const LearningTwinCard({
     super.key,
     required this.title,
     required this.message,
