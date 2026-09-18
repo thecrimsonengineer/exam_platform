@@ -43,6 +43,8 @@ final class LearningTwinPracticeMessageBridge {
         'm6-pre-practice-weak-fallback-v1',
       LearningTwinPracticeMode.weakAreas => 'm6-pre-practice-weak-$scope-v1',
       LearningTwinPracticeMode.customQuiz => 'm6-pre-practice-custom-$scope-v1',
+      LearningTwinPracticeMode.ultraHardExamReadiness =>
+        'm6-pre-practice-ultra-hard-$scope-v1',
     };
   }
 
@@ -54,6 +56,8 @@ final class LearningTwinPracticeMessageBridge {
       LearningTwinPracticeMode.dailyChallenge => LearningTwinState.encourage,
       LearningTwinPracticeMode.randomQuiz => LearningTwinState.encourage,
       LearningTwinPracticeMode.customQuiz => LearningTwinState.recommend,
+      LearningTwinPracticeMode.ultraHardExamReadiness =>
+        LearningTwinState.encourage,
     };
   }
 
@@ -64,6 +68,7 @@ final class LearningTwinPracticeMessageBridge {
       LearningTwinPracticeMode.dailyChallenge => 60,
       LearningTwinPracticeMode.customQuiz => 50,
       LearningTwinPracticeMode.randomQuiz => 40,
+      LearningTwinPracticeMode.ultraHardExamReadiness => 75,
     };
   }
 
@@ -76,6 +81,8 @@ final class LearningTwinPracticeMessageBridge {
       LearningTwinPracticeMode.weakAreas =>
         'Reinforce Domain ${_domainLabel(context.domainNumber)}',
       LearningTwinPracticeMode.customQuiz => 'Your practice plan',
+      LearningTwinPracticeMode.ultraHardExamReadiness =>
+        'Exam readiness stress-test',
     };
   }
 
@@ -106,6 +113,10 @@ final class LearningTwinPracticeMessageBridge {
         'You built a $count-question session from the published CSP11 '
             'scope you selected. Use each explanation to check the reasoning '
             'behind your answer.',
+      LearningTwinPracticeMode.ultraHardExamReadiness =>
+        'This $count-question readiness session uses only published '
+            'questions that cleared the strict DQG300 gate. Treat each item '
+            'as an exam-level decision and check the reasoning after you commit.',
     };
   }
 
