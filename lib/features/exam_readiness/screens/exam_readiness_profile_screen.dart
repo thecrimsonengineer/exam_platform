@@ -1,5 +1,6 @@
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
+import '../repositories/readiness_snapshot_repository.dart';
 import '../services/readiness_profile_service.dart';
 import 'readiness_profile_screen.dart';
 
@@ -10,11 +11,13 @@ class ExamReadinessProfileScreen extends ReadinessProfileScreen {
     EvidenceSnapshotRepository? evidenceRepository,
     LearnerAssessmentAttemptRepository? attemptRepository,
     ReadinessProfileService readinessService = const ReadinessProfileService(),
+    ReadinessSnapshotRepository? readinessRepository,
     DateTime Function()? now,
   }) : super(
          evidenceRepository: evidenceRepository,
          attemptRepository: attemptRepository,
          readinessService: readinessService,
+         readinessRepository: readinessRepository,
          now: now,
        );
 }
