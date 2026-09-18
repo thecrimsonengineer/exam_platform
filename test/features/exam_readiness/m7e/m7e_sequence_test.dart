@@ -189,12 +189,14 @@ void main() {
       examDate: DateTime(2026, 10, 1),
       availableMinutes: 90,
       readinessProfiles: _stableM7eBaseline(
-        overrideId: 'd03_c02',
+        overrideId: 'd01_c01',
         overrideProfile: m7dProfile(
+          competencyId: 'd01_c01',
           difficulty: 0.35,
           ultraHardAccuracy: 0.2,
           gaps: [
             m7dGap(
+              competencyId: 'd01_c01',
               type: ReadinessGapType.difficultyGap,
               severity: ReadinessGapSeverity.high,
               reasonCode: 'ULTRA_HARD_GAP',
@@ -202,7 +204,7 @@ void main() {
           ],
         ),
       ),
-      ultraHardAvailableCompetencyIds: {'d03_c02'},
+      ultraHardAvailableCompetencyIds: {'d01_c01'},
       generationReason:
           PlanRegenerationReason.majorPerformanceShift.dailyPlanReason,
     );
