@@ -24,6 +24,36 @@ import 'widgets/feedback/reference_card.dart';
 import 'widgets/header/quiz_header.dart';
 import 'widgets/question/question_card.dart';
 
+Widget buildCsp11QuizTagDestination({
+  required bool isDarkMode,
+  required String domainId,
+  required String competencyId,
+  required String domainTitle,
+  required String loadingTitle,
+  String? initialTopicId,
+  String? initialSubtopicId,
+}) {
+  if (isDarkMode) {
+    return DarkStudyContentScreen(
+      domainId: domainId,
+      competencyId: competencyId,
+      domainTitle: domainTitle,
+      loadingTitle: loadingTitle,
+      initialTopicId: initialTopicId,
+      initialSubtopicId: initialSubtopicId,
+    );
+  }
+
+  return StudyContentScreen(
+    domainId: domainId,
+    competencyId: competencyId,
+    domainTitle: domainTitle,
+    loadingTitle: loadingTitle,
+    initialTopicId: initialTopicId,
+    initialSubtopicId: initialSubtopicId,
+  );
+}
+
 class QuizScreen extends StatefulWidget {
   final int domain;
   final String? quizId;
@@ -239,23 +269,15 @@ class _QuizScreenState extends State<QuizScreen> {
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => isDarkMode
-            ? DarkStudyContentScreen(
-                domainId: domainId,
-                competencyId: competencyId,
-                domainTitle: csp11QuizDomainTitle(question.domain),
-                loadingTitle: competencyId.toUpperCase(),
-                initialTopicId: initialTopicId,
-                initialSubtopicId: initialSubtopicId,
-              )
-            : StudyContentScreen(
-                domainId: domainId,
-                competencyId: competencyId,
-                domainTitle: csp11QuizDomainTitle(question.domain),
-                loadingTitle: competencyId.toUpperCase(),
-                initialTopicId: initialTopicId,
-                initialSubtopicId: initialSubtopicId,
-              ),
+        builder: (_) => buildCsp11QuizTagDestination(
+          isDarkMode: isDarkMode,
+          domainId: domainId,
+          competencyId: competencyId,
+          domainTitle: csp11QuizDomainTitle(question.domain),
+          loadingTitle: competencyId.toUpperCase(),
+          initialTopicId: initialTopicId,
+          initialSubtopicId: initialSubtopicId,
+        ),
       ),
     );
   }
