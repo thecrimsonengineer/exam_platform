@@ -2860,3 +2860,35 @@ The defining M7 quality standard is:
 > CSP11 must never manufacture certainty. It must distinguish strong evidence, weak evidence, missing evidence and actual performance, then use those distinctions to build an explainable study plan that adapts as the learner produces new evidence.
 
 This document is the frozen implementation direction for M7A-M7F.
+
+---
+
+# Final M7 closure record
+
+Status:
+
+```text
+PHASE M7 - EXAM READINESS
+CLOSED / PASS
+```
+
+Authoritative tested runtime checkpoint:
+
+```text
+8747089c9692fb9ec6e24eb2f70b7e8d5df7575e
+```
+
+Final closure evidence:
+
+- M7 Final Closure run `35342568377`
+- job `105591610580`
+- complete Exam Readiness tree: 771 / 771 PASS
+- complete Flutter regression suite: 1287 / 1287 PASS
+- Flutter analyzer: PASS
+- production web release build: PASS
+
+The final capacity contract treats 120 minutes as a quick-choice value rather
+than a hard ceiling. Learners may explicitly declare a higher daily study
+capacity, and CSP11 must respect that declaration without silently increasing
+it.
+
