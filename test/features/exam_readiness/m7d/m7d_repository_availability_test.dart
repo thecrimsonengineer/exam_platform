@@ -5,6 +5,7 @@ import 'package:exam_platform/features/exam_readiness/models/study_plan_block.da
 import 'package:exam_platform/features/exam_readiness/repositories/daily_study_plan_repository.dart';
 import 'package:exam_platform/features/exam_readiness/services/daily_study_plan_service.dart';
 import 'package:exam_platform/features/exam_readiness/services/ultra_hard_availability_service.dart';
+import 'package:exam_platform/models/question.dart';
 import 'package:exam_platform/services/auth/learner_local_identity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -151,9 +152,10 @@ void main() {
     test('classification tag comparison is case-insensitive', () {
       final questions = [
         for (var i = 0; i < 5; i++)
-          m7dQuestion(id: i + 1).copyWithTagsForTest(
-            const ['ULTRA-HARD-DQG300'],
-          ),
+          Question.fromJson({
+            ...m7dQuestion(id: i + 1).toJson(),
+            'tags': const ['ULTRA-HARD-DQG300'],
+          }),
       ];
       expect(
         UltraHardAvailabilityService.fromQuestions(questions),
@@ -324,5 +326,3 @@ void main() {
     });
   });
 }
-
-extension _QuestionTestCopy on dynamic {}
