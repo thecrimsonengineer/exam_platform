@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_colors.dart';
+import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
+import '../../features/exam_readiness/screens/exam_readiness_route.dart';
 import '../../models/student_learning_progress.dart';
 import '../../services/student_learning_position_service.dart';
 import '../../services/student_learning_progress_service.dart';
@@ -148,6 +150,17 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute<void>(
         builder: (_) =>
             PracticeQuickLaunchScreen(mode: mode, isDarkMode: false),
+      ),
+    );
+  }
+
+  void _openExamReadiness() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Navigator.of(context).push(
+      examReadinessRoute<void>(
+        child: const ExamReadinessPlanScreen(),
+        isDarkMode: isDarkMode,
       ),
     );
   }
@@ -1264,8 +1277,8 @@ class _HomeScreenState extends State<HomeScreen> {
             color: const Color(0xFFF5F8FD),
             borderRadius: BorderRadius.circular(18),
             child: InkWell(
-              key: const ValueKey('home-progress'),
-              onTap: widget.onOpenProgress,
+              key: const ValueKey('home-exam-readiness'),
+              onTap: _openExamReadiness,
               borderRadius: BorderRadius.circular(18),
               child: Container(
                 width: compact ? double.infinity : 240,
@@ -1283,7 +1296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'OPEN DASHBOARD',
+                            'EXAM READINESS',
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: 9,
@@ -1293,7 +1306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'See domain and topic progress',
+                            'Plan, measure and adapt for exam day',
                             style: TextStyle(
                               color: _textPrimary,
                               fontSize: 11.5,
@@ -1534,7 +1547,11 @@ class _ProgressOrb extends StatelessWidget {
           ),
         ],
       ),
-      child: const Icon(Icons.insights_rounded, color: Colors.white, size: 22),
+      child: const Icon(
+        Icons.event_available_rounded,
+        color: Colors.white,
+        size: 22,
+      ),
     );
   }
 }
