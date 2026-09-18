@@ -73,6 +73,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      expect(find.textContaining('1/47 competencies'), findsOneWidget);
+
       final row = find.byKey(const ValueKey('m7c-competency-d03_c02'));
       await tester.scrollUntilVisible(row, 800);
 
@@ -81,7 +83,6 @@ void main() {
         find.descendant(of: row, matching: find.text('UNASSESSED')),
         findsNothing,
       );
-      expect(find.textContaining('1/47 competencies'), findsOneWidget);
     },
   );
 }
