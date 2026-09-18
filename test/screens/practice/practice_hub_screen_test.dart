@@ -1,4 +1,3 @@
-import 'package:exam_platform/features/exam_readiness/screens/exam_readiness_plan_screen.dart';
 import 'package:exam_platform/screens/practice/practice_hub_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,11 +22,7 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('Practice hub renders all six modes in light mode', (
-    tester,
-  ) async {
-    await pumpHub(tester, brightness: Brightness.light);
-
+  void expectPracticeModesOnly() {
     expect(find.byKey(const ValueKey('practice-hub-daily')), findsOneWidget);
     expect(find.byKey(const ValueKey('practice-hub-weak')), findsOneWidget);
     expect(find.byKey(const ValueKey('practice-hub-random')), findsOneWidget);
@@ -38,65 +33,40 @@ void main() {
     );
     expect(
       find.byKey(const ValueKey('practice-hub-exam-readiness')),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('Exam Readiness'), findsOneWidget);
-    expect(find.byType(BackdropFilter), findsWidgets);
-    expect(tester.takeException(), isNull);
-  });
+    expect(find.text('Ultra Hard • DQG300'), findsOneWidget);
+  }
 
-  testWidgets('Practice hub renders all six modes in dark mode', (
+  testWidgets('Practice hub renders five practice modes in light mode', (
     tester,
   ) async {
-    await pumpHub(tester, brightness: Brightness.dark);
-
-    expect(find.byKey(const ValueKey('practice-hub-daily')), findsOneWidget);
-    expect(find.byKey(const ValueKey('practice-hub-weak')), findsOneWidget);
-    expect(find.byKey(const ValueKey('practice-hub-random')), findsOneWidget);
-    expect(find.byKey(const ValueKey('practice-hub-custom')), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('practice-hub-ultra-hard')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('practice-hub-exam-readiness')),
-      findsOneWidget,
-    );
-    expect(find.text('Exam Readiness'), findsOneWidget);
-    expect(find.byType(BackdropFilter), findsWidgets);
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('Exam Readiness entry opens the readiness plan route', (
-    tester,
-  ) async {
-    tester.view.devicePixelRatio = 1;
-    tester.view.physicalSize = const Size(1200, 2200);
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
     await pumpHub(tester, brightness: Brightness.light);
 
-    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
-    expect(entry, findsOneWidget);
-    expect(find.text('Exam Readiness'), findsOneWidget);
-
-    await tester.tap(find.text('Exam Readiness'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ExamReadinessPlanScreen), findsOneWidget);
+    expectPracticeModesOnly();
+    expect(find.byType(BackdropFilter), findsWidgets);
+    expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Exam Readiness entry remains available in dark mode', (
+  testWidgets('Practice hub renders five practice modes in dark mode', (
     tester,
   ) async {
     await pumpHub(tester, brightness: Brightness.dark);
 
-    final entry = find.byKey(const ValueKey('practice-hub-exam-readiness'));
-    await tester.scrollUntilVisible(entry, 500);
-    await tester.pump();
-
-    expect(entry, findsOneWidget);
+    expectPracticeModesOnly();
+    expect(find.byType(BackdropFilter), findsWidgets);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Practice hub contains no standalone Exam Readiness planner', (
+    tester,
+  ) async {
+    await pumpHub(tester, brightness: Brightness.light);
+
+    expect(
+      find.byKey(const ValueKey('practice-hub-exam-readiness')),
+      findsNothing,
+    );
+    expect(find.text('Exam Readiness'), findsNothing);
   });
 }
