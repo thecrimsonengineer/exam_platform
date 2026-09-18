@@ -20,6 +20,12 @@ PHASE_TEST_DIRS = {
     "m7c": ROOT / "test/features/exam_readiness/m7c",
 }
 
+PHASE_MIN_TESTS = {
+    "m7a": 40,
+    "m7b": 100,
+    "m7c": 100,
+}
+
 PHASE_REQUIRED_FILES = {
     "m7a": [
         "lib/features/exam_readiness/models/exam_study_plan.dart",
@@ -144,7 +150,11 @@ def verify_phase(phase: str) -> None:
         require((ROOT / relative).exists(), f"{phase.upper()} missing {relative}")
 
     count = phase_test_count(phase)
-    require(count >= 40, f"{phase.upper()} has {count} explicit tests; minimum is 40")
+    minimum = PHASE_MIN_TESTS[phase]
+    require(
+        count >= minimum,
+        f"{phase.upper()} has {count} explicit tests; minimum is {minimum}",
+    )
 
     if phase == "m7a":
         capacity = read(ROOT / "lib/features/exam_readiness/services/exam_study_capacity_service.dart")
