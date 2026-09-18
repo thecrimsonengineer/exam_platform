@@ -178,12 +178,12 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: _loading
-                        ? _LoadingCard(
+                        ? _LoadingStudentGlassCard(
                             key: const ValueKey('practice-quick-loading'),
                             title: _title,
                             copy: _loadingCopy,
                           )
-                        : _ErrorCard(
+                        : _ErrorStudentGlassCard(
                             key: const ValueKey('practice-quick-error'),
                             message:
                                 _error ??
@@ -202,7 +202,7 @@ class _PracticeQuickLaunchScreenState extends State<PracticeQuickLaunchScreen> {
 }
 
 class _LoadingCard extends StatelessWidget {
-  const _LoadingCard({super.key, required this.title, required this.copy});
+  const _LoadingStudentGlassCard({super.key, required this.title, required this.copy});
 
   final String title;
   final String copy;
@@ -254,7 +254,7 @@ class _LoadingCard extends StatelessWidget {
 }
 
 class _ErrorCard extends StatelessWidget {
-  const _ErrorCard({super.key, required this.message, required this.onRetry});
+  const _ErrorStudentGlassCard({super.key, required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

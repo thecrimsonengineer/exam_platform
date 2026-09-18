@@ -335,7 +335,7 @@ class SettingsScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 30),
-                          _buildAboutCard(),
+                          _buildAboutStudentGlassCard(),
                         ],
                       ),
                     ),
@@ -668,7 +668,7 @@ class SettingsScreen extends StatelessWidget {
                 (item) => SizedBox(
                   width: width,
                   height: 156,
-                  child: _contactCard(item),
+                  child: _contactStudentGlassCard(item),
                 ),
               )
               .toList(),
@@ -677,7 +677,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _contactCard(_ContactData item) {
+  Widget _contactStudentGlassCard(_ContactData item) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -836,7 +836,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAboutCard() {
+  Widget _buildAboutStudentGlassCard() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),

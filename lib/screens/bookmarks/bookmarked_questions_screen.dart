@@ -146,7 +146,7 @@ class _BookmarkedQuestionsScreenState extends State<BookmarkedQuestionsScreen> {
                   return _buildIntro(questions.length);
                 }
 
-                return _buildQuestionCard(questions[index - 1]);
+                return _buildQuestionStudentGlassCard(questions[index - 1]);
               },
             ),
           );
@@ -222,7 +222,7 @@ class _BookmarkedQuestionsScreenState extends State<BookmarkedQuestionsScreen> {
     );
   }
 
-  Widget _buildQuestionCard(Question question) {
+  Widget _buildQuestionStudentGlassCard(Question question) {
     final navigationLabel = question.navigationTags.isEmpty
         ? question.competencyId.toUpperCase()
         : question.navigationTags.last.toUpperCase();
