@@ -1,4 +1,6 @@
+import 'package:exam_platform/data/csp11_blueprint.dart';
 import 'package:exam_platform/features/exam_readiness/models/daily_study_plan.dart';
+import 'package:exam_platform/features/exam_readiness/models/evidence_confidence.dart';
 import 'package:exam_platform/features/exam_readiness/models/competency_readiness_profile.dart';
 import 'package:exam_platform/features/exam_readiness/models/learner_assessment_attempt.dart';
 import 'package:exam_platform/features/exam_readiness/models/plan_regeneration_reason.dart';
@@ -20,6 +22,37 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../m7d/_support/m7d_fixture.dart';
 import '_support/m7e_fixture.dart';
 
+Map<String, CompetencyReadinessProfile> _stableM7eBaseline({
+  String? overrideId,
+  CompetencyReadinessProfile? overrideProfile,
+}) {
+  final profiles = <String, CompetencyReadinessProfile>{};
+
+  for (final domain in csp11Domains) {
+    for (final competency in domain.competencies) {
+      profiles[competency.id] = m7dProfile(
+        competencyId: competency.id,
+        evidenceConfidence: EvidenceConfidence.veryHigh,
+        readinessState: ReadinessState.stable,
+        knowledge: 0.92,
+        application: 0.90,
+        retention: 0.90,
+        coverage: 0.95,
+        difficulty: 0.88,
+        calibration: 0.92,
+        hardAccuracy: 0.88,
+        ultraHardAccuracy: 0.82,
+      );
+    }
+  }
+
+  if (overrideId != null && overrideProfile != null) {
+    profiles[overrideId] = overrideProfile;
+  }
+
+  return profiles;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -38,14 +71,15 @@ void main() {
       generatedAt: DateTime(2026, 9, 18),
       examDate: DateTime(2026, 10, 20),
       availableMinutes: 60,
-      readinessProfiles: {
-        'd03_c02': m7dProfile(
+      readinessProfiles: _stableM7eBaseline(
+        overrideId: 'd03_c02',
+        overrideProfile: m7dProfile(
           readinessState: ReadinessState.strong,
           knowledge: 0.85,
           application: 0.85,
           retention: 0.8,
         ),
-      },
+      ),
     );
 
     final after = planner.generate(
@@ -54,8 +88,9 @@ void main() {
       generatedAt: DateTime(2026, 9, 18, 12),
       examDate: DateTime(2026, 10, 20),
       availableMinutes: 60,
-      readinessProfiles: {
-        'd03_c02': m7dProfile(
+      readinessProfiles: _stableM7eBaseline(
+        overrideId: 'd03_c02',
+        overrideProfile: m7dProfile(
           readinessState: ReadinessState.developing,
           knowledge: 0.82,
           application: 0.3,
@@ -67,7 +102,7 @@ void main() {
             ),
           ],
         ),
-      },
+      ),
       existingPlan: before,
       generationReason:
           PlanRegenerationReason.majorPerformanceShift.dailyPlanReason,
@@ -89,12 +124,13 @@ void main() {
       generatedAt: DateTime(2026, 9, 18),
       examDate: DateTime(2026, 10, 20),
       availableMinutes: 60,
-      readinessProfiles: {
-        'd03_c02': m7dProfile(
+      readinessProfiles: _stableM7eBaseline(
+        overrideId: 'd03_c02',
+        overrideProfile: m7dProfile(
           application: 0.3,
           gaps: [m7dGap()],
         ),
-      },
+      ),
     );
     final strong = planner.generate(
       userId: 'u1',
@@ -102,8 +138,9 @@ void main() {
       generatedAt: DateTime(2026, 9, 18, 12),
       examDate: DateTime(2026, 10, 20),
       availableMinutes: 60,
-      readinessProfiles: {
-        'd03_c02': m7dProfile(
+      readinessProfiles: _stableM7eBaseline(
+        overrideId: 'd03_c02',
+        overrideProfile: m7dProfile(
           readinessState: ReadinessState.strong,
           knowledge: 0.9,
           application: 0.9,
@@ -111,7 +148,7 @@ void main() {
           coverage: 0.9,
           difficulty: 0.85,
         ),
-      },
+      ),
     );
 
     expect(weak.blocks.any((b) => b.type == StudyPlanBlockType.repair), isTrue);
@@ -145,8 +182,9 @@ void main() {
       generatedAt: DateTime(2026, 9, 18),
       examDate: DateTime(2026, 10, 1),
       availableMinutes: 90,
-      readinessProfiles: {
-        'd03_c02': m7dProfile(
+      readinessProfiles: _stableM7eBaseline(
+        overrideId: 'd03_c02',
+        overrideProfile: m7dProfile(
           difficulty: 0.35,
           ultraHardAccuracy: 0.2,
           gaps: [
@@ -157,7 +195,7 @@ void main() {
             ),
           ],
         ),
-      },
+      ),
       ultraHardAvailableCompetencyIds: {'d03_c02'},
       generationReason:
           PlanRegenerationReason.majorPerformanceShift.dailyPlanReason,
