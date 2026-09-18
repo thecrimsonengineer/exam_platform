@@ -35,11 +35,11 @@ class CSPOverviewScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            HeroStudentGlassCard(),
+            HeroCard(),
 
             SizedBox(height: AppSpacing.section),
 
-            PerformanceSummaryStudentGlassCard(),
+            PerformanceSummaryCard(),
 
             SizedBox(height: AppSpacing.section),
 
@@ -47,7 +47,7 @@ class CSPOverviewScreen extends StatelessWidget {
 
             SizedBox(height: AppSpacing.section),
 
-            DomainListStudentGlassCard(),
+            DomainListCard(),
           ],
         ),
       ),

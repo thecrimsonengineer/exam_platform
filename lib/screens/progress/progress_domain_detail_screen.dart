@@ -265,7 +265,7 @@ class _ProgressDomainDetailScreenState
         ...domain.competencies.map(
           (competency) => Padding(
             padding: const EdgeInsets.only(bottom: 14),
-            child: _competencyStudentGlassCard(context, competency),
+            child: _competencyCard(context, competency),
           ),
         ),
       ],
@@ -309,7 +309,7 @@ class _ProgressDomainDetailScreenState
               .map((item) {
                 return SizedBox(
                   width: width,
-                  child: _metricStudentGlassCard(context, item.$1, item.$2, item.$3),
+                  child: _metricCard(context, item.$1, item.$2, item.$3),
                 );
               })
               .toList(growable: false),
@@ -318,7 +318,7 @@ class _ProgressDomainDetailScreenState
     );
   }
 
-  Widget _metricStudentGlassCard(
+  Widget _metricCard(
     BuildContext context,
     String value,
     String label,
@@ -417,7 +417,7 @@ class _ProgressDomainDetailScreenState
     );
   }
 
-  Widget _competencyStudentGlassCard(
+  Widget _competencyCard(
     BuildContext context,
     StudentCompetencyProgressDetail competency,
   ) {

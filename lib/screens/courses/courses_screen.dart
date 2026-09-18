@@ -591,7 +591,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget _learningPulse(bool wide, bool tablet) {
     final stack = !wide || tablet;
 
-    return _sectionStudentGlassCard(
+    return _sectionCard(
       title: 'LEARNING PULSE',
       subtitle: 'Your current momentum at a glance.',
       icon: Icons.insights_rounded,
@@ -670,7 +670,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Widget _continueLearning(BuildContext context, bool wide) {
-    return _sectionStudentGlassCard(
+    return _sectionCard(
       title: 'CONTINUE LEARNING',
       subtitle: 'Pick up exactly where you stopped.',
       icon: Icons.play_circle_outline_rounded,
@@ -791,7 +791,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
         ? 2
         : 1;
 
-    return _sectionStudentGlassCard(
+    return _sectionCard(
       title: 'CSP11 DOMAIN JOURNEY',
       subtitle: 'Seven examination domains, one structured pathway.',
       icon: Icons.account_tree_rounded,
@@ -807,7 +807,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
           childAspectRatio: columns == 1 ? 3.0 : 1.7,
         ),
         itemBuilder: (context, index) {
-          return _domainStudentGlassCard(context, _domains[index]);
+          return _domainCard(context, _domains[index]);
         },
       ),
     );
@@ -839,7 +839,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     );
   }
 
-  Widget _domainStudentGlassCard(BuildContext context, _DomainData domain) {
+  Widget _domainCard(BuildContext context, _DomainData domain) {
     final percent = (domain.progress * 100).round();
 
     final status = _statusFor(domain.progress);
@@ -996,7 +996,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
         ? 2
         : 1;
 
-    return _sectionStudentGlassCard(
+    return _sectionCard(
       title: 'CHOOSE YOUR MODE',
       subtitle: 'Use the pathway that matches your current goal.',
       icon: Icons.tune_rounded,
@@ -1008,21 +1008,21 @@ class _CoursesScreenState extends State<CoursesScreen> {
         mainAxisSpacing: 12,
         childAspectRatio: columns == 1 ? 3.0 : 2.0,
         children: [
-          _modeStudentGlassCard(
+          _modeCard(
             context,
             Icons.menu_book_rounded,
             'STUDY',
             'Structured notes and core concepts.',
             const Color(0xFF3157A4),
           ),
-          _modeStudentGlassCard(
+          _modeCard(
             context,
             Icons.quiz_outlined,
             'PRACTICE',
             'Target weak areas with focused questions.',
             const Color(0xFF7257B7),
           ),
-          _modeStudentGlassCard(
+          _modeCard(
             context,
             Icons.timer_outlined,
             'EXAM',
@@ -1034,7 +1034,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     );
   }
 
-  Widget _modeStudentGlassCard(
+  Widget _modeCard(
     BuildContext context,
     IconData icon,
     String title,
@@ -1120,7 +1120,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget _readinessPanel(double width) {
     final desktop = width >= 1050;
 
-    return _sectionStudentGlassCard(
+    return _sectionCard(
       title: 'CERTIFICATION READINESS',
       subtitle: 'A high-level view of your current preparation.',
       icon: Icons.verified_user_outlined,
@@ -1326,7 +1326,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     final compact = width < 720;
     final cardWidth = compact ? width - 68 : 270.0;
 
-    return _sectionStudentGlassCard(
+    return _sectionCard(
       title: 'EXPANDING THE ACADEMY',
       subtitle: 'Additional certification pathways are being prepared.',
       icon: Icons.auto_awesome_outlined,
@@ -1393,7 +1393,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     );
   }
 
-  Widget _sectionStudentGlassCard({
+  Widget _sectionCard({
     required String title,
     required String subtitle,
     required IconData icon,

@@ -942,7 +942,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
                 (action) => SizedBox(
                   width: width,
                   height: 190,
-                  child: _buildPrimaryActionStudentGlassCard(action),
+                  child: _buildPrimaryActionCard(action),
                 ),
               )
               .toList(),
@@ -951,7 +951,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     );
   }
 
-  Widget _buildPrimaryActionStudentGlassCard(_PrimaryActionData action) {
+  Widget _buildPrimaryActionCard(_PrimaryActionData action) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -1129,7 +1129,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
               .map(
                 (item) => SizedBox(
                   width: width,
-                  child: _buildQuickPracticeStudentGlassCard(item),
+                  child: _buildQuickPracticeCard(item),
                 ),
               )
               .toList(),
@@ -1138,7 +1138,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     );
   }
 
-  Widget _buildQuickPracticeStudentGlassCard(_QuickActionData item) {
+  Widget _buildQuickPracticeCard(_QuickActionData item) {
     return Material(
       color: _surface,
       borderRadius: BorderRadius.circular(18),

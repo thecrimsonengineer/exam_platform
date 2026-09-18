@@ -322,7 +322,7 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
               ...snapshot.domains.map(
                 (domain) => Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: _domainStudentGlassCard(context, domain),
+                  child: _domainCard(context, domain),
                 ),
               ),
             ]),
@@ -490,7 +490,7 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
               .map((item) {
                 return SizedBox(
                   width: itemWidth,
-                  child: _kpiStudentGlassCard(context, item.$1, item.$2, item.$3),
+                  child: _kpiCard(context, item.$1, item.$2, item.$3),
                 );
               })
               .toList(growable: false),
@@ -499,7 +499,7 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
     );
   }
 
-  Widget _kpiStudentGlassCard(
+  Widget _kpiCard(
     BuildContext context,
     String value,
     String label,
@@ -638,7 +638,7 @@ class ProgressAnalyticsScreenState extends State<ProgressAnalyticsScreen> {
     );
   }
 
-  Widget _domainStudentGlassCard(
+  Widget _domainCard(
     BuildContext context,
     ProgressDomainAnalyticsSummary domain,
   ) {
