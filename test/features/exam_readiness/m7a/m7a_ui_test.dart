@@ -49,10 +49,12 @@ class _PermissionDeniedRemote implements ExamStudyPlanRemoteStore {
   }
 }
 
-Finder _setupScrollable() => find.descendant(
-  of: find.byKey(const ValueKey('m7a-setup-list')),
-  matching: find.byType(Scrollable),
-);
+Finder _setupScrollable() => find
+    .descendant(
+      of: find.byKey(const ValueKey('m7a-setup-list')),
+      matching: find.byType(Scrollable),
+    )
+    .first;
 
 Widget _app(Widget home, {bool dark = false}) {
   return MaterialApp(
