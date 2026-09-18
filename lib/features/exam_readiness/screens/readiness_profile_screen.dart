@@ -44,10 +44,7 @@ class _ReadinessProfileScreenState
       widget.attemptRepository ?? const LearnerAssessmentAttemptRepository();
 
   ReadinessSnapshotRepository get _readinessRepository =>
-      widget.readinessRepository ??
-      ReadinessSnapshotRepository(
-        remoteStore: FirebaseReadinessSnapshotRemoteStore(),
-      );
+      widget.readinessRepository ?? ReadinessSnapshotRepository();
 
   DateTime get _now => widget.now?.call() ?? DateTime.now();
 
