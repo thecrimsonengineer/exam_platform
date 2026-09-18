@@ -34,7 +34,7 @@ class DailyStudyPlanService {
     final day = DateTime(date.year, date.month, date.day);
     final exam = DateTime(examDate.year, examDate.month, examDate.day);
     final daysUntilExam = exam.difference(day).inDays;
-    final normalizedAvailable = availableMinutes.clamp(0, 1440);
+    final normalizedAvailable = availableMinutes.clamp(0, 1440).toInt();
     final planId =
         'm7d-${_safe(userId)}-${day.year}${day.month.toString().padLeft(2, '0')}${day.day.toString().padLeft(2, '0')}';
     final nextVersion = (existingPlan?.planVersion ?? 0) + 1;
@@ -136,10 +136,12 @@ class DailyStudyPlanService {
         (candidate) => _needsRetention(candidate.profile),
         orElse: () => selected.first,
       );
-      final minutes = remaining.clamp(
-        constraints.reviewMinMinutes,
-        constraints.reviewMaxMinutes,
-      );
+      final minutes = remaining
+          .clamp(
+            constraints.reviewMinMinutes,
+            constraints.reviewMaxMinutes,
+          )
+          .toInt();
       blocks.add(
         _buildBlock(
           planId: planId,
@@ -171,10 +173,12 @@ class DailyStudyPlanService {
       final type = ultraCandidate == null
           ? StudyPlanBlockType.standardPractice
           : StudyPlanBlockType.ultraHardPractice;
-      final minutes = remaining.clamp(
-        constraints.practiceMinMinutes,
-        constraints.practiceMaxMinutes,
-      );
+      final minutes = remaining
+          .clamp(
+            constraints.practiceMinMinutes,
+            constraints.practiceMaxMinutes,
+          )
+          .toInt();
 
       blocks.add(
         _buildBlock(
@@ -197,10 +201,12 @@ class DailyStudyPlanService {
         blocks.length < constraints.maxBlocksPerDay &&
         selected.isNotEmpty) {
       final candidate = selected[slot % selected.length];
-      final minutes = remaining.clamp(
-        constraints.practiceMinMinutes,
-        constraints.practiceMaxMinutes,
-      );
+      final minutes = remaining
+          .clamp(
+            constraints.practiceMinMinutes,
+            constraints.practiceMaxMinutes,
+          )
+          .toInt();
       blocks.add(
         _buildBlock(
           planId: planId,
@@ -557,7 +563,7 @@ class DailyStudyPlanService {
 
   int _fit(int target, int min, int max, int remaining) {
     if (remaining < min) return 0;
-    return target.clamp(min, max).clamp(min, remaining);
+    return target.clamp(min, max).clamp(min, remaining).toInt();
   }
 
   StudyPlanBlock _buildBlock({
@@ -618,7 +624,7 @@ class DailyStudyPlanService {
       case StudyPlanBlockType.competencyRecheck:
       case StudyPlanBlockType.confidenceCalibration:
       case StudyPlanBlockType.examSimulation:
-        return (minutes ~/ 2).clamp(3, 10);
+        return (minutes ~/ 2).clamp(3, 10).toInt();
       default:
         return 0;
     }
