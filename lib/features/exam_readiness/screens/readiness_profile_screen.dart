@@ -174,8 +174,7 @@ class _ReadinessProfileScreenState
       ),
     );
   }
-
-
+}
 
 class _EvidenceHero extends StatelessWidget {
   const _EvidenceHero({required this.dashboard});
