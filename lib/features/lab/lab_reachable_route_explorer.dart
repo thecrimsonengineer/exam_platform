@@ -100,21 +100,24 @@ class LabReachableRouteExplorer {
     int routeBudget = 1000,
     int hardRouteLimit = 10000,
   }) {
-    if (routeBudget <= 0) {
-      throw const LabContractException(
-        'L4M route exploration budget must be greater than zero.',
-      );
-    }
-    if (hardRouteLimit <= 0 || hardRouteLimit < routeBudget) {
-      throw const LabContractException(
-        'L4M hard route limit must be greater than or equal to the route budget.',
-      );
-    }
-
+    _requireLimits(routeBudget, hardRouteLimit);
     final exhaustive = exhaustiveValidator.run(
       package,
       maxRoutes: hardRouteLimit,
     );
+    return exploreFromExhaustive(
+      exhaustive,
+      routeBudget: routeBudget,
+      hardRouteLimit: hardRouteLimit,
+    );
+  }
+
+  LabReachableRouteExplorationReport exploreFromExhaustive(
+    LabExhaustiveRouteReport exhaustive, {
+    int routeBudget = 1000,
+    int hardRouteLimit = 10000,
+  }) {
+    _requireLimits(routeBudget, hardRouteLimit);
 
     if (!exhaustive.isValid) {
       final issues = <String>[
@@ -212,6 +215,19 @@ class LabReachableRouteExplorer {
       issues: List<String>.unmodifiable(issues),
       fingerprint: firstFingerprint,
     );
+  }
+
+  void _requireLimits(int routeBudget, int hardRouteLimit) {
+    if (routeBudget <= 0) {
+      throw const LabContractException(
+        'L4M route exploration budget must be greater than zero.',
+      );
+    }
+    if (hardRouteLimit <= 0 || hardRouteLimit < routeBudget) {
+      throw const LabContractException(
+        'L4M hard route limit must be greater than or equal to the route budget.',
+      );
+    }
   }
 
   List<LabExhaustiveRouteTrace> _selectRepresentative(
