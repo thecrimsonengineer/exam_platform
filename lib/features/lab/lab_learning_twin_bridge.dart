@@ -85,37 +85,63 @@ class LabLearningTwinEvidenceBridge {
       );
     }
 
-    final recoveryNodes = _stringSet(
-      package.learningSignals['recoveryDecisionNodeIds'],
-    );
     final completion = session.status == LabSessionStatus.completed
         ? LabEvidenceCompletion.completed
         : LabEvidenceCompletion.partial;
 
-    final result = <LabLearningEvidence>[];
-    for (final event in session.decisionHistory) {
-      final node = _decisionNode(package, event.nodeId);
-      final option = node.requireOption(event.selectedOptionId);
-      result.add(
-        LabLearningEvidence(
-          eventId: event.eventId,
-          labId: session.labId,
-          labVersionId: session.labVersionId,
-          nodeId: event.nodeId,
-          optionId: option.id,
-          quality: option.quality,
-          competencyEvidence: option.competencyEvidence,
-          mistakeDnaTags: option.mistakeTags,
-          confidence: event.confidence,
-          responseTimeMs: event.responseTimeMs,
-          recoveryEvidence: recoveryNodes.contains(event.nodeId),
+    return List<LabLearningEvidence>.unmodifiable(
+      session.decisionHistory.map(
+        (event) => buildEvidenceForEvent(
+          package: package,
+          session: session,
+          event: event,
           completion: completion,
-          occurredAt: event.timestamp,
         ),
+      ),
+    );
+  }
+
+  LabLearningEvidence buildEvidenceForEvent({
+    required LabPackage package,
+    required LabSession session,
+    required LabDecisionEvent event,
+    required LabEvidenceCompletion completion,
+  }) {
+    if (session.labId != package.metadata.id ||
+        session.labVersionId != package.metadata.versionId) {
+      throw const LabSessionException(
+        'Learning evidence requires the session pinned LAB version.',
+      );
+    }
+    if (!session.decisionHistory.any(
+      (candidate) => candidate.eventId == event.eventId,
+    )) {
+      throw const LabSessionException(
+        'Learning evidence event must belong to the supplied LAB session.',
       );
     }
 
-    return List<LabLearningEvidence>.unmodifiable(result);
+    final node = _decisionNode(package, event.nodeId);
+    final option = node.requireOption(event.selectedOptionId);
+    final recoveryNodes = _stringSet(
+      package.learningSignals['recoveryDecisionNodeIds'],
+    );
+
+    return LabLearningEvidence(
+      eventId: event.eventId,
+      labId: session.labId,
+      labVersionId: session.labVersionId,
+      nodeId: event.nodeId,
+      optionId: option.id,
+      quality: option.quality,
+      competencyEvidence: option.competencyEvidence,
+      mistakeDnaTags: option.mistakeTags,
+      confidence: event.confidence,
+      responseTimeMs: event.responseTimeMs,
+      recoveryEvidence: recoveryNodes.contains(event.nodeId),
+      completion: completion,
+      occurredAt: event.timestamp,
+    );
   }
 
   Future<List<LabLearningEvidence>> emit({
