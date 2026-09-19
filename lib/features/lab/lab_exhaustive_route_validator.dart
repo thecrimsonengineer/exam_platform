@@ -355,11 +355,6 @@ class LabExhaustiveRouteValidator {
         consequence.id: consequence,
     };
     final routes = <LabExhaustiveRouteTrace>[];
-    final optionCoverage = <String>{};
-    final consequenceCoverage = <String>{};
-    final gateCoverage = <String>{};
-    final gateTypeCoverage = <LabGateType>{};
-    final endingIds = <String>{};
     final issues = <String>[];
     final depthLimit = maxDepth ?? package.nodes.length * 8 + 16;
     var limitExceeded = false;
@@ -401,7 +396,6 @@ class LabExhaustiveRouteValidator {
       if (node is LabDecisionNode) {
         for (final option in node.options) {
           if (limitExceeded) return;
-          optionCoverage.add(node.id + '::' + option.id);
           try {
             final resolution = runtime.resolveDecision(
               state: state,
@@ -423,10 +417,6 @@ class LabExhaustiveRouteValidator {
               );
               continue;
             }
-
-            consequenceCoverage.add(resolution.consequence.consequenceId);
-            gateCoverage.add(gate.gateId);
-            gateTypeCoverage.add(gate.type);
 
             final step = LabExhaustiveRouteStep(
               nodeId: node.id,
@@ -460,7 +450,6 @@ class LabExhaustiveRouteValidator {
             final nextSteps = <LabExhaustiveRouteStep>[...steps, step];
 
             if (gate.endingId != null) {
-              endingIds.add(gate.endingId!);
               routes.add(
                 LabExhaustiveRouteTrace(
                   steps: List<LabExhaustiveRouteStep>.unmodifiable(nextSteps),
@@ -508,9 +497,6 @@ class LabExhaustiveRouteValidator {
           issues.add('Scene ' + node.id + ' has no Story Gate.');
           return;
         }
-        gateCoverage.add(gate.gateId);
-        gateTypeCoverage.add(gate.type);
-
         final step = LabExhaustiveRouteStep(
           nodeId: node.id,
           gateId: gate.gateId,
@@ -529,7 +515,6 @@ class LabExhaustiveRouteValidator {
         final nextSteps = <LabExhaustiveRouteStep>[...steps, step];
 
         if (gate.endingId != null) {
-          endingIds.add(gate.endingId!);
           routes.add(
             LabExhaustiveRouteTrace(
               steps: List<LabExhaustiveRouteStep>.unmodifiable(nextSteps),
@@ -567,6 +552,25 @@ class LabExhaustiveRouteValidator {
       const <String>{},
       'root',
     );
+
+    final completedSteps = routes.expand((route) => route.steps).toList();
+    final optionCoverage = <String>{
+      for (final step in completedSteps)
+        if (step.optionId != null) step.nodeId + '::' + step.optionId!,
+    };
+    final consequenceCoverage = <String>{
+      for (final step in completedSteps)
+        if (step.consequenceId != null) step.consequenceId!,
+    };
+    final gateCoverage = <String>{
+      for (final step in completedSteps) step.gateId,
+    };
+    final gateTypeCoverage = <LabGateType>{
+      for (final step in completedSteps) step.gateType,
+    };
+    final endingIds = <String>{
+      for (final route in routes) route.endingId,
+    };
 
     final routeFingerprints = routes.map((route) => route.fingerprint).toList()
       ..sort();
