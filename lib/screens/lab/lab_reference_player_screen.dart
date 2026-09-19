@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:exam_platform/features/lab/lab_contracts.dart';
+import 'package:exam_platform/features/lab/lab_learning_twin_bridge.dart';
+import 'package:exam_platform/features/lab/lab_learning_twin_emitter.dart';
 import 'package:exam_platform/features/lab/lab_session.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
@@ -14,11 +18,13 @@ class LabReferencePlayerScreen extends StatefulWidget {
     required this.mode,
     this.scenario = LabScenarioCatalog.confinedSpaceH2s,
     this.assetPath,
+    this.learningEvidenceSink,
   });
 
   final LabMode mode;
   final LabScenarioDefinition scenario;
   final String? assetPath;
+  final LabLearningEvidenceSink? learningEvidenceSink;
 
   @override
   State<LabReferencePlayerScreen> createState() =>
@@ -28,6 +34,8 @@ class LabReferencePlayerScreen extends StatefulWidget {
 class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
   late final InMemoryLabSessionStore _store;
   late final LabSessionEngine _engine;
+  late final LabLearningEvidenceSink _learningEvidenceSink;
+  late final LabIncrementalLearningTwinEvidenceEmitter _learningEvidenceEmitter;
 
   LabPackage? _package;
   LabSession? _session;
@@ -43,6 +51,10 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     super.initState();
     _store = InMemoryLabSessionStore();
     _engine = LabSessionEngine(store: _store);
+    _learningEvidenceSink =
+        widget.learningEvidenceSink ?? InMemoryLabLearningEvidenceSink();
+    _learningEvidenceEmitter =
+        const LabIncrementalLearningTwinEvidenceEmitter();
     _loadLab();
   }
 
@@ -115,6 +127,14 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         session: session,
         optionId: optionId,
         responseTimeMs: elapsed < 0 ? 0 : elapsed,
+      );
+      unawaited(
+        _learningEvidenceEmitter.emitNewlyPersisted(
+          package: package,
+          before: session,
+          after: updated,
+          sink: _learningEvidenceSink,
+        ),
       );
       if (!mounted) return;
 
