@@ -136,9 +136,7 @@ class LabAutomatedLifecycleService {
       qualityEvidenceJson: certificate.encode(),
       exhaustiveRouteEvidenceJson: l4lCertificate.encode(),
       publishEvidenceJson: l4nCertificate.encode(),
-      snapshotFingerprint: LabSnapshotFingerprint.compute(
-        published.sourceJson,
-      ),
+      snapshotFingerprint: LabSnapshotFingerprint.compute(published.sourceJson),
     );
 
     await studio.repository.saveImmutable(version);
