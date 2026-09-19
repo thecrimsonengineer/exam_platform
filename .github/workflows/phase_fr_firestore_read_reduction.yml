@@ -32,8 +32,8 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Show dependency lock changes
-        run: git diff -- pubspec.lock || true
+      - name: Dependency lock gate
+        run: git diff --exit-code -- pubspec.lock
 
       - name: FR formatting gate
         run: |
