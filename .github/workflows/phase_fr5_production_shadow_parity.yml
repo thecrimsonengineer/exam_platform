@@ -121,7 +121,9 @@ jobs:
           fi
           echo "Firestore read preflight: PASS"
 
-      - name: Build canonical FR5 Firestore source snapshot
+      - id: fr5_source
+        name: Build canonical FR5 Firestore source snapshot
+        continue-on-error: true
         env:
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
         run: |
@@ -129,18 +131,55 @@ jobs:
             --firestore-project="$FIREBASE_PROJECT_ID" \
             --output=build/fr5-production/production_source.json \
             --evidence=build/fr5-production/production_source_selection.json
-          grep -q '"ready": true' build/fr5-production/production_source_selection.json
-          grep -q '"issueCount": 0' build/fr5-production/production_source_selection.json
+
+      - name: Diagnose FR5 canonical source selection
+        if: always()
+        shell: bash
+        run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          report = json.loads(
-              Path('build/fr5-production/production_source_selection.json').read_text()
-          )
+
+          path = Path('build/fr5-production/production_source_selection.json')
+          if not path.exists():
+              print('FR5 source-selection evidence file was not created.')
+              raise SystemExit(0)
+
+          report = json.loads(path.read_text())
+          print('FR5 source ready:', report.get('ready'))
           print('FR5 raw source counts:', report.get('rawSourceCounts'))
           print('FR5 selected source counts:', report.get('selectedSourceCounts'))
           print('FR5 superseded draft snapshots:', report.get('supersededDraftCount'))
+          print('FR5 source issue count:', report.get('issueCount'))
+
+          issues = report.get('issues') or []
+          if issues:
+              print('FR5 source collision details:')
+              for index, issue in enumerate(issues, start=1):
+                  print(
+                      f"  {index}. targetKey={issue.get('targetKey')} "
+                      f"kind={issue.get('kind')}"
+                  )
+                  for candidate in issue.get('candidates') or []:
+                      print(
+                          f"     sourceId={candidate.get('sourceId')} "
+                          f"status={candidate.get('status')} "
+                          f"idPrefix={candidate.get('idPrefix')}"
+                      )
           PY
+
+      - name: Enforce FR5 canonical source gate
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.fr5_source.outcome }}" != "success" ]; then
+            echo "FR5 canonical source selection failed. See diagnostics above."
+            exit 1
+          fi
+          test -f build/fr5-production/production_source_selection.json
+          test -f build/fr5-production/production_source.json
+          grep -q '"ready": true' build/fr5-production/production_source_selection.json
+          grep -q '"issueCount": 0' build/fr5-production/production_source_selection.json
 
       - id: fr4_extract
         name: Extract deterministic production FR4 manifest
