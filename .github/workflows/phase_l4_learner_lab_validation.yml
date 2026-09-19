@@ -38,11 +38,13 @@ jobs:
             lib/screens/lab/lab_library_screen.dart \
             lib/screens/lab/lab_scenario_briefing_screen.dart \
             lib/screens/lab/lab_learner_debrief_screen.dart \
-            lib/screens/lab/lab_learner_debrief_screen.dart \
             lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
+            lib/features/lab/lab_dqg300.dart \
+            lib/features/lab/lab_automated_publish_gate.dart \
             test/screens/lab \
+            test/lab_quality \
             test/features/lab/lab1_shells_test.dart
 
       - name: Analyze
@@ -50,6 +52,9 @@ jobs:
 
       - name: Phase L4 learner experience regressions
         run: flutter test test/screens/lab
+
+      - name: Phase L4K DQG300-LAB automated publish gate
+        run: flutter test test/lab_quality
 
       - name: Preserve exact frozen Phase L engine suite
         run: flutter test test/features/lab
@@ -82,7 +87,10 @@ jobs:
             lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
+            lib/features/lab/lab_dqg300.dart \
+            lib/features/lab/lab_automated_publish_gate.dart \
             test/screens/lab \
+            test/lab_quality \
             test/features/lab/lab1_shells_test.dart
-          git commit -m "Format Phase L4A-L4E learner LAB"
+          git commit -m "Format Phase L4 learner and DQG300 LAB"
           git push origin HEAD:phase-l4-learner-decision-lab
