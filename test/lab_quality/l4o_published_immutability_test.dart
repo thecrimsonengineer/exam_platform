@@ -188,6 +188,31 @@ void main() {
     );
   });
 
+
+  test('L4O rejects revision creation after nested published root mutation',
+      () async {
+    final repository = InMemoryLabPublishedRepository();
+    final service = Lab1000StudioService(repository: repository);
+    final draft = service.importJson(_draftSource());
+    final review = service.requestReview(draft);
+    final validated =
+        service.approveReview(review, reviewerId: 'manual-reviewer');
+    final published = await service.publish(validated);
+    final lab = (published.root['lab'] as Map).cast<String, Object?>();
+    lab['title'] = 'Mutated after immutable publication';
+
+    expect(
+      () => service.createRevision(published, newVersionId: 'v2'),
+      throwsA(isA<LabStudioException>()),
+    );
+
+    final stored = await repository.load('l2_lab', 'v1');
+    expect(
+      LabPackage.decode(stored!.publishedJson).metadata.title,
+      'L2 deterministic validation LAB',
+    );
+  });
+
   test('L4O legitimate revision preserves the immutable original snapshot',
       () async {
     final repository = InMemoryLabPublishedRepository();
