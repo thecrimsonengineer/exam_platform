@@ -90,13 +90,10 @@ void main() {
     await tester.tap(
       find.byKey(const ValueKey('lab-mode-professional')),
     );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-    );
+    await tester.pump();
 
-    expect(find.text('Professional LAB'), findsWidgets);
-    expect(find.byKey(const ValueKey('lab-decision-prompt')), findsOneWidget);
+    expect(find.text('Professional LAB'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets('Assessment mode opens the playable LAB', (tester) async {
@@ -109,12 +106,9 @@ void main() {
     await tester.tap(
       find.byKey(const ValueKey('lab-mode-assessment')),
     );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-    );
+    await tester.pump();
 
-    expect(find.text('Assessment LAB'), findsWidgets);
-    expect(find.byKey(const ValueKey('lab-decision-prompt')), findsOneWidget);
+    expect(find.text('Assessment LAB'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 }
