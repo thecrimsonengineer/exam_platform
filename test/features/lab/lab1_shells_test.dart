@@ -83,10 +83,14 @@ void main() {
       path: 'lib/screens/lab/lab_library_screen.dart',
       needle: 'Safety Decision LAB',
     ),
-    (path: 'lib/screens/lab/lab_library_screen.dart', needle: 'Practice safety decisions before they happen for real'),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',
-      needle: 'Once confirmed, that decision is locked for the current attempt.',
+      needle: 'Practice safety decisions before they happen for real',
+    ),
+    (
+      path: 'lib/screens/lab/lab_library_screen.dart',
+      needle:
+          'Once confirmed, that decision is locked for the current attempt.',
     ),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',

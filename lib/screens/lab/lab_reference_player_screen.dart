@@ -473,10 +473,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     );
   }
 
-  Widget _buildLearnerContext(
-    BuildContext context,
-    LabSession session,
-  ) {
+  Widget _buildLearnerContext(BuildContext context, LabSession session) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final text = dark ? const Color(0xFFF4F7FB) : const Color(0xFF18243A);
     final muted = dark ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
@@ -484,11 +481,12 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
       session.stateValues,
       session.simulatedMinutes,
     );
-    final evidence = session.evidenceUnlocked
-        .map(widget.scenario.evidenceFor)
-        .whereType<LabEvidencePresentation>()
-        .toList()
-      ..sort((a, b) => a.title.compareTo(b.title));
+    final evidence =
+        session.evidenceUnlocked
+            .map(widget.scenario.evidenceFor)
+            .whereType<LabEvidencePresentation>()
+            .toList()
+          ..sort((a, b) => a.title.compareTo(b.title));
 
     return StudentGlassSurface(
       padding: const EdgeInsets.all(18),
@@ -538,10 +536,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        item.label,
-                        style: TextStyle(color: muted),
-                      ),
+                      child: Text(item.label, style: TextStyle(color: muted)),
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -820,7 +815,6 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
       ],
     );
   }
-
 }
 
 class _PendingConsequence {

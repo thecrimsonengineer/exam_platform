@@ -111,27 +111,29 @@ void main() {
     expect(session.currentNodeId, 'closeout_decision');
     expect(session.decisionHistory.last.gateTriggered, 'emergency_convergence');
   });
-  test('L4H critical first decision remains playable through emergency route', () async {
-    final package = loadV2();
-    final store = InMemoryLabSessionStore();
-    final engine = LabSessionEngine(store: store);
+  test(
+    'L4H critical first decision remains playable through emergency route',
+    () async {
+      final package = loadV2();
+      final store = InMemoryLabSessionStore();
+      final engine = LabSessionEngine(store: store);
 
-    var session = await engine.startAttempt(
-      package: package,
-      sessionId: 'critical_first_decision_route',
-      userId: 'story_tester',
-      mode: LabMode.professional,
-    );
+      var session = await engine.startAttempt(
+        package: package,
+        sessionId: 'critical_first_decision_route',
+        userId: 'story_tester',
+        mode: LabMode.professional,
+      );
 
-    session = await commit(engine, package, session, 'p4');
+      session = await commit(engine, package, session, 'p4');
 
-    expect(session.status, LabSessionStatus.active);
-    expect(session.currentNodeId, 'emergency_decision');
-    expect(
-      session.decisionHistory.last.gateTriggered,
-      'permit_critical_event',
-    );
-    expect(session.endingId, isNull);
-  });
-
+      expect(session.status, LabSessionStatus.active);
+      expect(session.currentNodeId, 'emergency_decision');
+      expect(
+        session.decisionHistory.last.gateTriggered,
+        'permit_critical_event',
+      );
+      expect(session.endingId, isNull);
+    },
+  );
 }

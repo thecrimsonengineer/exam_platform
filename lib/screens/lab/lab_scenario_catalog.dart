@@ -192,7 +192,8 @@ abstract final class LabScenarioCatalog {
       'permit': LabEvidencePresentation(
         id: 'permit',
         title: 'Confined-space permit',
-        summary: 'The permit defines the authorised entry and required controls.',
+        summary:
+            'The permit defines the authorised entry and required controls.',
         details: <String>[
           'Work scope: internal vessel inspection and maintenance.',
           'Entry requires verified isolation and atmospheric testing.',
@@ -202,7 +203,8 @@ abstract final class LabScenarioCatalog {
       'isolation_record': LabEvidencePresentation(
         id: 'isolation_record',
         title: 'Isolation record',
-        summary: 'The isolation record shows the controls applied before entry.',
+        summary:
+            'The isolation record shows the controls applied before entry.',
         details: <String>[
           'Relevant process connections are identified for isolation.',
           'Isolation status must be independently verified before entry.',
@@ -212,7 +214,8 @@ abstract final class LabScenarioCatalog {
       'gas_test': LabEvidencePresentation(
         id: 'gas_test',
         title: 'Atmospheric test',
-        summary: 'Atmospheric testing provides the current condition of the space.',
+        summary:
+            'Atmospheric testing provides the current condition of the space.',
         details: <String>[
           'Testing must represent the locations where entrants may be exposed.',
           'Conditions can change after the initial test.',

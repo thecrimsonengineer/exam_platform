@@ -125,10 +125,7 @@ class _ScenarioCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 11),
-          Text(
-            scenario.summary,
-            style: TextStyle(color: muted, height: 1.45),
-          ),
+          Text(scenario.summary, style: TextStyle(color: muted, height: 1.45)),
           const SizedBox(height: 13),
           Wrap(
             spacing: 7,
@@ -318,10 +315,7 @@ class _HowStep extends StatelessWidget {
                   style: TextStyle(color: text, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  description,
-                  style: TextStyle(color: muted, height: 1.35),
-                ),
+                Text(description, style: TextStyle(color: muted, height: 1.35)),
               ],
             ),
           ),

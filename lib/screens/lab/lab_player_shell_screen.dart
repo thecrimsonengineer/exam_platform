@@ -139,10 +139,8 @@ class LabPlayerShellScreen extends StatelessWidget {
   ) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => LabReferencePlayerScreen(
-          mode: mode,
-          scenario: selectedScenario,
-        ),
+        builder: (_) =>
+            LabReferencePlayerScreen(mode: mode, scenario: selectedScenario),
       ),
     );
   }

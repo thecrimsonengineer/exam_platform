@@ -57,10 +57,7 @@ void main() {
         find.byKey(const ValueKey('lab-situation-heading')),
         findsOneWidget,
       );
-      expect(
-        find.byKey(const ValueKey('lab-action-heading')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const ValueKey('lab-action-heading')), findsOneWidget);
       expect(find.text('What is happening now'), findsOneWidget);
       expect(find.text('What would you do?'), findsOneWidget);
       expect(find.byKey(const ValueKey('lab-option-p1')), findsOneWidget);
@@ -86,9 +83,7 @@ void main() {
       expect(find.textContaining('permit_safe'), findsNothing);
       expect(find.textContaining('H2S may be present'), findsNothing);
 
-      await tester.tap(
-        find.byKey(const ValueKey('lab-consequence-continue')),
-      );
+      await tester.tap(find.byKey(const ValueKey('lab-consequence-continue')));
       await _pumpUntilFound(tester, find.textContaining('H2S may be present'));
 
       expect(find.text('Decision 2'), findsOneWidget);
@@ -100,9 +95,7 @@ void main() {
         tester,
         find.byKey(const ValueKey('lab-consequence-screen')),
       );
-      await tester.tap(
-        find.byKey(const ValueKey('lab-consequence-continue')),
-      );
+      await tester.tap(find.byKey(const ValueKey('lab-consequence-continue')));
       await _pumpUntilFound(
         tester,
         find.textContaining('Nearby line-breaking SIMOPS begins'),
@@ -117,9 +110,7 @@ void main() {
     _useTallTestViewport(tester);
 
     await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
-    final professional = find.byKey(
-      const ValueKey('lab-mode-professional'),
-    );
+    final professional = find.byKey(const ValueKey('lab-mode-professional'));
     await tester.ensureVisible(professional);
     await tester.tap(professional);
     await tester.pump();
@@ -131,14 +122,11 @@ void main() {
     _useTallTestViewport(tester);
 
     await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
-    final assessment = find.byKey(
-      const ValueKey('lab-mode-assessment'),
-    );
+    final assessment = find.byKey(const ValueKey('lab-mode-assessment'));
     await tester.ensureVisible(assessment);
     await tester.tap(assessment);
     await tester.pump();
 
     expect(find.text('Assessment LAB'), findsOneWidget);
   });
-
 }

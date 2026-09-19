@@ -27,17 +27,15 @@ void _useTallViewport(WidgetTester tester) {
 
 void main() {
   test('L4F learner status excludes internal route and risk variables', () {
-    final status = LabScenarioCatalog.confinedSpaceH2s.learnerStatus(
-      <String, Object?>{
-        'route': 'critical',
-        'risk': 10,
-        'permit_verified': true,
-        'isolated': true,
-        'gas_test_verified': false,
-        'rescue_ready': false,
-      },
-      3,
-    );
+    final status = LabScenarioCatalog.confinedSpaceH2s
+        .learnerStatus(<String, Object?>{
+          'route': 'critical',
+          'risk': 10,
+          'permit_verified': true,
+          'isolated': true,
+          'gas_test_verified': false,
+          'rescue_ready': false,
+        }, 3);
 
     final labels = status.map((item) => item.label).toSet();
 
@@ -50,13 +48,13 @@ void main() {
     expect(labels, isNot(contains('Route')));
   });
 
-  testWidgets('L4F status reflects committed learner-safe state', (tester) async {
+  testWidgets('L4F status reflects committed learner-safe state', (
+    tester,
+  ) async {
     _useTallViewport(tester);
 
     await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.guided),
-      ),
+      const MaterialApp(home: LabReferencePlayerScreen(mode: LabMode.guided)),
     );
     await _pumpUntilFound(
       tester,

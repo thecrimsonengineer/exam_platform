@@ -23,10 +23,7 @@ void _useTallViewport(WidgetTester tester) {
   addTearDown(tester.view.resetDevicePixelRatio);
 }
 
-Future<void> _chooseAndContinue(
-  WidgetTester tester,
-  String optionId,
-) async {
+Future<void> _chooseAndContinue(WidgetTester tester, String optionId) async {
   final option = find.byKey(ValueKey('lab-option-$optionId'));
   await tester.ensureVisible(option);
   await tester.tap(option);
@@ -40,9 +37,7 @@ Future<void> _chooseAndContinue(
     find.byKey(const ValueKey('lab-consequence-screen')),
   );
 
-  final continueButton = find.byKey(
-    const ValueKey('lab-consequence-continue'),
-  );
+  final continueButton = find.byKey(const ValueKey('lab-consequence-continue'));
   await tester.ensureVisible(continueButton);
   await tester.tap(continueButton);
   await tester.pump();
@@ -94,23 +89,14 @@ void main() {
     );
 
     expect(find.text('Safe completion'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('lab-ending-narrative')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('lab-ending-narrative')), findsOneWidget);
     expect(
       find.byKey(const ValueKey('lab-ending-turning-point')),
       findsOneWidget,
     );
     expect(find.byKey(const ValueKey('lab-ending-journey')), findsOneWidget);
-    expect(
-      find.textContaining('Permit and isolation'),
-      findsOneWidget,
-    );
-    expect(
-      find.textContaining('Changing SIMOPS conditions'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Permit and isolation'), findsOneWidget);
+    expect(find.textContaining('Changing SIMOPS conditions'), findsOneWidget);
     expect(find.byKey(const ValueKey('lab-view-debrief')), findsOneWidget);
     expect(find.text('OPTIMAL'), findsNothing);
 
@@ -119,10 +105,7 @@ void main() {
     await tester.tap(debriefButton);
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const ValueKey('lab-learner-debrief')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('lab-learner-debrief')), findsOneWidget);
     expect(find.text('Your outcome'), findsOneWidget);
     expect(find.text('Your decision journey'), findsOneWidget);
     expect(find.text('Important turning points'), findsOneWidget);

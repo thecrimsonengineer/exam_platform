@@ -38,7 +38,9 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: LabLibraryScreen()));
 
     expect(
-      find.text('Once confirmed, that decision is locked for the current attempt.'),
+      find.text(
+        'Once confirmed, that decision is locked for the current attempt.',
+      ),
       findsNothing,
     );
 
@@ -50,7 +52,9 @@ void main() {
     expect(find.text('Confirm your decision'), findsOneWidget);
     expect(find.text('See what happens next'), findsOneWidget);
     expect(
-      find.text('Once confirmed, that decision is locked for the current attempt.'),
+      find.text(
+        'Once confirmed, that decision is locked for the current attempt.',
+      ),
       findsOneWidget,
     );
   });
@@ -61,19 +65,14 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: LabLibraryScreen()));
 
     const scenarioId = 'confined_space_h2s_simops';
-    final start = find.byKey(
-      const ValueKey('lab-scenario-open-$scenarioId'),
-    );
+    final start = find.byKey(const ValueKey('lab-scenario-open-$scenarioId'));
 
     await tester.ensureVisible(start);
     await tester.tap(start);
     await tester.pumpAndSettle();
 
     expect(find.text('Scenario Briefing'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('lab-scenario-briefing')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('lab-scenario-briefing')), findsOneWidget);
     expect(find.text('Your role'), findsOneWidget);
     expect(find.text('Situation'), findsOneWidget);
     expect(find.text('Your objective'), findsOneWidget);
@@ -81,9 +80,7 @@ void main() {
     expect(find.text('What you know so far'), findsOneWidget);
     expect(find.byKey(const ValueKey('lab-mode-guided')), findsNothing);
 
-    final continueButton = find.byKey(
-      const ValueKey('lab-briefing-continue'),
-    );
+    final continueButton = find.byKey(const ValueKey('lab-briefing-continue'));
     await tester.ensureVisible(continueButton);
     await tester.tap(continueButton);
     await tester.pumpAndSettle();
