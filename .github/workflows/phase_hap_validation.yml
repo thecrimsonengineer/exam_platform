@@ -43,6 +43,7 @@ jobs:
           lib/screens/courses/csp/study_subtopic_screen_dark.dart
           lib/screens/lab/lab_reference_player_screen.dart
           lib/screens/admin/haptic_diagnostics_screen.dart
+          lib/screens/admin/admin_home_screen.dart
           lib/features/learning_twin/integration/learning_twin_progress_guidance.dart
           test/services/haptics
           test/services/settings/haptic_preference_service_test.dart
