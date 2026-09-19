@@ -68,6 +68,21 @@ void main() {
 
       expect(find.textContaining('H2S may be present'), findsOneWidget);
       expect(find.text('Decision 2'), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('lab-option-g1')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
+      await _pumpUntilFound(
+        tester,
+        find.textContaining('Nearby line-breaking SIMOPS begins'),
+      );
+
+      expect(
+        find.textContaining('Nearby line-breaking SIMOPS begins'),
+        findsOneWidget,
+      );
+      expect(find.text('Decision 3'), findsOneWidget);
+      expect(find.byKey(const ValueKey('lab-option-s1')), findsOneWidget);
     },
   );
 
