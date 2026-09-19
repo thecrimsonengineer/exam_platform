@@ -28,9 +28,9 @@ Flutter
   -> PostgreSQL / Storage
 ```
 
-All FR3 public tables have RLS enabled. Direct `anon` and `authenticated` table privileges are revoked. Server-side access remains available to `service_role`, which must never be embedded in Flutter.
+All FR3 public tables have RLS enabled. Direct `anon` and `authenticated` table privileges are revoked. Each table also has an explicit fail-closed `FOR ALL` RLS policy for those client roles using `false` for both `USING` and `WITH CHECK`. Server-side access remains available to `service_role`, which must never be embedded in Flutter.
 
-The current Supabase advisor notice that RLS is enabled without policies is therefore intentional. Direct client table access is denied by privileges as well as by the absence of permissive RLS policies.
+The shared trigger function also revokes direct execution from `PUBLIC`, `anon` and `authenticated`.
 
 ## Canonical tables
 
@@ -83,8 +83,8 @@ The empty-database readiness plan used a bitmap index scan followed by a small s
 
 Immediately after schema creation:
 
-- Security advisor: no warning/error finding. Fourteen informational `rls_enabled_no_policy` findings are expected under the Edge-only access model.
-- Performance advisor: unused-index informational findings only. This is expected because every FR3 table still contains zero rows.
+- Security advisor: **zero lints** after explicit deny-all client RLS policies were added.
+- Performance advisor: unused-index informational findings only. This is expected because every FR3 table still contains zero rows. Representative `EXPLAIN` checks nevertheless select the intended FR3 indexes.
 
 ## Data-preservation result
 
