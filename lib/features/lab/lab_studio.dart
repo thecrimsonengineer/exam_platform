@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 import 'lab_contracts.dart';
+import 'lab_dqg300.dart';
+import 'lab_dqg300_certificate.dart';
+import 'lab_l4l_certificate.dart';
+import 'lab_l4n_certificate.dart';
 import 'lab_validation.dart';
 
 class LabStudioException implements Exception {
@@ -143,7 +147,125 @@ class InMemoryLabPublishedRepository implements LabPublishedRepository {
         'Published LAB versions are immutable and cannot be overwritten.',
       );
     }
+    _validateImmutableSnapshot(version);
     _versions[key] = version;
+  }
+
+  void _validateImmutableSnapshot(LabPublishedVersion version) {
+    if (version.reviewerId.trim().isEmpty) {
+      throw const LabStudioException(
+        'Published LAB snapshot requires a reviewer or validation authority.',
+      );
+    }
+
+    late final LabPackage package;
+    try {
+      package = LabPackage.decode(version.publishedJson);
+    } catch (error) {
+      throw LabStudioException(
+        'Published LAB snapshot is invalid: ' + error.toString(),
+      );
+    }
+
+    if (package.metadata.lifecycle != LabLifecycleStatus.published) {
+      throw const LabStudioException(
+        'Immutable repository accepts only PUBLISHED LAB snapshots.',
+      );
+    }
+    if (package.metadata.id != version.labId ||
+        package.metadata.versionId != version.versionId) {
+      throw const LabStudioException(
+        'Published LAB snapshot identity does not match its repository key.',
+      );
+    }
+
+    final authority = version.validationAuthority;
+    final hasAutomatedEvidence =
+        version.qualityEvidenceJson != null ||
+        version.exhaustiveRouteEvidenceJson != null ||
+        version.publishEvidenceJson != null;
+
+    if (authority == null) {
+      if (hasAutomatedEvidence) {
+        throw const LabStudioException(
+          'Automated LAB evidence requires a validation authority.',
+        );
+      }
+      return;
+    }
+    if (authority.trim().isEmpty || version.reviewerId.trim() != authority.trim()) {
+      throw const LabStudioException(
+        'Automated LAB validation authority must match the published reviewer.',
+      );
+    }
+
+    final dqgSource = version.qualityEvidenceJson;
+    final l4lSource = version.exhaustiveRouteEvidenceJson;
+    final l4nSource = version.publishEvidenceJson;
+    if (dqgSource == null || l4lSource == null || l4nSource == null) {
+      throw const LabStudioException(
+        'Automated LAB publication requires DQG300, L4L and L4N evidence.',
+      );
+    }
+
+    late final LabDqg300EvidenceCertificate dqg;
+    late final LabL4lEvidenceCertificate l4l;
+    late final LabL4nPublishEvidenceCertificate l4n;
+    try {
+      dqg = LabDqg300EvidenceCertificate.decode(dqgSource);
+      l4l = LabL4lEvidenceCertificate.decode(l4lSource);
+      l4n = LabL4nPublishEvidenceCertificate.decode(l4nSource);
+    } catch (error) {
+      throw LabStudioException(
+        'Automated LAB evidence certificate is invalid: ' + error.toString(),
+      );
+    }
+
+    bool pinned(String labId, String versionId, String certAuthority) =>
+        labId == version.labId &&
+        versionId == version.versionId &&
+        certAuthority == authority.trim();
+
+    if (!pinned(dqg.labId, dqg.versionId, dqg.validationAuthority) ||
+        !pinned(l4l.labId, l4l.versionId, l4l.validationAuthority) ||
+        !pinned(l4n.labId, l4n.versionId, l4n.validationAuthority) ||
+        !dqg.isPass ||
+        !l4l.isPass ||
+        !l4n.isPass) {
+      throw const LabStudioException(
+        'Automated LAB evidence is not valid for this immutable version.',
+      );
+    }
+
+    if (dqg.validatedAtIso != l4l.validatedAtIso ||
+        dqg.validatedAtIso != l4n.validatedAtIso) {
+      throw const LabStudioException(
+        'Automated LAB evidence certificates must share one validation timestamp.',
+      );
+    }
+
+    final decisionCertificates = <String, LabDqg300DecisionCertificate>{
+      for (final decision in dqg.decisions) decision.nodeId: decision,
+    };
+    final decisionNodes = package.nodes.whereType<LabDecisionNode>().toList();
+    if (decisionCertificates.length != decisionNodes.length ||
+        decisionNodes.any((node) {
+          final certificate = decisionCertificates[node.id];
+          return certificate == null ||
+              certificate.decisionSignature !=
+                  LabDqg300Validator.decisionSignature(node);
+        })) {
+      throw const LabStudioException(
+        'DQG300 evidence does not match the immutable Decision Node content.',
+      );
+    }
+
+    if (l4n.routeExplorationEvidence['exhaustiveProofFingerprint'] !=
+        l4l.routeEvidence['fingerprint']) {
+      throw const LabStudioException(
+        'L4N route exploration is not bound to the persisted L4L proof.',
+      );
+    }
   }
 }
 
@@ -326,9 +448,18 @@ class Lab1000StudioService {
     LabStudioWorkspace workspace, {
     required String newVersionId,
   }) {
-    if (!workspace.isPublished) {
+    final immutable = workspace.publishedVersion;
+    if (!workspace.isPublished || immutable == null) {
       throw const LabStudioException(
-        'A new version is created from an immutable published LAB.',
+        'A new version must be created from a persisted immutable LAB.',
+      );
+    }
+    if (immutable.labId != workspace.package.metadata.id ||
+        immutable.versionId != workspace.package.metadata.versionId ||
+        immutable.publishedJson != workspace.sourceJson ||
+        immutable.reviewerId != workspace.reviewerId) {
+      throw const LabStudioException(
+        'Published workspace no longer matches its immutable repository snapshot.',
       );
     }
     LabIds.requireCanonical(newVersionId, 'LAB version ID');
