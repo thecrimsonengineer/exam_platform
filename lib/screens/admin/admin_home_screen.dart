@@ -8,6 +8,7 @@ import '../../services/auth/learner_local_identity.dart';
 import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import 'lab/lab1000_studio_screen.dart';
+import 'haptic_diagnostics_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -52,6 +53,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     _NavItem(Icons.people_alt_rounded, 'Learners', 'LEARNERS', enabled: false),
     _NavItem(Icons.analytics_rounded, 'Analytics', 'INSIGHTS', enabled: false),
     _NavItem(Icons.settings_rounded, 'Settings', 'SYSTEM', enabled: false),
+    _NavItem(Icons.vibration_rounded, 'Haptic Diagnostics', 'SYSTEM'),
   ];
 
   @override
@@ -132,6 +134,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   void _openRepository() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const ContentRepositoryScreen()),
+    );
+  }
+
+  void _openHapticDiagnostics() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const HapticDiagnosticsScreen()),
     );
   }
 
@@ -221,6 +229,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       _openRepository();
     } else if (index == 6) {
       _openStudio();
+    } else if (index == 11) {
+      _openHapticDiagnostics();
     }
   }
 
