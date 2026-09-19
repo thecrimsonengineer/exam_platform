@@ -376,6 +376,55 @@ void main() {
     );
   });
 
+  test('L4L coverage excludes an option whose branch cannot complete', () {
+    final decoded = jsonDecode(
+      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+    ) as Map;
+    final root = decoded.cast<String, Object?>();
+
+    final stateSchema = (root['stateSchema'] as Map).cast<String, Object?>();
+    final routeSchema = (stateSchema['route'] as Map).cast<String, Object?>();
+    final allowedValues = routeSchema['allowedValues'] as List;
+    allowedValues.add('dead');
+
+    final consequences = root['consequences'] as List;
+    final weak = consequences
+        .map((item) => (item as Map).cast<String, Object?>())
+        .firstWhere((item) => item['id'] == 'c_weak');
+    final mutations = weak['mutations'] as List;
+    final routeMutation = mutations
+        .map((item) => (item as Map).cast<String, Object?>())
+        .firstWhere((item) => item['stateId'] == 'route');
+    routeMutation['value'] = 'dead';
+
+    final rawGates = root['gates'] as List;
+    final normal = rawGates
+        .map((item) => (item as Map).cast<String, Object?>())
+        .firstWhere((item) => item['id'] == 'normal_route');
+    normal['condition'] = <String, Object?>{
+      'op': 'ENUM',
+      'stateId': 'route',
+      'equals': 'safe',
+    };
+
+    final report = const LabExhaustiveRouteValidator().run(
+      LabPackage.fromJson(root),
+    );
+
+    expect(report.isValid, isFalse);
+    expect(report.completeOptionCoverage, isFalse);
+    expect(report.completeConsequenceCoverage, isFalse);
+    expect(report.uncoveredOptionKeys, contains('decision_one::o3'));
+    expect(report.uncoveredConsequenceIds, contains('c_weak'));
+    expect(
+      report.issues.any(
+        (issue) =>
+            issue.contains('Decision decision_one option o3 has no Story Gate'),
+      ),
+      isTrue,
+    );
+  });
+
   test('L4L fails closed when an authored gate can never win', () {
     final decoded = jsonDecode(
       File(
