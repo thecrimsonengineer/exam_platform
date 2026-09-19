@@ -90,7 +90,9 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     if (node == null) return;
 
     final selectedOption = node.requireOption(optionId);
-    final elapsed = DateTime.now().difference(_decisionStartedAt).inMilliseconds;
+    final elapsed = DateTime.now()
+        .difference(_decisionStartedAt)
+        .inMilliseconds;
 
     setState(() => _busy = true);
     try {
@@ -213,11 +215,9 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
                   _ModeBadge(mode: widget.mode),
                   const Spacer(),
                   Text(
-                    'Decision ' + (session.decisionHistory.length + 1).toString(),
-                    style: TextStyle(
-                      color: muted,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    'Decision ' +
+                        (session.decisionHistory.length + 1).toString(),
+                    style: TextStyle(color: muted, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
@@ -314,8 +314,9 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         const SizedBox(height: 4),
         FilledButton.icon(
           key: const ValueKey('lab-confirm-decision'),
-          onPressed:
-              _selectedOptionId == null || _busy ? null : _confirmDecision,
+          onPressed: _selectedOptionId == null || _busy
+              ? null
+              : _confirmDecision,
           icon: _busy
               ? const SizedBox(
                   width: 18,
@@ -506,10 +507,7 @@ class _DecisionHistoryRow extends StatelessWidget {
             radius: 14,
             child: Text(
               index.toString(),
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-              ),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
             ),
           ),
           const SizedBox(width: 11),

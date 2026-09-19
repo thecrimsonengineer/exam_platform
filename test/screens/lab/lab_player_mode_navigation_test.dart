@@ -27,17 +27,11 @@ void main() {
     (tester) async {
       _useTallTestViewport(tester);
 
-      await tester.pumpWidget(
-        const MaterialApp(home: LabPlayerShellScreen()),
-      );
+      await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
 
       final guided = find.byKey(const ValueKey('lab-mode-guided'));
-      final professional = find.byKey(
-        const ValueKey('lab-mode-professional'),
-      );
-      final assessment = find.byKey(
-        const ValueKey('lab-mode-assessment'),
-      );
+      final professional = find.byKey(const ValueKey('lab-mode-professional'));
+      final assessment = find.byKey(const ValueKey('lab-mode-assessment'));
 
       expect(guided, findsOneWidget);
       expect(professional, findsOneWidget);
@@ -58,7 +52,10 @@ void main() {
 
       expect(find.text('Guided LAB'), findsWidgets);
       expect(find.byKey(const ValueKey('lab-decision-prompt')), findsOneWidget);
-      expect(find.byKey(const ValueKey('lab-confirm-decision')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('lab-confirm-decision')),
+        findsOneWidget,
+      );
       expect(
         find.textContaining('A contractor crew is ready to enter a vessel'),
         findsOneWidget,
@@ -67,15 +64,9 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
       await tester.pump();
       await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
-      await _pumpUntilFound(
-        tester,
-        find.textContaining('H2S may be present'),
-      );
+      await _pumpUntilFound(tester, find.textContaining('H2S may be present'));
 
-      expect(
-        find.textContaining('H2S may be present'),
-        findsOneWidget,
-      );
+      expect(find.textContaining('H2S may be present'), findsOneWidget);
       expect(find.text('Decision 2'), findsOneWidget);
     },
   );
@@ -83,13 +74,9 @@ void main() {
   testWidgets('Professional mode opens the playable LAB', (tester) async {
     _useTallTestViewport(tester);
 
-    await tester.pumpWidget(
-      const MaterialApp(home: LabPlayerShellScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
 
-    await tester.tap(
-      find.byKey(const ValueKey('lab-mode-professional')),
-    );
+    await tester.tap(find.byKey(const ValueKey('lab-mode-professional')));
     await tester.pump();
 
     expect(find.text('Professional LAB'), findsOneWidget);
@@ -98,13 +85,9 @@ void main() {
   testWidgets('Assessment mode opens the playable LAB', (tester) async {
     _useTallTestViewport(tester);
 
-    await tester.pumpWidget(
-      const MaterialApp(home: LabPlayerShellScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
 
-    await tester.tap(
-      find.byKey(const ValueKey('lab-mode-assessment')),
-    );
+    await tester.tap(find.byKey(const ValueKey('lab-mode-assessment')));
     await tester.pump();
 
     expect(find.text('Assessment LAB'), findsOneWidget);
