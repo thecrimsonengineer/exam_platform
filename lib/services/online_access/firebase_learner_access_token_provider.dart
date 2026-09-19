@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'learner_online_access_gate.dart';
 
-class FirebaseLearnerAccessTokenProvider
-    implements LearnerAccessTokenProvider {
+class FirebaseLearnerAccessTokenProvider implements LearnerAccessTokenProvider {
   FirebaseLearnerAccessTokenProvider({FirebaseAuth? firebaseAuth})
     : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 

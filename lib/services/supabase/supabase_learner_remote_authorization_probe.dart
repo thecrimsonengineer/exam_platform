@@ -48,9 +48,7 @@ class SupabaseLearnerRemoteAuthorizationProbe
 
     final data = await _invoker.invoke(
       functionName: functionName,
-      headers: <String, String>{
-        'Authorization': 'Bearer $normalizedToken',
-      },
+      headers: <String, String>{'Authorization': 'Bearer $normalizedToken'},
     );
 
     if (data is! Map) {

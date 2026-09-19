@@ -14,10 +14,7 @@ void main() {
   });
 
   test('FR2 rejects missing configuration', () {
-    expect(
-      SupabaseRuntimeConfig.tryParse(url: '', publishableKey: ''),
-      isNull,
-    );
+    expect(SupabaseRuntimeConfig.tryParse(url: '', publishableKey: ''), isNull);
   });
 
   test('FR2 rejects secret and service-role style client keys', () {

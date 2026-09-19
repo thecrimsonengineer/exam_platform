@@ -2,24 +2,26 @@ import 'package:exam_platform/services/supabase/supabase_learner_remote_authoriz
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('FR2 probe sends Firebase token only to the auth Edge Function', () async {
-    final invoker = _FakeInvoker(response: <String, Object?>{
-      'authorized': true,
-    });
-    final probe = SupabaseLearnerRemoteAuthorizationProbe(invoker: invoker);
+  test(
+    'FR2 probe sends Firebase token only to the auth Edge Function',
+    () async {
+      final invoker = _FakeInvoker(
+        response: <String, Object?>{'authorized': true},
+      );
+      final probe = SupabaseLearnerRemoteAuthorizationProbe(invoker: invoker);
 
-    final result = await probe.authorize(accessToken: ' firebase-token ');
+      final result = await probe.authorize(accessToken: ' firebase-token ');
 
-    expect(result, isTrue);
-    expect(
-      invoker.lastFunctionName,
-      SupabaseLearnerRemoteAuthorizationProbe.functionName,
-    );
-    expect(
-      invoker.lastHeaders,
-      <String, String>{'Authorization': 'Bearer firebase-token'},
-    );
-  });
+      expect(result, isTrue);
+      expect(
+        invoker.lastFunctionName,
+        SupabaseLearnerRemoteAuthorizationProbe.functionName,
+      );
+      expect(invoker.lastHeaders, <String, String>{
+        'Authorization': 'Bearer firebase-token',
+      });
+    },
+  );
 
   test('FR2 probe fails closed for malformed responses', () async {
     final probe = SupabaseLearnerRemoteAuthorizationProbe(
@@ -31,9 +33,7 @@ void main() {
 
   test('FR2 probe fails closed when authorized is not true', () async {
     final probe = SupabaseLearnerRemoteAuthorizationProbe(
-      invoker: _FakeInvoker(
-        response: <String, Object?>{'authorized': false},
-      ),
+      invoker: _FakeInvoker(response: <String, Object?>{'authorized': false}),
     );
 
     expect(await probe.authorize(accessToken: 'token'), isFalse);

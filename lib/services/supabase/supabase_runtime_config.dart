@@ -39,10 +39,7 @@ class SupabaseRuntimeConfig {
       return null;
     }
 
-    return SupabaseRuntimeConfig._(
-      url: uri,
-      publishableKey: normalizedKey,
-    );
+    return SupabaseRuntimeConfig._(url: uri, publishableKey: normalizedKey);
   }
 
   static bool _isAllowedScheme(Uri uri) {

@@ -14,8 +14,11 @@ void main() {
 
   test('FR3 schema migration is schema-only', () {
     expect(
-      RegExp(r'^\s*(insert|copy)\b', caseSensitive: false, multiLine: true)
-          .hasMatch(sql),
+      RegExp(
+        r'^\s*(insert|copy)\b',
+        caseSensitive: false,
+        multiLine: true,
+      ).hasMatch(sql),
       isFalse,
     );
   });
@@ -48,9 +51,7 @@ void main() {
       );
       expect(
         sql,
-        contains(
-          'revoke all on table public.$table from anon, authenticated;',
-        ),
+        contains('revoke all on table public.$table from anon, authenticated;'),
         reason: '$table must remain inaccessible to direct learner roles.',
       );
       expect(
@@ -75,21 +76,14 @@ void main() {
   test('FR3 preserves immutable version and rollback constraints', () {
     expect(sql, contains('primary key (content_id, version)'));
     expect(sql, contains('primary key (question_id, version)'));
+    expect(sql, contains('published_packages_one_current_uidx'));
     expect(
       sql,
-      contains('published_packages_one_current_uidx'),
+      contains('create unique index exam_study_plans_one_active_uidx'),
     );
     expect(
       sql,
-      contains(
-        'create unique index exam_study_plans_one_active_uidx',
-      ),
-    );
-    expect(
-      sql,
-      contains(
-        'create unique index daily_study_plans_one_active_per_day_uidx',
-      ),
+      contains('create unique index daily_study_plans_one_active_per_day_uidx'),
     );
   });
 

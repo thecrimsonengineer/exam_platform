@@ -17,15 +17,18 @@ void main() {
     expect(source, contains('issuer: firebaseIssuer'));
   });
 
-  test('FR2 Edge auth gateway does not embed privileged Supabase credentials', () {
-    final source = File(
-      'supabase/functions/firebase-auth-probe/index.ts',
-    ).readAsStringSync();
+  test(
+    'FR2 Edge auth gateway does not embed privileged Supabase credentials',
+    () {
+      final source = File(
+        'supabase/functions/firebase-auth-probe/index.ts',
+      ).readAsStringSync();
 
-    expect(source, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
-    expect(source, isNot(contains('sb_secret_')));
-    expect(source, isNot(contains('service_role')));
-  });
+      expect(source, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
+      expect(source, isNot(contains('sb_secret_')));
+      expect(source, isNot(contains('service_role')));
+    },
+  );
 
   test('FR2 pins verify_jwt=false for the custom Firebase gateway', () {
     final config = File('supabase/config.toml').readAsStringSync();

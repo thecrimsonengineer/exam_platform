@@ -4,37 +4,43 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   final checkedAt = DateTime.utc(2026, 9, 19, 12);
 
-  test('FR2 authorizes only after token and remote authorization succeed', () async {
-    final tokenProvider = _FakeTokenProvider(token: 'firebase-token');
-    final probe = _FakeProbe(authorized: true);
-    final gate = LearnerOnlineAccessGate(
-      tokenProvider: tokenProvider,
-      authorizationProbe: probe,
-      clock: () => checkedAt,
-    );
+  test(
+    'FR2 authorizes only after token and remote authorization succeed',
+    () async {
+      final tokenProvider = _FakeTokenProvider(token: 'firebase-token');
+      final probe = _FakeProbe(authorized: true);
+      final gate = LearnerOnlineAccessGate(
+        tokenProvider: tokenProvider,
+        authorizationProbe: probe,
+        clock: () => checkedAt,
+      );
 
-    final result = await gate.validate();
+      final result = await gate.validate();
 
-    expect(result.status, LearnerOnlineAccessStatus.authorized);
-    expect(result.isAuthorized, isTrue);
-    expect(result.checkedAt, checkedAt);
-    expect(probe.calls, 1);
-    expect(probe.lastToken, 'firebase-token');
-  });
+      expect(result.status, LearnerOnlineAccessStatus.authorized);
+      expect(result.isAuthorized, isTrue);
+      expect(result.checkedAt, checkedAt);
+      expect(probe.calls, 1);
+      expect(probe.lastToken, 'firebase-token');
+    },
+  );
 
-  test('FR2 does not call backend when there is no Firebase user token', () async {
-    final probe = _FakeProbe(authorized: true);
-    final gate = LearnerOnlineAccessGate(
-      tokenProvider: _FakeTokenProvider(token: null),
-      authorizationProbe: probe,
-    );
+  test(
+    'FR2 does not call backend when there is no Firebase user token',
+    () async {
+      final probe = _FakeProbe(authorized: true);
+      final gate = LearnerOnlineAccessGate(
+        tokenProvider: _FakeTokenProvider(token: null),
+        authorizationProbe: probe,
+      );
 
-    final result = await gate.validate();
+      final result = await gate.validate();
 
-    expect(result.status, LearnerOnlineAccessStatus.noAuthenticatedUser);
-    expect(result.isAuthorized, isFalse);
-    expect(probe.calls, 0);
-  });
+      expect(result.status, LearnerOnlineAccessStatus.noAuthenticatedUser);
+      expect(result.isAuthorized, isFalse);
+      expect(probe.calls, 0);
+    },
+  );
 
   test('FR2 blocks protected access when backend rejects the token', () async {
     final gate = LearnerOnlineAccessGate(
