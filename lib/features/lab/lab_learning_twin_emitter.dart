@@ -21,6 +21,7 @@ class LabLearningEvidenceEmissionResult {
       !issues.any((issue) => issue.startsWith('L4P transition'));
   bool get allDelivered =>
       transitionValid &&
+      issues.isEmpty &&
       attemptedEventIds.length == deliveredEventIds.length &&
       failedEventIds.isEmpty;
 }
@@ -156,6 +157,12 @@ class LabIncrementalLearningTwinEvidenceEmitter {
         .skip(before.decisionHistory.length)
         .toList(growable: false);
     if (appended.isEmpty) {
+      return issues;
+    }
+    if (after.revision <= before.revision) {
+      issues.add(
+        'L4P transition appended Decision Events without advancing revision.',
+      );
       return issues;
     }
 
