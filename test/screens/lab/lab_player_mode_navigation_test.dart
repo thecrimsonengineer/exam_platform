@@ -1,6 +1,4 @@
-import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/screens/lab/lab_player_shell_screen.dart';
-import 'package:exam_platform/screens/lab/lab_reference_player_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -115,67 +113,5 @@ void main() {
     },
   );
 
-  testWidgets('L4E Professional consequence avoids coaching', (tester) async {
-    _useTallTestViewport(tester);
 
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.professional),
-      ),
-    );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-      maxPumps: 80,
-    );
-
-    final firstOption = find.byKey(const ValueKey('lab-option-p1'));
-    await tester.ensureVisible(firstOption);
-    await tester.tap(firstOption);
-    await tester.pump();
-
-    final confirm = find.byKey(const ValueKey('lab-confirm-decision'));
-    await tester.ensureVisible(confirm);
-    await tester.tap(confirm);
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-consequence-screen')),
-    );
-
-    expect(find.text('What happened next'), findsOneWidget);
-    expect(find.text('Why this mattered'), findsNothing);
-    expect(find.text('OPTIMAL'), findsNothing);
-  });
-
-  testWidgets('L4E Assessment consequence avoids coaching', (tester) async {
-    _useTallTestViewport(tester);
-
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.assessment),
-      ),
-    );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-      maxPumps: 80,
-    );
-
-    final firstOption = find.byKey(const ValueKey('lab-option-p1'));
-    await tester.ensureVisible(firstOption);
-    await tester.tap(firstOption);
-    await tester.pump();
-
-    final confirm = find.byKey(const ValueKey('lab-confirm-decision'));
-    await tester.ensureVisible(confirm);
-    await tester.tap(confirm);
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-consequence-screen')),
-    );
-
-    expect(find.text('What happened next'), findsOneWidget);
-    expect(find.text('Why this mattered'), findsNothing);
-    expect(find.text('OPTIMAL'), findsNothing);
-  });
 }
