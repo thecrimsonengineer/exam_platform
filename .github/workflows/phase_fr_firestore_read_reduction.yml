@@ -42,7 +42,8 @@ jobs:
             lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
             lib/features/exam_readiness/repositories/exam_study_plan_repository.dart \
             lib/features/exam_readiness/repositories/readiness_snapshot_repository.dart \
-            test/services/performance/firestore_read_audit_test.dart
+            test/services/performance/firestore_read_audit_test.dart \
+            test/architecture/phase_fr_local_data_preservation_test.dart
           git diff -- \
             lib/services/performance/firestore_read_audit.dart \
             lib/services/auth/user_role_service.dart \
@@ -67,6 +68,9 @@ jobs:
 
       - name: FR1 read audit tests
         run: flutter test test/services/performance/firestore_read_audit_test.dart
+
+      - name: FR learner local data preservation gate
+        run: flutter test test/architecture/phase_fr_local_data_preservation_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
