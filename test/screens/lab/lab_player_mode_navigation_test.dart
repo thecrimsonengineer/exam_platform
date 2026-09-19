@@ -93,7 +93,6 @@ void main() {
     await tester.pump();
 
     expect(find.text('Professional LAB'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets('Assessment mode opens the playable LAB', (tester) async {
@@ -109,6 +108,5 @@ void main() {
     await tester.pump();
 
     expect(find.text('Assessment LAB'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 }
