@@ -5,6 +5,7 @@ import 'lab_dqg300.dart';
 import 'lab_dqg300_certificate.dart';
 import 'lab_l4l_certificate.dart';
 import 'lab_l4n_certificate.dart';
+import 'lab_snapshot_fingerprint.dart';
 import 'lab_validation.dart';
 
 class LabStudioException implements Exception {
@@ -110,6 +111,7 @@ class LabPublishedVersion {
     this.qualityEvidenceJson,
     this.exhaustiveRouteEvidenceJson,
     this.publishEvidenceJson,
+    this.snapshotFingerprint,
   });
 
   final String labId;
@@ -121,6 +123,7 @@ class LabPublishedVersion {
   final String? qualityEvidenceJson;
   final String? exhaustiveRouteEvidenceJson;
   final String? publishEvidenceJson;
+  final String? snapshotFingerprint;
 }
 
 abstract class LabPublishedRepository {
@@ -183,7 +186,8 @@ class InMemoryLabPublishedRepository implements LabPublishedRepository {
     final hasAutomatedEvidence =
         version.qualityEvidenceJson != null ||
         version.exhaustiveRouteEvidenceJson != null ||
-        version.publishEvidenceJson != null;
+        version.publishEvidenceJson != null ||
+        version.snapshotFingerprint != null;
 
     if (authority == null) {
       if (hasAutomatedEvidence) {
@@ -197,6 +201,17 @@ class InMemoryLabPublishedRepository implements LabPublishedRepository {
         version.reviewerId.trim() != authority.trim()) {
       throw const LabStudioException(
         'Automated LAB validation authority must match the published reviewer.',
+      );
+    }
+
+    final snapshotFingerprint = version.snapshotFingerprint;
+    if (snapshotFingerprint == null ||
+        !LabSnapshotFingerprint.matches(
+          publishedJson: version.publishedJson,
+          fingerprint: snapshotFingerprint,
+        )) {
+      throw const LabStudioException(
+        'Automated LAB snapshot fingerprint does not match published JSON.',
       );
     }
 
