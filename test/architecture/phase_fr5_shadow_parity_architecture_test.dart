@@ -7,15 +7,19 @@ void main() {
   const cliPath = 'tool/fr5_shadow_parity/fr5_shadow_parity.dart';
   const workflowPath =
       '.github/workflows/phase_fr_firestore_read_reduction.yml';
+  const productionWorkflowPath =
+      '.github/workflows/phase_fr5_production_shadow_parity.yml';
 
   late String core;
   late String cli;
   late String workflow;
+  late String productionWorkflow;
 
   setUpAll(() {
     core = File(corePath).readAsStringSync();
     cli = File(cliPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
+    productionWorkflow = File(productionWorkflowPath).readAsStringSync();
   });
 
   test('FR5 tooling stays outside learner runtime', () {
@@ -50,6 +54,25 @@ void main() {
     expect(core, contains("'ledger_mismatch'"));
     expect(core, contains("'extra_ledger'"));
     expect(core, contains('fr5LearnerVisibleMatches'));
+  });
+
+  test('FR5 production workflow is manual, credentialed and shadow-only', () {
+    expect(productionWorkflow, contains('workflow_dispatch:'));
+    expect(
+      productionWorkflow,
+      contains("github.ref == 'refs/heads/phase-fr5-shadow-data-parity'"),
+    );
+    expect(productionWorkflow, contains('google-github-actions/auth@v3'));
+    expect(productionWorkflow, contains('GCP_WIF_PROVIDER'));
+    expect(
+      productionWorkflow,
+      contains('GCP_FIRESTORE_READER_SERVICE_ACCOUNT'),
+    );
+    expect(productionWorkflow, contains('FIREBASE_SERVICE_ACCOUNT_JSON'));
+    expect(productionWorkflow, contains('SUPABASE_SECRET_KEY'));
+    expect(productionWorkflow, contains('FR5_SHADOW_ONLY'));
+    expect(productionWorkflow, contains('--preflight'));
+    expect(productionWorkflow, isNot(contains('upload-artifact')));
   });
 
   test('FR5 CI preserves FR4, frozen L4 and full repository gates', () {
