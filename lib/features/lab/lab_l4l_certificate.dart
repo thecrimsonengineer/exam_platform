@@ -18,8 +18,7 @@ class LabL4lEvidenceCertificate {
         'L4L certificate requires validation authority and timestamp.',
       );
     }
-    if (this.routeEvidence['schemaVersion'] !=
-        'csp11.lab.l4l.exhaustive.v1') {
+    if (this.routeEvidence['schemaVersion'] != 'csp11.lab.l4l.exhaustive.v1') {
       throw const LabContractException(
         'L4L certificate requires exhaustive route evidence v1.',
       );
@@ -105,8 +104,6 @@ class LabL4lEvidenceCertificate {
         'L4L evidence certificate root must be an object.',
       );
     }
-    return LabL4lEvidenceCertificate.fromJson(
-      decoded.cast<String, Object?>(),
-    );
+    return LabL4lEvidenceCertificate.fromJson(decoded.cast<String, Object?>());
   }
 }

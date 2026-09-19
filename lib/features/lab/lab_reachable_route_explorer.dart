@@ -3,11 +3,7 @@ import 'dart:convert';
 import 'lab_contracts.dart';
 import 'lab_exhaustive_route_validator.dart';
 
-enum LabReachableRouteExplorationMode {
-  exhaustive,
-  representative,
-  blocked,
-}
+enum LabReachableRouteExplorationMode { exhaustive, representative, blocked }
 
 class LabReachableRouteExplorationReport {
   const LabReachableRouteExplorationReport({
@@ -45,8 +41,7 @@ class LabReachableRouteExplorationReport {
   int get discoveredRouteCount => exhaustiveReport.routes.length;
   int get selectedRouteCount => selectedRoutes.length;
 
-  bool get isExhaustive =>
-      mode == LabReachableRouteExplorationMode.exhaustive;
+  bool get isExhaustive => mode == LabReachableRouteExplorationMode.exhaustive;
   bool get isRepresentative =>
       mode == LabReachableRouteExplorationMode.representative;
   bool get isBlocked => mode == LabReachableRouteExplorationMode.blocked;
@@ -63,8 +58,8 @@ class LabReachableRouteExplorationReport {
     List<String> sortedStrings(Iterable<String> values) =>
         values.toList()..sort();
 
-    final gateTypes =
-        selectedGateTypeCoverage.map((type) => type.name).toList()..sort();
+    final gateTypes = selectedGateTypeCoverage.map((type) => type.name).toList()
+      ..sort();
     final routeFingerprints =
         selectedRoutes.map((route) => route.fingerprint).toList()..sort();
 
@@ -75,10 +70,10 @@ class LabReachableRouteExplorationReport {
       'hardRouteLimit': hardRouteLimit,
       'discoveredRouteCount': discoveredRouteCount,
       'selectedRouteCount': selectedRouteCount,
-      'selectedOptionCoverageKeys':
-          sortedStrings(selectedOptionCoverageKeys),
-      'selectedConsequenceCoverageIds':
-          sortedStrings(selectedConsequenceCoverageIds),
+      'selectedOptionCoverageKeys': sortedStrings(selectedOptionCoverageKeys),
+      'selectedConsequenceCoverageIds': sortedStrings(
+        selectedConsequenceCoverageIds,
+      ),
       'selectedGateCoverageIds': sortedStrings(selectedGateCoverageIds),
       'selectedGateTypeCoverage': gateTypes,
       'selectedEndingIds': sortedStrings(selectedEndingIds),
@@ -203,13 +198,14 @@ class LabReachableRouteExplorer {
       selectedRoutes: List<LabExhaustiveRouteTrace>.unmodifiable(selected),
       routeBudget: routeBudget,
       hardRouteLimit: hardRouteLimit,
-      selectedOptionCoverageKeys:
-          Set<String>.unmodifiable(coverage.optionKeys),
-      selectedConsequenceCoverageIds:
-          Set<String>.unmodifiable(coverage.consequenceIds),
+      selectedOptionCoverageKeys: Set<String>.unmodifiable(coverage.optionKeys),
+      selectedConsequenceCoverageIds: Set<String>.unmodifiable(
+        coverage.consequenceIds,
+      ),
       selectedGateCoverageIds: Set<String>.unmodifiable(coverage.gateIds),
-      selectedGateTypeCoverage:
-          Set<LabGateType>.unmodifiable(coverage.gateTypes),
+      selectedGateTypeCoverage: Set<LabGateType>.unmodifiable(
+        coverage.gateTypes,
+      ),
       selectedEndingIds: Set<String>.unmodifiable(coverage.endingIds),
       completeMandatoryCoverage: completeCoverage,
       deterministic: deterministic,
@@ -227,11 +223,13 @@ class LabReachableRouteExplorer {
     final selectedFingerprints = <String>{};
 
     final uncoveredOptions = Set<String>.from(exhaustive.optionCoverageKeys);
-    final uncoveredConsequences =
-        Set<String>.from(exhaustive.consequenceCoverageIds);
+    final uncoveredConsequences = Set<String>.from(
+      exhaustive.consequenceCoverageIds,
+    );
     final uncoveredGates = Set<String>.from(exhaustive.gateCoverageIds);
-    final uncoveredGateTypes =
-        Set<LabGateType>.from(exhaustive.gateTypeCoverage);
+    final uncoveredGateTypes = Set<LabGateType>.from(
+      exhaustive.gateTypeCoverage,
+    );
     final uncoveredEndings = Set<String>.from(exhaustive.endingIds);
 
     bool hasUncovered() =>

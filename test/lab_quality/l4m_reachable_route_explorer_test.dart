@@ -9,7 +9,6 @@ LabPackage _referenceV2() => LabPackage.decode(
   File('content/lab_reference_confined_space_h2s_v2.json').readAsStringSync(),
 );
 
-
 LabPackage _largeRoutePackage() {
   final nodes = <LabNodeContract>[];
   final gates = <Map<String, Object?>>[];
@@ -19,7 +18,8 @@ LabPackage _largeRoutePackage() {
     nodes.add(
       LabDecisionNode(
         id: nodeId,
-        prompt: 'Choose an authored action for decision ' +
+        prompt:
+            'Choose an authored action for decision ' +
             decisionIndex.toString() +
             '.',
         options: List<LabDecisionOption>.generate(4, (optionIndex) {
@@ -35,7 +35,8 @@ LabPackage _largeRoutePackage() {
               _ => LabDecisionQuality.critical,
             },
             consequence: LabConsequence(
-              id: 'd' +
+              id:
+                  'd' +
                   decisionIndex.toString() +
                   '_o' +
                   number.toString() +
@@ -80,9 +81,7 @@ LabPackage _largeRoutePackage() {
       startingNodeId: 'decision_1',
       startingState: const <String, Object?>{},
     ),
-    stateRegistry: LabStateRegistry(
-      const <LabStateVariableDefinition>[],
-    ),
+    stateRegistry: LabStateRegistry(const <LabStateVariableDefinition>[]),
     nodes: nodes,
     gates: gates,
     endings: const <Map<String, Object?>>[
@@ -209,24 +208,27 @@ void main() {
     );
   });
 
-  test('L4M fails closed when representative budget loses mandatory coverage', () {
-    final report = const LabReachableRouteExplorer().explore(
-      _referenceV2(),
-      routeBudget: 2,
-      hardRouteLimit: 10000,
-    );
+  test(
+    'L4M fails closed when representative budget loses mandatory coverage',
+    () {
+      final report = const LabReachableRouteExplorer().explore(
+        _referenceV2(),
+        routeBudget: 2,
+        hardRouteLimit: 10000,
+      );
 
-    expect(report.mode, LabReachableRouteExplorationMode.representative);
-    expect(report.selectedRouteCount, 2);
-    expect(report.completeMandatoryCoverage, isFalse);
-    expect(report.isValid, isFalse);
-    expect(
-      report.issues,
-      contains(
-        'L4M representative route budget cannot preserve all mandatory reachable coverage.',
-      ),
-    );
-  });
+      expect(report.mode, LabReachableRouteExplorationMode.representative);
+      expect(report.selectedRouteCount, 2);
+      expect(report.completeMandatoryCoverage, isFalse);
+      expect(report.isValid, isFalse);
+      expect(
+        report.issues,
+        contains(
+          'L4M representative route budget cannot preserve all mandatory reachable coverage.',
+        ),
+      );
+    },
+  );
 
   test('L4M blocks when exact route discovery exceeds its hard guard', () {
     final report = const LabReachableRouteExplorer().explore(
@@ -247,32 +249,32 @@ void main() {
     );
   });
 
-  test('L4M evidence exposes exhaustive proof and selected coverage separately', () {
-    final report = const LabReachableRouteExplorer().explore(
-      _referenceV2(),
-      routeBudget: 32,
-    );
-    final evidence = report.toEvidenceJson();
+  test(
+    'L4M evidence exposes exhaustive proof and selected coverage separately',
+    () {
+      final report = const LabReachableRouteExplorer().explore(
+        _referenceV2(),
+        routeBudget: 32,
+      );
+      final evidence = report.toEvidenceJson();
 
-    expect(evidence['schemaVersion'], 'csp11.lab.l4m.exploration.v1');
-    expect(evidence['mode'], 'representative');
-    expect(evidence['routeBudget'], 32);
-    expect(evidence['hardRouteLimit'], 10000);
-    expect(evidence['discoveredRouteCount'], 196);
-    expect(evidence['selectedRouteCount'], 32);
-    expect(evidence['completeMandatoryCoverage'], isTrue);
-    expect(evidence['deterministic'], isTrue);
-    expect(evidence['isValid'], isTrue);
-    expect(
-      evidence['exhaustiveProofFingerprint'],
-      report.exhaustiveReport.fingerprint,
-    );
-    expect(evidence['fingerprint'], report.fingerprint);
-    expect(
-      (evidence['selectedRouteFingerprints'] as List),
-      hasLength(32),
-    );
-  });
+      expect(evidence['schemaVersion'], 'csp11.lab.l4m.exploration.v1');
+      expect(evidence['mode'], 'representative');
+      expect(evidence['routeBudget'], 32);
+      expect(evidence['hardRouteLimit'], 10000);
+      expect(evidence['discoveredRouteCount'], 196);
+      expect(evidence['selectedRouteCount'], 32);
+      expect(evidence['completeMandatoryCoverage'], isTrue);
+      expect(evidence['deterministic'], isTrue);
+      expect(evidence['isValid'], isTrue);
+      expect(
+        evidence['exhaustiveProofFingerprint'],
+        report.exhaustiveReport.fingerprint,
+      );
+      expect(evidence['fingerprint'], report.fingerprint);
+      expect((evidence['selectedRouteFingerprints'] as List), hasLength(32));
+    },
+  );
 
   test('L4M validates budget and hard-guard configuration', () {
     final package = _referenceV2();
@@ -283,11 +285,7 @@ void main() {
       throwsA(isA<LabContractException>()),
     );
     expect(
-      () => explorer.explore(
-        package,
-        routeBudget: 100,
-        hardRouteLimit: 50,
-      ),
+      () => explorer.explore(package, routeBudget: 100, hardRouteLimit: 50),
       throwsA(isA<LabContractException>()),
     );
   });
