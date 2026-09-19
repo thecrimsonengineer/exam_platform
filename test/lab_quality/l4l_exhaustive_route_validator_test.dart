@@ -52,6 +52,42 @@ void main() {
     );
   });
 
+  test('L4L freezes critical-event and convergence gate win counts', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+
+    expect(report.gateWinCountById['permit_critical_event'], 13);
+    expect(report.gateWinCountById['permit_route'], 183);
+    expect(report.gateWinCountById['gas_critical_event'], 39);
+    expect(report.gateWinCountById['gas_work_convergence'], 144);
+    expect(report.gateWinCountById['simops_critical_event'], 117);
+    expect(report.gateWinCountById['simops_safe_completion'], 9);
+    expect(report.gateWinCountById['simops_recovery_completion'], 9);
+    expect(report.gateWinCountById['simops_contained_completion'], 9);
+    expect(report.gateWinCountById['emergency_critical_failure'], 13);
+    expect(report.gateWinCountById['emergency_convergence'], 156);
+    expect(report.gateWinCountById['ending_safe'], 39);
+    expect(report.gateWinCountById['ending_recovery'], 39);
+    expect(report.gateWinCountById['ending_contained'], 39);
+    expect(report.gateWinCountById['ending_major'], 39);
+
+    expect(
+      report.gateWinCountByType,
+      <String, int>{
+        'route': 183,
+        'criticalEvent': 169,
+        'convergence': 300,
+        'completion': 196,
+      },
+    );
+    expect(
+      report.gateWinCountByType.values.fold<int>(
+        0,
+        (sum, count) => sum + count,
+      ),
+      848,
+    );
+  });
+
   test('L4L records consequence state and winning gate for every step', () {
     final report = const LabExhaustiveRouteValidator().run(_referenceV2());
 
@@ -460,6 +496,15 @@ void main() {
     );
     expect(first.toEvidenceJson()['routeCount'], 196);
     expect(first.toEvidenceJson()['routeCount'], first.routes.length);
+    expect(
+      first.toEvidenceJson()['gateWinCountByType'],
+      <String, int>{
+        'completion': 196,
+        'convergence': 300,
+        'criticalEvent': 169,
+        'route': 183,
+      },
+    );
     expect(
       first.toEvidenceJson()['routeCountByEnding'],
       <String, int>{
