@@ -68,10 +68,7 @@ Future<void> main(List<String> args) async {
   );
 
   final applyEvidence = await _applyAndVerify(client, plan);
-  final finalReport = <String, dynamic>{
-    ...report,
-    ...applyEvidence,
-  };
+  final finalReport = <String, dynamic>{...report, ...applyEvidence};
 
   await _writeEvidence(options.evidencePath, finalReport);
 
@@ -101,25 +98,27 @@ Future<List<Fr4SourceDocument>> _loadLocalDocuments(String path) async {
           'Input must be a JSON list or {"documents": [...]} object.',
         );
 
-  return items.map((item) {
-    if (item is! Map) {
-      throw const FormatException('Each input document must be an object.');
-    }
-    final map = Map<String, dynamic>.from(item);
-    final collection = map['collection']?.toString().trim() ?? '';
-    final id = map['id']?.toString().trim() ?? '';
-    final data = map['data'];
-    if (collection.isEmpty || id.isEmpty || data is! Map) {
-      throw const FormatException(
-        'Each input document needs collection, id, and object data.',
-      );
-    }
-    return Fr4SourceDocument(
-      collection: collection,
-      id: id,
-      data: Map<String, dynamic>.from(data),
-    );
-  }).toList(growable: false);
+  return items
+      .map((item) {
+        if (item is! Map) {
+          throw const FormatException('Each input document must be an object.');
+        }
+        final map = Map<String, dynamic>.from(item);
+        final collection = map['collection']?.toString().trim() ?? '';
+        final id = map['id']?.toString().trim() ?? '';
+        final data = map['data'];
+        if (collection.isEmpty || id.isEmpty || data is! Map) {
+          throw const FormatException(
+            'Each input document needs collection, id, and object data.',
+          );
+        }
+        return Fr4SourceDocument(
+          collection: collection,
+          id: id,
+          data: Map<String, dynamic>.from(data),
+        );
+      })
+      .toList(growable: false);
 }
 
 Future<List<Fr4SourceDocument>> _loadFirestoreDocuments(
@@ -132,12 +131,9 @@ Future<List<Fr4SourceDocument>> _loadFirestoreDocuments(
     );
   }
 
-  final token =
-      Platform.environment['GOOGLE_OAUTH_ACCESS_TOKEN']?.trim() ?? '';
+  final token = Platform.environment['GOOGLE_OAUTH_ACCESS_TOKEN']?.trim() ?? '';
   if (token.isEmpty) {
-    throw StateError(
-      'Remote extraction requires GOOGLE_OAUTH_ACCESS_TOKEN.',
-    );
+    throw StateError('Remote extraction requires GOOGLE_OAUTH_ACCESS_TOKEN.');
   }
 
   final collections = options.collections.isEmpty
@@ -158,8 +154,7 @@ Future<List<Fr4SourceDocument>> _loadFirestoreDocuments(
       do {
         final parameters = <String, String>{
           'pageSize': '1000',
-          if (pageToken != null && pageToken.isNotEmpty)
-            'pageToken': pageToken,
+          if (pageToken != null && pageToken.isNotEmpty) 'pageToken': pageToken,
         };
         final uri = Uri.https(
           'firestore.googleapis.com',
@@ -167,10 +162,7 @@ Future<List<Fr4SourceDocument>> _loadFirestoreDocuments(
           parameters,
         );
         final request = await client.getUrl(uri);
-        request.headers.set(
-          HttpHeaders.authorizationHeader,
-          'Bearer $token',
-        );
+        request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
         request.headers.set(HttpHeaders.acceptHeader, 'application/json');
 
         final response = await request.close();
@@ -246,15 +238,13 @@ Future<Map<String, dynamic>> _applyAndVerify(
         'matched': matched,
       });
 
-      await client.upsertLedger(
-        <String, dynamic>{
-          ...planned.pendingLedgerRow(),
-          'validation_status': matched ? 'matched' : 'mismatch',
-          'failure_reason': matched ? null : 'Target checksum mismatch.',
-          'validated_at': DateTime.now().toUtc().toIso8601String(),
-          'migrated_at': DateTime.now().toUtc().toIso8601String(),
-        },
-      );
+      await client.upsertLedger(<String, dynamic>{
+        ...planned.pendingLedgerRow(),
+        'validation_status': matched ? 'matched' : 'mismatch',
+        'failure_reason': matched ? null : 'Target checksum mismatch.',
+        'validated_at': DateTime.now().toUtc().toIso8601String(),
+        'migrated_at': DateTime.now().toUtc().toIso8601String(),
+      });
     }
   }
 
@@ -266,10 +256,8 @@ Future<Map<String, dynamic>> _applyAndVerify(
 }
 
 class _SupabaseRestClient {
-  _SupabaseRestClient({
-    required String baseUrl,
-    required this.serviceRoleKey,
-  }) : baseUri = Uri.parse(baseUrl);
+  _SupabaseRestClient({required String baseUrl, required this.serviceRoleKey})
+    : baseUri = Uri.parse(baseUrl);
 
   final Uri baseUri;
   final String serviceRoleKey;
@@ -309,21 +297,20 @@ class _SupabaseRestClient {
   Future<Map<String, dynamic>?> fetchTarget(Fr4TargetRow row) async {
     final query = switch (row.targetTable) {
       'content_versions' => <String, String>{
-          'content_id': 'eq.${row.row['content_id']}',
-          'version': 'eq.${row.row['version']}',
-          'limit': '1',
-        },
+        'content_id': 'eq.${row.row['content_id']}',
+        'version': 'eq.${row.row['version']}',
+        'limit': '1',
+      },
       'questions' => <String, String>{
-          'question_id': 'eq.${row.row['question_id']}',
-          'version': 'eq.${row.row['version']}',
-          'limit': '1',
-        },
+        'question_id': 'eq.${row.row['question_id']}',
+        'version': 'eq.${row.row['version']}',
+        'limit': '1',
+      },
       _ => throw StateError('No verification query for ${row.targetTable}.'),
     };
 
     final uri = baseUri.replace(
-      path:
-          '${baseUri.path}/rest/v1/${row.targetTable}'.replaceAll('//', '/'),
+      path: '${baseUri.path}/rest/v1/${row.targetTable}'.replaceAll('//', '/'),
       queryParameters: query,
     );
     final response = await _request('GET', uri);
@@ -450,10 +437,7 @@ class _Arguments {
   }
 }
 
-Future<void> _writeEvidence(
-  String path,
-  Map<String, dynamic> report,
-) async {
+Future<void> _writeEvidence(String path, Map<String, dynamic> report) async {
   final file = File(path);
   await file.parent.create(recursive: true);
   await file.writeAsString(
