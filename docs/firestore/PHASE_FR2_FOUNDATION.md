@@ -46,13 +46,47 @@ The first FR2 code establishes:
 
 No screen is switched to this gate yet. Protected-content enforcement is activated only after the real Supabase probe and migration-safe UI wiring are validated.
 
+## Free-tier authorization decision
+
+FR2 excludes Firebase Cloud Functions. Deploying Firebase Functions would require moving the Firebase project off the Spark-only constraint.
+
+The selected FR2 authorization architecture is:
+
+```text
+Firebase Auth
+   ↓ Firebase ID token
+Supabase Edge Function: firebase-auth-probe
+   ↓ server-side signature / issuer / audience / expiry verification
+FR online-access gate
+   ↓
+protected CSP11 delivery paths
+```
+
+The Edge Function validates the Firebase ID token against Google's published Secure Token signing keys and requires:
+
+- issuer `https://securetoken.google.com/csp11-exam-platform`;
+- audience `csp11-exam-platform`;
+- `RS256` signature;
+- valid token lifetime;
+- non-empty Firebase subject/UID.
+
+The function uses custom Firebase-token verification, therefore its Supabase gateway JWT verification is intentionally disabled for this function only. This is not public authorization: the function itself performs fail-closed Firebase verification.
+
+No Supabase service-role key or secret is embedded in Flutter or the function source.
+
+Protected learner data will not use direct client access to Supabase tables during FR. Later learner reads/writes must pass through authenticated server-side boundaries or another explicitly reviewed mechanism.
+
+This removes the need for the Firebase `role: authenticated` custom claim in the FR gateway path and keeps Firebase Auth as the single learner identity provider.
+
+The Supabase project remains empty of learner schema/data during FR2.
+
 ## NEXT ACTION
 
 After the FR2 foundation tests are green:
 
 1. create/configure the Supabase Free project with explicit project-creation approval;
 2. add/pin `supabase_flutter`;
-3. configure Firebase third-party Auth;
-4. implement the real Supabase authorization probe;
-5. prove the free-tier Firebase role-claim bootstrap;
+3. deploy and verify the Firebase-token Edge authorization probe;
+4. connect the real Supabase authorization probe to protected learner gating only after live verification;
+5. preserve the existing Firebase identity and local-data contracts;
 6. keep production data unmigrated until FR3 schema/RLS design is frozen.
