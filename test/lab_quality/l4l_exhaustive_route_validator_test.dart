@@ -367,6 +367,63 @@ void main() {
     }
   });
 
+  test('L4L supports valid inline authored consequences', () {
+    final decoded = jsonDecode(
+      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+    ) as Map;
+    final root = decoded.cast<String, Object?>();
+    final consequences = root['consequences'] as List;
+    final nodes = root['nodes'] as List;
+    final firstNode = (nodes.first as Map).cast<String, Object?>();
+    final options = firstNode['options'] as List;
+    final firstOption = (options.first as Map).cast<String, Object?>();
+    final consequenceId = firstOption['consequenceId'];
+    final consequenceIndex = consequences.indexWhere(
+      (item) => (item as Map)['id'] == consequenceId,
+    );
+    final inline = consequences.removeAt(consequenceIndex);
+    firstOption.remove('consequenceId');
+    firstOption['consequence'] = inline;
+
+    final report = const LabExhaustiveRouteValidator().run(
+      LabPackage.fromJson(root),
+    );
+
+    expect(report.isValid, isTrue);
+    expect(report.completeConsequenceCoverage, isTrue);
+    expect(report.consequenceCoverageIds, contains('c_safe'));
+    expect(report.routeInvariantsHold, isTrue);
+  });
+
+  test('L4L depth guard fails closed on a state-changing route cycle', () {
+    final decoded = jsonDecode(
+      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+    ) as Map;
+    final root = decoded.cast<String, Object?>();
+    final rawGates = root['gates'] as List;
+    for (final rawGate in rawGates) {
+      final gate = (rawGate as Map).cast<String, Object?>();
+      if (gate['fromNodeId'] == 'decision_one') {
+        gate['targetNodeId'] = 'decision_one';
+      }
+    }
+
+    final report = const LabExhaustiveRouteValidator().run(
+      LabPackage.fromJson(root),
+      maxRoutes: 500,
+      maxDepth: 2,
+    );
+
+    expect(report.isValid, isFalse);
+    expect(report.limitExceeded, isFalse);
+    expect(
+      report.issues.any(
+        (issue) => issue.contains('Route exceeded exhaustive depth guard'),
+      ),
+      isTrue,
+    );
+  });
+
   test('L4L closure evidence summary is deterministic and complete', () {
     const validator = LabExhaustiveRouteValidator();
     final package = _referenceV2();
