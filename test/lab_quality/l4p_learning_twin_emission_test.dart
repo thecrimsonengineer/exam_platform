@@ -243,6 +243,56 @@ void main() {
     );
   });
 
+  test('L4P per-event builder rejects a substituted event with the same ID', () async {
+    final route = await _runRecoverySequence();
+    final original = route.first.decisionHistory.single;
+    final tamperedJson = original.toJson();
+    tamperedJson['selectedOptionId'] = 'p1';
+    final tampered = LabDecisionEvent.fromJson(tamperedJson);
+
+    expect(
+      () => const LabLearningTwinEvidenceBridge().buildEvidenceForEvent(
+        package: route.package,
+        session: route.first,
+        event: tampered,
+        completion: LabEvidenceCompletion.partial,
+      ),
+      throwsA(
+        isA<LabSessionException>().having(
+          (error) => error.message,
+          'message',
+          contains('exactly match the committed Decision Event'),
+        ),
+      ),
+    );
+  });
+
+  test('L4P rejects appended history when session revision does not advance', () async {
+    final route = await _runRecoverySequence();
+    final staleRevisionJson = route.first.toJson();
+    staleRevisionJson['revision'] = route.start.revision;
+    final staleRevision = LabSession.fromJson(staleRevisionJson);
+    final sink = InMemoryLabLearningEvidenceSink();
+
+    final result = await emitter.emitNewlyPersisted(
+      package: route.package,
+      before: route.start,
+      after: staleRevision,
+      sink: sink,
+    );
+
+    expect(result.transitionValid, isFalse);
+    expect(result.allDelivered, isFalse);
+    expect(result.attemptedEventIds, isEmpty);
+    expect(sink.events, isEmpty);
+    expect(
+      result.issues,
+      contains(
+        'L4P transition appended Decision Events without advancing revision.',
+      ),
+    );
+  });
+
   test('L4P does not alter frozen retrospective completed-session semantics', () async {
     final route = await _runRecoverySequence();
     final retrospective = const LabLearningTwinEvidenceBridge().buildEvidence(
