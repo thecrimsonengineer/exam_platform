@@ -60,10 +60,10 @@ Run 3 adds tests for:
 
 ### HAP15 - diagnostics
 
-A standalone `HapticDiagnosticsScreen` now exposes all eight semantic events
-plus the local ON/OFF preference for physical-device verification.
-
-It is intentionally not registered in normal learner navigation.
+`HapticDiagnosticsScreen` now exposes all eight semantic events plus the local
+ON/OFF preference for physical-device verification. It is reachable from the
+Admin Console under SYSTEM and is intentionally absent from normal learner
+navigation.
 
 ### HAP16 - architecture enforcement
 
