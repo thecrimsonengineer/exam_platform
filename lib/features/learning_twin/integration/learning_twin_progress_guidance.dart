@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:exam_platform/features/learning_twin/coaching/learning_twin_coaching.dart';
 import 'package:exam_platform/features/learning_twin/domain/learning_twin_domain.dart';
 import 'package:exam_platform/features/learning_twin/ui/learning_twin_ui.dart';
 import 'package:exam_platform/models/progress_analytics_snapshot.dart';
+import 'package:exam_platform/services/haptics/csp11_haptic_service.dart';
 import 'package:flutter/material.dart';
 
 /// First adaptive M5 learner surface.
@@ -106,6 +109,7 @@ class _LearningTwinProgressGuidanceState
       _actionConsumed = true;
     });
 
+    unawaited(Csp11Haptics.navigation());
     openDomain(binding.targetDomainId);
   }
 
