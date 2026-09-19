@@ -132,6 +132,7 @@ void main() {
     expect(report.runtimeNodeCoverageComplete, isTrue);
     expect(report.runtimeEndingCoverageComplete, isTrue);
     expect(report.dqg300Report.isValid, isTrue);
+    expect(report.exhaustiveRouteReport.isValid, isTrue);
     expect(report.isPublishable, isTrue);
   });
 
@@ -162,6 +163,25 @@ void main() {
 
     expect(report.structuralReport.isValid, isTrue);
     expect(report.dqg300Report.isValid, isFalse);
+    expect(report.isPublishable, isFalse);
+  });
+
+  test('automated publish blocks when exhaustive route proof is capped', () {
+    final source = _source();
+    final decoded = jsonDecode(source) as Map;
+    final root = decoded.cast<String, Object?>();
+    final package = LabPackage.fromJson(root);
+
+    final report = const LabAutomatedPublishGate().evaluate(
+      package: package,
+      root: root,
+      dqg300Evidence: _passingEvidence(package),
+      exhaustiveRouteLimit: 1,
+    );
+
+    expect(report.dqg300Report.isValid, isTrue);
+    expect(report.exhaustiveRouteReport.limitExceeded, isTrue);
+    expect(report.exhaustiveRouteReport.isValid, isFalse);
     expect(report.isPublishable, isFalse);
   });
 }

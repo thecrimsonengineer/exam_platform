@@ -1,5 +1,6 @@
 import 'lab_contracts.dart';
 import 'lab_dqg300.dart';
+import 'lab_exhaustive_route_validator.dart';
 import 'lab_validation.dart';
 
 class LabAutomatedPublishGateReport {
@@ -8,12 +9,14 @@ class LabAutomatedPublishGateReport {
     required this.dqg300Report,
     required this.runtimeNodeCoverageComplete,
     required this.runtimeEndingCoverageComplete,
+    required this.exhaustiveRouteReport,
   });
 
   final LabValidationReport structuralReport;
   final LabDqg300Report dqg300Report;
   final bool runtimeNodeCoverageComplete;
   final bool runtimeEndingCoverageComplete;
+  final LabExhaustiveRouteReport exhaustiveRouteReport;
 
   bool get isPublishable =>
       structuralReport.isValid &&
@@ -22,17 +25,20 @@ class LabAutomatedPublishGateReport {
       structuralReport.simulationCount > 0 &&
       runtimeNodeCoverageComplete &&
       runtimeEndingCoverageComplete &&
-      dqg300Report.isValid;
+      dqg300Report.isValid &&
+      exhaustiveRouteReport.isValid;
 }
 
 class LabAutomatedPublishGate {
   const LabAutomatedPublishGate({
     this.labValidator = const LabValidationEngine(),
     this.dqg300Validator = const LabDqg300Validator(),
+    this.exhaustiveRouteValidator = const LabExhaustiveRouteValidator(),
   });
 
   final LabValidationEngine labValidator;
   final LabDqg300Validator dqg300Validator;
+  final LabExhaustiveRouteValidator exhaustiveRouteValidator;
 
   LabAutomatedPublishGateReport evaluate({
     required LabPackage package,
@@ -41,6 +47,7 @@ class LabAutomatedPublishGate {
     Set<String>? availableAssetIds,
     Set<String>? allowedCompetencyIds,
     int simulationLimit = 1000,
+    int exhaustiveRouteLimit = 1000,
   }) {
     final structural = labValidator.validatePackage(
       package,
@@ -52,6 +59,11 @@ class LabAutomatedPublishGate {
     final dqg300 = dqg300Validator.validate(
       package: package,
       evidenceBundle: dqg300Evidence,
+    );
+
+    final exhaustive = exhaustiveRouteValidator.run(
+      package,
+      maxRoutes: exhaustiveRouteLimit,
     );
 
     final expectedNodes = package.nodes.map((node) => node.id).toSet();
@@ -69,6 +81,7 @@ class LabAutomatedPublishGate {
       runtimeEndingCoverageComplete: structural.reachableEndingIds.containsAll(
         expectedEndings,
       ),
+      exhaustiveRouteReport: exhaustive,
     );
   }
 }
