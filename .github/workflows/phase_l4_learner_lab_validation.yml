@@ -41,6 +41,7 @@ jobs:
             lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
+            lib/screens/admin/lab/lab1000_studio_screen.dart \
             lib/features/lab/lab_dqg300.dart \
             lib/features/lab/lab_automated_publish_gate.dart \
             lib/features/lab/lab_automated_lifecycle.dart \
@@ -95,6 +96,7 @@ jobs:
             lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
+            lib/screens/admin/lab/lab1000_studio_screen.dart \
             lib/features/lab/lab_dqg300.dart \
             lib/features/lab/lab_automated_publish_gate.dart \
             lib/features/lab/lab_automated_lifecycle.dart \
