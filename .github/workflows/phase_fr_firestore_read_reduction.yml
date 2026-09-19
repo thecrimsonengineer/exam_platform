@@ -1,0 +1,65 @@
+name: Phase FR Firestore Read Reduction Validation
+
+on:
+  push:
+    branches:
+      - phase-fr-firestore-read-reduction
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-fr-firestore-read-reduction
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: FR formatting gate
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/services/performance/firestore_read_audit.dart \
+            lib/services/cloud_question_repository.dart \
+            lib/services/study_content/cloud_content_repository.dart \
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+            lib/features/exam_readiness/repositories/exam_study_plan_repository.dart \
+            lib/features/exam_readiness/repositories/readiness_snapshot_repository.dart \
+            test/services/performance/firestore_read_audit_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: FR1 read audit tests
+        run: flutter test test/services/performance/firestore_read_audit_test.dart
+
+      - name: Preserve frozen Phase L4 learner regressions
+        run: flutter test test/screens/lab
+
+      - name: Preserve frozen Phase L4 quality gates
+        run: flutter test test/lab_quality
+
+      - name: Preserve exact frozen Phase L engine suite
+        run: flutter test test/features/lab
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
