@@ -102,6 +102,8 @@ class LabPublishedVersion {
     required this.publishedJson,
     required this.publishedAt,
     required this.reviewerId,
+    this.validationAuthority,
+    this.qualityEvidenceJson,
   });
 
   final String labId;
@@ -109,6 +111,8 @@ class LabPublishedVersion {
   final String publishedJson;
   final DateTime publishedAt;
   final String reviewerId;
+  final String? validationAuthority;
+  final String? qualityEvidenceJson;
 }
 
 abstract class LabPublishedRepository {

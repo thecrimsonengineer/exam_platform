@@ -43,6 +43,9 @@ jobs:
             lib/screens/lab/lab_reference_player_screen.dart \
             lib/features/lab/lab_dqg300.dart \
             lib/features/lab/lab_automated_publish_gate.dart \
+            lib/features/lab/lab_automated_lifecycle.dart \
+            lib/features/lab/lab_dqg300_certificate.dart \
+            lib/features/lab/lab_studio.dart \
             test/screens/lab \
             test/lab_quality \
             test/features/lab/lab1_shells_test.dart
@@ -89,6 +92,9 @@ jobs:
             lib/screens/lab/lab_reference_player_screen.dart \
             lib/features/lab/lab_dqg300.dart \
             lib/features/lab/lab_automated_publish_gate.dart \
+            lib/features/lab/lab_automated_lifecycle.dart \
+            lib/features/lab/lab_dqg300_certificate.dart \
+            lib/features/lab/lab_studio.dart \
             test/screens/lab \
             test/lab_quality \
             test/features/lab/lab1_shells_test.dart
