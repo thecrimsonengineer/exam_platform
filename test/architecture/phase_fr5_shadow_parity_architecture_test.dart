@@ -5,6 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const corePath = 'tool/fr5_shadow_parity/fr5_shadow_parity_core.dart';
   const cliPath = 'tool/fr5_shadow_parity/fr5_shadow_parity.dart';
+  const sourceCorePath =
+      'tool/fr5_shadow_parity/fr5_firestore_source_core.dart';
+  const sourceCliPath = 'tool/fr5_shadow_parity/fr5_firestore_source.dart';
   const workflowPath =
       '.github/workflows/phase_fr_firestore_read_reduction.yml';
   const productionWorkflowPath =
@@ -12,12 +15,16 @@ void main() {
 
   late String core;
   late String cli;
+  late String sourceCore;
+  late String sourceCli;
   late String workflow;
   late String productionWorkflow;
 
   setUpAll(() {
     core = File(corePath).readAsStringSync();
     cli = File(cliPath).readAsStringSync();
+    sourceCore = File(sourceCorePath).readAsStringSync();
+    sourceCli = File(sourceCliPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
     productionWorkflow = File(productionWorkflowPath).readAsStringSync();
   });
@@ -27,6 +34,20 @@ void main() {
     expect(cli, isNot(contains('package:flutter/')));
     expect(cli, isNot(contains('firebase_core')));
     expect(cli, isNot(contains('supabase_flutter')));
+  });
+
+  test('FR5 production source selector is read-only and fail-closed', () {
+    expect(sourceCore, contains('Fr5CanonicalSourceSelector'));
+    expect(
+      sourceCore,
+      contains('prefer_published_over_draft_for_same_content_id_and_version'),
+    );
+    expect(sourceCore, contains('ambiguous_content_version_duplicate'));
+    expect(sourceCli, contains('GOOGLE_OAUTH_ACCESS_TOKEN'));
+    expect(sourceCli, contains('fr4SupportedCollections'));
+    expect(sourceCli, isNot(contains('DELETE')));
+    expect(sourceCli, isNot(contains('PATCH')));
+    expect(sourceCli, isNot(contains('POST')));
   });
 
   test('FR5 apply remains explicit shadow-only and non-destructive', () {
@@ -71,6 +92,7 @@ void main() {
     expect(productionWorkflow, contains('FIREBASE_SERVICE_ACCOUNT_JSON'));
     expect(productionWorkflow, contains('SUPABASE_SECRET_KEY'));
     expect(productionWorkflow, contains('FR5_SHADOW_ONLY'));
+    expect(productionWorkflow, contains('fr5_firestore_source.dart'));
     expect(productionWorkflow, contains('--preflight'));
     expect(productionWorkflow, isNot(contains('upload-artifact')));
   });
