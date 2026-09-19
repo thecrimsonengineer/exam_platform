@@ -29,6 +29,18 @@ class LabEvidencePresentation {
   final List<String> details;
 }
 
+class LabEndingPresentation {
+  const LabEndingPresentation({
+    required this.title,
+    required this.narrative,
+    required this.keyTurningPoint,
+  });
+
+  final String title;
+  final String narrative;
+  final String keyTurningPoint;
+}
+
 class LabScenarioDefinition {
   const LabScenarioDefinition({
     required this.id,
@@ -44,6 +56,8 @@ class LabScenarioDefinition {
     required this.peopleInvolved,
     required this.knownFacts,
     required this.evidence,
+    required this.decisionTitles,
+    required this.endings,
     required this.consequences,
   });
 
@@ -60,6 +74,8 @@ class LabScenarioDefinition {
   final List<String> peopleInvolved;
   final List<String> knownFacts;
   final Map<String, LabEvidencePresentation> evidence;
+  final Map<String, String> decisionTitles;
+  final Map<String, LabEndingPresentation> endings;
   final Map<String, LabConsequencePresentation> consequences;
 
   LabConsequencePresentation consequenceFor(String consequenceId) {
@@ -74,6 +90,20 @@ class LabScenarioDefinition {
 
   LabEvidencePresentation? evidenceFor(String evidenceId) =>
       evidence[evidenceId];
+
+  String decisionTitleFor(String nodeId) =>
+      decisionTitles[nodeId] ?? 'Safety decision';
+
+  LabEndingPresentation endingFor(String? endingId) {
+    return endings[endingId] ??
+        const LabEndingPresentation(
+          title: 'Scenario complete',
+          narrative:
+              'Your decisions brought this authored scenario to an ending.',
+          keyTurningPoint:
+              'Review your decision journey to see where the situation changed.',
+        );
+  }
 
   List<LabLearnerStatusItem> learnerStatus(
     Map<String, Object?> stateValues,
@@ -198,6 +228,55 @@ abstract final class LabScenarioCatalog {
           'The planned rescue capability must be mobilised and controlled.',
           'The scene must be protected from secondary casualties.',
         ],
+      ),
+    },
+    decisionTitles: <String, String>{
+      'permit_decision': 'Permit and isolation',
+      'gas_decision': 'Atmospheric testing',
+      'simops_decision': 'Changing SIMOPS conditions',
+      'emergency_decision': 'Emergency response',
+      'closeout_decision': 'Recovery and closeout',
+    },
+    endings: <String, LabEndingPresentation>{
+      'safe_completion': LabEndingPresentation(
+        title: 'Safe completion',
+        narrative:
+            'The work remained controlled as conditions changed. The scenario '
+            'ended without an uncontrolled confined-space emergency.',
+        keyTurningPoint:
+            'You acted on changing conditions before they developed into an emergency.',
+      ),
+      'controlled_recovery': LabEndingPresentation(
+        title: 'Controlled recovery',
+        narrative:
+            'The situation required additional control and recovery actions, '
+            'but the operation was brought back under control.',
+        keyTurningPoint:
+            'Recovery decisions prevented the earlier control weakness from escalating further.',
+      ),
+      'incident_contained': LabEndingPresentation(
+        title: 'Incident contained',
+        narrative:
+            'The scenario developed into an incident condition, but later '
+            'decisions prevented a more serious outcome.',
+        keyTurningPoint:
+            'The response after conditions deteriorated limited the consequences.',
+      ),
+      'major_incident': LabEndingPresentation(
+        title: 'Major incident',
+        narrative:
+            'Unresolved control failures and later decisions allowed the event '
+            'to develop into a major incident outcome.',
+        keyTurningPoint:
+            'Earlier warning signs or recovery opportunities were not fully controlled before restart.',
+      ),
+      'critical_failure': LabEndingPresentation(
+        title: 'Critical failure',
+        narrative:
+            'The emergency response created an additional severe consequence '
+            'and the scenario reached a critical ending.',
+        keyTurningPoint:
+            'An unprotected rescue response turned the original emergency into a secondary-casualty event.',
       ),
     },
     consequences: <String, LabConsequencePresentation>{
