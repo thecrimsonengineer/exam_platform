@@ -1,10 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:exam_platform/features/lab/lab_automated_lifecycle.dart';
 import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_dqg300.dart';
 import 'package:exam_platform/features/lab/lab_dqg300_certificate.dart';
+import 'package:exam_platform/features/lab/lab_l4l_certificate.dart';
 import 'package:exam_platform/features/lab/lab_studio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -53,14 +53,15 @@ void main() {
       expect(stored!.validationAuthority, 'DQG300-LAB-AUTO');
       expect(stored.qualityEvidenceJson, isNotNull);
       expect(stored.exhaustiveRouteEvidenceJson, isNotNull);
-      final routeEvidence =
-          jsonDecode(stored.exhaustiveRouteEvidenceJson!) as Map;
-      expect(
-        routeEvidence['schemaVersion'],
-        'csp11.lab.l4l.exhaustive.v1',
+      final l4l = LabL4lEvidenceCertificate.decode(
+        stored.exhaustiveRouteEvidenceJson!,
       );
-      expect(routeEvidence['isValid'], isTrue);
-      expect(routeEvidence['routeCount'], greaterThan(0));
+      expect(l4l.labId, 'l2_lab');
+      expect(l4l.versionId, 'v1');
+      expect(l4l.validationAuthority, 'DQG300-LAB-AUTO');
+      expect(l4l.isPass, isTrue);
+      expect(l4l.routeEvidence['isValid'], isTrue);
+      expect(l4l.routeEvidence['routeCount'], greaterThan(0));
     },
   );
 
