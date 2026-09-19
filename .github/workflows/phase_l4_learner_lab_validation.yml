@@ -45,6 +45,7 @@ jobs:
             lib/features/lab/lab_automated_publish_gate.dart \
             lib/features/lab/lab_automated_lifecycle.dart \
             lib/features/lab/lab_dqg300_certificate.dart \
+            lib/features/lab/lab_dqg300_evidence_store.dart \
             lib/features/lab/lab_studio.dart \
             lib/features/lab/lab_exhaustive_route_validator.dart \
             test/screens/lab \

@@ -4,6 +4,7 @@ import 'lab_automated_publish_gate.dart';
 import 'lab_contracts.dart';
 import 'lab_dqg300.dart';
 import 'lab_dqg300_certificate.dart';
+import 'lab_dqg300_evidence_store.dart';
 import 'lab_studio.dart';
 
 class LabAutomatedLifecycleResult {
@@ -23,11 +24,41 @@ class LabAutomatedLifecycleService {
     required this.studio,
     this.publishGate = const LabAutomatedPublishGate(),
     this.validationAuthority = 'DQG300-LAB-AUTO',
+    this.evidenceRepository,
   });
 
   final Lab1000StudioService studio;
   final LabAutomatedPublishGate publishGate;
   final String validationAuthority;
+  final LabDqg300EvidenceRepository? evidenceRepository;
+
+  Future<LabAutomatedLifecycleResult> validateAndPublishStored({
+    required LabStudioWorkspace workspace,
+    DateTime? validatedAt,
+    DateTime? publishedAt,
+  }) async {
+    final repository = evidenceRepository;
+    if (repository == null) {
+      throw const LabStudioException(
+        'Persisted DQG300-LAB evidence repository is not configured.',
+      );
+    }
+    final evidence = await repository.load(
+      workspace.package.metadata.id,
+      workspace.package.metadata.versionId,
+    );
+    if (evidence == null) {
+      throw const LabStudioException(
+        'Persisted DQG300-LAB evidence was not found for this version.',
+      );
+    }
+    return validateAndPublish(
+      workspace: workspace,
+      dqg300Evidence: evidence,
+      validatedAt: validatedAt,
+      publishedAt: publishedAt,
+    );
+  }
 
   Future<LabAutomatedLifecycleResult> validateAndPublish({
     required LabStudioWorkspace workspace,
