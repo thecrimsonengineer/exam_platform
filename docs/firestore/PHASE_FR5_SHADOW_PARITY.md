@@ -16,10 +16,10 @@ Firestore remains authoritative throughout FR5. FR5 does not modify learner runt
 
 FR5 migrates only the canonical source collections already frozen by FR4:
 
-- contentVersions to content_versions
-- questions to questions
+- published contentVersions to content_versions
+- published questions to questions
 
-Learner progress, attempts, readiness history, plans, LAB attempts and Learning Twin evidence remain outside FR5.
+Draft, review and validated authoring records are explicitly outside the FR5 production migration. Learner progress, attempts, readiness history, plans, LAB attempts and Learning Twin evidence remain outside FR5.
 
 ## Starting live Supabase state
 
@@ -38,9 +38,24 @@ The Supabase security advisor returned zero findings.
 
 The performance advisor returned only unused-index informational notices. That is expected on the empty shadow database and is not treated as a defect.
 
+## Authoring workspace separation
+
+Legacy draft content has been removed from the production Firestore source before the live FR5 retry.
+
+FR5 now treats the Supabase public schema as production-only. A separate authoring schema is reserved for future admin work:
+
+- authoring.content_drafts
+- authoring.question_drafts
+
+The authoring schema is not learner-facing. Anonymous and authenticated Data API roles are denied access. Future admin authoring cutover will write working copies there, while only published records move into public.content_versions and public.questions.
+
+This separation is schema preparation only. FR5 does not route the current Flutter admin authoring runtime to Supabase, and Firestore remains authoritative until a later explicit cutover phase.
+
 ## FR5 architecture
 
 Firestore authoritative
+-> FR5 published-only source selection
+-> non-published authoring records excluded
 -> FR4 deterministic extraction and normalization
 -> frozen FR4 evidence manifest
 -> FR5 guarded Supabase shadow upsert
@@ -49,7 +64,7 @@ Firestore authoritative
 -> migration-ledger parity
 -> FR5 complete only when every check matches
 
-The FR4 evidence file is the migration manifest. FR5 does not independently reinterpret Firestore documents.
+The FR4 evidence file remains the migration manifest. Before FR4 normalization, FR5 performs one narrow classification step so only published production content and questions enter that manifest. Non-published lifecycle records are reported as excluded authoring rows rather than migrated into public production tables.
 
 ## Required parity
 
@@ -124,7 +139,7 @@ A service-account JSON fallback is supported through the FIREBASE_SERVICE_ACCOUN
 
 Supabase production shadow access requires the SUPABASE_SECRET_KEY repository secret.
 
-The credential values are not currently available through this session, so the production Firestore extraction and live shadow copy have not been executed.
+Workload Identity Federation is now configured and production Firestore read permission has been proven by GitHub Actions. Earlier live preflight attempts exposed legacy draft/published source collisions. Those draft records have since been removed, and the production source selector has been changed to published-only migration semantics.
 
 FR5 must not be frozen as complete until the real production Firestore source is extracted through that authorized server-side path and the live Supabase shadow parity report is completely green.
 
@@ -136,19 +151,7 @@ No learner cutover occurs until later frozen FR phases.
 
 ## NEXT ACTION
 
-Configure the production workflow credentials without placing secrets in source control.
-
-Preferred Google path:
-- repository variable GCP_WIF_PROVIDER
-- repository variable GCP_FIRESTORE_READER_SERVICE_ACCOUNT
-
-Fallback Google path:
-- repository secret FIREBASE_SERVICE_ACCOUNT_JSON
-
-Supabase:
-- repository secret SUPABASE_SECRET_KEY
-
-Then run Phase FR5 Production Shadow Parity from branch phase-fr5-shadow-data-parity with apply_shadow=false first.
+Run Phase FR5 Production Shadow Parity from branch phase-fr5-shadow-data-parity with apply_shadow=false after the published-only source-selection change is green.
 
 If extraction and preflight are green, run it again with apply_shadow=true and confirmation FR5_SHADOW_ONLY.
 

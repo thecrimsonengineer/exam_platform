@@ -40,9 +40,10 @@ void main() {
     expect(sourceCore, contains('Fr5CanonicalSourceSelector'));
     expect(
       sourceCore,
-      contains('prefer_published_over_draft_for_same_content_id_and_version'),
+      contains('published_only_production_source_authoring_excluded'),
     );
-    expect(sourceCore, contains('ambiguous_content_version_duplicate'));
+    expect(sourceCore, contains('authoring_or_non_published_content'));
+    expect(sourceCore, contains('authoring_or_non_published_question'));
     expect(sourceCli, contains('GOOGLE_OAUTH_ACCESS_TOKEN'));
     expect(sourceCli, contains('fr4SupportedCollections'));
     expect(sourceCli, isNot(contains('DELETE')));

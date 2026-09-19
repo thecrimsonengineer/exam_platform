@@ -73,7 +73,8 @@ jobs:
             tool/fr5_shadow_parity/fr5_firestore_source.dart \
             test/tool/fr5_shadow_parity_core_test.dart \
             test/tool/fr5_firestore_source_core_test.dart \
-            test/architecture/phase_fr5_shadow_parity_architecture_test.dart
+            test/architecture/phase_fr5_shadow_parity_architecture_test.dart \
+            test/architecture/phase_fr5_authoring_workspace_test.dart
           git diff --
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -148,6 +149,7 @@ jobs:
           flutter test test/tool/fr5_shadow_parity_core_test.dart
           flutter test test/tool/fr5_firestore_source_core_test.dart
           flutter test test/architecture/phase_fr5_shadow_parity_architecture_test.dart
+          flutter test test/architecture/phase_fr5_authoring_workspace_test.dart
 
       - name: FR5 deterministic fixture parity gate
         run: |

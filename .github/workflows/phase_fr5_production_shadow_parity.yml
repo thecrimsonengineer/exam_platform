@@ -127,6 +127,8 @@ jobs:
         env:
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
         run: |
+          rm -rf build/fr5-production
+          mkdir -p build/fr5-production
           dart run tool/fr5_shadow_parity/fr5_firestore_source.dart \
             --firestore-project="$FIREBASE_PROJECT_ID" \
             --output=build/fr5-production/production_source.json \
@@ -149,23 +151,20 @@ jobs:
           print('FR5 source ready:', report.get('ready'))
           print('FR5 raw source counts:', report.get('rawSourceCounts'))
           print('FR5 selected source counts:', report.get('selectedSourceCounts'))
-          print('FR5 superseded draft snapshots:', report.get('supersededDraftCount'))
+          print('FR5 excluded source counts:', report.get('excludedSourceCounts'))
+          print('FR5 excluded authoring rows:', report.get('excludedAuthoringCount'))
           print('FR5 source issue count:', report.get('issueCount'))
 
           issues = report.get('issues') or []
           if issues:
-              print('FR5 source collision details:')
+              print('FR5 source classification issues:')
               for index, issue in enumerate(issues, start=1):
                   print(
-                      f"  {index}. targetKey={issue.get('targetKey')} "
-                      f"kind={issue.get('kind')}"
+                      f"  {index}. kind={issue.get('kind')} "
+                      f"collection={issue.get('collection')} "
+                      f"sourceId={issue.get('sourceId')} "
+                      f"message={issue.get('message')}"
                   )
-                  for candidate in issue.get('candidates') or []:
-                      print(
-                          f"     sourceId={candidate.get('sourceId')} "
-                          f"status={candidate.get('status')} "
-                          f"idPrefix={candidate.get('idPrefix')}"
-                      )
           PY
 
       - name: Enforce FR5 canonical source gate
@@ -187,8 +186,7 @@ jobs:
         env:
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
         run: |
-          rm -rf build/fr5-production
-          mkdir -p build/fr5-production
+          rm -f build/fr5-production/production_fr4_plan.json
           dart run tool/fr4_migration/fr4_migrate.dart \
             --input=build/fr5-production/production_source.json \
             --evidence=build/fr5-production/production_fr4_plan.json
@@ -285,7 +283,8 @@ jobs:
           source_selection = json.loads(
               Path('build/fr5-production/production_source_selection.json').read_text()
           )
-          print('FR5 superseded draft snapshots:', source_selection.get('supersededDraftCount'))
+          print('FR5 excluded authoring rows:', source_selection.get('excludedAuthoringCount'))
+          print('FR5 excluded source counts:', source_selection.get('excludedSourceCounts'))
 
           plan = json.loads(Path('build/fr5-production/production_fr4_plan.json').read_text())
           print('FR5 production manifest rows:', plan.get('rowCount'))

@@ -29,8 +29,8 @@ Future<void> main(List<String> args) async {
 
   if (!selection.ready) {
     stderr.writeln(
-      'FR5 SOURCE FAIL-CLOSED: ${selection.issues.length} ambiguous '
-      'canonical source collision(s).',
+      'FR5 SOURCE FAIL-CLOSED: ${selection.issues.length} production '
+      'source classification issue(s).',
     );
     exitCode = 2;
     return;
@@ -48,9 +48,9 @@ Future<void> main(List<String> args) async {
   );
 
   stdout.writeln(
-    'FR5 SOURCE PASS: ${selection.documents.length} canonical source '
-    'document(s); ${selection.superseded.length} draft snapshot(s) '
-    'superseded by published snapshots.',
+    'FR5 SOURCE PASS: ${selection.documents.length} published production '
+    'document(s); ${selection.excluded.length} non-published authoring '
+    'document(s) excluded.',
   );
 }
 
@@ -187,7 +187,7 @@ GOOGLE_OAUTH_ACCESS_TOKEN=... dart run \
   --output=build/fr5/production_source.json \
   --evidence=build/fr5/production_source_selection.json
 
-This command is read-only against Firestore. It resolves only an exact
-draft+published contentVersions pair for the same canonical content ID/version,
-preferring the published snapshot. Any other duplicate set fails closed.
+This command is read-only against Firestore. It selects only published
+production content and questions. Draft, review, validated, and archived
+authoring records are excluded from FR5 production migration.
 ''';

@@ -9,6 +9,7 @@ void main() {
     required String contentId,
     required int version,
     required String status,
+    required String copyType,
   }) {
     return Fr4SourceDocument(
       collection: 'contentVersions',
@@ -17,11 +18,27 @@ void main() {
         'id': contentId,
         'version': version,
         'status': status,
+        'copyType': copyType,
       },
     );
   }
 
-  test('published snapshot deterministically supersedes matching draft', () {
+  Fr4SourceDocument question({
+    required String sourceId,
+    required int questionId,
+    required String status,
+  }) {
+    return Fr4SourceDocument(
+      collection: 'questions',
+      id: sourceId,
+      data: <String, dynamic>{
+        'id': questionId,
+        'status': status,
+      },
+    );
+  }
+
+  test('FR5 selects only published production rows', () {
     final result = const Fr5CanonicalSourceSelector().select(
       <Fr4SourceDocument>[
         content(
@@ -29,73 +46,83 @@ void main() {
           contentId: 'd01_c01-v1',
           version: 1,
           status: 'published',
+          copyType: 'published',
         ),
-        content(
-          sourceId: 'draft_d01_c01-v1',
-          contentId: 'd01_c01-v1',
-          version: 1,
-          status: 'draft',
-        ),
-        const Fr4SourceDocument(
-          collection: 'questions',
-          id: '101',
-          data: <String, dynamic>{'id': 101},
+        question(
+          sourceId: 'question_101',
+          questionId: 101,
+          status: 'published',
         ),
       ],
     );
 
     expect(result.ready, isTrue);
-    expect(result.issues, isEmpty);
-    expect(result.superseded, hasLength(1));
     expect(result.documents, hasLength(2));
-    expect(
-      result.documents
-          .where((document) => document.collection == 'contentVersions')
-          .single
-          .id,
-      'published_d01_c01-v1',
-    );
-    expect(result.rawSourceCounts['contentVersions'], 2);
+    expect(result.excluded, isEmpty);
+    expect(result.issues, isEmpty);
     expect(result.selectedSourceCounts['contentVersions'], 1);
+    expect(result.selectedSourceCounts['questions'], 1);
   });
 
-  test('duplicate lifecycle set other than exact draft+published fails closed', () {
+  test('FR5 excludes authoring lifecycle rows from production migration', () {
     final result = const Fr5CanonicalSourceSelector().select(
       <Fr4SourceDocument>[
         content(
-          sourceId: 'draft_a',
+          sourceId: 'draft_d01_c01-v1',
           contentId: 'd01_c01-v1',
           version: 1,
-          status: 'draft',
+          status: 'validated',
+          copyType: 'draft',
         ),
-        content(
-          sourceId: 'review_a',
-          contentId: 'd01_c01-v1',
-          version: 1,
+        question(
+          sourceId: 'question_102',
+          questionId: 102,
           status: 'review',
         ),
       ],
     );
 
-    expect(result.ready, isFalse);
-    expect(result.issues, hasLength(1));
-    expect(result.issues.single.kind, 'ambiguous_content_version_duplicate');
+    expect(result.ready, isTrue);
     expect(result.documents, isEmpty);
+    expect(result.excluded, hasLength(2));
+    expect(result.excludedSourceCounts['contentVersions'], 1);
+    expect(result.excludedSourceCounts['questions'], 1);
   });
 
-  test('malformed content remains selected for frozen FR4 to reject', () {
+  test('published content identity mismatch fails closed', () {
+    final result = const Fr5CanonicalSourceSelector().select(
+      <Fr4SourceDocument>[
+        content(
+          sourceId: 'draft_d01_c01-v1',
+          contentId: 'd01_c01-v1',
+          version: 1,
+          status: 'published',
+          copyType: 'draft',
+        ),
+      ],
+    );
+
+    expect(result.ready, isFalse);
+    expect(result.documents, isEmpty);
+    expect(result.issues, hasLength(1));
+    expect(
+      result.issues.single.kind,
+      'inconsistent_published_content_identity',
+    );
+  });
+
+  test('missing lifecycle status fails closed', () {
     const malformed = Fr4SourceDocument(
-      collection: 'contentVersions',
-      id: 'malformed',
-      data: <String, dynamic>{'status': 'draft'},
+      collection: 'questions',
+      id: 'question_103',
+      data: <String, dynamic>{'id': 103},
     );
 
     final result = const Fr5CanonicalSourceSelector().select(
       <Fr4SourceDocument>[malformed],
     );
 
-    expect(result.ready, isTrue);
-    expect(result.documents, <Fr4SourceDocument>[malformed]);
-    expect(result.superseded, isEmpty);
+    expect(result.ready, isFalse);
+    expect(result.issues.single.kind, 'missing_or_invalid_lifecycle');
   });
 }
