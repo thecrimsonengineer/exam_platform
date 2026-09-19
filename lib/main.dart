@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'app/theme.dart';
 import 'firebase_options.dart';
 import 'services/local_question_repository.dart';
+import 'services/settings/haptic_preference_service.dart';
 import 'services/settings/theme_mode_service.dart';
 import 'services/supabase/supabase_bootstrap_service.dart';
 import 'screens/auth/auth_gate.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
 
   await LocalQuestionRepository.instance.initialize();
   await ThemeModeService.initialize();
+  await HapticPreferenceService.initialize();
 
   runApp(const ExamPlatformApp());
 }

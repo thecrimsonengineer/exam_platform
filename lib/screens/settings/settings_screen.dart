@@ -8,6 +8,7 @@ import '../../services/auth/auth_state_service.dart';
 import '../../services/student_learning_position_service.dart';
 import '../../services/student_learning_progress_service.dart';
 import '../../services/student_question_progress_service.dart';
+import '../../services/settings/haptic_preference_service.dart';
 import '../../services/settings/settings_external_links.dart';
 import '../../services/settings/theme_mode_service.dart';
 import 'legal_document_screen.dart';
@@ -247,6 +248,23 @@ class SettingsScreen extends StatelessWidget {
                                 onTap: () {
                                   ThemeModeService.toggle();
                                 },
+                              ),
+                              _SettingsTile(
+                                key: const ValueKey('settings-haptics'),
+                                icon: Icons.vibration_rounded,
+                                iconColor: _blue,
+                                iconBackground: const Color(0xFFEAF1FF),
+                                title: 'Haptic feedback',
+                                subtitle:
+                                    'Use subtle tactile feedback for supported learner interactions.',
+                                trailing: ValueListenableBuilder<bool>(
+                                  valueListenable: HapticPreferenceService.enabled,
+                                  builder: (context, enabled, _) => Switch(
+                                    value: enabled,
+                                    onChanged: HapticPreferenceService.setEnabled,
+                                  ),
+                                ),
+                                onTap: HapticPreferenceService.toggle,
                               ),
                               _SettingsTile(
                                 key: const ValueKey('settings-rate-app'),

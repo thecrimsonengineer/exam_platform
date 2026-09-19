@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
+import '../../services/haptics/csp11_haptic_service.dart';
 import '../../services/settings/theme_mode_service.dart';
 import '../../services/learning_activity_tracker.dart';
 import '../../services/progress_overview_snapshot_service.dart';
@@ -139,6 +140,15 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     });
   }
 
+  void _selectBottomNavigationTab(int index) {
+    if (_selectedIndex == index) {
+      return;
+    }
+
+    unawaited(Csp11Haptics.navigation());
+    _selectTab(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
@@ -168,7 +178,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                 filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
                 child: NavigationBar(
                   selectedIndex: _selectedIndex,
-                  onDestinationSelected: _selectTab,
+                  onDestinationSelected: _selectBottomNavigationTab,
                   destinations: const [
                     NavigationDestination(
                       icon: Icon(Icons.home_outlined),
