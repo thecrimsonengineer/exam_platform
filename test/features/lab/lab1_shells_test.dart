@@ -83,18 +83,18 @@ void main() {
       path: 'lib/screens/lab/lab_library_screen.dart',
       needle: 'Safety Decision LAB',
     ),
-    (path: 'lib/screens/lab/lab_library_screen.dart', needle: 'Decision LABs'),
+    (path: 'lib/screens/lab/lab_library_screen.dart', needle: 'Practice safety decisions before they happen for real'),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',
-      needle: 'Irreversible after confirm',
+      needle: 'Once confirmed, that decision is locked for the current attempt.',
     ),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',
-      needle: 'No runtime AI branching',
+      needle: 'Available scenarios',
     ),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',
-      needle: "ValueKey('lab-open-player-shell')",
+      needle: "ValueKey('lab-scenario-open-' + scenario.id)",
     ),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',
@@ -115,7 +115,7 @@ void main() {
     ),
     (
       path: 'lib/screens/lab/lab_player_shell_screen.dart',
-      needle: 'Scene → Decision → Consequence → Story Gate',
+      needle: 'Choose how you want to practise',
     ),
     (
       path: 'lib/screens/lab/lab_player_shell_screen.dart',
