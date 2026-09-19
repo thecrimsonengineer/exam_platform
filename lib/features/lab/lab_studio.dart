@@ -457,6 +457,7 @@ class Lab1000StudioService {
     if (immutable.labId != workspace.package.metadata.id ||
         immutable.versionId != workspace.package.metadata.versionId ||
         immutable.publishedJson != workspace.sourceJson ||
+        jsonEncode(workspace.root) != immutable.publishedJson ||
         immutable.reviewerId != workspace.reviewerId) {
       throw const LabStudioException(
         'Published workspace no longer matches its immutable repository snapshot.',
@@ -469,7 +470,15 @@ class Lab1000StudioService {
       );
     }
 
-    final mutable = _deepCopy(workspace.root);
+    final immutableDecoded = jsonDecode(immutable.publishedJson);
+    if (immutableDecoded is! Map) {
+      throw const LabStudioException(
+        'Immutable published LAB snapshot is no longer decodable.',
+      );
+    }
+    final mutable = _deepCopy(
+      immutableDecoded.cast<String, Object?>(),
+    );
     final lab = mutable['lab'];
     if (lab is! Map) {
       throw const LabStudioException('LAB metadata is missing.');
