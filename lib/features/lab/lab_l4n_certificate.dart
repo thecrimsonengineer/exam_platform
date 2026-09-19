@@ -11,8 +11,9 @@ class LabL4nPublishEvidenceCertificate {
     required this.validatedAtIso,
     required Map<String, Object?> routeExplorationEvidence,
     required Map<String, Object?> publishEvidence,
-  }) : routeExplorationEvidence =
-           Map<String, Object?>.unmodifiable(routeExplorationEvidence),
+  }) : routeExplorationEvidence = Map<String, Object?>.unmodifiable(
+         routeExplorationEvidence,
+       ),
        publishEvidence = Map<String, Object?>.unmodifiable(publishEvidence) {
     LabIds.requireCanonical(labId, 'L4N certificate LAB ID');
     LabIds.requireCanonical(versionId, 'L4N certificate version ID');
@@ -57,9 +58,7 @@ class LabL4nPublishEvidenceCertificate {
     );
   }
 
-  factory LabL4nPublishEvidenceCertificate.fromJson(
-    Map<String, Object?> json,
-  ) {
+  factory LabL4nPublishEvidenceCertificate.fromJson(Map<String, Object?> json) {
     if (json['schemaVersion'] != schemaVersion) {
       throw const LabContractException(
         'Unsupported L4N publish evidence certificate schema.',

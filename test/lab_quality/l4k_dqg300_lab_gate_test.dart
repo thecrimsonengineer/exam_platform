@@ -145,29 +145,31 @@ void main() {
     expect(report.isPublishable, isTrue);
   });
 
+  test(
+    'automated publish fails closed when L4N privacy evidence is invalid',
+    () {
+      final decoded = jsonDecode(_source()) as Map;
+      final root = decoded.cast<String, Object?>();
+      root['learningSignals'] = <String, Object?>{
+        'privacy': 'full_session_state',
+      };
+      final package = LabPackage.fromJson(root);
 
-  test('automated publish fails closed when L4N privacy evidence is invalid', () {
-    final decoded = jsonDecode(_source()) as Map;
-    final root = decoded.cast<String, Object?>();
-    root['learningSignals'] = <String, Object?>{
-      'privacy': 'full_session_state',
-    };
-    final package = LabPackage.fromJson(root);
+      final report = const LabAutomatedPublishGate().evaluate(
+        package: package,
+        root: root,
+        dqg300Evidence: _passingEvidence(package),
+      );
 
-    final report = const LabAutomatedPublishGate().evaluate(
-      package: package,
-      root: root,
-      dqg300Evidence: _passingEvidence(package),
-    );
-
-    expect(report.structuralReport.isValid, isTrue);
-    expect(report.dqg300Report.isValid, isTrue);
-    expect(report.exhaustiveRouteReport.isValid, isTrue);
-    expect(report.routeExplorationReport.isValid, isTrue);
-    expect(report.publishEvidenceReport.privacyBoundaryValid, isFalse);
-    expect(report.publishEvidenceReport.isValid, isFalse);
-    expect(report.isPublishable, isFalse);
-  });
+      expect(report.structuralReport.isValid, isTrue);
+      expect(report.dqg300Report.isValid, isTrue);
+      expect(report.exhaustiveRouteReport.isValid, isTrue);
+      expect(report.routeExplorationReport.isValid, isTrue);
+      expect(report.publishEvidenceReport.privacyBoundaryValid, isFalse);
+      expect(report.publishEvidenceReport.isValid, isFalse);
+      expect(report.isPublishable, isFalse);
+    },
+  );
 
   test('automated publish eligibility blocks incomplete DQG300 coverage', () {
     final source = _source();

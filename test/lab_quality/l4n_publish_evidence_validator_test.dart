@@ -17,9 +17,7 @@ LabPackage _l2() => LabPackage.decode(
 
 Map<String, Object?> _referenceRoot() {
   final decoded = jsonDecode(
-    File(
-      'content/lab_reference_confined_space_h2s_v2.json',
-    ).readAsStringSync(),
+    File('content/lab_reference_confined_space_h2s_v2.json').readAsStringSync(),
   );
   return (decoded as Map).cast<String, Object?>();
 }
@@ -28,28 +26,31 @@ void main() {
   const explorer = LabReachableRouteExplorer();
   const validator = LabPublishEvidenceValidator();
 
-  test('L4N validates debrief and Learning Twin evidence on every reference route', () {
-    final package = _referenceV2();
-    final routes = explorer.explore(package);
-    final report = validator.validate(
-      package: package,
-      routeExplorationReport: routes,
-    );
+  test(
+    'L4N validates debrief and Learning Twin evidence on every reference route',
+    () {
+      final package = _referenceV2();
+      final routes = explorer.explore(package);
+      final report = validator.validate(
+        package: package,
+        routeExplorationReport: routes,
+      );
 
-    expect(routes.isExhaustive, isTrue);
-    expect(routes.selectedRouteCount, 196);
-    expect(report.selectedRouteCount, 196);
-    expect(report.debriefCount, 196);
-    expect(report.decisionEventCount, 848);
-    expect(report.learningEvidenceCount, 848);
-    expect(report.alternateTimelineReferencesValid, isTrue);
-    expect(report.recoverySignalReferencesValid, isTrue);
-    expect(report.privacyBoundaryValid, isTrue);
-    expect(report.routeEvidenceValid, isTrue);
-    expect(report.deterministic, isTrue);
-    expect(report.issues, isEmpty);
-    expect(report.isValid, isTrue);
-  });
+      expect(routes.isExhaustive, isTrue);
+      expect(routes.selectedRouteCount, 196);
+      expect(report.selectedRouteCount, 196);
+      expect(report.debriefCount, 196);
+      expect(report.decisionEventCount, 848);
+      expect(report.learningEvidenceCount, 848);
+      expect(report.alternateTimelineReferencesValid, isTrue);
+      expect(report.recoverySignalReferencesValid, isTrue);
+      expect(report.privacyBoundaryValid, isTrue);
+      expect(report.routeEvidenceValid, isTrue);
+      expect(report.deterministic, isTrue);
+      expect(report.issues, isEmpty);
+      expect(report.isValid, isTrue);
+    },
+  );
 
   test('L4N validates only the deterministic L4M representative matrix', () {
     final package = _referenceV2();
@@ -124,7 +125,8 @@ void main() {
     expect(report.isValid, isFalse);
     expect(
       report.issues.any(
-        (issue) => issue.contains('unknown option permit_decision::ghost_option'),
+        (issue) =>
+            issue.contains('unknown option permit_decision::ghost_option'),
       ),
       isTrue,
     );
@@ -192,7 +194,6 @@ void main() {
       ),
     );
   });
-
 
   test('L4N certificate round-trips exact route and publish evidence', () {
     final package = _referenceV2();

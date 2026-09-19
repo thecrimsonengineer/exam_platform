@@ -185,7 +185,10 @@ void main() {
     expect(reused.mode, direct.mode);
     expect(reused.selectedRouteCount, direct.selectedRouteCount);
     expect(reused.fingerprint, direct.fingerprint);
-    expect(reused.selectedOptionCoverageKeys, direct.selectedOptionCoverageKeys);
+    expect(
+      reused.selectedOptionCoverageKeys,
+      direct.selectedOptionCoverageKeys,
+    );
     expect(
       reused.selectedConsequenceCoverageIds,
       direct.selectedConsequenceCoverageIds,

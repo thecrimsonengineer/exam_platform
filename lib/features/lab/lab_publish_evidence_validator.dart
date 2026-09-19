@@ -377,9 +377,7 @@ class LabPublishEvidenceValidator {
     for (final item in raw) {
       if (item is! Map) {
         valid = false;
-        issues.add(
-          'L4N debrief alternate timeline entries must be objects.',
-        );
+        issues.add('L4N debrief alternate timeline entries must be objects.');
         continue;
       }
       final map = item.cast<String, Object?>();
@@ -460,10 +458,7 @@ class LabPublishEvidenceValidator {
     return valid;
   }
 
-  bool _validatePrivacyBoundary(
-    LabPackage package,
-    List<String> issues,
-  ) {
+  bool _validatePrivacyBoundary(LabPackage package, List<String> issues) {
     final raw = package.learningSignals['privacy'];
     if (raw == null) return true;
     final valid = raw.toString() == 'sanitized_decision_evidence_only';
