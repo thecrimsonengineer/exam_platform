@@ -285,7 +285,15 @@ Learners may read learner-approved published data but cannot mutate canonical co
 
 ## 23. Firebase-to-Supabase Auth bridge
 
-Keep Firebase Auth. Configure Supabase third-party Firebase authentication. Flutter supplies the Firebase ID token to Supabase.
+Keep Firebase Auth as CSP11's learner identity provider.
+
+Phase FR uses a Supabase Edge authorization gateway for protected learner traffic. Flutter supplies the current Firebase ID token to the gateway. The gateway verifies Google's Firebase Secure Token signature and validates the exact CSP11 Firebase issuer and audience before protected access is authorized.
+
+Firebase Cloud Functions are excluded from the FR free-tier architecture.
+
+Direct learner access to protected Supabase tables is not the default FR path. Protected reads/writes pass through reviewed server-side boundaries. This avoids requiring a Firebase `role: authenticated` custom claim solely for Supabase Data API access while preserving the separate CSP11 admin/student application-role model.
+
+If a future FR change proposes direct third-party-auth Data API access, it requires a new security review and an explicit freeze amendment.
 
 Verify the required authenticated-role/custom-claim behavior for existing users, new users, refresh, logout and account switching before learner cutover.
 
