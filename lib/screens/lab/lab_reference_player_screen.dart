@@ -358,9 +358,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
               child: InkWell(
                 key: ValueKey('lab-option-' + option.id),
                 borderRadius: BorderRadius.circular(18),
-                onTap: _busy
-                    ? null
-                    : () => _selectDecisionOption(option.id),
+                onTap: _busy ? null : () => _selectDecisionOption(option.id),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 160),
                   width: double.infinity,

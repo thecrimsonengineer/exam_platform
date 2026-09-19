@@ -10,15 +10,15 @@ void main() {
     () {
       final source = read('lib/screens/courses/csp/quiz/quiz_screen.dart');
 
-    expect(source, contains('Csp11Haptics.selection()'));
-    expect(source, contains('quizController.selectedAnswer == index'));
-    expect(source, contains('quizController.selectedAnswer == null'));
-    expect(source, contains('Csp11Haptics.error()'));
-    expect(source, contains('_emitQuizResultHaptics(correct)'));
-    expect(source, contains('Csp11Haptics.confirm()'));
-    expect(source, contains('Csp11Haptics.success()'));
-    expect(source, contains('Csp11Haptics.warning()'));
-    expect(source, contains('Csp11Haptics.navigation()'));
+      expect(source, contains('Csp11Haptics.selection()'));
+      expect(source, contains('quizController.selectedAnswer == index'));
+      expect(source, contains('quizController.selectedAnswer == null'));
+      expect(source, contains('Csp11Haptics.error()'));
+      expect(source, contains('_emitQuizResultHaptics(correct)'));
+      expect(source, contains('Csp11Haptics.confirm()'));
+      expect(source, contains('Csp11Haptics.success()'));
+      expect(source, contains('Csp11Haptics.warning()'));
+      expect(source, contains('Csp11Haptics.navigation()'));
       expect(source, contains('Csp11Haptics.completion()'));
     },
   );
@@ -54,16 +54,16 @@ void main() {
     'Subtopic completion emits completion feedback after local persistence',
     () {
       for (final path in <String>[
-      'lib/screens/courses/csp/study_subtopic_screen.dart',
-      'lib/screens/courses/csp/study_subtopic_screen_dark.dart',
-    ]) {
-      final source = read(path);
-      final persistenceIndex = source.indexOf(
-        'await _progressService.completeSubtopic(',
-      );
-      final hapticIndex = source.indexOf('await Csp11Haptics.completion();');
+        'lib/screens/courses/csp/study_subtopic_screen.dart',
+        'lib/screens/courses/csp/study_subtopic_screen_dark.dart',
+      ]) {
+        final source = read(path);
+        final persistenceIndex = source.indexOf(
+          'await _progressService.completeSubtopic(',
+        );
+        final hapticIndex = source.indexOf('await Csp11Haptics.completion();');
 
-      expect(persistenceIndex, greaterThanOrEqualTo(0));
+        expect(persistenceIndex, greaterThanOrEqualTo(0));
         expect(hapticIndex, greaterThan(persistenceIndex));
       }
     },
