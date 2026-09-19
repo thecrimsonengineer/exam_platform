@@ -8,6 +8,27 @@ class LabConsequencePresentation {
   final String guidedInsight;
 }
 
+class LabLearnerStatusItem {
+  const LabLearnerStatusItem({required this.label, required this.value});
+
+  final String label;
+  final String value;
+}
+
+class LabEvidencePresentation {
+  const LabEvidencePresentation({
+    required this.id,
+    required this.title,
+    required this.summary,
+    required this.details,
+  });
+
+  final String id;
+  final String title;
+  final String summary;
+  final List<String> details;
+}
+
 class LabScenarioDefinition {
   const LabScenarioDefinition({
     required this.id,
@@ -22,6 +43,7 @@ class LabScenarioDefinition {
     required this.objective,
     required this.peopleInvolved,
     required this.knownFacts,
+    required this.evidence,
     required this.consequences,
   });
 
@@ -37,6 +59,7 @@ class LabScenarioDefinition {
   final String objective;
   final List<String> peopleInvolved;
   final List<String> knownFacts;
+  final Map<String, LabEvidencePresentation> evidence;
   final Map<String, LabConsequencePresentation> consequences;
 
   LabConsequencePresentation consequenceFor(String consequenceId) {
@@ -47,6 +70,56 @@ class LabScenarioDefinition {
           guidedInsight:
               'Review what changed before making your next decision.',
         );
+  }
+
+  LabEvidencePresentation? evidenceFor(String evidenceId) =>
+      evidence[evidenceId];
+
+  List<LabLearnerStatusItem> learnerStatus(
+    Map<String, Object?> stateValues,
+    int simulatedMinutes,
+  ) {
+    String yesNo(Object? value, {required String yes, required String no}) =>
+        value == true ? yes : no;
+
+    return <LabLearnerStatusItem>[
+      LabLearnerStatusItem(
+        label: 'Permit',
+        value: yesNo(
+          stateValues['permit_verified'],
+          yes: 'Verified',
+          no: 'Not yet verified',
+        ),
+      ),
+      LabLearnerStatusItem(
+        label: 'Isolation',
+        value: yesNo(
+          stateValues['isolated'],
+          yes: 'Verified',
+          no: 'Not yet verified',
+        ),
+      ),
+      LabLearnerStatusItem(
+        label: 'Atmospheric test',
+        value: yesNo(
+          stateValues['gas_test_verified'],
+          yes: 'Verified',
+          no: 'Not yet verified',
+        ),
+      ),
+      LabLearnerStatusItem(
+        label: 'Rescue readiness',
+        value: yesNo(
+          stateValues['rescue_ready'],
+          yes: 'Confirmed',
+          no: 'Not yet confirmed',
+        ),
+      ),
+      LabLearnerStatusItem(
+        label: 'Scenario time',
+        value: simulatedMinutes.toString() + ' min',
+      ),
+    ];
   }
 }
 
@@ -85,6 +158,48 @@ abstract final class LabScenarioCatalog {
       'Atmospheric conditions may change during nearby SIMOPS.',
       'A planned rescue capability is available.',
     ],
+    evidence: <String, LabEvidencePresentation>{
+      'permit': LabEvidencePresentation(
+        id: 'permit',
+        title: 'Confined-space permit',
+        summary: 'The permit defines the authorised entry and required controls.',
+        details: <String>[
+          'Work scope: internal vessel inspection and maintenance.',
+          'Entry requires verified isolation and atmospheric testing.',
+          'The permit must be suspended if conditions or nearby work change.',
+        ],
+      ),
+      'isolation_record': LabEvidencePresentation(
+        id: 'isolation_record',
+        title: 'Isolation record',
+        summary: 'The isolation record shows the controls applied before entry.',
+        details: <String>[
+          'Relevant process connections are identified for isolation.',
+          'Isolation status must be independently verified before entry.',
+          'Any change affecting the isolation requires the job to be reassessed.',
+        ],
+      ),
+      'gas_test': LabEvidencePresentation(
+        id: 'gas_test',
+        title: 'Atmospheric test',
+        summary: 'Atmospheric testing provides the current condition of the space.',
+        details: <String>[
+          'Testing must represent the locations where entrants may be exposed.',
+          'Conditions can change after the initial test.',
+          'Continuous or repeated monitoring is needed when changing work can affect the atmosphere.',
+        ],
+      ),
+      'rescue_plan': LabEvidencePresentation(
+        id: 'rescue_plan',
+        title: 'Rescue plan',
+        summary: 'The plan defines how a confined-space emergency is managed.',
+        details: <String>[
+          'Unprotected spontaneous entry is not an acceptable rescue method.',
+          'The planned rescue capability must be mobilised and controlled.',
+          'The scene must be protected from secondary casualties.',
+        ],
+      ),
+    },
     consequences: <String, LabConsequencePresentation>{
       'permit_safe': LabConsequencePresentation(
         observable:
