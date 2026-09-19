@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:exam_platform/features/lab/lab_automated_lifecycle.dart';
 import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_dqg300.dart';
+import 'package:exam_platform/features/lab/lab_snapshot_fingerprint.dart';
 import 'package:exam_platform/features/lab/lab_studio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -29,6 +30,7 @@ LabPublishedVersion _manualVersion({
   String? qualityEvidenceJson,
   String? exhaustiveRouteEvidenceJson,
   String? publishEvidenceJson,
+  String? snapshotFingerprint,
 }) {
   return LabPublishedVersion(
     labId: labId ?? 'l2_lab',
@@ -40,6 +42,7 @@ LabPublishedVersion _manualVersion({
     qualityEvidenceJson: qualityEvidenceJson,
     exhaustiveRouteEvidenceJson: exhaustiveRouteEvidenceJson,
     publishEvidenceJson: publishEvidenceJson,
+    snapshotFingerprint: snapshotFingerprint,
   );
 }
 
@@ -147,6 +150,11 @@ void main() {
     expect(stored!.qualityEvidenceJson, isNotNull);
     expect(stored.exhaustiveRouteEvidenceJson, isNotNull);
     expect(stored.publishEvidenceJson, isNotNull);
+    expect(stored.snapshotFingerprint, isNotNull);
+    expect(
+      stored.snapshotFingerprint,
+      LabSnapshotFingerprint.compute(stored.publishedJson),
+    );
   });
 
   test(
@@ -172,6 +180,44 @@ void main() {
         qualityEvidenceJson: source.qualityEvidenceJson,
         exhaustiveRouteEvidenceJson: source.exhaustiveRouteEvidenceJson,
         publishEvidenceJson: source.publishEvidenceJson,
+        snapshotFingerprint: source.snapshotFingerprint,
+      );
+
+      final repository = InMemoryLabPublishedRepository();
+      await expectLater(
+        repository.saveImmutable(tampered),
+        throwsA(isA<LabStudioException>()),
+      );
+      expect(await repository.load(source.labId, source.versionId), isNull);
+    },
+  );
+
+  test(
+    'L4O rejects Story Gate mutation even when Decision signatures are unchanged',
+    () async {
+      final source = await _automatedVersion();
+      final decoded = jsonDecode(source.publishedJson) as Map;
+      final root = decoded.cast<String, Object?>();
+      final gates = root['gates'] as List;
+      final firstGate = (gates.first as Map).cast<String, Object?>();
+      firstGate['priority'] = (firstGate['priority'] as int) + 1;
+
+      final tampered = LabPublishedVersion(
+        labId: source.labId,
+        versionId: source.versionId,
+        publishedJson: jsonEncode(root),
+        publishedAt: source.publishedAt,
+        reviewerId: source.reviewerId,
+        validationAuthority: source.validationAuthority,
+        qualityEvidenceJson: source.qualityEvidenceJson,
+        exhaustiveRouteEvidenceJson: source.exhaustiveRouteEvidenceJson,
+        publishEvidenceJson: source.publishEvidenceJson,
+        snapshotFingerprint: source.snapshotFingerprint,
+      );
+
+      expect(
+        LabSnapshotFingerprint.compute(tampered.publishedJson),
+        isNot(source.snapshotFingerprint),
       );
 
       final repository = InMemoryLabPublishedRepository();
