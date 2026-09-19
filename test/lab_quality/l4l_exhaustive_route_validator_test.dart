@@ -100,6 +100,66 @@ void main() {
     expect(report.isValid, isFalse);
   });
 
+
+  test('L4L fingerprints consequence state, evidence and simulated time', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+
+    final permitSafe = report.routes
+        .expand((route) => route.steps)
+        .firstWhere(
+          (step) =>
+              step.nodeId == 'permit_decision' && step.optionId == 'p1',
+        );
+
+    expect(permitSafe.stateBefore['permit_verified'], isFalse);
+    expect(permitSafe.stateAfter['permit_verified'], isTrue);
+    expect(permitSafe.stateAfter['isolated'], isTrue);
+    expect(permitSafe.evidenceBefore, isEmpty);
+    expect(
+      permitSafe.evidenceAfter,
+      containsAll(<String>{'permit', 'isolation_record'}),
+    );
+    expect(permitSafe.simulatedMinutesBefore, 0);
+    expect(permitSafe.simulatedMinutesAfter, 3);
+    expect(permitSafe.deterministicKey, contains('permit_verified'));
+    expect(permitSafe.deterministicKey, contains('isolation_record'));
+    expect(permitSafe.deterministicKey, contains('"minutesAfter":3'));
+  });
+
+  test('L4L scene transitions preserve state, evidence and simulated time', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+    final sceneSteps = report.routes
+        .expand((route) => route.steps)
+        .where((step) => step.optionId == null)
+        .toList();
+
+    expect(
+      sceneSteps.every(
+        (step) =>
+            step.stateBefore.toString() == step.stateAfter.toString() &&
+            step.evidenceBefore.length == step.evidenceAfter.length &&
+            step.evidenceAfter.containsAll(step.evidenceBefore) &&
+            step.simulatedMinutesBefore == step.simulatedMinutesAfter,
+      ),
+      isTrue,
+    );
+  });
+
+  test('L4L consequence traces never lose unlocked evidence or move time backwards', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+
+    expect(
+      report.routes.every(
+        (route) => route.steps.every(
+          (step) =>
+              step.evidenceAfter.containsAll(step.evidenceBefore) &&
+              step.simulatedMinutesAfter >= step.simulatedMinutesBefore,
+        ),
+      ),
+      isTrue,
+    );
+  });
+
   test('L4L fingerprint is stable across repeated exhaustive runs', () {
     const validator = LabExhaustiveRouteValidator();
     final package = _referenceV2();
