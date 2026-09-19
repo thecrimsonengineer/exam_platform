@@ -37,6 +37,8 @@ jobs:
           dart format \
             lib/screens/lab/lab_library_screen.dart \
             lib/screens/lab/lab_scenario_briefing_screen.dart \
+            lib/screens/lab/lab_learner_debrief_screen.dart \
+            lib/screens/lab/lab_learner_debrief_screen.dart \
             lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
@@ -46,7 +48,7 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-fatal-infos
 
-      - name: Phase L4A-L4E learner regressions
+      - name: Phase L4 learner experience regressions
         run: flutter test test/screens/lab
 
       - name: Preserve exact frozen Phase L engine suite
