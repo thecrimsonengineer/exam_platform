@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exam_platform/features/lab/lab_contracts.dart';
+import 'package:exam_platform/features/lab/lab_l4n_certificate.dart';
 import 'package:exam_platform/features/lab/lab_publish_evidence_validator.dart';
 import 'package:exam_platform/features/lab/lab_reachable_route_explorer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -189,6 +190,54 @@ void main() {
       contains(
         'L4N publish evidence requires a valid L4M route exploration report.',
       ),
+    );
+  });
+
+
+  test('L4N certificate round-trips exact route and publish evidence', () {
+    final package = _referenceV2();
+    final routes = explorer.explore(package, routeBudget: 32);
+    final report = validator.validate(
+      package: package,
+      routeExplorationReport: routes,
+    );
+    final certificate = LabL4nPublishEvidenceCertificate.fromReport(
+      package: package,
+      report: report,
+      validationAuthority: 'DQG300-LAB-AUTO',
+      validatedAt: DateTime.utc(2026, 9, 19, 8),
+    );
+
+    final encoded = certificate.encode();
+    final restored = LabL4nPublishEvidenceCertificate.decode(encoded);
+
+    expect(restored.labId, package.metadata.id);
+    expect(restored.versionId, package.metadata.versionId);
+    expect(restored.validationAuthority, 'DQG300-LAB-AUTO');
+    expect(restored.validatedAtIso, '2026-09-19T08:00:00.000Z');
+    expect(restored.routeExplorationEvidence['isValid'], isTrue);
+    expect(restored.publishEvidence['isValid'], isTrue);
+    expect(restored.isPass, isTrue);
+    expect(restored.encode(), encoded);
+  });
+
+  test('L4N certificate refuses invalid publish evidence', () {
+    final package = _referenceV2();
+    final invalidRoutes = explorer.explore(package, routeBudget: 2);
+    final invalidReport = validator.validate(
+      package: package,
+      routeExplorationReport: invalidRoutes,
+    );
+
+    expect(invalidReport.isValid, isFalse);
+    expect(
+      () => LabL4nPublishEvidenceCertificate.fromReport(
+        package: package,
+        report: invalidReport,
+        validationAuthority: 'DQG300-LAB-AUTO',
+        validatedAt: DateTime.utc(2026, 9, 19, 8),
+      ),
+      throwsA(isA<LabContractException>()),
     );
   });
 
