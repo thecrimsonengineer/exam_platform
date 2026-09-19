@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/study_content.dart';
+import '../performance/firestore_read_audit.dart';
 
 /// Firebase-backed repository for CSP11 study-content versions.
 ///
@@ -24,6 +25,12 @@ class CloudContentRepository {
     final snapshot = await _collection
         .where('copyType', isEqualTo: 'draft')
         .get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'content.loadDrafts',
+      collection: 'contentVersions',
+      scope: 'copyType=draft',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     return snapshot.docs
         .map(_fromQueryDocument)
@@ -32,7 +39,14 @@ class CloudContentRepository {
   }
 
   Future<StudyContent?> loadDraft(String contentId) async {
-    final doc = await _collection.doc(_draftId(contentId)).get();
+    final documentId = _draftId(contentId);
+    final doc = await _collection.doc(documentId).get();
+    FirestoreReadAudit.recordDocument(
+      operation: 'content.loadDraft',
+      collection: 'contentVersions',
+      documentId: documentId,
+      exists: doc.exists,
+    );
 
     return _fromDocument(doc);
   }
@@ -58,6 +72,12 @@ class CloudContentRepository {
     final snapshot = await _collection
         .where('copyType', isEqualTo: 'draft')
         .get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'content.clearDrafts.readBeforeDelete',
+      collection: 'contentVersions',
+      scope: 'copyType=draft',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     final batch = _firestore.batch();
 
@@ -73,6 +93,12 @@ class CloudContentRepository {
         .where('copyType', isEqualTo: 'published')
         .where('status', isEqualTo: 'published')
         .get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'content.loadPublished',
+      collection: 'contentVersions',
+      scope: 'copyType=published,status=published',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     return snapshot.docs
         .map(_fromQueryDocument)
@@ -81,7 +107,14 @@ class CloudContentRepository {
   }
 
   Future<StudyContent?> loadPublishedContent(String contentId) async {
-    final doc = await _collection.doc(_publishedId(contentId)).get();
+    final documentId = _publishedId(contentId);
+    final doc = await _collection.doc(documentId).get();
+    FirestoreReadAudit.recordDocument(
+      operation: 'content.loadPublishedContent',
+      collection: 'contentVersions',
+      documentId: documentId,
+      exists: doc.exists,
+    );
 
     return _fromDocument(doc);
   }
@@ -103,6 +136,12 @@ class CloudContentRepository {
         .where('copyType', isEqualTo: 'published')
         .where('status', isEqualTo: 'published')
         .get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'content.loadPublishedDomain',
+      collection: 'contentVersions',
+      scope: 'domainId=$domainId,copyType=published,status=published',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     final latestByCompetency = <String, StudyContent>{};
 
@@ -146,6 +185,14 @@ class CloudContentRepository {
         .where('copyType', isEqualTo: 'published')
         .where('status', isEqualTo: 'published')
         .get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'content.loadPublishedCompetency',
+      collection: 'contentVersions',
+      scope:
+          'domainId=$domainId,competencyId=$competencyId,'
+          'copyType=published,status=published',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     StudyContent? latest;
 
@@ -204,6 +251,12 @@ class CloudContentRepository {
     final snapshot = await _collection
         .where('copyType', isEqualTo: 'published')
         .get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'content.clearPublished.readBeforeDelete',
+      collection: 'contentVersions',
+      scope: 'copyType=published',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     final batch = _firestore.batch();
 
