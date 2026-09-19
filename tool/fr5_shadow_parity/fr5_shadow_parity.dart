@@ -55,6 +55,37 @@ Future<void> main(List<String> args) async {
   var targetRows = await client.fetchShadowRows();
   var ledgerRows = await client.fetchLedgerRows();
 
+  if (options.preflightOnly) {
+    if (options.applyShadow) {
+      throw StateError('FR5 preflight and apply-shadow cannot run together.');
+    }
+
+    final extras = _unexpectedTargetKeys(expected, targetRows);
+    await _writeEvidence(options.evidencePath, <String, dynamic>{
+      'schemaVersion': 1,
+      'phase': 'FR5',
+      'preflightOnly': true,
+      'safeToApply': extras.isEmpty,
+      'expectedRowCount': expected.rows.length,
+      'currentTargetRowCount': targetRows.length,
+      'unexpectedTargetKeys': extras,
+      'credentialKind': config.credentialKind,
+    });
+
+    if (extras.isNotEmpty) {
+      stderr.writeln(
+        'FR5 PREFLIGHT FAILED: ${extras.length} unexpected target row(s).',
+      );
+      exitCode = 4;
+      return;
+    }
+
+    stdout.writeln(
+      'FR5 PREFLIGHT PASS: no unexpected shadow target rows detected.',
+    );
+    return;
+  }
+
   if (options.applyShadow) {
     if (options.confirmation != 'FR5_SHADOW_ONLY') {
       stderr.writeln(
@@ -464,6 +495,7 @@ class _Arguments {
     required this.targetPath,
     required this.evidencePath,
     required this.applyShadow,
+    required this.preflightOnly,
     required this.confirmation,
   });
 
@@ -472,6 +504,7 @@ class _Arguments {
   final String? targetPath;
   final String evidencePath;
   final bool applyShadow;
+  final bool preflightOnly;
   final String? confirmation;
 
   static _Arguments parse(List<String> args) {
@@ -480,6 +513,7 @@ class _Arguments {
     String? targetPath;
     var evidencePath = 'build/fr5/fr5_shadow_parity_evidence.json';
     var applyShadow = false;
+    var preflightOnly = false;
     String? confirmation;
 
     for (final arg in args) {
@@ -493,6 +527,8 @@ class _Arguments {
         evidencePath = arg.substring('--evidence='.length);
       } else if (arg == '--apply-shadow') {
         applyShadow = true;
+      } else if (arg == '--preflight') {
+        preflightOnly = true;
       } else if (arg.startsWith('--confirm=')) {
         confirmation = arg.substring('--confirm='.length);
       } else {
@@ -510,6 +546,7 @@ class _Arguments {
       targetPath: targetPath,
       evidencePath: evidencePath,
       applyShadow: applyShadow,
+      preflightOnly: preflightOnly,
       confirmation: confirmation,
     );
   }
@@ -544,6 +581,12 @@ Validate a deterministic local target fixture:
   dart run tool/fr5_shadow_parity/fr5_shadow_parity.dart \
     --fr4-evidence=build/fr5/fr4_plan.json \
     --target=test/fixtures/fr5/target_snapshot.json
+
+Preflight current Supabase shadow data without writing:
+  SUPABASE_URL=... SUPABASE_SECRET_KEY=... \
+  dart run tool/fr5_shadow_parity/fr5_shadow_parity.dart \
+    --fr4-evidence=<frozen-fr4-evidence.json> \
+    --preflight
 
 Validate current Supabase shadow data:
   SUPABASE_URL=... SUPABASE_SECRET_KEY=... \
