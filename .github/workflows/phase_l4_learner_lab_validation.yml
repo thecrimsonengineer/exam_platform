@@ -3,14 +3,14 @@ name: Phase L4 Learner Decision LAB Validation
 on:
   push:
     branches:
-      - phase-l4-learner-decision-lab
+      - phase-l4a-e-checkpoint
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: phase-l4-learner-decision-lab
+  group: phase-l4a-e-checkpoint
   cancel-in-progress: true
 
 jobs:
@@ -83,4 +83,4 @@ jobs:
             test/screens/lab \
             test/features/lab/lab1_shells_test.dart
           git commit -m "Format Phase L4A-L4E learner LAB"
-          git push origin HEAD:phase-l4-learner-decision-lab
+          git push origin HEAD:phase-l4a-e-checkpoint
