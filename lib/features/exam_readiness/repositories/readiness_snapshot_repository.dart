@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/auth/learner_local_identity.dart';
+import '../../../services/performance/firestore_read_audit.dart';
 import '../models/competency_readiness_profile.dart';
 
 abstract interface class ReadinessSnapshotRemoteStore {
@@ -31,6 +32,12 @@ class FirebaseReadinessSnapshotRemoteStore
   @override
   Future<List<CompetencyReadinessProfile>> loadAll(String userId) async {
     final query = await _collection(userId).get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'readiness.snapshots.loadAll',
+      collection: 'users/$userId/readinessSnapshots',
+      scope: 'all',
+      returnedDocuments: query.docs.length,
+    );
     final result = <CompetencyReadinessProfile>[];
 
     for (final document in query.docs) {
