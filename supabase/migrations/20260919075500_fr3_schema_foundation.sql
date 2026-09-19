@@ -423,3 +423,51 @@ grant all on table public.study_plan_block_outcomes to service_role;
 grant all on table public.lab_attempts to service_role;
 grant all on table public.learning_twin_evidence to service_role;
 grant all on table public.fr_migration_ledger to service_role;
+
+revoke execute on function public.fr_touch_updated_at() from public, anon, authenticated;
+grant execute on function public.fr_touch_updated_at() to service_role;
+
+-- Edge-only learner architecture: even if direct table grants are added later,
+-- these explicit RLS policies continue to fail closed for client roles.
+create policy fr_edge_only_deny_direct_client
+  on public.app_users for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.content_versions for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.questions for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.published_packages for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.learner_subtopic_progress for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.learner_question_progress for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.learner_assessment_attempts for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.readiness_snapshots for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.exam_study_plans for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.daily_study_plans for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.study_plan_block_outcomes for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.lab_attempts for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.learning_twin_evidence for all to anon, authenticated
+  using (false) with check (false);
+create policy fr_edge_only_deny_direct_client
+  on public.fr_migration_ledger for all to anon, authenticated
+  using (false) with check (false);
