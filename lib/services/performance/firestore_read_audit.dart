@@ -30,10 +30,8 @@ class FirestoreReadAudit {
   static List<FirestoreReadAuditEvent> get events =>
       List<FirestoreReadAuditEvent>.unmodifiable(_events);
 
-  static int get totalReturnedDocuments => _events.fold<int>(
-    0,
-    (total, event) => total + event.returnedDocuments,
-  );
+  static int get totalReturnedDocuments =>
+      _events.fold<int>(0, (total, event) => total + event.returnedDocuments);
 
   static int countOperation(String operation) =>
       _events.where((event) => event.operation == operation).length;
