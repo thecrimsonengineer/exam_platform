@@ -36,19 +36,19 @@ void main() {
 
   tearDown(Csp11Haptics.debugResetDriver);
 
-  test('semantic convenience methods route to the frozen event vocabulary', () async {
-    await Csp11Haptics.selection();
-    await Csp11Haptics.navigation();
-    await Csp11Haptics.confirm();
-    await Csp11Haptics.success();
-    await Csp11Haptics.warning();
-    await Csp11Haptics.error();
-    await Csp11Haptics.criticalDecision();
-    await Csp11Haptics.completion();
+  test(
+    'semantic convenience methods route to the frozen event vocabulary',
+    () async {
+      await Csp11Haptics.selection();
+      await Csp11Haptics.navigation();
+      await Csp11Haptics.confirm();
+      await Csp11Haptics.success();
+      await Csp11Haptics.warning();
+      await Csp11Haptics.error();
+      await Csp11Haptics.criticalDecision();
+      await Csp11Haptics.completion();
 
-    expect(
-      driver.events,
-      <Csp11HapticEvent>[
+      expect(driver.events, <Csp11HapticEvent>[
         Csp11HapticEvent.selection,
         Csp11HapticEvent.navigation,
         Csp11HapticEvent.confirm,
@@ -57,9 +57,9 @@ void main() {
         Csp11HapticEvent.error,
         Csp11HapticEvent.criticalDecision,
         Csp11HapticEvent.completion,
-      ],
-    );
-  });
+      ]);
+    },
+  );
 
   test('disabled preference suppresses all haptic driver calls', () async {
     await HapticPreferenceService.setEnabled(false);

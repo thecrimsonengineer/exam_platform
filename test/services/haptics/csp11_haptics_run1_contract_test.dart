@@ -41,14 +41,8 @@ void main() {
     expect(navigation, contains('if (_selectedIndex == index)'));
     expect(navigation, contains('return;'));
 
-    expect(
-      navigation,
-      contains('onOpenStudy: () => _selectTab(1)'),
-    );
-    expect(
-      navigation,
-      contains('onOpenFlashcards: () => _selectTab(4)'),
-    );
+    expect(navigation, contains('onOpenStudy: () => _selectTab(1)'));
+    expect(navigation, contains('onOpenFlashcards: () => _selectTab(4)'));
   });
 
   test('Flutter HapticFeedback is isolated to the production driver', () {

@@ -258,10 +258,12 @@ class SettingsScreen extends StatelessWidget {
                                 subtitle:
                                     'Use subtle tactile feedback for supported learner interactions.',
                                 trailing: ValueListenableBuilder<bool>(
-                                  valueListenable: HapticPreferenceService.enabled,
+                                  valueListenable:
+                                      HapticPreferenceService.enabled,
                                   builder: (context, enabled, _) => Switch(
                                     value: enabled,
-                                    onChanged: HapticPreferenceService.setEnabled,
+                                    onChanged:
+                                        HapticPreferenceService.setEnabled,
                                   ),
                                 ),
                                 onTap: HapticPreferenceService.toggle,

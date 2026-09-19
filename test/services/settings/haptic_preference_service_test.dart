@@ -29,9 +29,6 @@ void main() {
 
     final preferences = await SharedPreferences.getInstance();
     expect(HapticPreferenceService.enabled.value, isFalse);
-    expect(
-      preferences.getBool(HapticPreferenceService.preferenceKey),
-      isFalse,
-    );
+    expect(preferences.getBool(HapticPreferenceService.preferenceKey), isFalse);
   });
 }
