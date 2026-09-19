@@ -7,6 +7,7 @@ import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_learning_twin_bridge.dart';
 import 'package:exam_platform/features/lab/lab_learning_twin_emitter.dart';
 import 'package:exam_platform/features/lab/lab_session.dart';
+import 'package:exam_platform/services/haptics/csp11_haptic_service.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import 'lab_learner_debrief_screen.dart';
@@ -104,6 +105,15 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     return null;
   }
 
+  void _selectDecisionOption(String optionId) {
+    if (_busy || _selectedOptionId == optionId) {
+      return;
+    }
+
+    setState(() => _selectedOptionId = optionId);
+    unawaited(Csp11Haptics.selection());
+  }
+
   Future<void> _confirmDecision() async {
     final package = _package;
     final session = _session;
@@ -151,6 +161,8 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         );
         _busy = false;
       });
+
+      unawaited(_emitAcceptedDecisionHaptics(selectedOption.quality));
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -160,11 +172,35 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     }
   }
 
+  Future<void> _emitAcceptedDecisionHaptics(
+    LabDecisionQuality quality,
+  ) async {
+    await Csp11Haptics.criticalDecision();
+    await Future<void>.delayed(const Duration(milliseconds: 220));
+
+    switch (quality) {
+      case LabDecisionQuality.optimal:
+        await Csp11Haptics.success();
+      case LabDecisionQuality.defensible:
+        break;
+      case LabDecisionQuality.weak:
+        await Csp11Haptics.warning();
+      case LabDecisionQuality.critical:
+        await Csp11Haptics.error();
+    }
+  }
+
   void _continueAfterConsequence() {
+    final completed = _session?.status == LabSessionStatus.completed;
+
     setState(() {
       _pendingConsequence = null;
       _decisionStartedAt = DateTime.now();
     });
+
+    if (completed) {
+      unawaited(Csp11Haptics.completion());
+    }
   }
 
   Future<void> _replay() async {
@@ -326,7 +362,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
                 borderRadius: BorderRadius.circular(18),
                 onTap: _busy
                     ? null
-                    : () => setState(() => _selectedOptionId = option.id),
+                    : () => _selectDecisionOption(option.id),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 160),
                   width: double.infinity,

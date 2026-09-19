@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
@@ -7,6 +9,7 @@ import '../../../../features/learning_twin/coaching/learning_twin_practice_conte
 
 import '../../../../models/question.dart';
 import '../../../../services/bookmark_service.dart';
+import '../../../../services/haptics/csp11_haptic_service.dart';
 import '../../../../services/quiz_service.dart';
 import '../../../../services/student_question_progress_service.dart';
 import '../../../../services/settings/theme_mode_service.dart';
@@ -186,16 +189,23 @@ class _QuizScreenState extends State<QuizScreen> {
   void _selectAnswer(int index) {
     final quizController = controller;
     if (quizController == null || quizController.submitted) return;
+    if (quizController.selectedAnswer == index) return;
 
     setState(() {
       quizController.selectAnswer(index);
     });
+
+    unawaited(Csp11Haptics.selection());
   }
 
   void _submitAnswer() {
     final quizController = controller;
     if (quizController == null || quizController.submitted) return;
-    if (quizController.selectedAnswer == null) return;
+
+    if (quizController.selectedAnswer == null) {
+      unawaited(Csp11Haptics.error());
+      return;
+    }
 
     final question = quizController.currentQuestionData;
     final correct = quizController.isCorrectDisplayedOption(
@@ -206,7 +216,19 @@ class _QuizScreenState extends State<QuizScreen> {
       quizController.submitAnswer();
     });
 
+    unawaited(_emitQuizResultHaptics(correct));
     _recordQuestionCompletion(question, correct);
+  }
+
+  Future<void> _emitQuizResultHaptics(bool correct) async {
+    await Csp11Haptics.confirm();
+    await Future<void>.delayed(const Duration(milliseconds: 180));
+
+    if (correct) {
+      await Csp11Haptics.success();
+    } else {
+      await Csp11Haptics.warning();
+    }
   }
 
   Future<void> _recordQuestionCompletion(
@@ -228,10 +250,12 @@ class _QuizScreenState extends State<QuizScreen> {
     if (quizController == null) return;
 
     if (!quizController.nextQuestion()) {
+      unawaited(Csp11Haptics.completion());
       _showResult();
       return;
     }
 
+    unawaited(Csp11Haptics.navigation());
     setState(() {});
   }
 

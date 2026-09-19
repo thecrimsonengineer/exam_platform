@@ -4,6 +4,7 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../models/study_content.dart';
 import '../../../models/student_learning_progress.dart';
+import '../../../services/haptics/csp11_haptic_service.dart';
 import '../../../services/student_learning_progress_service.dart';
 import '../../../theme/study/study_colors_dark.dart';
 import '../../../theme/study/study_gradients.dart';
@@ -114,6 +115,8 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
       studyContentId: widget.content.id,
       studyContentVersion: widget.content.version,
     );
+
+    await Csp11Haptics.completion();
 
     if (!mounted) {
       return;
