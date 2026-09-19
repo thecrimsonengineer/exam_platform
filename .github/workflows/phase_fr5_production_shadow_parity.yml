@@ -118,7 +118,9 @@ jobs:
           fi
           echo "Firestore read preflight: PASS"
 
-      - name: Extract deterministic production FR4 manifest
+      - id: fr4_extract
+        name: Extract deterministic production FR4 manifest
+        continue-on-error: true
         env:
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
         run: |
@@ -127,6 +129,51 @@ jobs:
           dart run tool/fr4_migration/fr4_migrate.dart \
             --firestore-project="$FIREBASE_PROJECT_ID" \
             --evidence=build/fr5-production/production_fr4_plan.json
+
+      - name: Diagnose FR4 production manifest
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('build/fr5-production/production_fr4_plan.json')
+          if not path.exists():
+              print('FR4 evidence file was not created.')
+              raise SystemExit(0)
+
+          plan = json.loads(path.read_text())
+          print('FR4 readyToApply:', plan.get('readyToApply'))
+          print('FR4 rowCount:', plan.get('rowCount'))
+          print('FR4 sourceCounts:', plan.get('sourceCounts'))
+          print('FR4 targetCounts:', plan.get('targetCounts'))
+          print('FR4 issueCount:', plan.get('issueCount'))
+          print('FR4 duplicateCount:', plan.get('duplicateCount'))
+          print('FR4 failureCount:', plan.get('failureCount'))
+          print('FR4 unmappedCount:', plan.get('unmappedCount'))
+
+          issues = plan.get('issues') or []
+          if issues:
+              print('FR4 issue details:')
+              for index, issue in enumerate(issues, start=1):
+                  print(
+                      f"  {index}. kind={issue.get('kind')} "
+                      f"collection={issue.get('collection')} "
+                      f"sourceId={issue.get('sourceId')} "
+                      f"message={issue.get('message')}"
+                  )
+          PY
+
+      - name: Enforce FR4 production manifest gate
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.fr4_extract.outcome }}" != "success" ]; then
+            echo "FR4 extraction/normalization failed. See the diagnostic step above."
+            exit 1
+          fi
+          test -f build/fr5-production/production_fr4_plan.json
           grep -q '"readyToApply": true' build/fr5-production/production_fr4_plan.json
           grep -q '"issueCount": 0' build/fr5-production/production_fr4_plan.json
           grep -q '"duplicateCount": 0' build/fr5-production/production_fr4_plan.json
