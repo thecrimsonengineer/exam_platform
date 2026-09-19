@@ -49,12 +49,15 @@ jobs:
             test/architecture/phase_fr_local_data_preservation_test.dart \
             lib/services/supabase/supabase_runtime_config.dart \
             lib/services/supabase/supabase_bootstrap_service.dart \
+            lib/services/supabase/supabase_learner_remote_authorization_probe.dart \
             lib/main.dart \
             lib/services/online_access/learner_online_access_gate.dart \
             lib/services/online_access/firebase_learner_access_token_provider.dart \
             test/services/supabase/supabase_runtime_config_test.dart \
             test/services/supabase/supabase_bootstrap_service_test.dart \
-            test/services/online_access/learner_online_access_gate_test.dart
+            test/services/supabase/supabase_learner_remote_authorization_probe_test.dart \
+            test/services/online_access/learner_online_access_gate_test.dart \
+            test/architecture/phase_fr_edge_auth_gateway_test.dart
           git diff -- \
             lib/services/performance/firestore_read_audit.dart \
             lib/services/auth/user_role_service.dart \
@@ -87,7 +90,9 @@ jobs:
         run: |
           flutter test test/services/supabase/supabase_runtime_config_test.dart
           flutter test test/services/supabase/supabase_bootstrap_service_test.dart
+          flutter test test/services/supabase/supabase_learner_remote_authorization_probe_test.dart
           flutter test test/services/online_access/learner_online_access_gate_test.dart
+          flutter test test/architecture/phase_fr_edge_auth_gateway_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
