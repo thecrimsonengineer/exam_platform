@@ -33,6 +33,25 @@ void main() {
     expect(report.routes, hasLength(196));
   });
 
+  test('L4L freezes exact reference ending distribution', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+
+    expect(
+      report.routeCountByEnding,
+      <String, int>{
+        'safe_completion': 48,
+        'controlled_recovery': 48,
+        'incident_contained': 48,
+        'major_incident': 39,
+        'critical_failure': 13,
+      },
+    );
+    expect(
+      report.routeCountByEnding.values.fold<int>(0, (sum, count) => sum + count),
+      196,
+    );
+  });
+
   test('L4L records consequence state and winning gate for every step', () {
     final report = const LabExhaustiveRouteValidator().run(_referenceV2());
 
@@ -441,6 +460,16 @@ void main() {
     );
     expect(first.toEvidenceJson()['routeCount'], 196);
     expect(first.toEvidenceJson()['routeCount'], first.routes.length);
+    expect(
+      first.toEvidenceJson()['routeCountByEnding'],
+      <String, int>{
+        'controlled_recovery': 48,
+        'critical_failure': 13,
+        'incident_contained': 48,
+        'major_incident': 39,
+        'safe_completion': 48,
+      },
+    );
     expect(first.toEvidenceJson()['uncoveredOptionKeys'], isEmpty);
     expect(first.toEvidenceJson()['uncoveredConsequenceIds'], isEmpty);
     expect(first.toEvidenceJson()['uncoveredGateIds'], isEmpty);
