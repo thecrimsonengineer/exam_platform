@@ -49,6 +49,8 @@ jobs:
             lib/features/lab/lab_dqg300_evidence_store.dart \
             lib/features/lab/lab_l4l_certificate.dart \
             lib/features/lab/lab_l4n_certificate.dart \
+            lib/features/lab/lab_learning_twin_bridge.dart \
+            lib/features/lab/lab_learning_twin_emitter.dart \
             lib/features/lab/lab_exhaustive_route_validator.dart \
             lib/features/lab/lab_reachable_route_explorer.dart \
             lib/features/lab/lab_publish_evidence_validator.dart \
@@ -78,6 +80,9 @@ jobs:
 
       - name: Phase L4O published immutability
         run: flutter test test/lab_quality/l4o_published_immutability_test.dart
+
+      - name: Phase L4P Learning Twin evidence emission
+        run: flutter test test/lab_quality/l4p_learning_twin_emission_test.dart
 
       - name: Preserve exact frozen Phase L engine suite
         run: flutter test test/features/lab
@@ -118,6 +123,8 @@ jobs:
             lib/features/lab/lab_dqg300_evidence_store.dart \
             lib/features/lab/lab_l4l_certificate.dart \
             lib/features/lab/lab_l4n_certificate.dart \
+            lib/features/lab/lab_learning_twin_bridge.dart \
+            lib/features/lab/lab_learning_twin_emitter.dart \
             lib/features/lab/lab_exhaustive_route_validator.dart \
             lib/features/lab/lab_reachable_route_explorer.dart \
             lib/features/lab/lab_publish_evidence_validator.dart \
