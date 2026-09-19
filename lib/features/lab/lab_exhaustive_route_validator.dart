@@ -104,8 +104,10 @@ class LabExhaustiveRouteReport {
     required this.gateCoverageIds,
     required this.gateTypeCoverage,
     required this.endingIds,
+    required this.uncoveredOptionKeys,
     required this.uncoveredConsequenceIds,
     required this.uncoveredGateIds,
+    required this.uncoveredEndingIds,
     required this.issues,
     required this.limitExceeded,
     required this.completeOptionCoverage,
@@ -123,8 +125,10 @@ class LabExhaustiveRouteReport {
   final Set<String> gateCoverageIds;
   final Set<LabGateType> gateTypeCoverage;
   final Set<String> endingIds;
+  final Set<String> uncoveredOptionKeys;
   final Set<String> uncoveredConsequenceIds;
   final Set<String> uncoveredGateIds;
+  final Set<String> uncoveredEndingIds;
   final List<String> issues;
   final bool limitExceeded;
   final bool completeOptionCoverage;
@@ -134,6 +138,42 @@ class LabExhaustiveRouteReport {
   final bool routeInvariantsHold;
   final bool deterministic;
   final String fingerprint;
+
+  Map<String, Object?> toEvidenceJson() {
+    final options = optionCoverageKeys.toList()..sort();
+    final consequences = consequenceCoverageIds.toList()..sort();
+    final gates = gateCoverageIds.toList()..sort();
+    final gateTypes = gateTypeCoverage.map((type) => type.name).toList()..sort();
+    final endings = endingIds.toList()..sort();
+    final missingOptions = uncoveredOptionKeys.toList()..sort();
+    final missingConsequences = uncoveredConsequenceIds.toList()..sort();
+    final missingGates = uncoveredGateIds.toList()..sort();
+    final missingEndings = uncoveredEndingIds.toList()..sort();
+
+    return <String, Object?>{
+      'schemaVersion': 'csp11.lab.l4l.exhaustive.v1',
+      'routeCount': routes.length,
+      'optionCoverageKeys': options,
+      'consequenceCoverageIds': consequences,
+      'gateCoverageIds': gates,
+      'gateTypeCoverage': gateTypes,
+      'endingIds': endings,
+      'uncoveredOptionKeys': missingOptions,
+      'uncoveredConsequenceIds': missingConsequences,
+      'uncoveredGateIds': missingGates,
+      'uncoveredEndingIds': missingEndings,
+      'limitExceeded': limitExceeded,
+      'completeOptionCoverage': completeOptionCoverage,
+      'completeConsequenceCoverage': completeConsequenceCoverage,
+      'completeGateCoverage': completeGateCoverage,
+      'completeEndingCoverage': completeEndingCoverage,
+      'routeInvariantsHold': routeInvariantsHold,
+      'deterministic': deterministic,
+      'issues': issues,
+      'fingerprint': fingerprint,
+      'isValid': isValid,
+    };
+  }
 
   bool get isValid =>
       routes.isNotEmpty &&
@@ -194,9 +234,12 @@ class LabExhaustiveRouteValidator {
         .map((ending) => ending['id']?.toString() ?? '')
         .where((id) => id.isNotEmpty)
         .toSet();
+    final uncoveredOptions =
+        expectedOptions.difference(first.optionCoverageKeys);
     final uncoveredConsequences =
         expectedConsequences.difference(first.consequenceCoverageIds);
     final uncoveredGates = expectedGates.difference(first.gateCoverageIds);
+    final uncoveredEndings = expectedEndings.difference(first.endingIds);
     final invariantsHold = _routesHoldInvariants(
       first.routes,
       package: package,
@@ -211,15 +254,16 @@ class LabExhaustiveRouteValidator {
       gateTypeCoverage:
           Set<LabGateType>.unmodifiable(first.gateTypeCoverage),
       endingIds: Set<String>.unmodifiable(first.endingIds),
+      uncoveredOptionKeys: Set<String>.unmodifiable(uncoveredOptions),
       uncoveredConsequenceIds: Set<String>.unmodifiable(uncoveredConsequences),
       uncoveredGateIds: Set<String>.unmodifiable(uncoveredGates),
+      uncoveredEndingIds: Set<String>.unmodifiable(uncoveredEndings),
       issues: List<String>.unmodifiable(first.issues),
       limitExceeded: first.limitExceeded,
-      completeOptionCoverage:
-          first.optionCoverageKeys.containsAll(expectedOptions),
+      completeOptionCoverage: uncoveredOptions.isEmpty,
       completeConsequenceCoverage: uncoveredConsequences.isEmpty,
       completeGateCoverage: uncoveredGates.isEmpty,
-      completeEndingCoverage: first.endingIds.containsAll(expectedEndings),
+      completeEndingCoverage: uncoveredEndings.isEmpty,
       routeInvariantsHold: invariantsHold,
       deterministic:
           first.fingerprint == second.fingerprint &&
@@ -496,6 +540,10 @@ class LabExhaustiveRouteValidator {
       registry: package.stateRegistry,
       startingState: package.metadata.startingState,
     ).snapshot;
+    final authoredEndingIds = package.endings
+        .map((ending) => ending['id']?.toString() ?? '')
+        .where((id) => id.isNotEmpty)
+        .toSet();
 
     for (final route in routes) {
       if (route.steps.isEmpty) return false;
@@ -522,6 +570,7 @@ class LabExhaustiveRouteValidator {
         if (terminal) {
           if (!hasEnding ||
               step.endingId != route.endingId ||
+              !authoredEndingIds.contains(route.endingId) ||
               step.gateType != LabGateType.completion) {
             return false;
           }
