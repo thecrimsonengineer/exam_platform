@@ -30,7 +30,7 @@ void main() {
     expect(report.optionCoverageKeys, hasLength(20));
     expect(report.endingIds, containsAll(expectedEndings));
     expect(report.endingIds, hasLength(5));
-    expect(report.routes.length, greaterThan(100));
+    expect(report.routes, hasLength(196));
   });
 
   test('L4L records consequence state and winning gate for every step', () {
@@ -170,6 +170,7 @@ void main() {
     expect(report.uncoveredConsequenceIds, isEmpty);
     expect(report.uncoveredGateIds, isEmpty);
     expect(report.consequenceCoverageIds, hasLength(20));
+    expect(report.gateCoverageIds, hasLength(14));
     expect(report.gateCoverageIds, hasLength(package.gates.length));
     expect(
       report.gateTypeCoverage,
@@ -438,6 +439,7 @@ void main() {
       first.toEvidenceJson()['schemaVersion'],
       'csp11.lab.l4l.exhaustive.v1',
     );
+    expect(first.toEvidenceJson()['routeCount'], 196);
     expect(first.toEvidenceJson()['routeCount'], first.routes.length);
     expect(first.toEvidenceJson()['uncoveredOptionKeys'], isEmpty);
     expect(first.toEvidenceJson()['uncoveredConsequenceIds'], isEmpty);
