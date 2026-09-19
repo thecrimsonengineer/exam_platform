@@ -16,14 +16,8 @@ void main() {
     expect(sql, contains('create schema if not exists authoring;'));
     expect(sql, contains('authoring.content_drafts'));
     expect(sql, contains('authoring.question_drafts'));
-    expect(
-      sql,
-      contains("check (status in ('draft', 'review', 'validated'))"),
-    );
-    expect(
-      sql,
-      contains("check (status in ('published', 'archived'))"),
-    );
+    expect(sql, contains("check (status in ('draft', 'review', 'validated'))"));
+    expect(sql, contains("check (status in ('published', 'archived'))"));
   });
 
   test('FR5 authoring workspace is denied to learner Data API roles', () {

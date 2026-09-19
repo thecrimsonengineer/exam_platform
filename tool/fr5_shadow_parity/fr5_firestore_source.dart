@@ -36,16 +36,13 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  await _writeJson(
-    options.outputPath,
-    <String, dynamic>{
-      'schemaVersion': 1,
-      'phase': 'FR5',
-      'documents': selection.documents
-          .map((document) => document.toJson())
-          .toList(growable: false),
-    },
-  );
+  await _writeJson(options.outputPath, <String, dynamic>{
+    'schemaVersion': 1,
+    'phase': 'FR5',
+    'documents': selection.documents
+        .map((document) => document.toJson())
+        .toList(growable: false),
+  });
 
   stdout.writeln(
     'FR5 SOURCE PASS: ${selection.documents.length} published production '

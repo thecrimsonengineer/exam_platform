@@ -31,30 +31,26 @@ void main() {
     return Fr4SourceDocument(
       collection: 'questions',
       id: sourceId,
-      data: <String, dynamic>{
-        'id': questionId,
-        'status': status,
-      },
+      data: <String, dynamic>{'id': questionId, 'status': status},
     );
   }
 
   test('FR5 selects only published production rows', () {
-    final result = const Fr5CanonicalSourceSelector().select(
-      <Fr4SourceDocument>[
-        content(
-          sourceId: 'published_d01_c01-v1',
-          contentId: 'd01_c01-v1',
-          version: 1,
-          status: 'published',
-          copyType: 'published',
-        ),
-        question(
-          sourceId: 'question_101',
-          questionId: 101,
-          status: 'published',
-        ),
-      ],
-    );
+    final result = const Fr5CanonicalSourceSelector()
+        .select(<Fr4SourceDocument>[
+          content(
+            sourceId: 'published_d01_c01-v1',
+            contentId: 'd01_c01-v1',
+            version: 1,
+            status: 'published',
+            copyType: 'published',
+          ),
+          question(
+            sourceId: 'question_101',
+            questionId: 101,
+            status: 'published',
+          ),
+        ]);
 
     expect(result.ready, isTrue);
     expect(result.documents, hasLength(2));
@@ -65,22 +61,17 @@ void main() {
   });
 
   test('FR5 excludes authoring lifecycle rows from production migration', () {
-    final result = const Fr5CanonicalSourceSelector().select(
-      <Fr4SourceDocument>[
-        content(
-          sourceId: 'draft_d01_c01-v1',
-          contentId: 'd01_c01-v1',
-          version: 1,
-          status: 'validated',
-          copyType: 'draft',
-        ),
-        question(
-          sourceId: 'question_102',
-          questionId: 102,
-          status: 'review',
-        ),
-      ],
-    );
+    final result = const Fr5CanonicalSourceSelector()
+        .select(<Fr4SourceDocument>[
+          content(
+            sourceId: 'draft_d01_c01-v1',
+            contentId: 'd01_c01-v1',
+            version: 1,
+            status: 'validated',
+            copyType: 'draft',
+          ),
+          question(sourceId: 'question_102', questionId: 102, status: 'review'),
+        ]);
 
     expect(result.ready, isTrue);
     expect(result.documents, isEmpty);
@@ -90,17 +81,16 @@ void main() {
   });
 
   test('published content identity mismatch fails closed', () {
-    final result = const Fr5CanonicalSourceSelector().select(
-      <Fr4SourceDocument>[
-        content(
-          sourceId: 'draft_d01_c01-v1',
-          contentId: 'd01_c01-v1',
-          version: 1,
-          status: 'published',
-          copyType: 'draft',
-        ),
-      ],
-    );
+    final result = const Fr5CanonicalSourceSelector()
+        .select(<Fr4SourceDocument>[
+          content(
+            sourceId: 'draft_d01_c01-v1',
+            contentId: 'd01_c01-v1',
+            version: 1,
+            status: 'published',
+            copyType: 'draft',
+          ),
+        ]);
 
     expect(result.ready, isFalse);
     expect(result.documents, isEmpty);
