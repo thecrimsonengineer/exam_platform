@@ -112,6 +112,7 @@ jobs:
           git add \
             lib/screens/lab/lab_library_screen.dart \
             lib/screens/lab/lab_scenario_briefing_screen.dart \
+            lib/screens/lab/lab_learner_debrief_screen.dart \
             lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
