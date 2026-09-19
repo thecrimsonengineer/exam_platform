@@ -28,15 +28,12 @@ Future<void> main(List<String> args) async {
       ledgerRows: snapshot.ledgerRows,
     );
 
-    await _writeEvidence(
-      options.evidencePath,
-      <String, dynamic>{
-        ...report.toJson(),
-        'sourceMode': 'fr4-evidence',
-        'targetMode': 'local-fixture',
-        'applyRequested': false,
-      },
-    );
+    await _writeEvidence(options.evidencePath, <String, dynamic>{
+      ...report.toJson(),
+      'sourceMode': 'fr4-evidence',
+      'targetMode': 'local-fixture',
+      'applyRequested': false,
+    });
 
     if (!report.completeParity) {
       stderr.writeln(
@@ -70,17 +67,14 @@ Future<void> main(List<String> args) async {
 
     final extras = _unexpectedTargetKeys(expected, targetRows);
     if (extras.isNotEmpty) {
-      await _writeEvidence(
-        options.evidencePath,
-        <String, dynamic>{
-          'schemaVersion': 1,
-          'phase': 'FR5',
-          'completeParity': false,
-          'applyRequested': true,
-          'blockedBeforeWrite': true,
-          'unexpectedTargetKeys': extras,
-        },
-      );
+      await _writeEvidence(options.evidencePath, <String, dynamic>{
+        'schemaVersion': 1,
+        'phase': 'FR5',
+        'completeParity': false,
+        'applyRequested': true,
+        'blockedBeforeWrite': true,
+        'unexpectedTargetKeys': extras,
+      });
       stderr.writeln(
         'FR5 FAIL-CLOSED: shadow target contains ${extras.length} '
         'unexpected row(s). No write performed.',
@@ -112,14 +106,11 @@ Future<void> main(List<String> args) async {
     if (dataIssues.isNotEmpty ||
         preLedger.matchedRowCount != expected.rows.length ||
         preLedger.learnerVisibleMatchedCount != expected.rows.length) {
-      await _writeEvidence(
-        options.evidencePath,
-        <String, dynamic>{
-          ...preLedger.toJson(),
-          'applyRequested': true,
-          'blockedBeforeLedgerWrite': true,
-        },
-      );
+      await _writeEvidence(options.evidencePath, <String, dynamic>{
+        ...preLedger.toJson(),
+        'applyRequested': true,
+        'blockedBeforeLedgerWrite': true,
+      });
       stderr.writeln(
         'FR5 SHADOW APPLY FAILED before ledger commit: '
         '${dataIssues.length} data parity issue(s).',
@@ -142,16 +133,13 @@ Future<void> main(List<String> args) async {
     ledgerRows: ledgerRows,
   );
 
-  await _writeEvidence(
-    options.evidencePath,
-    <String, dynamic>{
-      ...report.toJson(),
-      'sourceMode': 'fr4-evidence',
-      'targetMode': 'supabase-shadow',
-      'applyRequested': options.applyShadow,
-      'credentialKind': config.credentialKind,
-    },
-  );
+  await _writeEvidence(options.evidencePath, <String, dynamic>{
+    ...report.toJson(),
+    'sourceMode': 'fr4-evidence',
+    'targetMode': 'supabase-shadow',
+    'applyRequested': options.applyShadow,
+    'credentialKind': config.credentialKind,
+  });
 
   if (!report.completeParity) {
     stderr.writeln(
@@ -168,10 +156,7 @@ Future<void> main(List<String> args) async {
 }
 
 class _Snapshot {
-  const _Snapshot({
-    required this.targetRows,
-    required this.ledgerRows,
-  });
+  const _Snapshot({required this.targetRows, required this.ledgerRows});
 
   final List<Fr5TargetRow> targetRows;
   final List<Map<String, dynamic>> ledgerRows;
@@ -201,10 +186,7 @@ _Snapshot _snapshotFromFixture(
         throw FormatException('Fixture table "$table" contains a non-object.');
       }
       targetRows.add(
-        Fr5TargetRow(
-          table: table,
-          row: Map<String, dynamic>.from(row),
-        ),
+        Fr5TargetRow(table: table, row: Map<String, dynamic>.from(row)),
       );
     }
   }
@@ -220,9 +202,7 @@ _Snapshot _snapshotFromFixture(
       ledgerRows.add(Map<String, dynamic>.from(row));
     }
   } else if (fixture['ledgerFromPlan'] == true) {
-    ledgerRows.addAll(
-      expected.rows.map(fr5MatchedLedgerRow),
-    );
+    ledgerRows.addAll(expected.rows.map(fr5MatchedLedgerRow));
   } else {
     throw const FormatException(
       'FR5 target fixture requires ledger rows or ledgerFromPlan=true.',
@@ -240,8 +220,7 @@ List<String> _unexpectedTargetKeys(
   Iterable<Fr5TargetRow> actual,
 ) {
   final expectedKeys = <String>{
-    for (final row in expected.rows)
-      '${row.targetTable}|${row.targetKey}',
+    for (final row in expected.rows) '${row.targetTable}|${row.targetKey}',
   };
 
   final extras = <String>[];
@@ -268,8 +247,7 @@ class _SupabaseServerConfig {
 
   factory _SupabaseServerConfig.fromEnvironment() {
     final baseUrl = Platform.environment['SUPABASE_URL']?.trim() ?? '';
-    final secretKey =
-        Platform.environment['SUPABASE_SECRET_KEY']?.trim() ?? '';
+    final secretKey = Platform.environment['SUPABASE_SECRET_KEY']?.trim() ?? '';
     final legacyServiceRole =
         Platform.environment['SUPABASE_SERVICE_ROLE_KEY']?.trim() ?? '';
 
@@ -314,11 +292,7 @@ class _SupabaseRestClient {
     final rows = <Fr5TargetRow>[];
     for (final table in fr5SupportedTargetTables.toList()..sort()) {
       final pageRows = await _fetchAll(table);
-      rows.addAll(
-        pageRows.map(
-          (row) => Fr5TargetRow(table: table, row: row),
-        ),
-      );
+      rows.addAll(pageRows.map((row) => Fr5TargetRow(table: table, row: row)));
     }
     return rows;
   }
@@ -367,10 +341,9 @@ class _SupabaseRestClient {
           ? start + batchSize
           : rows.length;
       final batch = rows.sublist(start, end);
-      final uri = _tableUri(
-        table,
-        <String, String>{'on_conflict': conflictColumns},
-      );
+      final uri = _tableUri(table, <String, String>{
+        'on_conflict': conflictColumns,
+      });
 
       final response = await _request(
         'POST',
@@ -394,14 +367,11 @@ class _SupabaseRestClient {
     final output = <Map<String, dynamic>>[];
 
     for (var offset = 0; ; offset += pageSize) {
-      final uri = _tableUri(
-        table,
-        <String, String>{
-          'select': '*',
-          'limit': '$pageSize',
-          'offset': '$offset',
-        },
-      );
+      final uri = _tableUri(table, <String, String>{
+        'select': '*',
+        'limit': '$pageSize',
+        'offset': '$offset',
+      });
 
       final response = await _request('GET', uri);
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -453,10 +423,7 @@ class _SupabaseRestClient {
       final request = await client.openUrl(method, uri);
       request.headers.set('apikey', apiKey);
       if (legacyJwt) {
-        request.headers.set(
-          HttpHeaders.authorizationHeader,
-          'Bearer $apiKey',
-        );
+        request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $apiKey');
       }
       request.headers.set(HttpHeaders.acceptHeader, 'application/json');
       request.headers.set(
@@ -476,10 +443,7 @@ class _SupabaseRestClient {
       final response = await request.close();
       final responseBody = await utf8.decoder.bind(response).join();
 
-      return _HttpResult(
-        statusCode: response.statusCode,
-        body: responseBody,
-      );
+      return _HttpResult(statusCode: response.statusCode, body: responseBody);
     } finally {
       client.close(force: true);
     }
@@ -487,10 +451,7 @@ class _SupabaseRestClient {
 }
 
 class _HttpResult {
-  const _HttpResult({
-    required this.statusCode,
-    required this.body,
-  });
+  const _HttpResult({required this.statusCode, required this.body});
 
   final int statusCode;
   final String body;
@@ -567,10 +528,7 @@ Map<String, dynamic> _readJsonObject(String path) {
   return Map<String, dynamic>.from(decoded);
 }
 
-Future<void> _writeEvidence(
-  String path,
-  Map<String, dynamic> report,
-) async {
+Future<void> _writeEvidence(String path, Map<String, dynamic> report) async {
   final file = File(path);
   await file.parent.create(recursive: true);
   await file.writeAsString(
