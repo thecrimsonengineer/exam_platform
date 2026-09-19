@@ -281,6 +281,13 @@ void main() {
     await tester.pump();
     expect(sink.events, isEmpty);
 
+    await tester.drag(
+      find.byKey(const ValueKey('lab-reference-player')),
+      const Offset(0, -700),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('lab-confirm-decision')), findsOneWidget);
+
     await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
     await tester.pumpAndSettle();
 
