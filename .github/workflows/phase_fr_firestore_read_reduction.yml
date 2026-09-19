@@ -34,7 +34,23 @@ jobs:
 
       - name: FR formatting gate
         run: |
-          dart format --output=none --set-exit-if-changed \
+          dart format \
+            lib/services/performance/firestore_read_audit.dart \
+            lib/services/cloud_question_repository.dart \
+            lib/services/study_content/cloud_content_repository.dart \
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+            lib/features/exam_readiness/repositories/exam_study_plan_repository.dart \
+            lib/features/exam_readiness/repositories/readiness_snapshot_repository.dart \
+            test/services/performance/firestore_read_audit_test.dart
+          git diff -- \
+            lib/services/performance/firestore_read_audit.dart \
+            lib/services/cloud_question_repository.dart \
+            lib/services/study_content/cloud_content_repository.dart \
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+            lib/features/exam_readiness/repositories/exam_study_plan_repository.dart \
+            lib/features/exam_readiness/repositories/readiness_snapshot_repository.dart \
+            test/services/performance/firestore_read_audit_test.dart
+          git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
             lib/services/cloud_question_repository.dart \
             lib/services/study_content/cloud_content_repository.dart \
