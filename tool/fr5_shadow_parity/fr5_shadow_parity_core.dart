@@ -1,9 +1,6 @@
 import '../fr4_migration/fr4_migration_core.dart';
 
-const fr5SupportedTargetTables = <String>{
-  'content_versions',
-  'questions',
-};
+const fr5SupportedTargetTables = <String>{'content_versions', 'questions'};
 
 class Fr5ExpectedRow {
   const Fr5ExpectedRow({
@@ -124,10 +121,7 @@ class Fr5ExpectedPlan {
 }
 
 class Fr5TargetRow {
-  const Fr5TargetRow({
-    required this.table,
-    required this.row,
-  });
+  const Fr5TargetRow({required this.table, required this.row});
 
   final String table;
   final Map<String, dynamic> row;
@@ -231,7 +225,8 @@ class Fr5ShadowParityEngine {
             kind: 'duplicate_target',
             targetTable: target.table,
             targetKey: target.targetKey,
-            message: 'Supabase returned the same target identity more than once.',
+            message:
+                'Supabase returned the same target identity more than once.',
           ),
         );
         continue;
@@ -260,10 +255,7 @@ class Fr5ShadowParityEngine {
 
       var targetMatches = false;
       try {
-        targetMatches = fr4TargetMatches(
-          planned.toFr4TargetRow(),
-          actual.row,
-        );
+        targetMatches = fr4TargetMatches(planned.toFr4TargetRow(), actual.row);
       } catch (error) {
         issues.add(
           Fr5ParityIssue(
@@ -287,7 +279,8 @@ class Fr5ShadowParityEngine {
               kind: 'checksum_mismatch',
               targetTable: planned.targetTable,
               targetKey: planned.targetKey,
-              message: 'Target row checksum does not match frozen FR4 evidence.',
+              message:
+                  'Target row checksum does not match frozen FR4 evidence.',
             ),
           );
         }
