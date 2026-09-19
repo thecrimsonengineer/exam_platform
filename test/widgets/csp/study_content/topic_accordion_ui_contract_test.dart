@@ -15,7 +15,9 @@ void main() {
     darkSource = File(
       'lib/widgets/csp/study_content/study_content_renderer_dark.dart',
     ).readAsStringSync();
-    spacingSource = File('lib/theme/study/study_spacing.dart').readAsStringSync();
+    spacingSource = File(
+      'lib/theme/study/study_spacing.dart',
+    ).readAsStringSync();
   });
 
   test('learner index preserves Topic -> Subtopic hierarchy', () {

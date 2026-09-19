@@ -8,8 +8,14 @@ void main() {
   });
 
   test('tablet and desktop keep their wider reading margins', () {
-    expect(StudySpacing.pageHorizontalForWidth(700), StudySpacing.pageHorizontal);
-    expect(StudySpacing.heroHorizontalForWidth(700), StudySpacing.pageHorizontal);
+    expect(
+      StudySpacing.pageHorizontalForWidth(700),
+      StudySpacing.pageHorizontal,
+    );
+    expect(
+      StudySpacing.heroHorizontalForWidth(700),
+      StudySpacing.pageHorizontal,
+    );
     expect(
       StudySpacing.pageHorizontalForWidth(1200),
       StudySpacing.pageHorizontalDesktop,

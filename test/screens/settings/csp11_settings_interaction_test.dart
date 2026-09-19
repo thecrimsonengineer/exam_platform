@@ -41,7 +41,9 @@ void main() {
     expect(find.byType(SettingsScreen), findsNothing);
   });
 
-  testWidgets('sign out returns directly to the auth-root route', (tester) async {
+  testWidgets('sign out returns directly to the auth-root route', (
+    tester,
+  ) async {
     var signedOut = false;
 
     await tester.pumpWidget(

@@ -18,12 +18,8 @@ class SettingsRoute extends StatelessWidget {
           switchInCurve: Curves.easeOutCubic,
           switchOutCurve: Curves.easeInCubic,
           child: isDarkMode
-              ? const DarkSettingsScreen(
-                  key: ValueKey('settings-route-dark'),
-                )
-              : const SettingsScreen(
-                  key: ValueKey('settings-route-light'),
-                ),
+              ? const DarkSettingsScreen(key: ValueKey('settings-route-dark'))
+              : const SettingsScreen(key: ValueKey('settings-route-light')),
         );
       },
     );

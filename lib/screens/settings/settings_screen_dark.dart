@@ -172,9 +172,9 @@ class DarkSettingsScreen extends StatelessWidget {
   }
 
   void _openFullProgress(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const DarkProgressScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const DarkProgressScreen()));
   }
 
   @override

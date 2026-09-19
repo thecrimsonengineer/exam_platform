@@ -171,9 +171,9 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _openFullProgress(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const ProgressScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const ProgressScreen()));
   }
 
   @override

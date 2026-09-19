@@ -155,8 +155,9 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
             _buildHero(domain),
             LayoutBuilder(
               builder: (context, constraints) {
-                final horizontalPadding =
-                    StudySpacing.pageHorizontalForWidth(constraints.maxWidth);
+                final horizontalPadding = StudySpacing.pageHorizontalForWidth(
+                  constraints.maxWidth,
+                );
 
                 return Center(
                   child: ConstrainedBox(
