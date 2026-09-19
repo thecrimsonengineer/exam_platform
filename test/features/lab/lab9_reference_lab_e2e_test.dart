@@ -220,7 +220,10 @@ void main() {
           );
           await tester.pump();
           expect(find.text('Safety Decision LAB'), findsOneWidget);
-          expect(find.text('Decision LABs'), findsOneWidget);
+          expect(
+            find.text('Practice safety decisions before they happen for real'),
+            findsOneWidget,
+          );
         } else if (i == 2 || i == 3) {
           await tester.pumpWidget(
             MaterialApp(
@@ -229,9 +232,9 @@ void main() {
             ),
           );
           await tester.pump();
-          expect(find.text('LAB Player'), findsOneWidget);
+          expect(find.text('Choose LAB Mode'), findsOneWidget);
           expect(
-            find.text('Scene → Decision → Consequence → Story Gate'),
+            find.text('Choose how you want to practise'),
             findsOneWidget,
           );
         } else if (i == 4) {
