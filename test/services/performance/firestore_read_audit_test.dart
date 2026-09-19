@@ -26,10 +26,7 @@ void main() {
       FirestoreReadAudit.returnedDocumentsFor('questions.loadPublished'),
       12,
     );
-    expect(
-      FirestoreReadAudit.events.single.kind,
-      FirestoreReadAuditKind.query,
-    );
+    expect(FirestoreReadAudit.events.single.kind, FirestoreReadAuditKind.query);
   });
 
   test('FR1 records an existing single-document read as one document', () {
