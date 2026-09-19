@@ -27,42 +27,44 @@ LabDqg300EvidenceBundle _passingEvidence(LabPackage package) {
 }
 
 void main() {
-  test('L4K automated lifecycle publishes DRAFT without human approval', () async {
-    final repository = InMemoryLabPublishedRepository();
-    final studio = Lab1000StudioService(repository: repository);
-    final draft = studio.importJson(_source());
-    final service = LabAutomatedLifecycleService(studio: studio);
+  test(
+    'L4K automated lifecycle publishes DRAFT without human approval',
+    () async {
+      final repository = InMemoryLabPublishedRepository();
+      final studio = Lab1000StudioService(repository: repository);
+      final draft = studio.importJson(_source());
+      final service = LabAutomatedLifecycleService(studio: studio);
 
-    final result = await service.validateAndPublish(
-      workspace: draft,
-      dqg300Evidence: _passingEvidence(draft.package),
-      validatedAt: DateTime.utc(2026, 9, 19, 5),
-      publishedAt: DateTime.utc(2026, 9, 19, 5, 1),
-    );
+      final result = await service.validateAndPublish(
+        workspace: draft,
+        dqg300Evidence: _passingEvidence(draft.package),
+        validatedAt: DateTime.utc(2026, 9, 19, 5),
+        publishedAt: DateTime.utc(2026, 9, 19, 5, 1),
+      );
 
-    expect(result.workspace.lifecycle, LabLifecycleStatus.published);
-    expect(result.workspace.reviewerId, 'DQG300-LAB-AUTO');
-    expect(result.gateReport.isPublishable, isTrue);
-    expect(result.certificate.isPass, isTrue);
+      expect(result.workspace.lifecycle, LabLifecycleStatus.published);
+      expect(result.workspace.reviewerId, 'DQG300-LAB-AUTO');
+      expect(result.gateReport.isPublishable, isTrue);
+      expect(result.certificate.isPass, isTrue);
 
-    final stored = await repository.load('l2_lab', 'v1');
-    expect(stored, isNotNull);
-    expect(stored!.validationAuthority, 'DQG300-LAB-AUTO');
-    expect(stored.qualityEvidenceJson, isNotNull);
-  });
+      final stored = await repository.load('l2_lab', 'v1');
+      expect(stored, isNotNull);
+      expect(stored!.validationAuthority, 'DQG300-LAB-AUTO');
+      expect(stored.qualityEvidenceJson, isNotNull);
+    },
+  );
 
   test('persisted DQG300-LAB certificate round-trips exactly', () async {
     final repository = InMemoryLabPublishedRepository();
     final studio = Lab1000StudioService(repository: repository);
     final draft = studio.importJson(_source());
 
-    final result = await LabAutomatedLifecycleService(
-      studio: studio,
-    ).validateAndPublish(
-      workspace: draft,
-      dqg300Evidence: _passingEvidence(draft.package),
-      validatedAt: DateTime.utc(2026, 9, 19, 5),
-    );
+    final result = await LabAutomatedLifecycleService(studio: studio)
+        .validateAndPublish(
+          workspace: draft,
+          dqg300Evidence: _passingEvidence(draft.package),
+          validatedAt: DateTime.utc(2026, 9, 19, 5),
+        );
 
     final encoded = result.certificate.encode();
     final restored = LabDqg300EvidenceCertificate.decode(encoded);
@@ -75,33 +77,35 @@ void main() {
     expect(restored.encode(), encoded);
   });
 
-  test('automated lifecycle fails closed without complete DQG300 evidence', () async {
-    final repository = InMemoryLabPublishedRepository();
-    final studio = Lab1000StudioService(repository: repository);
-    final draft = studio.importJson(_source());
-    final first = draft.package.nodes.whereType<LabDecisionNode>().first;
-    final incomplete = LabDqg300EvidenceBundle(
-      labId: draft.package.metadata.id,
-      versionId: draft.package.metadata.versionId,
-      decisions: <LabDqg300DecisionEvidence>[
-        LabDqg300DecisionEvidence(
-          nodeId: first.id,
-          decisionSignature: LabDqg300Validator.decisionSignature(first),
-          evidence: perfectDqg300Evidence(),
-        ),
-      ],
-    );
+  test(
+    'automated lifecycle fails closed without complete DQG300 evidence',
+    () async {
+      final repository = InMemoryLabPublishedRepository();
+      final studio = Lab1000StudioService(repository: repository);
+      final draft = studio.importJson(_source());
+      final first = draft.package.nodes.whereType<LabDecisionNode>().first;
+      final incomplete = LabDqg300EvidenceBundle(
+        labId: draft.package.metadata.id,
+        versionId: draft.package.metadata.versionId,
+        decisions: <LabDqg300DecisionEvidence>[
+          LabDqg300DecisionEvidence(
+            nodeId: first.id,
+            decisionSignature: LabDqg300Validator.decisionSignature(first),
+            evidence: perfectDqg300Evidence(),
+          ),
+        ],
+      );
 
-    await expectLater(
-      LabAutomatedLifecycleService(studio: studio).validateAndPublish(
-        workspace: draft,
-        dqg300Evidence: incomplete,
-      ),
-      throwsA(isA<LabStudioException>()),
-    );
+      await expectLater(
+        LabAutomatedLifecycleService(
+          studio: studio,
+        ).validateAndPublish(workspace: draft, dqg300Evidence: incomplete),
+        throwsA(isA<LabStudioException>()),
+      );
 
-    expect(await repository.load('l2_lab', 'v1'), isNull);
-  });
+      expect(await repository.load('l2_lab', 'v1'), isNull);
+    },
+  );
 
   test('legacy human-review publish API remains available', () async {
     final repository = InMemoryLabPublishedRepository();

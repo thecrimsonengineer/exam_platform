@@ -84,9 +84,7 @@ class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
     final workspace = _workspace;
     if (workspace == null) return;
     try {
-      final bundle = const LabDqg300EvidenceCodec().decode(
-        _dqgController.text,
-      );
+      final bundle = const LabDqg300EvidenceCodec().decode(_dqgController.text);
       if (bundle.labId != workspace.package.metadata.id ||
           bundle.versionId != workspace.package.metadata.versionId) {
         throw const LabStudioException(
@@ -362,18 +360,18 @@ class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
                       children: [
                         FilledButton(
                           key: const ValueKey('lab1000-review'),
-                    onPressed: workspace.lifecycle.name == 'draft'
-                        ? _requestReview
-                        : null,
-                    child: const Text('SEND TO REVIEW'),
-                  ),
-                  FilledButton(
-                    key: const ValueKey('lab1000-approve'),
-                    onPressed: workspace.lifecycle.name == 'review'
-                        ? _approve
-                        : null,
-                    child: const Text('APPROVE / VALIDATE'),
-                  ),
+                          onPressed: workspace.lifecycle.name == 'draft'
+                              ? _requestReview
+                              : null,
+                          child: const Text('SEND TO REVIEW'),
+                        ),
+                        FilledButton(
+                          key: const ValueKey('lab1000-approve'),
+                          onPressed: workspace.lifecycle.name == 'review'
+                              ? _approve
+                              : null,
+                          child: const Text('APPROVE / VALIDATE'),
+                        ),
                         FilledButton(
                           key: const ValueKey('lab1000-publish'),
                           onPressed: workspace.lifecycle.name == 'validated'

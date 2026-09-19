@@ -56,8 +56,7 @@ void main() {
     final criticalSteps = report.routes
         .expand((route) => route.steps)
         .where(
-          (step) =>
-              step.nodeId == 'simops_decision' && step.optionId == 's4',
+          (step) => step.nodeId == 'simops_decision' && step.optionId == 's4',
         )
         .toList();
 

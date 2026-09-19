@@ -43,7 +43,10 @@ void main() {
     expect(restored.versionId, bundle.versionId);
     expect(restored.decisions.keys, bundle.decisions.keys);
     expect(result.isValid, isTrue);
-    expect(result.decisionResults.every((item) => item.result.dqs == 100), isTrue);
+    expect(
+      result.decisionResults.every((item) => item.result.dqs == 100),
+      isTrue,
+    );
   });
 
   test('persisted DQG300-LAB evidence can drive automated publish', () async {
@@ -54,13 +57,14 @@ void main() {
 
     await evidenceRepository.save(_bundle(draft.package));
 
-    final result = await LabAutomatedLifecycleService(
-      studio: studio,
-      evidenceRepository: evidenceRepository,
-    ).validateAndPublishStored(
-      workspace: draft,
-      validatedAt: DateTime.utc(2026, 9, 19, 6),
-    );
+    final result =
+        await LabAutomatedLifecycleService(
+          studio: studio,
+          evidenceRepository: evidenceRepository,
+        ).validateAndPublishStored(
+          workspace: draft,
+          validatedAt: DateTime.utc(2026, 9, 19, 6),
+        );
 
     expect(result.workspace.lifecycle, LabLifecycleStatus.published);
     expect(result.gateReport.dqg300Report.isValid, isTrue);
@@ -68,39 +72,42 @@ void main() {
     expect(result.certificate.isPass, isTrue);
   });
 
-  test('stored evidence becomes stale when decision signature changes', () async {
-    final package = LabPackage.decode(_source());
-    final repository = InMemoryLabDqg300EvidenceRepository();
-    final bundle = _bundle(package);
-    await repository.save(bundle);
+  test(
+    'stored evidence becomes stale when decision signature changes',
+    () async {
+      final package = LabPackage.decode(_source());
+      final repository = InMemoryLabDqg300EvidenceRepository();
+      final bundle = _bundle(package);
+      await repository.save(bundle);
 
-    final restored = await repository.load(
-      package.metadata.id,
-      package.metadata.versionId,
-    );
-    expect(restored, isNotNull);
-
-    final first = package.nodes.whereType<LabDecisionNode>().first;
-    final staleDecisions = restored!.decisions.values.map((item) {
-      if (item.nodeId != first.id) return item;
-      return LabDqg300DecisionEvidence(
-        nodeId: item.nodeId,
-        decisionSignature: 'changed-authoring-content',
-        evidence: item.evidence,
+      final restored = await repository.load(
+        package.metadata.id,
+        package.metadata.versionId,
       );
-    });
+      expect(restored, isNotNull);
 
-    final stale = LabDqg300EvidenceBundle(
-      labId: restored.labId,
-      versionId: restored.versionId,
-      decisions: staleDecisions,
-    );
-    final report = const LabDqg300Validator().validate(
-      package: package,
-      evidenceBundle: stale,
-    );
+      final first = package.nodes.whereType<LabDecisionNode>().first;
+      final staleDecisions = restored!.decisions.values.map((item) {
+        if (item.nodeId != first.id) return item;
+        return LabDqg300DecisionEvidence(
+          nodeId: item.nodeId,
+          decisionSignature: 'changed-authoring-content',
+          evidence: item.evidence,
+        );
+      });
 
-    expect(report.isValid, isFalse);
-    expect(report.staleEvidenceNodeIds, contains(first.id));
-  });
+      final stale = LabDqg300EvidenceBundle(
+        labId: restored.labId,
+        versionId: restored.versionId,
+        decisions: staleDecisions,
+      );
+      final report = const LabDqg300Validator().validate(
+        package: package,
+        evidenceBundle: stale,
+      );
+
+      expect(report.isValid, isFalse);
+      expect(report.staleEvidenceNodeIds, contains(first.id));
+    },
+  );
 }
