@@ -172,9 +172,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     }
   }
 
-  Future<void> _emitAcceptedDecisionHaptics(
-    LabDecisionQuality quality,
-  ) async {
+  Future<void> _emitAcceptedDecisionHaptics(LabDecisionQuality quality) async {
     await Csp11Haptics.criticalDecision();
     await Future<void>.delayed(const Duration(milliseconds: 220));
 
