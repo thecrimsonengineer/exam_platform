@@ -350,6 +350,47 @@ Permanent rule: protected data must never load/render before Online Access Gate 
 
 Development/test telemetry will measure online gate, catalogue query, cache lookup, package download/decode, quiz start, Home/Progress render/sync, package bytes, cache hits and misses without becoming a heavy backend workload.
 
+## 29A. Existing learner local-data preservation invariant
+
+An ordinary Phase FR application upgrade must preserve valid learner-owned local data already stored on the student's device.
+
+Protected preservation scope includes, where present:
+
+- learner progress and learning position;
+- question progress/history and attempt state;
+- Exam Readiness state and study-plan state;
+- learner preferences and other UID-scoped application state;
+- unsynchronized learner-owned records that have not yet reached the backend.
+
+Phase FR must not require an uninstall, package-ID change, Clear Data operation, blanket SharedPreferences reset, or destructive cache reset in order to migrate.
+
+Existing local schemas must migrate using a copy -> validate -> write new version -> read-back verify -> switch -> later retire old version sequence.
+
+If migration or verification fails, the previous valid local data remains intact.
+
+Protected StudyContent/question/LAB/flashcard caches are handled differently: their bytes may be preserved for migration/performance, but the new online-only invariant means they must not be rendered offline. Old cache content must be converted or replaced only after current online authorization succeeds.
+
+Caches and learner-owned local state remain Firebase-UID scoped. User B must never inherit or unlock User A's data.
+
+Mandatory upgrade tests include:
+
+| Upgrade scenario | Required result |
+|---|---|
+| Existing learner installs updated APK | learner progress remains |
+| Existing learning position | remains |
+| Existing question history | remains |
+| Existing readiness/plans | remain |
+| Migration interrupted halfway | previous data remains intact |
+| New-format verification fails | previous data remains intact |
+| Same Firebase UID logs in | same learner state remains associated |
+| Different Firebase UID logs in | prior user's data inaccessible |
+| Existing protected cache + offline | protected material remains unavailable |
+| Existing protected cache + online authorization | eligible cache may migrate/refresh safely |
+| Successful migration | old representation retired only after verified replacement |
+
+Permanent rule: **no destructive local-data migration and no protected offline content access.**
+
+
 # 30. Implementation roadmap
 
 ## FR0 — Existing Firestore Baseline
@@ -409,7 +450,11 @@ Build private immutable package delivery with deterministic builders, compressio
 
 ## FR8 — Online-Authorized Cache Security
 
-Implement OnlineAccessGate, auth state controller, UID cache, unlock boundary, LRU eviction, network-loss lock, resume revalidation and logout/account-switch lock. Add offline-blocking tests.
+Implement OnlineAccessGate, auth state controller, UID cache, unlock boundary, LRU eviction, network-loss lock, resume revalidation and logout/account-switch lock.
+
+Also implement non-destructive local-data migration support for existing installations. Preserve learner-owned UID-scoped progress/history/preferences/unsynchronized state, migrate versioned cache formats using copy-and-verify semantics, and never require uninstall/Clear Data/package-ID change.
+
+Add offline-blocking, upgrade-preservation, interrupted-migration and cross-user isolation tests.
 
 ## FR9 — Question Delivery Cutover
 
