@@ -5,6 +5,11 @@ import 'lab_runtime.dart';
 import 'lab_state.dart';
 import 'lab_story_gate.dart';
 
+Map<String, Object?> _orderedState(Map<String, Object?> state) {
+  final keys = state.keys.toList()..sort();
+  return <String, Object?>{for (final key in keys) key: state[key]};
+}
+
 class LabExhaustiveRouteStep {
   const LabExhaustiveRouteStep({
     required this.nodeId,
@@ -12,6 +17,10 @@ class LabExhaustiveRouteStep {
     required this.gatePriority,
     required this.stateBefore,
     required this.stateAfter,
+    required this.evidenceBefore,
+    required this.evidenceAfter,
+    required this.simulatedMinutesBefore,
+    required this.simulatedMinutesAfter,
     this.optionId,
     this.consequenceId,
     this.targetNodeId,
@@ -25,6 +34,10 @@ class LabExhaustiveRouteStep {
   final int gatePriority;
   final Map<String, Object?> stateBefore;
   final Map<String, Object?> stateAfter;
+  final Set<String> evidenceBefore;
+  final Set<String> evidenceAfter;
+  final int simulatedMinutesBefore;
+  final int simulatedMinutesAfter;
   final String? targetNodeId;
   final String? endingId;
 
@@ -36,6 +49,21 @@ class LabExhaustiveRouteStep {
       gateId +
       '::' +
       (targetNodeId ?? endingId ?? 'none');
+
+  String get stateTraceFingerprint {
+    final beforeEvidence = evidenceBefore.toList()..sort();
+    final afterEvidence = evidenceAfter.toList()..sort();
+    return jsonEncode(<String, Object?>{
+      'before': _orderedState(stateBefore),
+      'after': _orderedState(stateAfter),
+      'evidenceBefore': beforeEvidence,
+      'evidenceAfter': afterEvidence,
+      'minutesBefore': simulatedMinutesBefore,
+      'minutesAfter': simulatedMinutesAfter,
+    });
+  }
+
+  String get deterministicKey => transitionKey + '::' + stateTraceFingerprint;
 }
 
 class LabExhaustiveRouteTrace {
@@ -48,7 +76,7 @@ class LabExhaustiveRouteTrace {
   final String endingId;
 
   String get fingerprint =>
-      steps.map((step) => step.transitionKey).join('>') + '=>' + endingId;
+      steps.map((step) => step.deterministicKey).join('>') + '=>' + endingId;
 }
 
 class LabExhaustiveRouteReport {
@@ -233,6 +261,16 @@ class LabExhaustiveRouteValidator {
               stateAfter: Map<String, Object?>.unmodifiable(
                 resolution.consequence.after.values,
               ),
+              evidenceBefore: Set<String>.unmodifiable(
+                resolution.consequence.before.evidenceUnlocked,
+              ),
+              evidenceAfter: Set<String>.unmodifiable(
+                resolution.consequence.after.evidenceUnlocked,
+              ),
+              simulatedMinutesBefore:
+                  resolution.consequence.before.simulatedMinutes,
+              simulatedMinutesAfter:
+                  resolution.consequence.after.simulatedMinutes,
               targetNodeId: gate.targetNodeId,
               endingId: gate.endingId,
             );
@@ -293,6 +331,10 @@ class LabExhaustiveRouteValidator {
           gatePriority: gate.priority,
           stateBefore: Map<String, Object?>.unmodifiable(state.values),
           stateAfter: Map<String, Object?>.unmodifiable(state.values),
+          evidenceBefore: Set<String>.unmodifiable(state.evidenceUnlocked),
+          evidenceAfter: Set<String>.unmodifiable(state.evidenceUnlocked),
+          simulatedMinutesBefore: state.simulatedMinutes,
+          simulatedMinutesAfter: state.simulatedMinutes,
           targetNodeId: gate.targetNodeId,
           endingId: gate.endingId,
         );
