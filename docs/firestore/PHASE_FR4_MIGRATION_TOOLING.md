@@ -1,9 +1,10 @@
 # CSP11 Phase FR4 Deterministic Migration Tooling
 
-**Status:** IMPLEMENTED, FINAL CI VALIDATION IN PROGRESS  
+**Status:** CLOSED / FROZEN  
 **Branch:** `phase-fr-firestore-read-reduction`  
 **Source checkpoint:** `phase-fr3-closed` at `138f468bbeb10c15a03ec50542eeae13355ad254`  
 **Date:** 2026-09-19
+**Implementation validation:** GitHub Actions run `35432064574` on `139a141387ffb420b8b035d0a873a61a49d9f05e` — full FR gate green
 
 ## Purpose
 
@@ -189,11 +190,15 @@ The FR workflow now requires:
 14. full repository regression;
 15. diff hygiene.
 
-## Closure rule
+## Closure evidence
 
-FR4 may be frozen only when the complete CI sequence is green.
+FR4 implementation validation is green in GitHub Actions run `35432064574` at implementation SHA `139a141387ffb420b8b035d0a873a61a49d9f05e`.
 
-A green FR4 closes tooling, not data parity. No claim is made that production Firestore data already matches Supabase.
+The run passed dependency lock stability, canonical formatting, Flutter analyze, FR1, learner local-data preservation, FR2, FR3, both FR4 gates, every frozen Phase L4 regression suite, the full repository regression and diff hygiene.
+
+The closure-document commit is metadata only. It changes no Dart, SQL, learner runtime or migration behavior and is revalidated before the `phase-fr4-closed` recovery branch is created.
+
+A green FR4 closes tooling, not data parity. No production Firestore content or learner records have been cut over, and Firestore remains authoritative until the later frozen cutover phases.
 
 ## NEXT ACTION
 
