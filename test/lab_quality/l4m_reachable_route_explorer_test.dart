@@ -172,6 +172,29 @@ void main() {
     );
   });
 
+  test('L4M reuses a precomputed L4L proof without changing selection', () {
+    const explorer = LabReachableRouteExplorer();
+    final package = _referenceV2();
+    final direct = explorer.explore(package, routeBudget: 32);
+    final reused = explorer.exploreFromExhaustive(
+      direct.exhaustiveReport,
+      routeBudget: 32,
+      hardRouteLimit: 10000,
+    );
+
+    expect(reused.mode, direct.mode);
+    expect(reused.selectedRouteCount, direct.selectedRouteCount);
+    expect(reused.fingerprint, direct.fingerprint);
+    expect(reused.selectedOptionCoverageKeys, direct.selectedOptionCoverageKeys);
+    expect(
+      reused.selectedConsequenceCoverageIds,
+      direct.selectedConsequenceCoverageIds,
+    );
+    expect(reused.selectedGateCoverageIds, direct.selectedGateCoverageIds);
+    expect(reused.selectedEndingIds, direct.selectedEndingIds);
+    expect(reused.isValid, isTrue);
+  });
+
   test('L4M representative routes are all complete authored traces', () {
     final report = const LabReachableRouteExplorer().explore(
       _referenceV2(),
