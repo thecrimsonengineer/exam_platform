@@ -2,13 +2,22 @@
 
 ## Status
 
-**IMPLEMENTATION IN PROGRESS**
+**FROZEN / CLOSED**
 
 Phase: `L4M`
 
 Working branch: `phase-l4-learner-decision-lab`
 
 Closed predecessor: `phase-l4l-closed` at `40a32bcaf1b94adcac2675a49ffe24226de2c4f9`
+
+L4M closure was validated by GitHub Actions run `35424550700`.
+
+Formatter-normalized L4M recovery checkpoint:
+
+- branch: `phase-l4m-closed`
+- commit: `25431d0693e609acffa78483b25295b16209e13c`
+
+The closure run passed formatting, Flutter analyze, learner regressions, L4K, closed L4L, L4M including the 1,024-route scale case, the frozen Phase L suite, full repository regression, Android debug build, production web build and diff hygiene.
 
 The frozen Phase L4 direction defines L4M as:
 
@@ -176,4 +185,4 @@ Before L4M is frozen, confirm:
 13. production web build passes;
 14. diff hygiene passes.
 
-Do not create the L4M closed checkpoint until all gates are green.
+All L4M closure gates passed in run `35424550700`. L4M is closed at the recovery checkpoint recorded above.
