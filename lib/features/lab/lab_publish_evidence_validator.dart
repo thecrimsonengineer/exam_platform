@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'lab_contracts.dart';
 import 'lab_debrief.dart';
+import 'lab_exhaustive_route_validator.dart';
 import 'lab_learning_twin_bridge.dart';
 import 'lab_reachable_route_explorer.dart';
 import 'lab_session.dart';
@@ -308,9 +309,7 @@ class LabPublishEvidenceValidator {
             9,
             19,
             12,
-            0,
-            decisionIndex,
-          ),
+          ).add(Duration(seconds: decisionIndex)),
         ),
       );
     }
