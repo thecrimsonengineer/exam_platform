@@ -8,61 +8,79 @@ void main() {
   const engine = LabDebriefEngine();
 
   for (var i = 0; i < 10; i++) {
-    test('LAB-8 chronological timeline ordering ' + (i + 1).toString(), () async {
-      final package = l3ReferenceDraftPackage();
-      final session = await runL3WeakRoute(package, sessionId: 'timeline_$i');
-      final debrief = engine.reconstruct(package: package, session: session);
-      expect(debrief.decisions, hasLength(3));
-      expect(
-        debrief.decisions.map((item) => item.index).toList(),
-        <int>[0, 1, 2],
-      );
-      expect(
-        debrief.decisions.map((item) => item.nodeId).toList(),
-        <String>['permit_decision', 'gas_decision', 'closeout_decision'],
-      );
-      expect(
-        debrief.decisions[0].timestamp.isBefore(debrief.decisions[1].timestamp),
-        isTrue,
-      );
-      expect(
-        debrief.decisions[1].timestamp.isBefore(debrief.decisions[2].timestamp),
-        isTrue,
-      );
-    });
+    test(
+      'LAB-8 chronological timeline ordering ' + (i + 1).toString(),
+      () async {
+        final package = l3ReferenceDraftPackage();
+        final session = await runL3WeakRoute(package, sessionId: 'timeline_$i');
+        final debrief = engine.reconstruct(package: package, session: session);
+        expect(debrief.decisions, hasLength(3));
+        expect(debrief.decisions.map((item) => item.index).toList(), <int>[
+          0,
+          1,
+          2,
+        ]);
+        expect(debrief.decisions.map((item) => item.nodeId).toList(), <String>[
+          'permit_decision',
+          'gas_decision',
+          'closeout_decision',
+        ]);
+        expect(
+          debrief.decisions[0].timestamp.isBefore(
+            debrief.decisions[1].timestamp,
+          ),
+          isTrue,
+        );
+        expect(
+          debrief.decisions[1].timestamp.isBefore(
+            debrief.decisions[2].timestamp,
+          ),
+          isTrue,
+        );
+      },
+    );
   }
 
   for (var i = 0; i < 10; i++) {
-    test('LAB-8 consequence gate and causal reconstruction ' + (i + 1).toString(), () async {
-      final package = l3ReferenceDraftPackage();
-      final session = await runL3SafeRoute(package, sessionId: 'causal_$i');
-      final debrief = engine.reconstruct(package: package, session: session);
-      expect(debrief.decisions.first.consequenceId, 'permit_safe');
-      expect(debrief.decisions.first.gateId, 'permit_route');
-      expect(debrief.decisions[1].consequenceId, 'gas_safe');
-      expect(debrief.decisions[1].gateId, 'gas_convergence');
-      expect(debrief.decisions.last.gateId, 'ending_safe');
-      expect(
-        debrief.causalChain.first,
-        'permit_decision -> p1 -> permit_safe -> permit_route',
-      );
-      expect(debrief.endingId, 'safe_completion');
-    });
+    test(
+      'LAB-8 consequence gate and causal reconstruction ' + (i + 1).toString(),
+      () async {
+        final package = l3ReferenceDraftPackage();
+        final session = await runL3SafeRoute(package, sessionId: 'causal_$i');
+        final debrief = engine.reconstruct(package: package, session: session);
+        expect(debrief.decisions.first.consequenceId, 'permit_safe');
+        expect(debrief.decisions.first.gateId, 'permit_route');
+        expect(debrief.decisions[1].consequenceId, 'gas_safe');
+        expect(debrief.decisions[1].gateId, 'gas_convergence');
+        expect(debrief.decisions.last.gateId, 'ending_safe');
+        expect(
+          debrief.causalChain.first,
+          'permit_decision -> p1 -> permit_safe -> permit_route',
+        );
+        expect(debrief.endingId, 'safe_completion');
+      },
+    );
   }
 
   for (var i = 0; i < 10; i++) {
-    test('LAB-8 critical and recovery identification ' + (i + 1).toString(), () async {
-      final package = l3ReferenceDraftPackage();
-      final session = await runL3RecoveryRoute(package, sessionId: 'identify_$i');
-      final debrief = engine.reconstruct(package: package, session: session);
-      expect(debrief.criticalDecisionIndexes, <int>[0]);
-      expect(debrief.recoveryDecisionIndexes, <int>[1, 2]);
-      expect(debrief.decisions.first.critical, isTrue);
-      expect(debrief.decisions[1].recovery, isTrue);
-      expect(debrief.decisions[2].recovery, isTrue);
-      expect(debrief.competencyEvidence, contains('recovery_ability'));
-      expect(debrief.mistakeDnaSignals, contains('permit_bypass'));
-    });
+    test(
+      'LAB-8 critical and recovery identification ' + (i + 1).toString(),
+      () async {
+        final package = l3ReferenceDraftPackage();
+        final session = await runL3RecoveryRoute(
+          package,
+          sessionId: 'identify_$i',
+        );
+        final debrief = engine.reconstruct(package: package, session: session);
+        expect(debrief.criticalDecisionIndexes, <int>[0]);
+        expect(debrief.recoveryDecisionIndexes, <int>[1, 2]);
+        expect(debrief.decisions.first.critical, isTrue);
+        expect(debrief.decisions[1].recovery, isTrue);
+        expect(debrief.decisions[2].recovery, isTrue);
+        expect(debrief.competencyEvidence, contains('recovery_ability'));
+        expect(debrief.mistakeDnaSignals, contains('permit_bypass'));
+      },
+    );
   }
 
   for (var i = 0; i < 10; i++) {
@@ -93,22 +111,28 @@ void main() {
   }
 
   for (var i = 0; i < 10; i++) {
-    test('LAB-8 incomplete deterministic reconstruction ' + (i + 1).toString(), () async {
-      final package = l3ReferenceDraftPackage();
-      final session = await runL3Route(
-        package: package,
-        optionIds: const <String>['p3'],
-        sessionId: 'incomplete_$i',
-      );
-      final first = engine.reconstruct(package: package, session: session);
-      final second = engine.reconstruct(package: package, session: session);
-      expect(session.status, LabSessionStatus.active);
-      expect(first.completed, isFalse);
-      expect(first.endingId, isNull);
-      expect(first.decisions, hasLength(1));
-      expect(first.causalChain, second.causalChain);
-      expect(first.alternateTimelines.length, second.alternateTimelines.length);
-      expect(first.sources, package.metadata.sources);
-    });
+    test(
+      'LAB-8 incomplete deterministic reconstruction ' + (i + 1).toString(),
+      () async {
+        final package = l3ReferenceDraftPackage();
+        final session = await runL3Route(
+          package: package,
+          optionIds: const <String>['p3'],
+          sessionId: 'incomplete_$i',
+        );
+        final first = engine.reconstruct(package: package, session: session);
+        final second = engine.reconstruct(package: package, session: session);
+        expect(session.status, LabSessionStatus.active);
+        expect(first.completed, isFalse);
+        expect(first.endingId, isNull);
+        expect(first.decisions, hasLength(1));
+        expect(first.causalChain, second.causalChain);
+        expect(
+          first.alternateTimelines.length,
+          second.alternateTimelines.length,
+        );
+        expect(first.sources, package.metadata.sources);
+      },
+    );
   }
 }

@@ -10,11 +10,14 @@ String l3ReferenceSource() => File(
 
 LabPackage l3ReferenceDraftPackage() => LabPackage.decode(l3ReferenceSource());
 
-Future<({
-  Lab1000StudioService service,
-  LabStudioWorkspace published,
-  LabPackage package,
-})> publishL3Reference() async {
+Future<
+  ({
+    Lab1000StudioService service,
+    LabStudioWorkspace published,
+    LabPackage package,
+  })
+>
+publishL3Reference() async {
   final service = Lab1000StudioService(
     repository: InMemoryLabPublishedRepository(),
   );
