@@ -33,42 +33,37 @@ class LabPlayerShellScreen extends StatelessWidget {
               child: Column(
                 children: [
                   StudentGlassSurface(
-                    padding: const EdgeInsets.all(24),
-                    borderRadius: BorderRadius.circular(22),
+                    padding: const EdgeInsets.all(20),
+                    borderRadius: BorderRadius.circular(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Selected scenario',
+                          'Scenario',
                           style: TextStyle(
                             color: muted,
                             fontSize: 12.5,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        const SizedBox(height: 7),
+                        const SizedBox(height: 6),
                         Text(
                           selectedScenario.title,
                           key: const ValueKey('lab-selected-scenario-title'),
                           style: TextStyle(
                             color: text,
-                            fontSize: 21,
+                            fontSize: 19,
                             fontWeight: FontWeight.w900,
                             height: 1.25,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          selectedScenario.summary,
-                          style: TextStyle(color: muted, height: 1.45),
-                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 15),
                   StudentGlassSurface(
-                    padding: const EdgeInsets.all(24),
-                    borderRadius: BorderRadius.circular(24),
+                    padding: const EdgeInsets.all(23),
+                    borderRadius: BorderRadius.circular(23),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -80,19 +75,18 @@ class LabPlayerShellScreen extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 7),
                         Text(
-                          'The scenario is the same in every mode. What changes '
-                          'is how much guidance you receive while making decisions.',
-                          style: TextStyle(color: muted, height: 1.5),
+                          'The story is the same in every mode. Only the amount '
+                          'of guidance changes.',
+                          style: TextStyle(color: muted, height: 1.45),
                         ),
-                        const SizedBox(height: 22),
+                        const SizedBox(height: 20),
                         _LabModeCard(
                           key: const ValueKey('lab-mode-guided'),
                           title: 'Guided LAB',
-                          bestFor: 'Best for learning',
                           description:
-                              'Get more guidance and decision feedback while you progress.',
+                              'Learn while you practise. Feedback may be provided during the scenario.',
                           icon: Icons.explore_rounded,
                           onTap: () => _openMode(
                             context,
@@ -100,13 +94,12 @@ class LabPlayerShellScreen extends StatelessWidget {
                             selectedScenario,
                           ),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 13),
                         _LabModeCard(
                           key: const ValueKey('lab-mode-professional'),
                           title: 'Professional LAB',
-                          bestFor: 'Best for realistic practice',
                           description:
-                              'Make decisions with limited guidance and review the analysis after the LAB.',
+                              'Make decisions with limited guidance. Detailed feedback comes later.',
                           icon: Icons.engineering_rounded,
                           onTap: () => _openMode(
                             context,
@@ -114,13 +107,12 @@ class LabPlayerShellScreen extends StatelessWidget {
                             selectedScenario,
                           ),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 13),
                         _LabModeCard(
                           key: const ValueKey('lab-mode-assessment'),
                           title: 'Assessment LAB',
-                          bestFor: 'Best for testing yourself',
                           description:
-                              'Complete the scenario without coaching during the attempt.',
+                              'Complete the scenario independently. Feedback is provided after completion.',
                           icon: Icons.fact_check_rounded,
                           onTap: () => _openMode(
                             context,
@@ -149,7 +141,7 @@ class LabPlayerShellScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         builder: (_) => LabReferencePlayerScreen(
           mode: mode,
-          assetPath: selectedScenario.assetPath,
+          scenario: selectedScenario,
         ),
       ),
     );
@@ -160,14 +152,12 @@ class _LabModeCard extends StatelessWidget {
   const _LabModeCard({
     super.key,
     required this.title,
-    required this.bestFor,
     required this.description,
     required this.icon,
     required this.onTap,
   });
 
   final String title;
-  final String bestFor;
   final String description;
   final IconData icon;
   final VoidCallback onTap;
@@ -211,19 +201,10 @@ class _LabModeCard extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        const SizedBox(height: 3),
-                        Text(
-                          bestFor,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
                         const SizedBox(height: 5),
                         Text(
                           description,
-                          style: TextStyle(color: muted, height: 1.35),
+                          style: TextStyle(color: muted, height: 1.4),
                         ),
                       ],
                     ),

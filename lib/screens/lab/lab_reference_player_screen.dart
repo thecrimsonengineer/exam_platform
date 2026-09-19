@@ -5,15 +5,19 @@ import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_session.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
+import 'lab_scenario_catalog.dart';
+
 class LabReferencePlayerScreen extends StatefulWidget {
   const LabReferencePlayerScreen({
     super.key,
     required this.mode,
-    this.assetPath = 'content/lab_reference_confined_space_h2s_v2.json',
+    this.scenario = LabScenarioCatalog.confinedSpaceH2s,
+    this.assetPath,
   });
 
   final LabMode mode;
-  final String assetPath;
+  final LabScenarioDefinition scenario;
+  final String? assetPath;
 
   @override
   State<LabReferencePlayerScreen> createState() =>
@@ -27,6 +31,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
   LabPackage? _package;
   LabSession? _session;
   String? _selectedOptionId;
+  _PendingConsequence? _pendingConsequence;
   String? _error;
   bool _busy = false;
   DateTime _decisionStartedAt = DateTime.now();
@@ -41,7 +46,9 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
 
   Future<void> _loadLab() async {
     try {
-      final source = await rootBundle.loadString(widget.assetPath);
+      final source = await rootBundle.loadString(
+        widget.assetPath ?? widget.scenario.assetPath,
+      );
       final package = LabPackage.decode(source);
       final session = await _engine.startAttempt(
         package: package,
@@ -54,6 +61,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         _package = package;
         _session = session;
         _selectedOptionId = null;
+        _pendingConsequence = null;
         _error = null;
         _decisionStartedAt = DateTime.now();
       });
@@ -106,26 +114,20 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         responseTimeMs: elapsed < 0 ? 0 : elapsed,
       );
       if (!mounted) return;
+
+      final presentation = widget.scenario.consequenceFor(
+        selectedOption.consequenceId,
+      );
+
       setState(() {
         _session = updated;
         _selectedOptionId = null;
-        _decisionStartedAt = DateTime.now();
+        _pendingConsequence = _PendingConsequence(
+          selectedOptionText: selectedOption.text,
+          presentation: presentation,
+        );
         _busy = false;
       });
-
-      if (updated.status != LabSessionStatus.completed) {
-        final message = switch (widget.mode) {
-          LabMode.guided =>
-            'Decision confirmed: ' +
-                selectedOption.quality.name.toUpperCase() +
-                '.',
-          LabMode.professional => 'Decision confirmed. Continue the scenario.',
-          LabMode.assessment => 'Decision locked in. Continue.',
-        };
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
-      }
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -133,6 +135,13 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         _error = error.toString();
       });
     }
+  }
+
+  void _continueAfterConsequence() {
+    setState(() {
+      _pendingConsequence = null;
+      _decisionStartedAt = DateTime.now();
+    });
   }
 
   Future<void> _replay() async {
@@ -151,6 +160,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
       setState(() {
         _session = session;
         _selectedOptionId = null;
+        _pendingConsequence = null;
         _decisionStartedAt = DateTime.now();
         _busy = false;
         _error = null;
@@ -186,6 +196,11 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     LabPackage package,
     LabSession session,
   ) {
+    final pending = _pendingConsequence;
+    if (pending != null) {
+      return _buildConsequence(context, session, pending);
+    }
+
     if (session.status == LabSessionStatus.completed) {
       return _buildCompletion(context, package, session);
     }
@@ -220,20 +235,31 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
                   Text(
                     'Decision ' +
                         (session.decisionHistory.length + 1).toString(),
+                    key: const ValueKey('lab-decision-number'),
                     style: TextStyle(color: muted, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 17),
               Text(
-                package.metadata.title,
+                widget.scenario.title,
                 style: TextStyle(
                   color: text,
-                  fontSize: 22,
+                  fontSize: 21,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              const SizedBox(height: 9),
+              const SizedBox(height: 17),
+              Text(
+                'What is happening now',
+                key: const ValueKey('lab-situation-heading'),
+                style: TextStyle(
+                  color: text,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 7),
               Text(
                 node.prompt,
                 key: const ValueKey('lab-decision-prompt'),
@@ -244,9 +270,19 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 17),
               Text(
-                'Choose one option. You can change your choice until you confirm it.',
+                'What would you do?',
+                key: const ValueKey('lab-action-heading'),
+                style: TextStyle(
+                  color: text,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Choose one action. You can change your choice until you confirm it.',
                 style: TextStyle(color: muted, height: 1.4),
               ),
             ],
@@ -334,6 +370,96 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
           'Once confirmed, this decision is irreversible for this attempt.',
           textAlign: TextAlign.center,
           style: TextStyle(color: muted, fontSize: 12.5),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildConsequence(
+    BuildContext context,
+    LabSession session,
+    _PendingConsequence pending,
+  ) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final text = dark ? const Color(0xFFF4F7FB) : const Color(0xFF18243A);
+    final muted = dark ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
+    final completed = session.status == LabSessionStatus.completed;
+
+    return ListView(
+      key: const ValueKey('lab-consequence-screen'),
+      padding: const EdgeInsets.all(20),
+      children: [
+        StudentGlassSurface(
+          padding: const EdgeInsets.all(23),
+          borderRadius: BorderRadius.circular(23),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _ModeBadge(mode: widget.mode),
+              const SizedBox(height: 18),
+              Text(
+                'You decided',
+                style: TextStyle(
+                  color: muted,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                pending.selectedOptionText,
+                key: const ValueKey('lab-consequence-selected-action'),
+                style: TextStyle(
+                  color: text,
+                  fontSize: 17,
+                  height: 1.4,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 21),
+              Text(
+                'What happened next',
+                key: const ValueKey('lab-consequence-heading'),
+                style: TextStyle(
+                  color: text,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                pending.presentation.observable,
+                key: const ValueKey('lab-consequence-text'),
+                style: TextStyle(color: text, height: 1.5),
+              ),
+              if (widget.mode == LabMode.guided) ...[
+                const SizedBox(height: 20),
+                Text(
+                  'Why this mattered',
+                  key: const ValueKey('lab-guided-consequence-insight'),
+                  style: TextStyle(
+                    color: text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 7),
+                Text(
+                  pending.presentation.guidedInsight,
+                  style: TextStyle(color: muted, height: 1.45),
+                ),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: 18),
+        FilledButton.icon(
+          key: const ValueKey('lab-consequence-continue'),
+          onPressed: _continueAfterConsequence,
+          icon: Icon(
+            completed ? Icons.flag_rounded : Icons.arrow_forward_rounded,
+          ),
+          label: Text(completed ? 'SEE OUTCOME' : 'CONTINUE'),
         ),
       ],
     );
@@ -459,6 +585,16 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
   }
 }
 
+class _PendingConsequence {
+  const _PendingConsequence({
+    required this.selectedOptionText,
+    required this.presentation,
+  });
+
+  final String selectedOptionText;
+  final LabConsequencePresentation presentation;
+}
+
 class _ModeBadge extends StatelessWidget {
   const _ModeBadge({required this.mode});
 
@@ -519,7 +655,7 @@ class _DecisionHistoryRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  option?.text ?? event.selectedOptionId,
+                  option?.text ?? 'Decision recorded',
                   style: TextStyle(
                     color: text,
                     height: 1.35,
@@ -528,11 +664,7 @@ class _DecisionHistoryRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  option == null
-                      ? event.consequenceId
-                      : option.quality.name.toUpperCase() +
-                            ' • ' +
-                            event.consequenceId,
+                  'Decision recorded',
                   style: TextStyle(color: muted, fontSize: 12.5),
                 ),
               ],

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> _pumpUntilFound(
   WidgetTester tester,
   Finder finder, {
-  int maxPumps = 30,
+  int maxPumps = 40,
 }) async {
   for (var i = 0; i < maxPumps; i++) {
     await tester.pump(const Duration(milliseconds: 100));
@@ -15,7 +15,7 @@ Future<void> _pumpUntilFound(
 }
 
 void _useTallTestViewport(WidgetTester tester) {
-  tester.view.physicalSize = const Size(900, 1600);
+  tester.view.physicalSize = const Size(900, 1800);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
@@ -23,7 +23,7 @@ void _useTallTestViewport(WidgetTester tester) {
 
 void main() {
   testWidgets(
-    'LAB modes are stacked vertically and Guided advances the story',
+    'L4C modes stack vertically and L4D/L4E Guided flow stays coherent',
     (tester) async {
       _useTallTestViewport(tester);
 
@@ -37,12 +37,14 @@ void main() {
       expect(professional, findsOneWidget);
       expect(assessment, findsOneWidget);
 
-      final guidedCenter = tester.getCenter(guided);
-      final professionalCenter = tester.getCenter(professional);
-      final assessmentCenter = tester.getCenter(assessment);
-
-      expect(guidedCenter.dy, lessThan(professionalCenter.dy));
-      expect(professionalCenter.dy, lessThan(assessmentCenter.dy));
+      expect(
+        tester.getCenter(guided).dy,
+        lessThan(tester.getCenter(professional).dy),
+      );
+      expect(
+        tester.getCenter(professional).dy,
+        lessThan(tester.getCenter(assessment).dy),
+      );
 
       await tester.tap(guided);
       await _pumpUntilFound(
@@ -51,22 +53,44 @@ void main() {
       );
 
       expect(find.text('Guided LAB'), findsWidgets);
-      expect(find.byKey(const ValueKey('lab-decision-prompt')), findsOneWidget);
       expect(
-        find.byKey(const ValueKey('lab-confirm-decision')),
+        find.byKey(const ValueKey('lab-situation-heading')),
         findsOneWidget,
       );
       expect(
-        find.textContaining('A contractor crew is ready to enter a vessel'),
+        find.byKey(const ValueKey('lab-action-heading')),
         findsOneWidget,
       );
+      expect(find.text('What is happening now'), findsOneWidget);
+      expect(find.text('What would you do?'), findsOneWidget);
+      expect(find.byKey(const ValueKey('lab-option-p1')), findsOneWidget);
+      expect(find.byKey(const ValueKey('lab-option-p2')), findsOneWidget);
+      expect(find.byKey(const ValueKey('lab-option-p3')), findsOneWidget);
+      expect(find.byKey(const ValueKey('lab-option-p4')), findsOneWidget);
 
       await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
       await tester.pump();
       await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
+      await _pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('lab-consequence-screen')),
+      );
+
+      expect(find.text('You decided'), findsOneWidget);
+      expect(find.text('What happened next'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('lab-guided-consequence-insight')),
+        findsOneWidget,
+      );
+      expect(find.text('OPTIMAL'), findsNothing);
+      expect(find.textContaining('permit_safe'), findsNothing);
+      expect(find.textContaining('H2S may be present'), findsNothing);
+
+      await tester.tap(
+        find.byKey(const ValueKey('lab-consequence-continue')),
+      );
       await _pumpUntilFound(tester, find.textContaining('H2S may be present'));
 
-      expect(find.textContaining('H2S may be present'), findsOneWidget);
       expect(find.text('Decision 2'), findsOneWidget);
 
       await tester.tap(find.byKey(const ValueKey('lab-option-g1')));
@@ -74,37 +98,64 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
       await _pumpUntilFound(
         tester,
+        find.byKey(const ValueKey('lab-consequence-screen')),
+      );
+      await tester.tap(
+        find.byKey(const ValueKey('lab-consequence-continue')),
+      );
+      await _pumpUntilFound(
+        tester,
         find.textContaining('Nearby line-breaking SIMOPS begins'),
       );
 
-      expect(
-        find.textContaining('Nearby line-breaking SIMOPS begins'),
-        findsOneWidget,
-      );
       expect(find.text('Decision 3'), findsOneWidget);
       expect(find.byKey(const ValueKey('lab-option-s1')), findsOneWidget);
     },
   );
 
-  testWidgets('Professional mode opens the playable LAB', (tester) async {
+  testWidgets('L4E Professional consequence avoids coaching', (tester) async {
     _useTallTestViewport(tester);
 
     await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
-
     await tester.tap(find.byKey(const ValueKey('lab-mode-professional')));
-    await tester.pump();
+    await _pumpUntilFound(
+      tester,
+      find.byKey(const ValueKey('lab-reference-player')),
+    );
 
-    expect(find.text('Professional LAB'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
+    await _pumpUntilFound(
+      tester,
+      find.byKey(const ValueKey('lab-consequence-screen')),
+    );
+
+    expect(find.text('What happened next'), findsOneWidget);
+    expect(find.text('Why this mattered'), findsNothing);
+    expect(find.text('OPTIMAL'), findsNothing);
   });
 
-  testWidgets('Assessment mode opens the playable LAB', (tester) async {
+  testWidgets('L4E Assessment consequence avoids coaching', (tester) async {
     _useTallTestViewport(tester);
 
     await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
-
     await tester.tap(find.byKey(const ValueKey('lab-mode-assessment')));
-    await tester.pump();
+    await _pumpUntilFound(
+      tester,
+      find.byKey(const ValueKey('lab-reference-player')),
+    );
 
-    expect(find.text('Assessment LAB'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
+    await _pumpUntilFound(
+      tester,
+      find.byKey(const ValueKey('lab-consequence-screen')),
+    );
+
+    expect(find.text('What happened next'), findsOneWidget);
+    expect(find.text('Why this mattered'), findsNothing);
+    expect(find.text('OPTIMAL'), findsNothing);
   });
 }

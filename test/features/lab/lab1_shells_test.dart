@@ -98,7 +98,7 @@ void main() {
     ),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',
-      needle: 'LabPlayerShellScreen',
+      needle: 'LabScenarioBriefingScreen',
     ),
     (
       path: 'lib/screens/lab/lab_library_screen.dart',

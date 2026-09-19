@@ -1,0 +1,86 @@
+name: Phase L4 Learner Decision LAB Validation
+
+on:
+  push:
+    branches:
+      - phase-l4-learner-decision-lab
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase-l4-learner-decision-lab
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Canonical Dart format
+        run: |
+          dart format \
+            lib/screens/lab/lab_library_screen.dart \
+            lib/screens/lab/lab_scenario_briefing_screen.dart \
+            lib/screens/lab/lab_scenario_catalog.dart \
+            lib/screens/lab/lab_player_shell_screen.dart \
+            lib/screens/lab/lab_reference_player_screen.dart \
+            test/screens/lab \
+            test/features/lab/lab1_shells_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Phase L4A-L4E learner regressions
+        run: flutter test test/screens/lab
+
+      - name: Preserve exact frozen Phase L engine suite
+        run: flutter test test/features/lab
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Android debug build
+        run: flutter build apk --debug
+
+      - name: Production web build
+        run: flutter build web --release
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Commit formatter output
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No formatter changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            lib/screens/lab/lab_library_screen.dart \
+            lib/screens/lab/lab_scenario_briefing_screen.dart \
+            lib/screens/lab/lab_scenario_catalog.dart \
+            lib/screens/lab/lab_player_shell_screen.dart \
+            lib/screens/lab/lab_reference_player_screen.dart \
+            test/screens/lab \
+            test/features/lab/lab1_shells_test.dart
+          git commit -m "Format Phase L4A-L4E learner LAB"
+          git push origin HEAD:phase-l4-learner-decision-lab
