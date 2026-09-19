@@ -47,7 +47,7 @@ class LabAutomatedPublishGate {
     Set<String>? availableAssetIds,
     Set<String>? allowedCompetencyIds,
     int simulationLimit = 1000,
-    int exhaustiveRouteLimit = 1000,
+    int exhaustiveRouteLimit = 10000,
   }) {
     final structural = labValidator.validatePackage(
       package,
