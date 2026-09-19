@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'lab_contracts.dart';
 import 'lab_session.dart';
 
@@ -113,11 +115,21 @@ class LabLearningTwinEvidenceBridge {
         'Learning evidence requires the session pinned LAB version.',
       );
     }
-    if (!session.decisionHistory.any(
-      (candidate) => candidate.eventId == event.eventId,
-    )) {
+    LabDecisionEvent? committedEvent;
+    for (final candidate in session.decisionHistory) {
+      if (candidate.eventId == event.eventId) {
+        committedEvent = candidate;
+        break;
+      }
+    }
+    if (committedEvent == null) {
       throw const LabSessionException(
         'Learning evidence event must belong to the supplied LAB session.',
+      );
+    }
+    if (jsonEncode(committedEvent.toJson()) != jsonEncode(event.toJson())) {
+      throw const LabSessionException(
+        'Learning evidence event must exactly match the committed Decision Event.',
       );
     }
 
