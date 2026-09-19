@@ -46,11 +46,14 @@ void main() {
     final diagnostics = read(
       'lib/screens/admin/haptic_diagnostics_screen.dart',
     );
+    final adminHome = read('lib/screens/admin/admin_home_screen.dart');
     final navigation = read('lib/screens/navigation/bottom_navigation.dart');
 
     expect(diagnostics, contains('Haptic diagnostics'));
     expect(diagnostics, contains('Csp11HapticEvent.values'));
     expect(diagnostics, contains('Csp11Haptics.trigger(event)'));
+    expect(adminHome, contains('Haptic Diagnostics'));
+    expect(adminHome, contains('HapticDiagnosticsScreen'));
     expect(navigation, isNot(contains('HapticDiagnosticsScreen')));
     expect(navigation, isNot(contains('/admin/haptic-diagnostics')));
   });
