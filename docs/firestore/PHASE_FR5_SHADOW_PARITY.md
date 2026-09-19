@@ -143,6 +143,16 @@ Workload Identity Federation is now configured and production Firestore read per
 
 FR5 must not be frozen as complete until the real production Firestore source is extracted through that authorized server-side path and the live Supabase shadow parity report is completely green.
 
+## Quota-blocked production apply
+
+The published-only production preflight completed successfully in GitHub Actions run 35437437913 before the write attempt. It proved a clean manifest of 3,637 production rows: 81 published content versions and 3,556 published questions, with zero FR4 issues, duplicates, failures or unmapped rows.
+
+The subsequent authorized shadow-write attempts did not begin Supabase writes because Firestore returned HTTP 429 RESOURCE_EXHAUSTED before a fresh source snapshot could be completed. The later attempt was blocked on its first Firestore document read, confirming the read quota was exhausted rather than a Supabase parity failure.
+
+The production workflow has therefore been restored to manual-only execution. Ordinary branch pushes no longer read production Firestore. The redundant one-document Firestore permission probe has also been removed; WIF token presence is checked first and the real source extractor is the fail-closed permission/quota boundary with bounded retry for transient 429 responses.
+
+Live Supabase production shadow counts remain zero for content_versions, questions and fr_migration_ledger. The authoring workspace also remains empty.
+
 ## Runtime invariant
 
 Even after FR5 succeeds, learner runtime remains on Firestore. Supabase remains shadow-only.

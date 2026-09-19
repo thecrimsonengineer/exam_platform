@@ -94,30 +94,6 @@ jobs:
             exit 1
           fi
 
-      - name: Verify Firestore read permission
-        env:
-          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          response_file="$(mktemp)"
-          status="$(curl -sS -o "$response_file" -w "%{http_code}" \
-            -H "Authorization: Bearer $GOOGLE_OAUTH_ACCESS_TOKEN" \
-            -H "Accept: application/json" \
-            "https://firestore.googleapis.com/v1/projects/$FIREBASE_PROJECT_ID/databases/(default)/documents/contentVersions?pageSize=1")"
-          if [ "$status" != "200" ]; then
-            echo "Firestore read preflight failed with HTTP $status."
-            cat "$response_file"
-            echo
-            echo "WIF authentication succeeded, but the impersonated service account cannot read Firestore."
-            echo "Grant Cloud Datastore Viewer (roles/datastore.viewer) to:"
-            echo "  $GCP_FIRESTORE_READER_SERVICE_ACCOUNT"
-            echo "at PROJECT scope on:"
-            echo "  $FIREBASE_PROJECT_ID"
-            exit 1
-          fi
-          echo "Firestore read preflight: PASS"
-
       - id: fr5_source
         name: Build canonical FR5 Firestore source snapshot
         continue-on-error: true
