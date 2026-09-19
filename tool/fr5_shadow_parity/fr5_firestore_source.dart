@@ -130,8 +130,7 @@ Future<Map<String, dynamic>> _loadFirestorePageWithRetry({
       }
 
       return <String, dynamic>{
-        for (final entry in payload.entries)
-          entry.key.toString(): entry.value,
+        for (final entry in payload.entries) entry.key.toString(): entry.value,
       };
     }
 
