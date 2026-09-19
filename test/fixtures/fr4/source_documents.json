@@ -1,0 +1,82 @@
+[
+  {
+    "collection": "contentVersions",
+    "id": "published_d07_c01",
+    "data": {
+      "id": "d07_c01-v1",
+      "domainId": "d07",
+      "competencyId": "d07_c01",
+      "competencyNumber": 1,
+      "title": "Environmental Management",
+      "status": "published",
+      "version": 1,
+      "copyType": "published",
+      "topics": [
+        {
+          "id": "d07_c01_t01",
+          "title": "Environmental foundations",
+          "subtopics": [
+            {
+              "id": "d07_c01_t01_s01",
+              "title": "Environmental aspects",
+              "blocks": [
+                {
+                  "id": "table_1",
+                  "type": "table",
+                  "data": {
+                    "rows": {
+                      "csp11FirestoreNestedListV1": true,
+                      "items": {
+                        "0": [
+                          "Aspect",
+                          "Impact"
+                        ],
+                        "1": [
+                          "Fuel spill",
+                          "Soil contamination"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "collection": "questions",
+    "id": "question_7001001",
+    "data": {
+      "id": 7001001,
+      "domain": 7,
+      "competencyId": "d07_c01",
+      "subtopicId": "d07_c01_t01_s01",
+      "topicId": "d07_c01_t01",
+      "quizId": "d07_c01_t01_s01_quiz",
+      "contentPackageId": "d07_c01-v1",
+      "question": "During a site inspection, a recurring diesel leak reaches bare soil. Which action is the BEST immediate response?",
+      "options": [
+        "Record it for the annual review",
+        "Stop the release and contain the spill",
+        "Wait for laboratory sampling",
+        "Move the inspection to another area"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Source control and containment prevent further environmental harm.",
+      "bestAnswerRationale": "It controls the active release before longer-term investigation.",
+      "reference": "CSP11 controlled source",
+      "difficulty": "Hard",
+      "cognitiveLevel": "application",
+      "questionType": "scenario_mcq",
+      "status": "published",
+      "version": 1,
+      "tags": [
+        "environmental aspect",
+        "spill control"
+      ]
+    }
+  }
+]
