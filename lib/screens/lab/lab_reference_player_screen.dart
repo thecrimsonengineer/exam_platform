@@ -34,6 +34,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
   _PendingConsequence? _pendingConsequence;
   String? _error;
   bool _busy = false;
+  bool _statusExpanded = false;
   DateTime _decisionStartedAt = DateTime.now();
 
   @override
@@ -62,6 +63,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         _session = session;
         _selectedOptionId = null;
         _pendingConsequence = null;
+        _statusExpanded = false;
         _error = null;
         _decisionStartedAt = DateTime.now();
       });
@@ -161,6 +163,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         _session = session;
         _selectedOptionId = null;
         _pendingConsequence = null;
+        _statusExpanded = false;
         _decisionStartedAt = DateTime.now();
         _busy = false;
         _error = null;
@@ -288,6 +291,8 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
             ],
           ),
         ),
+        const SizedBox(height: 14),
+        _buildLearnerContext(context, session),
         const SizedBox(height: 16),
         ...node.options.map((option) {
           final selected = _selectedOptionId == option.id;
@@ -452,6 +457,8 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
             ],
           ),
         ),
+        const SizedBox(height: 14),
+        _buildLearnerContext(context, session),
         const SizedBox(height: 18),
         FilledButton.icon(
           key: const ValueKey('lab-consequence-continue'),
@@ -462,6 +469,194 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
           label: Text(completed ? 'SEE OUTCOME' : 'CONTINUE'),
         ),
       ],
+    );
+  }
+
+  Widget _buildLearnerContext(
+    BuildContext context,
+    LabSession session,
+  ) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final text = dark ? const Color(0xFFF4F7FB) : const Color(0xFF18243A);
+    final muted = dark ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
+    final status = widget.scenario.learnerStatus(
+      session.stateValues,
+      session.simulatedMinutes,
+    );
+    final evidence = session.evidenceUnlocked
+        .map(widget.scenario.evidenceFor)
+        .whereType<LabEvidencePresentation>()
+        .toList()
+      ..sort((a, b) => a.title.compareTo(b.title));
+
+    return StudentGlassSurface(
+      padding: const EdgeInsets.all(18),
+      borderRadius: BorderRadius.circular(19),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            key: const ValueKey('lab-situation-status-toggle'),
+            borderRadius: BorderRadius.circular(12),
+            onTap: () => setState(() => _statusExpanded = !_statusExpanded),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.monitor_heart_outlined,
+                    size: 22,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Situation status',
+                      style: TextStyle(
+                        color: text,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _statusExpanded
+                        ? Icons.expand_less_rounded
+                        : Icons.expand_more_rounded,
+                    color: muted,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_statusExpanded) ...[
+            const SizedBox(height: 14),
+            for (final item in status)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 9),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.label,
+                        style: TextStyle(color: muted),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      item.value,
+                      key: ValueKey(
+                        'lab-status-' +
+                            item.label.toLowerCase().replaceAll(' ', '-'),
+                      ),
+                      style: TextStyle(
+                        color: text,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+          if (evidence.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            Text(
+              'Available evidence',
+              key: const ValueKey('lab-available-evidence-heading'),
+              style: TextStyle(
+                color: text,
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final item in evidence)
+                  OutlinedButton.icon(
+                    key: ValueKey('lab-evidence-' + item.id),
+                    onPressed: () => _showEvidence(context, item),
+                    icon: const Icon(Icons.description_outlined, size: 18),
+                    label: Text(item.title),
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showEvidence(
+    BuildContext context,
+    LabEvidencePresentation evidence,
+  ) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final text = dark ? const Color(0xFFF4F7FB) : const Color(0xFF18243A);
+    final muted = dark ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
+
+    return showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: SingleChildScrollView(
+            key: ValueKey('lab-evidence-sheet-' + evidence.id),
+            padding: const EdgeInsets.fromLTRB(22, 8, 22, 28),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  evidence.title,
+                  style: TextStyle(
+                    color: text,
+                    fontSize: 21,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  evidence.summary,
+                  style: TextStyle(color: muted, height: 1.45),
+                ),
+                const SizedBox(height: 17),
+                for (final detail in evidence.details)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 11),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          size: 7,
+                          color: Theme.of(sheetContext).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 9),
+                        Expanded(
+                          child: Text(
+                            detail,
+                            style: TextStyle(color: text, height: 1.45),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(sheetContext).pop(),
+                    child: const Text('CLOSE'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
