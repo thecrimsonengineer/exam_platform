@@ -30,17 +30,34 @@ jobs:
         run: flutter pub get
 
       - name: Formatting gate
-        run: dart format --output=none --set-exit-if-changed lib/main.dart lib/services/haptics lib/services/settings/haptic_preference_service.dart lib/screens/navigation/bottom_navigation.dart lib/screens/settings/settings_screen.dart lib/screens/settings/settings_screen_dark.dart lib/screens/courses/csp/quiz/quiz_screen.dart lib/screens/courses/csp/study_subtopic_screen.dart lib/screens/courses/csp/study_subtopic_screen_dark.dart lib/screens/lab/lab_reference_player_screen.dart test/services/haptics test/services/settings/haptic_preference_service_test.dart
+        run: >
+          dart format --output=none --set-exit-if-changed
+          lib/main.dart
+          lib/services/haptics
+          lib/services/settings/haptic_preference_service.dart
+          lib/screens/navigation/bottom_navigation.dart
+          lib/screens/settings/settings_screen.dart
+          lib/screens/settings/settings_screen_dark.dart
+          lib/screens/courses/csp/quiz/quiz_screen.dart
+          lib/screens/courses/csp/study_subtopic_screen.dart
+          lib/screens/courses/csp/study_subtopic_screen_dark.dart
+          lib/screens/lab/lab_reference_player_screen.dart
+          lib/screens/admin/haptic_diagnostics_screen.dart
+          lib/features/learning_twin/integration/learning_twin_progress_guidance.dart
+          test/services/haptics
+          test/services/settings/haptic_preference_service_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      - name: Haptic foundation and Run 2 tests
+      - name: Haptic foundation and Run 3 tests
         run: |
           flutter test test/services/settings/haptic_preference_service_test.dart
           flutter test test/services/haptics/csp11_haptic_service_test.dart
           flutter test test/services/haptics/csp11_haptics_run1_contract_test.dart
           flutter test test/services/haptics/csp11_haptics_run2_contract_test.dart
+          flutter test test/services/haptics/csp11_haptics_run3_contract_test.dart
+          flutter test test/services/haptics/csp11_haptic_architecture_test.dart
 
       - name: LAB regression tests
         run: |
