@@ -66,13 +66,15 @@ class Fr5CanonicalSourceSelection {
     'schemaVersion': 1,
     'phase': 'FR5',
     'ready': ready,
-    'policy': 'prefer_published_over_draft_for_same_content_id_and_version',
+    'policy': 'prefer_published_snapshot_over_matching_working_snapshot',
     'rawSourceCounts': rawSourceCounts,
     'selectedSourceCounts': selectedSourceCounts,
     'selectedDocumentCount': documents.length,
     'supersededDraftCount': superseded.length,
     'issueCount': issues.length,
-    'superseded': superseded.map((item) => item.toJson()).toList(growable: false),
+    'superseded': superseded
+        .map((item) => item.toJson())
+        .toList(growable: false),
     'issues': issues.map((item) => item.toJson()).toList(growable: false),
   };
 }
@@ -122,32 +124,42 @@ class Fr5CanonicalSourceSelector {
     final orderedKeys = contentGroups.keys.toList(growable: false)..sort();
     for (final key in orderedKeys) {
       final group = contentGroups[key]!
-        ..sort(
-          (left, right) => left.document.id.compareTo(right.document.id),
-        );
+        ..sort((left, right) => left.document.id.compareTo(right.document.id));
 
       if (group.length == 1) {
         selected.add(group.single.document);
         continue;
       }
 
-      final published = group
-          .where((candidate) => candidate.status == 'published')
+      final publishedSnapshots = group
+          .where(
+            (candidate) =>
+                candidate.idPrefix == 'published' &&
+                candidate.status == 'published',
+          )
           .toList(growable: false);
-      final drafts = group
-          .where((candidate) => candidate.status == 'draft')
+      final workingSnapshots = group
+          .where(
+            (candidate) =>
+                candidate.idPrefix == 'draft' &&
+                const <String>{'draft', 'review', 'validated'}
+                    .contains(candidate.status),
+          )
           .toList(growable: false);
 
-      if (group.length == 2 && published.length == 1 && drafts.length == 1) {
-        selected.add(published.single.document);
+      if (group.length == 2 &&
+          publishedSnapshots.length == 1 &&
+          workingSnapshots.length == 1) {
+        selected.add(publishedSnapshots.single.document);
         superseded.add(
           Fr5SupersededSource(
             targetKey: key,
-            selectedSourceId: published.single.document.id,
-            supersededSourceId: drafts.single.document.id,
+            selectedSourceId: publishedSnapshots.single.document.id,
+            supersededSourceId: workingSnapshots.single.document.id,
             reason:
-                'Published lifecycle snapshot supersedes the draft snapshot '
-                'for the same canonical content ID and version.',
+                'Published lifecycle snapshot supersedes the matching '
+                'working snapshot for the same canonical content ID and '
+                'version.',
           ),
         );
         continue;
@@ -165,13 +177,15 @@ class Fr5CanonicalSourceSelector {
                 (candidate) => <String, dynamic>{
                   'sourceId': candidate.document.id,
                   'status': candidate.status,
-                  'idPrefix': _sourceIdPrefix(candidate.document.id),
+                  'idPrefix': candidate.idPrefix,
                 },
               )
               .toList(growable: false),
           message:
-              'Only an exact draft+published pair may be resolved '
-              'automatically. All other duplicate lifecycle sets fail closed.',
+              'Only one published_ document with published status paired '
+              'with one draft_ working document in draft, review, or '
+              'validated status may be resolved automatically. All other '
+              'duplicate lifecycle sets fail closed.',
         ),
       );
     }
@@ -205,8 +219,7 @@ class Fr5CanonicalSourceSelector {
       final decoded = decodeCsp11FirestoreSafe(document.data);
       if (decoded is! Map) return null;
       final source = <String, dynamic>{
-        for (final entry in decoded.entries)
-          entry.key.toString(): entry.value,
+        for (final entry in decoded.entries) entry.key.toString(): entry.value,
       };
 
       final contentId = source['id']?.toString().trim() ?? '';
@@ -216,7 +229,10 @@ class Fr5CanonicalSourceSelector {
           : int.tryParse(versionValue?.toString() ?? '');
       final status = source['status']?.toString().trim().toLowerCase() ?? '';
 
-      if (contentId.isEmpty || version == null || version <= 0 || status.isEmpty) {
+      if (contentId.isEmpty ||
+          version == null ||
+          version <= 0 ||
+          status.isEmpty) {
         return null;
       }
 
@@ -224,6 +240,7 @@ class Fr5CanonicalSourceSelector {
         document: document,
         targetKey: '$contentId|v$version',
         status: status,
+        idPrefix: _sourceIdPrefix(document.id),
       );
     } catch (_) {
       return null;
@@ -244,9 +261,11 @@ class _ContentCandidate {
     required this.document,
     required this.targetKey,
     required this.status,
+    required this.idPrefix,
   });
 
   final Fr4SourceDocument document;
   final String targetKey;
   final String status;
+  final String idPrefix;
 }
