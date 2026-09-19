@@ -119,6 +119,9 @@ class LabAutomatedLifecycleService {
       reviewerId: validationAuthority,
       validationAuthority: validationAuthority,
       qualityEvidenceJson: certificate.encode(),
+      exhaustiveRouteEvidenceJson: jsonEncode(
+        validatedGate.exhaustiveRouteReport.toEvidenceJson(),
+      ),
     );
 
     await studio.repository.saveImmutable(version);
