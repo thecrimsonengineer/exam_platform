@@ -6,6 +6,7 @@ import 'lab_dqg300.dart';
 import 'lab_dqg300_certificate.dart';
 import 'lab_dqg300_evidence_store.dart';
 import 'lab_l4l_certificate.dart';
+import 'lab_l4n_certificate.dart';
 import 'lab_studio.dart';
 
 class LabAutomatedLifecycleResult {
@@ -117,6 +118,12 @@ class LabAutomatedLifecycleService {
       validationAuthority: validationAuthority,
       validatedAt: validationTime,
     );
+    final l4nCertificate = LabL4nPublishEvidenceCertificate.fromReport(
+      package: published.package,
+      report: validatedGate.publishEvidenceReport,
+      validationAuthority: validationAuthority,
+      validatedAt: validationTime,
+    );
 
     final version = LabPublishedVersion(
       labId: published.package.metadata.id,
@@ -127,6 +134,7 @@ class LabAutomatedLifecycleService {
       validationAuthority: validationAuthority,
       qualityEvidenceJson: certificate.encode(),
       exhaustiveRouteEvidenceJson: l4lCertificate.encode(),
+      publishEvidenceJson: l4nCertificate.encode(),
     );
 
     await studio.repository.saveImmutable(version);
