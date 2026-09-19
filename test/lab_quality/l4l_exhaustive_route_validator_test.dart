@@ -126,23 +126,22 @@ void main() {
     expect(permitSafe.deterministicKey, contains('"minutesAfter":3'));
   });
 
-  test('L4L scene transitions preserve state, evidence and simulated time', () {
+  test('L4L captures exact state delta and winning gate type', () {
     final report = const LabExhaustiveRouteValidator().run(_referenceV2());
-    final sceneSteps = report.routes
+    final critical = report.routes
         .expand((route) => route.steps)
-        .where((step) => step.optionId == null)
-        .toList();
+        .firstWhere(
+          (step) =>
+              step.nodeId == 'simops_decision' && step.optionId == 's4',
+        );
 
-    expect(
-      sceneSteps.every(
-        (step) =>
-            step.stateBefore.toString() == step.stateAfter.toString() &&
-            step.evidenceBefore.length == step.evidenceAfter.length &&
-            step.evidenceAfter.containsAll(step.evidenceBefore) &&
-            step.simulatedMinutesBefore == step.simulatedMinutesAfter,
-      ),
-      isTrue,
-    );
+    expect(critical.gateType, LabGateType.criticalEvent);
+    expect(critical.stateDelta.keys, containsAll(<String>{'route', 'risk'}));
+    expect(critical.stateDelta['route']!.before, isNot('critical'));
+    expect(critical.stateDelta['route']!.after, 'critical');
+    expect(critical.stateDelta['risk']!.after, 10);
+    expect(critical.deterministicKey, contains('"gateType":"criticalEvent"'));
+    expect(critical.deterministicKey, contains('"delta"'));
   });
 
   test('L4L consequence traces never lose unlocked evidence or move time backwards', () {
