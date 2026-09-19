@@ -75,6 +75,9 @@ jobs:
       - name: Phase L4N publish evidence validation
         run: flutter test test/lab_quality/l4n_publish_evidence_validator_test.dart
 
+      - name: Phase L4O published immutability
+        run: flutter test test/lab_quality/l4o_published_immutability_test.dart
+
       - name: Preserve exact frozen Phase L engine suite
         run: flutter test test/features/lab
 
