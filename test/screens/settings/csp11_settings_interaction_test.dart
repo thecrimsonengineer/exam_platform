@@ -18,17 +18,23 @@ void main() {
     ThemeModeService.isDarkMode.value = true;
   });
 
+  Future<void> useTallViewport(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+  }
+
   testWidgets('theme switch changes the visible Settings variant immediately', (
     tester,
   ) async {
+    await useTallViewport(tester);
     await tester.pumpWidget(const MaterialApp(home: SettingsRoute()));
 
     expect(find.byType(SettingsScreen), findsOneWidget);
     expect(find.byType(DarkSettingsScreen), findsNothing);
 
     final tile = find.byKey(const ValueKey('settings-dark-mode'));
-    await tester.scrollUntilVisible(tile, 350);
-
     final toggle = find.descendant(of: tile, matching: find.byType(Switch));
     expect(toggle, findsOneWidget);
 
@@ -44,6 +50,7 @@ void main() {
   testWidgets('sign out returns directly to the auth-root route', (
     tester,
   ) async {
+    await useTallViewport(tester);
     var signedOut = false;
 
     await tester.pumpWidget(
@@ -75,7 +82,6 @@ void main() {
     await tester.pumpAndSettle();
 
     final signOutTile = find.byKey(const ValueKey('settings-sign-out'));
-    await tester.scrollUntilVisible(signOutTile, 400);
     await tester.tap(signOutTile);
     await tester.pumpAndSettle();
 
