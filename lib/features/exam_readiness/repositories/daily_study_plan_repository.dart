@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/auth/learner_local_identity.dart';
+import '../../../services/performance/firestore_read_audit.dart';
 import '../models/daily_study_plan.dart';
 
 abstract interface class DailyStudyPlanRemoteStore {
@@ -23,6 +24,12 @@ class FirebaseDailyStudyPlanRemoteStore implements DailyStudyPlanRemoteStore {
   @override
   Future<List<DailyStudyPlan>> loadPlans(String userId) async {
     final snapshot = await _collection(userId).get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'readiness.dailyStudyPlans.loadPlans',
+      collection: 'users/$userId/dailyStudyPlans',
+      scope: 'all',
+      returnedDocuments: snapshot.docs.length,
+    );
     final plans = <DailyStudyPlan>[];
 
     for (final document in snapshot.docs) {
@@ -45,6 +52,12 @@ class FirebaseDailyStudyPlanRemoteStore implements DailyStudyPlanRemoteStore {
     final documentId = '${plan.planId}_v${plan.planVersion}';
     final reference = _collection(plan.userId).doc(documentId);
     final existing = await reference.get();
+    FirestoreReadAudit.recordDocument(
+      operation: 'readiness.dailyStudyPlans.savePlan.preflight',
+      collection: 'users/${plan.userId}/dailyStudyPlans',
+      documentId: documentId,
+      exists: existing.exists,
+    );
 
     if (existing.exists) {
       final current = Map<String, dynamic>.from(existing.data() ?? {})
