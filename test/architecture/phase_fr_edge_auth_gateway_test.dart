@@ -27,6 +27,13 @@ void main() {
     expect(source, isNot(contains('service_role')));
   });
 
+  test('FR2 pins verify_jwt=false for the custom Firebase gateway', () {
+    final config = File('supabase/config.toml').readAsStringSync();
+
+    expect(config, contains('[functions.firebase-auth-probe]'));
+    expect(config, contains('verify_jwt = false'));
+  });
+
   test('FR2 excludes Firebase Cloud Functions from the free-tier path', () {
     expect(Directory('functions').existsSync(), isFalse);
   });
