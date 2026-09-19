@@ -9,6 +9,92 @@ LabPackage _referenceV2() => LabPackage.decode(
   File('content/lab_reference_confined_space_h2s_v2.json').readAsStringSync(),
 );
 
+
+LabPackage _largeRoutePackage() {
+  final nodes = <LabNodeContract>[];
+  final gates = <Map<String, Object?>>[];
+
+  for (var decisionIndex = 1; decisionIndex <= 5; decisionIndex++) {
+    final nodeId = 'decision_' + decisionIndex.toString();
+    nodes.add(
+      LabDecisionNode(
+        id: nodeId,
+        prompt: 'Choose an authored action for decision ' +
+            decisionIndex.toString() +
+            '.',
+        options: List<LabDecisionOption>.generate(4, (optionIndex) {
+          final number = optionIndex + 1;
+          return LabDecisionOption(
+            id: 'o' + number.toString(),
+            text: 'Authored action ' + number.toString(),
+            isBest: number == 1,
+            quality: switch (number) {
+              1 => LabDecisionQuality.optimal,
+              2 => LabDecisionQuality.defensible,
+              3 => LabDecisionQuality.weak,
+              _ => LabDecisionQuality.critical,
+            },
+            consequence: LabConsequence(
+              id: 'd' +
+                  decisionIndex.toString() +
+                  '_o' +
+                  number.toString() +
+                  '_consequence',
+              explicitNoOp: true,
+            ),
+          );
+        }),
+      ),
+    );
+
+    if (decisionIndex < 5) {
+      gates.add(<String, Object?>{
+        'id': 'route_' + decisionIndex.toString(),
+        'type': 'ROUTE',
+        'priority': 10,
+        'fromNodeId': nodeId,
+        'targetNodeId': 'decision_' + (decisionIndex + 1).toString(),
+        'condition': <String, Object?>{'op': 'ALWAYS'},
+      });
+    } else {
+      gates.add(<String, Object?>{
+        'id': 'complete',
+        'type': 'COMPLETION',
+        'priority': 10,
+        'fromNodeId': nodeId,
+        'endingId': 'complete_ending',
+        'condition': <String, Object?>{'op': 'ALWAYS'},
+      });
+    }
+  }
+
+  return LabPackage(
+    schemaVersion: kLabSchemaVersion,
+    metadata: LabMetadata(
+      id: 'l4m_scale_lab',
+      versionId: 'v1',
+      title: 'L4M scale LAB',
+      description: 'Five four-option decisions create 1,024 complete routes.',
+      lifecycle: LabLifecycleStatus.draft,
+      supportedModes: const <LabMode>{LabMode.professional},
+      startingNodeId: 'decision_1',
+      startingState: const <String, Object?>{},
+    ),
+    stateRegistry: LabStateRegistry(
+      const <LabStateVariableDefinition>[],
+    ),
+    nodes: nodes,
+    gates: gates,
+    endings: const <Map<String, Object?>>[
+      <String, Object?>{
+        'id': 'complete_ending',
+        'family': 'SAFE_COMPLETION',
+        'title': 'Complete',
+      },
+    ],
+  );
+}
+
 void main() {
   test('L4M uses exhaustive mode when reachable routes fit the budget', () {
     final report = const LabReachableRouteExplorer().explore(_referenceV2());
@@ -36,6 +122,24 @@ void main() {
       report.exhaustiveReport.gateCoverageIds,
     );
     expect(report.selectedEndingIds, report.exhaustiveReport.endingIds);
+  });
+
+  test('L4M default budget becomes representative above 1,000 routes', () {
+    final report = const LabReachableRouteExplorer().explore(
+      _largeRoutePackage(),
+    );
+
+    expect(report.mode, LabReachableRouteExplorationMode.representative);
+    expect(report.discoveredRouteCount, 1024);
+    expect(report.selectedRouteCount, 1000);
+    expect(report.routeBudget, 1000);
+    expect(report.completeMandatoryCoverage, isTrue);
+    expect(report.selectedOptionCoverageKeys, hasLength(20));
+    expect(report.selectedConsequenceCoverageIds, hasLength(20));
+    expect(report.selectedGateCoverageIds, hasLength(5));
+    expect(report.selectedEndingIds, <String>{'complete_ending'});
+    expect(report.deterministic, isTrue);
+    expect(report.isValid, isTrue);
   });
 
   test('L4M deterministically selects representative complete routes', () {
