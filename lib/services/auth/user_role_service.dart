@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/app_user.dart';
+import '../performance/firestore_read_audit.dart';
 
 class UserRoleService {
   UserRoleService({
@@ -14,6 +15,12 @@ class UserRoleService {
         .collection('users')
         .doc(uid)
         .get();
+    FirestoreReadAudit.recordDocument(
+      operation: 'auth.userRole.getRole',
+      collection: 'users',
+      documentId: uid,
+      exists: snapshot.exists,
+    );
 
     if (!snapshot.exists) {
       return AppUserRole.student;
