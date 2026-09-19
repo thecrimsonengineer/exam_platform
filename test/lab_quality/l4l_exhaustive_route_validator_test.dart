@@ -432,7 +432,7 @@ void main() {
       ).readAsStringSync(),
     ) as Map;
     final root = decoded.cast<String, Object?>();
-    final gates = (root['gates'] as List).cast<Map<String, Object?>>();
+    final gates = root['gates'] as List;
     gates.add(<String, Object?>{
       'id': 'never_reachable_gate',
       'type': 'ROUTE',
@@ -461,13 +461,14 @@ void main() {
       File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
     ) as Map;
     final root = decoded.cast<String, Object?>();
-    final consequences =
-        (root['consequences'] as List).cast<Map<String, Object?>>();
-    for (final consequence in consequences) {
+    final consequences = root['consequences'] as List;
+    for (final rawConsequence in consequences) {
+      final consequence = (rawConsequence as Map).cast<String, Object?>();
       consequence['simulatedMinutes'] = 0;
     }
-    final gates = (root['gates'] as List).cast<Map<String, Object?>>();
-    for (final gate in gates) {
+    final gates = root['gates'] as List;
+    for (final rawGate in gates) {
+      final gate = (rawGate as Map).cast<String, Object?>();
       if (gate['fromNodeId'] == 'decision_one') {
         gate['targetNodeId'] = 'decision_one';
       }
