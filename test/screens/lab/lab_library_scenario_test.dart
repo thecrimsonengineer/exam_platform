@@ -15,15 +15,10 @@ void main() {
   ) async {
     _useTallViewport(tester);
 
-    await tester.pumpWidget(
-      const MaterialApp(home: LabLibraryScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: LabLibraryScreen()));
 
     expect(find.text('Safety Decision LAB'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('lab-learner-intro')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('lab-learner-intro')), findsOneWidget);
     expect(find.text('How a LAB works'), findsOneWidget);
     expect(find.text('What you get at the end'), findsOneWidget);
     expect(find.text('Choose how you want to practise'), findsOneWidget);
@@ -41,14 +36,10 @@ void main() {
   ) async {
     _useTallViewport(tester);
 
-    await tester.pumpWidget(
-      const MaterialApp(home: LabLibraryScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: LabLibraryScreen()));
 
     const scenarioId = 'confined_space_h2s_simops';
-    final button = find.byKey(
-      const ValueKey('lab-scenario-open-$scenarioId'),
-    );
+    final button = find.byKey(const ValueKey('lab-scenario-open-$scenarioId'));
 
     await tester.ensureVisible(button);
     await tester.tap(button);
@@ -59,18 +50,9 @@ void main() {
       find.byKey(const ValueKey('lab-selected-scenario-title')),
       findsOneWidget,
     );
-    expect(
-      find.text('Confined Space H2S SIMOPS Response'),
-      findsOneWidget,
-    );
+    expect(find.text('Confined Space H2S SIMOPS Response'), findsOneWidget);
     expect(find.byKey(const ValueKey('lab-mode-guided')), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('lab-mode-professional')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('lab-mode-assessment')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('lab-mode-professional')), findsOneWidget);
+    expect(find.byKey(const ValueKey('lab-mode-assessment')), findsOneWidget);
   });
 }

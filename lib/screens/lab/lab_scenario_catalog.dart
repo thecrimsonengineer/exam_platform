@@ -29,7 +29,5 @@ abstract final class LabScenarioCatalog {
     assetPath: 'content/lab_reference_confined_space_h2s_v2.json',
   );
 
-  static const all = <LabScenarioDefinition>[
-    confinedSpaceH2s,
-  ];
+  static const all = <LabScenarioDefinition>[confinedSpaceH2s];
 }

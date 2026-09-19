@@ -235,10 +235,7 @@ class _HowItWorksStep extends StatelessWidget {
             radius: 15,
             child: Text(
               number,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w900,
-              ),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
             ),
           ),
           const SizedBox(width: 12),
@@ -248,16 +245,10 @@ class _HowItWorksStep extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: text,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: TextStyle(color: text, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 3),
-                Text(
-                  description,
-                  style: TextStyle(color: muted, height: 1.4),
-                ),
+                Text(description, style: TextStyle(color: muted, height: 1.4)),
               ],
             ),
           ),
@@ -284,17 +275,10 @@ class _OutputRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 11),
           Expanded(
-            child: Text(
-              text,
-              style: TextStyle(color: muted, height: 1.35),
-            ),
+            child: Text(text, style: TextStyle(color: muted, height: 1.35)),
           ),
         ],
       ),
@@ -327,11 +311,7 @@ class _ModePreviewCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 27,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          Icon(icon, size: 27, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 13),
           Expanded(
             child: Column(
@@ -355,10 +335,7 @@ class _ModePreviewCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  description,
-                  style: TextStyle(color: muted, height: 1.4),
-                ),
+                Text(description, style: TextStyle(color: muted, height: 1.4)),
               ],
             ),
           ),
@@ -409,10 +386,7 @@ class _ScenarioCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(
-            scenario.summary,
-            style: TextStyle(color: muted, height: 1.5),
-          ),
+          Text(scenario.summary, style: TextStyle(color: muted, height: 1.5)),
           const SizedBox(height: 12),
           Text(
             scenario.focus,

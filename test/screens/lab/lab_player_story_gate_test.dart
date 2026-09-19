@@ -47,39 +47,45 @@ void main() {
     expect(validated.package.nodes.whereType<LabDecisionNode>(), hasLength(5));
   });
 
-  test('two optimal decisions route to the matching SIMOPS story beat', () async {
-    final package = loadV2();
-    final store = InMemoryLabSessionStore();
-    final engine = LabSessionEngine(store: store);
+  test(
+    'two optimal decisions route to the matching SIMOPS story beat',
+    () async {
+      final package = loadV2();
+      final store = InMemoryLabSessionStore();
+      final engine = LabSessionEngine(store: store);
 
-    var session = await engine.startAttempt(
-      package: package,
-      sessionId: 'safe_story_route',
-      userId: 'story_tester',
-      mode: LabMode.guided,
-    );
+      var session = await engine.startAttempt(
+        package: package,
+        sessionId: 'safe_story_route',
+        userId: 'story_tester',
+        mode: LabMode.guided,
+      );
 
-    session = await commit(engine, package, session, 'p1');
-    expect(session.currentNodeId, 'gas_decision');
-    expect(session.decisionHistory.last.gateTriggered, 'permit_route');
+      session = await commit(engine, package, session, 'p1');
+      expect(session.currentNodeId, 'gas_decision');
+      expect(session.decisionHistory.last.gateTriggered, 'permit_route');
 
-    session = await commit(engine, package, session, 'g1');
-    expect(session.currentNodeId, 'simops_decision');
-    expect(session.decisionHistory.last.gateTriggered, 'gas_work_convergence');
+      session = await commit(engine, package, session, 'g1');
+      expect(session.currentNodeId, 'simops_decision');
+      expect(
+        session.decisionHistory.last.gateTriggered,
+        'gas_work_convergence',
+      );
 
-    final simopsNode = package.nodes
-        .whereType<LabDecisionNode>()
-        .singleWhere((node) => node.id == 'simops_decision');
-    expect(
-      simopsNode.prompt,
-      contains('Nearby line-breaking SIMOPS begins'),
-    );
+      final simopsNode = package.nodes.whereType<LabDecisionNode>().singleWhere(
+        (node) => node.id == 'simops_decision',
+      );
+      expect(simopsNode.prompt, contains('Nearby line-breaking SIMOPS begins'));
 
-    session = await commit(engine, package, session, 's1');
-    expect(session.status, LabSessionStatus.completed);
-    expect(session.endingId, 'safe_completion');
-    expect(session.decisionHistory.last.gateTriggered, 'simops_safe_completion');
-  });
+      session = await commit(engine, package, session, 's1');
+      expect(session.status, LabSessionStatus.completed);
+      expect(session.endingId, 'safe_completion');
+      expect(
+        session.decisionHistory.last.gateTriggered,
+        'simops_safe_completion',
+      );
+    },
+  );
 
   test('critical SIMOPS decision interrupts into emergency response', () async {
     final package = loadV2();
