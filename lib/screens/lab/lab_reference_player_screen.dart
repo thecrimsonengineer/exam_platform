@@ -5,6 +5,7 @@ import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_session.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
+import 'lab_learner_debrief_screen.dart';
 import 'lab_scenario_catalog.dart';
 
 class LabReferencePlayerScreen extends StatefulWidget {
@@ -668,7 +669,10 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final text = dark ? const Color(0xFFF4F7FB) : const Color(0xFF18243A);
     final muted = dark ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
-    final endingTitle = _endingTitle(package, session.endingId);
+    final ending = widget.scenario.endingFor(session.endingId);
+    final journey = session.decisionHistory
+        .map((event) => widget.scenario.decisionTitleFor(event.nodeId))
+        .join(' → ');
 
     return ListView(
       key: const ValueKey('lab-completion-screen'),
@@ -692,15 +696,53 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                endingTitle,
+                ending.title,
                 key: const ValueKey('lab-ending-title'),
                 style: TextStyle(
                   color: text,
-                  fontSize: 19,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 9),
+              Text(
+                ending.narrative,
+                key: const ValueKey('lab-ending-narrative'),
+                style: TextStyle(color: muted, height: 1.5),
+              ),
+              const SizedBox(height: 17),
+              Text(
+                'Key turning point',
+                style: TextStyle(
+                  color: text,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                ending.keyTurningPoint,
+                key: const ValueKey('lab-ending-turning-point'),
+                style: TextStyle(color: muted, height: 1.45),
+              ),
+              if (journey.isNotEmpty) ...[
+                const SizedBox(height: 17),
+                Text(
+                  'Your journey',
+                  style: TextStyle(
+                    color: text,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  journey,
+                  key: const ValueKey('lab-ending-journey'),
+                  style: TextStyle(color: muted, height: 1.45),
+                ),
+              ],
+              const SizedBox(height: 17),
               Text(
                 _modeTitle(widget.mode) +
                     ' mode • ' +
@@ -741,6 +783,26 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
           ),
         const SizedBox(height: 18),
         FilledButton.icon(
+          key: const ValueKey('lab-view-debrief'),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => LabLearnerDebriefScreen(
+                  package: package,
+                  session: session,
+                  scenario: widget.scenario,
+                  onReplay: () {
+                    _replay();
+                  },
+                ),
+              ),
+            );
+          },
+          icon: const Icon(Icons.insights_rounded),
+          label: const Text('VIEW DEBRIEF'),
+        ),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
           key: const ValueKey('lab-replay-mode'),
           onPressed: _busy ? null : _replay,
           icon: const Icon(Icons.replay_rounded),
@@ -749,6 +811,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
           ),
         ),
         const SizedBox(height: 10),
+
         OutlinedButton.icon(
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_rounded),
@@ -758,26 +821,6 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     );
   }
 
-  String _endingTitle(LabPackage package, String? endingId) {
-    for (final ending in package.endings) {
-      if (ending['id']?.toString() == endingId) {
-        return ending['title']?.toString() ?? _friendlyId(endingId);
-      }
-    }
-    return _friendlyId(endingId);
-  }
-
-  String _friendlyId(String? value) {
-    if (value == null || value.isEmpty) return 'Completed';
-    return value
-        .split('_')
-        .map(
-          (part) => part.isEmpty
-              ? part
-              : part[0].toUpperCase() + part.substring(1).toLowerCase(),
-        )
-        .join(' ');
-  }
 }
 
 class _PendingConsequence {
