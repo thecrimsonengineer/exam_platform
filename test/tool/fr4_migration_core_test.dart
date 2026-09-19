@@ -30,15 +30,12 @@ void main() {
         },
       });
 
-      expect(
-        decoded,
-        <String, dynamic>{
-          'rows': <dynamic>[
-            <String>['a', 'b'],
-            <String>['c', 'd'],
-          ],
-        },
-      );
+      expect(decoded, <String, dynamic>{
+        'rows': <dynamic>[
+          <String>['a', 'b'],
+          <String>['c', 'd'],
+        ],
+      });
     });
   });
 
@@ -264,22 +261,16 @@ void main() {
       final row = plan.rows.single;
 
       expect(
-        fr4TargetMatches(
-          row,
-          <String, dynamic>{
-            ...row.row,
-            'created_at': '2099-01-01T00:00:00Z',
-            'updated_at': '2099-01-01T00:00:00Z',
-          },
-        ),
+        fr4TargetMatches(row, <String, dynamic>{
+          ...row.row,
+          'created_at': '2099-01-01T00:00:00Z',
+          'updated_at': '2099-01-01T00:00:00Z',
+        }),
         isTrue,
       );
 
       expect(
-        fr4TargetMatches(
-          row,
-          <String, dynamic>{...row.row, 'stem': 'changed'},
-        ),
+        fr4TargetMatches(row, <String, dynamic>{...row.row, 'stem': 'changed'}),
         isFalse,
       );
     });
