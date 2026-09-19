@@ -120,6 +120,28 @@ The evidence contains:
 
 All unordered sets are serialized in deterministic sorted form.
 
+## Immutable published evidence
+
+Automated publication now persists the exhaustive proof separately from the DQG300 certificate.
+
+`LabPublishedVersion.qualityEvidenceJson` remains the DQG300 certificate payload for backward compatibility.
+
+`LabPublishedVersion.exhaustiveRouteEvidenceJson` stores a version-pinned L4L certificate with schema:
+
+`csp11.lab.l4l.certificate.v1`
+
+The L4L certificate contains:
+
+- LAB ID;
+- version ID;
+- automated validation authority;
+- UTC validation timestamp;
+- the deterministic `csp11.lab.l4l.exhaustive.v1` route-evidence object.
+
+A certificate can be created only from a passing L4L report. Its `isPass` contract requires complete option, consequence, gate and ending coverage, valid route invariants, deterministic proof, no route truncation and a non-empty exhaustive fingerprint.
+
+Legacy manual publish remains compatible and leaves automated DQG300 / L4L evidence fields empty.
+
 ## Frozen reference LAB matrix candidate
 
 Reference package:
