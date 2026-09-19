@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exam_platform/features/lab/lab_contracts.dart';
@@ -157,6 +158,213 @@ void main() {
       ),
       isTrue,
     );
+  });
+
+  test('L4L formally covers every authored consequence and Story Gate', () {
+    final package = _referenceV2();
+    final report = const LabExhaustiveRouteValidator().run(package);
+
+    expect(report.completeConsequenceCoverage, isTrue);
+    expect(report.completeGateCoverage, isTrue);
+    expect(report.routeInvariantsHold, isTrue);
+    expect(report.uncoveredConsequenceIds, isEmpty);
+    expect(report.uncoveredGateIds, isEmpty);
+    expect(report.consequenceCoverageIds, hasLength(20));
+    expect(report.gateCoverageIds, hasLength(package.gates.length));
+    expect(
+      report.gateTypeCoverage,
+      containsAll(<LabGateType>{
+        LabGateType.route,
+        LabGateType.criticalEvent,
+        LabGateType.convergence,
+        LabGateType.completion,
+      }),
+    );
+  });
+
+  test('L4L proves convergence preserves accumulated state and evidence', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+    final route = report.routes.firstWhere(
+      (candidate) =>
+          candidate.steps.any(
+            (step) =>
+                step.nodeId == 'permit_decision' && step.optionId == 'p1',
+          ) &&
+          candidate.steps.any(
+            (step) => step.nodeId == 'gas_decision' && step.optionId == 'g1',
+          ) &&
+          candidate.steps.any(
+            (step) =>
+                step.nodeId == 'simops_decision' && step.optionId == 's1',
+          ),
+    );
+    final gasIndex = route.steps.indexWhere(
+      (step) => step.nodeId == 'gas_decision' && step.optionId == 'g1',
+    );
+    final gas = route.steps[gasIndex];
+    final simops = route.steps[gasIndex + 1];
+
+    expect(gas.gateType, LabGateType.convergence);
+    expect(gas.gateId, 'gas_work_convergence');
+    expect(gas.targetNodeId, 'simops_decision');
+    expect(gas.evidenceAfter, containsAll(<String>{
+      'permit',
+      'isolation_record',
+      'gas_test',
+    }));
+    expect(simops.stateBefore, gas.stateAfter);
+    expect(simops.evidenceBefore, gas.evidenceAfter);
+    expect(simops.simulatedMinutesBefore, gas.simulatedMinutesAfter);
+  });
+
+  test('L4L proves critical chain can terminate at critical failure', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+    final route = report.routes.firstWhere(
+      (candidate) =>
+          candidate.endingId == 'critical_failure' &&
+          candidate.steps.any(
+            (step) =>
+                step.nodeId == 'permit_decision' && step.optionId == 'p4',
+          ) &&
+          candidate.steps.any(
+            (step) =>
+                step.nodeId == 'emergency_decision' && step.optionId == 'e4',
+          ),
+    );
+
+    expect(route.steps, hasLength(2));
+    expect(route.steps.first.gateType, LabGateType.criticalEvent);
+    expect(route.steps.first.gatePriority, 100);
+    expect(route.steps.first.targetNodeId, 'emergency_decision');
+    expect(route.steps.last.gateType, LabGateType.completion);
+    expect(route.steps.last.gateId, 'emergency_critical_failure');
+    expect(route.steps.last.endingId, 'critical_failure');
+  });
+
+  test('L4L proves recovery and incident-contained authored endings', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+
+    expect(
+      report.routes.any(
+        (route) =>
+            route.endingId == 'controlled_recovery' &&
+            route.steps.any(
+              (step) =>
+                  step.nodeId == 'simops_decision' && step.optionId == 's2',
+            ),
+      ),
+      isTrue,
+    );
+    expect(
+      report.routes.any(
+        (route) =>
+            route.endingId == 'incident_contained' &&
+            route.steps.any(
+              (step) =>
+                  step.nodeId == 'simops_decision' && step.optionId == 's3',
+            ),
+      ),
+      isTrue,
+    );
+    expect(
+      report.routes.any(
+        (route) =>
+            route.steps.any(
+              (step) =>
+                  step.nodeId == 'emergency_decision' &&
+                  step.optionId == 'e1' &&
+                  step.gateType == LabGateType.convergence,
+            ) &&
+            route.steps.any(
+              (step) => step.nodeId == 'closeout_decision',
+            ),
+      ),
+      isTrue,
+    );
+  });
+
+  test('L4L fails closed when an authored gate can never win', () {
+    final decoded = jsonDecode(
+      File(
+        'content/lab_reference_confined_space_h2s_v2.json',
+      ).readAsStringSync(),
+    ) as Map;
+    final root = decoded.cast<String, Object?>();
+    final gates = (root['gates'] as List).cast<Map<String, Object?>>();
+    gates.add(<String, Object?>{
+      'id': 'never_reachable_gate',
+      'type': 'ROUTE',
+      'priority': 50,
+      'fromNodeId': 'gas_decision',
+      'targetNodeId': 'simops_decision',
+      'condition': <String, Object?>{
+        'op': 'NUMERIC',
+        'stateId': 'risk',
+        'operator': 'GT',
+        'value': 99,
+      },
+    });
+
+    final report = const LabExhaustiveRouteValidator().run(
+      LabPackage.fromJson(root),
+    );
+
+    expect(report.completeGateCoverage, isFalse);
+    expect(report.uncoveredGateIds, contains('never_reachable_gate'));
+    expect(report.isValid, isFalse);
+  });
+
+  test('L4L fails closed on a reachable repeated-state route cycle', () {
+    final decoded = jsonDecode(
+      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+    ) as Map;
+    final root = decoded.cast<String, Object?>();
+    final consequences =
+        (root['consequences'] as List).cast<Map<String, Object?>>();
+    for (final consequence in consequences) {
+      consequence['simulatedMinutes'] = 0;
+    }
+    final gates = (root['gates'] as List).cast<Map<String, Object?>>();
+    for (final gate in gates) {
+      if (gate['fromNodeId'] == 'decision_one') {
+        gate['targetNodeId'] = 'decision_one';
+      }
+    }
+
+    final report = const LabExhaustiveRouteValidator().run(
+      LabPackage.fromJson(root),
+      maxRoutes: 500,
+      maxDepth: 12,
+    );
+
+    expect(report.isValid, isFalse);
+    expect(
+      report.issues.any(
+        (issue) => issue.contains('Reachable route cycle repeated state'),
+      ),
+      isTrue,
+    );
+  });
+
+  test('L4L route continuity invariants hold on every exhaustive trace', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+
+    expect(report.routeInvariantsHold, isTrue);
+    for (final route in report.routes) {
+      expect(route.steps.last.endingId, route.endingId);
+      expect(route.steps.last.gateType, LabGateType.completion);
+      for (var index = 0; index < route.steps.length - 1; index++) {
+        final current = route.steps[index];
+        final next = route.steps[index + 1];
+        expect(current.targetNodeId, next.nodeId);
+        expect(current.stateAfter, next.stateBefore);
+        expect(current.evidenceAfter, next.evidenceBefore);
+        expect(
+          current.simulatedMinutesAfter,
+          next.simulatedMinutesBefore,
+        );
+      }
+    }
   });
 
   test('L4L fingerprint is stable across repeated exhaustive runs', () {
