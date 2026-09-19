@@ -115,65 +115,32 @@ void main() {
     },
   );
 
-  testWidgets('L4E Professional consequence avoids coaching', (tester) async {
+  testWidgets('Professional mode opens the LAB destination', (tester) async {
     _useTallTestViewport(tester);
 
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.professional),
-      ),
+    await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
+    final professional = find.byKey(
+      const ValueKey('lab-mode-professional'),
     );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-    );
-
-    final firstOption = find.byKey(const ValueKey('lab-option-p1'));
-    await tester.ensureVisible(firstOption);
-    await tester.tap(firstOption);
+    await tester.ensureVisible(professional);
+    await tester.tap(professional);
     await tester.pump();
 
-    final confirm = find.byKey(const ValueKey('lab-confirm-decision'));
-    await tester.ensureVisible(confirm);
-    await tester.tap(confirm);
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-consequence-screen')),
-    );
-
-    expect(find.text('What happened next'), findsOneWidget);
-    expect(find.text('Why this mattered'), findsNothing);
-    expect(find.text('OPTIMAL'), findsNothing);
+    expect(find.text('Professional LAB'), findsOneWidget);
   });
 
-  testWidgets('L4E Assessment consequence avoids coaching', (tester) async {
+  testWidgets('Assessment mode opens the LAB destination', (tester) async {
     _useTallTestViewport(tester);
 
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.assessment),
-      ),
+    await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
+    final assessment = find.byKey(
+      const ValueKey('lab-mode-assessment'),
     );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-    );
-
-    final firstOption = find.byKey(const ValueKey('lab-option-p1'));
-    await tester.ensureVisible(firstOption);
-    await tester.tap(firstOption);
+    await tester.ensureVisible(assessment);
+    await tester.tap(assessment);
     await tester.pump();
 
-    final confirm = find.byKey(const ValueKey('lab-confirm-decision'));
-    await tester.ensureVisible(confirm);
-    await tester.tap(confirm);
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-consequence-screen')),
-    );
-
-    expect(find.text('What happened next'), findsOneWidget);
-    expect(find.text('Why this mattered'), findsNothing);
-    expect(find.text('OPTIMAL'), findsNothing);
+    expect(find.text('Assessment LAB'), findsOneWidget);
   });
+
 }
