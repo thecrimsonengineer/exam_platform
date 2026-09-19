@@ -121,6 +121,27 @@ jobs:
           fi
           echo "Firestore read preflight: PASS"
 
+      - name: Build canonical FR5 Firestore source snapshot
+        env:
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
+        run: |
+          dart run tool/fr5_shadow_parity/fr5_firestore_source.dart \
+            --firestore-project="$FIREBASE_PROJECT_ID" \
+            --output=build/fr5-production/production_source.json \
+            --evidence=build/fr5-production/production_source_selection.json
+          grep -q '"ready": true' build/fr5-production/production_source_selection.json
+          grep -q '"issueCount": 0' build/fr5-production/production_source_selection.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(
+              Path('build/fr5-production/production_source_selection.json').read_text()
+          )
+          print('FR5 raw source counts:', report.get('rawSourceCounts'))
+          print('FR5 selected source counts:', report.get('selectedSourceCounts'))
+          print('FR5 superseded draft snapshots:', report.get('supersededDraftCount'))
+          PY
+
       - id: fr4_extract
         name: Extract deterministic production FR4 manifest
         continue-on-error: true
@@ -130,7 +151,7 @@ jobs:
           rm -rf build/fr5-production
           mkdir -p build/fr5-production
           dart run tool/fr4_migration/fr4_migrate.dart \
-            --firestore-project="$FIREBASE_PROJECT_ID" \
+            --input=build/fr5-production/production_source.json \
             --evidence=build/fr5-production/production_fr4_plan.json
 
       - name: Diagnose FR4 production manifest
@@ -221,6 +242,11 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
+
+          source_selection = json.loads(
+              Path('build/fr5-production/production_source_selection.json').read_text()
+          )
+          print('FR5 superseded draft snapshots:', source_selection.get('supersededDraftCount'))
 
           plan = json.loads(Path('build/fr5-production/production_fr4_plan.json').read_text())
           print('FR5 production manifest rows:', plan.get('rowCount'))
