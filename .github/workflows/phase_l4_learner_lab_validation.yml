@@ -47,8 +47,10 @@ jobs:
             lib/features/lab/lab_automated_lifecycle.dart \
             lib/features/lab/lab_dqg300_certificate.dart \
             lib/features/lab/lab_dqg300_evidence_store.dart \
-            lib/features/lab/lab_studio.dart \
+            lib/features/lab/lab_l4l_certificate.dart \
             lib/features/lab/lab_exhaustive_route_validator.dart \
+            lib/features/lab/lab_reachable_route_explorer.dart \
+            lib/features/lab/lab_studio.dart \
             test/screens/lab \
             test/lab_quality \
             test/features/lab/lab1_shells_test.dart
@@ -64,6 +66,9 @@ jobs:
 
       - name: Phase L4L exhaustive route state and Story Gate tests
         run: flutter test test/lab_quality/l4l_exhaustive_route_validator_test.dart
+
+      - name: Phase L4M reachable-route exploration
+        run: flutter test test/lab_quality/l4m_reachable_route_explorer_test.dart
 
       - name: Preserve exact frozen Phase L engine suite
         run: flutter test test/features/lab
@@ -104,6 +109,7 @@ jobs:
             lib/features/lab/lab_dqg300_evidence_store.dart \
             lib/features/lab/lab_l4l_certificate.dart \
             lib/features/lab/lab_exhaustive_route_validator.dart \
+            lib/features/lab/lab_reachable_route_explorer.dart \
             lib/features/lab/lab_studio.dart \
             test/screens/lab \
             test/lab_quality \
