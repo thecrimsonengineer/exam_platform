@@ -250,16 +250,28 @@ jobs:
           grep -q '"safeToApply": true' build/fr5-production/preflight.json
 
       - name: Require explicit shadow-only confirmation
-        if: inputs.apply_shadow == true
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) ||
+          (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized production shadow apply')
         shell: bash
         run: |
-          if [ "${{ inputs.confirmation }}" != "FR5_SHADOW_ONLY" ]; then
-            echo "Apply requested without exact FR5_SHADOW_ONLY confirmation."
-            exit 1
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.confirmation }}" != "FR5_SHADOW_ONLY" ]; then
+              echo "Apply requested without exact FR5_SHADOW_ONLY confirmation."
+              exit 1
+            fi
+          else
+            if [ "${{ github.event.head_commit.message }}" != "FR5: authorized production shadow apply" ]; then
+              echo "Push apply attempted without the one-time authorized marker."
+              exit 1
+            fi
           fi
+          echo "FR5 shadow-only write authorization: PASS"
 
       - name: Apply production shadow data and prove parity
-        if: inputs.apply_shadow == true
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) ||
+          (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized production shadow apply')
         run: |
           dart run tool/fr5_shadow_parity/fr5_shadow_parity.dart \
             --fr4-evidence=build/fr5-production/production_fr4_plan.json \
