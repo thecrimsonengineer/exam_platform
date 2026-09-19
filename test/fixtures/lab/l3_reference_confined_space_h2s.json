@@ -14,12 +14,12 @@
     "startingNodeId": "permit_decision",
     "startingState": {
       "route": "start",
-      "emergencyOutcome": "none",
-      "finalOutcome": "none",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
       "isolated": false,
-      "permitVerified": false,
-      "gasTestVerified": false,
-      "rescueReady": false,
+      "permit_verified": false,
+      "gas_test_verified": false,
+      "rescue_ready": false,
       "risk": 0,
       "observations": []
     }
@@ -35,7 +35,7 @@
         "recovery"
       ]
     },
-    "emergencyOutcome": {
+    "emergency_outcome": {
       "type": "ENUM",
       "allowedValues": [
         "none",
@@ -45,7 +45,7 @@
         "fatal"
       ]
     },
-    "finalOutcome": {
+    "final_outcome": {
       "type": "ENUM",
       "allowedValues": [
         "none",
@@ -59,15 +59,15 @@
       "type": "BOOLEAN",
       "irreversible": true
     },
-    "permitVerified": {
+    "permit_verified": {
       "type": "BOOLEAN",
       "irreversible": true
     },
-    "gasTestVerified": {
+    "gas_test_verified": {
       "type": "BOOLEAN",
       "irreversible": true
     },
-    "rescueReady": {
+    "rescue_ready": {
       "type": "BOOLEAN",
       "irreversible": true
     },
@@ -127,7 +127,7 @@
         },
         {
           "op": "SET",
-          "stateId": "permitVerified",
+          "stateId": "permit_verified",
           "value": true
         },
         {
@@ -157,7 +157,7 @@
         },
         {
           "op": "SET",
-          "stateId": "permitVerified",
+          "stateId": "permit_verified",
           "value": true
         },
         {
@@ -215,7 +215,7 @@
         },
         {
           "op": "SET",
-          "stateId": "gasTestVerified",
+          "stateId": "gas_test_verified",
           "value": true
         },
         {
@@ -239,7 +239,7 @@
         },
         {
           "op": "SET",
-          "stateId": "gasTestVerified",
+          "stateId": "gas_test_verified",
           "value": true
         },
         {
@@ -292,12 +292,12 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "emergencyOutcome",
+          "stateId": "emergency_outcome",
           "value": "recover"
         },
         {
           "op": "SET",
-          "stateId": "rescueReady",
+          "stateId": "rescue_ready",
           "value": true
         },
         {
@@ -316,7 +316,7 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "emergencyOutcome",
+          "stateId": "emergency_outcome",
           "value": "contain"
         },
         {
@@ -333,7 +333,7 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "emergencyOutcome",
+          "stateId": "emergency_outcome",
           "value": "major"
         },
         {
@@ -350,7 +350,7 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "emergencyOutcome",
+          "stateId": "emergency_outcome",
           "value": "fatal"
         },
         {
@@ -367,7 +367,7 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "finalOutcome",
+          "stateId": "final_outcome",
           "value": "safe"
         },
         {
@@ -384,7 +384,7 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "finalOutcome",
+          "stateId": "final_outcome",
           "value": "recovery"
         },
         {
@@ -401,7 +401,7 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "finalOutcome",
+          "stateId": "final_outcome",
           "value": "contained"
         },
         {
@@ -418,7 +418,7 @@
       "mutations": [
         {
           "op": "SET",
-          "stateId": "finalOutcome",
+          "stateId": "final_outcome",
           "value": "major"
         },
         {
@@ -739,7 +739,7 @@
       "endingId": "critical_failure",
       "condition": {
         "op": "ENUM",
-        "stateId": "emergencyOutcome",
+        "stateId": "emergency_outcome",
         "equals": "fatal"
       }
     },
@@ -761,7 +761,7 @@
       "endingId": "safe_completion",
       "condition": {
         "op": "ENUM",
-        "stateId": "finalOutcome",
+        "stateId": "final_outcome",
         "equals": "safe"
       }
     },
@@ -773,7 +773,7 @@
       "endingId": "controlled_recovery",
       "condition": {
         "op": "ENUM",
-        "stateId": "finalOutcome",
+        "stateId": "final_outcome",
         "equals": "recovery"
       }
     },
@@ -785,7 +785,7 @@
       "endingId": "incident_contained",
       "condition": {
         "op": "ENUM",
-        "stateId": "finalOutcome",
+        "stateId": "final_outcome",
         "equals": "contained"
       }
     },
@@ -797,7 +797,7 @@
       "endingId": "major_incident",
       "condition": {
         "op": "ENUM",
-        "stateId": "finalOutcome",
+        "stateId": "final_outcome",
         "equals": "major"
       }
     }
