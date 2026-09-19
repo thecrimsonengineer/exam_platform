@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/auth/learner_local_identity.dart';
+import '../../../services/performance/firestore_read_audit.dart';
 import '../models/exam_study_plan.dart';
 
 abstract interface class ExamStudyPlanRemoteStore {
@@ -29,6 +30,12 @@ class FirebaseExamStudyPlanRemoteStore implements ExamStudyPlanRemoteStore {
   @override
   Future<List<ExamStudyPlan>> loadPlans(String userId) async {
     final snapshot = await _collection(userId).get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'readiness.examPlans.loadPlans',
+      collection: 'users/$userId/examPlans',
+      scope: 'all',
+      returnedDocuments: snapshot.docs.length,
+    );
     final plans = <ExamStudyPlan>[];
 
     for (final document in snapshot.docs) {
@@ -64,6 +71,12 @@ class FirebaseExamStudyPlanRemoteStore implements ExamStudyPlanRemoteStore {
     final snapshot = await _collection(
       userId,
     ).where('active', isEqualTo: true).get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'readiness.examPlans.loadActiveForDeactivation',
+      collection: 'users/$userId/examPlans',
+      scope: 'active=true',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     if (snapshot.docs.isEmpty) {
       return;
