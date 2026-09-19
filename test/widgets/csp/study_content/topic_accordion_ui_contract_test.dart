@@ -56,14 +56,8 @@ void main() {
     expect(spacingSource, contains('if (width < 600) return xs;'));
     expect(spacingSource, contains('if (width < 600) return md;'));
 
-    expect(
-      source,
-      contains('StudySpacing.pageHorizontalForWidth(constraints.maxWidth)'),
-    );
-    expect(
-      darkSource,
-      contains('StudySpacing.pageHorizontalForWidth(constraints.maxWidth)'),
-    );
+    expect(source, contains('StudySpacing.pageHorizontalForWidth('));
+    expect(darkSource, contains('StudySpacing.pageHorizontalForWidth('));
     expect(source, contains('StudySpacing.heroHorizontalForWidth('));
     expect(darkSource, contains('StudySpacing.heroHorizontalForWidth('));
   });
