@@ -7,24 +7,19 @@ void main() {
   group('FR5 expected plan', () {
     test('accepts frozen ready FR4 evidence', () {
       final fr4 = _fr4Plan();
-      final expected = Fr5ExpectedPlan.fromFr4Evidence(
-        _fr4Evidence(fr4),
-      );
+      final expected = Fr5ExpectedPlan.fromFr4Evidence(_fr4Evidence(fr4));
 
       expect(expected.rows, hasLength(2));
-      expect(expected.rows.map((row) => row.targetTable), containsAll(
-        <String>['content_versions', 'questions'],
-      ));
+      expect(
+        expected.rows.map((row) => row.targetTable),
+        containsAll(<String>['content_versions', 'questions']),
+      );
     });
 
     test('rejects FR4 evidence that is not ready', () {
-      final evidence = _fr4Evidence(_fr4Plan())
-        ..['readyToApply'] = false;
+      final evidence = _fr4Evidence(_fr4Plan())..['readyToApply'] = false;
 
-      expect(
-        () => Fr5ExpectedPlan.fromFr4Evidence(evidence),
-        throwsStateError,
-      );
+      expect(() => Fr5ExpectedPlan.fromFr4Evidence(evidence), throwsStateError);
     });
 
     test('rejects tampered target checksum', () {
@@ -34,10 +29,7 @@ void main() {
         ..['targetChecksumSha256'] = '0' * 64;
       rows[0] = first;
 
-      expect(
-        () => Fr5ExpectedPlan.fromFr4Evidence(evidence),
-        throwsStateError,
-      );
+      expect(() => Fr5ExpectedPlan.fromFr4Evidence(evidence), throwsStateError);
     });
   });
 
@@ -91,10 +83,7 @@ void main() {
         Fr5TargetRow(table: first.targetTable, row: first.row),
         const Fr5TargetRow(
           table: 'questions',
-          row: <String, dynamic>{
-            'question_id': 999999,
-            'version': 1,
-          },
+          row: <String, dynamic>{'question_id': 999999, 'version': 1},
         ),
       ];
 
@@ -156,12 +145,7 @@ void main() {
         _fr4Evidence(_fr4Plan()),
       );
       final targetRows = expected.rows
-          .map(
-            (row) => Fr5TargetRow(
-              table: row.targetTable,
-              row: row.row,
-            ),
-          )
+          .map((row) => Fr5TargetRow(table: row.targetTable, row: row.row))
           .toList(growable: false);
 
       final badLedger = expected.rows
@@ -209,15 +193,13 @@ void main() {
       final blocks =
           (subtopics.first as Map<String, dynamic>)['blocks'] as List<dynamic>;
       final data =
-          (blocks.first as Map<String, dynamic>)['data'] as Map<String, dynamic>;
+          (blocks.first as Map<String, dynamic>)['data']
+              as Map<String, dynamic>;
 
-      expect(
-        data['rows'],
-        <dynamic>[
-          <String>['Aspect', 'Impact'],
-          <String>['Fuel spill', 'Soil contamination'],
-        ],
-      );
+      expect(data['rows'], <dynamic>[
+        <String>['Aspect', 'Impact'],
+        <String>['Fuel spill', 'Soil contamination'],
+      ]);
     });
   });
 }
@@ -253,10 +235,7 @@ Fr4MigrationPlan _fr4Plan() {
                         'csp11FirestoreNestedListV1': true,
                         'items': <String, dynamic>{
                           '0': <String>['Aspect', 'Impact'],
-                          '1': <String>[
-                            'Fuel spill',
-                            'Soil contamination',
-                          ],
+                          '1': <String>['Fuel spill', 'Soil contamination'],
                         },
                       },
                     },
