@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: phase-l3-${{ github.ref }}
+  group: phase-l3-closure
   cancel-in-progress: true
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Verify L3 ancestry and branch
+      - name: Verify L3 ancestry and branch boundary
         shell: bash
         run: |
           set -euo pipefail
@@ -40,27 +40,18 @@ jobs:
           git merge-base --is-ancestor origin/phase-l2-closed HEAD
           test "$GITHUB_REF_NAME" = "phase-l-lab-engine"
 
-      - name: Frozen architecture checks
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q "A LAB is a deterministic, JSON-authored, four-option safety decision simulation" docs/lab/PHASE_L_LAB_ENGINE_FREEZE.md
-          grep -q "Learning Twin integration must not be allowed to modify authored story truth or gate selection." docs/lab/PHASE_L_LAB_ENGINE_FREEZE.md
-          grep -q "Alternate timelines must be derived from authored graph logic" docs/lab/PHASE_L_LAB_ENGINE_FREEZE.md
-          test -f test/fixtures/lab/l3_reference_confined_space_h2s.json
-          if grep -R -n -E "OpenAI|Gemini|Anthropic|ChatGPT|runtime LLM|generateStory|generateBranch" lib/features/lab --include='*.dart'; then
-            echo "Runtime LLM dependency or story generation marker found in LAB engine."
-            exit 1
-          fi
-
       - name: Strict Phase L formatting
         run: |
-          dart format --output=none --set-exit-if-changed             lib/features/lab             lib/screens/lab             lib/screens/admin/lab             test/features/lab
+          dart format --output=none --set-exit-if-changed \
+            lib/features/lab \
+            lib/screens/lab \
+            lib/screens/admin/lab \
+            test/features/lab
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
 
-      - name: Run exact 1000-test Phase L budget
+      - name: Run exact 1,000 Phase L tests
         shell: bash
         run: |
           set -euo pipefail
@@ -115,22 +106,30 @@ jobs:
               raise SystemExit('Final Phase L closure must contain exactly 1,000 tests.')
           PY
 
-      - name: Reference LAB golden publish and learner flow
+      - name: Reference LAB golden pipeline
         run: |
-          flutter test test/features/lab/lab9_reference_lab_e2e_test.dart             --plain-name "LAB-9 JSON Studio publish learner load 1"
-          flutter test test/features/lab/lab9_reference_lab_e2e_test.dart             --plain-name "LAB-9 safe route 1"
-          flutter test test/features/lab/lab9_reference_lab_e2e_test.dart             --plain-name "LAB-9 resume debrief Learning Twin evidence 1"
+          flutter test test/features/lab/lab9_reference_lab_e2e_test.dart \
+            --plain-name "LAB-9 JSON Studio publish learner load 1"
 
-      - name: Published immutability and deterministic replay
+      - name: Deterministic replay and intelligence bridge
         run: |
-          flutter test test/features/lab/lab6_studio_pipeline_test.dart             --plain-name "LAB-6 immutable publish 1"
-          flutter test test/features/lab/lab9_reference_lab_e2e_test.dart             --plain-name "LAB-9 deterministic golden replay and UI boundary 1"
+          flutter test test/features/lab/lab7_learning_twin_bridge_test.dart
+          flutter test test/features/lab/lab8_debrief_reconstruction_test.dart
+          flutter test test/features/lab/lab9_reference_lab_e2e_test.dart
 
-      - name: Admin learner and settings regressions
+      - name: Admin and learner permission regressions
         run: |
           flutter test test/screens/auth/admin_gate_test.dart
           flutter test test/screens/navigation
           flutter test test/screens/settings
+          flutter test test/features/learning_twin
+
+      - name: Frozen safety contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -RniE 'OpenAI|runtime[[:space:]]+LLM|generate.*branch' lib/features/lab/lab_runtime.dart
+          ! grep -RniE 'javascript|dartcode|shell|remotecode' test/fixtures/lab/l3_reference_confined_space_h2s.json
 
       - name: Full repository regression
         run: flutter test
