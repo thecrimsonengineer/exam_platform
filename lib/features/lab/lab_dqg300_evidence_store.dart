@@ -65,9 +65,7 @@ class LabDqg300EvidenceCodec {
         return LabDqg300DecisionEvidence(
           nodeId: map['nodeId']?.toString() ?? '',
           decisionSignature: map['decisionSignature']?.toString() ?? '',
-          evidence: _evidenceFromJson(
-            rawEvidence.cast<String, Object?>(),
-          ),
+          evidence: _evidenceFromJson(rawEvidence.cast<String, Object?>()),
         );
       }),
     );
@@ -121,8 +119,9 @@ class LabDqg300EvidenceCodec {
       'sophisticationParitySatisfied': value.sophisticationParitySatisfied,
       'advancedDistractorPresentWhenApplicable':
           value.advancedDistractorPresentWhenApplicable,
-      'optionSurfaceMetrics':
-          value.optionSurfaceMetrics.map(_surfaceToJson).toList(),
+      'optionSurfaceMetrics': value.optionSurfaceMetrics
+          .map(_surfaceToJson)
+          .toList(),
       'noMaterialLengthCue': value.noMaterialLengthCue,
       'ruleEvidence': <String, Object?>{
         for (final entry in value.ruleEvidence.entries)
@@ -139,8 +138,7 @@ class LabDqg300EvidenceCodec {
 
     return QuestionQualityEvidence(
       difficultyLevel: _string(json, 'difficultyLevel'),
-      distractors:
-          distractors.map(_distractorFromJson).toList(growable: false),
+      distractors: distractors.map(_distractorFromJson).toList(growable: false),
       decisiveScenarioFacts: _strings(json['decisiveScenarioFacts']),
       materialCriteria: _strings(json['materialCriteria']),
       keySatisfiedCriteria: _strings(json['keySatisfiedCriteria']),
@@ -156,38 +154,57 @@ class LabDqg300EvidenceCodec {
       unresolvedBlockCount: _int(json, 'unresolvedBlockCount'),
       unresolvedFailCount: _int(json, 'unresolvedFailCount'),
       unresolvedWarningCount: _int(json, 'unresolvedWarningCount'),
-      keyRequiresNoUnstatedAssumption:
-          _bool(json, 'keyRequiresNoUnstatedAssumption'),
+      keyRequiresNoUnstatedAssumption: _bool(
+        json,
+        'keyRequiresNoUnstatedAssumption',
+      ),
       assumptionsDocumented: _bool(json, 'assumptionsDocumented'),
       keyAssumptionsSupported: _bool(json, 'keyAssumptionsSupported'),
-      noEquivalenceFromUnstatedAssumption:
-          _bool(json, 'noEquivalenceFromUnstatedAssumption'),
+      noEquivalenceFromUnstatedAssumption: _bool(
+        json,
+        'noEquivalenceFromUnstatedAssumption',
+      ),
       assumptions: assumptions.map(_assumptionFromJson).toList(growable: false),
       authoritativeSources: _strings(json['authoritativeSources']),
       sourceAuthorityVerified: _bool(json, 'sourceAuthorityVerified'),
       sourceSupportsKey: _bool(json, 'sourceSupportsKey'),
-      noUnsupportedMicroscopicDistinction:
-          _bool(json, 'noUnsupportedMicroscopicDistinction'),
+      noUnsupportedMicroscopicDistinction: _bool(
+        json,
+        'noUnsupportedMicroscopicDistinction',
+      ),
       ambiguityDetected: _bool(json, 'ambiguityDetected'),
-      semanticDuplicateOptionsDetected:
-          _bool(json, 'semanticDuplicateOptionsDetected'),
+      semanticDuplicateOptionsDetected: _bool(
+        json,
+        'semanticDuplicateOptionsDetected',
+      ),
       answerPositionCueDetected: _bool(json, 'answerPositionCueDetected'),
       answerKeyVerified: _bool(json, 'answerKeyVerified'),
       stemSufficient: _bool(json, 'stemSufficient'),
       testsIntendedCompetency: _bool(json, 'testsIntendedCompetency'),
       numericQuestion: _bool(json, 'numericQuestion'),
-      wrongLevelCorrectnessApplicable:
-          _bool(json, 'wrongLevelCorrectnessApplicable'),
-      wrongLevelDistinctionDocumented:
-          _bool(json, 'wrongLevelDistinctionDocumented'),
-      sophisticationParityApplicable:
-          _bool(json, 'sophisticationParityApplicable'),
-      sophisticationParitySatisfied:
-          _bool(json, 'sophisticationParitySatisfied'),
-      advancedDistractorPresentWhenApplicable:
-          _bool(json, 'advancedDistractorPresentWhenApplicable'),
-      optionSurfaceMetrics:
-          surface.map(_surfaceFromJson).toList(growable: false),
+      wrongLevelCorrectnessApplicable: _bool(
+        json,
+        'wrongLevelCorrectnessApplicable',
+      ),
+      wrongLevelDistinctionDocumented: _bool(
+        json,
+        'wrongLevelDistinctionDocumented',
+      ),
+      sophisticationParityApplicable: _bool(
+        json,
+        'sophisticationParityApplicable',
+      ),
+      sophisticationParitySatisfied: _bool(
+        json,
+        'sophisticationParitySatisfied',
+      ),
+      advancedDistractorPresentWhenApplicable: _bool(
+        json,
+        'advancedDistractorPresentWhenApplicable',
+      ),
+      optionSurfaceMetrics: surface
+          .map(_surfaceFromJson)
+          .toList(growable: false),
       noMaterialLengthCue: _bool(json, 'noMaterialLengthCue'),
       ruleEvidence: <String, DqgEvidenceRecord>{
         for (final entry in rawRuleEvidence.entries)
@@ -196,116 +213,129 @@ class LabDqg300EvidenceCodec {
     );
   }
 
-  Map<String, Object?> _distractorToJson(DistractorQualityEvidence value) =>
-      <String, Object?>{
-        'optionIndex': value.optionIndex,
-        'role': value.role,
-        'difficultyLevel': value.difficultyLevel,
-        'plausibilityScore': value.plausibilityScore,
-        'truthComponentScore': value.truthComponentScore,
-        'confusabilityScore': value.confusabilityScore,
-        'family': value.family,
-        'familyJustification': value.familyJustification,
-        'misconceptionFingerprint': value.misconceptionFingerprint,
-        'targetedMisconception': value.targetedMisconception,
-        'whyTempting': value.whyTempting,
-        'fatalFlaw': value.fatalFlaw,
-        'scenarioEvidence': value.scenarioEvidence,
-        'scenarioAnchorsValid': value.scenarioAnchorsValid,
-        'technicalTruth': value.technicalTruth,
-        'keyDifference': value.keyDifference,
-        'counterfactualToBecomeCorrect': value.counterfactualToBecomeCorrect,
-        'sameTechnicalUniverse': value.sameTechnicalUniverse,
-        'sameProfessionalLevel': value.sameProfessionalLevel,
-        'substantiallyTechnicallyCorrect':
-            value.substantiallyTechnicallyCorrect,
-        'professionalTerminologyValid': value.professionalTerminologyValid,
-        'addressesActualDecisionOrHazard':
-            value.addressesActualDecisionOrHazard,
-        'credibleInProfessionalPractice': value.credibleInProfessionalPractice,
-        'singleFatalFlaw': value.singleFatalFlaw,
-        'multipleUnrelatedDefectsDetected':
-            value.multipleUnrelatedDefectsDetected,
-        'sophisticatedReasoningPath': value.sophisticatedReasoningPath,
-        'counterfactualMinimalAndPlausible':
-            value.counterfactualMinimalAndPlausible,
-        'grammarParallel': value.grammarParallel,
-        'specificityAndDetailParallel': value.specificityAndDetailParallel,
-        'lengthAndClauseParallel': value.lengthAndClauseParallel,
-        'terminologyUnitsPrecisionParallel':
-            value.terminologyUnitsPrecisionParallel,
-        'conditionalWordingParallel': value.conditionalWordingParallel,
-        'linguisticCueDetected': value.linguisticCueDetected,
-        'keywordLeakageDetected': value.keywordLeakageDetected,
-        'absoluteLanguageShortcutDetected':
-            value.absoluteLanguageShortcutDetected,
-        'nonTechnicalEliminationShortcutDetected':
-            value.nonTechnicalEliminationShortcutDetected,
-        'sourceSupportsRejectionDistinction':
-            value.sourceSupportsRejectionDistinction,
-        'smeRejectionProof': value.smeRejectionProof,
-        'distractorCalculationPath': value.distractorCalculationPath,
-        'calculationConsistent': value.calculationConsistent,
-      };
+  Map<String, Object?> _distractorToJson(
+    DistractorQualityEvidence value,
+  ) => <String, Object?>{
+    'optionIndex': value.optionIndex,
+    'role': value.role,
+    'difficultyLevel': value.difficultyLevel,
+    'plausibilityScore': value.plausibilityScore,
+    'truthComponentScore': value.truthComponentScore,
+    'confusabilityScore': value.confusabilityScore,
+    'family': value.family,
+    'familyJustification': value.familyJustification,
+    'misconceptionFingerprint': value.misconceptionFingerprint,
+    'targetedMisconception': value.targetedMisconception,
+    'whyTempting': value.whyTempting,
+    'fatalFlaw': value.fatalFlaw,
+    'scenarioEvidence': value.scenarioEvidence,
+    'scenarioAnchorsValid': value.scenarioAnchorsValid,
+    'technicalTruth': value.technicalTruth,
+    'keyDifference': value.keyDifference,
+    'counterfactualToBecomeCorrect': value.counterfactualToBecomeCorrect,
+    'sameTechnicalUniverse': value.sameTechnicalUniverse,
+    'sameProfessionalLevel': value.sameProfessionalLevel,
+    'substantiallyTechnicallyCorrect': value.substantiallyTechnicallyCorrect,
+    'professionalTerminologyValid': value.professionalTerminologyValid,
+    'addressesActualDecisionOrHazard': value.addressesActualDecisionOrHazard,
+    'credibleInProfessionalPractice': value.credibleInProfessionalPractice,
+    'singleFatalFlaw': value.singleFatalFlaw,
+    'multipleUnrelatedDefectsDetected': value.multipleUnrelatedDefectsDetected,
+    'sophisticatedReasoningPath': value.sophisticatedReasoningPath,
+    'counterfactualMinimalAndPlausible':
+        value.counterfactualMinimalAndPlausible,
+    'grammarParallel': value.grammarParallel,
+    'specificityAndDetailParallel': value.specificityAndDetailParallel,
+    'lengthAndClauseParallel': value.lengthAndClauseParallel,
+    'terminologyUnitsPrecisionParallel':
+        value.terminologyUnitsPrecisionParallel,
+    'conditionalWordingParallel': value.conditionalWordingParallel,
+    'linguisticCueDetected': value.linguisticCueDetected,
+    'keywordLeakageDetected': value.keywordLeakageDetected,
+    'absoluteLanguageShortcutDetected': value.absoluteLanguageShortcutDetected,
+    'nonTechnicalEliminationShortcutDetected':
+        value.nonTechnicalEliminationShortcutDetected,
+    'sourceSupportsRejectionDistinction':
+        value.sourceSupportsRejectionDistinction,
+    'smeRejectionProof': value.smeRejectionProof,
+    'distractorCalculationPath': value.distractorCalculationPath,
+    'calculationConsistent': value.calculationConsistent,
+  };
 
-  DistractorQualityEvidence _distractorFromJson(Map<String, Object?> json) =>
-      DistractorQualityEvidence(
-        optionIndex: _int(json, 'optionIndex'),
-        role: _string(json, 'role'),
-        difficultyLevel: _string(json, 'difficultyLevel'),
-        plausibilityScore: _int(json, 'plausibilityScore'),
-        truthComponentScore: _int(json, 'truthComponentScore'),
-        confusabilityScore: _int(json, 'confusabilityScore'),
-        family: _string(json, 'family'),
-        familyJustification: _string(json, 'familyJustification'),
-        misconceptionFingerprint: _string(json, 'misconceptionFingerprint'),
-        targetedMisconception: _string(json, 'targetedMisconception'),
-        whyTempting: _string(json, 'whyTempting'),
-        fatalFlaw: _string(json, 'fatalFlaw'),
-        scenarioEvidence: _strings(json['scenarioEvidence']),
-        scenarioAnchorsValid: _bool(json, 'scenarioAnchorsValid'),
-        technicalTruth: _string(json, 'technicalTruth'),
-        keyDifference: _string(json, 'keyDifference'),
-        counterfactualToBecomeCorrect:
-            _string(json, 'counterfactualToBecomeCorrect'),
-        sameTechnicalUniverse: _bool(json, 'sameTechnicalUniverse'),
-        sameProfessionalLevel: _bool(json, 'sameProfessionalLevel'),
-        substantiallyTechnicallyCorrect:
-            _bool(json, 'substantiallyTechnicallyCorrect'),
-        professionalTerminologyValid:
-            _bool(json, 'professionalTerminologyValid'),
-        addressesActualDecisionOrHazard:
-            _bool(json, 'addressesActualDecisionOrHazard'),
-        credibleInProfessionalPractice:
-            _bool(json, 'credibleInProfessionalPractice'),
-        singleFatalFlaw: _bool(json, 'singleFatalFlaw'),
-        multipleUnrelatedDefectsDetected:
-            _bool(json, 'multipleUnrelatedDefectsDetected'),
-        sophisticatedReasoningPath:
-            _bool(json, 'sophisticatedReasoningPath'),
-        counterfactualMinimalAndPlausible:
-            _bool(json, 'counterfactualMinimalAndPlausible'),
-        grammarParallel: _bool(json, 'grammarParallel'),
-        specificityAndDetailParallel:
-            _bool(json, 'specificityAndDetailParallel'),
-        lengthAndClauseParallel: _bool(json, 'lengthAndClauseParallel'),
-        terminologyUnitsPrecisionParallel:
-            _bool(json, 'terminologyUnitsPrecisionParallel'),
-        conditionalWordingParallel:
-            _bool(json, 'conditionalWordingParallel'),
-        linguisticCueDetected: _bool(json, 'linguisticCueDetected'),
-        keywordLeakageDetected: _bool(json, 'keywordLeakageDetected'),
-        absoluteLanguageShortcutDetected:
-            _bool(json, 'absoluteLanguageShortcutDetected'),
-        nonTechnicalEliminationShortcutDetected:
-            _bool(json, 'nonTechnicalEliminationShortcutDetected'),
-        sourceSupportsRejectionDistinction:
-            _bool(json, 'sourceSupportsRejectionDistinction'),
-        smeRejectionProof: _string(json, 'smeRejectionProof'),
-        distractorCalculationPath:
-            _string(json, 'distractorCalculationPath'),
-        calculationConsistent: _bool(json, 'calculationConsistent'),
-      );
+  DistractorQualityEvidence _distractorFromJson(
+    Map<String, Object?> json,
+  ) => DistractorQualityEvidence(
+    optionIndex: _int(json, 'optionIndex'),
+    role: _string(json, 'role'),
+    difficultyLevel: _string(json, 'difficultyLevel'),
+    plausibilityScore: _int(json, 'plausibilityScore'),
+    truthComponentScore: _int(json, 'truthComponentScore'),
+    confusabilityScore: _int(json, 'confusabilityScore'),
+    family: _string(json, 'family'),
+    familyJustification: _string(json, 'familyJustification'),
+    misconceptionFingerprint: _string(json, 'misconceptionFingerprint'),
+    targetedMisconception: _string(json, 'targetedMisconception'),
+    whyTempting: _string(json, 'whyTempting'),
+    fatalFlaw: _string(json, 'fatalFlaw'),
+    scenarioEvidence: _strings(json['scenarioEvidence']),
+    scenarioAnchorsValid: _bool(json, 'scenarioAnchorsValid'),
+    technicalTruth: _string(json, 'technicalTruth'),
+    keyDifference: _string(json, 'keyDifference'),
+    counterfactualToBecomeCorrect: _string(
+      json,
+      'counterfactualToBecomeCorrect',
+    ),
+    sameTechnicalUniverse: _bool(json, 'sameTechnicalUniverse'),
+    sameProfessionalLevel: _bool(json, 'sameProfessionalLevel'),
+    substantiallyTechnicallyCorrect: _bool(
+      json,
+      'substantiallyTechnicallyCorrect',
+    ),
+    professionalTerminologyValid: _bool(json, 'professionalTerminologyValid'),
+    addressesActualDecisionOrHazard: _bool(
+      json,
+      'addressesActualDecisionOrHazard',
+    ),
+    credibleInProfessionalPractice: _bool(
+      json,
+      'credibleInProfessionalPractice',
+    ),
+    singleFatalFlaw: _bool(json, 'singleFatalFlaw'),
+    multipleUnrelatedDefectsDetected: _bool(
+      json,
+      'multipleUnrelatedDefectsDetected',
+    ),
+    sophisticatedReasoningPath: _bool(json, 'sophisticatedReasoningPath'),
+    counterfactualMinimalAndPlausible: _bool(
+      json,
+      'counterfactualMinimalAndPlausible',
+    ),
+    grammarParallel: _bool(json, 'grammarParallel'),
+    specificityAndDetailParallel: _bool(json, 'specificityAndDetailParallel'),
+    lengthAndClauseParallel: _bool(json, 'lengthAndClauseParallel'),
+    terminologyUnitsPrecisionParallel: _bool(
+      json,
+      'terminologyUnitsPrecisionParallel',
+    ),
+    conditionalWordingParallel: _bool(json, 'conditionalWordingParallel'),
+    linguisticCueDetected: _bool(json, 'linguisticCueDetected'),
+    keywordLeakageDetected: _bool(json, 'keywordLeakageDetected'),
+    absoluteLanguageShortcutDetected: _bool(
+      json,
+      'absoluteLanguageShortcutDetected',
+    ),
+    nonTechnicalEliminationShortcutDetected: _bool(
+      json,
+      'nonTechnicalEliminationShortcutDetected',
+    ),
+    sourceSupportsRejectionDistinction: _bool(
+      json,
+      'sourceSupportsRejectionDistinction',
+    ),
+    smeRejectionProof: _string(json, 'smeRejectionProof'),
+    distractorCalculationPath: _string(json, 'distractorCalculationPath'),
+    calculationConsistent: _bool(json, 'calculationConsistent'),
+  );
 
   Map<String, Object?> _assumptionToJson(AssumptionEvidence value) =>
       <String, Object?>{
@@ -419,8 +449,7 @@ class LabDqg300EvidenceCodec {
   Map<String, bool> _stringBoolMap(Object? value) {
     final map = _object(value);
     return <String, bool>{
-      for (final entry in map.entries)
-        entry.key: entry.value == true,
+      for (final entry in map.entries) entry.key: entry.value == true,
     };
   }
 }
@@ -448,10 +477,7 @@ class InMemoryLabDqg300EvidenceRepository
   }
 
   @override
-  Future<LabDqg300EvidenceBundle?> load(
-    String labId,
-    String versionId,
-  ) async {
+  Future<LabDqg300EvidenceBundle?> load(String labId, String versionId) async {
     final source = _records[_key(labId, versionId)];
     return source == null ? null : codec.decode(source);
   }

@@ -84,10 +84,7 @@ class LabExhaustiveRouteStep {
 }
 
 class LabExhaustiveRouteTrace {
-  const LabExhaustiveRouteTrace({
-    required this.steps,
-    required this.endingId,
-  });
+  const LabExhaustiveRouteTrace({required this.steps, required this.endingId});
 
   final List<LabExhaustiveRouteStep> steps;
   final String endingId;
@@ -144,16 +141,12 @@ class LabExhaustiveRouteReport {
     for (final step in routes.expand((route) => route.steps)) {
       final consequenceId = step.consequenceId;
       if (consequenceId == null) continue;
-      counts.update(
-        consequenceId,
-        (value) => value + 1,
-        ifAbsent: () => 1,
-      );
+      counts.update(consequenceId, (value) => value + 1, ifAbsent: () => 1);
     }
     final keys = counts.keys.toList()..sort();
-    return Map<String, int>.unmodifiable(
-      <String, int>{for (final key in keys) key: counts[key]!},
-    );
+    return Map<String, int>.unmodifiable(<String, int>{
+      for (final key in keys) key: counts[key]!,
+    });
   }
 
   Map<String, int> get gateWinCountById {
@@ -162,9 +155,9 @@ class LabExhaustiveRouteReport {
       counts.update(step.gateId, (value) => value + 1, ifAbsent: () => 1);
     }
     final keys = counts.keys.toList()..sort();
-    return Map<String, int>.unmodifiable(
-      <String, int>{for (final key in keys) key: counts[key]!},
-    );
+    return Map<String, int>.unmodifiable(<String, int>{
+      for (final key in keys) key: counts[key]!,
+    });
   }
 
   Map<String, int> get gateWinCountByType {
@@ -174,9 +167,9 @@ class LabExhaustiveRouteReport {
       counts.update(key, (value) => value + 1, ifAbsent: () => 1);
     }
     final keys = counts.keys.toList()..sort();
-    return Map<String, int>.unmodifiable(
-      <String, int>{for (final key in keys) key: counts[key]!},
-    );
+    return Map<String, int>.unmodifiable(<String, int>{
+      for (final key in keys) key: counts[key]!,
+    });
   }
 
   Map<String, int> get routeCountByEnding {
@@ -185,16 +178,17 @@ class LabExhaustiveRouteReport {
       counts.update(route.endingId, (value) => value + 1, ifAbsent: () => 1);
     }
     final keys = counts.keys.toList()..sort();
-    return Map<String, int>.unmodifiable(
-      <String, int>{for (final key in keys) key: counts[key]!},
-    );
+    return Map<String, int>.unmodifiable(<String, int>{
+      for (final key in keys) key: counts[key]!,
+    });
   }
 
   Map<String, Object?> toEvidenceJson() {
     final options = optionCoverageKeys.toList()..sort();
     final consequences = consequenceCoverageIds.toList()..sort();
     final gates = gateCoverageIds.toList()..sort();
-    final gateTypes = gateTypeCoverage.map((type) => type.name).toList()..sort();
+    final gateTypes = gateTypeCoverage.map((type) => type.name).toList()
+      ..sort();
     final endings = endingIds.toList()..sort();
     final missingOptions = uncoveredOptionKeys.toList()..sort();
     final missingConsequences = uncoveredConsequenceIds.toList()..sort();
@@ -262,11 +256,7 @@ class LabExhaustiveRouteValidator {
       );
     }
 
-    final first = _enumerate(
-      package,
-      maxRoutes: maxRoutes,
-      maxDepth: maxDepth,
-    );
+    final first = _enumerate(package, maxRoutes: maxRoutes, maxDepth: maxDepth);
     final second = _enumerate(
       package,
       maxRoutes: maxRoutes,
@@ -289,10 +279,12 @@ class LabExhaustiveRouteValidator {
         .map((ending) => ending['id']?.toString() ?? '')
         .where((id) => id.isNotEmpty)
         .toSet();
-    final uncoveredOptions =
-        expectedOptions.difference(first.optionCoverageKeys);
-    final uncoveredConsequences =
-        expectedConsequences.difference(first.consequenceCoverageIds);
+    final uncoveredOptions = expectedOptions.difference(
+      first.optionCoverageKeys,
+    );
+    final uncoveredConsequences = expectedConsequences.difference(
+      first.consequenceCoverageIds,
+    );
     final uncoveredGates = expectedGates.difference(first.gateCoverageIds);
     final uncoveredEndings = expectedEndings.difference(first.endingIds);
     final invariantsHold = _routesHoldInvariants(
@@ -303,11 +295,11 @@ class LabExhaustiveRouteValidator {
     return LabExhaustiveRouteReport(
       routes: List<LabExhaustiveRouteTrace>.unmodifiable(first.routes),
       optionCoverageKeys: Set<String>.unmodifiable(first.optionCoverageKeys),
-      consequenceCoverageIds:
-          Set<String>.unmodifiable(first.consequenceCoverageIds),
+      consequenceCoverageIds: Set<String>.unmodifiable(
+        first.consequenceCoverageIds,
+      ),
       gateCoverageIds: Set<String>.unmodifiable(first.gateCoverageIds),
-      gateTypeCoverage:
-          Set<LabGateType>.unmodifiable(first.gateTypeCoverage),
+      gateTypeCoverage: Set<LabGateType>.unmodifiable(first.gateTypeCoverage),
       endingIds: Set<String>.unmodifiable(first.endingIds),
       uncoveredOptionKeys: Set<String>.unmodifiable(uncoveredOptions),
       uncoveredConsequenceIds: Set<String>.unmodifiable(uncoveredConsequences),
@@ -329,10 +321,7 @@ class LabExhaustiveRouteValidator {
             second.consequenceCoverageIds,
           ) &&
           _setEquals(first.gateCoverageIds, second.gateCoverageIds) &&
-          _gateTypeSetEquals(
-            first.gateTypeCoverage,
-            second.gateTypeCoverage,
-          ) &&
+          _gateTypeSetEquals(first.gateTypeCoverage, second.gateTypeCoverage) &&
           _setEquals(first.endingIds, second.endingIds) &&
           _listEquals(first.issues, second.issues) &&
           invariantsHold ==
@@ -541,7 +530,9 @@ class LabExhaustiveRouteValidator {
       } on LabGateAmbiguityException catch (error) {
         issues.add(error.message);
       } catch (error) {
-        issues.add('Scene route failure at ' + node.id + ': ' + error.toString());
+        issues.add(
+          'Scene route failure at ' + node.id + ': ' + error.toString(),
+        );
       }
     }
 
@@ -568,9 +559,7 @@ class LabExhaustiveRouteValidator {
     final gateTypeCoverage = <LabGateType>{
       for (final step in completedSteps) step.gateType,
     };
-    final endingIds = <String>{
-      for (final route in routes) route.endingId,
-    };
+    final endingIds = <String>{for (final route in routes) route.endingId};
 
     final routeFingerprints = routes.map((route) => route.fingerprint).toList()
       ..sort();

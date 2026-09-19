@@ -172,41 +172,44 @@ void main() {
     expect(report.isPublishable, isFalse);
   });
 
-  test('automated publish blocks an authored Story Gate with no winning route', () {
-    final decoded = jsonDecode(_source()) as Map;
-    final root = decoded.cast<String, Object?>();
-    final rawGates = root['gates'] as List;
-    rawGates.add(<String, Object?>{
-      'id': 'unreachable_publish_gate',
-      'type': 'ROUTE',
-      'priority': 50,
-      'fromNodeId': 'decision_one',
-      'targetNodeId': 'decision_two',
-      'condition': <String, Object?>{
-        'op': 'NUMERIC',
-        'stateId': 'risk',
-        'operator': 'GT',
-        'value': 99,
-      },
-    });
-    final package = LabPackage.fromJson(root);
+  test(
+    'automated publish blocks an authored Story Gate with no winning route',
+    () {
+      final decoded = jsonDecode(_source()) as Map;
+      final root = decoded.cast<String, Object?>();
+      final rawGates = root['gates'] as List;
+      rawGates.add(<String, Object?>{
+        'id': 'unreachable_publish_gate',
+        'type': 'ROUTE',
+        'priority': 50,
+        'fromNodeId': 'decision_one',
+        'targetNodeId': 'decision_two',
+        'condition': <String, Object?>{
+          'op': 'NUMERIC',
+          'stateId': 'risk',
+          'operator': 'GT',
+          'value': 99,
+        },
+      });
+      final package = LabPackage.fromJson(root);
 
-    final report = const LabAutomatedPublishGate().evaluate(
-      package: package,
-      root: root,
-      dqg300Evidence: _passingEvidence(package),
-    );
+      final report = const LabAutomatedPublishGate().evaluate(
+        package: package,
+        root: root,
+        dqg300Evidence: _passingEvidence(package),
+      );
 
-    expect(report.structuralReport.isValid, isTrue);
-    expect(report.dqg300Report.isValid, isTrue);
-    expect(report.exhaustiveRouteReport.completeGateCoverage, isFalse);
-    expect(
-      report.exhaustiveRouteReport.uncoveredGateIds,
-      contains('unreachable_publish_gate'),
-    );
-    expect(report.exhaustiveRouteReport.isValid, isFalse);
-    expect(report.isPublishable, isFalse);
-  });
+      expect(report.structuralReport.isValid, isTrue);
+      expect(report.dqg300Report.isValid, isTrue);
+      expect(report.exhaustiveRouteReport.completeGateCoverage, isFalse);
+      expect(
+        report.exhaustiveRouteReport.uncoveredGateIds,
+        contains('unreachable_publish_gate'),
+      );
+      expect(report.exhaustiveRouteReport.isValid, isFalse);
+      expect(report.isPublishable, isFalse);
+    },
+  );
 
   test('automated publish blocks when exhaustive route proof is capped', () {
     final source = _source();

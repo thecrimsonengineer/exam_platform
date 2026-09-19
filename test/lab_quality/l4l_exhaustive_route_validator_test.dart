@@ -37,18 +37,18 @@ void main() {
   test('L4L freezes exact reference ending distribution', () {
     final report = const LabExhaustiveRouteValidator().run(_referenceV2());
 
+    expect(report.routeCountByEnding, <String, int>{
+      'safe_completion': 48,
+      'controlled_recovery': 48,
+      'incident_contained': 48,
+      'major_incident': 39,
+      'critical_failure': 13,
+    });
     expect(
-      report.routeCountByEnding,
-      <String, int>{
-        'safe_completion': 48,
-        'controlled_recovery': 48,
-        'incident_contained': 48,
-        'major_incident': 39,
-        'critical_failure': 13,
-      },
-    );
-    expect(
-      report.routeCountByEnding.values.fold<int>(0, (sum, count) => sum + count),
+      report.routeCountByEnding.values.fold<int>(
+        0,
+        (sum, count) => sum + count,
+      ),
       196,
     );
   });
@@ -71,15 +71,12 @@ void main() {
     expect(report.gateWinCountById['ending_contained'], 39);
     expect(report.gateWinCountById['ending_major'], 39);
 
-    expect(
-      report.gateWinCountByType,
-      <String, int>{
-        'route': 183,
-        'criticalEvent': 169,
-        'convergence': 300,
-        'completion': 196,
-      },
-    );
+    expect(report.gateWinCountByType, <String, int>{
+      'route': 183,
+      'criticalEvent': 169,
+      'convergence': 300,
+      'completion': 196,
+    });
     expect(
       report.gateWinCountByType.values.fold<int>(
         0,
@@ -185,9 +182,11 @@ void main() {
   });
 
   test('L4L fails closed on reachable equal-priority gate ambiguity', () {
-    final decoded = jsonDecode(
-      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
-    ) as Map;
+    final decoded =
+        jsonDecode(
+              File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+            )
+            as Map;
     final root = decoded.cast<String, Object?>();
     final rawGates = root['gates'] as List;
     final normal = rawGates
@@ -201,9 +200,7 @@ void main() {
 
     expect(report.isValid, isFalse);
     expect(
-      report.issues.any(
-        (issue) => issue.contains('equal-priority gates'),
-      ),
+      report.issues.any((issue) => issue.contains('equal-priority gates')),
       isTrue,
     );
     expect(report.uncoveredOptionKeys, contains('decision_one::o4'));
@@ -219,15 +216,13 @@ void main() {
     expect(report.isValid, isFalse);
   });
 
-
   test('L4L fingerprints consequence state, evidence and simulated time', () {
     final report = const LabExhaustiveRouteValidator().run(_referenceV2());
 
     final permitSafe = report.routes
         .expand((route) => route.steps)
         .firstWhere(
-          (step) =>
-              step.nodeId == 'permit_decision' && step.optionId == 'p1',
+          (step) => step.nodeId == 'permit_decision' && step.optionId == 'p1',
         );
 
     expect(permitSafe.stateBefore['permit_verified'], isFalse);
@@ -250,8 +245,7 @@ void main() {
     final critical = report.routes
         .expand((route) => route.steps)
         .firstWhere(
-          (step) =>
-              step.nodeId == 'simops_decision' && step.optionId == 's4',
+          (step) => step.nodeId == 'simops_decision' && step.optionId == 's4',
         );
 
     expect(critical.gateType, LabGateType.criticalEvent);
@@ -263,20 +257,23 @@ void main() {
     expect(critical.deterministicKey, contains('"delta"'));
   });
 
-  test('L4L consequence traces never lose unlocked evidence or move time backwards', () {
-    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+  test(
+    'L4L consequence traces never lose unlocked evidence or move time backwards',
+    () {
+      final report = const LabExhaustiveRouteValidator().run(_referenceV2());
 
-    expect(
-      report.routes.every(
-        (route) => route.steps.every(
-          (step) =>
-              step.evidenceAfter.containsAll(step.evidenceBefore) &&
-              step.simulatedMinutesAfter >= step.simulatedMinutesBefore,
+      expect(
+        report.routes.every(
+          (route) => route.steps.every(
+            (step) =>
+                step.evidenceAfter.containsAll(step.evidenceBefore) &&
+                step.simulatedMinutesAfter >= step.simulatedMinutesBefore,
+          ),
         ),
-      ),
-      isTrue,
-    );
-  });
+        isTrue,
+      );
+    },
+  );
 
   test('L4L formally covers every authored consequence and Story Gate', () {
     final package = _referenceV2();
@@ -306,15 +303,13 @@ void main() {
     final route = report.routes.firstWhere(
       (candidate) =>
           candidate.steps.any(
-            (step) =>
-                step.nodeId == 'permit_decision' && step.optionId == 'p1',
+            (step) => step.nodeId == 'permit_decision' && step.optionId == 'p1',
           ) &&
           candidate.steps.any(
             (step) => step.nodeId == 'gas_decision' && step.optionId == 'g1',
           ) &&
           candidate.steps.any(
-            (step) =>
-                step.nodeId == 'simops_decision' && step.optionId == 's1',
+            (step) => step.nodeId == 'simops_decision' && step.optionId == 's1',
           ),
     );
     final gasIndex = route.steps.indexWhere(
@@ -326,11 +321,10 @@ void main() {
     expect(gas.gateType, LabGateType.convergence);
     expect(gas.gateId, 'gas_work_convergence');
     expect(gas.targetNodeId, 'simops_decision');
-    expect(gas.evidenceAfter, containsAll(<String>{
-      'permit',
-      'isolation_record',
-      'gas_test',
-    }));
+    expect(
+      gas.evidenceAfter,
+      containsAll(<String>{'permit', 'isolation_record', 'gas_test'}),
+    );
     expect(simops.stateBefore, gas.stateAfter);
     expect(simops.evidenceBefore, gas.evidenceAfter);
     expect(simops.simulatedMinutesBefore, gas.simulatedMinutesAfter);
@@ -342,8 +336,7 @@ void main() {
       (candidate) =>
           candidate.endingId == 'critical_failure' &&
           candidate.steps.any(
-            (step) =>
-                step.nodeId == 'permit_decision' && step.optionId == 'p4',
+            (step) => step.nodeId == 'permit_decision' && step.optionId == 'p4',
           ) &&
           candidate.steps.any(
             (step) =>
@@ -394,18 +387,18 @@ void main() {
                   step.optionId == 'e1' &&
                   step.gateType == LabGateType.convergence,
             ) &&
-            route.steps.any(
-              (step) => step.nodeId == 'closeout_decision',
-            ),
+            route.steps.any((step) => step.nodeId == 'closeout_decision'),
       ),
       isTrue,
     );
   });
 
   test('L4L coverage excludes an option whose branch cannot complete', () {
-    final decoded = jsonDecode(
-      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
-    ) as Map;
+    final decoded =
+        jsonDecode(
+              File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+            )
+            as Map;
     final root = decoded.cast<String, Object?>();
 
     final stateSchema = (root['stateSchema'] as Map).cast<String, Object?>();
@@ -452,11 +445,13 @@ void main() {
   });
 
   test('L4L fails closed when an authored gate can never win', () {
-    final decoded = jsonDecode(
-      File(
-        'content/lab_reference_confined_space_h2s_v2.json',
-      ).readAsStringSync(),
-    ) as Map;
+    final decoded =
+        jsonDecode(
+              File(
+                'content/lab_reference_confined_space_h2s_v2.json',
+              ).readAsStringSync(),
+            )
+            as Map;
     final root = decoded.cast<String, Object?>();
     final gates = root['gates'] as List;
     gates.add(<String, Object?>{
@@ -483,9 +478,11 @@ void main() {
   });
 
   test('L4L fails closed on a reachable repeated-state route cycle', () {
-    final decoded = jsonDecode(
-      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
-    ) as Map;
+    final decoded =
+        jsonDecode(
+              File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+            )
+            as Map;
     final root = decoded.cast<String, Object?>();
     final consequences = root['consequences'] as List;
     for (final rawConsequence in consequences) {
@@ -528,18 +525,17 @@ void main() {
         expect(current.targetNodeId, next.nodeId);
         expect(current.stateAfter, next.stateBefore);
         expect(current.evidenceAfter, next.evidenceBefore);
-        expect(
-          current.simulatedMinutesAfter,
-          next.simulatedMinutesBefore,
-        );
+        expect(current.simulatedMinutesAfter, next.simulatedMinutesBefore);
       }
     }
   });
 
   test('L4L supports valid inline authored consequences', () {
-    final decoded = jsonDecode(
-      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
-    ) as Map;
+    final decoded =
+        jsonDecode(
+              File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+            )
+            as Map;
     final root = decoded.cast<String, Object?>();
     final consequences = root['consequences'] as List;
     final nodes = root['nodes'] as List;
@@ -565,9 +561,11 @@ void main() {
   });
 
   test('L4L depth guard fails closed on a state-changing route cycle', () {
-    final decoded = jsonDecode(
-      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
-    ) as Map;
+    final decoded =
+        jsonDecode(
+              File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+            )
+            as Map;
     final root = decoded.cast<String, Object?>();
     final rawGates = root['gates'] as List;
     for (final rawGate in rawGates) {
@@ -609,25 +607,19 @@ void main() {
     );
     expect(first.toEvidenceJson()['routeCount'], 196);
     expect(first.toEvidenceJson()['routeCount'], first.routes.length);
-    expect(
-      first.toEvidenceJson()['gateWinCountByType'],
-      <String, int>{
-        'completion': 196,
-        'convergence': 300,
-        'criticalEvent': 169,
-        'route': 183,
-      },
-    );
-    expect(
-      first.toEvidenceJson()['routeCountByEnding'],
-      <String, int>{
-        'controlled_recovery': 48,
-        'critical_failure': 13,
-        'incident_contained': 48,
-        'major_incident': 39,
-        'safe_completion': 48,
-      },
-    );
+    expect(first.toEvidenceJson()['gateWinCountByType'], <String, int>{
+      'completion': 196,
+      'convergence': 300,
+      'criticalEvent': 169,
+      'route': 183,
+    });
+    expect(first.toEvidenceJson()['routeCountByEnding'], <String, int>{
+      'controlled_recovery': 48,
+      'critical_failure': 13,
+      'incident_contained': 48,
+      'major_incident': 39,
+      'safe_completion': 48,
+    });
     expect(first.toEvidenceJson()['uncoveredOptionKeys'], isEmpty);
     expect(first.toEvidenceJson()['uncoveredConsequenceIds'], isEmpty);
     expect(first.toEvidenceJson()['uncoveredGateIds'], isEmpty);
@@ -638,11 +630,13 @@ void main() {
   });
 
   test('L4L rejects completion at an unauthored ending', () {
-    final decoded = jsonDecode(
-      File(
-        'content/lab_reference_confined_space_h2s_v2.json',
-      ).readAsStringSync(),
-    ) as Map;
+    final decoded =
+        jsonDecode(
+              File(
+                'content/lab_reference_confined_space_h2s_v2.json',
+              ).readAsStringSync(),
+            )
+            as Map;
     final root = decoded.cast<String, Object?>();
     final rawGates = root['gates'] as List;
     final gate = rawGates
@@ -659,27 +653,30 @@ void main() {
     expect(report.isValid, isFalse);
   });
 
-  test('L4L evidence certificate round-trips exactly and stays version-pinned', () {
-    final package = _referenceV2();
-    final report = const LabExhaustiveRouteValidator().run(package);
-    final certificate = LabL4lEvidenceCertificate.fromReport(
-      package: package,
-      report: report,
-      validationAuthority: 'DQG300-LAB-AUTO',
-      validatedAt: DateTime.utc(2026, 9, 19, 7),
-    );
+  test(
+    'L4L evidence certificate round-trips exactly and stays version-pinned',
+    () {
+      final package = _referenceV2();
+      final report = const LabExhaustiveRouteValidator().run(package);
+      final certificate = LabL4lEvidenceCertificate.fromReport(
+        package: package,
+        report: report,
+        validationAuthority: 'DQG300-LAB-AUTO',
+        validatedAt: DateTime.utc(2026, 9, 19, 7),
+      );
 
-    final encoded = certificate.encode();
-    final restored = LabL4lEvidenceCertificate.decode(encoded);
+      final encoded = certificate.encode();
+      final restored = LabL4lEvidenceCertificate.decode(encoded);
 
-    expect(restored.labId, package.metadata.id);
-    expect(restored.versionId, package.metadata.versionId);
-    expect(restored.validationAuthority, 'DQG300-LAB-AUTO');
-    expect(restored.validatedAtIso, '2026-09-19T07:00:00.000Z');
-    expect(restored.isPass, isTrue);
-    expect(restored.routeEvidence['routeCount'], 196);
-    expect(restored.encode(), encoded);
-  });
+      expect(restored.labId, package.metadata.id);
+      expect(restored.versionId, package.metadata.versionId);
+      expect(restored.validationAuthority, 'DQG300-LAB-AUTO');
+      expect(restored.validatedAtIso, '2026-09-19T07:00:00.000Z');
+      expect(restored.isPass, isTrue);
+      expect(restored.routeEvidence['routeCount'], 196);
+      expect(restored.encode(), encoded);
+    },
+  );
 
   test('L4L evidence certificate refuses an incomplete route proof', () {
     final package = _referenceV2();
