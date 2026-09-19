@@ -193,7 +193,8 @@ class InMemoryLabPublishedRepository implements LabPublishedRepository {
       }
       return;
     }
-    if (authority.trim().isEmpty || version.reviewerId.trim() != authority.trim()) {
+    if (authority.trim().isEmpty ||
+        version.reviewerId.trim() != authority.trim()) {
       throw const LabStudioException(
         'Automated LAB validation authority must match the published reviewer.',
       );
@@ -476,9 +477,7 @@ class Lab1000StudioService {
         'Immutable published LAB snapshot is no longer decodable.',
       );
     }
-    final mutable = _deepCopy(
-      immutableDecoded.cast<String, Object?>(),
-    );
+    final mutable = _deepCopy(immutableDecoded.cast<String, Object?>());
     final lab = mutable['lab'];
     if (lab is! Map) {
       throw const LabStudioException('LAB metadata is missing.');

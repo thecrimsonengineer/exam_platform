@@ -242,7 +242,6 @@ void main() {
     );
   });
 
-
   test('L4N certificate detects mismatched L4M and publish evidence', () {
     final package = _referenceV2();
     final routes = explorer.explore(package, routeBudget: 32);
@@ -258,8 +257,8 @@ void main() {
     );
     final decoded = jsonDecode(certificate.encode()) as Map;
     final root = decoded.cast<String, Object?>();
-    final publishEvidence =
-        (root['publishEvidence'] as Map).cast<String, Object?>();
+    final publishEvidence = (root['publishEvidence'] as Map)
+        .cast<String, Object?>();
     publishEvidence['routeExplorationFingerprint'] = 'tampered-route-selection';
 
     final restored = LabL4nPublishEvidenceCertificate.fromJson(root);
