@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_exhaustive_route_validator.dart';
+import 'package:exam_platform/features/lab/lab_l4l_certificate.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 LabPackage _referenceV2() => LabPackage.decode(
@@ -656,6 +657,47 @@ void main() {
     expect(report.routeInvariantsHold, isFalse);
     expect(report.endingIds, contains('ghost_ending'));
     expect(report.isValid, isFalse);
+  });
+
+  test('L4L evidence certificate round-trips exactly and stays version-pinned', () {
+    final package = _referenceV2();
+    final report = const LabExhaustiveRouteValidator().run(package);
+    final certificate = LabL4lEvidenceCertificate.fromReport(
+      package: package,
+      report: report,
+      validationAuthority: 'DQG300-LAB-AUTO',
+      validatedAt: DateTime.utc(2026, 9, 19, 7),
+    );
+
+    final encoded = certificate.encode();
+    final restored = LabL4lEvidenceCertificate.decode(encoded);
+
+    expect(restored.labId, package.metadata.id);
+    expect(restored.versionId, package.metadata.versionId);
+    expect(restored.validationAuthority, 'DQG300-LAB-AUTO');
+    expect(restored.validatedAtIso, '2026-09-19T07:00:00.000Z');
+    expect(restored.isPass, isTrue);
+    expect(restored.routeEvidence['routeCount'], 196);
+    expect(restored.encode(), encoded);
+  });
+
+  test('L4L evidence certificate refuses an incomplete route proof', () {
+    final package = _referenceV2();
+    final invalid = const LabExhaustiveRouteValidator().run(
+      package,
+      maxRoutes: 10,
+    );
+
+    expect(invalid.isValid, isFalse);
+    expect(
+      () => LabL4lEvidenceCertificate.fromReport(
+        package: package,
+        report: invalid,
+        validationAuthority: 'DQG300-LAB-AUTO',
+        validatedAt: DateTime.utc(2026, 9, 19, 7),
+      ),
+      throwsA(isA<LabContractException>()),
+    );
   });
 
   test('L4L fingerprint is stable across repeated exhaustive runs', () {
