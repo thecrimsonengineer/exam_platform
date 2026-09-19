@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exam_platform/features/lab/lab_automated_lifecycle.dart';
@@ -51,6 +52,15 @@ void main() {
       expect(stored, isNotNull);
       expect(stored!.validationAuthority, 'DQG300-LAB-AUTO');
       expect(stored.qualityEvidenceJson, isNotNull);
+      expect(stored.exhaustiveRouteEvidenceJson, isNotNull);
+      final routeEvidence =
+          jsonDecode(stored.exhaustiveRouteEvidenceJson!) as Map;
+      expect(
+        routeEvidence['schemaVersion'],
+        'csp11.lab.l4l.exhaustive.v1',
+      );
+      expect(routeEvidence['isValid'], isTrue);
+      expect(routeEvidence['routeCount'], greaterThan(0));
     },
   );
 
@@ -122,5 +132,6 @@ void main() {
     expect(published.reviewerId, 'legacy-reviewer');
     expect(published.publishedVersion!.validationAuthority, isNull);
     expect(published.publishedVersion!.qualityEvidenceJson, isNull);
+    expect(published.publishedVersion!.exhaustiveRouteEvidenceJson, isNull);
   });
 }
