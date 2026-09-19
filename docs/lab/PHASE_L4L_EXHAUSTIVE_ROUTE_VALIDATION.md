@@ -2,13 +2,20 @@
 
 ## Status
 
-**IMPLEMENTED / CI VALIDATION PENDING**
+**FROZEN / CLOSED**
 
 Branch: `phase-l4-learner-decision-lab`
 
 L4L extends the automated LAB publish path with exact deterministic route verification. It does not replace the standard LAB1000 simulation matrix. The LAB1000 simulation cap remains a separate validation mechanism. L4L is a stronger exact proof for the reachable authored route space subject to its independent hard guard.
 
-Do not mark L4L frozen or closed until the Phase L4 workflow is green after these changes.
+L4L closure was validated by GitHub Actions run `35424031946`. The complete gate passed Flutter analyze, learner regressions, L4K, L4L, the frozen Phase L suite, the full repository regression, Android debug build, production web build and diff hygiene.
+
+The formatter-normalized recovery checkpoint is:
+
+- branch: `phase-l4l-closed`
+- commit: `40a32bcaf1b94adcac2675a49ffe24226de2c4f9`
+
+Later L4 work must preserve this checkpoint rather than redesigning the closed L4L proof.
 
 ## Purpose
 
@@ -228,4 +235,4 @@ Before creating an L4L frozen checkpoint, confirm the current Phase L4 workflow 
 9. Production web build.
 10. Diff hygiene.
 
-Only after those gates are green should L4L be tagged or checkpointed as closed.
+All closure gates passed in run `35424031946`. L4L is closed at the checkpoint recorded above.
