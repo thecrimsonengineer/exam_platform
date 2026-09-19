@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/question.dart';
+import 'performance/firestore_read_audit.dart';
 
 /// Firebase-backed repository for CSP11 managed questions.
 ///
@@ -25,6 +26,12 @@ class CloudQuestionRepository {
 
   Future<List<Question>> loadAll() async {
     final snapshot = await _collection.get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'questions.loadAll',
+      collection: 'questions',
+      scope: 'all',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     final questions = snapshot.docs
         .map((doc) => _decode(doc.data()))
@@ -39,6 +46,12 @@ class CloudQuestionRepository {
     final snapshot = await _collection
         .where('status', isEqualTo: 'published')
         .get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'questions.loadPublished',
+      collection: 'questions',
+      scope: 'status=published',
+      returnedDocuments: snapshot.docs.length,
+    );
 
     final questions = snapshot.docs
         .map((doc) => _decode(doc.data()))
@@ -50,7 +63,14 @@ class CloudQuestionRepository {
   }
 
   Future<Question?> load(int questionId) async {
-    final doc = await _collection.doc(_documentId(questionId)).get();
+    final documentId = _documentId(questionId);
+    final doc = await _collection.doc(documentId).get();
+    FirestoreReadAudit.recordDocument(
+      operation: 'questions.load',
+      collection: 'questions',
+      documentId: documentId,
+      exists: doc.exists,
+    );
 
     if (!doc.exists) {
       return null;
@@ -72,6 +92,12 @@ class CloudQuestionRepository {
 
   Future<void> clear() async {
     final snapshot = await _collection.get();
+    FirestoreReadAudit.recordQuery(
+      operation: 'questions.clear.readBeforeDelete',
+      collection: 'questions',
+      scope: 'all',
+      returnedDocuments: snapshot.docs.length,
+    );
     final batch = _firestore.batch();
 
     for (final doc in snapshot.docs) {
