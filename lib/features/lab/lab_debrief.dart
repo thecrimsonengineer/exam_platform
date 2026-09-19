@@ -87,9 +87,7 @@ class LabDebrief {
 }
 
 class LabDebriefEngine {
-  const LabDebriefEngine({
-    this.runtime = const LabDeterministicRuntime(),
-  });
+  const LabDebriefEngine({this.runtime = const LabDeterministicRuntime()});
 
   final LabDeterministicRuntime runtime;
 
@@ -138,8 +136,9 @@ class LabDebriefEngine {
           timestamp: event.timestamp,
           critical: isCritical,
           recovery: isRecovery,
-          competencyEvidence:
-              Set<String>.unmodifiable(option.competencyEvidence),
+          competencyEvidence: Set<String>.unmodifiable(
+            option.competencyEvidence,
+          ),
           mistakeDnaTags: Set<String>.unmodifiable(option.mistakeTags),
           sources: List<String>.unmodifiable(package.metadata.sources),
         ),
@@ -209,7 +208,12 @@ class LabDebriefEngine {
         node: node,
         optionId: alternateOptionId,
         applicationKey:
-            'debrief:' + session.sessionId + ':' + nodeId + ':' + alternateOptionId,
+            'debrief:' +
+            session.sessionId +
+            ':' +
+            nodeId +
+            ':' +
+            alternateOptionId,
         gates: gates,
         consequenceRegistry: consequences,
       );

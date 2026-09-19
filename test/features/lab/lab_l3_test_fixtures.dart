@@ -8,11 +8,9 @@ import 'package:exam_platform/features/lab/lab_studio.dart';
 const String referenceLabFixturePath =
     'test/fixtures/lab/l3_reference_confined_space_h2s.json';
 
-String referenceLabSource() =>
-    File(referenceLabFixturePath).readAsStringSync();
+String referenceLabSource() => File(referenceLabFixturePath).readAsStringSync();
 
-LabPackage referenceLabPackage() =>
-    LabPackage.decode(referenceLabSource());
+LabPackage referenceLabPackage() => LabPackage.decode(referenceLabSource());
 
 Lab1000StudioService referenceStudioService() =>
     Lab1000StudioService(repository: InMemoryLabPublishedRepository());
@@ -35,10 +33,7 @@ Future<PublishedReferenceLab> publishReferenceLab({
   final service = referenceStudioService();
   final draft = service.importJson(referenceLabSource());
   final review = service.requestReview(draft);
-  final validated = service.approveReview(
-    review,
-    reviewerId: reviewerId,
-  );
+  final validated = service.approveReview(review, reviewerId: reviewerId);
   final published = await service.publish(
     validated,
     publishedAt: DateTime.utc(2026, 9, 19, 1, 0),
@@ -107,33 +102,19 @@ Future<ReferenceRun> runReferencePath(
 Future<ReferenceRun> safeReferenceRun({
   String sessionId = 'safe_session',
   double? confidence,
-}) =>
-    runReferencePath(
-      const <String>['p1', 'g1', 'c1'],
-      sessionId: sessionId,
-      confidence: confidence,
-    );
+}) => runReferencePath(
+  const <String>['p1', 'g1', 'c1'],
+  sessionId: sessionId,
+  confidence: confidence,
+);
 
-Future<ReferenceRun> weakReferenceRun({
-  String sessionId = 'weak_session',
-}) =>
-    runReferencePath(
-      const <String>['p3', 'g3', 'c3'],
-      sessionId: sessionId,
-    );
+Future<ReferenceRun> weakReferenceRun({String sessionId = 'weak_session'}) =>
+    runReferencePath(const <String>['p3', 'g3', 'c3'], sessionId: sessionId);
 
 Future<ReferenceRun> criticalReferenceRun({
   String sessionId = 'critical_session',
-}) =>
-    runReferencePath(
-      const <String>['p4', 'e4'],
-      sessionId: sessionId,
-    );
+}) => runReferencePath(const <String>['p4', 'e4'], sessionId: sessionId);
 
 Future<ReferenceRun> recoveryReferenceRun({
   String sessionId = 'recovery_session',
-}) =>
-    runReferencePath(
-      const <String>['p4', 'e1', 'c2'],
-      sessionId: sessionId,
-    );
+}) => runReferencePath(const <String>['p4', 'e1', 'c2'], sessionId: sessionId);
