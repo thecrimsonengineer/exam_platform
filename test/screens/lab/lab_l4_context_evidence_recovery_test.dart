@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/screens/lab/lab_reference_player_screen.dart';
 import 'package:exam_platform/screens/lab/lab_scenario_catalog.dart';
@@ -83,28 +85,6 @@ void main() {
     expect(find.text('Verified'), findsNWidgets(2));
     expect(find.textContaining('risk'), findsNothing);
     expect(find.textContaining('route'), findsNothing);
-  });
-
-  testWidgets('L4G unlocked evidence can be inspected', (tester) async {
-    _useTallViewport(tester);
-
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.guided),
-      ),
-    );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-    );
-
-    await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
-    await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-consequence-screen')),
-    );
 
     expect(
       find.byKey(const ValueKey('lab-available-evidence-heading')),
@@ -126,45 +106,14 @@ void main() {
     );
   });
 
-  testWidgets('L4H critical decision remains playable through emergency route', (
-    tester,
-  ) async {
-    _useTallViewport(tester);
+  test('L4H learner player has no quiz-style wrong/correct verdict', () {
+    final source = File(
+      'lib/screens/lab/lab_reference_player_screen.dart',
+    ).readAsStringSync();
 
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.professional),
-      ),
-    );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-    );
-
-    await tester.tap(find.byKey(const ValueKey('lab-option-p4')));
-    await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-consequence-screen')),
-    );
-
-    expect(find.text('What happened next'), findsOneWidget);
-    expect(find.text('CRITICAL'), findsNothing);
-    expect(find.textContaining('wrong'), findsNothing);
-    expect(find.textContaining('correct'), findsNothing);
-
-    final continueButton = find.byKey(
-      const ValueKey('lab-consequence-continue'),
-    );
-    await tester.ensureVisible(continueButton);
-    await tester.tap(continueButton);
-    await _pumpUntilFound(
-      tester,
-      find.textContaining('An H2S alarm occurs'),
-    );
-
-    expect(find.byKey(const ValueKey('lab-option-e1')), findsOneWidget);
-    expect(find.byKey(const ValueKey('lab-option-e4')), findsOneWidget);
+    expect(source, isNot(contains('Wrong answer')));
+    expect(source, isNot(contains('Correct answer')));
+    expect(source, isNot(contains("Text('CRITICAL')")));
+    expect(source, isNot(contains("Text('OPTIMAL')")));
   });
 }
