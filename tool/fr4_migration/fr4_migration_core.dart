@@ -3,10 +3,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
-const fr4SupportedCollections = <String>{
-  'contentVersions',
-  'questions',
-};
+const fr4SupportedCollections = <String>{'contentVersions', 'questions'};
 
 class Fr4SourceDocument {
   const Fr4SourceDocument({
@@ -86,10 +83,7 @@ class Fr4TargetRow {
     'target_checksum_sha256': targetChecksumSha256,
     'validation_status': 'pending',
     'failure_reason': null,
-    'metadata': <String, dynamic>{
-      'phase': 'FR4',
-      'toolingSchemaVersion': 1,
-    },
+    'metadata': <String, dynamic>{'phase': 'FR4', 'toolingSchemaVersion': 1},
   };
 }
 
@@ -194,8 +188,7 @@ class Fr4MigrationEngine {
           continue;
         }
 
-        targetOwners[ownershipKey] =
-            '${document.collection}/${document.id}';
+        targetOwners[ownershipKey] = '${document.collection}/${document.id}';
         rows.add(row);
         targetCounts.update(
           row.targetTable,
@@ -413,9 +406,7 @@ dynamic decodeCsp11FirestoreSafe(dynamic value) {
   }
 
   if (value is List) {
-    return value
-        .map(decodeCsp11FirestoreSafe)
-        .toList(growable: false);
+    return value.map(decodeCsp11FirestoreSafe).toList(growable: false);
   }
 
   return value;
@@ -450,9 +441,9 @@ dynamic decodeFirestoreRestValue(dynamic raw) {
   }
 
   if (value.containsKey('timestampValue')) {
-    return DateTime.parse(value['timestampValue'].toString())
-        .toUtc()
-        .toIso8601String();
+    return DateTime.parse(
+      value['timestampValue'].toString(),
+    ).toUtc().toIso8601String();
   }
 
   if (value.containsKey('stringValue')) {
@@ -553,10 +544,7 @@ Map<String, dynamic> fr4TargetProjection(
   return projected;
 }
 
-bool fr4TargetMatches(
-  Fr4TargetRow planned,
-  Map<String, dynamic> returnedRow,
-) {
+bool fr4TargetMatches(Fr4TargetRow planned, Map<String, dynamic> returnedRow) {
   return fr4Sha256(fr4TargetProjection(planned, returnedRow)) ==
       planned.targetChecksumSha256;
 }
@@ -612,11 +600,7 @@ String _requiredString(Map<String, dynamic> source, String key) {
 
 String _optionalString(dynamic value) => value?.toString() ?? '';
 
-int _requiredInt(
-  Map<String, dynamic> source,
-  String key, {
-  int? fallback,
-}) {
+int _requiredInt(Map<String, dynamic> source, String key, {int? fallback}) {
   final value = source[key];
   if (value == null && fallback != null) return fallback;
   if (value is int) return value;
@@ -655,10 +639,7 @@ String _requiredLifecycle(Map<String, dynamic> source, String key) {
   return value;
 }
 
-List<String> _requiredStringList(
-  Map<String, dynamic> source,
-  String key,
-) {
+List<String> _requiredStringList(Map<String, dynamic> source, String key) {
   final values = _stringList(source[key]);
   if (values.isEmpty) {
     throw StateError('Required list field "$key" is empty.');
