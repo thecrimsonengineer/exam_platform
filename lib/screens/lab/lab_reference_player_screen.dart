@@ -115,9 +115,9 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
       );
       if (!mounted) return;
 
-      final presentation = widget.scenario.consequenceFor(
-        selectedOption.consequenceId,
-      );
+      final consequenceId =
+          selectedOption.consequenceId ?? selectedOption.consequence!.id;
+      final presentation = widget.scenario.consequenceFor(consequenceId);
 
       setState(() {
         _session = updated;
