@@ -17,7 +17,7 @@ Future<void> _pumpUntilFound(
 }
 
 void _useTallTestViewport(WidgetTester tester) {
-  tester.view.physicalSize = const Size(900, 1800);
+  tester.view.physicalSize = const Size(900, 2600);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
@@ -128,9 +128,14 @@ void main() {
       find.byKey(const ValueKey('lab-reference-player')),
     );
 
-    await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
+    final firstOption = find.byKey(const ValueKey('lab-option-p1'));
+    await tester.ensureVisible(firstOption);
+    await tester.tap(firstOption);
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
+
+    final confirm = find.byKey(const ValueKey('lab-confirm-decision'));
+    await tester.ensureVisible(confirm);
+    await tester.tap(confirm);
     await _pumpUntilFound(
       tester,
       find.byKey(const ValueKey('lab-consequence-screen')),
@@ -154,9 +159,14 @@ void main() {
       find.byKey(const ValueKey('lab-reference-player')),
     );
 
-    await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
+    final firstOption = find.byKey(const ValueKey('lab-option-p1'));
+    await tester.ensureVisible(firstOption);
+    await tester.tap(firstOption);
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
+
+    final confirm = find.byKey(const ValueKey('lab-confirm-decision'));
+    await tester.ensureVisible(confirm);
+    await tester.tap(confirm);
     await _pumpUntilFound(
       tester,
       find.byKey(const ValueKey('lab-consequence-screen')),
