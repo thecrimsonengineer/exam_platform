@@ -312,7 +312,6 @@ class Fr4MigrationEngine {
       'tags': _stringList(source['tags']),
     };
 
-    final sourceChecksum = fr4Sha256(canonicalSource);
     final qualityPayload =
         _firstStringMap(source, const <String>[
           'qualityGatePayload',
