@@ -73,29 +73,12 @@ Future<List<Fr4SourceDocument>> _loadFirestoreDocuments({
           '/v1/projects/$projectId/databases/(default)/documents/$collection',
           parameters,
         );
-        final request = await client.getUrl(uri);
-        request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
-        request.headers.set(HttpHeaders.acceptHeader, 'application/json');
-
-        final response = await request.close();
-        final body = await utf8.decoder.bind(response).join();
-        if (response.statusCode < 200 || response.statusCode >= 300) {
-          throw HttpException(
-            'Firestore list failed for $collection '
-            '(${response.statusCode}): $body',
-            uri: uri,
-          );
-        }
-
-        final payload = jsonDecode(body);
-        if (payload is! Map) {
-          throw const FormatException('Firestore response is not an object.');
-        }
-
-        final map = <String, dynamic>{
-          for (final entry in payload.entries)
-            entry.key.toString(): entry.value,
-        };
+        final map = await _loadFirestorePageWithRetry(
+          client: client,
+          uri: uri,
+          token: token,
+          collection: collection,
+        );
         final rawDocuments = map['documents'];
         if (rawDocuments is List) {
           for (final rawDocument in rawDocuments) {
@@ -115,6 +98,59 @@ Future<List<Fr4SourceDocument>> _loadFirestoreDocuments({
     return output;
   } finally {
     client.close(force: true);
+  }
+}
+
+Future<Map<String, dynamic>> _loadFirestorePageWithRetry({
+  required HttpClient client,
+  required Uri uri,
+  required String token,
+  required String collection,
+}) async {
+  const retryDelays = <Duration>[
+    Duration(seconds: 5),
+    Duration(seconds: 15),
+    Duration(seconds: 30),
+    Duration(seconds: 60),
+    Duration(seconds: 120),
+  ];
+
+  for (var attempt = 0; ; attempt++) {
+    final request = await client.getUrl(uri);
+    request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
+    request.headers.set(HttpHeaders.acceptHeader, 'application/json');
+
+    final response = await request.close();
+    final body = await utf8.decoder.bind(response).join();
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final payload = jsonDecode(body);
+      if (payload is! Map) {
+        throw const FormatException('Firestore response is not an object.');
+      }
+
+      return <String, dynamic>{
+        for (final entry in payload.entries)
+          entry.key.toString(): entry.value,
+      };
+    }
+
+    if (response.statusCode == 429 && attempt < retryDelays.length) {
+      final delay = retryDelays[attempt];
+      stderr.writeln(
+        'Firestore quota response for $collection. Retrying page in '
+        '${delay.inSeconds}s (attempt ${attempt + 2}/'
+        '${retryDelays.length + 1}).',
+      );
+      await Future<void>.delayed(delay);
+      continue;
+    }
+
+    throw HttpException(
+      'Firestore list failed for $collection '
+      '(${response.statusCode}): $body',
+      uri: uri,
+    );
   }
 }
 

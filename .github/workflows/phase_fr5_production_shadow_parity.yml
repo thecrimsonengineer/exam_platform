@@ -35,7 +35,10 @@ env:
 
 jobs:
   shadow-parity:
-    if: github.ref == 'refs/heads/phase-fr5-shadow-data-parity'
+    if: >-
+      github.ref == 'refs/heads/phase-fr5-shadow-data-parity' &&
+      (github.event_name == 'workflow_dispatch' ||
+       github.event.head_commit.message == 'FR5: authorized production shadow apply')
     runs-on: ubuntu-latest
     timeout-minutes: 65
 
