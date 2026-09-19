@@ -32,6 +32,9 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
+      - name: Show dependency lock changes
+        run: git diff -- pubspec.lock || true
+
       - name: FR formatting gate
         run: |
           dart format \
@@ -45,9 +48,12 @@ jobs:
             test/services/performance/firestore_read_audit_test.dart \
             test/architecture/phase_fr_local_data_preservation_test.dart \
             lib/services/supabase/supabase_runtime_config.dart \
+            lib/services/supabase/supabase_bootstrap_service.dart \
+            lib/main.dart \
             lib/services/online_access/learner_online_access_gate.dart \
             lib/services/online_access/firebase_learner_access_token_provider.dart \
             test/services/supabase/supabase_runtime_config_test.dart \
+            test/services/supabase/supabase_bootstrap_service_test.dart \
             test/services/online_access/learner_online_access_gate_test.dart
           git diff -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -80,6 +86,7 @@ jobs:
       - name: FR2 foundation unit tests
         run: |
           flutter test test/services/supabase/supabase_runtime_config_test.dart
+          flutter test test/services/supabase/supabase_bootstrap_service_test.dart
           flutter test test/services/online_access/learner_online_access_gate_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions

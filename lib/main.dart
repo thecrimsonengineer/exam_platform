@@ -5,12 +5,14 @@ import 'app/theme.dart';
 import 'firebase_options.dart';
 import 'services/local_question_repository.dart';
 import 'services/settings/theme_mode_service.dart';
+import 'services/supabase/supabase_bootstrap_service.dart';
 import 'screens/auth/auth_gate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await SupabaseBootstrapService.initializeIfConfigured();
 
   await LocalQuestionRepository.instance.initialize();
   await ThemeModeService.initialize();
