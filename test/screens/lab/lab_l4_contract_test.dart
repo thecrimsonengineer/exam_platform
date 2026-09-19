@@ -49,6 +49,15 @@ void main() {
     expect(source, contains('_continueAfterConsequence'));
   });
 
+  test('L4E coaching is gated to Guided mode only', () {
+    final source = File(
+      'lib/screens/lab/lab_reference_player_screen.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('if (widget.mode == LabMode.guided)'));
+    expect(source, contains('Why this mattered'));
+  });
+
   test('learner player does not render internal option quality', () {
     final source = File(
       'lib/screens/lab/lab_reference_player_screen.dart',
