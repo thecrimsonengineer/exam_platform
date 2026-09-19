@@ -547,6 +547,10 @@ class LabExhaustiveRouteValidator {
     final authoredConsequences = <String, LabConsequence>{
       for (final consequence in package.consequences)
         consequence.id: consequence,
+      for (final node in package.nodes.whereType<LabDecisionNode>())
+        for (final option in node.options)
+          if (option.consequence != null)
+            option.consequence!.id: option.consequence!,
     };
     final authoredGates = <String, LabStoryGate>{
       for (final gate in package.gates.map(LabStoryGate.fromJson))
@@ -643,6 +647,7 @@ class LabExhaustiveRouteValidator {
   ) {
     final gate = authored[step.gateId];
     if (gate == null ||
+        (gate.fromNodeId != null && gate.fromNodeId != step.nodeId) ||
         gate.type != step.gateType ||
         gate.priority != step.gatePriority ||
         gate.targetNodeId != step.targetNodeId ||
