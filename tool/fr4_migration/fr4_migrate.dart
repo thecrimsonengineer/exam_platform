@@ -141,7 +141,7 @@ Future<List<Fr4SourceDocument>> _loadFirestoreDocuments(
   }
 
   final collections = options.collections.isEmpty
-      ? fr4SupportedCollections.toList()..sort()
+      ? (fr4SupportedCollections.toList()..sort())
       : options.collections;
 
   final client = HttpClient();
