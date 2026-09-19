@@ -7,9 +7,15 @@ void main() {
       'lib/widgets/csp/study_content/study_content_renderer.dart';
 
   late String source;
+  late String darkSource;
+  late String spacingSource;
 
   setUpAll(() {
     source = File(rendererPath).readAsStringSync();
+    darkSource = File(
+      'lib/widgets/csp/study_content/study_content_renderer_dark.dart',
+    ).readAsStringSync();
+    spacingSource = File('lib/theme/study/study_spacing.dart').readAsStringSync();
   });
 
   test('learner index preserves Topic -> Subtopic hierarchy', () {
@@ -40,6 +46,24 @@ void main() {
     expect(source, contains('_globalSubtopicIndex'));
     expect(source, contains('subtopicIndex: globalIndex'));
     expect(source, contains('_orderedSubtopics'));
+  });
+
+  test('phone layout reduces Android-side whitespace in both themes', () {
+    expect(spacingSource, contains('pageHorizontalForWidth'));
+    expect(spacingSource, contains('heroHorizontalForWidth'));
+    expect(spacingSource, contains('if (width < 600) return xs;'));
+    expect(spacingSource, contains('if (width < 600) return md;'));
+
+    expect(
+      source,
+      contains('StudySpacing.pageHorizontalForWidth(constraints.maxWidth)'),
+    );
+    expect(
+      darkSource,
+      contains('StudySpacing.pageHorizontalForWidth(constraints.maxWidth)'),
+    );
+    expect(source, contains('StudySpacing.heroHorizontalForWidth('));
+    expect(darkSource, contains('StudySpacing.heroHorizontalForWidth('));
   });
 
   test('resume target can select its parent topic', () {

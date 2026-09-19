@@ -98,6 +98,15 @@ class SettingsScreen extends StatelessWidget {
     } else {
       await AuthStateService().signOut();
     }
+
+    if (!context.mounted) {
+      return;
+    }
+
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).popUntil((route) => route.isFirst);
   }
 
   Future<void> _resetLearningData(BuildContext context) async {
@@ -382,6 +391,7 @@ class SettingsScreen extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     if (width >= 1200) return 28;
     if (width >= 700) return 22;
+    if (width < 600) return 12;
     return 16;
   }
 
@@ -452,7 +462,7 @@ class SettingsScreen extends StatelessWidget {
       key: const ValueKey('settings-hero'),
       width: double.infinity,
       constraints: BoxConstraints(minHeight: compact ? 320 : 290),
-      padding: EdgeInsets.all(compact ? 22 : 28),
+      padding: EdgeInsets.all(compact ? 18 : 28),
       borderRadius: BorderRadius.circular(26),
       gradient: LinearGradient(
         begin: Alignment.topLeft,

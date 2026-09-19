@@ -31,12 +31,23 @@ void main() {
     expect(navigation, contains('PracticeHubScreen'));
     expect(navigation, contains('LabLibraryScreen'));
     expect(navigation, contains('DarkFlashcardsScreen'));
-    expect(navigation, contains('DarkSettingsScreen'));
+    expect(navigation, contains('SettingsRoute'));
 
     expect(navigation, isNot(contains('DarkProgressScreen')));
     expect(navigation, contains('AppTheme.darkTheme'));
 
     expect(navigation, contains('ThemeModeService.isDarkMode'));
+  });
+
+  test('Settings route reacts immediately to the theme notifier', () {
+    final route = read('lib/screens/settings/settings_route.dart');
+
+    expect(route, contains('ThemeModeService.isDarkMode'));
+    expect(route, contains('ValueListenableBuilder<bool>'));
+    expect(route, contains('DarkSettingsScreen'));
+    expect(route, contains('SettingsScreen'));
+    expect(route, contains("ValueKey('settings-route-dark')"));
+    expect(route, contains("ValueKey('settings-route-light')"));
   });
 
   test('P6 supports dark mode across the Phase L learner destinations', () {

@@ -155,7 +155,8 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
             _buildHero(domain),
             LayoutBuilder(
               builder: (context, constraints) {
-                final isDesktop = constraints.maxWidth >= 900;
+                final horizontalPadding =
+                    StudySpacing.pageHorizontalForWidth(constraints.maxWidth);
 
                 return Center(
                   child: ConstrainedBox(
@@ -164,13 +165,9 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
-                        isDesktop
-                            ? StudySpacing.pageHorizontalDesktop
-                            : StudySpacing.pageHorizontal,
+                        horizontalPadding,
                         28,
-                        isDesktop
-                            ? StudySpacing.pageHorizontalDesktop
-                            : StudySpacing.pageHorizontal,
+                        horizontalPadding,
                         48,
                       ),
                       child: Column(
@@ -268,6 +265,10 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
   }
 
   Widget _buildHero(int domain) {
+    final horizontalPadding = StudySpacing.heroHorizontalForWidth(
+      MediaQuery.sizeOf(context).width,
+    );
+
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(gradient: StudyGradients.hero),
@@ -277,10 +278,10 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
             maxWidth: StudySpacing.maxContentWidth,
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              StudySpacing.pageHorizontalDesktop,
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
               36,
-              StudySpacing.pageHorizontalDesktop,
+              horizontalPadding,
               38,
             ),
             child: Column(

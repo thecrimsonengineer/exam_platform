@@ -13,6 +13,18 @@ class StudySpacing {
   static const double pageHorizontal = 20;
   static const double pageHorizontalDesktop = 32;
 
+  static double pageHorizontalForWidth(double width) {
+    if (width >= 900) return pageHorizontalDesktop;
+    if (width < 600) return xs;
+    return pageHorizontal;
+  }
+
+  static double heroHorizontalForWidth(double width) {
+    if (width >= 900) return pageHorizontalDesktop;
+    if (width < 600) return md;
+    return pageHorizontal;
+  }
+
   static const double sectionGap = 32;
   static const double blockGap = 20;
   static const double cardPadding = 20;
