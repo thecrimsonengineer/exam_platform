@@ -117,9 +117,7 @@ class LabIncrementalLearningTwinEvidenceEmitter {
         before.labVersionId != after.labVersionId ||
         before.mode != after.mode ||
         before.startedAt != after.startedAt) {
-      issues.add(
-        'L4P transition must remain inside one pinned LAB session.',
-      );
+      issues.add('L4P transition must remain inside one pinned LAB session.');
       return issues;
     }
 
@@ -166,7 +164,9 @@ class LabIncrementalLearningTwinEvidenceEmitter {
       return issues;
     }
 
-    final endingEvents = appended.where((event) => event.endingId != null).toList();
+    final endingEvents = appended
+        .where((event) => event.endingId != null)
+        .toList();
     if (endingEvents.length > 1 ||
         (endingEvents.isNotEmpty && endingEvents.last != appended.last)) {
       issues.add(
