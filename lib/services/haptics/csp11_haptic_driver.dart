@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'csp11_haptic_event.dart';
@@ -11,6 +12,23 @@ class FlutterCsp11HapticDriver implements Csp11HapticDriver {
 
   @override
   Future<void> trigger(Csp11HapticEvent event) {
+    if (kIsWeb) {
+      return Future<void>.value();
+    }
+
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+        return _triggerSupportedPlatform(event);
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.macOS:
+      case TargetPlatform.windows:
+        return Future<void>.value();
+    }
+  }
+
+  Future<void> _triggerSupportedPlatform(Csp11HapticEvent event) {
     return switch (event) {
       Csp11HapticEvent.selection => HapticFeedback.selectionClick(),
       Csp11HapticEvent.navigation => HapticFeedback.lightImpact(),
