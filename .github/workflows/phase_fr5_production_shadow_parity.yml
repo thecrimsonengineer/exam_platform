@@ -1,9 +1,6 @@
 name: Phase FR5 Production Shadow Parity
 
 on:
-  push:
-    branches:
-      - phase-fr5-shadow-data-parity
   workflow_dispatch:
     inputs:
       apply_shadow:
@@ -35,10 +32,7 @@ env:
 
 jobs:
   shadow-parity:
-    if: >-
-      github.ref == 'refs/heads/phase-fr5-shadow-data-parity' &&
-      (github.event_name == 'workflow_dispatch' ||
-       github.event.head_commit.message == 'FR5: authorized production shadow apply')
+    if: github.ref == 'refs/heads/phase-fr5-shadow-data-parity'
     runs-on: ubuntu-latest
     timeout-minutes: 65
 
@@ -253,28 +247,16 @@ jobs:
           grep -q '"safeToApply": true' build/fr5-production/preflight.json
 
       - name: Require explicit shadow-only confirmation
-        if: >-
-          (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) ||
-          (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized production shadow apply')
+        if: inputs.apply_shadow == true
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ inputs.confirmation }}" != "FR5_SHADOW_ONLY" ]; then
-              echo "Apply requested without exact FR5_SHADOW_ONLY confirmation."
-              exit 1
-            fi
-          else
-            if [ "${{ github.event.head_commit.message }}" != "FR5: authorized production shadow apply" ]; then
-              echo "Push apply attempted without the one-time authorized marker."
-              exit 1
-            fi
+          if [ "${{ inputs.confirmation }}" != "FR5_SHADOW_ONLY" ]; then
+            echo "Apply requested without exact FR5_SHADOW_ONLY confirmation."
+            exit 1
           fi
-          echo "FR5 shadow-only write authorization: PASS"
 
       - name: Apply production shadow data and prove parity
-        if: >-
-          (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) ||
-          (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized production shadow apply')
+        if: inputs.apply_shadow == true
         run: |
           dart run tool/fr5_shadow_parity/fr5_shadow_parity.dart \
             --fr4-evidence=build/fr5-production/production_fr4_plan.json \
