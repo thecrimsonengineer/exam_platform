@@ -6,7 +6,7 @@ on:
       - ui-android-theme-auth-cleanup
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ui-android-theme-auth-cleanup-${{ github.ref }}
