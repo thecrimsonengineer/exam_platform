@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exam_platform/features/lab/lab_automated_lifecycle.dart';
@@ -70,6 +71,17 @@ void main() {
     expect(result.gateReport.dqg300Report.isValid, isTrue);
     expect(result.gateReport.exhaustiveRouteReport.isValid, isTrue);
     expect(result.certificate.isPass, isTrue);
+
+    final stored = await publishedRepository.load('l2_lab', 'v1');
+    expect(stored, isNotNull);
+    expect(stored!.qualityEvidenceJson, isNotNull);
+    expect(stored.exhaustiveRouteEvidenceJson, isNotNull);
+    final routeEvidence =
+        jsonDecode(stored.exhaustiveRouteEvidenceJson!) as Map;
+    expect(routeEvidence['schemaVersion'], 'csp11.lab.l4l.exhaustive.v1');
+    expect(routeEvidence['isValid'], isTrue);
+    expect(routeEvidence['completeGateCoverage'], isTrue);
+    expect(routeEvidence['routeInvariantsHold'], isTrue);
   });
 
   test(
