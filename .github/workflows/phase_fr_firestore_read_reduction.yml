@@ -45,6 +45,7 @@ jobs:
             test/services/performance/firestore_read_audit_test.dart
           git diff -- \
             lib/services/performance/firestore_read_audit.dart \
+            lib/services/auth/user_role_service.dart \
             lib/services/cloud_question_repository.dart \
             lib/services/study_content/cloud_content_repository.dart \
             lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
@@ -53,6 +54,7 @@ jobs:
             test/services/performance/firestore_read_audit_test.dart
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
+            lib/services/auth/user_role_service.dart \
             lib/services/cloud_question_repository.dart \
             lib/services/study_content/cloud_content_repository.dart \
             lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
