@@ -133,6 +133,12 @@ void main() {
     expect(report.runtimeEndingCoverageComplete, isTrue);
     expect(report.dqg300Report.isValid, isTrue);
     expect(report.exhaustiveRouteReport.isValid, isTrue);
+    expect(report.exhaustiveRouteReport.completeConsequenceCoverage, isTrue);
+    expect(report.exhaustiveRouteReport.completeGateCoverage, isTrue);
+    expect(report.exhaustiveRouteReport.completeEndingCoverage, isTrue);
+    expect(report.exhaustiveRouteReport.routeInvariantsHold, isTrue);
+    expect(report.exhaustiveRouteReport.uncoveredConsequenceIds, isEmpty);
+    expect(report.exhaustiveRouteReport.uncoveredGateIds, isEmpty);
     expect(report.isPublishable, isTrue);
   });
 
@@ -163,6 +169,42 @@ void main() {
 
     expect(report.structuralReport.isValid, isTrue);
     expect(report.dqg300Report.isValid, isFalse);
+    expect(report.isPublishable, isFalse);
+  });
+
+  test('automated publish blocks an authored Story Gate with no winning route', () {
+    final decoded = jsonDecode(_source()) as Map;
+    final root = decoded.cast<String, Object?>();
+    final rawGates = root['gates'] as List;
+    rawGates.add(<String, Object?>{
+      'id': 'unreachable_publish_gate',
+      'type': 'ROUTE',
+      'priority': 50,
+      'fromNodeId': 'decision_one',
+      'targetNodeId': 'decision_two',
+      'condition': <String, Object?>{
+        'op': 'NUMERIC',
+        'stateId': 'risk',
+        'operator': 'GT',
+        'value': 99,
+      },
+    });
+    final package = LabPackage.fromJson(root);
+
+    final report = const LabAutomatedPublishGate().evaluate(
+      package: package,
+      root: root,
+      dqg300Evidence: _passingEvidence(package),
+    );
+
+    expect(report.structuralReport.isValid, isTrue);
+    expect(report.dqg300Report.isValid, isTrue);
+    expect(report.exhaustiveRouteReport.completeGateCoverage, isFalse);
+    expect(
+      report.exhaustiveRouteReport.uncoveredGateIds,
+      contains('unreachable_publish_gate'),
+    );
+    expect(report.exhaustiveRouteReport.isValid, isFalse);
     expect(report.isPublishable, isFalse);
   });
 
