@@ -53,7 +53,23 @@ void main() {
         ),
         reason: '$table must remain inaccessible to direct learner roles.',
       );
+      expect(
+        sql,
+        contains(
+          'on public.$table for all to anon, authenticated\n'
+          '  using (false) with check (false);',
+        ),
+        reason: '$table must retain the explicit fail-closed RLS policy.',
+      );
     }
+
+    expect(
+      sql,
+      contains(
+        'revoke execute on function public.fr_touch_updated_at() '
+        'from public, anon, authenticated;',
+      ),
+    );
   });
 
   test('FR3 preserves immutable version and rollback constraints', () {
