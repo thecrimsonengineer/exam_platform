@@ -16,7 +16,7 @@ class LabReferencePlayerScreen extends StatefulWidget {
 }
 
 class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
-  static const _assetPath = 'content/lab_reference_confined_space_h2s.json';
+  static const _assetPath = 'content/lab_reference_confined_space_h2s_v2.json';
 
   late final InMemoryLabSessionStore _store;
   late final LabSessionEngine _engine;
