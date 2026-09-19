@@ -67,14 +67,14 @@ class LabIncrementalLearningTwinEvidenceEmitter {
       final completion = event.endingId == null
           ? LabEvidenceCompletion.partial
           : LabEvidenceCompletion.completed;
-      final evidence = bridge.buildEvidenceForEvent(
-        package: package,
-        session: after,
-        event: event,
-        completion: completion,
-      );
 
       try {
+        final evidence = bridge.buildEvidenceForEvent(
+          package: package,
+          session: after,
+          event: event,
+          completion: completion,
+        );
         await sink.append(evidence);
         delivered.add(event.eventId);
       } catch (error) {
