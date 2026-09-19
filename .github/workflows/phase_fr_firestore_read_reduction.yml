@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - phase-fr-firestore-read-reduction
+  pull_request:
+    branches:
+      - phase-fr4-ci-base
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: phase-fr-firestore-read-reduction
+  group: phase-fr-firestore-read-reduction-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -58,7 +61,10 @@ jobs:
             test/services/supabase/supabase_learner_remote_authorization_probe_test.dart \
             test/services/online_access/learner_online_access_gate_test.dart \
             test/architecture/phase_fr_edge_auth_gateway_test.dart \
-            test/architecture/phase_fr_supabase_schema_test.dart
+            test/architecture/phase_fr_supabase_schema_test.dart \
+            tool/fr4_migration/fr4_migration_core.dart \
+            tool/fr4_migration/fr4_migrate.dart \
+            test/tool/fr4_migration_core_test.dart
           git diff --
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -81,7 +87,10 @@ jobs:
             test/services/supabase/supabase_learner_remote_authorization_probe_test.dart \
             test/services/online_access/learner_online_access_gate_test.dart \
             test/architecture/phase_fr_edge_auth_gateway_test.dart \
-            test/architecture/phase_fr_supabase_schema_test.dart
+            test/architecture/phase_fr_supabase_schema_test.dart \
+            tool/fr4_migration/fr4_migration_core.dart \
+            tool/fr4_migration/fr4_migrate.dart \
+            test/tool/fr4_migration_core_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -102,6 +111,21 @@ jobs:
 
       - name: FR3 schema architecture gate
         run: flutter test test/architecture/phase_fr_supabase_schema_test.dart
+
+      - name: FR4 deterministic migration unit tests
+        run: |
+          flutter test test/tool/fr4_migration_core_test.dart
+          flutter test test/architecture/phase_fr4_migration_architecture_test.dart
+
+      - name: FR4 deterministic fixture plan gate
+        run: |
+          rm -rf build/fr4
+          dart run tool/fr4_migration/fr4_migrate.dart \
+            --input=test/fixtures/fr4/source_documents.json \
+            --evidence=build/fr4/fr4_migration_evidence.json
+          test -s build/fr4/fr4_migration_evidence.json
+          grep -q '"readyToApply": true' build/fr4/fr4_migration_evidence.json
+          grep -q '"issueCount": 0' build/fr4/fr4_migration_evidence.json
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
