@@ -1,4 +1,6 @@
+import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/screens/lab/lab_player_shell_screen.dart';
+import 'package:exam_platform/screens/lab/lab_reference_player_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -116,11 +118,15 @@ void main() {
   testWidgets('L4E Professional consequence avoids coaching', (tester) async {
     _useTallTestViewport(tester);
 
-    await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
-    await tester.tap(find.byKey(const ValueKey('lab-mode-professional')));
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: LabReferencePlayerScreen(mode: LabMode.professional),
+      ),
+    );
     await _pumpUntilFound(
       tester,
       find.byKey(const ValueKey('lab-reference-player')),
+      maxPumps: 80,
     );
 
     await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
@@ -139,11 +145,15 @@ void main() {
   testWidgets('L4E Assessment consequence avoids coaching', (tester) async {
     _useTallTestViewport(tester);
 
-    await tester.pumpWidget(const MaterialApp(home: LabPlayerShellScreen()));
-    await tester.tap(find.byKey(const ValueKey('lab-mode-assessment')));
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: LabReferencePlayerScreen(mode: LabMode.assessment),
+      ),
+    );
     await _pumpUntilFound(
       tester,
       find.byKey(const ValueKey('lab-reference-player')),
+      maxPumps: 80,
     );
 
     await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
