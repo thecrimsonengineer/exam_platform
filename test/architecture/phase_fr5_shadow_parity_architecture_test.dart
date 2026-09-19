@@ -56,10 +56,7 @@ void main() {
     expect(workflow, contains('FR4 deterministic fixture plan gate'));
     expect(workflow, contains('FR5 shadow parity unit tests'));
     expect(workflow, contains('FR5 deterministic fixture parity gate'));
-    expect(
-      workflow,
-      contains('Preserve frozen Phase L4 learner regressions'),
-    );
+    expect(workflow, contains('Preserve frozen Phase L4 learner regressions'));
     expect(workflow, contains('Preserve frozen Phase L4 quality gates'));
     expect(workflow, contains('Preserve exact frozen Phase L engine suite'));
     expect(workflow, contains('Full repository regression'));
