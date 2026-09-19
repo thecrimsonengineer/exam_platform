@@ -367,6 +367,52 @@ void main() {
     }
   });
 
+  test('L4L closure evidence summary is deterministic and complete', () {
+    const validator = LabExhaustiveRouteValidator();
+    final package = _referenceV2();
+    final first = validator.run(package);
+    final second = validator.run(package);
+
+    final firstEvidence = jsonEncode(first.toEvidenceJson());
+    final secondEvidence = jsonEncode(second.toEvidenceJson());
+
+    expect(firstEvidence, secondEvidence);
+    expect(
+      first.toEvidenceJson()['schemaVersion'],
+      'csp11.lab.l4l.exhaustive.v1',
+    );
+    expect(first.toEvidenceJson()['routeCount'], first.routes.length);
+    expect(first.toEvidenceJson()['uncoveredOptionKeys'], isEmpty);
+    expect(first.toEvidenceJson()['uncoveredConsequenceIds'], isEmpty);
+    expect(first.toEvidenceJson()['uncoveredGateIds'], isEmpty);
+    expect(first.toEvidenceJson()['uncoveredEndingIds'], isEmpty);
+    expect(first.toEvidenceJson()['routeInvariantsHold'], isTrue);
+    expect(first.toEvidenceJson()['isValid'], isTrue);
+    expect(first.toEvidenceJson()['fingerprint'], first.fingerprint);
+  });
+
+  test('L4L rejects completion at an unauthored ending', () {
+    final decoded = jsonDecode(
+      File(
+        'content/lab_reference_confined_space_h2s_v2.json',
+      ).readAsStringSync(),
+    ) as Map;
+    final root = decoded.cast<String, Object?>();
+    final rawGates = root['gates'] as List;
+    final gate = rawGates
+        .map((item) => (item as Map).cast<String, Object?>())
+        .firstWhere((item) => item['id'] == 'simops_safe_completion');
+    gate['endingId'] = 'ghost_ending';
+
+    final report = const LabExhaustiveRouteValidator().run(
+      LabPackage.fromJson(root),
+    );
+
+    expect(report.routeInvariantsHold, isFalse);
+    expect(report.endingIds, contains('ghost_ending'));
+    expect(report.isValid, isFalse);
+  });
+
   test('L4L fingerprint is stable across repeated exhaustive runs', () {
     const validator = LabExhaustiveRouteValidator();
     final package = _referenceV2();
