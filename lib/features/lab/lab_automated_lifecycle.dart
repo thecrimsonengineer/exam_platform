@@ -7,6 +7,7 @@ import 'lab_dqg300_certificate.dart';
 import 'lab_dqg300_evidence_store.dart';
 import 'lab_l4l_certificate.dart';
 import 'lab_l4n_certificate.dart';
+import 'lab_snapshot_fingerprint.dart';
 import 'lab_studio.dart';
 
 class LabAutomatedLifecycleResult {
@@ -135,6 +136,9 @@ class LabAutomatedLifecycleService {
       qualityEvidenceJson: certificate.encode(),
       exhaustiveRouteEvidenceJson: l4lCertificate.encode(),
       publishEvidenceJson: l4nCertificate.encode(),
+      snapshotFingerprint: LabSnapshotFingerprint.compute(
+        published.sourceJson,
+      ),
     );
 
     await studio.repository.saveImmutable(version);
