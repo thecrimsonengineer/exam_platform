@@ -544,6 +544,14 @@ class LabExhaustiveRouteValidator {
         .map((ending) => ending['id']?.toString() ?? '')
         .where((id) => id.isNotEmpty)
         .toSet();
+    final authoredConsequences = <String, LabConsequence>{
+      for (final consequence in package.consequences)
+        consequence.id: consequence,
+    };
+    final authoredGates = <String, LabStoryGate>{
+      for (final gate in package.gates.map(LabStoryGate.fromJson))
+        gate.id: gate,
+    };
 
     for (final route in routes) {
       if (route.steps.isEmpty) return false;
@@ -558,7 +566,9 @@ class LabExhaustiveRouteValidator {
         final step = route.steps[index];
         if (step.simulatedMinutesAfter < step.simulatedMinutesBefore ||
             !step.evidenceAfter.containsAll(step.evidenceBefore) ||
-            !_deltaMatchesSnapshots(step)) {
+            !_deltaMatchesSnapshots(step) ||
+            !_authoredConsequenceMatches(step, authoredConsequences) ||
+            !_authoredGateMatches(step, authoredGates)) {
           return false;
         }
 
@@ -585,6 +595,59 @@ class LabExhaustiveRouteValidator {
           }
         }
       }
+    }
+    return true;
+  }
+
+  bool _authoredConsequenceMatches(
+    LabExhaustiveRouteStep step,
+    Map<String, LabConsequence> authored,
+  ) {
+    if (step.optionId == null) {
+      return step.consequenceId == null &&
+          step.stateDelta.isEmpty &&
+          step.simulatedMinutesAfter == step.simulatedMinutesBefore &&
+          _setEquals(step.evidenceBefore, step.evidenceAfter);
+    }
+
+    final consequenceId = step.consequenceId;
+    if (consequenceId == null) return false;
+    final consequence = authored[consequenceId];
+    if (consequence == null) return false;
+
+    if (step.simulatedMinutesAfter !=
+        step.simulatedMinutesBefore + consequence.simulatedMinutes) {
+      return false;
+    }
+
+    final expectedEvidence = <String>{
+      ...step.evidenceBefore,
+      ...consequence.evidenceUnlocks,
+    };
+    if (!_setEquals(expectedEvidence, step.evidenceAfter)) return false;
+
+    final expectedMutationIds = consequence.mutations
+        .where((mutation) => mutation.kind != LabMutationKind.noOp)
+        .map((mutation) => mutation.stateId)
+        .whereType<String>()
+        .toSet();
+    if (!step.stateDelta.keys.toSet().containsAll(expectedMutationIds)) {
+      return false;
+    }
+    return true;
+  }
+
+  bool _authoredGateMatches(
+    LabExhaustiveRouteStep step,
+    Map<String, LabStoryGate> authored,
+  ) {
+    final gate = authored[step.gateId];
+    if (gate == null ||
+        gate.type != step.gateType ||
+        gate.priority != step.gatePriority ||
+        gate.targetNodeId != step.targetNodeId ||
+        gate.endingId != step.endingId) {
+      return false;
     }
     return true;
   }
