@@ -53,10 +53,7 @@ class LabDqg300EvidenceBundle {
 }
 
 class LabDqg300DecisionResult {
-  const LabDqg300DecisionResult({
-    required this.nodeId,
-    required this.result,
-  });
+  const LabDqg300DecisionResult({required this.nodeId, required this.result});
 
   final String nodeId;
   final QuestionQualityValidationResult result;
@@ -129,9 +126,7 @@ class LabDqg300Validator {
           question: _asQuestion(package, node, index),
           evidence: decisionEvidence.evidence,
         );
-        results.add(
-          LabDqg300DecisionResult(nodeId: node.id, result: result),
-        );
+        results.add(LabDqg300DecisionResult(nodeId: node.id, result: result));
       }
     }
 
@@ -179,8 +174,7 @@ class LabDqg300Validator {
       subtopicId: '',
       topicId: '',
       quizId: package.metadata.id + '_' + node.id,
-      contentPackageId:
-          package.metadata.id + '-' + package.metadata.versionId,
+      contentPackageId: package.metadata.id + '-' + package.metadata.versionId,
       question: node.prompt,
       options: node.options.map((option) => option.text).toList(),
       correctAnswer: correctAnswer,

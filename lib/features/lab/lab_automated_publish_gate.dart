@@ -63,10 +63,12 @@ class LabAutomatedPublishGate {
     return LabAutomatedPublishGateReport(
       structuralReport: structural,
       dqg300Report: dqg300,
-      runtimeNodeCoverageComplete:
-          structural.reachableNodeIds.containsAll(expectedNodes),
-      runtimeEndingCoverageComplete:
-          structural.reachableEndingIds.containsAll(expectedEndings),
+      runtimeNodeCoverageComplete: structural.reachableNodeIds.containsAll(
+        expectedNodes,
+      ),
+      runtimeEndingCoverageComplete: structural.reachableEndingIds.containsAll(
+        expectedEndings,
+      ),
     );
   }
 }
