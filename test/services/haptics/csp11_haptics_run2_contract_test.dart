@@ -5,8 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   String read(String path) => File(path).readAsStringSync();
 
-  test('Quiz haptics follow selection, validation, result and navigation states', () {
-    final source = read('lib/screens/courses/csp/quiz/quiz_screen.dart');
+  test(
+    'Quiz haptics follow selection, validation, result and navigation states',
+    () {
+      final source = read('lib/screens/courses/csp/quiz/quiz_screen.dart');
 
     expect(source, contains('Csp11Haptics.selection()'));
     expect(source, contains('quizController.selectedAnswer == index'));
@@ -17,8 +19,9 @@ void main() {
     expect(source, contains('Csp11Haptics.success()'));
     expect(source, contains('Csp11Haptics.warning()'));
     expect(source, contains('Csp11Haptics.navigation()'));
-    expect(source, contains('Csp11Haptics.completion()'));
-  });
+      expect(source, contains('Csp11Haptics.completion()'));
+    },
+  );
 
   test('LAB haptics fire only around accepted deterministic decisions', () {
     final source = read('lib/screens/lab/lab_reference_player_screen.dart');
@@ -47,8 +50,10 @@ void main() {
     expect(source, contains('Csp11Haptics.completion()'));
   });
 
-  test('Subtopic completion emits completion feedback after local persistence', () {
-    for (final path in <String>[
+  test(
+    'Subtopic completion emits completion feedback after local persistence',
+    () {
+      for (final path in <String>[
       'lib/screens/courses/csp/study_subtopic_screen.dart',
       'lib/screens/courses/csp/study_subtopic_screen_dark.dart',
     ]) {
@@ -59,9 +64,10 @@ void main() {
       final hapticIndex = source.indexOf('await Csp11Haptics.completion();');
 
       expect(persistenceIndex, greaterThanOrEqualTo(0));
-      expect(hapticIndex, greaterThan(persistenceIndex));
-    }
-  });
+        expect(hapticIndex, greaterThan(persistenceIndex));
+      }
+    },
+  );
 
   test('Flashcards remain silent until a real review engine exists', () {
     for (final path in <String>[
