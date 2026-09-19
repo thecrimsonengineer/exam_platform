@@ -23,6 +23,7 @@ class _ThrowingHapticDriver implements Csp11HapticDriver {
 
 void main() {
   late _RecordingHapticDriver driver;
+  late DateTime now;
 
   setUp(() async {
     SharedPreferences.setMockInitialValues(<String, Object>{
@@ -30,8 +31,10 @@ void main() {
     });
     await HapticPreferenceService.initialize();
 
+    now = DateTime.utc(2026, 9, 19, 12);
     driver = _RecordingHapticDriver();
     Csp11Haptics.debugSetDriver(driver);
+    Csp11Haptics.debugSetNow(() => now);
   });
 
   tearDown(Csp11Haptics.debugResetDriver);
@@ -74,5 +77,47 @@ void main() {
     Csp11Haptics.debugSetDriver(_ThrowingHapticDriver());
 
     await expectLater(Csp11Haptics.confirm(), completes);
+  });
+
+  test('rapid duplicate light events are suppressed then allowed', () async {
+    await Csp11Haptics.selection();
+    now = now.add(const Duration(milliseconds: 40));
+    await Csp11Haptics.selection();
+
+    expect(driver.events, <Csp11HapticEvent>[Csp11HapticEvent.selection]);
+
+    now = now.add(const Duration(milliseconds: 41));
+    await Csp11Haptics.selection();
+
+    expect(driver.events, <Csp11HapticEvent>[
+      Csp11HapticEvent.selection,
+      Csp11HapticEvent.selection,
+    ]);
+  });
+
+  test('strong events use the longer suppression window', () async {
+    await Csp11Haptics.completion();
+    now = now.add(const Duration(milliseconds: 200));
+    await Csp11Haptics.completion();
+
+    expect(driver.events, <Csp11HapticEvent>[Csp11HapticEvent.completion]);
+
+    now = now.add(const Duration(milliseconds: 61));
+    await Csp11Haptics.completion();
+
+    expect(driver.events, <Csp11HapticEvent>[
+      Csp11HapticEvent.completion,
+      Csp11HapticEvent.completion,
+    ]);
+  });
+
+  test('different semantic events are not collapsed together', () async {
+    await Csp11Haptics.confirm();
+    await Csp11Haptics.success();
+
+    expect(driver.events, <Csp11HapticEvent>[
+      Csp11HapticEvent.confirm,
+      Csp11HapticEvent.success,
+    ]);
   });
 }
