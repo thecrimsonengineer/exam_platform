@@ -183,6 +183,31 @@ void main() {
     );
   });
 
+  test('L4L fails closed on reachable equal-priority gate ambiguity', () {
+    final decoded = jsonDecode(
+      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync(),
+    ) as Map;
+    final root = decoded.cast<String, Object?>();
+    final rawGates = root['gates'] as List;
+    final normal = rawGates
+        .map((item) => (item as Map).cast<String, Object?>())
+        .firstWhere((item) => item['id'] == 'normal_route');
+    normal['priority'] = 100;
+
+    final report = const LabExhaustiveRouteValidator().run(
+      LabPackage.fromJson(root),
+    );
+
+    expect(report.isValid, isFalse);
+    expect(
+      report.issues.any(
+        (issue) => issue.contains('equal-priority gates'),
+      ),
+      isTrue,
+    );
+    expect(report.uncoveredOptionKeys, contains('decision_one::o4'));
+  });
+
   test('L4L fails closed when route cap prevents exhaustive proof', () {
     final report = const LabExhaustiveRouteValidator().run(
       _referenceV2(),
