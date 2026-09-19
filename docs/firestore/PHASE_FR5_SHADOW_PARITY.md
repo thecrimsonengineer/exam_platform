@@ -1,9 +1,10 @@
 # CSP11 Phase FR5 Shadow Data Parity
 
-Status: IMPLEMENTATION IN PROGRESS
+Status: IMPLEMENTATION GREEN / LIVE PRODUCTION PARITY PENDING
 Branch: phase-fr5-shadow-data-parity
 Source checkpoint: phase-fr4-closed at bce142b3a337dfc8e93e1a57a47faac1a6a207cd
 Date: 2026-09-19
+Implementation validation: GitHub Actions run 35433210098 is fully green
 
 ## Purpose
 
@@ -103,13 +104,29 @@ The tool upserts only the frozen expected rows. It then re-reads target rows and
 
 The final report must have completeParity=true and zero missing, checksum mismatch, learner-visible mismatch, extra, duplicate and ledger mismatch counts.
 
-## Current live-source blocker
+## Live production execution status
 
-The repository currently contains no configured Firebase service-account or GitHub workload-identity path for server-side Firestore extraction.
+FR5 implementation CI is green. Run 35433210098 passed formatting, analyze, FR1 through FR5, all frozen L4 suites, the full repository regression and diff hygiene.
 
-FR5 implementation and deterministic CI can proceed without that credential.
+After that validation, the live Supabase shadow target was rechecked and remains untouched:
 
-FR5 must not be frozen as complete until the real production Firestore source is extracted through an explicitly authorized server-side credential and the live Supabase shadow parity report is completely green.
+- content_versions = 0
+- questions = 0
+- fr_migration_ledger = 0
+
+The Supabase security advisor still reports zero findings.
+
+A manual production workflow now exists at .github/workflows/phase_fr5_production_shadow_parity.yml.
+
+The preferred Google authentication path is Workload Identity Federation using repository variables GCP_WIF_PROVIDER and GCP_FIRESTORE_READER_SERVICE_ACCOUNT.
+
+A service-account JSON fallback is supported through the FIREBASE_SERVICE_ACCOUNT_JSON repository secret.
+
+Supabase production shadow access requires the SUPABASE_SECRET_KEY repository secret.
+
+The credential values are not currently available through this session, so the production Firestore extraction and live shadow copy have not been executed.
+
+FR5 must not be frozen as complete until the real production Firestore source is extracted through that authorized server-side path and the live Supabase shadow parity report is completely green.
 
 ## Runtime invariant
 
@@ -119,4 +136,20 @@ No learner cutover occurs until later frozen FR phases.
 
 ## NEXT ACTION
 
-Complete FR5 implementation CI first. Then use an authorized server-side Firestore reader credential path, run the production FR4 extraction, apply the frozen manifest to Supabase shadow tables, and close FR5 only after exact live parity plus the full FR/L4 regression gate are green.
+Configure the production workflow credentials without placing secrets in source control.
+
+Preferred Google path:
+- repository variable GCP_WIF_PROVIDER
+- repository variable GCP_FIRESTORE_READER_SERVICE_ACCOUNT
+
+Fallback Google path:
+- repository secret FIREBASE_SERVICE_ACCOUNT_JSON
+
+Supabase:
+- repository secret SUPABASE_SECRET_KEY
+
+Then run Phase FR5 Production Shadow Parity from branch phase-fr5-shadow-data-parity with apply_shadow=false first.
+
+If extraction and preflight are green, run it again with apply_shadow=true and confirmation FR5_SHADOW_ONLY.
+
+Only after the live report has completeParity=true and the final FR/L4/full-repository gate remains green should phase-fr5-closed be created.
