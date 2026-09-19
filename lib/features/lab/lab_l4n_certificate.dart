@@ -91,7 +91,14 @@ class LabL4nPublishEvidenceCertificate {
   final Map<String, Object?> routeExplorationEvidence;
   final Map<String, Object?> publishEvidence;
 
+  bool get routeEvidenceMatchesPublishEvidence =>
+      routeExplorationEvidence['fingerprint'] ==
+          publishEvidence['routeExplorationFingerprint'] &&
+      routeExplorationEvidence['selectedRouteCount'] ==
+          publishEvidence['selectedRouteCount'];
+
   bool get isPass =>
+      routeEvidenceMatchesPublishEvidence &&
       routeExplorationEvidence['isValid'] == true &&
       routeExplorationEvidence['deterministic'] == true &&
       routeExplorationEvidence['completeMandatoryCoverage'] == true &&
