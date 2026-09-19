@@ -5,6 +5,7 @@ import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_dqg300.dart';
 import 'package:exam_platform/features/lab/lab_dqg300_certificate.dart';
 import 'package:exam_platform/features/lab/lab_l4l_certificate.dart';
+import 'package:exam_platform/features/lab/lab_l4n_certificate.dart';
 import 'package:exam_platform/features/lab/lab_studio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -53,6 +54,7 @@ void main() {
       expect(stored!.validationAuthority, 'DQG300-LAB-AUTO');
       expect(stored.qualityEvidenceJson, isNotNull);
       expect(stored.exhaustiveRouteEvidenceJson, isNotNull);
+      expect(stored.publishEvidenceJson, isNotNull);
       final l4l = LabL4lEvidenceCertificate.decode(
         stored.exhaustiveRouteEvidenceJson!,
       );
@@ -62,6 +64,15 @@ void main() {
       expect(l4l.isPass, isTrue);
       expect(l4l.routeEvidence['isValid'], isTrue);
       expect(l4l.routeEvidence['routeCount'], greaterThan(0));
+      final l4n = LabL4nPublishEvidenceCertificate.decode(
+        stored.publishEvidenceJson!,
+      );
+      expect(l4n.labId, 'l2_lab');
+      expect(l4n.versionId, 'v1');
+      expect(l4n.validationAuthority, 'DQG300-LAB-AUTO');
+      expect(l4n.routeExplorationEvidence['isValid'], isTrue);
+      expect(l4n.publishEvidence['isValid'], isTrue);
+      expect(l4n.isPass, isTrue);
     },
   );
 
@@ -134,5 +145,6 @@ void main() {
     expect(published.publishedVersion!.validationAuthority, isNull);
     expect(published.publishedVersion!.qualityEvidenceJson, isNull);
     expect(published.publishedVersion!.exhaustiveRouteEvidenceJson, isNull);
+    expect(published.publishedVersion!.publishEvidenceJson, isNull);
   });
 }
