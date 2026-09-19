@@ -10,13 +10,26 @@ Map<String, Object?> _orderedState(Map<String, Object?> state) {
   return <String, Object?>{for (final key in keys) key: state[key]};
 }
 
+Map<String, Object?> _orderedDelta(Map<String, LabValueChange> delta) {
+  final keys = delta.keys.toList()..sort();
+  return <String, Object?>{
+    for (final key in keys)
+      key: <String, Object?>{
+        'before': delta[key]!.before,
+        'after': delta[key]!.after,
+      },
+  };
+}
+
 class LabExhaustiveRouteStep {
   const LabExhaustiveRouteStep({
     required this.nodeId,
     required this.gateId,
+    required this.gateType,
     required this.gatePriority,
     required this.stateBefore,
     required this.stateAfter,
+    required this.stateDelta,
     required this.evidenceBefore,
     required this.evidenceAfter,
     required this.simulatedMinutesBefore,
@@ -31,9 +44,11 @@ class LabExhaustiveRouteStep {
   final String? optionId;
   final String? consequenceId;
   final String gateId;
+  final LabGateType gateType;
   final int gatePriority;
   final Map<String, Object?> stateBefore;
   final Map<String, Object?> stateAfter;
+  final Map<String, LabValueChange> stateDelta;
   final Set<String> evidenceBefore;
   final Set<String> evidenceAfter;
   final int simulatedMinutesBefore;
@@ -56,6 +71,8 @@ class LabExhaustiveRouteStep {
     return jsonEncode(<String, Object?>{
       'before': _orderedState(stateBefore),
       'after': _orderedState(stateAfter),
+      'delta': _orderedDelta(stateDelta),
+      'gateType': gateType.name,
       'evidenceBefore': beforeEvidence,
       'evidenceAfter': afterEvidence,
       'minutesBefore': simulatedMinutesBefore,
@@ -254,12 +271,16 @@ class LabExhaustiveRouteValidator {
               optionId: option.id,
               consequenceId: resolution.consequence.consequenceId,
               gateId: gate.gateId,
+              gateType: gate.type,
               gatePriority: gate.priority,
               stateBefore: Map<String, Object?>.unmodifiable(
                 resolution.consequence.before.values,
               ),
               stateAfter: Map<String, Object?>.unmodifiable(
                 resolution.consequence.after.values,
+              ),
+              stateDelta: Map<String, LabValueChange>.unmodifiable(
+                resolution.consequence.delta,
               ),
               evidenceBefore: Set<String>.unmodifiable(
                 resolution.consequence.before.evidenceUnlocked,
@@ -328,9 +349,11 @@ class LabExhaustiveRouteValidator {
         final step = LabExhaustiveRouteStep(
           nodeId: node.id,
           gateId: gate.gateId,
+          gateType: gate.type,
           gatePriority: gate.priority,
           stateBefore: Map<String, Object?>.unmodifiable(state.values),
           stateAfter: Map<String, Object?>.unmodifiable(state.values),
+          stateDelta: const <String, LabValueChange>{},
           evidenceBefore: Set<String>.unmodifiable(state.evidenceUnlocked),
           evidenceAfter: Set<String>.unmodifiable(state.evidenceUnlocked),
           simulatedMinutesBefore: state.simulatedMinutes,
