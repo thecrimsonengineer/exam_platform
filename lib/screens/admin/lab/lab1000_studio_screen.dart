@@ -1,6 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
+import '../../../features/lab/lab_automated_lifecycle.dart';
+import '../../../features/lab/lab_dqg300_evidence_store.dart';
 import '../../../features/lab/lab_studio.dart';
 
 class Lab1000StudioScreen extends StatefulWidget {
@@ -12,16 +14,31 @@ class Lab1000StudioScreen extends StatefulWidget {
 
 class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
   final TextEditingController _jsonController = TextEditingController();
-  final Lab1000StudioService _service = Lab1000StudioService(
-    repository: InMemoryLabPublishedRepository(),
-  );
+  final TextEditingController _dqgController = TextEditingController();
+  late final InMemoryLabDqg300EvidenceRepository _evidenceRepository;
+  late final Lab1000StudioService _service;
+  late final LabAutomatedLifecycleService _automatedLifecycle;
 
   LabStudioWorkspace? _workspace;
   String? _message;
 
   @override
+  void initState() {
+    super.initState();
+    _evidenceRepository = InMemoryLabDqg300EvidenceRepository();
+    _service = Lab1000StudioService(
+      repository: InMemoryLabPublishedRepository(),
+    );
+    _automatedLifecycle = LabAutomatedLifecycleService(
+      studio: _service,
+      evidenceRepository: _evidenceRepository,
+    );
+  }
+
+  @override
   void dispose() {
     _jsonController.dispose();
+    _dqgController.dispose();
     super.dispose();
   }
 
@@ -61,6 +78,53 @@ class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
           ? 'LAB1000 validation passed.'
           : 'Validation found blocking issues.';
     });
+  }
+
+  Future<void> _saveDqgEvidence() async {
+    final workspace = _workspace;
+    if (workspace == null) return;
+    try {
+      final bundle = const LabDqg300EvidenceCodec().decode(
+        _dqgController.text,
+      );
+      if (bundle.labId != workspace.package.metadata.id ||
+          bundle.versionId != workspace.package.metadata.versionId) {
+        throw const LabStudioException(
+          'DQG300-LAB evidence does not match the imported LAB ID/version.',
+        );
+      }
+      await _evidenceRepository.save(bundle);
+      if (!mounted) return;
+      setState(() {
+        _message = 'DQG300-LAB evidence saved for automated validation.';
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _message = error.toString());
+    }
+  }
+
+  Future<void> _runTestsAndPublish() async {
+    final workspace = _workspace;
+    if (workspace == null) return;
+    try {
+      if (_dqgController.text.trim().isNotEmpty) {
+        await _saveDqgEvidence();
+      }
+      final result = await _automatedLifecycle.validateAndPublishStored(
+        workspace: workspace,
+      );
+      if (!mounted) return;
+      setState(() {
+        _workspace = result.workspace;
+        _jsonController.text = result.workspace.sourceJson;
+        _message =
+            'Automated LAB tests passed. Immutable version published without human approval.';
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _message = error.toString());
+    }
   }
 
   void _requestReview() {
@@ -241,12 +305,63 @@ class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
                     workspace.report.simulationCount.toString(),
               ),
               const SizedBox(height: 14),
+              const _StudioPanel(
+                icon: Icons.auto_awesome_rounded,
+                title: 'Automated publish gate',
+                body:
+                    'Paste or load the DQG300-LAB evidence bundle. RUN TESTS & PUBLISH re-runs structural validation, DQG300 for every Decision Node, exhaustive consequence/state/Story Gate routes and deterministic coverage before publishing. Human approval is not required on this path.',
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                key: const ValueKey('lab1000-dqg300-evidence-editor'),
+                controller: _dqgController,
+                minLines: 5,
+                maxLines: 12,
+                decoration: const InputDecoration(
+                  labelText: 'DQG300-LAB evidence JSON',
+                  alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
                 children: [
-                  FilledButton(
-                    key: const ValueKey('lab1000-review'),
+                  OutlinedButton.icon(
+                    key: const ValueKey('lab1000-save-dqg300-evidence'),
+                    onPressed: workspace.lifecycle.name == 'draft'
+                        ? _saveDqgEvidence
+                        : null,
+                    icon: const Icon(Icons.save_outlined),
+                    label: const Text('SAVE DQG300 EVIDENCE'),
+                  ),
+                  FilledButton.icon(
+                    key: const ValueKey('lab1000-auto-publish'),
+                    onPressed: workspace.lifecycle.name == 'draft'
+                        ? _runTestsAndPublish
+                        : null,
+                    icon: const Icon(Icons.verified_rounded),
+                    label: const Text('RUN TESTS & PUBLISH'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ExpansionTile(
+                key: const ValueKey('lab1000-legacy-lifecycle'),
+                title: const Text('Legacy manual lifecycle'),
+                subtitle: const Text(
+                  'Compatibility path retained. Automated publishing is the primary LAB path.',
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: [
+                        FilledButton(
+                          key: const ValueKey('lab1000-review'),
                     onPressed: workspace.lifecycle.name == 'draft'
                         ? _requestReview
                         : null,
@@ -259,12 +374,15 @@ class _Lab1000StudioScreenState extends State<Lab1000StudioScreen> {
                         : null,
                     child: const Text('APPROVE / VALIDATE'),
                   ),
-                  FilledButton(
-                    key: const ValueKey('lab1000-publish'),
-                    onPressed: workspace.lifecycle.name == 'validated'
-                        ? _publish
-                        : null,
-                    child: const Text('PUBLISH IMMUTABLE VERSION'),
+                        FilledButton(
+                          key: const ValueKey('lab1000-publish'),
+                          onPressed: workspace.lifecycle.name == 'validated'
+                              ? _publish
+                              : null,
+                          child: const Text('PUBLISH IMMUTABLE VERSION'),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
