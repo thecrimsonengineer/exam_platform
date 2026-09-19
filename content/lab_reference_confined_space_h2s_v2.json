@@ -1,0 +1,1070 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "confined_space_h2s_simops",
+    "versionId": "v2",
+    "title": "Confined Space H2S SIMOPS Response",
+    "description": "A deterministic contractor confined-space LAB covering permit review, isolation, atmospheric testing, changing SIMOPS, H2S trend response, emergency rescue and incident recovery.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "permit_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "isolated": false,
+      "permit_verified": false,
+      "gas_test_verified": false,
+      "rescue_ready": false,
+      "risk": 0,
+      "observations": []
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "weak",
+        "critical",
+        "recovery"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "isolated": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "permit_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "gas_test_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "rescue_ready": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    }
+  },
+  "characters": [
+    {
+      "id": "supervisor",
+      "role": "area_supervisor"
+    },
+    {
+      "id": "contractor",
+      "role": "contractor_supervisor"
+    },
+    {
+      "id": "attendant",
+      "role": "confined_space_attendant"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "permit",
+      "type": "permit",
+      "required": false
+    },
+    {
+      "id": "gas_test",
+      "type": "atmospheric_test",
+      "required": false
+    },
+    {
+      "id": "isolation_record",
+      "type": "isolation",
+      "required": false
+    },
+    {
+      "id": "rescue_plan",
+      "type": "emergency_plan",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "permit_safe",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "permit_verified",
+          "value": true
+        },
+        {
+          "op": "SET",
+          "stateId": "isolated",
+          "value": true
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        }
+      ],
+      "evidenceUnlocks": [
+        "permit",
+        "isolation_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "permit_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "permit_verified",
+          "value": true
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        }
+      ],
+      "evidenceUnlocks": [
+        "permit"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "permit_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "permit_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "gas_safe",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "gas_test_verified",
+          "value": true
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        }
+      ],
+      "evidenceUnlocks": [
+        "gas_test"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "gas_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "gas_test_verified",
+          "value": true
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        }
+      ],
+      "evidenceUnlocks": [
+        "gas_test"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "gas_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "gas_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "emergency_recover",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "rescue_ready",
+          "value": true
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        }
+      ],
+      "evidenceUnlocks": [
+        "rescue_plan"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "emergency_contain",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "emergency_major",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "emergency_fatal",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "close_safe",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "close_recovery",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "close_contained",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 4
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "close_major",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "simops_safe",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "simops_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "simops_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "simops_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "permit_decision",
+      "type": "DECISION",
+      "prompt": "A contractor crew is ready to enter a vessel while nearby SIMOPS continue. What is your first action?",
+      "options": [
+        {
+          "id": "p1",
+          "text": "Stop entry, verify the permit and isolation, then confirm the worksite is ready.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "permit_safe",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "permit_review",
+            "isolation"
+          ]
+        },
+        {
+          "id": "p2",
+          "text": "Review the permit but accept the existing isolation status without independent confirmation.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "permit_defensible",
+          "mistakeTags": [
+            "verification_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "permit_review"
+          ]
+        },
+        {
+          "id": "p3",
+          "text": "Allow preparations to continue while the permit details are checked in parallel.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "permit_weak",
+          "mistakeTags": [
+            "simops_pressure",
+            "work_before_verification"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "simops_reasoning"
+          ]
+        },
+        {
+          "id": "p4",
+          "text": "Allow entry because the contractor supervisor says the vessel was made safe earlier.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "permit_critical",
+          "mistakeTags": [
+            "permit_bypass",
+            "isolation_assumption"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "control_selection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gas_decision",
+      "type": "DECISION",
+      "prompt": "The permit stage is complete. H2S may be present and nearby work can change conditions. What should happen next?",
+      "options": [
+        {
+          "id": "g1",
+          "text": "Verify atmospheric testing at the required locations and maintain monitoring for changing conditions.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "gas_safe",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "hazard_recognition",
+            "information_gathering"
+          ]
+        },
+        {
+          "id": "g2",
+          "text": "Repeat the gas test before entry and increase monitoring because SIMOPS may affect the atmosphere.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "gas_defensible",
+          "mistakeTags": [
+            "late_verification"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "risk_evaluation"
+          ]
+        },
+        {
+          "id": "g3",
+          "text": "Rely on the earlier gas test unless someone reports an odour or alarm.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "gas_weak",
+          "mistakeTags": [
+            "stale_atmospheric_data"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "hazard_recognition"
+          ]
+        },
+        {
+          "id": "g4",
+          "text": "Proceed without another test because ventilation has been running continuously.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "gas_critical",
+          "mistakeTags": [
+            "gas_test_bypass",
+            "ventilation_assumption"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "control_selection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "simops_decision",
+      "type": "DECISION",
+      "prompt": "Entry is underway. Nearby line-breaking SIMOPS begins and the continuous H2S monitor shows a rising trend below the alarm set point. What do you do?",
+      "options": [
+        {
+          "id": "s1",
+          "text": "Stop the confined-space work, withdraw the entrant, suspend the permit and reassess the SIMOPS interface and atmosphere before any restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "simops_safe",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "simops_reasoning",
+            "risk_evaluation",
+            "control_selection"
+          ]
+        },
+        {
+          "id": "s2",
+          "text": "Pause the work with the entrant in a safe position while the supervisor verifies the gas trend and conflicting activity before deciding on restart.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "simops_defensible",
+          "mistakeTags": [
+            "delayed_withdrawal"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "simops_reasoning",
+            "information_gathering"
+          ]
+        },
+        {
+          "id": "s3",
+          "text": "Continue the task with increased gas checks because the reading is still below the alarm set point.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "simops_weak",
+          "mistakeTags": [
+            "alarm_threshold_dependency",
+            "changing_conditions_underestimated"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "risk_evaluation",
+            "hazard_recognition"
+          ]
+        },
+        {
+          "id": "s4",
+          "text": "Continue both activities because the permit is valid and the monitor has not yet reached the alarm set point.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "simops_critical",
+          "mistakeTags": [
+            "simops_conflict_ignored",
+            "rising_h2s_ignored"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "simops_reasoning",
+            "control_selection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "emergency_decision",
+      "type": "DECISION",
+      "prompt": "An H2S alarm occurs and a worker is unaccounted for. What emergency action do you take?",
+      "options": [
+        {
+          "id": "e1",
+          "text": "Raise the emergency response, prevent unprotected entry and use the planned rescue capability.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "emergency_recover",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response",
+            "recovery_ability"
+          ]
+        },
+        {
+          "id": "e2",
+          "text": "Evacuate and isolate the area while rescue resources are mobilised, without allowing spontaneous entry.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "emergency_contain",
+          "mistakeTags": [
+            "rescue_delay"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response"
+          ]
+        },
+        {
+          "id": "e3",
+          "text": "Let a nearby worker approach the opening to assess the casualty while the rescue team is called.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "emergency_major",
+          "mistakeTags": [
+            "secondary_casualty_exposure"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response"
+          ]
+        },
+        {
+          "id": "e4",
+          "text": "Send a colleague inside immediately to pull the worker out before conditions worsen.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "emergency_fatal",
+          "mistakeTags": [
+            "unplanned_rescue",
+            "secondary_casualty"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The immediate situation is stable. How should the operation be closed out and recovered?",
+      "options": [
+        {
+          "id": "c1",
+          "text": "Keep the space closed, investigate causes, verify corrective actions and only then authorise restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "close_safe",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation",
+            "recovery_ability"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Maintain suspension, correct the identified failures and use a controlled restart review.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "close_recovery",
+          "mistakeTags": [
+            "limited_investigation"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "recovery_ability"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "Record the event and resume once the atmosphere is acceptable and the crew is re-briefed.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "close_contained",
+          "mistakeTags": [
+            "premature_restart"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "corrective_action"
+          ]
+        },
+        {
+          "id": "c4",
+          "text": "Resume the task after ventilation clears the alarm because the delay is affecting the schedule.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "close_major",
+          "mistakeTags": [
+            "production_pressure",
+            "restart_without_learning"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "risk_evaluation"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "permit_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "permit_decision",
+      "targetNodeId": "emergency_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "permit_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "permit_decision",
+      "targetNodeId": "gas_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "gas_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "gas_decision",
+      "targetNodeId": "emergency_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "gas_work_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "gas_decision",
+      "targetNodeId": "simops_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "simops_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "simops_decision",
+      "targetNodeId": "emergency_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "simops_safe_completion",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "simops_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "simops_recovery_completion",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "simops_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "simops_contained_completion",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "simops_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "emergency_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "emergency_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "emergency_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "emergency_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "ending_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "ending_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "ending_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "ending_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "HSE L101 Safe work in confined spaces",
+    "OSHA 29 CFR 1910.146 Permit-required confined spaces",
+    "NIOSH Hydrogen Sulfide guidance"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "permit_decision",
+        "alternateOptionId": "p1"
+      },
+      {
+        "nodeId": "gas_decision",
+        "alternateOptionId": "g1"
+      },
+      {
+        "nodeId": "simops_decision",
+        "alternateOptionId": "s1"
+      },
+      {
+        "nodeId": "emergency_decision",
+        "alternateOptionId": "e1"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "c1"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "emergency_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}
