@@ -113,7 +113,9 @@ jobs:
         run: flutter test test/architecture/phase_fr_supabase_schema_test.dart
 
       - name: FR4 deterministic migration unit tests
-        run: flutter test test/tool/fr4_migration_core_test.dart
+        run: |
+          flutter test test/tool/fr4_migration_core_test.dart
+          flutter test test/architecture/phase_fr4_migration_architecture_test.dart
 
       - name: FR4 deterministic fixture plan gate
         run: |
