@@ -1,0 +1,107 @@
+{
+  "tables": {
+    "content_versions": [
+      {
+        "content_id": "d07_c01-v1",
+        "version": 1,
+        "domain_id": "d07",
+        "competency_id": "d07_c01",
+        "competency_number": 1,
+        "title": "Environmental Management",
+        "status": "published",
+        "source_document_id": "published_d07_c01",
+        "content_payload": {
+          "id": "d07_c01-v1",
+          "domainId": "d07",
+          "competencyId": "d07_c01",
+          "competencyNumber": 1,
+          "title": "Environmental Management",
+          "status": "published",
+          "version": 1,
+          "topics": [
+            {
+              "id": "d07_c01_t01",
+              "title": "Environmental foundations",
+              "subtopics": [
+                {
+                  "id": "d07_c01_t01_s01",
+                  "title": "Environmental aspects",
+                  "blocks": [
+                    {
+                      "id": "table_1",
+                      "type": "table",
+                      "data": {
+                        "rows": [
+                          ["Aspect", "Impact"],
+                          ["Fuel spill", "Soil contamination"]
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "source_checksum_sha256": "0e38ac6ba97c06eb9829c7f1b24d7e3083a994658d9b2d3948fdf856367d3730"
+      }
+    ],
+    "questions": [
+      {
+        "question_id": 7001001,
+        "version": 1,
+        "domain_number": 7,
+        "competency_id": "d07_c01",
+        "subtopic_id": "d07_c01_t01_s01",
+        "topic_id": "d07_c01_t01",
+        "quiz_id": "d07_c01_t01_s01_quiz",
+        "content_package_id": "d07_c01-v1",
+        "stem": "During a site inspection, a recurring diesel leak reaches bare soil. Which action is the BEST immediate response?",
+        "options": [
+          "Record it for the annual review",
+          "Stop the release and contain the spill",
+          "Wait for laboratory sampling",
+          "Move the inspection to another area"
+        ],
+        "correct_answer": 1,
+        "explanation": "Source control and containment prevent further environmental harm.",
+        "best_answer_rationale": "It controls the active release before longer-term investigation.",
+        "reference_text": "CSP11 controlled source",
+        "difficulty": "Hard",
+        "cognitive_level": "application",
+        "question_type": "scenario_mcq",
+        "status": "published",
+        "tags": ["environmental aspect", "spill control"],
+        "quality_gate_payload": {},
+        "source_document_id": "question_7001001",
+        "source_payload": {
+          "id": 7001001,
+          "domain": 7,
+          "competencyId": "d07_c01",
+          "subtopicId": "d07_c01_t01_s01",
+          "topicId": "d07_c01_t01",
+          "quizId": "d07_c01_t01_s01_quiz",
+          "contentPackageId": "d07_c01-v1",
+          "question": "During a site inspection, a recurring diesel leak reaches bare soil. Which action is the BEST immediate response?",
+          "options": [
+            "Record it for the annual review",
+            "Stop the release and contain the spill",
+            "Wait for laboratory sampling",
+            "Move the inspection to another area"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Source control and containment prevent further environmental harm.",
+          "bestAnswerRationale": "It controls the active release before longer-term investigation.",
+          "reference": "CSP11 controlled source",
+          "difficulty": "Hard",
+          "cognitiveLevel": "application",
+          "questionType": "scenario_mcq",
+          "status": "published",
+          "version": 1,
+          "tags": ["environmental aspect", "spill control"]
+        }
+      }
+    ]
+  },
+  "ledgerFromPlan": true
+}
