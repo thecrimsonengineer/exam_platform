@@ -105,6 +105,7 @@ class LabPublishedVersion {
     this.validationAuthority,
     this.qualityEvidenceJson,
     this.exhaustiveRouteEvidenceJson,
+    this.publishEvidenceJson,
   });
 
   final String labId;
@@ -115,6 +116,7 @@ class LabPublishedVersion {
   final String? validationAuthority;
   final String? qualityEvidenceJson;
   final String? exhaustiveRouteEvidenceJson;
+  final String? publishEvidenceJson;
 }
 
 abstract class LabPublishedRepository {
