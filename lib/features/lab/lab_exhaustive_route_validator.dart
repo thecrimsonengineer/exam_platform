@@ -139,6 +139,29 @@ class LabExhaustiveRouteReport {
   final bool deterministic;
   final String fingerprint;
 
+  Map<String, int> get gateWinCountById {
+    final counts = <String, int>{};
+    for (final step in routes.expand((route) => route.steps)) {
+      counts.update(step.gateId, (value) => value + 1, ifAbsent: () => 1);
+    }
+    final keys = counts.keys.toList()..sort();
+    return Map<String, int>.unmodifiable(
+      <String, int>{for (final key in keys) key: counts[key]!},
+    );
+  }
+
+  Map<String, int> get gateWinCountByType {
+    final counts = <String, int>{};
+    for (final step in routes.expand((route) => route.steps)) {
+      final key = step.gateType.name;
+      counts.update(key, (value) => value + 1, ifAbsent: () => 1);
+    }
+    final keys = counts.keys.toList()..sort();
+    return Map<String, int>.unmodifiable(
+      <String, int>{for (final key in keys) key: counts[key]!},
+    );
+  }
+
   Map<String, int> get routeCountByEnding {
     final counts = <String, int>{};
     for (final route in routes) {
@@ -170,6 +193,8 @@ class LabExhaustiveRouteReport {
       'gateTypeCoverage': gateTypes,
       'endingIds': endings,
       'routeCountByEnding': routeCountByEnding,
+      'gateWinCountById': gateWinCountById,
+      'gateWinCountByType': gateWinCountByType,
       'uncoveredOptionKeys': missingOptions,
       'uncoveredConsequenceIds': missingConsequences,
       'uncoveredGateIds': missingGates,
