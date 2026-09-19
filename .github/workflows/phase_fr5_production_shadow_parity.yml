@@ -23,7 +23,7 @@ permissions:
 
 concurrency:
   group: phase-fr5-production-shadow-parity
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   FIREBASE_PROJECT_ID: csp11-exam-platform
