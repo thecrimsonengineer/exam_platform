@@ -44,16 +44,19 @@ void main() {
     expect(FirestoreReadAudit.events.single.scope, 'document:question_42');
   });
 
-  test('FR1 records a missing single-document read as zero returned documents', () {
-    FirestoreReadAudit.recordDocument(
-      operation: 'questions.load',
-      collection: 'questions',
-      documentId: 'question_404',
-      exists: false,
-    );
+  test(
+    'FR1 records a missing single-document read as zero returned documents',
+    () {
+      FirestoreReadAudit.recordDocument(
+        operation: 'questions.load',
+        collection: 'questions',
+        documentId: 'question_404',
+        exists: false,
+      );
 
-    expect(FirestoreReadAudit.totalReturnedDocuments, 0);
-  });
+      expect(FirestoreReadAudit.totalReturnedDocuments, 0);
+    },
+  );
 
   test('FR1 can be disabled without affecting repository behavior', () {
     FirestoreReadAudit.enabled = false;
