@@ -69,7 +69,10 @@ jobs:
             test/tool/fr4_migration_core_test.dart \
             tool/fr5_shadow_parity/fr5_shadow_parity_core.dart \
             tool/fr5_shadow_parity/fr5_shadow_parity.dart \
+            tool/fr5_shadow_parity/fr5_firestore_source_core.dart \
+            tool/fr5_shadow_parity/fr5_firestore_source.dart \
             test/tool/fr5_shadow_parity_core_test.dart \
+            test/tool/fr5_firestore_source_core_test.dart \
             test/architecture/phase_fr5_shadow_parity_architecture_test.dart
           git diff --
           git diff --exit-code -- \
@@ -99,7 +102,10 @@ jobs:
             test/tool/fr4_migration_core_test.dart \
             tool/fr5_shadow_parity/fr5_shadow_parity_core.dart \
             tool/fr5_shadow_parity/fr5_shadow_parity.dart \
+            tool/fr5_shadow_parity/fr5_firestore_source_core.dart \
+            tool/fr5_shadow_parity/fr5_firestore_source.dart \
             test/tool/fr5_shadow_parity_core_test.dart \
+            test/tool/fr5_firestore_source_core_test.dart \
             test/architecture/phase_fr5_shadow_parity_architecture_test.dart
 
       - name: Analyze
@@ -140,6 +146,7 @@ jobs:
       - name: FR5 shadow parity unit tests
         run: |
           flutter test test/tool/fr5_shadow_parity_core_test.dart
+          flutter test test/tool/fr5_firestore_source_core_test.dart
           flutter test test/architecture/phase_fr5_shadow_parity_architecture_test.dart
 
       - name: FR5 deterministic fixture parity gate
