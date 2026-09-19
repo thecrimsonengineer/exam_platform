@@ -26,18 +26,21 @@ class Fr5SourceSelectionIssue {
     required this.kind,
     required this.targetKey,
     required this.sourceIds,
+    required this.candidates,
     required this.message,
   });
 
   final String kind;
   final String targetKey;
   final List<String> sourceIds;
+  final List<Map<String, dynamic>> candidates;
   final String message;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'kind': kind,
     'targetKey': targetKey,
     'sourceIds': sourceIds,
+    'candidates': candidates,
     'message': message,
   };
 }
@@ -157,6 +160,15 @@ class Fr5CanonicalSourceSelector {
           sourceIds: group
               .map((candidate) => candidate.document.id)
               .toList(growable: false),
+          candidates: group
+              .map(
+                (candidate) => <String, dynamic>{
+                  'sourceId': candidate.document.id,
+                  'status': candidate.status,
+                  'idPrefix': _sourceIdPrefix(candidate.document.id),
+                },
+              )
+              .toList(growable: false),
           message:
               'Only an exact draft+published pair may be resolved '
               'automatically. All other duplicate lifecycle sets fail closed.',
@@ -217,6 +229,14 @@ class Fr5CanonicalSourceSelector {
       return null;
     }
   }
+}
+
+String _sourceIdPrefix(String sourceId) {
+  if (sourceId.startsWith('published_')) return 'published';
+  if (sourceId.startsWith('draft_')) return 'draft';
+  if (sourceId.startsWith('validated_')) return 'validated';
+  if (sourceId.startsWith('review_')) return 'review';
+  return 'other';
 }
 
 class _ContentCandidate {
