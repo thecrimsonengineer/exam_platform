@@ -139,6 +139,17 @@ class LabExhaustiveRouteReport {
   final bool deterministic;
   final String fingerprint;
 
+  Map<String, int> get routeCountByEnding {
+    final counts = <String, int>{};
+    for (final route in routes) {
+      counts.update(route.endingId, (value) => value + 1, ifAbsent: () => 1);
+    }
+    final keys = counts.keys.toList()..sort();
+    return Map<String, int>.unmodifiable(
+      <String, int>{for (final key in keys) key: counts[key]!},
+    );
+  }
+
   Map<String, Object?> toEvidenceJson() {
     final options = optionCoverageKeys.toList()..sort();
     final consequences = consequenceCoverageIds.toList()..sort();
@@ -158,6 +169,7 @@ class LabExhaustiveRouteReport {
       'gateCoverageIds': gates,
       'gateTypeCoverage': gateTypes,
       'endingIds': endings,
+      'routeCountByEnding': routeCountByEnding,
       'uncoveredOptionKeys': missingOptions,
       'uncoveredConsequenceIds': missingConsequences,
       'uncoveredGateIds': missingGates,
