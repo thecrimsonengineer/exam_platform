@@ -242,6 +242,32 @@ void main() {
     );
   });
 
+
+  test('L4N certificate detects mismatched L4M and publish evidence', () {
+    final package = _referenceV2();
+    final routes = explorer.explore(package, routeBudget: 32);
+    final report = validator.validate(
+      package: package,
+      routeExplorationReport: routes,
+    );
+    final certificate = LabL4nPublishEvidenceCertificate.fromReport(
+      package: package,
+      report: report,
+      validationAuthority: 'DQG300-LAB-AUTO',
+      validatedAt: DateTime.utc(2026, 9, 19, 8),
+    );
+    final decoded = jsonDecode(certificate.encode()) as Map;
+    final root = decoded.cast<String, Object?>();
+    final publishEvidence =
+        (root['publishEvidence'] as Map).cast<String, Object?>();
+    publishEvidence['routeExplorationFingerprint'] = 'tampered-route-selection';
+
+    final restored = LabL4nPublishEvidenceCertificate.fromJson(root);
+
+    expect(restored.routeEvidenceMatchesPublishEvidence, isFalse);
+    expect(restored.isPass, isFalse);
+  });
+
   test('L4N publish evidence is byte-stable across repeated validation', () {
     final package = _referenceV2();
     final routes = explorer.explore(package, routeBudget: 32);
