@@ -35,15 +35,17 @@ jobs:
       - name: Canonical Dart format
         run: |
           dart format \
+            lib/screens/lab/lab_library_screen.dart \
+            lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
-            test/screens/lab/lab_player_mode_navigation_test.dart
+            test/screens/lab
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
 
-      - name: LAB player navigation regression
-        run: flutter test test/screens/lab/lab_player_mode_navigation_test.dart
+      - name: LAB learner UI and story regressions
+        run: flutter test test/screens/lab
 
       - name: Preserve frozen Phase L engine tests
         run: flutter test test/features/lab
@@ -71,8 +73,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
+            lib/screens/lab/lab_library_screen.dart \
+            lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_player_shell_screen.dart \
             lib/screens/lab/lab_reference_player_screen.dart \
-            test/screens/lab/lab_player_mode_navigation_test.dart
+            test/screens/lab
           git commit -m "Format LAB player mode navigation fix"
           git push origin HEAD:fix-lab-player-mode-navigation

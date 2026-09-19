@@ -6,9 +6,14 @@ import 'package:exam_platform/features/lab/lab_session.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 class LabReferencePlayerScreen extends StatefulWidget {
-  const LabReferencePlayerScreen({super.key, required this.mode});
+  const LabReferencePlayerScreen({
+    super.key,
+    required this.mode,
+    this.assetPath = 'content/lab_reference_confined_space_h2s_v2.json',
+  });
 
   final LabMode mode;
+  final String assetPath;
 
   @override
   State<LabReferencePlayerScreen> createState() =>
@@ -16,8 +21,6 @@ class LabReferencePlayerScreen extends StatefulWidget {
 }
 
 class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
-  static const _assetPath = 'content/lab_reference_confined_space_h2s_v2.json';
-
   late final InMemoryLabSessionStore _store;
   late final LabSessionEngine _engine;
 
@@ -38,7 +41,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
 
   Future<void> _loadLab() async {
     try {
-      final source = await rootBundle.loadString(_assetPath);
+      final source = await rootBundle.loadString(widget.assetPath);
       final package = LabPackage.decode(source);
       final session = await _engine.startAttempt(
         package: package,
