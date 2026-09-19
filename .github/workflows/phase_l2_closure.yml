@@ -38,7 +38,7 @@ jobs:
           set -euo pipefail
           git fetch origin phase-l1-closed
           git merge-base --is-ancestor origin/phase-l1-closed HEAD
-          test "$GITHUB_REF_NAME" = "phase-l-lab-engine"
+          test "$GITHUB_REF_NAME" = "phase-l2-closed"
           if find lib/features/lab test/features/lab -type f \( -iname 'lab7_*' -o -iname 'lab8_*' -o -iname 'lab9_*' \) | grep -q .; then
             echo "LAB-7 through LAB-9 files are forbidden before L3."
             exit 1
