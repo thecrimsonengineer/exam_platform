@@ -104,6 +104,7 @@ class LabPublishedVersion {
     required this.reviewerId,
     this.validationAuthority,
     this.qualityEvidenceJson,
+    this.exhaustiveRouteEvidenceJson,
   });
 
   final String labId;
@@ -113,6 +114,7 @@ class LabPublishedVersion {
   final String reviewerId;
   final String? validationAuthority;
   final String? qualityEvidenceJson;
+  final String? exhaustiveRouteEvidenceJson;
 }
 
 abstract class LabPublishedRepository {
