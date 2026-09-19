@@ -88,6 +88,43 @@ void main() {
     );
   });
 
+  test('L4L freezes authored consequence execution counts', () {
+    final report = const LabExhaustiveRouteValidator().run(_referenceV2());
+
+    expect(report.consequenceApplicationCountById['permit_safe'], 61);
+    expect(report.consequenceApplicationCountById['permit_defensible'], 61);
+    expect(report.consequenceApplicationCountById['permit_weak'], 61);
+    expect(report.consequenceApplicationCountById['permit_critical'], 13);
+
+    expect(report.consequenceApplicationCountById['gas_safe'], 48);
+    expect(report.consequenceApplicationCountById['gas_defensible'], 48);
+    expect(report.consequenceApplicationCountById['gas_weak'], 48);
+    expect(report.consequenceApplicationCountById['gas_critical'], 39);
+
+    expect(report.consequenceApplicationCountById['simops_safe'], 9);
+    expect(report.consequenceApplicationCountById['simops_defensible'], 9);
+    expect(report.consequenceApplicationCountById['simops_weak'], 9);
+    expect(report.consequenceApplicationCountById['simops_critical'], 117);
+
+    expect(report.consequenceApplicationCountById['emergency_recover'], 52);
+    expect(report.consequenceApplicationCountById['emergency_contain'], 52);
+    expect(report.consequenceApplicationCountById['emergency_major'], 52);
+    expect(report.consequenceApplicationCountById['emergency_fatal'], 13);
+
+    expect(report.consequenceApplicationCountById['close_safe'], 39);
+    expect(report.consequenceApplicationCountById['close_recovery'], 39);
+    expect(report.consequenceApplicationCountById['close_contained'], 39);
+    expect(report.consequenceApplicationCountById['close_major'], 39);
+
+    expect(
+      report.consequenceApplicationCountById.values.fold<int>(
+        0,
+        (sum, count) => sum + count,
+      ),
+      848,
+    );
+  });
+
   test('L4L records consequence state and winning gate for every step', () {
     final report = const LabExhaustiveRouteValidator().run(_referenceV2());
 
