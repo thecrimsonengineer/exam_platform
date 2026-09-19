@@ -1,0 +1,49 @@
+name: UI Android Theme Auth Cleanup Validation
+
+on:
+  push:
+    branches:
+      - ui-android-theme-auth-cleanup
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-android-theme-auth-cleanup-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Formatting gate
+        run: |
+          dart format             lib/screens/navigation/bottom_navigation.dart             lib/screens/settings/settings_screen.dart             lib/screens/settings/settings_screen_dark.dart             lib/screens/settings/settings_route.dart             lib/theme/study/study_spacing.dart             lib/widgets/csp/study_content/study_content_renderer.dart             lib/widgets/csp/study_content/study_content_renderer_dark.dart             test/screens/settings/csp11_settings_p6_dark_mode_contract_test.dart             test/screens/settings/csp11_settings_interaction_test.dart             test/widgets/csp/study_content/topic_accordion_ui_contract_test.dart             test/theme/study_spacing_test.dart
+          git diff --exit-code
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Settings interaction tests
+        run: |
+          flutter test test/screens/settings/csp11_settings_p5_contract_test.dart
+          flutter test test/screens/settings/csp11_settings_p6_dark_mode_contract_test.dart
+          flutter test test/screens/settings/csp11_settings_interaction_test.dart
+
+      - name: Android study spacing tests
+        run: |
+          flutter test test/theme/study_spacing_test.dart
+          flutter test test/widgets/csp/study_content/topic_accordion_ui_contract_test.dart
