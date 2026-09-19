@@ -4,6 +4,8 @@ import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_learning_twin_bridge.dart';
 import 'package:exam_platform/features/lab/lab_learning_twin_emitter.dart';
 import 'package:exam_platform/features/lab/lab_session.dart';
+import 'package:exam_platform/screens/lab/lab_reference_player_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../features/lab/lab_l3_test_fixtures.dart';
@@ -255,6 +257,38 @@ void main() {
       ),
       isTrue,
     );
+  });
+
+  testWidgets('L4P learner player emits only after a decision is committed', (
+    tester,
+  ) async {
+    final sink = InMemoryLabLearningEvidenceSink();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: LabReferencePlayerScreen(
+          mode: LabMode.professional,
+          learningEvidenceSink: sink,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(sink.events, isEmpty);
+    expect(find.byKey(const ValueKey('lab-option-p1')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('lab-option-p1')));
+    await tester.pump();
+    expect(sink.events, isEmpty);
+
+    await tester.tap(find.byKey(const ValueKey('lab-confirm-decision')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('lab-consequence-screen')), findsOneWidget);
+    expect(sink.events, hasLength(1));
+    expect(sink.events.single.nodeId, 'permit_decision');
+    expect(sink.events.single.optionId, 'p1');
+    expect(sink.events.single.completion, LabEvidenceCompletion.partial);
   });
 
   test('L4P can catch up multiple append-only events after an evidence outage', () async {
