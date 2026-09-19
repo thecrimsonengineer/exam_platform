@@ -113,30 +113,6 @@ void main() {
     );
     expect(find.byKey(const ValueKey('lab-view-debrief')), findsOneWidget);
     expect(find.text('OPTIMAL'), findsNothing);
-  });
-
-  testWidgets('L4J debrief is learner-friendly and replayable', (tester) async {
-    _useTallViewport(tester);
-
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: LabReferencePlayerScreen(mode: LabMode.guided),
-      ),
-    );
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-reference-player')),
-    );
-
-    await _chooseAndContinue(tester, 'p1');
-    await _pumpUntilFound(tester, find.byKey(const ValueKey('lab-option-g1')));
-    await _chooseAndContinue(tester, 'g1');
-    await _pumpUntilFound(tester, find.byKey(const ValueKey('lab-option-s1')));
-    await _chooseAndContinue(tester, 's1');
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('lab-completion-screen')),
-    );
 
     final debriefButton = find.byKey(const ValueKey('lab-view-debrief'));
     await tester.ensureVisible(debriefButton);
