@@ -100,22 +100,38 @@ class LabExhaustiveRouteReport {
   const LabExhaustiveRouteReport({
     required this.routes,
     required this.optionCoverageKeys,
+    required this.consequenceCoverageIds,
+    required this.gateCoverageIds,
+    required this.gateTypeCoverage,
     required this.endingIds,
+    required this.uncoveredConsequenceIds,
+    required this.uncoveredGateIds,
     required this.issues,
     required this.limitExceeded,
     required this.completeOptionCoverage,
+    required this.completeConsequenceCoverage,
+    required this.completeGateCoverage,
     required this.completeEndingCoverage,
+    required this.routeInvariantsHold,
     required this.deterministic,
     required this.fingerprint,
   });
 
   final List<LabExhaustiveRouteTrace> routes;
   final Set<String> optionCoverageKeys;
+  final Set<String> consequenceCoverageIds;
+  final Set<String> gateCoverageIds;
+  final Set<LabGateType> gateTypeCoverage;
   final Set<String> endingIds;
+  final Set<String> uncoveredConsequenceIds;
+  final Set<String> uncoveredGateIds;
   final List<String> issues;
   final bool limitExceeded;
   final bool completeOptionCoverage;
+  final bool completeConsequenceCoverage;
+  final bool completeGateCoverage;
   final bool completeEndingCoverage;
+  final bool routeInvariantsHold;
   final bool deterministic;
   final String fingerprint;
 
@@ -124,7 +140,10 @@ class LabExhaustiveRouteReport {
       issues.isEmpty &&
       !limitExceeded &&
       completeOptionCoverage &&
+      completeConsequenceCoverage &&
+      completeGateCoverage &&
       completeEndingCoverage &&
+      routeInvariantsHold &&
       deterministic;
 }
 
@@ -162,26 +181,63 @@ class LabExhaustiveRouteValidator {
       for (final node in package.nodes.whereType<LabDecisionNode>())
         for (final option in node.options) node.id + '::' + option.id,
     };
+    final expectedConsequences = <String>{
+      for (final node in package.nodes.whereType<LabDecisionNode>())
+        for (final option in node.options)
+          (option.consequence?.id ?? option.consequenceId)!,
+    };
+    final expectedGates = package.gates
+        .map((gate) => gate['id']?.toString() ?? '')
+        .where((id) => id.isNotEmpty)
+        .toSet();
     final expectedEndings = package.endings
         .map((ending) => ending['id']?.toString() ?? '')
         .where((id) => id.isNotEmpty)
         .toSet();
+    final uncoveredConsequences =
+        expectedConsequences.difference(first.consequenceCoverageIds);
+    final uncoveredGates = expectedGates.difference(first.gateCoverageIds);
+    final invariantsHold = _routesHoldInvariants(
+      first.routes,
+      package: package,
+    );
 
     return LabExhaustiveRouteReport(
       routes: List<LabExhaustiveRouteTrace>.unmodifiable(first.routes),
       optionCoverageKeys: Set<String>.unmodifiable(first.optionCoverageKeys),
+      consequenceCoverageIds:
+          Set<String>.unmodifiable(first.consequenceCoverageIds),
+      gateCoverageIds: Set<String>.unmodifiable(first.gateCoverageIds),
+      gateTypeCoverage:
+          Set<LabGateType>.unmodifiable(first.gateTypeCoverage),
       endingIds: Set<String>.unmodifiable(first.endingIds),
+      uncoveredConsequenceIds: Set<String>.unmodifiable(uncoveredConsequences),
+      uncoveredGateIds: Set<String>.unmodifiable(uncoveredGates),
       issues: List<String>.unmodifiable(first.issues),
       limitExceeded: first.limitExceeded,
       completeOptionCoverage:
           first.optionCoverageKeys.containsAll(expectedOptions),
+      completeConsequenceCoverage: uncoveredConsequences.isEmpty,
+      completeGateCoverage: uncoveredGates.isEmpty,
       completeEndingCoverage: first.endingIds.containsAll(expectedEndings),
+      routeInvariantsHold: invariantsHold,
       deterministic:
           first.fingerprint == second.fingerprint &&
           first.limitExceeded == second.limitExceeded &&
           _setEquals(first.optionCoverageKeys, second.optionCoverageKeys) &&
+          _setEquals(
+            first.consequenceCoverageIds,
+            second.consequenceCoverageIds,
+          ) &&
+          _setEquals(first.gateCoverageIds, second.gateCoverageIds) &&
+          _gateTypeSetEquals(
+            first.gateTypeCoverage,
+            second.gateTypeCoverage,
+          ) &&
           _setEquals(first.endingIds, second.endingIds) &&
-          _listEquals(first.issues, second.issues),
+          _listEquals(first.issues, second.issues) &&
+          invariantsHold ==
+              _routesHoldInvariants(second.routes, package: package),
       fingerprint: first.fingerprint,
     );
   }
@@ -201,6 +257,9 @@ class LabExhaustiveRouteValidator {
     };
     final routes = <LabExhaustiveRouteTrace>[];
     final optionCoverage = <String>{};
+    final consequenceCoverage = <String>{};
+    final gateCoverage = <String>{};
+    final gateTypeCoverage = <LabGateType>{};
     final endingIds = <String>{};
     final issues = <String>[];
     final depthLimit = maxDepth ?? package.nodes.length * 8 + 16;
@@ -265,6 +324,10 @@ class LabExhaustiveRouteValidator {
               );
               continue;
             }
+
+            consequenceCoverage.add(resolution.consequence.consequenceId);
+            gateCoverage.add(gate.gateId);
+            gateTypeCoverage.add(gate.type);
 
             final step = LabExhaustiveRouteStep(
               nodeId: node.id,
@@ -346,6 +409,9 @@ class LabExhaustiveRouteValidator {
           issues.add('Scene ' + node.id + ' has no Story Gate.');
           return;
         }
+        gateCoverage.add(gate.gateId);
+        gateTypeCoverage.add(gate.type);
+
         final step = LabExhaustiveRouteStep(
           nodeId: node.id,
           gateId: gate.gateId,
@@ -410,12 +476,102 @@ class LabExhaustiveRouteValidator {
     return _EnumerationResult(
       routes: routes,
       optionCoverageKeys: optionCoverage,
+      consequenceCoverageIds: consequenceCoverage,
+      gateCoverageIds: gateCoverage,
+      gateTypeCoverage: gateTypeCoverage,
       endingIds: endingIds,
       issues: sortedIssues,
       limitExceeded: limitExceeded,
       fingerprint: routeFingerprints.join('|'),
     );
   }
+
+  bool _routesHoldInvariants(
+    List<LabExhaustiveRouteTrace> routes, {
+    required LabPackage package,
+  }) {
+    if (routes.isEmpty) return false;
+
+    final initial = LabState.initial(
+      registry: package.stateRegistry,
+      startingState: package.metadata.startingState,
+    ).snapshot;
+
+    for (final route in routes) {
+      if (route.steps.isEmpty) return false;
+      final first = route.steps.first;
+      if (!_mapEquals(first.stateBefore, initial.values) ||
+          first.evidenceBefore.isNotEmpty ||
+          first.simulatedMinutesBefore != 0) {
+        return false;
+      }
+
+      for (var index = 0; index < route.steps.length; index++) {
+        final step = route.steps[index];
+        if (step.simulatedMinutesAfter < step.simulatedMinutesBefore ||
+            !step.evidenceAfter.containsAll(step.evidenceBefore) ||
+            !_deltaMatchesSnapshots(step)) {
+          return false;
+        }
+
+        final hasTarget = step.targetNodeId != null;
+        final hasEnding = step.endingId != null;
+        if (hasTarget == hasEnding) return false;
+
+        final terminal = index == route.steps.length - 1;
+        if (terminal) {
+          if (!hasEnding ||
+              step.endingId != route.endingId ||
+              step.gateType != LabGateType.completion) {
+            return false;
+          }
+        } else {
+          if (!hasTarget || hasEnding) return false;
+          final next = route.steps[index + 1];
+          if (step.targetNodeId != next.nodeId ||
+              !_mapEquals(step.stateAfter, next.stateBefore) ||
+              !_setEquals(step.evidenceAfter, next.evidenceBefore) ||
+              step.simulatedMinutesAfter != next.simulatedMinutesBefore) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  bool _deltaMatchesSnapshots(LabExhaustiveRouteStep step) {
+    for (final entry in step.stateDelta.entries) {
+      if (!_valueEquals(entry.value.before, step.stateBefore[entry.key]) ||
+          !_valueEquals(entry.value.after, step.stateAfter[entry.key])) {
+        return false;
+      }
+    }
+    for (final key in step.stateBefore.keys) {
+      if (!step.stateAfter.containsKey(key)) return false;
+      if (!step.stateDelta.containsKey(key) &&
+          !_valueEquals(step.stateBefore[key], step.stateAfter[key])) {
+        return false;
+      }
+    }
+    return step.stateAfter.keys.every(step.stateBefore.containsKey);
+  }
+
+  bool _mapEquals(Map<String, Object?> left, Map<String, Object?> right) {
+    if (left.length != right.length) return false;
+    for (final key in left.keys) {
+      if (!right.containsKey(key) || !_valueEquals(left[key], right[key])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _valueEquals(Object? left, Object? right) =>
+      jsonEncode(left) == jsonEncode(right);
+
+  bool _gateTypeSetEquals(Set<LabGateType> left, Set<LabGateType> right) =>
+      left.length == right.length && left.containsAll(right);
 
   String _frameKey(String nodeId, LabState state) {
     final keys = state.values.keys.toList()..sort();
@@ -448,6 +604,9 @@ class _EnumerationResult {
   const _EnumerationResult({
     required this.routes,
     required this.optionCoverageKeys,
+    required this.consequenceCoverageIds,
+    required this.gateCoverageIds,
+    required this.gateTypeCoverage,
     required this.endingIds,
     required this.issues,
     required this.limitExceeded,
@@ -456,6 +615,9 @@ class _EnumerationResult {
 
   final List<LabExhaustiveRouteTrace> routes;
   final Set<String> optionCoverageKeys;
+  final Set<String> consequenceCoverageIds;
+  final Set<String> gateCoverageIds;
+  final Set<LabGateType> gateTypeCoverage;
   final Set<String> endingIds;
   final List<String> issues;
   final bool limitExceeded;
