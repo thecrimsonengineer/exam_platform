@@ -1,6 +1,8 @@
 import 'lab_contracts.dart';
 import 'lab_dqg300.dart';
 import 'lab_exhaustive_route_validator.dart';
+import 'lab_publish_evidence_validator.dart';
+import 'lab_reachable_route_explorer.dart';
 import 'lab_validation.dart';
 
 class LabAutomatedPublishGateReport {
@@ -10,6 +12,8 @@ class LabAutomatedPublishGateReport {
     required this.runtimeNodeCoverageComplete,
     required this.runtimeEndingCoverageComplete,
     required this.exhaustiveRouteReport,
+    required this.routeExplorationReport,
+    required this.publishEvidenceReport,
   });
 
   final LabValidationReport structuralReport;
@@ -17,6 +21,8 @@ class LabAutomatedPublishGateReport {
   final bool runtimeNodeCoverageComplete;
   final bool runtimeEndingCoverageComplete;
   final LabExhaustiveRouteReport exhaustiveRouteReport;
+  final LabReachableRouteExplorationReport routeExplorationReport;
+  final LabPublishEvidenceReport publishEvidenceReport;
 
   bool get isPublishable =>
       structuralReport.isValid &&
@@ -26,7 +32,9 @@ class LabAutomatedPublishGateReport {
       runtimeNodeCoverageComplete &&
       runtimeEndingCoverageComplete &&
       dqg300Report.isValid &&
-      exhaustiveRouteReport.isValid;
+      exhaustiveRouteReport.isValid &&
+      routeExplorationReport.isValid &&
+      publishEvidenceReport.isValid;
 }
 
 class LabAutomatedPublishGate {
@@ -34,11 +42,15 @@ class LabAutomatedPublishGate {
     this.labValidator = const LabValidationEngine(),
     this.dqg300Validator = const LabDqg300Validator(),
     this.exhaustiveRouteValidator = const LabExhaustiveRouteValidator(),
+    this.routeExplorer = const LabReachableRouteExplorer(),
+    this.publishEvidenceValidator = const LabPublishEvidenceValidator(),
   });
 
   final LabValidationEngine labValidator;
   final LabDqg300Validator dqg300Validator;
   final LabExhaustiveRouteValidator exhaustiveRouteValidator;
+  final LabReachableRouteExplorer routeExplorer;
+  final LabPublishEvidenceValidator publishEvidenceValidator;
 
   LabAutomatedPublishGateReport evaluate({
     required LabPackage package,
@@ -48,6 +60,7 @@ class LabAutomatedPublishGate {
     Set<String>? allowedCompetencyIds,
     int simulationLimit = 1000,
     int exhaustiveRouteLimit = 10000,
+    int routeExplorationBudget = 1000,
   }) {
     final structural = labValidator.validatePackage(
       package,
@@ -64,6 +77,18 @@ class LabAutomatedPublishGate {
     final exhaustive = exhaustiveRouteValidator.run(
       package,
       maxRoutes: exhaustiveRouteLimit,
+    );
+    final effectiveRouteBudget = routeExplorationBudget <= exhaustiveRouteLimit
+        ? routeExplorationBudget
+        : exhaustiveRouteLimit;
+    final routeExploration = routeExplorer.exploreFromExhaustive(
+      exhaustive,
+      routeBudget: effectiveRouteBudget,
+      hardRouteLimit: exhaustiveRouteLimit,
+    );
+    final publishEvidence = publishEvidenceValidator.validate(
+      package: package,
+      routeExplorationReport: routeExploration,
     );
 
     final expectedNodes = package.nodes.map((node) => node.id).toSet();
@@ -82,6 +107,8 @@ class LabAutomatedPublishGate {
         expectedEndings,
       ),
       exhaustiveRouteReport: exhaustive,
+      routeExplorationReport: routeExploration,
+      publishEvidenceReport: publishEvidence,
     );
   }
 }
