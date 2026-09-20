@@ -36,9 +36,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('flashcard-studio-preview')));
     await tester.pumpAndSettle();
 
-    final studioList = find.byKey(
-      const ValueKey('flashcard-studio-list'),
-    );
+    final studioList = find.byKey(const ValueKey('flashcard-studio-list'));
     await tester.drag(studioList, const Offset(0, -180));
     await tester.pumpAndSettle();
 
@@ -51,10 +49,7 @@ void main() {
       'd03_c02_flashcards_v1',
     ]);
 
-    await tester.drag(
-      studioList,
-      const Offset(0, -700),
-    );
+    await tester.drag(studioList, const Offset(0, -700));
     await tester.pumpAndSettle();
 
     expect(find.textContaining('FCQ100 100/100 PASS'), findsOneWidget);
