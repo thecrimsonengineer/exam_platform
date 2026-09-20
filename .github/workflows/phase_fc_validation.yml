@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - phase-fc-flashcard-core
+      - phase-fc2-provenance
 
 permissions:
   contents: read
@@ -49,6 +50,11 @@ jobs:
 
       - name: FC Run 1 architecture boundary
         run: flutter test test/features/flashcards/architecture/flashcard_run1_architecture_test.dart
+
+      - name: FC Run 2 provenance tests
+        run: |
+          flutter test test/features/flashcards/provenance/flashcard_source_registry_test.dart
+          flutter test test/features/flashcards/provenance/flashcard_provenance_validator_test.dart
 
       - name: Frozen MOT foundation regression
         run: |
