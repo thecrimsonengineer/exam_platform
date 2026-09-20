@@ -25,9 +25,7 @@ void main() {
     ).readAsStringSync();
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: FlashcardStudioScreen(studioService: studio),
-      ),
+      MaterialApp(home: FlashcardStudioScreen(studioService: studio)),
     );
     await tester.pumpAndSettle();
 

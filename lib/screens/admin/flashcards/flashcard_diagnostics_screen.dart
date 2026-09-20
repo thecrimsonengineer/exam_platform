@@ -23,7 +23,8 @@ class FlashcardDiagnosticsScreen extends StatefulWidget {
       _FlashcardDiagnosticsScreenState();
 }
 
-class _FlashcardDiagnosticsScreenState extends State<FlashcardDiagnosticsScreen> {
+class _FlashcardDiagnosticsScreenState
+    extends State<FlashcardDiagnosticsScreen> {
   late final FlashcardIntegrationService _integration;
   late final LocalStudyContentRepository _studyContentRepository;
 
@@ -230,9 +231,7 @@ class _MappingPanel extends StatelessWidget {
           if (report.conflictingQuestionIds.isNotEmpty)
             _IdWrap(
               label: 'Conflicting Question IDs',
-              values: report.conflictingQuestionIds
-                  .map((id) => '$id')
-                  .toList(),
+              values: report.conflictingQuestionIds.map((id) => '$id').toList(),
             ),
         ],
       ),
@@ -311,10 +310,7 @@ class _PlacementPanel extends StatelessWidget {
 }
 
 class _CollectionPanel extends StatelessWidget {
-  const _CollectionPanel({
-    required this.report,
-    required this.error,
-  });
+  const _CollectionPanel({required this.report, required this.error});
 
   final FlashcardCollectionQualityReport? report;
   final Object? error;
@@ -458,9 +454,9 @@ class _IdWrap extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Wrap(
@@ -480,16 +476,13 @@ Widget _metricRow(BuildContext context, String label, String value) {
     child: Row(
       children: [
         Expanded(
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w800,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
         ),
       ],
     ),

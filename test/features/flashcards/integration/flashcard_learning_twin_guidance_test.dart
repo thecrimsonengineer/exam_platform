@@ -18,9 +18,7 @@ void main() {
 
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: LearningTwinFlashcardGuidance(summary: summary),
-        ),
+        home: Scaffold(body: LearningTwinFlashcardGuidance(summary: summary)),
       ),
     );
     await tester.pumpAndSettle();
@@ -29,14 +27,14 @@ void main() {
     expect(find.textContaining('3 concept cards'), findsOneWidget);
     expect(find.textContaining('2 weaker concepts'), findsOneWidget);
     expect(
-      find.byKey(
-        const ValueKey<String>('learning-twin-flashcard-guidance'),
-      ),
+      find.byKey(const ValueKey<String>('learning-twin-flashcard-guidance')),
       findsOneWidget,
     );
   });
 
-  testWidgets('unseen summary explains first reveal activation', (tester) async {
+  testWidgets('unseen summary explains first reveal activation', (
+    tester,
+  ) async {
     const summary = FlashcardLearningTwinSummary(
       ownedCount: 2,
       unseenCount: 2,

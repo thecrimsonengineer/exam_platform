@@ -117,9 +117,12 @@ class _QuizScreenState extends State<QuizScreen> {
     super.initState();
 
     _flashcardIntegrationService =
-        widget.flashcardIntegrationService ?? FlashcardIntegrationService.local();
-    _flashcardAttemptId =
-        DateTime.now().toUtc().microsecondsSinceEpoch.toString();
+        widget.flashcardIntegrationService ??
+        FlashcardIntegrationService.local();
+    _flashcardAttemptId = DateTime.now()
+        .toUtc()
+        .microsecondsSinceEpoch
+        .toString();
 
     _initializeController();
     _loadBookmarks();
@@ -270,11 +273,12 @@ class _QuizScreenState extends State<QuizScreen> {
     bool correct,
   ) async {
     try {
-      final result = await _flashcardIntegrationService.recordQuestionCompletion(
-        questionId: question.id,
-        correct: correct,
-        eventId: 'fc7-quiz-$_flashcardAttemptId-q${question.id}',
-      );
+      final result = await _flashcardIntegrationService
+          .recordQuestionCompletion(
+            questionId: question.id,
+            correct: correct,
+            eventId: 'fc7-quiz-$_flashcardAttemptId-q${question.id}',
+          );
 
       if (!mounted || !result.hasReward) {
         return;

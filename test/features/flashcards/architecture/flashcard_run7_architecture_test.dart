@@ -37,7 +37,8 @@ void main() {
     expect(
       violations,
       isEmpty,
-      reason: 'FC7 integrations must use the façade/UI entry contracts only: '
+      reason:
+          'FC7 integrations must use the façade/UI entry contracts only: '
           '${violations.join(', ')}',
     );
   });

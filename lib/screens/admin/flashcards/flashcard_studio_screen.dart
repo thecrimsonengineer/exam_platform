@@ -7,10 +7,7 @@ import '../../../features/flashcards/repository/flashcard_package_repository.dar
 import '../../../features/flashcards/studio/flashcard_studio_service.dart';
 
 class FlashcardStudioScreen extends StatefulWidget {
-  const FlashcardStudioScreen({
-    super.key,
-    this.studioService,
-  });
+  const FlashcardStudioScreen({super.key, this.studioService});
 
   final FlashcardStudioService? studioService;
 
@@ -153,8 +150,7 @@ class _FlashcardStudioScreenState extends State<FlashcardStudioScreen> {
             ),
             decoration: const InputDecoration(
               labelText: 'Flashcard package JSON',
-              hintText:
-                  'Paste one CSP11 Flashcard package JSON payload here.',
+              hintText: 'Paste one CSP11 Flashcard package JSON payload here.',
               alignLabelWithHint: true,
               border: OutlineInputBorder(),
             ),
@@ -252,9 +248,9 @@ class _PackagePreview extends StatelessWidget {
               children: [
                 Text(
                   contentPackage.deck.title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 6),
                 Text(
