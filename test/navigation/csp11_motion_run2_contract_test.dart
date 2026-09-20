@@ -64,14 +64,8 @@ void main() {
   test('Quiz changes only question content and reveals submitted feedback', () {
     final source = read('lib/screens/courses/csp/quiz/quiz_screen.dart');
 
-    expect(
-      source,
-      contains(r"'quiz-question-${question.id}'"),
-    );
-    expect(
-      source,
-      contains(r"'quiz-answers-${question.id}'"),
-    );
+    expect(source, contains(r"'quiz-question-${question.id}'"));
+    expect(source, contains(r"'quiz-answers-${question.id}'"));
     expect(source, contains('Csp11SlideFade('));
     expect(source, contains('Csp11StaggeredReveal('));
     expect(source, contains('ExplanationCard('));
