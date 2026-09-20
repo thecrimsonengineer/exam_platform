@@ -14,6 +14,7 @@
       "verificationStatus": "verified",
       "verifiedOn": "2026-09-20",
       "primaryEligible": true,
+      "verbatimEligible": false,
       "notes": "Use the exact page locator and retain attribution. Page-specific third-party material must still be checked before verbatim reuse."
     },
     {
@@ -28,6 +29,7 @@
       "verificationStatus": "verified",
       "verifiedOn": "2026-09-20",
       "primaryEligible": true,
+      "verbatimEligible": true,
       "notes": "OSHA presentation of the federal occupational safety and health standard. Use paragraph-level locators."
     },
     {
@@ -42,6 +44,7 @@
       "verificationStatus": "verified",
       "verifiedOn": "2026-09-20",
       "primaryEligible": true,
+      "verbatimEligible": false,
       "notes": "Definitions must remain tied to the source publication identified by NIST and its context."
     },
     {
@@ -56,6 +59,7 @@
       "verificationStatus": "needsReview",
       "verifiedOn": "",
       "primaryEligible": false,
+      "verbatimEligible": false,
       "notes": "Registry policy example only. Do not reproduce proprietary definitions without an applicable license or permission."
     }
   ]
