@@ -70,15 +70,16 @@ class FlashcardProvenanceValidator {
       }
 
       if (ref.definitionMode == SourceDefinitionMode.verbatimExcerpt) {
-        final verbatimAllowed =
+        final copyrightModeAllowsVerbatim =
             source.copyrightMode ==
                 SourceCopyrightMode.federalGovernmentWork ||
             source.copyrightMode == SourceCopyrightMode.openLicensed ||
             source.copyrightMode == SourceCopyrightMode.permissionGranted;
 
-        if (!verbatimAllowed) {
+        if (!copyrightModeAllowsVerbatim || !source.verbatimEligible) {
           throw FormatException(
-            'Verbatim source use is not permitted: ${ref.sourceId}',
+            'Verbatim source use is not explicitly permitted: '
+            '${ref.sourceId}',
           );
         }
       }
@@ -152,7 +153,7 @@ class FlashcardProvenanceValidator {
   }) {
     validateCard(card: card, sourceRegistry: sourceRegistry);
 
-    return List.unmodifiable(
+    return List<FlashcardSourceDetails>.unmodifiable(
       card.sourceRefs.map(sourceRegistry.detailsFor),
     );
   }
