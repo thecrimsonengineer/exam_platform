@@ -28,7 +28,7 @@ class FlashcardUnlockService {
 
   Future<bool> isOwned(String cardId) async {
     final learnerId = requireLearnerId();
-    return _repository.loadOwnership(
+    return await _repository.loadOwnership(
           learnerId: learnerId,
           cardId: cardId,
         ) !=
@@ -205,30 +205,29 @@ class FlashcardUnlockService {
       );
     }
 
-    switch (request.source) {
-      case FlashcardAcquisitionSource.questionCompletion:
-        if (request.questionId == null || request.questionId! <= 0) {
-          throw const FormatException(
-            'Question completion unlock requires a positive Question ID.',
-          );
-        }
-        if (request.questionOutcome == FlashcardQuestionOutcome.notApplicable) {
-          throw const FormatException(
-            'Question completion unlock requires correct/incorrect outcome.',
-          );
-        }
-      case FlashcardAcquisitionSource.dailyDiscovery:
-        if (request.questionId != null) {
-          throw const FormatException(
-            'Daily Discovery unlock cannot carry a Question ID.',
-          );
-        }
-        if (request.questionOutcome !=
-            FlashcardQuestionOutcome.notApplicable) {
-          throw const FormatException(
-            'Daily Discovery unlock cannot carry a Question outcome.',
-          );
-        }
+    if (request.source == FlashcardAcquisitionSource.questionCompletion) {
+      if (request.questionId == null || request.questionId! <= 0) {
+        throw const FormatException(
+          'Question completion unlock requires a positive Question ID.',
+        );
+      }
+      if (request.questionOutcome == FlashcardQuestionOutcome.notApplicable) {
+        throw const FormatException(
+          'Question completion unlock requires correct/incorrect outcome.',
+        );
+      }
+      return;
+    }
+
+    if (request.questionId != null) {
+      throw const FormatException(
+        'Daily Discovery unlock cannot carry a Question ID.',
+      );
+    }
+    if (request.questionOutcome != FlashcardQuestionOutcome.notApplicable) {
+      throw const FormatException(
+        'Daily Discovery unlock cannot carry a Question outcome.',
+      );
     }
   }
 

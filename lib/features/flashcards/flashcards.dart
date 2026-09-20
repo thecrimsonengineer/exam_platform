@@ -1,3 +1,11 @@
+export 'collection/daily_discovery_repository.dart';
+export 'collection/daily_discovery_service.dart';
+export 'collection/daily_discovery_state.dart';
+export 'collection/flashcard_collection_repository.dart';
+export 'collection/flashcard_collection_statistics.dart';
+export 'collection/flashcard_ownership.dart';
+export 'collection/flashcard_unlock_event.dart';
+export 'collection/flashcard_unlock_service.dart';
 export 'io/flashcard_package_json_codec.dart';
 export 'models/fcq_validation_result.dart';
 export 'models/flashcard.dart';

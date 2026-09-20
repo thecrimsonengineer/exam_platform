@@ -40,15 +40,17 @@ class FlashcardCollectionStatistics {
       } else {
         firstViewedCount++;
       }
+
       totalReinforcements += record.reinforcementCount;
       correctSignalCount += record.correctSignalCount;
       incorrectSignalCount += record.incorrectSignalCount;
 
-      switch (record.acquisitionSource) {
-        case FlashcardAcquisitionSource.questionCompletion:
-          questionAcquiredCount++;
-        case FlashcardAcquisitionSource.dailyDiscovery:
-          dailyDiscoveryAcquiredCount++;
+      if (record.acquisitionSource ==
+          FlashcardAcquisitionSource.questionCompletion) {
+        questionAcquiredCount++;
+      } else if (record.acquisitionSource ==
+          FlashcardAcquisitionSource.dailyDiscovery) {
+        dailyDiscoveryAcquiredCount++;
       }
     }
 

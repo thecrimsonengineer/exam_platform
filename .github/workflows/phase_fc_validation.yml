@@ -6,6 +6,7 @@ on:
       - phase-fc-flashcard-core
       - phase-fc2-provenance
       - phase-fc3-content-system
+      - phase-fc4-collectibles
 
 permissions:
   contents: read
@@ -62,6 +63,12 @@ jobs:
           flutter test test/features/flashcards/io/flashcard_package_json_codec_test.dart
           flutter test test/features/flashcards/repository/flashcard_package_repository_test.dart
           flutter test test/features/flashcards/studio/flashcard_studio_service_test.dart
+
+      - name: FC Run 4 collectible-engine tests
+        run: |
+          flutter test test/features/flashcards/collection/flashcard_collection_repository_test.dart
+          flutter test test/features/flashcards/collection/flashcard_unlock_service_test.dart
+          flutter test test/features/flashcards/collection/daily_discovery_service_test.dart
 
       - name: Frozen MOT foundation regression
         run: |
