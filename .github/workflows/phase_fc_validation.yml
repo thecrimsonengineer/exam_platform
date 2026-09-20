@@ -9,6 +9,7 @@ on:
       - phase-fc4-collectibles
       - phase-fc5-memory
       - phase-fc6-learner-ui
+      - phase-fc7-integration
 
 permissions:
   contents: read
@@ -85,6 +86,10 @@ jobs:
           flutter test test/features/flashcards/ui/flashcard_collection_screen_test.dart
           flutter test test/features/flashcards/ui/flashcard_review_player_screen_test.dart
           flutter test test/features/flashcards/architecture/flashcard_run6_architecture_test.dart
+
+      - name: FC Run 7 integration-core tests
+        run: |
+          flutter test test/features/flashcards/integration/flashcard_integration_service_test.dart
 
       - name: Frozen MOT foundation regression
         run: |
