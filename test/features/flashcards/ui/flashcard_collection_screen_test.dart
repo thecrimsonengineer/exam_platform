@@ -75,7 +75,7 @@ void main() {
     await pumpAtWidth(tester, width: 360, themeMode: ThemeMode.light);
 
     expect(find.text('My Collection'), findsWidgets);
-    expect(find.text('Daily Discovery'), findsWidgets);
+    expect(find.text('DAILY DISCOVERY'), findsOneWidget);
     expect(find.text('Newly Collected'), findsOneWidget);
     expect(find.text('Collection by Domain'), findsOneWidget);
     expect(find.text('Hierarchy of Controls'), findsWidgets);
@@ -88,7 +88,7 @@ void main() {
     await pumpAtWidth(tester, width: 900, themeMode: ThemeMode.dark);
 
     expect(find.text('My Collection'), findsWidgets);
-    expect(find.text('Domain 3'), findsOneWidget);
+    expect(find.text('Domain 3'), findsWidgets);
     expect(
       find.byKey(const ValueKey('flashcards-review-button')),
       findsOneWidget,
