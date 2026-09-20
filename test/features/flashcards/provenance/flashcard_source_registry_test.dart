@@ -7,11 +7,13 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('FlashcardSourceRegistry', () {
     test('Run 2 source registry fixture parses and validates', () {
-      final json = jsonDecode(
-        File(
-          'assets/flashcards/run2/fc_source_registry.v1.json',
-        ).readAsStringSync(),
-      ) as Map<String, dynamic>;
+      final json =
+          jsonDecode(
+                File(
+                  'assets/flashcards/run2/fc_source_registry.v1.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, dynamic>;
 
       final rawSources = json['sources'] as List<dynamic>;
       final entries = rawSources
@@ -100,11 +102,13 @@ void main() {
 }
 
 FlashcardSourceRegistry _run2Registry() {
-  final json = jsonDecode(
-    File(
-      'assets/flashcards/run2/fc_source_registry.v1.json',
-    ).readAsStringSync(),
-  ) as Map<String, dynamic>;
+  final json =
+      jsonDecode(
+            File(
+              'assets/flashcards/run2/fc_source_registry.v1.json',
+            ).readAsStringSync(),
+          )
+          as Map<String, dynamic>;
 
   final rawSources = json['sources'] as List<dynamic>;
   final entries = rawSources
