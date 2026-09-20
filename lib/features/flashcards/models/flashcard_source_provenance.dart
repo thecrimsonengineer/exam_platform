@@ -122,6 +122,7 @@ class FlashcardSourceRegistryEntry {
     required this.verificationStatus,
     required this.verifiedOn,
     required this.primaryEligible,
+    this.verbatimEligible = false,
     this.notes = '',
   });
 
@@ -136,6 +137,14 @@ class FlashcardSourceRegistryEntry {
   final SourceVerificationStatus verificationStatus;
   final String verifiedOn;
   final bool primaryEligible;
+
+  /// Explicit permission gate for word-for-word reuse.
+  ///
+  /// A federal or other trusted host is not enough on its own because a page
+  /// can contain third-party material. This remains false unless the exact
+  /// source has been checked for verbatim reuse.
+  final bool verbatimEligible;
+
   final String notes;
 
   factory FlashcardSourceRegistryEntry.fromJson(Map<String, dynamic> json) {
@@ -160,6 +169,7 @@ class FlashcardSourceRegistryEntry {
       ),
       verifiedOn: json['verifiedOn']?.toString() ?? '',
       primaryEligible: json['primaryEligible'] == true,
+      verbatimEligible: json['verbatimEligible'] == true,
       notes: json['notes']?.toString() ?? '',
     );
   }
@@ -177,6 +187,7 @@ class FlashcardSourceRegistryEntry {
       'verificationStatus': verificationStatus.name,
       'verifiedOn': verifiedOn,
       'primaryEligible': primaryEligible,
+      'verbatimEligible': verbatimEligible,
       if (notes.isNotEmpty) 'notes': notes,
     };
   }
@@ -200,7 +211,7 @@ class FlashcardSourceRegistryEntry {
   bool get usesOfficialUsGovernmentDomain {
     final uri = Uri.tryParse(canonicalUrl);
     final host = uri?.host.toLowerCase() ?? '';
-    return host == 'gov' || host.endsWith('.gov');
+    return host.endsWith('.gov');
   }
 }
 
