@@ -13,6 +13,7 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 import 'package:exam_platform/theme/motion/csp11_motion.dart';
 import 'package:exam_platform/widgets/motion/csp11_completion_reveal.dart';
 import 'package:exam_platform/widgets/motion/csp11_slide_fade.dart';
+import 'package:exam_platform/widgets/motion/csp11_status_reveal.dart';
 
 import 'lab_learner_debrief_screen.dart';
 import 'lab_scenario_catalog.dart';
@@ -256,9 +257,15 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
       appBar: AppBar(title: Text(_modeTitle(widget.mode) + ' LAB')),
       body: SafeArea(
         child: _error != null
-            ? _ErrorState(message: _error!, onRetry: _loadLab)
+            ? Csp11StatusReveal(
+                kind: Csp11StatusKind.error,
+                child: _ErrorState(message: _error!, onRetry: _loadLab),
+              )
             : _package == null || _session == null
-            ? const Center(child: CircularProgressIndicator())
+            ? const Csp11StatusReveal(
+                kind: Csp11StatusKind.loading,
+                child: Center(child: CircularProgressIndicator()),
+              )
             : Csp11SlideFade(
                 key: ValueKey(_motionStateKey(_package!, _session!)),
                 beginOffset: const Offset(0.02, 0),
