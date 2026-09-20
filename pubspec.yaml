@@ -45,6 +45,7 @@ flutter:
     - assets/learning_twin/candidates/
     - assets/flashcards/run1/
     - assets/flashcards/run2/
+    - assets/flashcards/run3/
 
 flutter_launcher_icons:
   android: true

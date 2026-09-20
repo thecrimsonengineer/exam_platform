@@ -13,12 +13,20 @@ class FlashcardPackageJsonCodec {
       );
     }
 
-    return FlashcardContentPackage.fromJson(
+    final contentPackage = FlashcardContentPackage.fromJson(
       Map<String, dynamic>.from(decoded),
     );
+    if (contentPackage.schemaVersion !=
+        FlashcardContentPackage.currentSchemaVersion) {
+      throw FormatException(
+        'Unsupported Flashcard package schema: '
+        '${contentPackage.schemaVersion}.',
+      );
+    }
+    return contentPackage;
   }
 
-  String encode(FlashcardContentPackage package) {
-    return const JsonEncoder.withIndent('  ').convert(package.toJson());
+  String encode(FlashcardContentPackage contentPackage) {
+    return const JsonEncoder.withIndent('  ').convert(contentPackage.toJson());
   }
 }

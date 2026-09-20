@@ -13,28 +13,29 @@ class FlashcardDeckValidationResult {
 class FlashcardDeckValidator {
   const FlashcardDeckValidator();
 
-  FlashcardDeckValidationResult validate(FlashcardContentPackage package) {
+  FlashcardDeckValidationResult validate(FlashcardContentPackage contentPackage) {
     final issues = <String>[];
 
     try {
       FlashcardConceptCatalog.build(
-        concepts: package.concepts,
-        cards: package.cards,
-        questionMappings: package.questionMappings,
-        decks: <dynamic>[package.deck],
+        concepts: contentPackage.concepts,
+        cards: contentPackage.cards,
+        questionMappings: contentPackage.questionMappings,
+        decks: [contentPackage.deck],
       );
     } on FormatException catch (error) {
       issues.add(error.message.toString());
     }
 
-    final packagedCardIds = package.cards.map((card) => card.id).toSet();
-    final deckCardIds = package.deck.cardIds.toSet();
+    final packagedCardIds =
+        contentPackage.cards.map((card) => card.id).toSet();
+    final deckCardIds = contentPackage.deck.cardIds.toSet();
 
-    if (packagedCardIds.length != package.cards.length) {
+    if (packagedCardIds.length != contentPackage.cards.length) {
       issues.add('Package contains duplicate Flashcard IDs.');
     }
 
-    if (deckCardIds.length != package.deck.cardIds.length) {
+    if (deckCardIds.length != contentPackage.deck.cardIds.length) {
       issues.add('Deck repeats one or more Flashcard IDs.');
     }
 
@@ -46,15 +47,19 @@ class FlashcardDeckValidator {
     }
 
     final conceptsById = {
-      for (final concept in package.concepts) concept.id: concept,
+      for (final concept in contentPackage.concepts) concept.id: concept,
     };
-    for (final card in package.cards) {
+    for (final card in contentPackage.cards) {
       final concept = conceptsById[card.conceptId];
       if (concept == null) {
         continue;
       }
-      if (concept.primaryPlacement.toJson().toString() !=
-          card.primaryPlacement.toJson().toString()) {
+      final left = concept.primaryPlacement;
+      final right = card.primaryPlacement;
+      if (left.domainId != right.domainId ||
+          left.competencyId != right.competencyId ||
+          left.topicId != right.topicId ||
+          left.subtopicId != right.subtopicId) {
         issues.add(
           'Concept ${concept.id} and card ${card.id} must share '
           'the same canonical placement.',
@@ -62,7 +67,8 @@ class FlashcardDeckValidator {
       }
     }
 
-    final duplicates = const FlashcardDuplicateDetector().inspect(package);
+    final duplicates =
+        const FlashcardDuplicateDetector().inspect(contentPackage);
     if (duplicates.hasBlockingDuplicates) {
       issues.add(
         'Package contains ${duplicates.findings.length} semantic duplicate '

@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d03_c02_flashcards_v1",
+    "domainId": "d03",
+    "competencyId": "d03_c02",
+    "title": "Risk Management Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.hierarchy_of_controls",
+      "csp11.flashcard.elimination_control"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.hierarchy_of_controls",
+      "canonicalLabel": "Hierarchy of Controls",
+      "flashcardId": "csp11.flashcard.hierarchy_of_controls",
+      "primaryPlacement": {
+        "domainId": "d03",
+        "competencyId": "d03_c02"
+      },
+      "aliases": ["control hierarchy"]
+    },
+    {
+      "id": "csp11.concept.elimination_control",
+      "canonicalLabel": "Elimination Control",
+      "flashcardId": "csp11.flashcard.elimination_control",
+      "primaryPlacement": {
+        "domainId": "d03",
+        "competencyId": "d03_c02"
+      },
+      "aliases": ["remove the hazard"]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.hierarchy_of_controls",
+      "conceptId": "csp11.concept.hierarchy_of_controls",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Hierarchy of Controls",
+      "backDefinition": "A framework that prioritizes ways to reduce or remove workplace hazards and exposures.",
+      "whyItMatters": "It guides control selection toward methods that reduce reliance on individual worker action.",
+      "keyPoint": "Prefer controls that act on the hazard before relying on PPE.",
+      "primaryPlacement": {
+        "domainId": "d03",
+        "competencyId": "d03_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.hierarchy_of_controls",
+          "locator": "Hierarchy of Controls > Overview",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": ["risk-management", "controls"]
+    },
+    {
+      "id": "csp11.flashcard.elimination_control",
+      "conceptId": "csp11.concept.elimination_control",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Elimination Control",
+      "backDefinition": "A control approach that removes the hazard so the hazardous exposure no longer exists.",
+      "whyItMatters": "Removing the hazard can prevent exposure without depending on repeated worker behavior or protective equipment.",
+      "keyPoint": "Elimination sits at the top of the NIOSH control hierarchy.",
+      "primaryPlacement": {
+        "domainId": "d03",
+        "competencyId": "d03_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.hierarchy_of_controls",
+          "locator": "Hierarchy of Controls > Elimination",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": ["risk-management", "elimination"]
+    }
+  ],
+  "questionMappings": [
+    {
+      "questionId": 930001,
+      "conceptId": "csp11.concept.hierarchy_of_controls"
+    },
+    {
+      "questionId": 930002,
+      "conceptId": "csp11.concept.elimination_control"
+    }
+  ],
+  "sources": [
+    {
+      "id": "csp11.source.niosh.hierarchy_of_controls",
+      "organization": "NIOSH",
+      "title": "Hierarchy of Controls",
+      "canonicalUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/index.html",
+      "allowedDomains": ["cdc.gov"],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-20",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Educational paraphrase only in this reference package."
+    }
+  ]
+}

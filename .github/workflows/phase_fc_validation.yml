@@ -5,6 +5,7 @@ on:
     branches:
       - phase-fc-flashcard-core
       - phase-fc2-provenance
+      - phase-fc3-content-system
 
 permissions:
   contents: read
@@ -54,6 +55,13 @@ jobs:
         run: |
           flutter test test/features/flashcards/provenance/flashcard_source_registry_test.dart
           flutter test test/features/flashcards/provenance/flashcard_provenance_validator_test.dart
+
+      - name: FC Run 3 content-system tests
+        run: |
+          flutter test test/features/flashcards/fcq/fcq100_validator_test.dart
+          flutter test test/features/flashcards/io/flashcard_package_json_codec_test.dart
+          flutter test test/features/flashcards/repository/flashcard_package_repository_test.dart
+          flutter test test/features/flashcards/studio/flashcard_studio_service_test.dart
 
       - name: Frozen MOT foundation regression
         run: |
