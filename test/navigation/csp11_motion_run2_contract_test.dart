@@ -68,7 +68,10 @@ void main() {
       source,
       contains(r"ValueKey<String>('quiz-question-${question.id}')"),
     );
-    expect(source, contains(r"ValueKey<String>('quiz-answers-${question.id}')"));
+    expect(
+      source,
+      contains(r"ValueKey<String>('quiz-answers-${question.id}')"),
+    );
     expect(source, contains('Csp11SlideFade('));
     expect(source, contains('Csp11StaggeredReveal('));
     expect(source, contains('ExplanationCard('));
