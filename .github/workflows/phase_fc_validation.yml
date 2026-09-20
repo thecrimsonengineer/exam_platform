@@ -1,0 +1,62 @@
+name: Phase FC Flashcard Core Validation
+
+on:
+  push:
+    branches:
+      - phase-fc-flashcard-core
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase-fc-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Apply FC canonical formatting
+        run: |
+          dart format lib/features/flashcards test/features/flashcards
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add lib/features/flashcards test/features/flashcards
+            git commit -m "FC1: apply canonical formatter output"
+            git push
+          fi
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+
+      - name: FC Run 1 identity and model tests
+        run: |
+          flutter test test/features/flashcards/registry/flashcard_ids_test.dart
+          flutter test test/features/flashcards/models/flashcard_models_test.dart
+
+      - name: FC Run 1 Concept Registry tests
+        run: |
+          flutter test test/features/flashcards/registry/flashcard_concept_catalog_test.dart
+          flutter test test/features/flashcards/fixtures/flashcard_run1_fixture_test.dart
+
+      - name: FC Run 1 architecture boundary
+        run: flutter test test/features/flashcards/architecture/flashcard_run1_architecture_test.dart
+
+      - name: Frozen MOT foundation regression
+        run: |
+          flutter test test/widgets/motion/csp11_flip_card_test.dart
+          flutter test test/services/haptics/csp11_haptic_architecture_test.dart
