@@ -61,23 +61,15 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
 
     try {
       final snapshot = await _controller.load();
-      FlashcardLearningTwinSummary? learningTwinSummary;
-      try {
-        learningTwinSummary = await _integrationService.learningTwinSummary(
-          now: snapshot.loadedAt,
-        );
-      } catch (_) {
-        // Twin guidance is optional and must not block the Collection.
-      }
 
       if (!mounted) {
         return;
       }
       setState(() {
         _snapshot = snapshot;
-        _learningTwinSummary = learningTwinSummary;
         _loading = false;
       });
+      unawaited(_refreshLearningTwinSummary(snapshot.loadedAt));
     } catch (error) {
       if (!mounted) {
         return;
@@ -86,6 +78,20 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
         _error = error;
         _loading = false;
       });
+    }
+  }
+
+  Future<void> _refreshLearningTwinSummary(DateTime at) async {
+    try {
+      final summary = await _integrationService.learningTwinSummary(now: at);
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _learningTwinSummary = summary;
+      });
+    } catch (_) {
+      // Twin guidance is optional and must never block the Collection.
     }
   }
 
