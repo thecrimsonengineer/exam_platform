@@ -49,13 +49,12 @@ class FlashcardMemoryStatistics {
         dueCount++;
       }
 
-      switch (review.stage) {
-        case FlashcardReviewStage.learning:
-          learningCount++;
-        case FlashcardReviewStage.review:
-          reviewStageCount++;
-        case FlashcardReviewStage.relearning:
-          relearningCount++;
+      if (review.stage == FlashcardReviewStage.learning) {
+        learningCount++;
+      } else if (review.stage == FlashcardReviewStage.review) {
+        reviewStageCount++;
+      } else if (review.stage == FlashcardReviewStage.relearning) {
+        relearningCount++;
       }
 
       final weak = weakCardPolicy.assess(
