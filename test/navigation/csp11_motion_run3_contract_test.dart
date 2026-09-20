@@ -8,8 +8,9 @@ void main() {
   test('LAB motion follows deterministic runtime state', () {
     final source = read('lib/screens/lab/lab_reference_player_screen.dart');
 
-    expect(source, contains('Csp11StateSwitcher('));
+    expect(source, contains('Csp11SlideFade('));
     expect(source, contains('_motionStateKey'));
+    expect(source, isNot(contains('Csp11StateSwitcher(')));
     expect(source, contains('lab-motion-decision-'));
     expect(source, contains('lab-motion-consequence-'));
     expect(source, contains('lab-motion-completion-'));
