@@ -7,6 +7,8 @@ import '../../services/auth/auth_state_service.dart';
 import '../../services/auth/learner_local_identity.dart';
 
 import 'content_repository/content_repository_screen.dart';
+import 'flashcards/flashcard_diagnostics_screen.dart';
+import 'flashcards/flashcard_studio_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import 'lab/lab1000_studio_screen.dart';
 import 'haptic_diagnostics_screen.dart';
@@ -57,6 +59,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     _NavItem(Icons.settings_rounded, 'Settings', 'SYSTEM', enabled: false),
     _NavItem(Icons.vibration_rounded, 'Haptic Diagnostics', 'SYSTEM'),
     _NavItem(Icons.motion_photos_on_rounded, 'Motion Diagnostics', 'SYSTEM'),
+    _NavItem(Icons.style_rounded, 'Flashcard Studio', 'FLASHCARDS'),
+    _NavItem(
+      Icons.health_and_safety_outlined,
+      'Flashcard Diagnostics',
+      'FLASHCARDS',
+    ),
   ];
 
   @override
@@ -152,6 +160,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     ).push(Csp11Route.detail<void>(child: const MotionDiagnosticsScreen()));
   }
 
+  void _openFlashcardStudio() {
+    Navigator.of(
+      context,
+    ).push(Csp11Route.detail<void>(child: const FlashcardStudioScreen()));
+  }
+
+  void _openFlashcardDiagnostics() {
+    Navigator.of(context).push(
+      Csp11Route.detail<void>(
+        child: FlashcardDiagnosticsScreen(
+          learnerIdOverride: widget.adminUserId,
+        ),
+      ),
+    );
+  }
+
   Future<void> _openStudentPortal() async {
     final adminUserId = widget.adminUserId?.trim();
 
@@ -242,6 +266,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       _openHapticDiagnostics();
     } else if (index == 12) {
       _openMotionDiagnostics();
+    } else if (index == 13) {
+      _openFlashcardStudio();
+    } else if (index == 14) {
+      _openFlashcardDiagnostics();
     }
   }
 
