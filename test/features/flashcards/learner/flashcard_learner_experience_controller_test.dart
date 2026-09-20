@@ -95,26 +95,23 @@ void main() {
   );
 
   test('conflicting duplicate learner card identity fails closed', () async {
-    final duplicate = FlashcardContentPackage(
-      schemaVersion: package.schemaVersion,
-      deck: package.deck,
-      concepts: package.concepts,
-      cards: <Flashcard>[
-        Flashcard(
-          id: package.cards.first.id,
-          conceptId: package.cards.first.conceptId,
-          version: package.cards.first.version,
-          type: package.cards.first.type,
-          frontLabel: 'Changed learner wording',
-          backDefinition: package.cards.first.backDefinition,
-          primaryPlacement: package.cards.first.primaryPlacement,
-          sourceRefs: package.cards.first.sourceRefs,
-          lifecycle: package.cards.first.lifecycle,
-        ),
-      ],
-      questionMappings: package.questionMappings,
-      sources: package.sources,
-    );
+    final duplicateJson = package.toJson();
+    final duplicateDeck = Map<String, dynamic>.from(
+      duplicateJson['deck']! as Map,
+    )
+      ..['id'] = 'd03_c02_flashcards_v2'
+      ..['version'] = 2;
+    duplicateJson['deck'] = duplicateDeck;
+
+    final duplicateCards = (duplicateJson['cards']! as List)
+        .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList();
+    duplicateCards.first['frontLabel'] = 'Hierarchy of Safety Controls';
+    duplicateJson['cards'] = duplicateCards;
+
+    final duplicate = FlashcardContentPackage.fromJson(duplicateJson);
+    expect(const Fcq100Validator().validate(package).passed, isTrue);
+    expect(const Fcq100Validator().validate(duplicate).passed, isTrue);
 
     final repository = MemoryFlashcardPackageRepository(
       seed: <FlashcardContentPackage>[package, duplicate],
