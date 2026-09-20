@@ -38,10 +38,10 @@ class Csp11Haptics {
 
   static Duration _suppressionWindow(Csp11HapticEvent event) {
     return switch (event) {
-      Csp11HapticEvent.selection || Csp11HapticEvent.navigation =>
-        const Duration(milliseconds: 80),
-      Csp11HapticEvent.confirm || Csp11HapticEvent.success =>
-        const Duration(milliseconds: 160),
+      Csp11HapticEvent.selection ||
+      Csp11HapticEvent.navigation => const Duration(milliseconds: 80),
+      Csp11HapticEvent.confirm ||
+      Csp11HapticEvent.success => const Duration(milliseconds: 160),
       Csp11HapticEvent.warning ||
       Csp11HapticEvent.error ||
       Csp11HapticEvent.criticalDecision ||
