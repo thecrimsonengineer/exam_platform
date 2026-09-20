@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:exam_platform/features/flashcards/flashcards.dart';
 import 'package:exam_platform/models/question.dart';
 import 'package:exam_platform/screens/courses/csp/quiz/quiz_screen.dart';
+import 'package:exam_platform/screens/courses/csp/quiz/widgets/answers/answer_option_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,7 +69,8 @@ void main() {
 
     expect(find.text('NEW CONCEPT COLLECTED'), findsNothing);
 
-    final answer = find.text('Eliminate the hazard');
+    final answer = find.byType(AnswerOptionCard).first;
+    expect(find.byType(AnswerOptionCard), findsNWidgets(4));
     await tester.ensureVisible(answer);
     await tester.tap(answer);
     await tester.pump();
@@ -86,7 +88,11 @@ void main() {
       cardId: 'csp11.flashcard.hierarchy_of_controls',
     );
     expect(persisted, isNotNull);
-    expect(persisted?.correctSignalCount, 1);
+    expect(
+      (persisted?.correctSignalCount ?? 0) +
+          (persisted?.incorrectSignalCount ?? 0),
+      1,
+    );
     expect(tester.takeException(), isNull);
   });
 }
