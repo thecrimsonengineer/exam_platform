@@ -69,9 +69,7 @@ class FlashcardDuplicateDetector {
 
     _collectDuplicates(
       kind: FlashcardDuplicateKind.cardFront,
-      values: {
-        for (final card in package.cards) card.id: card.frontLabel,
-      },
+      values: {for (final card in package.cards) card.id: card.frontLabel},
       findings: findings,
     );
 

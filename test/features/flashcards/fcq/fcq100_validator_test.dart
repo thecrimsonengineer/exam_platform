@@ -52,9 +52,10 @@ FlashcardContentPackage _referencePackage() {
 Map<String, dynamic> _referenceJson() {
   return Map<String, dynamic>.from(
     jsonDecode(
-      File(
-        'assets/flashcards/run3/fc_reference_package.v1.json',
-      ).readAsStringSync(),
-    ) as Map,
+          File(
+            'assets/flashcards/run3/fc_reference_package.v1.json',
+          ).readAsStringSync(),
+        )
+        as Map,
   );
 }

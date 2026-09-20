@@ -6,20 +6,23 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const codec = FlashcardPackageJsonCodec();
 
-  test('reference package JSON round trip is byte stable after first encode', () {
-    final source = File(
-      'assets/flashcards/run3/fc_reference_package.v1.json',
-    ).readAsStringSync();
+  test(
+    'reference package JSON round trip is byte stable after first encode',
+    () {
+      final source = File(
+        'assets/flashcards/run3/fc_reference_package.v1.json',
+      ).readAsStringSync();
 
-    final decoded = codec.decode(source);
-    final first = codec.encode(decoded);
-    final second = codec.encode(codec.decode(first));
+      final decoded = codec.decode(source);
+      final first = codec.encode(decoded);
+      final second = codec.encode(codec.decode(first));
 
-    expect(second, first);
-    expect(decoded.packageId, 'd03_c02_flashcards_v1');
-    expect(decoded.cards, hasLength(2));
-    expect(decoded.sources, hasLength(1));
-  });
+      expect(second, first);
+      expect(decoded.packageId, 'd03_c02_flashcards_v1');
+      expect(decoded.cards, hasLength(2));
+      expect(decoded.sources, hasLength(1));
+    },
+  );
 
   test('unsupported schema fails closed at the import boundary', () {
     const source = '{"schemaVersion":"future.v99","deck":{}}';

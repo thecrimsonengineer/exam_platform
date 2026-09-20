@@ -46,16 +46,18 @@ class FlashcardMappingCoverageReport {
     final unmappedEligible = eligible.difference(mappedQuestions).toList()
       ..sort();
 
-    final withMappings = counts.entries
-        .where((entry) => entry.value > 0)
-        .map((entry) => entry.key)
-        .toList()
-      ..sort();
-    final withoutMappings = counts.entries
-        .where((entry) => entry.value == 0)
-        .map((entry) => entry.key)
-        .toList()
-      ..sort();
+    final withMappings =
+        counts.entries
+            .where((entry) => entry.value > 0)
+            .map((entry) => entry.key)
+            .toList()
+          ..sort();
+    final withoutMappings =
+        counts.entries
+            .where((entry) => entry.value == 0)
+            .map((entry) => entry.key)
+            .toList()
+          ..sort();
     final sortedQuestions = mappedQuestions.toList()..sort();
     final sortedCounts = Map<String, int>.fromEntries(
       counts.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),

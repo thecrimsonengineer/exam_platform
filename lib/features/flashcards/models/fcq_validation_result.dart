@@ -15,14 +15,11 @@ class FcqRuleResult {
 }
 
 class FcqValidationResult {
-  const FcqValidationResult({
-    required this.rules,
-  });
+  const FcqValidationResult({required this.rules});
 
   final List<FcqRuleResult> rules;
 
-  int get score =>
-      rules.fold<int>(0, (sum, rule) => sum + rule.awardedPoints);
+  int get score => rules.fold<int>(0, (sum, rule) => sum + rule.awardedPoints);
 
   int get maxScore => rules.fold<int>(0, (sum, rule) => sum + rule.points);
 

@@ -13,7 +13,9 @@ class FlashcardDeckValidationResult {
 class FlashcardDeckValidator {
   const FlashcardDeckValidator();
 
-  FlashcardDeckValidationResult validate(FlashcardContentPackage contentPackage) {
+  FlashcardDeckValidationResult validate(
+    FlashcardContentPackage contentPackage,
+  ) {
     final issues = <String>[];
 
     try {
@@ -27,8 +29,7 @@ class FlashcardDeckValidator {
       issues.add(error.message.toString());
     }
 
-    final packagedCardIds =
-        contentPackage.cards.map((card) => card.id).toSet();
+    final packagedCardIds = contentPackage.cards.map((card) => card.id).toSet();
     final deckCardIds = contentPackage.deck.cardIds.toSet();
 
     if (packagedCardIds.length != contentPackage.cards.length) {
@@ -41,9 +42,7 @@ class FlashcardDeckValidator {
 
     if (packagedCardIds.difference(deckCardIds).isNotEmpty ||
         deckCardIds.difference(packagedCardIds).isNotEmpty) {
-      issues.add(
-        'Deck cardIds must match the packaged Flashcard set exactly.',
-      );
+      issues.add('Deck cardIds must match the packaged Flashcard set exactly.');
     }
 
     final conceptsById = {
@@ -67,8 +66,9 @@ class FlashcardDeckValidator {
       }
     }
 
-    final duplicates =
-        const FlashcardDuplicateDetector().inspect(contentPackage);
+    final duplicates = const FlashcardDuplicateDetector().inspect(
+      contentPackage,
+    );
     if (duplicates.hasBlockingDuplicates) {
       issues.add(
         'Package contains ${duplicates.findings.length} semantic duplicate '

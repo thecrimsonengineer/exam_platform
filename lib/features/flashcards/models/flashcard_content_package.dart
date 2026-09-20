@@ -38,10 +38,7 @@ class FlashcardContentPackage {
         json['concepts'],
         (item) => FlashcardConcept.fromJson(item),
       ),
-      cards: _decodeList(
-        json['cards'],
-        (item) => Flashcard.fromJson(item),
-      ),
+      cards: _decodeList(json['cards'], (item) => Flashcard.fromJson(item)),
       questionMappings: _decodeList(
         json['questionMappings'],
         (item) => QuestionConceptMapping.fromJson(item),

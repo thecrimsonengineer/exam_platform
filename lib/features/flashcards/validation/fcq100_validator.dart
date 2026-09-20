@@ -24,10 +24,12 @@ class Fcq100Validator {
       sourceRegistryValid = false;
     }
 
-    final deckValidation =
-        const FlashcardDeckValidator().validate(contentPackage);
-    final duplicateReport =
-        const FlashcardDuplicateDetector().inspect(contentPackage);
+    final deckValidation = const FlashcardDeckValidator().validate(
+      contentPackage,
+    );
+    final duplicateReport = const FlashcardDuplicateDetector().inspect(
+      contentPackage,
+    );
 
     var provenanceValid = sourceRegistryValid;
     if (sourceRegistry != null) {
@@ -44,11 +46,11 @@ class Fcq100Validator {
       }
     }
 
-    final conceptIds =
-        contentPackage.concepts.map((item) => item.id).toList();
+    final conceptIds = contentPackage.concepts.map((item) => item.id).toList();
     final cardIds = contentPackage.cards.map((item) => item.id).toList();
-    final questionIds =
-        contentPackage.questionMappings.map((item) => item.questionId).toList();
+    final questionIds = contentPackage.questionMappings
+        .map((item) => item.questionId)
+        .toList();
     final sourceIds = contentPackage.sources.map((item) => item.id).toList();
 
     final placementsMatch = contentPackage.cards.every((card) {
@@ -178,8 +180,7 @@ class Fcq100Validator {
       _rule(
         'FCQ-019',
         contentPackage.cards.every(
-          (card) =>
-              card.keyPoint.isEmpty || card.keyPoint.trim().length <= 300,
+          (card) => card.keyPoint.isEmpty || card.keyPoint.trim().length <= 300,
         ),
         'Optional key points must not exceed 300 characters.',
       ),
@@ -239,9 +240,7 @@ class Fcq100Validator {
     );
   }
 
-  static bool _deckVersionMatches(
-    FlashcardContentPackage contentPackage,
-  ) {
+  static bool _deckVersionMatches(FlashcardContentPackage contentPackage) {
     try {
       return contentPackage.deck.version >= 1 &&
           FlashcardIds.deckVersion(contentPackage.deck.id) ==
