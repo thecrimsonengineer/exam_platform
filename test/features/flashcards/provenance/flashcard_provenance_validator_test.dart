@@ -13,11 +13,13 @@ void main() {
   group('FlashcardProvenanceValidator', () {
     test('Run 2 learner-ready fixture passes provenance validation', () {
       final registry = _run2Registry();
-      final json = jsonDecode(
-        File(
-          'assets/flashcards/run2/fc_sourced_cards.v1.json',
-        ).readAsStringSync(),
-      ) as Map<String, dynamic>;
+      final json =
+          jsonDecode(
+                File(
+                  'assets/flashcards/run2/fc_sourced_cards.v1.json',
+                ).readAsStringSync(),
+              )
+              as Map<String, dynamic>;
       final rawCards = json['cards'] as List<dynamic>;
       final card = Flashcard.fromJson(
         Map<String, dynamic>.from(rawCards.single as Map),
@@ -41,8 +43,14 @@ void main() {
         card: card,
         sourceRegistry: registry,
       );
-      expect(details.single.definitionMode, SourceDefinitionMode.educationalParaphrase);
-      expect(details.single.verificationStatus, SourceVerificationStatus.verified);
+      expect(
+        details.single.definitionMode,
+        SourceDefinitionMode.educationalParaphrase,
+      );
+      expect(
+        details.single.verificationStatus,
+        SourceVerificationStatus.verified,
+      );
     });
 
     test('candidate card may exist before source review', () {
@@ -255,11 +263,13 @@ void main() {
 }
 
 FlashcardSourceRegistry _run2Registry() {
-  final json = jsonDecode(
-    File(
-      'assets/flashcards/run2/fc_source_registry.v1.json',
-    ).readAsStringSync(),
-  ) as Map<String, dynamic>;
+  final json =
+      jsonDecode(
+            File(
+              'assets/flashcards/run2/fc_source_registry.v1.json',
+            ).readAsStringSync(),
+          )
+          as Map<String, dynamic>;
 
   final rawSources = json['sources'] as List<dynamic>;
   final entries = rawSources
