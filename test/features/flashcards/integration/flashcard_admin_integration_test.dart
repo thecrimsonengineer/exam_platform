@@ -46,11 +46,7 @@ void main() {
 
     final studioList = find.byKey(const ValueKey('flashcard-studio-list'));
     final fcqPass = find.textContaining('FCQ100 100/100 PASS');
-    await tester.scrollUntilVisible(
-      fcqPass,
-      300,
-      scrollable: studioList,
-    );
+    await tester.scrollUntilVisible(fcqPass, 300, scrollable: studioList);
     expect(fcqPass, findsOneWidget);
     expect(find.text('Hierarchy of Controls'), findsOneWidget);
 
