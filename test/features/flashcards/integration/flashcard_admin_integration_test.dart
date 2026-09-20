@@ -38,14 +38,26 @@ void main() {
       find.byKey(const ValueKey('flashcard-studio-json')),
       source,
     );
-    await tester.tap(find.byKey(const ValueKey('flashcard-studio-preview')));
+    final preview = find.byKey(const ValueKey('flashcard-studio-preview'));
+    await tester.ensureVisible(preview);
+    await tester.pumpAndSettle();
+    await tester.tap(preview);
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('FCQ100 100/100 PASS'), findsOneWidget);
+    final studioList = find.byKey(const ValueKey('flashcard-studio-list'));
+    final fcqPass = find.textContaining('FCQ100 100/100 PASS');
+    await tester.scrollUntilVisible(
+      fcqPass,
+      300,
+      scrollable: studioList,
+    );
+    expect(fcqPass, findsOneWidget);
     expect(find.text('Hierarchy of Controls'), findsOneWidget);
 
     final save = find.byKey(const ValueKey('flashcard-studio-save'));
     expect(save, findsOneWidget);
+    await tester.ensureVisible(save);
+    await tester.pumpAndSettle();
     await tester.tap(save);
     await tester.pumpAndSettle();
 
@@ -99,21 +111,25 @@ void main() {
     final diagnosticsList = find.byKey(
       const ValueKey('flashcard-diagnostics-list'),
     );
-    await tester.drag(diagnosticsList, const Offset(0, -600));
-    await tester.pumpAndSettle();
-
-    expect(
-      find.byKey(const ValueKey('flashcard-diagnostics-placement')),
-      findsOneWidget,
+    final placement = find.byKey(
+      const ValueKey('flashcard-diagnostics-placement'),
     );
-
-    await tester.drag(diagnosticsList, const Offset(0, -600));
-    await tester.pumpAndSettle();
-
-    expect(
-      find.byKey(const ValueKey('flashcard-diagnostics-collection')),
-      findsOneWidget,
+    await tester.scrollUntilVisible(
+      placement,
+      300,
+      scrollable: diagnosticsList,
     );
+    expect(placement, findsOneWidget);
+
+    final collection = find.byKey(
+      const ValueKey('flashcard-diagnostics-collection'),
+    );
+    await tester.scrollUntilVisible(
+      collection,
+      300,
+      scrollable: diagnosticsList,
+    );
+    expect(collection, findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
