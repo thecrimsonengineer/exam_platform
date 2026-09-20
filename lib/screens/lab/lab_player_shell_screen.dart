@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:exam_platform/features/lab/lab_contracts.dart';
+import 'package:exam_platform/navigation/csp11_route.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import 'lab_reference_player_screen.dart';
@@ -138,9 +139,11 @@ class LabPlayerShellScreen extends StatelessWidget {
     LabScenarioDefinition selectedScenario,
   ) {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) =>
-            LabReferencePlayerScreen(mode: mode, scenario: selectedScenario),
+      Csp11Route.forward<void>(
+        child: LabReferencePlayerScreen(
+          mode: mode,
+          scenario: selectedScenario,
+        ),
       ),
     );
   }
