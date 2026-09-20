@@ -19,9 +19,7 @@ abstract class FlashcardCollectionRepository {
     required FlashcardOwnership ownership,
   });
 
-  Future<void> clearLearnerCollection({
-    required String learnerId,
-  });
+  Future<void> clearLearnerCollection({required String learnerId});
 }
 
 class MemoryFlashcardCollectionRepository
@@ -41,8 +39,8 @@ class MemoryFlashcardCollectionRepository
   Future<List<FlashcardOwnership>> loadAllOwnership({
     required String learnerId,
   }) async {
-    final records = _byLearner[learnerId]?.values.toList() ??
-        <FlashcardOwnership>[];
+    final records =
+        _byLearner[learnerId]?.values.toList() ?? <FlashcardOwnership>[];
     records.sort((a, b) => a.cardId.compareTo(b.cardId));
     return List.unmodifiable(records);
   }
@@ -60,9 +58,7 @@ class MemoryFlashcardCollectionRepository
   }
 
   @override
-  Future<void> clearLearnerCollection({
-    required String learnerId,
-  }) async {
+  Future<void> clearLearnerCollection({required String learnerId}) async {
     _byLearner.remove(learnerId);
   }
 }
@@ -75,8 +71,7 @@ class SharedPreferencesFlashcardCollectionRepository
   static String ownershipKeyForLearner({
     required String learnerId,
     required String cardId,
-  }) =>
-      'csp11.student.$learnerId.flashcards.ownership.v1.$cardId';
+  }) => 'csp11.student.$learnerId.flashcards.ownership.v1.$cardId';
 
   @override
   Future<FlashcardOwnership?> loadOwnership({
@@ -168,9 +163,7 @@ class SharedPreferencesFlashcardCollectionRepository
   }
 
   @override
-  Future<void> clearLearnerCollection({
-    required String learnerId,
-  }) async {
+  Future<void> clearLearnerCollection({required String learnerId}) async {
     _validateIdentity(learnerId: learnerId, cardId: 'index');
 
     final prefs = await SharedPreferences.getInstance();

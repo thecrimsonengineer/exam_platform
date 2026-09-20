@@ -44,11 +44,7 @@ class FlashcardUnlockService {
 
     return _serialize(
       lockKey,
-      () => _applyLocked(
-        learnerId: learnerId,
-        card: card,
-        request: request,
-      ),
+      () => _applyLocked(learnerId: learnerId, card: card, request: request),
     );
   }
 
@@ -77,10 +73,8 @@ class FlashcardUnlockService {
       final updated = existing.copyWith(
         firstViewedAt: viewedAt ?? DateTime.now(),
       );
-      await _repository.saveOwnership(
-        learnerId: learnerId,
-        ownership: updated,
-      );
+      updated.validate();
+      await _repository.saveOwnership(learnerId: learnerId, ownership: updated);
       return updated;
     });
   }
@@ -134,6 +128,7 @@ class FlashcardUnlockService {
         incorrectSignalCount: counts.incorrect,
         appliedEventIds: <String>[eventId],
       );
+      ownership.validate();
 
       await _repository.saveOwnership(
         learnerId: learnerId,
@@ -167,11 +162,9 @@ class FlashcardUnlockService {
       incorrectSignalCount: existing.incorrectSignalCount + counts.incorrect,
       appliedEventIds: <String>[...existing.appliedEventIds, eventId],
     );
+    updated.validate();
 
-    await _repository.saveOwnership(
-      learnerId: learnerId,
-      ownership: updated,
-    );
+    await _repository.saveOwnership(learnerId: learnerId, ownership: updated);
 
     return FlashcardUnlockEvent(
       eventId: eventId,

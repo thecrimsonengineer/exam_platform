@@ -1,10 +1,6 @@
 import 'flashcard_ownership.dart';
 
-enum FlashcardUnlockEventKind {
-  newlyCollected,
-  reinforced,
-  duplicateIgnored,
-}
+enum FlashcardUnlockEventKind { newlyCollected, reinforced, duplicateIgnored }
 
 class FlashcardUnlockRequest {
   const FlashcardUnlockRequest({
@@ -49,12 +45,9 @@ class FlashcardUnlockEvent {
   final FlashcardOwnership ownership;
   final int? questionId;
 
-  bool get isNewCollection =>
-      kind == FlashcardUnlockEventKind.newlyCollected;
+  bool get isNewCollection => kind == FlashcardUnlockEventKind.newlyCollected;
 
-  bool get isReinforcement =>
-      kind == FlashcardUnlockEventKind.reinforced;
+  bool get isReinforcement => kind == FlashcardUnlockEventKind.reinforced;
 
-  bool get wasDuplicate =>
-      kind == FlashcardUnlockEventKind.duplicateIgnored;
+  bool get wasDuplicate => kind == FlashcardUnlockEventKind.duplicateIgnored;
 }

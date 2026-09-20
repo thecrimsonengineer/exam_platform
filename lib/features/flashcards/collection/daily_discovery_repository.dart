@@ -15,10 +15,7 @@ abstract class DailyDiscoveryRepository {
     required DailyDiscoveryState state,
   });
 
-  Future<void> clearState({
-    required String learnerId,
-    required String dateKey,
-  });
+  Future<void> clearState({required String learnerId, required String dateKey});
 }
 
 class MemoryDailyDiscoveryRepository implements DailyDiscoveryRepository {
@@ -58,8 +55,7 @@ class SharedPreferencesDailyDiscoveryRepository
   static String storageKey({
     required String learnerId,
     required String dateKey,
-  }) =>
-      'csp11.student.$learnerId.flashcards.daily.v1.$dateKey';
+  }) => 'csp11.student.$learnerId.flashcards.daily.v1.$dateKey';
 
   @override
   Future<DailyDiscoveryState?> loadState({
@@ -86,9 +82,7 @@ class SharedPreferencesDailyDiscoveryRepository
       Map<String, dynamic>.from(decoded),
     );
     if (state.dateKey != dateKey) {
-      throw FormatException(
-        'Daily Discovery storage/date mismatch: $dateKey',
-      );
+      throw FormatException('Daily Discovery storage/date mismatch: $dateKey');
     }
     return state;
   }
@@ -120,15 +114,10 @@ class SharedPreferencesDailyDiscoveryRepository
   }) async {
     _validate(learnerId: learnerId, dateKey: dateKey);
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(
-      storageKey(learnerId: learnerId, dateKey: dateKey),
-    );
+    await prefs.remove(storageKey(learnerId: learnerId, dateKey: dateKey));
   }
 
-  static void _validate({
-    required String learnerId,
-    required String dateKey,
-  }) {
+  static void _validate({required String learnerId, required String dateKey}) {
     if (learnerId.trim().isEmpty) {
       throw const FormatException('Daily Discovery learner ID is required.');
     }

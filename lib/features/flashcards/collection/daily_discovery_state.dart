@@ -1,16 +1,11 @@
-enum DailyDiscoveryStatus {
-  offered,
-  claimed,
-  empty,
-}
+enum DailyDiscoveryStatus { offered, claimed, empty }
 
 DailyDiscoveryStatus dailyDiscoveryStatusFromJson(dynamic value) {
   final raw = value?.toString().trim() ?? '';
   return DailyDiscoveryStatus.values.firstWhere(
     (item) => item.name == raw,
-    orElse: () => throw FormatException(
-      'Unsupported Daily Discovery status: $value',
-    ),
+    orElse: () =>
+        throw FormatException('Unsupported Daily Discovery status: $value'),
   );
 }
 
@@ -58,8 +53,7 @@ class DailyDiscoveryState {
     }
 
     final claimedRaw = json['claimedAt']?.toString() ?? '';
-    final claimedAt =
-        claimedRaw.isEmpty ? null : DateTime.tryParse(claimedRaw);
+    final claimedAt = claimedRaw.isEmpty ? null : DateTime.tryParse(claimedRaw);
     if (claimedRaw.isNotEmpty && claimedAt == null) {
       throw const FormatException('Daily Discovery claimedAt is invalid.');
     }

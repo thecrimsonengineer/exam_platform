@@ -5,10 +5,9 @@ import 'package:crypto/crypto.dart';
 import '../../../services/auth/learner_local_identity.dart';
 import '../models/flashcard.dart';
 import '../models/flashcard_content_package.dart';
-import '../models/flashcard_lifecycle.dart';
+import '../validation/fcq100_validator.dart';
 import 'daily_discovery_repository.dart';
 import 'daily_discovery_state.dart';
-import 'flashcard_collection_repository.dart';
 import 'flashcard_ownership.dart';
 import 'flashcard_unlock_event.dart';
 import 'flashcard_unlock_service.dart';
@@ -26,16 +25,16 @@ class DailyDiscoveryClaimResult {
 class DailyDiscoveryService {
   DailyDiscoveryService({
     required DailyDiscoveryRepository discoveryRepository,
-    required FlashcardCollectionRepository collectionRepository,
     required FlashcardUnlockService unlockService,
+    Fcq100Validator fcq100 = const Fcq100Validator(),
     this.userIdOverride,
   }) : _discoveryRepository = discoveryRepository,
-       _collectionRepository = collectionRepository,
-       _unlockService = unlockService;
+       _unlockService = unlockService,
+       _fcq100 = fcq100;
 
   final DailyDiscoveryRepository _discoveryRepository;
-  final FlashcardCollectionRepository _collectionRepository;
   final FlashcardUnlockService _unlockService;
+  final Fcq100Validator _fcq100;
   final String? userIdOverride;
 
   Future<DailyDiscoveryState> offerForDate({
@@ -43,7 +42,7 @@ class DailyDiscoveryService {
     required Iterable<FlashcardContentPackage> packages,
     DateTime? offeredAt,
   }) async {
-    final learnerId = _requireLearnerId();
+    final learnerId = _requireAlignedLearnerId();
     final dateKey = localDateKey(localDate);
 
     final existing = await _discoveryRepository.loadState(
@@ -54,25 +53,17 @@ class DailyDiscoveryService {
       return existing;
     }
 
-    final owned = await _collectionRepository.loadAllOwnership(
-      learnerId: learnerId,
-    );
+    final owned = await _unlockService.loadCollection();
     final ownedIds = owned.map((item) => item.cardId).toSet();
     final eligibleById = <String, Flashcard>{};
 
     for (final contentPackage in packages) {
-      final deckReady =
-          contentPackage.deck.lifecycle == FlashcardLifecycle.validated ||
-          contentPackage.deck.lifecycle == FlashcardLifecycle.bundled;
-      if (!deckReady) {
+      if (!_fcq100.validate(contentPackage).passed) {
         continue;
       }
 
       for (final card in contentPackage.cards) {
-        final cardReady =
-            card.lifecycle == FlashcardLifecycle.validated ||
-            card.lifecycle == FlashcardLifecycle.bundled;
-        if (!cardReady || ownedIds.contains(card.id)) {
+        if (ownedIds.contains(card.id)) {
           continue;
         }
 
@@ -97,18 +88,16 @@ class DailyDiscoveryService {
         offeredAt: now,
       );
       state.validate();
-      await _discoveryRepository.saveState(
-        learnerId: learnerId,
-        state: state,
-      );
+      await _discoveryRepository.saveState(learnerId: learnerId, state: state);
       return state;
     }
 
-    final selected = candidates[_deterministicIndex(
-      learnerId: learnerId,
-      dateKey: dateKey,
-      length: candidates.length,
-    )];
+    final selected =
+        candidates[_deterministicIndex(
+          learnerId: learnerId,
+          dateKey: dateKey,
+          length: candidates.length,
+        )];
     final eventId = 'daily:$dateKey:${selected.id}';
 
     final state = DailyDiscoveryState(
@@ -120,10 +109,7 @@ class DailyDiscoveryService {
       unlockEventId: eventId,
     );
     state.validate();
-    await _discoveryRepository.saveState(
-      learnerId: learnerId,
-      state: state,
-    );
+    await _discoveryRepository.saveState(learnerId: learnerId, state: state);
     return state;
   }
 
@@ -132,6 +118,8 @@ class DailyDiscoveryService {
     required Iterable<FlashcardContentPackage> packages,
     DateTime? claimedAt,
   }) async {
+    _requireAlignedLearnerId();
+
     final packageList = packages.toList(growable: false);
     final state = await offerForDate(
       localDate: localDate,
@@ -140,10 +128,7 @@ class DailyDiscoveryService {
     );
 
     if (!state.hasOffer) {
-      return DailyDiscoveryClaimResult(
-        state: state,
-        unlockEvent: null,
-      );
+      return DailyDiscoveryClaimResult(state: state, unlockEvent: null);
     }
 
     final card = _findOfferedCard(
@@ -166,23 +151,14 @@ class DailyDiscoveryService {
     );
 
     if (state.isClaimed) {
-      return DailyDiscoveryClaimResult(
-        state: state,
-        unlockEvent: event,
-      );
+      return DailyDiscoveryClaimResult(state: state, unlockEvent: event);
     }
 
-    final learnerId = _requireLearnerId();
+    final learnerId = _requireAlignedLearnerId();
     final claimed = state.markClaimed(at);
-    await _discoveryRepository.saveState(
-      learnerId: learnerId,
-      state: claimed,
-    );
+    await _discoveryRepository.saveState(learnerId: learnerId, state: claimed);
 
-    return DailyDiscoveryClaimResult(
-      state: claimed,
-      unlockEvent: event,
-    );
+    return DailyDiscoveryClaimResult(state: claimed, unlockEvent: event);
   }
 
   static String localDateKey(DateTime value) {
@@ -192,10 +168,17 @@ class DailyDiscoveryService {
     return '$year-$month-$day';
   }
 
-  String _requireLearnerId() {
-    return LearnerLocalIdentity.requireCurrentUserId(
+  String _requireAlignedLearnerId() {
+    final learnerId = LearnerLocalIdentity.requireCurrentUserId(
       userIdOverride: userIdOverride,
     );
+    final unlockLearnerId = _unlockService.requireLearnerId();
+    if (learnerId != unlockLearnerId) {
+      throw StateError(
+        'Daily Discovery and Flashcard unlock learner identities differ.',
+      );
+    }
+    return learnerId;
   }
 
   static int _deterministicIndex({

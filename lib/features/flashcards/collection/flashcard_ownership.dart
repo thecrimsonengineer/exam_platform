@@ -1,13 +1,6 @@
-enum FlashcardAcquisitionSource {
-  questionCompletion,
-  dailyDiscovery,
-}
+enum FlashcardAcquisitionSource { questionCompletion, dailyDiscovery }
 
-enum FlashcardQuestionOutcome {
-  correct,
-  incorrect,
-  notApplicable,
-}
+enum FlashcardQuestionOutcome { correct, incorrect, notApplicable }
 
 FlashcardAcquisitionSource flashcardAcquisitionSourceFromJson(dynamic value) {
   final raw = value?.toString().trim() ?? '';
@@ -23,9 +16,8 @@ FlashcardQuestionOutcome flashcardQuestionOutcomeFromJson(dynamic value) {
   final raw = value?.toString().trim() ?? '';
   return FlashcardQuestionOutcome.values.firstWhere(
     (item) => item.name == raw,
-    orElse: () => throw FormatException(
-      'Unsupported Flashcard question outcome: $value',
-    ),
+    orElse: () =>
+        throw FormatException('Unsupported Flashcard question outcome: $value'),
   );
 }
 
@@ -84,8 +76,7 @@ class FlashcardOwnership {
       reinforcementCount: reinforcementCount ?? this.reinforcementCount,
       lastReinforcedAt: lastReinforcedAt ?? this.lastReinforcedAt,
       correctSignalCount: correctSignalCount ?? this.correctSignalCount,
-      incorrectSignalCount:
-          incorrectSignalCount ?? this.incorrectSignalCount,
+      incorrectSignalCount: incorrectSignalCount ?? this.incorrectSignalCount,
       appliedEventIds: appliedEventIds ?? this.appliedEventIds,
     );
   }
@@ -118,7 +109,19 @@ class FlashcardOwnership {
       );
     }
 
-    return FlashcardOwnership(
+    final eventIds = rawEventIds is List
+        ? rawEventIds
+              .map((item) => item?.toString().trim() ?? '')
+              .where((item) => item.isNotEmpty)
+              .toList()
+        : <String>[];
+    if (eventIds.toSet().length != eventIds.length) {
+      throw const FormatException(
+        'Flashcard ownership applied event IDs must be unique.',
+      );
+    }
+
+    final ownership = FlashcardOwnership(
       cardId: json['cardId']?.toString() ?? '',
       conceptId: json['conceptId']?.toString() ?? '',
       acquiredAt: acquiredAt,
@@ -134,13 +137,10 @@ class FlashcardOwnership {
       lastReinforcedAt: lastReinforcedAt,
       correctSignalCount: _toNonNegativeInt(json['correctSignalCount']),
       incorrectSignalCount: _toNonNegativeInt(json['incorrectSignalCount']),
-      appliedEventIds: rawEventIds is List
-          ? rawEventIds
-                .map((item) => item?.toString().trim() ?? '')
-                .where((item) => item.isNotEmpty)
-                .toList()
-          : const <String>[],
+      appliedEventIds: eventIds,
     );
+    ownership.validate();
+    return ownership;
   }
 
   Map<String, dynamic> toJson() {
@@ -159,6 +159,29 @@ class FlashcardOwnership {
       'incorrectSignalCount': incorrectSignalCount,
       'appliedEventIds': appliedEventIds,
     };
+  }
+
+  void validate() {
+    if (cardId.trim().isEmpty || conceptId.trim().isEmpty) {
+      throw const FormatException(
+        'Flashcard ownership requires card and concept IDs.',
+      );
+    }
+    if (appliedEventIds.isEmpty) {
+      throw const FormatException(
+        'Flashcard ownership requires at least one acquisition event.',
+      );
+    }
+    if (firstViewedAt != null && firstViewedAt!.isBefore(acquiredAt)) {
+      throw const FormatException(
+        'Flashcard first-view time cannot precede acquisition.',
+      );
+    }
+    if (lastReinforcedAt != null && lastReinforcedAt!.isBefore(acquiredAt)) {
+      throw const FormatException(
+        'Flashcard reinforcement time cannot precede acquisition.',
+      );
+    }
   }
 }
 
