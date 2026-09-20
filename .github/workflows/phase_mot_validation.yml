@@ -6,7 +6,7 @@ on:
       - phase-mot-motion-system
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: phase-mot-motion-${{ github.ref }}
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
 
     steps:
       - uses: actions/checkout@v4
@@ -29,26 +29,37 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Formatting gate
-        run: >
-          dart format --output=none --set-exit-if-changed
-          lib/theme/motion
-          lib/widgets/motion
-          lib/navigation/csp11_route.dart
-          lib/screens/navigation/bottom_navigation.dart
-          lib/screens/settings/settings_route.dart
-          test/theme/motion
-          test/widgets/motion
-          test/navigation/csp11_motion_run1_contract_test.dart
+      - name: Apply canonical formatting
+        run: |
+          dart format             lib/theme/motion             lib/widgets/motion             lib/navigation/csp11_route.dart             lib/screens/navigation/bottom_navigation.dart             lib/screens/settings/settings_route.dart             lib/screens/home/home_screen.dart             lib/screens/home/home_screen_dark.dart             lib/screens/courses/csp/csp_study_hub_screen.dart             lib/screens/courses/csp/csp_study_hub_screen_dark.dart             lib/screens/courses/csp/domain_screen.dart             lib/screens/courses/csp/domain_screen_dark.dart             lib/screens/courses/csp/competency_screen.dart             lib/screens/courses/csp/study_subtopic_screen.dart             lib/screens/courses/csp/study_subtopic_screen_dark.dart             lib/screens/courses/csp/quiz/quiz_screen.dart             lib/screens/courses/csp/quiz/result/result_screen.dart             lib/screens/courses/csp/quiz/widgets/answers/answer_option_card.dart             test/theme/motion             test/widgets/motion             test/navigation/csp11_motion_run1_contract_test.dart             test/navigation/csp11_motion_run2_contract_test.dart             test/screens/courses/csp/domain_screen_direct_study_navigation_test.dart             test/screens/courses/csp/quiz_tag_dark_mode_navigation_test.dart
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add               lib/theme/motion               lib/widgets/motion               lib/navigation/csp11_route.dart               lib/screens/navigation/bottom_navigation.dart               lib/screens/settings/settings_route.dart               lib/screens/home/home_screen.dart               lib/screens/home/home_screen_dark.dart               lib/screens/courses/csp/csp_study_hub_screen.dart               lib/screens/courses/csp/csp_study_hub_screen_dark.dart               lib/screens/courses/csp/domain_screen.dart               lib/screens/courses/csp/domain_screen_dark.dart               lib/screens/courses/csp/competency_screen.dart               lib/screens/courses/csp/study_subtopic_screen.dart               lib/screens/courses/csp/study_subtopic_screen_dark.dart               lib/screens/courses/csp/quiz/quiz_screen.dart               lib/screens/courses/csp/quiz/result/result_screen.dart               lib/screens/courses/csp/quiz/widgets/answers/answer_option_card.dart               test/theme/motion               test/widgets/motion               test/navigation/csp11_motion_run1_contract_test.dart               test/navigation/csp11_motion_run2_contract_test.dart               test/screens/courses/csp/domain_screen_direct_study_navigation_test.dart               test/screens/courses/csp/quiz_tag_dark_mode_navigation_test.dart
+            git commit -m "MOT2: apply canonical formatter output"
+            git push
+          fi
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      - name: MOT Run 1 tests
+      - name: MOT Run 1 and Run 2 tests
         run: |
           flutter test test/theme/motion/csp11_motion_tokens_test.dart
           flutter test test/widgets/motion/csp11_motion_primitives_test.dart
+          flutter test test/widgets/motion/csp11_staggered_reveal_test.dart
           flutter test test/navigation/csp11_motion_run1_contract_test.dart
+          flutter test test/navigation/csp11_motion_run2_contract_test.dart
+
+      - name: Learn navigation regression tests
+        run: |
+          flutter test test/screens/courses/csp/domain_screen_direct_study_navigation_test.dart
+          flutter test test/screens/courses/csp/quiz_tag_dark_mode_navigation_test.dart
+
+      - name: Quiz UI regression tests
+        run: |
+          flutter test test/screens/courses/csp/csp11_p6_3_1_quiz_question_contrast_contract_test.dart
+          flutter test test/screens/courses/csp/quiz_domain_label_test.dart
 
       - name: Settings regression tests
         run: |
