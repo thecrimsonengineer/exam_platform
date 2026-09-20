@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "csp11.flashcards.v1",
+  "deck": {
+    "id": "d03_c02_flashcards_v1",
+    "domainId": "d03",
+    "competencyId": "d03_c02",
+    "title": "Risk Management Concept Cards",
+    "version": 1,
+    "lifecycle": "candidate",
+    "cardIds": [
+      "csp11.flashcard.hierarchy_of_controls"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.hierarchy_of_controls",
+      "canonicalLabel": "Hierarchy of Controls",
+      "flashcardId": "csp11.flashcard.hierarchy_of_controls",
+      "primaryPlacement": {
+        "domainId": "d03",
+        "competencyId": "d03_c02"
+      },
+      "aliases": [
+        "control hierarchy"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.hierarchy_of_controls",
+      "conceptId": "csp11.concept.hierarchy_of_controls",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Hierarchy of Controls",
+      "backDefinition": "A framework for selecting controls by prioritizing more effective ways to eliminate or reduce exposure to hazards.",
+      "whyItMatters": "It helps safety professionals prefer controls that act on the hazard before relying on worker behavior or personal protective equipment.",
+      "primaryPlacement": {
+        "domainId": "d03",
+        "competencyId": "d03_c02"
+      },
+      "sourceRefs": [],
+      "lifecycle": "candidate",
+      "tags": [
+        "risk-management",
+        "controls"
+      ]
+    }
+  ],
+  "questionMappings": [
+    {
+      "questionId": 900001,
+      "conceptId": "csp11.concept.hierarchy_of_controls"
+    },
+    {
+      "questionId": 900002,
+      "conceptId": "csp11.concept.hierarchy_of_controls"
+    }
+  ]
+}
