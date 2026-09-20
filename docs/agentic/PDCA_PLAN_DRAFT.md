@@ -4,6 +4,14 @@
 **Status:** Expanded draft  
 **Freeze state:** NOT FROZEN
 
+
+> Cross-PDCA consistency rule: this stage draft is governed by
+> `PDCA_CANONICAL_CONTROL_MODEL_DRAFT.md` for authority hierarchy, state
+> ownership, repair budgets, approvals, validation tiers, and closure semantics.
+> Where older draft wording conflicts with the canonical model, the canonical
+> model is the preferred interpretation until freeze-ready consolidation.
+
+
 ## 1. Purpose
 
 The agentic system exists to reduce repetitive engineering work in `thecrimsonengineer/exam_platform` while preserving or improving the reliability currently obtained through manual supervision.

@@ -4,6 +4,16 @@
 **Status:** Expanded draft  
 **Freeze state:** NOT FROZEN
 
+
+> Cross-PDCA consistency rule: this stage draft is governed by
+> `PDCA_CANONICAL_CONTROL_MODEL_DRAFT.md` for CHECK state ownership, TASK /
+> INTEGRATION / CLOSURE CHECK tiers, Trusted Judge Set rules, exception
+> semantics, and final closure evidence. CHECK supplies validation facts;
+> ACT alone computes closure eligibility. Where older wording conflicts with
+> the canonical model, the canonical model is the preferred interpretation
+> until freeze-ready consolidation.
+
+
 ## Governing principle
 
 PLAN defines what is allowed. DO produces a candidate. CHECK independently determines whether that candidate is trustworthy.

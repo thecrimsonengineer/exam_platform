@@ -4,6 +4,15 @@
 **Status:** Expanded draft  
 **Freeze state:** NOT FROZEN
 
+
+> Cross-PDCA consistency rule: this stage draft is governed by
+> `PDCA_CANONICAL_CONTROL_MODEL_DRAFT.md` for task-state namespaces,
+> DO_STOP_EVENT routing, repair lineage, branch ownership, integration tiers,
+> and maturity coupling. Where older draft wording conflicts with the canonical
+> model, the canonical model is the preferred interpretation until freeze-ready
+> consolidation.
+
+
 ## Governing principle
 
 PLAN defines authority. DO executes inside that authority.
