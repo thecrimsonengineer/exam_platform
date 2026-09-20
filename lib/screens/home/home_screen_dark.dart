@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
+
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../app/app_colors.dart';
@@ -90,8 +92,8 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
   Future<void> _continueLearning(StudentLearningPosition? position) async {
     if (position == null) {
       await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => const DarkDomainScreen(domainNumber: 1),
+        Csp11Route.forward<void>(
+          child: const DarkDomainScreen(domainNumber: 1),
         ),
       );
       await _refreshHome();
@@ -99,8 +101,8 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     }
 
     await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => DarkStudyContentScreen(
+      Csp11Route.forward<void>(
+        child: DarkStudyContentScreen(
           domainId: position.domainId,
           competencyId: position.competencyId,
           domainTitle: position.domainTitle,
@@ -115,8 +117,8 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
 
   Future<void> _openSearchResult(StudyContentSearchResult result) async {
     await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => DarkStudyContentScreen(
+      Csp11Route.forward<void>(
+        child: DarkStudyContentScreen(
           domainId: result.domainId,
           competencyId: result.competencyId,
           domainTitle: result.domainTitle,

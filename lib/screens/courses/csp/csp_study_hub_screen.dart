@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_study_hub_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
+
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../app/app_colors.dart';
@@ -524,8 +526,8 @@ class CspStudyHubScreen extends StatelessWidget {
         key: ValueKey('study-domain-${domain.number}'),
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => DomainScreen(domainNumber: domain.number),
+            Csp11Route.forward<void>(
+              child: DomainScreen(domainNumber: domain.number),
             ),
           );
         },

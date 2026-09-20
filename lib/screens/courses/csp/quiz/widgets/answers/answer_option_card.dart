@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/motion/csp11_motion.dart';
 
 import '../../theme/quiz_colors.dart';
 import '../../theme/quiz_spacing.dart';
@@ -28,9 +29,15 @@ class AnswerOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = _getIcon();
+    final reduced = Csp11MotionPreferences.reduced(context);
+    final targetScale = !submitted && isSelected ? 1.006 : 1.0;
 
-    return StudentGlassSurface(
-      borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+    return AnimatedScale(
+      scale: reduced ? 1.0 : targetScale,
+      duration: reduced ? Duration.zero : Csp11MotionDuration.quick,
+      curve: Csp11MotionCurve.enter,
+      child: StudentGlassSurface(
+        borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
       tint: _surfaceTint(),
       borderColor: _surfaceBorderColor(),
       shadowColor: _surfaceShadowColor(),
@@ -69,6 +76,7 @@ class AnswerOptionCard extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

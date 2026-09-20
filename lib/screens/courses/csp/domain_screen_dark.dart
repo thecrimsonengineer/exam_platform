@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_domain_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
+
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../models/study_content.dart';
@@ -73,10 +75,9 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
   }
 
   void _openPracticeQuiz() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => QuizScreen(domain: widget.domainNumber),
+    Navigator.of(context).push(
+      Csp11Route.detail<void>(
+        child: QuizScreen(domain: widget.domainNumber),
       ),
     );
   }
@@ -86,10 +87,9 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
     required String competencyId,
     required String title,
   }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => DarkStudyContentScreen(
+    Navigator.of(context).push(
+      Csp11Route.forward<void>(
+        child: DarkStudyContentScreen(
           domainId: domainId,
           competencyId: competencyId,
           domainTitle: _domain.title,

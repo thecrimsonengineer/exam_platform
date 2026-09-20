@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
+
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../models/study_content.dart';
@@ -502,8 +504,8 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
 
   void _openSubtopic(BuildContext context, int index) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => StudySubtopicScreen(
+      Csp11Route.replacement<void>(
+        child: StudySubtopicScreen(
           content: widget.content,
           subtopicIndex: index,
           domainTitle: widget.domainTitle,

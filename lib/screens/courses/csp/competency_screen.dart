@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
+
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../app/app_colors.dart';
@@ -81,10 +83,9 @@ class _CompetencyScreenState extends State<CompetencyScreen> {
       subtopicTitle: subtopicTitle,
     );
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => StudyContentScreen(
+    Navigator.of(context).push(
+      Csp11Route.forward<void>(
+        child: StudyContentScreen(
           domainId: widget.domainId,
           competencyId: widget.competencyId,
           domainTitle: widget.domainTitle,

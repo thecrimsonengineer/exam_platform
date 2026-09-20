@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/motion/csp11_motion.dart';
+import 'package:exam_platform/widgets/motion/csp11_staggered_reveal.dart';
 
 import '../../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
 import '../../../../../features/learning_twin/coaching/learning_twin_practice_result_context.dart';
@@ -77,32 +80,48 @@ class ResultScreen extends StatelessWidget {
                         constraints: const BoxConstraints(maxWidth: 1000),
                         child: Column(
                           children: [
-                            _buildHeroCard(percentage, score, totalQuestions),
+                            Csp11StaggeredReveal(
+                              child: _buildHeroCard(
+                                context,
+                                percentage,
+                                score,
+                                totalQuestions,
+                              ),
+                            ),
 
                             if (learningTwinPracticeContext != null) ...[
                               const SizedBox(height: 16),
-                              LearningTwinPostPracticeGuidance(
-                                resultContext:
-                                    LearningTwinPracticeResultContext(
+                              Csp11StaggeredReveal(
+                                delay: const Duration(milliseconds: 40),
+                                child: LearningTwinPostPracticeGuidance(
+                                  resultContext:
+                                      LearningTwinPracticeResultContext(
                                       practiceContext:
                                           learningTwinPracticeContext!,
                                       score: score,
-                                      totalQuestions: totalQuestions,
-                                    ),
+                                        totalQuestions: totalQuestions,
+                                      ),
+                                ),
                               ),
                             ],
 
                             const SizedBox(height: 16),
 
-                            _buildPerformanceCard(
-                              score,
-                              incorrectCount,
-                              bookmarkedCount,
+                            Csp11StaggeredReveal(
+                              delay: const Duration(milliseconds: 80),
+                              child: _buildPerformanceCard(
+                                score,
+                                incorrectCount,
+                                bookmarkedCount,
+                              ),
                             ),
 
                             const SizedBox(height: 16),
 
-                            _buildReviewCard(incorrectCount),
+                            Csp11StaggeredReveal(
+                              delay: const Duration(milliseconds: 120),
+                              child: _buildReviewCard(incorrectCount),
+                            ),
                           ],
                         ),
                       ),
@@ -115,7 +134,10 @@ class ResultScreen extends StatelessWidget {
                 Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 1000),
-                    child: _buildActionButtons(context),
+                    child: Csp11StaggeredReveal(
+                      delay: const Duration(milliseconds: 150),
+                      child: _buildActionButtons(context),
+                    ),
                   ),
                 ),
               ],
@@ -130,7 +152,12 @@ class ResultScreen extends StatelessWidget {
   // HERO
   // ==========================================================
 
-  Widget _buildHeroCard(double percentage, int score, int totalQuestions) {
+  Widget _buildHeroCard(
+    BuildContext context,
+    double percentage,
+    int score,
+    int totalQuestions,
+  ) {
     final performance = _performanceLabel(percentage);
 
     return StudentGlassSurface(
@@ -216,7 +243,7 @@ class ResultScreen extends StatelessWidget {
 
           const SizedBox(height: 21),
 
-          _buildProgressBar(percentage),
+          _buildProgressBar(context, percentage),
         ],
       ),
     );
@@ -226,8 +253,11 @@ class ResultScreen extends StatelessWidget {
   // PROGRESS
   // ==========================================================
 
-  Widget _buildProgressBar(double percentage) {
+  Widget _buildProgressBar(BuildContext context, double percentage) {
     final double value = (percentage / 100).clamp(0.0, 1.0);
+    final duration = Csp11MotionPreferences.reduced(context)
+        ? Duration.zero
+        : Csp11MotionDuration.celebration;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,10 +266,17 @@ class ResultScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           child: SizedBox(
             height: 7,
-            child: LinearProgressIndicator(
-              value: value,
-              backgroundColor: Colors.white.withValues(alpha: 0.14),
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0, end: value),
+              duration: duration,
+              curve: Csp11MotionCurve.enter,
+              builder: (context, animatedValue, _) {
+                return LinearProgressIndicator(
+                  value: animatedValue,
+                  backgroundColor: Colors.white.withValues(alpha: 0.14),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                );
+              },
             ),
           ),
         ),
@@ -469,10 +506,9 @@ class ResultScreen extends StatelessWidget {
             onPressed: () {
               final routeTheme = Theme.of(context);
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => Theme(
+              Navigator.of(context).pushReplacement(
+                Csp11Route.replacement<void>(
+                  child: Theme(
                     data: routeTheme,
                     child: QuizScreen(
                       domain: domain,
@@ -504,10 +540,9 @@ class ResultScreen extends StatelessWidget {
                 : () {
                     final routeTheme = Theme.of(context);
 
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => Theme(
+                    Navigator.of(context).pushReplacement(
+                      Csp11Route.replacement<void>(
+                        child: Theme(
                           data: routeTheme,
                           child: QuizScreen(
                             domain: domain,

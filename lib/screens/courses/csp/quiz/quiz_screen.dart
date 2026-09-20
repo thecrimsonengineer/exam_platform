@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
+import 'package:exam_platform/widgets/motion/csp11_slide_fade.dart';
+import 'package:exam_platform/widgets/motion/csp11_staggered_reveal.dart';
 
 import '../../../../controllers/quiz_controller.dart';
 import '../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
@@ -294,8 +297,8 @@ class _QuizScreenState extends State<QuizScreen> {
     final isDarkMode = ThemeModeService.isDarkMode.value;
 
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => buildCsp11QuizTagDestination(
+      Csp11Route.detail<void>(
+        child: buildCsp11QuizTagDestination(
           isDarkMode: isDarkMode,
           domainId: domainId,
           competencyId: competencyId,
@@ -321,10 +324,9 @@ class _QuizScreenState extends State<QuizScreen> {
 
     final resultRouteTheme = Theme.of(context);
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Theme(
+    Navigator.of(context).pushReplacement(
+      Csp11Route.replacement<void>(
+        child: Theme(
           data: resultRouteTheme,
           child: ResultScreen(
             domain: widget.domain,
@@ -522,9 +524,15 @@ class _QuizScreenState extends State<QuizScreen> {
                           // ========================================
                           // QUESTION
                           // ========================================
-                          QuestionCard(
-                            question: question.question,
-                            questionNumber: quizController.questionNumber,
+                          Csp11SlideFade(
+                            key: ValueKey<String>(
+                              'quiz-question-${question.id}',
+                            ),
+                            beginOffset: const Offset(0.035, 0),
+                            child: QuestionCard(
+                              question: question.question,
+                              questionNumber: quizController.questionNumber,
+                            ),
                           ),
 
                           const SizedBox(height: QuizSpacing.sectionGap),
@@ -532,10 +540,16 @@ class _QuizScreenState extends State<QuizScreen> {
                           // ========================================
                           // ANSWERS
                           // ========================================
-                          AnswerList(
-                            question: question,
-                            controller: quizController,
-                            onSelect: _selectAnswer,
+                          Csp11SlideFade(
+                            key: ValueKey<String>(
+                              'quiz-answers-${question.id}',
+                            ),
+                            beginOffset: const Offset(0.025, 0),
+                            child: AnswerList(
+                              question: question,
+                              controller: quizController,
+                              onSelect: _selectAnswer,
+                            ),
                           ),
 
                           // ========================================
@@ -544,11 +558,20 @@ class _QuizScreenState extends State<QuizScreen> {
                           if (quizController.submitted) ...[
                             const SizedBox(height: QuizSpacing.sectionGap),
 
-                            ExplanationCard(explanation: question.explanation),
+                            Csp11StaggeredReveal(
+                              child: ExplanationCard(
+                                explanation: question.explanation,
+                              ),
+                            ),
 
                             const SizedBox(height: QuizSpacing.md),
 
-                            ReferenceCard(reference: question.reference),
+                            Csp11StaggeredReveal(
+                              delay: const Duration(milliseconds: 40),
+                              child: ReferenceCard(
+                                reference: question.reference,
+                              ),
+                            ),
 
                             if (question.allTags.isNotEmpty) ...[
                               const SizedBox(height: QuizSpacing.md),

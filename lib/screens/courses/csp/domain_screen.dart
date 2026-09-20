@@ -1,6 +1,8 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_domain_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/navigation/csp11_route.dart';
+
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../models/study_content.dart';
@@ -72,10 +74,9 @@ class _DomainScreenState extends State<DomainScreen> {
   }
 
   void _openPracticeQuiz() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => QuizScreen(domain: widget.domainNumber),
+    Navigator.of(context).push(
+      Csp11Route.detail<void>(
+        child: QuizScreen(domain: widget.domainNumber),
       ),
     );
   }
@@ -85,10 +86,9 @@ class _DomainScreenState extends State<DomainScreen> {
     required String competencyId,
     required String title,
   }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => StudyContentScreen(
+    Navigator.of(context).push(
+      Csp11Route.forward<void>(
+        child: StudyContentScreen(
           domainId: domainId,
           competencyId: competencyId,
           domainTitle: _domain.title,
