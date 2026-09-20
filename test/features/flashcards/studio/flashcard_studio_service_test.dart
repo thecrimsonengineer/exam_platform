@@ -34,9 +34,18 @@ void main() {
         eligibleQuestionIds: const <int>[930001, 930002, 930003],
       );
       expect(coverage.mappingCount, 2);
+      expect(coverage.mappedEligibleQuestionIds, <int>[930001, 930002]);
       expect(coverage.unmappedEligibleQuestionIds, <int>[930003]);
       expect(coverage.eligibleQuestionCoverageRatio, closeTo(2 / 3, 0.0001));
       expect(coverage.conceptsWithoutMappings, isEmpty);
+
+      final narrowedCoverage = await studio.mappingCoverage(
+        'd03_c02_flashcards_v1',
+        eligibleQuestionIds: const <int>[930001, 930003],
+      );
+      expect(narrowedCoverage.mappedEligibleQuestionIds, <int>[930001]);
+      expect(narrowedCoverage.unmappedEligibleQuestionIds, <int>[930003]);
+      expect(narrowedCoverage.eligibleQuestionCoverageRatio, 0.5);
 
       await studio.deletePackage('d03_c02_flashcards_v1');
       expect((await studio.buildDeckIndex()).deckCount, 0);

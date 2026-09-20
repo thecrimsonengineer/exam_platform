@@ -4,6 +4,7 @@ class FlashcardMappingCoverageReport {
   const FlashcardMappingCoverageReport({
     required this.mappingCount,
     required this.mappedQuestionIds,
+    required this.mappedEligibleQuestionIds,
     required this.unmappedEligibleQuestionIds,
     required this.conceptsWithMappings,
     required this.conceptsWithoutMappings,
@@ -12,18 +13,21 @@ class FlashcardMappingCoverageReport {
 
   final int mappingCount;
   final List<int> mappedQuestionIds;
+  final List<int> mappedEligibleQuestionIds;
   final List<int> unmappedEligibleQuestionIds;
   final List<String> conceptsWithMappings;
   final List<String> conceptsWithoutMappings;
   final Map<String, int> mappingsPerConcept;
 
+  int get eligibleQuestionCount =>
+      mappedEligibleQuestionIds.length + unmappedEligibleQuestionIds.length;
+
   double get eligibleQuestionCoverageRatio {
-    final denominator =
-        mappedQuestionIds.length + unmappedEligibleQuestionIds.length;
+    final denominator = eligibleQuestionCount;
     if (denominator == 0) {
       return 1;
     }
-    return mappedQuestionIds.length / denominator;
+    return mappedEligibleQuestionIds.length / denominator;
   }
 
   factory FlashcardMappingCoverageReport.build({
@@ -43,6 +47,8 @@ class FlashcardMappingCoverageReport {
     }
 
     final eligible = eligibleQuestionIds.where((id) => id > 0).toSet();
+    final mappedEligible = eligible.intersection(mappedQuestions).toList()
+      ..sort();
     final unmappedEligible = eligible.difference(mappedQuestions).toList()
       ..sort();
 
@@ -66,6 +72,7 @@ class FlashcardMappingCoverageReport {
     return FlashcardMappingCoverageReport(
       mappingCount: package.questionMappings.length,
       mappedQuestionIds: List.unmodifiable(sortedQuestions),
+      mappedEligibleQuestionIds: List.unmodifiable(mappedEligible),
       unmappedEligibleQuestionIds: List.unmodifiable(unmappedEligible),
       conceptsWithMappings: List.unmodifiable(withMappings),
       conceptsWithoutMappings: List.unmodifiable(withoutMappings),
