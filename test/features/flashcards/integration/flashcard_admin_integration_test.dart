@@ -45,8 +45,15 @@ void main() {
     await tester.pumpAndSettle();
 
     final studioList = find.byKey(const ValueKey('flashcard-studio-list'));
+    final studioScrollable = find
+        .descendant(of: studioList, matching: find.byType(Scrollable))
+        .first;
     final fcqPass = find.textContaining('FCQ100 100/100 PASS');
-    await tester.scrollUntilVisible(fcqPass, 300, scrollable: studioList);
+    await tester.scrollUntilVisible(
+      fcqPass,
+      300,
+      scrollable: studioScrollable,
+    );
     expect(fcqPass, findsOneWidget);
     expect(find.text('Hierarchy of Controls'), findsOneWidget);
 
@@ -107,13 +114,16 @@ void main() {
     final diagnosticsList = find.byKey(
       const ValueKey('flashcard-diagnostics-list'),
     );
+    final diagnosticsScrollable = find
+        .descendant(of: diagnosticsList, matching: find.byType(Scrollable))
+        .first;
     final placement = find.byKey(
       const ValueKey('flashcard-diagnostics-placement'),
     );
     await tester.scrollUntilVisible(
       placement,
       300,
-      scrollable: diagnosticsList,
+      scrollable: diagnosticsScrollable,
     );
     expect(placement, findsOneWidget);
 
@@ -123,7 +133,7 @@ void main() {
     await tester.scrollUntilVisible(
       collection,
       300,
-      scrollable: diagnosticsList,
+      scrollable: diagnosticsScrollable,
     );
     expect(collection, findsOneWidget);
     expect(tester.takeException(), isNull);
