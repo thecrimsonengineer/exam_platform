@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/csp11_blueprint.dart';
+import '../../navigation/csp11_route.dart';
 import '../../services/auth/auth_state_provider.dart';
 import '../../services/auth/auth_state_service.dart';
 import '../../services/auth/learner_local_identity.dart';
@@ -9,6 +10,7 @@ import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import 'lab/lab1000_studio_screen.dart';
 import 'haptic_diagnostics_screen.dart';
+import 'motion_diagnostics_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -54,6 +56,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     _NavItem(Icons.analytics_rounded, 'Analytics', 'INSIGHTS', enabled: false),
     _NavItem(Icons.settings_rounded, 'Settings', 'SYSTEM', enabled: false),
     _NavItem(Icons.vibration_rounded, 'Haptic Diagnostics', 'SYSTEM'),
+    _NavItem(Icons.motion_photos_on_rounded, 'Motion Diagnostics', 'SYSTEM'),
   ];
 
   @override
@@ -139,7 +142,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
   void _openHapticDiagnostics() {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const HapticDiagnosticsScreen()),
+      Csp11Route.detail<void>(child: const HapticDiagnosticsScreen()),
+    );
+  }
+
+  void _openMotionDiagnostics() {
+    Navigator.of(context).push(
+      Csp11Route.detail<void>(child: const MotionDiagnosticsScreen()),
     );
   }
 
@@ -231,6 +240,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       _openStudio();
     } else if (index == 11) {
       _openHapticDiagnostics();
+    } else if (index == 12) {
+      _openMotionDiagnostics();
     }
   }
 
