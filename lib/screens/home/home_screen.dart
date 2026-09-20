@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:exam_platform/navigation/csp11_route.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
+import 'package:exam_platform/widgets/motion/csp11_staggered_reveal.dart';
 
 import '../../app/app_colors.dart';
 import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
@@ -203,14 +204,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildHero(context, snapshot, data),
+                                Csp11StaggeredReveal(
+                                  child: _buildHero(context, snapshot, data),
+                                ),
                                 const SizedBox(height: 18),
-                                StudyContentSearchPanel(
-                                  isDarkMode: false,
-                                  onSelected: _openSearchResult,
+                                Csp11StaggeredReveal(
+                                  delay: const Duration(milliseconds: 30),
+                                  child: StudyContentSearchPanel(
+                                    isDarkMode: false,
+                                    onSelected: _openSearchResult,
+                                  ),
                                 ),
                                 const SizedBox(height: 24),
-                                _buildContinueLearning(snapshot, data),
+                                Csp11StaggeredReveal(
+                                  delay: const Duration(milliseconds: 60),
+                                  child: _buildContinueLearning(snapshot, data),
+                                ),
                                 const SizedBox(height: 28),
                                 _buildSectionHeading(
                                   eyebrow: 'YOUR WORKSPACE',
@@ -219,7 +228,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'Four focused routes. One CSP11 learning system.',
                                 ),
                                 const SizedBox(height: 14),
-                                _buildPrimaryActions(context),
+                                Csp11StaggeredReveal(
+                                  delay: const Duration(milliseconds: 90),
+                                  child: _buildPrimaryActions(context),
+                                ),
                                 const SizedBox(height: 30),
                                 _buildSectionHeading(
                                   eyebrow: 'QUICK PRACTICE',
@@ -228,9 +240,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'Jump straight into a focused question session.',
                                 ),
                                 const SizedBox(height: 14),
-                                _buildQuickPractice(context),
+                                Csp11StaggeredReveal(
+                                  delay: const Duration(milliseconds: 120),
+                                  child: _buildQuickPractice(context),
+                                ),
                                 const SizedBox(height: 30),
-                                _buildProgressIntelligence(snapshot, data),
+                                Csp11StaggeredReveal(
+                                  delay: const Duration(milliseconds: 150),
+                                  child: _buildProgressIntelligence(
+                                    snapshot,
+                                    data,
+                                  ),
+                                ),
                               ],
                             );
                           },
