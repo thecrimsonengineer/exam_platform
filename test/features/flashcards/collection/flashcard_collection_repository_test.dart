@@ -31,11 +31,11 @@ void main() {
     );
 
     expect(
-      (await repository.loadAllOwnership(learnerId: 'learner-a')),
+      await repository.loadAllOwnership(learnerId: 'learner-a'),
       hasLength(1),
     );
     expect(
-      (await repository.loadAllOwnership(learnerId: 'learner-b')),
+      await repository.loadAllOwnership(learnerId: 'learner-b'),
       hasLength(1),
     );
 
@@ -61,10 +61,7 @@ void main() {
 
     await repository.clearLearnerCollection(learnerId: 'learner-a');
 
-    expect(
-      await repository.loadAllOwnership(learnerId: 'learner-a'),
-      isEmpty,
-    );
+    expect(await repository.loadAllOwnership(learnerId: 'learner-a'), isEmpty);
     expect(
       await repository.loadAllOwnership(learnerId: 'learner-b'),
       hasLength(1),
@@ -91,5 +88,20 @@ void main() {
     expect(decoded.isUnseen, isTrue);
     expect(decoded.reinforcementCount, 2);
     expect(decoded.appliedEventIds, ownership.appliedEventIds);
+  });
+
+  test('duplicate applied event IDs fail closed on persisted ownership', () {
+    final ownership = FlashcardOwnership(
+      cardId: 'csp11.flashcard.elimination_control',
+      conceptId: 'csp11.concept.elimination_control',
+      acquiredAt: DateTime.utc(2026, 9, 20, 9),
+      acquisitionSource: FlashcardAcquisitionSource.dailyDiscovery,
+      firstQuestionOutcome: FlashcardQuestionOutcome.notApplicable,
+      appliedEventIds: const <String>['daily:one'],
+    );
+    final json = ownership.toJson();
+    json['appliedEventIds'] = <String>['daily:one', 'daily:one'];
+
+    expect(() => FlashcardOwnership.fromJson(json), throwsFormatException);
   });
 }

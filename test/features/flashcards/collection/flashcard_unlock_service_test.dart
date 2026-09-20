@@ -126,39 +126,42 @@ void main() {
     expect(duplicate.ownership.appliedEventIds, hasLength(2));
   });
 
-  test('concurrent duplicate callbacks create one ownership mutation', () async {
-    final repository = MemoryFlashcardCollectionRepository();
-    final service = FlashcardUnlockService(
-      repository: repository,
-      userIdOverride: 'learner-concurrent',
-    );
-    final request = FlashcardUnlockRequest(
-      eventId: 'quiz:concurrent',
-      cardId: hierarchy.id,
-      conceptId: hierarchy.conceptId,
-      source: FlashcardAcquisitionSource.questionCompletion,
-      questionOutcome: FlashcardQuestionOutcome.correct,
-      questionId: 930001,
-    );
+  test(
+    'concurrent duplicate callbacks create one ownership mutation',
+    () async {
+      final repository = MemoryFlashcardCollectionRepository();
+      final service = FlashcardUnlockService(
+        repository: repository,
+        userIdOverride: 'learner-concurrent',
+      );
+      final request = FlashcardUnlockRequest(
+        eventId: 'quiz:concurrent',
+        cardId: hierarchy.id,
+        conceptId: hierarchy.conceptId,
+        source: FlashcardAcquisitionSource.questionCompletion,
+        questionOutcome: FlashcardQuestionOutcome.correct,
+        questionId: 930001,
+      );
 
-    final events = await Future.wait(<Future<FlashcardUnlockEvent>>[
-      service.apply(card: hierarchy, request: request),
-      service.apply(card: hierarchy, request: request),
-    ]);
+      final events = await Future.wait(<Future<FlashcardUnlockEvent>>[
+        service.apply(card: hierarchy, request: request),
+        service.apply(card: hierarchy, request: request),
+      ]);
 
-    expect(
-      events.map((event) => event.kind).toSet(),
-      <FlashcardUnlockEventKind>{
-        FlashcardUnlockEventKind.newlyCollected,
-        FlashcardUnlockEventKind.duplicateIgnored,
-      },
-    );
+      expect(
+        events.map((event) => event.kind).toSet(),
+        <FlashcardUnlockEventKind>{
+          FlashcardUnlockEventKind.newlyCollected,
+          FlashcardUnlockEventKind.duplicateIgnored,
+        },
+      );
 
-    final owned = await service.loadCollection();
-    expect(owned, hasLength(1));
-    expect(owned.single.reinforcementCount, 0);
-    expect(owned.single.appliedEventIds, <String>['quiz:concurrent']);
-  });
+      final owned = await service.loadCollection();
+      expect(owned, hasLength(1));
+      expect(owned.single.reinforcementCount, 0);
+      expect(owned.single.appliedEventIds, <String>['quiz:concurrent']);
+    },
+  );
 
   test('first-view transition is one-way and idempotent', () async {
     final repository = MemoryFlashcardCollectionRepository();
@@ -195,58 +198,61 @@ void main() {
     expect(second.firstViewedAt, firstAt);
   });
 
-  test('collection statistics separate ownership, view and reinforcement', () async {
-    final repository = MemoryFlashcardCollectionRepository();
-    final service = FlashcardUnlockService(
-      repository: repository,
-      userIdOverride: 'learner-stats',
-    );
+  test(
+    'collection statistics separate ownership, view and reinforcement',
+    () async {
+      final repository = MemoryFlashcardCollectionRepository();
+      final service = FlashcardUnlockService(
+        repository: repository,
+        userIdOverride: 'learner-stats',
+      );
 
-    await service.apply(
-      card: hierarchy,
-      request: FlashcardUnlockRequest(
-        eventId: 'quiz:stats:one',
-        cardId: hierarchy.id,
-        conceptId: hierarchy.conceptId,
-        source: FlashcardAcquisitionSource.questionCompletion,
-        questionOutcome: FlashcardQuestionOutcome.correct,
-        questionId: 930001,
-      ),
-    );
-    await service.apply(
-      card: hierarchy,
-      request: FlashcardUnlockRequest(
-        eventId: 'quiz:stats:two',
-        cardId: hierarchy.id,
-        conceptId: hierarchy.conceptId,
-        source: FlashcardAcquisitionSource.questionCompletion,
-        questionOutcome: FlashcardQuestionOutcome.incorrect,
-        questionId: 930001,
-      ),
-    );
-    await service.apply(
-      card: elimination,
-      request: FlashcardUnlockRequest(
-        eventId: 'daily:stats',
-        cardId: elimination.id,
-        conceptId: elimination.conceptId,
-        source: FlashcardAcquisitionSource.dailyDiscovery,
-        questionOutcome: FlashcardQuestionOutcome.notApplicable,
-      ),
-    );
-    await service.markFirstViewed(cardId: hierarchy.id);
+      await service.apply(
+        card: hierarchy,
+        request: FlashcardUnlockRequest(
+          eventId: 'quiz:stats:one',
+          cardId: hierarchy.id,
+          conceptId: hierarchy.conceptId,
+          source: FlashcardAcquisitionSource.questionCompletion,
+          questionOutcome: FlashcardQuestionOutcome.correct,
+          questionId: 930001,
+        ),
+      );
+      await service.apply(
+        card: hierarchy,
+        request: FlashcardUnlockRequest(
+          eventId: 'quiz:stats:two',
+          cardId: hierarchy.id,
+          conceptId: hierarchy.conceptId,
+          source: FlashcardAcquisitionSource.questionCompletion,
+          questionOutcome: FlashcardQuestionOutcome.incorrect,
+          questionId: 930001,
+        ),
+      );
+      await service.apply(
+        card: elimination,
+        request: FlashcardUnlockRequest(
+          eventId: 'daily:stats',
+          cardId: elimination.id,
+          conceptId: elimination.conceptId,
+          source: FlashcardAcquisitionSource.dailyDiscovery,
+          questionOutcome: FlashcardQuestionOutcome.notApplicable,
+        ),
+      );
+      await service.markFirstViewed(cardId: hierarchy.id);
 
-    final stats = await service.statistics();
+      final stats = await service.statistics();
 
-    expect(stats.totalOwned, 2);
-    expect(stats.unseenCount, 1);
-    expect(stats.firstViewedCount, 1);
-    expect(stats.totalReinforcements, 1);
-    expect(stats.questionAcquiredCount, 1);
-    expect(stats.dailyDiscoveryAcquiredCount, 1);
-    expect(stats.correctSignalCount, 1);
-    expect(stats.incorrectSignalCount, 1);
-  });
+      expect(stats.totalOwned, 2);
+      expect(stats.unseenCount, 1);
+      expect(stats.firstViewedCount, 1);
+      expect(stats.totalReinforcements, 1);
+      expect(stats.questionAcquiredCount, 1);
+      expect(stats.dailyDiscoveryAcquiredCount, 1);
+      expect(stats.correctSignalCount, 1);
+      expect(stats.incorrectSignalCount, 1);
+    },
+  );
 
   test('the same card is isolated between learner namespaces', () async {
     final repository = MemoryFlashcardCollectionRepository();

@@ -37,39 +37,40 @@ void main() {
       userIdOverride: learnerId,
     );
     return DailyDiscoveryService(
-      discoveryRepository:
-          discovery ?? MemoryDailyDiscoveryRepository(),
-      collectionRepository: collection,
+      discoveryRepository: discovery ?? MemoryDailyDiscoveryRepository(),
       unlockService: unlock,
       userIdOverride: learnerId,
     );
   }
 
-  test('same learner and local date get the same deterministic offer', () async {
-    final date = DateTime(2026, 9, 20);
-    final a = buildDaily(
-      learnerId: 'learner-daily',
-      collection: MemoryFlashcardCollectionRepository(),
-    );
-    final b = buildDaily(
-      learnerId: 'learner-daily',
-      collection: MemoryFlashcardCollectionRepository(),
-    );
+  test(
+    'same learner and local date get the same deterministic offer',
+    () async {
+      final date = DateTime(2026, 9, 20);
+      final a = buildDaily(
+        learnerId: 'learner-daily',
+        collection: MemoryFlashcardCollectionRepository(),
+      );
+      final b = buildDaily(
+        learnerId: 'learner-daily',
+        collection: MemoryFlashcardCollectionRepository(),
+      );
 
-    final offerA = await a.offerForDate(
-      localDate: date,
-      packages: <FlashcardContentPackage>[referencePackage],
-    );
-    final offerB = await b.offerForDate(
-      localDate: date,
-      packages: <FlashcardContentPackage>[referencePackage],
-    );
+      final offerA = await a.offerForDate(
+        localDate: date,
+        packages: <FlashcardContentPackage>[referencePackage],
+      );
+      final offerB = await b.offerForDate(
+        localDate: date,
+        packages: <FlashcardContentPackage>[referencePackage],
+      );
 
-    expect(offerA.status, DailyDiscoveryStatus.offered);
-    expect(offerB.cardId, offerA.cardId);
-    expect(offerB.conceptId, offerA.conceptId);
-    expect(offerB.unlockEventId, offerA.unlockEventId);
-  });
+      expect(offerA.status, DailyDiscoveryStatus.offered);
+      expect(offerB.cardId, offerA.cardId);
+      expect(offerB.conceptId, offerA.conceptId);
+      expect(offerB.unlockEventId, offerA.unlockEventId);
+    },
+  );
 
   test('reopening the same day returns the persisted offer', () async {
     final collection = MemoryFlashcardCollectionRepository();
@@ -95,7 +96,7 @@ void main() {
     expect(second.toJson(), first.toJson());
   });
 
-  test('Daily Discovery selects only an unowned learner-ready card', () async {
+  test('Daily Discovery selects only an unowned FCQ100 card', () async {
     final collection = MemoryFlashcardCollectionRepository();
     final unlock = FlashcardUnlockService(
       repository: collection,
@@ -115,7 +116,6 @@ void main() {
 
     final service = DailyDiscoveryService(
       discoveryRepository: MemoryDailyDiscoveryRepository(),
-      collectionRepository: collection,
       unlockService: unlock,
       userIdOverride: 'learner-filter',
     );
@@ -126,6 +126,46 @@ void main() {
     );
 
     expect(offer.cardId, elimination.id);
+  });
+
+  test('package that fails FCQ100 contributes no Daily Discovery card', () async {
+    final json = referencePackage.toJson();
+    final cards = json['cards'] as List<dynamic>;
+    final first = Map<String, dynamic>.from(cards.first as Map);
+    first['whyItMatters'] = '';
+    cards[0] = first;
+    final invalidPackage = FlashcardContentPackage.fromJson(json);
+
+    final service = buildDaily(
+      learnerId: 'learner-invalid-package',
+      collection: MemoryFlashcardCollectionRepository(),
+    );
+    final state = await service.offerForDate(
+      localDate: DateTime(2026, 9, 20),
+      packages: <FlashcardContentPackage>[invalidPackage],
+    );
+
+    expect(state.status, DailyDiscoveryStatus.empty);
+  });
+
+  test('Daily Discovery rejects mismatched learner identity', () async {
+    final unlock = FlashcardUnlockService(
+      repository: MemoryFlashcardCollectionRepository(),
+      userIdOverride: 'learner-b',
+    );
+    final service = DailyDiscoveryService(
+      discoveryRepository: MemoryDailyDiscoveryRepository(),
+      unlockService: unlock,
+      userIdOverride: 'learner-a',
+    );
+
+    await expectLater(
+      service.offerForDate(
+        localDate: DateTime(2026, 9, 20),
+        packages: <FlashcardContentPackage>[referencePackage],
+      ),
+      throwsStateError,
+    );
   });
 
   test('claim is idempotent and never creates duplicate ownership', () async {
@@ -154,9 +194,7 @@ void main() {
     expect(second.state.status, DailyDiscoveryStatus.claimed);
     expect(second.unlockEvent?.kind, FlashcardUnlockEventKind.duplicateIgnored);
 
-    final owned = await collection.loadAllOwnership(
-      learnerId: 'learner-claim',
-    );
+    final owned = await collection.loadAllOwnership(learnerId: 'learner-claim');
     expect(owned, hasLength(1));
     expect(owned.single.reinforcementCount, 0);
   });
@@ -194,7 +232,6 @@ void main() {
     final discovery = MemoryDailyDiscoveryRepository();
     final service = DailyDiscoveryService(
       discoveryRepository: discovery,
-      collectionRepository: collection,
       unlockService: unlock,
       userIdOverride: 'learner-complete',
     );
