@@ -172,6 +172,44 @@ class FlashcardOwnership {
         'Flashcard ownership requires at least one acquisition event.',
       );
     }
+    if (appliedEventIds.toSet().length != appliedEventIds.length) {
+      throw const FormatException(
+        'Flashcard ownership applied event IDs must be unique.',
+      );
+    }
+    if (reinforcementCount != appliedEventIds.length - 1) {
+      throw const FormatException(
+        'Flashcard reinforcement count must match unique applied events.',
+      );
+    }
+    if (reinforcementCount == 0 && lastReinforcedAt != null) {
+      throw const FormatException(
+        'Unreinforced Flashcard cannot have lastReinforcedAt.',
+      );
+    }
+    if (reinforcementCount > 0 && lastReinforcedAt == null) {
+      throw const FormatException(
+        'Reinforced Flashcard requires lastReinforcedAt.',
+      );
+    }
+    if (acquisitionSource == FlashcardAcquisitionSource.questionCompletion) {
+      if (firstQuestionOutcome == FlashcardQuestionOutcome.notApplicable ||
+          correctSignalCount + incorrectSignalCount < 1) {
+        throw const FormatException(
+          'Question-acquired Flashcard requires a correct/incorrect signal.',
+        );
+      }
+    } else if (firstQuestionOutcome !=
+        FlashcardQuestionOutcome.notApplicable) {
+      throw const FormatException(
+        'Daily Discovery acquisition cannot have a Question outcome.',
+      );
+    }
+    if (correctSignalCount + incorrectSignalCount > appliedEventIds.length) {
+      throw const FormatException(
+        'Flashcard Question signals exceed applied acquisition events.',
+      );
+    }
     if (firstViewedAt != null && firstViewedAt!.isBefore(acquiredAt)) {
       throw const FormatException(
         'Flashcard first-view time cannot precede acquisition.',

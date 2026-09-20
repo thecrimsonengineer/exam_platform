@@ -254,6 +254,31 @@ void main() {
     },
   );
 
+  test('failed ownership persistence yields no successful reward event', () async {
+    final repository = _FailingSaveCollectionRepository();
+    final service = FlashcardUnlockService(
+      repository: repository,
+      userIdOverride: 'learner-save-failure',
+    );
+
+    await expectLater(
+      service.apply(
+        card: hierarchy,
+        request: FlashcardUnlockRequest(
+          eventId: 'quiz:save-failure',
+          cardId: hierarchy.id,
+          conceptId: hierarchy.conceptId,
+          source: FlashcardAcquisitionSource.questionCompletion,
+          questionOutcome: FlashcardQuestionOutcome.correct,
+          questionId: 930001,
+        ),
+      ),
+      throwsStateError,
+    );
+
+    expect(await service.isOwned(hierarchy.id), isFalse);
+  });
+
   test('the same card is isolated between learner namespaces', () async {
     final repository = MemoryFlashcardCollectionRepository();
     final a = FlashcardUnlockService(
@@ -282,4 +307,16 @@ void main() {
     expect(await a.loadCollection(), hasLength(1));
     expect(await b.loadCollection(), hasLength(1));
   });
+}
+
+
+class _FailingSaveCollectionRepository
+    extends MemoryFlashcardCollectionRepository {
+  @override
+  Future<void> saveOwnership({
+    required String learnerId,
+    required FlashcardOwnership ownership,
+  }) async {
+    throw StateError('simulated local persistence failure');
+  }
 }

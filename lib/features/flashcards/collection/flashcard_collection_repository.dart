@@ -50,6 +50,7 @@ class MemoryFlashcardCollectionRepository
     required String learnerId,
     required FlashcardOwnership ownership,
   }) async {
+    ownership.validate();
     final learner = _byLearner.putIfAbsent(
       learnerId,
       () => <String, FlashcardOwnership>{},
@@ -124,6 +125,7 @@ class SharedPreferencesFlashcardCollectionRepository
     required FlashcardOwnership ownership,
   }) async {
     _validateIdentity(learnerId: learnerId, cardId: ownership.cardId);
+    ownership.validate();
 
     final prefs = await SharedPreferences.getInstance();
     final ownershipKey = ownershipKeyForLearner(

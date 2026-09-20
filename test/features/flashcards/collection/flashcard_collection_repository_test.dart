@@ -79,7 +79,11 @@ void main() {
       lastReinforcedAt: DateTime.utc(2026, 9, 21, 9),
       correctSignalCount: 1,
       incorrectSignalCount: 1,
-      appliedEventIds: const <String>['daily:one', 'quiz:two'],
+      appliedEventIds: const <String>[
+        'daily:one',
+        'quiz:two',
+        'quiz:three',
+      ],
     );
 
     final decoded = FlashcardOwnership.fromJson(ownership.toJson());
@@ -88,6 +92,25 @@ void main() {
     expect(decoded.isUnseen, isTrue);
     expect(decoded.reinforcementCount, 2);
     expect(decoded.appliedEventIds, ownership.appliedEventIds);
+  });
+
+  test('repository rejects ownership with no acquisition event', () async {
+    final repository = MemoryFlashcardCollectionRepository();
+    final invalid = FlashcardOwnership(
+      cardId: 'csp11.flashcard.elimination_control',
+      conceptId: 'csp11.concept.elimination_control',
+      acquiredAt: DateTime.utc(2026, 9, 20, 9),
+      acquisitionSource: FlashcardAcquisitionSource.dailyDiscovery,
+      firstQuestionOutcome: FlashcardQuestionOutcome.notApplicable,
+    );
+
+    await expectLater(
+      repository.saveOwnership(
+        learnerId: 'learner-invalid',
+        ownership: invalid,
+      ),
+      throwsFormatException,
+    );
   });
 
   test('duplicate applied event IDs fail closed on persisted ownership', () {
