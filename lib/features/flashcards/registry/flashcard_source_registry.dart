@@ -141,6 +141,25 @@ class FlashcardSourceRegistry {
       );
     }
 
+    if (entry.verbatimEligible) {
+      final copyrightModeAllowsVerbatim =
+          entry.copyrightMode == SourceCopyrightMode.federalGovernmentWork ||
+          entry.copyrightMode == SourceCopyrightMode.openLicensed ||
+          entry.copyrightMode == SourceCopyrightMode.permissionGranted;
+
+      if (!copyrightModeAllowsVerbatim) {
+        throw FormatException(
+          'Verbatim eligibility conflicts with copyright mode: ${entry.id}',
+        );
+      }
+
+      if (entry.verificationStatus != SourceVerificationStatus.verified) {
+        throw FormatException(
+          'Verbatim-eligible source must be verified: ${entry.id}',
+        );
+      }
+    }
+
     if (entry.authorityTier == SourceAuthorityTier.blocked &&
         entry.primaryEligible) {
       throw FormatException(
