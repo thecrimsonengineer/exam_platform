@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../../features/flashcards/collection/daily_discovery_state.dart';
 import '../../features/flashcards/collection/flashcard_ownership.dart';
+import '../../features/flashcards/integration/flashcard_integration_models.dart';
+import '../../features/flashcards/integration/flashcard_integration_service.dart';
 import '../../features/flashcards/learner/flashcard_learner_experience_controller.dart';
 import '../../features/flashcards/models/flashcard.dart';
+import '../../features/learning_twin/integration/learning_twin_flashcard_guidance.dart';
 import '../../navigation/csp11_route.dart';
 import '../../services/haptics/csp11_haptic_service.dart';
 import '../../theme/glass/student_glass.dart';
@@ -15,9 +18,14 @@ import 'widgets/flashcard_collectible_reveal_screen.dart';
 import 'widgets/flashcard_review_player_screen.dart';
 
 class FlashcardsScreen extends StatefulWidget {
-  const FlashcardsScreen({super.key, this.controller});
+  const FlashcardsScreen({
+    super.key,
+    this.controller,
+    this.integrationService,
+  });
 
   final FlashcardLearnerExperienceController? controller;
+  final FlashcardIntegrationService? integrationService;
 
   @override
   State<FlashcardsScreen> createState() => _FlashcardsScreenState();
@@ -25,7 +33,10 @@ class FlashcardsScreen extends StatefulWidget {
 
 class _FlashcardsScreenState extends State<FlashcardsScreen> {
   late final FlashcardLearnerExperienceController _controller;
+  late final FlashcardIntegrationService _integrationService;
+
   FlashcardLearnerSnapshot? _snapshot;
+  FlashcardLearningTwinSummary? _learningTwinSummary;
   Object? _error;
   bool _loading = true;
   bool _claimingDaily = false;
@@ -36,6 +47,11 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
     super.initState();
     _controller =
         widget.controller ?? FlashcardLearnerExperienceController.local();
+    _integrationService =
+        widget.integrationService ??
+        FlashcardIntegrationService.local(
+          userIdOverride: _controller.userIdOverride,
+        );
     unawaited(_refresh());
   }
 
@@ -49,11 +65,21 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
 
     try {
       final snapshot = await _controller.load();
+      FlashcardLearningTwinSummary? learningTwinSummary;
+      try {
+        learningTwinSummary = await _integrationService.learningTwinSummary(
+          now: snapshot.loadedAt,
+        );
+      } catch (_) {
+        // Twin guidance is optional and must not block the Collection.
+      }
+
       if (!mounted) {
         return;
       }
       setState(() {
         _snapshot = snapshot;
+        _learningTwinSummary = learningTwinSummary;
         _loading = false;
       });
     } catch (error) {
@@ -273,6 +299,12 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
                   Csp11StaggeredReveal(
                     child: _CollectionHero(snapshot: snapshot),
                   ),
+                  if (_learningTwinSummary != null) ...[
+                    const SizedBox(height: 16),
+                    LearningTwinFlashcardGuidance(
+                      summary: _learningTwinSummary!,
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   Csp11StaggeredReveal(
                     delay: const Duration(milliseconds: 40),
