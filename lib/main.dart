@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'app/theme.dart';
 import 'firebase_options.dart';
+import 'theme/motion/csp11_motion.dart';
 import 'services/local_question_repository.dart';
 import 'services/settings/haptic_preference_service.dart';
 import 'services/settings/theme_mode_service.dart';
@@ -36,6 +37,8 @@ class ExamPlatformApp extends StatelessWidget {
           theme: AppTheme.studentGlassLightTheme,
           darkTheme: AppTheme.studentGlassDarkTheme,
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          themeAnimationDuration: Csp11MotionDuration.quick,
+          themeAnimationCurve: Csp11MotionCurve.standard,
           home: const AuthGate(),
         );
       },
