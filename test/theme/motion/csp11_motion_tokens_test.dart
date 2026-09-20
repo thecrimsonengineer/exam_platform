@@ -11,16 +11,13 @@ void main() {
   });
 
   test('MOT semantic intent vocabulary stays frozen', () {
-    expect(
-      Csp11MotionIntent.values,
-      <Csp11MotionIntent>[
-        Csp11MotionIntent.navigate,
-        Csp11MotionIntent.reveal,
-        Csp11MotionIntent.select,
-        Csp11MotionIntent.confirm,
-        Csp11MotionIntent.consequence,
-        Csp11MotionIntent.celebrate,
-      ],
-    );
+    expect(Csp11MotionIntent.values, <Csp11MotionIntent>[
+      Csp11MotionIntent.navigate,
+      Csp11MotionIntent.reveal,
+      Csp11MotionIntent.select,
+      Csp11MotionIntent.confirm,
+      Csp11MotionIntent.consequence,
+      Csp11MotionIntent.celebrate,
+    ]);
   });
 }

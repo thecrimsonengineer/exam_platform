@@ -4,16 +4,10 @@ import 'package:exam_platform/widgets/motion/csp11_state_switcher.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _host({
-  required Widget child,
-  bool disableAnimations = false,
-}) {
+Widget _host({required Widget child, bool disableAnimations = false}) {
   return MediaQuery(
     data: MediaQueryData(disableAnimations: disableAnimations),
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    ),
+    child: Directionality(textDirection: TextDirection.ltr, child: child),
   );
 }
 
@@ -38,23 +32,24 @@ void main() {
     expect(reduced, isTrue);
   });
 
-  testWidgets('state switcher collapses to instant token under reduced motion', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      _host(
-        disableAnimations: true,
-        child: const Csp11StateSwitcher(
-          child: SizedBox(key: ValueKey<String>('state')),
+  testWidgets(
+    'state switcher collapses to instant token under reduced motion',
+    (tester) async {
+      await tester.pumpWidget(
+        _host(
+          disableAnimations: true,
+          child: const Csp11StateSwitcher(
+            child: SizedBox(key: ValueKey<String>('state')),
+          ),
         ),
-      ),
-    );
+      );
 
-    final switcher = tester.widget<AnimatedSwitcher>(
-      find.byType(AnimatedSwitcher),
-    );
-    expect(switcher.duration, Csp11MotionDuration.instant);
-  });
+      final switcher = tester.widget<AnimatedSwitcher>(
+        find.byType(AnimatedSwitcher),
+      );
+      expect(switcher.duration, Csp11MotionDuration.instant);
+    },
+  );
 
   testWidgets('pressable uses no scale animation under reduced motion', (
     tester,
@@ -79,7 +74,9 @@ void main() {
     expect(taps, 1);
   });
 
-  testWidgets('pressable keeps the frozen subtle pressed scale', (tester) async {
+  testWidgets('pressable keeps the frozen subtle pressed scale', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _host(
         child: Csp11Pressable(

@@ -47,9 +47,7 @@ class _Csp11PressableState extends State<Csp11Pressable> {
       onTapCancel: interactive ? () => _setPressed(false) : null,
       child: AnimatedScale(
         scale: scale,
-        duration: reduced
-            ? Duration.zero
-            : Csp11MotionDuration.instant,
+        duration: reduced ? Duration.zero : Csp11MotionDuration.instant,
         curve: Csp11MotionCurve.standard,
         child: widget.child,
       ),

@@ -17,17 +17,23 @@ void main() {
     expect(settings, isNot(contains('AnimatedSwitcher(')));
   });
 
-  test('bottom navigation preserves cached IndexedStack state during motion', () {
-    final source = read('lib/screens/navigation/bottom_navigation.dart');
+  test(
+    'bottom navigation preserves cached IndexedStack state during motion',
+    () {
+      final source = read('lib/screens/navigation/bottom_navigation.dart');
 
-    expect(source, contains('IndexedStack('));
-    expect(source, contains('AnimationController('));
-    expect(source, contains('Csp11MotionDuration.quick'));
-    expect(source, contains('Csp11MotionPreferences.reduced(context)'));
-    expect(source, contains('_ensureScreenBuilt(index, isDarkMode)'));
-    expect(source, contains('_screensFor(isDarkMode)'));
-    expect(source, isNot(contains('AnimatedSwitcher(\n              child: IndexedStack')));
-  });
+      expect(source, contains('IndexedStack('));
+      expect(source, contains('AnimationController('));
+      expect(source, contains('Csp11MotionDuration.quick'));
+      expect(source, contains('Csp11MotionPreferences.reduced(context)'));
+      expect(source, contains('_ensureScreenBuilt(index, isDarkMode)'));
+      expect(source, contains('_screensFor(isDarkMode)'));
+      expect(
+        source,
+        isNot(contains('AnimatedSwitcher(\n              child: IndexedStack')),
+      );
+    },
+  );
 
   test('route factory exposes the frozen Run 1 route families', () {
     final source = read('lib/navigation/csp11_route.dart');
