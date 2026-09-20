@@ -76,9 +76,7 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
 
   void _openPracticeQuiz() {
     Navigator.of(context).push(
-      Csp11Route.detail<void>(
-        child: QuizScreen(domain: widget.domainNumber),
-      ),
+      Csp11Route.detail<void>(child: QuizScreen(domain: widget.domainNumber)),
     );
   }
 

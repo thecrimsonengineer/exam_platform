@@ -92,9 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _continueLearning(StudentLearningPosition? position) async {
     if (position == null) {
       await Navigator.of(context).push(
-        Csp11Route.forward<void>(
-          child: const DomainScreen(domainNumber: 1),
-        ),
+        Csp11Route.forward<void>(child: const DomainScreen(domainNumber: 1)),
       );
       await _refreshHome();
       return;

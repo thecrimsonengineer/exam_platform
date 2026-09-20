@@ -2,10 +2,7 @@ import 'package:exam_platform/widgets/motion/csp11_staggered_reveal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _host({
-  required Widget child,
-  bool disableAnimations = false,
-}) {
+Widget _host({required Widget child, bool disableAnimations = false}) {
   return MaterialApp(
     home: MediaQuery(
       data: MediaQueryData(disableAnimations: disableAnimations),
@@ -15,7 +12,9 @@ Widget _host({
 }
 
 void main() {
-  testWidgets('reduced motion bypasses staged reveal animation', (tester) async {
+  testWidgets('reduced motion bypasses staged reveal animation', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _host(
         disableAnimations: true,

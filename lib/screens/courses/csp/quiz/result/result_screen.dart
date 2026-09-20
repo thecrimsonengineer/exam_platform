@@ -96,9 +96,9 @@ class ResultScreen extends StatelessWidget {
                                 child: LearningTwinPostPracticeGuidance(
                                   resultContext:
                                       LearningTwinPracticeResultContext(
-                                      practiceContext:
-                                          learningTwinPracticeContext!,
-                                      score: score,
+                                        practiceContext:
+                                            learningTwinPracticeContext!,
+                                        score: score,
                                         totalQuestions: totalQuestions,
                                       ),
                                 ),

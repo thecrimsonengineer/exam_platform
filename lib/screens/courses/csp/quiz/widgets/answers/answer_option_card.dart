@@ -38,45 +38,45 @@ class AnswerOptionCard extends StatelessWidget {
       curve: Csp11MotionCurve.enter,
       child: StudentGlassSurface(
         borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
-      tint: _surfaceTint(),
-      borderColor: _surfaceBorderColor(),
-      shadowColor: _surfaceShadowColor(),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: submitted ? null : onTap,
-          borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildIndicator(icon),
-                const SizedBox(width: QuizSpacing.md),
-                Expanded(
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                      color: _textColor(),
-                      fontSize: 16,
-                      fontWeight: isSelected || isCorrect || isIncorrect
-                          ? FontWeight.w600
-                          : FontWeight.w500,
-                      height: 1.48,
-                      letterSpacing: 0.03,
+        tint: _surfaceTint(),
+        borderColor: _surfaceBorderColor(),
+        shadowColor: _surfaceShadowColor(),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: submitted ? null : onTap,
+            borderRadius: BorderRadius.circular(QuizSpacing.cardRadius),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildIndicator(icon),
+                  const SizedBox(width: QuizSpacing.md),
+                  Expanded(
+                    child: Text(
+                      text,
+                      style: TextStyle(
+                        color: _textColor(),
+                        fontSize: 16,
+                        fontWeight: isSelected || isCorrect || isIncorrect
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        height: 1.48,
+                        letterSpacing: 0.03,
+                      ),
                     ),
                   ),
-                ),
-                if (submitted && (isCorrect || isIncorrect)) ...[
-                  const SizedBox(width: 8),
-                  _buildStateIcon(),
+                  if (submitted && (isCorrect || isIncorrect)) ...[
+                    const SizedBox(width: 8),
+                    _buildStateIcon(),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 

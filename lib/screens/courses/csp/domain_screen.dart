@@ -75,9 +75,7 @@ class _DomainScreenState extends State<DomainScreen> {
 
   void _openPracticeQuiz() {
     Navigator.of(context).push(
-      Csp11Route.detail<void>(
-        child: QuizScreen(domain: widget.domainNumber),
-      ),
+      Csp11Route.detail<void>(child: QuizScreen(domain: widget.domainNumber)),
     );
   }
 

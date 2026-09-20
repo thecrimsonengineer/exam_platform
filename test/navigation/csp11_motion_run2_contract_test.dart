@@ -27,8 +27,7 @@ void main() {
           'Csp11Route.forward<void>(',
       'lib/screens/courses/csp/csp_study_hub_screen_dark.dart':
           'Csp11Route.forward<void>(',
-      'lib/screens/courses/csp/domain_screen.dart':
-          'Csp11Route.forward<void>(',
+      'lib/screens/courses/csp/domain_screen.dart': 'Csp11Route.forward<void>(',
       'lib/screens/courses/csp/domain_screen_dark.dart':
           'Csp11Route.forward<void>(',
       'lib/screens/courses/csp/competency_screen.dart':
@@ -65,7 +64,10 @@ void main() {
   test('Quiz changes only question content and reveals submitted feedback', () {
     final source = read('lib/screens/courses/csp/quiz/quiz_screen.dart');
 
-    expect(source, contains("ValueKey<String>('quiz-question-${question.id}')"));
+    expect(
+      source,
+      contains("ValueKey<String>('quiz-question-${question.id}')"),
+    );
     expect(source, contains("ValueKey<String>('quiz-answers-${question.id}')"));
     expect(source, contains('Csp11SlideFade('));
     expect(source, contains('Csp11StaggeredReveal('));
