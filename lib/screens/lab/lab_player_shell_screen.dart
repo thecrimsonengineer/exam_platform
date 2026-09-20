@@ -140,10 +140,7 @@ class LabPlayerShellScreen extends StatelessWidget {
   ) {
     Navigator.of(context).push(
       Csp11Route.forward<void>(
-        child: LabReferencePlayerScreen(
-          mode: mode,
-          scenario: selectedScenario,
-        ),
+        child: LabReferencePlayerScreen(mode: mode, scenario: selectedScenario),
       ),
     );
   }

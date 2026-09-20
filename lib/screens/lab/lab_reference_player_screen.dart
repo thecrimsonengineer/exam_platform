@@ -261,9 +261,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Csp11StateSwitcher(
                 child: KeyedSubtree(
-                  key: ValueKey(
-                    _motionStateKey(_package!, _session!),
-                  ),
+                  key: ValueKey(_motionStateKey(_package!, _session!)),
                   child: _buildLoaded(context, _package!, _session!),
                 ),
               ),
@@ -782,57 +780,41 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         key: const ValueKey('lab-completion-screen'),
         padding: const EdgeInsets.all(20),
         children: [
-        StudentGlassSurface(
-          padding: const EdgeInsets.all(24),
-          borderRadius: BorderRadius.circular(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Icon(Icons.flag_circle_rounded, size: 42),
-              const SizedBox(height: 14),
-              Text(
-                'LAB complete',
-                style: TextStyle(
-                  color: text,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w900,
+          StudentGlassSurface(
+            padding: const EdgeInsets.all(24),
+            borderRadius: BorderRadius.circular(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.flag_circle_rounded, size: 42),
+                const SizedBox(height: 14),
+                Text(
+                  'LAB complete',
+                  style: TextStyle(
+                    color: text,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                ending.title,
-                key: const ValueKey('lab-ending-title'),
-                style: TextStyle(
-                  color: text,
-                  fontSize: 21,
-                  fontWeight: FontWeight.w900,
+                const SizedBox(height: 8),
+                Text(
+                  ending.title,
+                  key: const ValueKey('lab-ending-title'),
+                  style: TextStyle(
+                    color: text,
+                    fontSize: 21,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 9),
-              Text(
-                ending.narrative,
-                key: const ValueKey('lab-ending-narrative'),
-                style: TextStyle(color: muted, height: 1.5),
-              ),
-              const SizedBox(height: 17),
-              Text(
-                'Key turning point',
-                style: TextStyle(
-                  color: text,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w900,
+                const SizedBox(height: 9),
+                Text(
+                  ending.narrative,
+                  key: const ValueKey('lab-ending-narrative'),
+                  style: TextStyle(color: muted, height: 1.5),
                 ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                ending.keyTurningPoint,
-                key: const ValueKey('lab-ending-turning-point'),
-                style: TextStyle(color: muted, height: 1.45),
-              ),
-              if (journey.isNotEmpty) ...[
                 const SizedBox(height: 17),
                 Text(
-                  'Your journey',
+                  'Key turning point',
                   style: TextStyle(
                     color: text,
                     fontSize: 15,
@@ -841,87 +823,103 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  journey,
-                  key: const ValueKey('lab-ending-journey'),
+                  ending.keyTurningPoint,
+                  key: const ValueKey('lab-ending-turning-point'),
                   style: TextStyle(color: muted, height: 1.45),
                 ),
-              ],
-              const SizedBox(height: 17),
-              Text(
-                _modeTitle(widget.mode) +
-                    ' mode • ' +
-                    session.decisionHistory.length.toString() +
-                    ' decisions • ' +
-                    session.simulatedMinutes.toString() +
-                    ' simulated min',
-                style: TextStyle(color: muted, height: 1.4),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        if (session.decisionHistory.isNotEmpty)
-          StudentGlassSurface(
-            padding: const EdgeInsets.all(20),
-            borderRadius: BorderRadius.circular(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+                if (journey.isNotEmpty) ...[
+                  const SizedBox(height: 17),
+                  Text(
+                    'Your journey',
+                    style: TextStyle(
+                      color: text,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    journey,
+                    key: const ValueKey('lab-ending-journey'),
+                    style: TextStyle(color: muted, height: 1.45),
+                  ),
+                ],
+                const SizedBox(height: 17),
                 Text(
-                  'Decision timeline',
-                  style: TextStyle(
-                    color: text,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w900,
-                  ),
+                  _modeTitle(widget.mode) +
+                      ' mode • ' +
+                      session.decisionHistory.length.toString() +
+                      ' decisions • ' +
+                      session.simulatedMinutes.toString() +
+                      ' simulated min',
+                  style: TextStyle(color: muted, height: 1.4),
                 ),
-                const SizedBox(height: 12),
-                for (var i = 0; i < session.decisionHistory.length; i++)
-                  _DecisionHistoryRow(
-                    index: i + 1,
-                    event: session.decisionHistory[i],
-                    package: package,
-                  ),
               ],
             ),
           ),
-        const SizedBox(height: 18),
-        FilledButton.icon(
-          key: const ValueKey('lab-view-debrief'),
-          onPressed: () {
-            Navigator.of(context).push(
-              Csp11Route.detail<void>(
-                child: LabLearnerDebriefScreen(
-                  package: package,
-                  session: session,
-                  scenario: widget.scenario,
-                  onReplay: () {
-                    _replay();
-                  },
-                ),
+          const SizedBox(height: 16),
+          if (session.decisionHistory.isNotEmpty)
+            StudentGlassSurface(
+              padding: const EdgeInsets.all(20),
+              borderRadius: BorderRadius.circular(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Decision timeline',
+                    style: TextStyle(
+                      color: text,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  for (var i = 0; i < session.decisionHistory.length; i++)
+                    _DecisionHistoryRow(
+                      index: i + 1,
+                      event: session.decisionHistory[i],
+                      package: package,
+                    ),
+                ],
               ),
-            );
-          },
-          icon: const Icon(Icons.insights_rounded),
-          label: const Text('VIEW DEBRIEF'),
-        ),
-        const SizedBox(height: 10),
-        OutlinedButton.icon(
-          key: const ValueKey('lab-replay-mode'),
-          onPressed: _busy ? null : _replay,
-          icon: const Icon(Icons.replay_rounded),
-          label: Text(
-            'REPLAY ' + _modeTitle(widget.mode).toUpperCase() + ' LAB',
+            ),
+          const SizedBox(height: 18),
+          FilledButton.icon(
+            key: const ValueKey('lab-view-debrief'),
+            onPressed: () {
+              Navigator.of(context).push(
+                Csp11Route.detail<void>(
+                  child: LabLearnerDebriefScreen(
+                    package: package,
+                    session: session,
+                    scenario: widget.scenario,
+                    onReplay: () {
+                      _replay();
+                    },
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.insights_rounded),
+            label: const Text('VIEW DEBRIEF'),
           ),
-        ),
-        const SizedBox(height: 10),
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            key: const ValueKey('lab-replay-mode'),
+            onPressed: _busy ? null : _replay,
+            icon: const Icon(Icons.replay_rounded),
+            label: Text(
+              'REPLAY ' + _modeTitle(widget.mode).toUpperCase() + ' LAB',
+            ),
+          ),
+          const SizedBox(height: 10),
 
-        OutlinedButton.icon(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back_rounded),
-          label: const Text('BACK TO LAB MODES'),
-        ),
-      ],
+          OutlinedButton.icon(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back_rounded),
+            label: const Text('BACK TO LAB MODES'),
+          ),
+        ],
       ),
     );
   }

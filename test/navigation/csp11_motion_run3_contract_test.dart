@@ -22,30 +22,36 @@ void main() {
     expect(consequenceStateIndex, greaterThan(commitIndex));
   });
 
-  test('LAB selection and accepted-decision lock use central motion tokens', () {
-    final source = read('lib/screens/lab/lab_reference_player_screen.dart');
+  test(
+    'LAB selection and accepted-decision lock use central motion tokens',
+    () {
+      final source = read('lib/screens/lab/lab_reference_player_screen.dart');
 
-    expect(source, contains('final lockedOut = _busy && !selected;'));
-    expect(source, contains('AnimatedOpacity('));
-    expect(source, contains('opacity: lockedOut ? 0.48 : 1'));
-    expect(source, contains('AnimatedScale('));
-    expect(source, contains('Csp11MotionDuration.quick'));
-    expect(source, contains('Csp11MotionCurve.standard'));
-    expect(source, contains('Csp11MotionPreferences.reduced(context)'));
-  });
+      expect(source, contains('final lockedOut = _busy && !selected;'));
+      expect(source, contains('AnimatedOpacity('));
+      expect(source, contains('opacity: lockedOut ? 0.48 : 1'));
+      expect(source, contains('AnimatedScale('));
+      expect(source, contains('Csp11MotionDuration.quick'));
+      expect(source, contains('Csp11MotionCurve.standard'));
+      expect(source, contains('Csp11MotionPreferences.reduced(context)'));
+    },
+  );
 
-  test('LAB endings celebrate only safe completion and keep debrief centralized', () {
-    final source = read('lib/screens/lab/lab_reference_player_screen.dart');
+  test(
+    'LAB endings celebrate only safe completion and keep debrief centralized',
+    () {
+      final source = read('lib/screens/lab/lab_reference_player_screen.dart');
 
-    expect(
-      source,
-      contains("final celebratory = session.endingId == 'safe_completion';"),
-    );
-    expect(source, contains('Csp11CompletionReveal('));
-    expect(source, contains('celebratory: celebratory'));
-    expect(source, contains('Csp11Route.detail<void>('));
-    expect(source, isNot(contains("session.endingId == 'critical_failure'")));
-  });
+      expect(
+        source,
+        contains("final celebratory = session.endingId == 'safe_completion';"),
+      );
+      expect(source, contains('Csp11CompletionReveal('));
+      expect(source, contains('celebratory: celebratory'));
+      expect(source, contains('Csp11Route.detail<void>('));
+      expect(source, isNot(contains("session.endingId == 'critical_failure'")));
+    },
+  );
 
   test('LAB mode entry uses the central route system', () {
     final source = read('lib/screens/lab/lab_player_shell_screen.dart');
@@ -64,29 +70,29 @@ void main() {
       final source = read(path);
       expect(source, contains('LearningTwinMotionReveal('));
       expect(source, contains('motionKey: message.id'));
-      expect(
-        source,
-        contains('message.state == LearningTwinState.celebrate'),
-      );
+      expect(source, contains('message.state == LearningTwinState.celebrate'));
     }
   });
 
-  test('future Flashcard motion foundation does not invent review behavior', () {
-    final flip = read('lib/widgets/motion/csp11_flip_card.dart');
+  test(
+    'future Flashcard motion foundation does not invent review behavior',
+    () {
+      final flip = read('lib/widgets/motion/csp11_flip_card.dart');
 
-    expect(flip, contains('class Csp11FlipCard'));
-    expect(flip, contains('Matrix4.rotationY'));
-    expect(flip, contains('Csp11MotionPreferences.reduced(context)'));
+      expect(flip, contains('class Csp11FlipCard'));
+      expect(flip, contains('Matrix4.rotationY'));
+      expect(flip, contains('Csp11MotionPreferences.reduced(context)'));
 
-    for (final path in <String>[
-      'lib/screens/flashcards/flashcards_screen.dart',
-      'lib/screens/flashcards/flashcards_screen_dark.dart',
-    ]) {
-      final source = read(path);
-      expect(source, contains('No flashcard decks are published yet.'));
-      expect(source, isNot(contains('Csp11FlipCard')));
-    }
-  });
+      for (final path in <String>[
+        'lib/screens/flashcards/flashcards_screen.dart',
+        'lib/screens/flashcards/flashcards_screen_dark.dart',
+      ]) {
+        final source = read(path);
+        expect(source, contains('No flashcard decks are published yet.'));
+        expect(source, isNot(contains('Csp11FlipCard')));
+      }
+    },
+  );
 
   test('Run 3 motion foundation remains Firebase and Supabase free', () {
     for (final path in <String>[

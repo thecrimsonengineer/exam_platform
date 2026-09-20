@@ -3,16 +3,10 @@ import 'package:exam_platform/widgets/motion/csp11_completion_reveal.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _host({
-  required Widget child,
-  bool disableAnimations = false,
-}) {
+Widget _host({required Widget child, bool disableAnimations = false}) {
   return MediaQuery(
     data: MediaQueryData(disableAnimations: disableAnimations),
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    ),
+    child: Directionality(textDirection: TextDirection.ltr, child: child),
   );
 }
 
@@ -54,11 +48,7 @@ void main() {
 
   testWidgets('calm completion uses emphasized duration', (tester) async {
     await tester.pumpWidget(
-      _host(
-        child: const Csp11CompletionReveal(
-          child: Text('done'),
-        ),
-      ),
+      _host(child: const Csp11CompletionReveal(child: Text('done'))),
     );
 
     final animation = tester.widget<TweenAnimationBuilder<double>>(
