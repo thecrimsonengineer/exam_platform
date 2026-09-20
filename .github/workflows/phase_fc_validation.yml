@@ -6,7 +6,7 @@ on:
       - phase-fc-flashcard-core
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: phase-fc-${{ github.ref }}
@@ -29,17 +29,11 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Apply FC canonical formatting
-        run: |
-          dart format lib/features/flashcards test/features/flashcards
-          if ! git diff --quiet; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add lib/features/flashcards test/features/flashcards
-            git commit -m "FC1: apply canonical formatter output"
-            git push
-          fi
-
+      - name: FC formatting gate
+        run: >
+          dart format --output=none --set-exit-if-changed
+          lib/features/flashcards
+          test/features/flashcards
       - name: Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
