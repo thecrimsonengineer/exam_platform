@@ -49,11 +49,7 @@ void main() {
         .descendant(of: studioList, matching: find.byType(Scrollable))
         .first;
     final fcqPass = find.textContaining('FCQ100 100/100 PASS');
-    await tester.scrollUntilVisible(
-      fcqPass,
-      300,
-      scrollable: studioScrollable,
-    );
+    await tester.scrollUntilVisible(fcqPass, 300, scrollable: studioScrollable);
     expect(fcqPass, findsOneWidget);
     expect(find.text('Hierarchy of Controls'), findsOneWidget);
 
