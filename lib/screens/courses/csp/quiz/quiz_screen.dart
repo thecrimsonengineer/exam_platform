@@ -6,6 +6,7 @@ import 'package:exam_platform/navigation/csp11_route.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 import 'package:exam_platform/widgets/motion/csp11_slide_fade.dart';
 import 'package:exam_platform/widgets/motion/csp11_staggered_reveal.dart';
+import 'package:exam_platform/widgets/motion/csp11_status_reveal.dart';
 
 import '../../../../controllers/quiz_controller.dart';
 import '../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
@@ -352,19 +353,25 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     if (_isInitializing) {
       return const StudentGlassScaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Csp11StatusReveal(
+          kind: Csp11StatusKind.loading,
+          child: Center(child: CircularProgressIndicator()),
+        ),
       );
     }
 
     if (_initializationError != null) {
       return StudentGlassScaffold(
         appBar: AppBar(title: const Text('Quiz')),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(
-              'Unable to load published questions.\n$_initializationError',
-              textAlign: TextAlign.center,
+        body: Csp11StatusReveal(
+          kind: Csp11StatusKind.error,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(
+                'Unable to load published questions.\n$_initializationError',
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),
@@ -381,8 +388,11 @@ class _QuizScreenState extends State<QuizScreen> {
           elevation: 0,
           title: const Text('Quiz'),
         ),
-        body: const Center(
-          child: Text('No questions are available for this content.'),
+        body: const Csp11StatusReveal(
+          kind: Csp11StatusKind.empty,
+          child: Center(
+            child: Text('No questions are available for this content.'),
+          ),
         ),
       );
     }
