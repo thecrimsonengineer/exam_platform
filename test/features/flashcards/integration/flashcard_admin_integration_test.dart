@@ -18,6 +18,11 @@ void main() {
   testWidgets('Flashcard Studio imports, previews and saves local package', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(1000, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     final repository = MemoryFlashcardPackageRepository();
     final studio = FlashcardStudioService(repository: repository);
     final source = File(
@@ -36,9 +41,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('flashcard-studio-preview')));
     await tester.pumpAndSettle();
 
-    final studioList = find.byKey(const ValueKey('flashcard-studio-list'));
-    await tester.drag(studioList, const Offset(0, -180));
-    await tester.pumpAndSettle();
+    expect(find.textContaining('FCQ100 100/100 PASS'), findsOneWidget);
+    expect(find.text('Hierarchy of Controls'), findsOneWidget);
 
     final save = find.byKey(const ValueKey('flashcard-studio-save'));
     expect(save, findsOneWidget);
@@ -48,12 +52,6 @@ void main() {
     expect(await repository.listPackageIds(), <String>[
       'd03_c02_flashcards_v1',
     ]);
-
-    await tester.drag(studioList, const Offset(0, -700));
-    await tester.pumpAndSettle();
-
-    expect(find.textContaining('FCQ100 100/100 PASS'), findsOneWidget);
-    expect(find.text('Hierarchy of Controls'), findsOneWidget);
   });
 
   testWidgets('Flashcard Diagnostics renders four healthy integration panels', (
