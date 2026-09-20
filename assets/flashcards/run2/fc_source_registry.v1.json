@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "csp11.flashcard-sources.v1",
+  "verifiedOn": "2026-09-20",
+  "sources": [
+    {
+      "id": "csp11.source.niosh.hierarchy_of_controls",
+      "organization": "NIOSH",
+      "title": "Hierarchy of Controls",
+      "canonicalUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/index.html",
+      "allowedDomains": ["cdc.gov"],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-20",
+      "primaryEligible": true,
+      "notes": "Use the exact page locator and retain attribution. Page-specific third-party material must still be checked before verbatim reuse."
+    },
+    {
+      "id": "csp11.source.osha.1910_134",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.134 - Respiratory protection",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.134",
+      "allowedDomains": ["osha.gov"],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "agencyStandard",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-20",
+      "primaryEligible": true,
+      "notes": "OSHA presentation of the federal occupational safety and health standard. Use paragraph-level locators."
+    },
+    {
+      "id": "csp11.source.nist.csrc_safety_glossary",
+      "organization": "NIST",
+      "title": "CSRC Glossary - safety",
+      "canonicalUrl": "https://csrc.nist.gov/glossary/term/safety",
+      "allowedDomains": ["nist.gov"],
+      "authorityTier": "federalTechnical",
+      "sourceType": "officialGlossary",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-20",
+      "primaryEligible": true,
+      "notes": "Definitions must remain tied to the source publication identified by NIST and its context."
+    },
+    {
+      "id": "csp11.source.ansi.example",
+      "organization": "ANSI-accredited consensus source",
+      "title": "Proprietary consensus-standard placeholder",
+      "canonicalUrl": "https://www.ansi.org/",
+      "allowedDomains": ["ansi.org"],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "needsReview",
+      "verifiedOn": "",
+      "primaryEligible": false,
+      "notes": "Registry policy example only. Do not reproduce proprietary definitions without an applicable license or permission."
+    }
+  ]
+}
