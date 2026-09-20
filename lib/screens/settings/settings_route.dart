@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/settings/theme_mode_service.dart';
+import '../../theme/motion/csp11_motion.dart';
 import '../../widgets/motion/csp11_state_switcher.dart';
 import 'settings_screen.dart';
 import 'settings_screen_dark.dart';
@@ -15,6 +16,7 @@ class SettingsRoute extends StatelessWidget {
       valueListenable: ThemeModeService.isDarkMode,
       builder: (context, isDarkMode, _) {
         return Csp11StateSwitcher(
+          duration: Csp11MotionDuration.quick,
           child: isDarkMode
               ? const DarkSettingsScreen(key: ValueKey('settings-route-dark'))
               : const SettingsScreen(key: ValueKey('settings-route-light')),
