@@ -37,8 +37,34 @@ jobs:
 
       - name: FC formatting gate
         run: |
-          dart format lib/features/flashcards lib/screens/flashcards test/features/flashcards
-          git diff --exit-code -- lib/features/flashcards lib/screens/flashcards test/features/flashcards
+          dart format \
+            lib/features/flashcards \
+            lib/features/learning_twin/integration/learning_twin_flashcard_guidance.dart \
+            lib/screens/flashcards \
+            lib/screens/admin/flashcards \
+            lib/screens/admin/admin_home_screen.dart \
+            lib/screens/courses/csp/domain_screen.dart \
+            lib/screens/courses/csp/domain_screen_dark.dart \
+            lib/screens/courses/csp/study_subtopic_screen.dart \
+            lib/screens/courses/csp/study_subtopic_screen_dark.dart \
+            lib/screens/courses/csp/quiz/quiz_screen.dart \
+            lib/widgets/csp/study_content/study_content_renderer.dart \
+            lib/widgets/csp/study_content/study_content_renderer_dark.dart \
+            test/features/flashcards
+          git diff --exit-code -- \
+            lib/features/flashcards \
+            lib/features/learning_twin/integration/learning_twin_flashcard_guidance.dart \
+            lib/screens/flashcards \
+            lib/screens/admin/flashcards \
+            lib/screens/admin/admin_home_screen.dart \
+            lib/screens/courses/csp/domain_screen.dart \
+            lib/screens/courses/csp/domain_screen_dark.dart \
+            lib/screens/courses/csp/study_subtopic_screen.dart \
+            lib/screens/courses/csp/study_subtopic_screen_dark.dart \
+            lib/screens/courses/csp/quiz/quiz_screen.dart \
+            lib/widgets/csp/study_content/study_content_renderer.dart \
+            lib/widgets/csp/study_content/study_content_renderer_dark.dart \
+            test/features/flashcards
       - name: Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
@@ -87,9 +113,13 @@ jobs:
           flutter test test/features/flashcards/ui/flashcard_review_player_screen_test.dart
           flutter test test/features/flashcards/architecture/flashcard_run6_architecture_test.dart
 
-      - name: FC Run 7 integration-core tests
+      - name: FC Run 7 integration tests
         run: |
           flutter test test/features/flashcards/integration/flashcard_integration_service_test.dart
+          flutter test test/features/flashcards/integration/flashcard_quiz_integration_test.dart
+          flutter test test/features/flashcards/integration/flashcard_learning_twin_guidance_test.dart
+          flutter test test/features/flashcards/integration/flashcard_admin_integration_test.dart
+          flutter test test/features/flashcards/architecture/flashcard_run7_architecture_test.dart
 
       - name: Frozen MOT foundation regression
         run: |
