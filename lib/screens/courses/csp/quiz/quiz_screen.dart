@@ -9,6 +9,8 @@ import 'package:exam_platform/widgets/motion/csp11_staggered_reveal.dart';
 import 'package:exam_platform/widgets/motion/csp11_status_reveal.dart';
 
 import '../../../../controllers/quiz_controller.dart';
+import '../../../../features/flashcards/integration/flashcard_integration_models.dart';
+import '../../../../features/flashcards/integration/flashcard_integration_service.dart';
 import '../../../../features/learning_twin/coaching/learning_twin_practice_context.dart';
 
 import '../../../../models/question.dart';
@@ -17,6 +19,8 @@ import '../../../../services/haptics/csp11_haptic_service.dart';
 import '../../../../services/quiz_service.dart';
 import '../../../../services/student_question_progress_service.dart';
 import '../../../../services/settings/theme_mode_service.dart';
+
+import '../../../flashcards/widgets/flashcard_quiz_reward_card.dart';
 
 import '../study_content_screen.dart';
 import '../study_content_screen_dark.dart';
@@ -73,6 +77,7 @@ class QuizScreen extends StatefulWidget {
   final String? sessionTitle;
   final String? sessionNotice;
   final LearningTwinPracticeContext? learningTwinPracticeContext;
+  final FlashcardIntegrationService? flashcardIntegrationService;
 
   const QuizScreen({
     super.key,
@@ -85,6 +90,7 @@ class QuizScreen extends StatefulWidget {
     this.sessionTitle,
     this.sessionNotice,
     this.learningTwinPracticeContext,
+    this.flashcardIntegrationService,
   });
 
   @override
@@ -100,11 +106,20 @@ class _QuizScreenState extends State<QuizScreen> {
   final StudentQuestionProgressService _questionProgressService =
       const StudentQuestionProgressService();
 
+  late final FlashcardIntegrationService _flashcardIntegrationService;
+  late final String _flashcardAttemptId;
+
   Set<int> _bookmarkedQuestions = <int>{};
+  FlashcardQuestionCompletionResult? _flashcardReward;
 
   @override
   void initState() {
     super.initState();
+
+    _flashcardIntegrationService =
+        widget.flashcardIntegrationService ?? FlashcardIntegrationService.local();
+    _flashcardAttemptId =
+        DateTime.now().toUtc().microsecondsSinceEpoch.toString();
 
     _initializeController();
     _loadBookmarks();
@@ -221,7 +236,8 @@ class _QuizScreenState extends State<QuizScreen> {
     });
 
     unawaited(_emitQuizResultHaptics(correct));
-    _recordQuestionCompletion(question, correct);
+    unawaited(_recordQuestionCompletion(question, correct));
+    unawaited(_recordFlashcardCompletion(question, correct));
   }
 
   Future<void> _emitQuizResultHaptics(bool correct) async {
@@ -249,6 +265,36 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+  Future<void> _recordFlashcardCompletion(
+    Question question,
+    bool correct,
+  ) async {
+    try {
+      final result = await _flashcardIntegrationService.recordQuestionCompletion(
+        questionId: question.id,
+        correct: correct,
+        eventId: 'fc7-quiz-$_flashcardAttemptId-q${question.id}',
+      );
+
+      if (!mounted || !result.hasReward) {
+        return;
+      }
+
+      final quizController = controller;
+      if (quizController == null ||
+          !quizController.submitted ||
+          quizController.currentQuestionData.id != question.id) {
+        return;
+      }
+
+      setState(() {
+        _flashcardReward = result;
+      });
+    } catch (_) {
+      // Flashcard integration must never interrupt or block the active quiz.
+    }
+  }
+
   void _nextQuestion() {
     final quizController = controller;
     if (quizController == null) return;
@@ -260,7 +306,9 @@ class _QuizScreenState extends State<QuizScreen> {
     }
 
     unawaited(Csp11Haptics.navigation());
-    setState(() {});
+    setState(() {
+      _flashcardReward = null;
+    });
   }
 
   // ==========================================================
@@ -582,6 +630,17 @@ class _QuizScreenState extends State<QuizScreen> {
                                 reference: question.reference,
                               ),
                             ),
+
+                            if (_flashcardReward?.questionId == question.id &&
+                                _flashcardReward?.hasReward == true) ...[
+                              const SizedBox(height: QuizSpacing.md),
+                              Csp11StaggeredReveal(
+                                delay: const Duration(milliseconds: 60),
+                                child: FlashcardQuizRewardCard(
+                                  result: _flashcardReward!,
+                                ),
+                              ),
+                            ],
 
                             if (question.allTags.isNotEmpty) ...[
                               const SizedBox(height: QuizSpacing.md),
