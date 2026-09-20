@@ -4,6 +4,38 @@ import '../models/question.dart';
 import '../services/quiz_service.dart';
 import '../services/quiz_service_interface.dart';
 
+class _ReviewQuizService implements QuizServiceInterface {
+  const _ReviewQuizService();
+
+  @override
+  List<Question> getQuiz({
+    required int domain,
+    required int numberOfQuestions,
+  }) {
+    return const <Question>[];
+  }
+
+  @override
+  List<Question> getQuizById(String quizId) {
+    return const <Question>[];
+  }
+
+  @override
+  List<Question> getShuffledQuestionsByCompetency(String competencyId) {
+    return const <Question>[];
+  }
+
+  @override
+  List<Question> getShuffledQuestionsBySubtopic(String subtopicId) {
+    return const <Question>[];
+  }
+
+  @override
+  List<Question> getShuffledQuestionsByTopic(String topicId) {
+    return const <Question>[];
+  }
+}
+
 class QuizController {
   final QuizServiceInterface _quizService;
   final Random _random;
@@ -106,7 +138,7 @@ class QuizController {
     required List<Question> questions,
     QuizServiceInterface? quizService,
     Random? random,
-  }) : _quizService = quizService ?? QuizService(),
+  }) : _quizService = quizService ?? const _ReviewQuizService(),
        _random = random ?? Random() {
     this.questions = List<Question>.from(questions);
 
