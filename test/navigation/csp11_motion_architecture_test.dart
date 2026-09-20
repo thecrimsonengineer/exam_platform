@@ -69,13 +69,14 @@ void main() {
       'lib/widgets/motion',
       'lib/navigation/csp11_route.dart',
     ]) {
-      final root = FileSystemEntity.typeSync(rootPath) == FileSystemEntityType.file
+      final root =
+          FileSystemEntity.typeSync(rootPath) == FileSystemEntityType.file
           ? <File>[File(rootPath)]
           : Directory(rootPath)
-              .listSync(recursive: true)
-              .whereType<File>()
-              .where((file) => file.path.endsWith('.dart'))
-              .toList();
+                .listSync(recursive: true)
+                .whereType<File>()
+                .where((file) => file.path.endsWith('.dart'))
+                .toList();
 
       for (final file in root) {
         final source = file.readAsStringSync();

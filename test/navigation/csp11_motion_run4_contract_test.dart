@@ -8,25 +8,31 @@ void main() {
   test('root theme transition uses central MOT tokens', () {
     final source = read('lib/main.dart');
 
-    expect(source, contains('themeAnimationDuration: Csp11MotionDuration.quick'));
+    expect(
+      source,
+      contains('themeAnimationDuration: Csp11MotionDuration.quick'),
+    );
     expect(source, contains('themeAnimationCurve: Csp11MotionCurve.standard'));
   });
 
-  test('Quiz passive loading empty and error states use status reveal only', () {
-    final source = read('lib/screens/courses/csp/quiz/quiz_screen.dart');
+  test(
+    'Quiz passive loading empty and error states use status reveal only',
+    () {
+      final source = read('lib/screens/courses/csp/quiz/quiz_screen.dart');
 
-    expect(source, contains('Csp11StatusKind.loading'));
-    expect(source, contains('Csp11StatusKind.empty'));
-    expect(source, contains('Csp11StatusKind.error'));
+      expect(source, contains('Csp11StatusKind.loading'));
+      expect(source, contains('Csp11StatusKind.empty'));
+      expect(source, contains('Csp11StatusKind.error'));
 
-    final passiveStart = source.indexOf('if (_isInitializing)');
-    final activeStart = source.indexOf(
-      'final Question question = quizController.currentQuestionData;',
-    );
-    final passiveSection = source.substring(passiveStart, activeStart);
+      final passiveStart = source.indexOf('if (_isInitializing)');
+      final activeStart = source.indexOf(
+        'final Question question = quizController.currentQuestionData;',
+      );
+      final passiveSection = source.substring(passiveStart, activeStart);
 
-    expect(passiveSection, isNot(contains('Csp11Haptics.')));
-  });
+      expect(passiveSection, isNot(contains('Csp11Haptics.')));
+    },
+  );
 
   test('LAB passive loading and errors remain haptically silent', () {
     final source = read('lib/screens/lab/lab_reference_player_screen.dart');
@@ -41,18 +47,21 @@ void main() {
     expect(buildSection, isNot(contains('Csp11Haptics.')));
   });
 
-  test('Flashcards empty state is animated without inventing review behavior', () {
-    for (final path in <String>[
-      'lib/screens/flashcards/flashcards_screen.dart',
-      'lib/screens/flashcards/flashcards_screen_dark.dart',
-    ]) {
-      final source = read(path);
-      expect(source, contains('Csp11StatusKind.empty'));
-      expect(source, contains('No flashcard decks are published yet.'));
-      expect(source, isNot(contains('Csp11FlipCard')));
-      expect(source, isNot(contains('Csp11Haptics.')));
-    }
-  });
+  test(
+    'Flashcards empty state is animated without inventing review behavior',
+    () {
+      for (final path in <String>[
+        'lib/screens/flashcards/flashcards_screen.dart',
+        'lib/screens/flashcards/flashcards_screen_dark.dart',
+      ]) {
+        final source = read(path);
+        expect(source, contains('Csp11StatusKind.empty'));
+        expect(source, contains('No flashcard decks are published yet.'));
+        expect(source, isNot(contains('Csp11FlipCard')));
+        expect(source, isNot(contains('Csp11Haptics.')));
+      }
+    },
+  );
 
   test('motion and haptics share the same semantic learner transitions', () {
     final navigation = read('lib/screens/navigation/bottom_navigation.dart');

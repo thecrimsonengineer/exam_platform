@@ -6,11 +6,7 @@ import 'csp11_fade_in.dart';
 enum Csp11StatusKind { loading, empty, error }
 
 class Csp11StatusReveal extends StatelessWidget {
-  const Csp11StatusReveal({
-    super.key,
-    required this.kind,
-    required this.child,
-  });
+  const Csp11StatusReveal({super.key, required this.kind, required this.child});
 
   final Csp11StatusKind kind;
   final Widget child;

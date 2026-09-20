@@ -3,16 +3,10 @@ import 'package:exam_platform/widgets/motion/csp11_status_reveal.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _host({
-  required Widget child,
-  bool disableAnimations = false,
-}) {
+Widget _host({required Widget child, bool disableAnimations = false}) {
   return MediaQuery(
     data: MediaQueryData(disableAnimations: disableAnimations),
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    ),
+    child: Directionality(textDirection: TextDirection.ltr, child: child),
   );
 }
 

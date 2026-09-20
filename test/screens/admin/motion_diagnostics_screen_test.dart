@@ -8,9 +8,7 @@ void main() {
   testWidgets('Motion Diagnostics exposes local semantic motion samples', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      const MaterialApp(home: MotionDiagnosticsScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: MotionDiagnosticsScreen()));
 
     expect(
       find.byKey(const ValueKey('motion-diagnostics-reduced-status')),

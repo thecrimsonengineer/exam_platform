@@ -141,15 +141,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   }
 
   void _openHapticDiagnostics() {
-    Navigator.of(context).push(
-      Csp11Route.detail<void>(child: const HapticDiagnosticsScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(Csp11Route.detail<void>(child: const HapticDiagnosticsScreen()));
   }
 
   void _openMotionDiagnostics() {
-    Navigator.of(context).push(
-      Csp11Route.detail<void>(child: const MotionDiagnosticsScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(Csp11Route.detail<void>(child: const MotionDiagnosticsScreen()));
   }
 
   Future<void> _openStudentPortal() async {

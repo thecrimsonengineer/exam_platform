@@ -4,10 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget _host(Widget child) {
-  return Directionality(
-    textDirection: TextDirection.ltr,
-    child: child,
-  );
+  return Directionality(textDirection: TextDirection.ltr, child: child);
 }
 
 void main() {
@@ -17,24 +14,14 @@ void main() {
     const key = ValueKey<String>('stable-slide');
 
     await tester.pumpWidget(
-      _host(
-        const Csp11SlideFade(
-          key: key,
-          child: Text('first'),
-        ),
-      ),
+      _host(const Csp11SlideFade(key: key, child: Text('first'))),
     );
     await tester.pumpAndSettle();
 
     expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, 1);
 
     await tester.pumpWidget(
-      _host(
-        const Csp11SlideFade(
-          key: key,
-          child: Text('updated'),
-        ),
-      ),
+      _host(const Csp11SlideFade(key: key, child: Text('updated'))),
     );
     await tester.pump();
 

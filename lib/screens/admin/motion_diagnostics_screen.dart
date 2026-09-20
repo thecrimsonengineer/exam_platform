@@ -48,7 +48,9 @@ class _MotionDiagnosticsScreenState extends State<MotionDiagnosticsScreen> {
             child: ListTile(
               key: const ValueKey('motion-diagnostics-reduced-status'),
               leading: Icon(
-                reduced ? Icons.accessibility_new_rounded : Icons.motion_photos_on,
+                reduced
+                    ? Icons.accessibility_new_rounded
+                    : Icons.motion_photos_on,
               ),
               title: const Text('Reduced motion'),
               subtitle: Text(

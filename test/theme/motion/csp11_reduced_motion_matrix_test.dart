@@ -12,10 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 Widget _host(Widget child) {
   return MediaQuery(
     data: const MediaQueryData(disableAnimations: true),
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    ),
+    child: Directionality(textDirection: TextDirection.ltr, child: child),
   );
 }
 
@@ -36,13 +33,8 @@ void main() {
               back: Text('back'),
               isFlipped: false,
             ),
-            Csp11Pressable(
-              onTap: () {},
-              child: const Text('press'),
-            ),
-            const Csp11StateSwitcher(
-              child: Text('switch'),
-            ),
+            Csp11Pressable(onTap: () {}, child: const Text('press')),
+            const Csp11StateSwitcher(child: Text('switch')),
           ],
         ),
       ),
@@ -75,9 +67,7 @@ void main() {
     );
     expect(switcher.duration, Csp11MotionDuration.instant);
 
-    final pressScale = tester.widget<AnimatedScale>(
-      find.byType(AnimatedScale),
-    );
+    final pressScale = tester.widget<AnimatedScale>(find.byType(AnimatedScale));
     expect(pressScale.duration, Duration.zero);
   });
 }
