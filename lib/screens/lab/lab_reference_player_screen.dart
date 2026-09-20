@@ -45,6 +45,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
   String? _error;
   bool _busy = false;
   bool _statusExpanded = false;
+  Timer? _decisionOutcomeHapticTimer;
   DateTime _decisionStartedAt = DateTime.now();
 
   @override
@@ -57,6 +58,12 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     _learningEvidenceEmitter =
         const LabIncrementalLearningTwinEvidenceEmitter();
     _loadLab();
+  }
+
+  @override
+  void dispose() {
+    _decisionOutcomeHapticTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadLab() async {
@@ -162,7 +169,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         _busy = false;
       });
 
-      unawaited(_emitAcceptedDecisionHaptics(selectedOption.quality));
+      _emitAcceptedDecisionHaptics(selectedOption.quality);
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -172,20 +179,27 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     }
   }
 
-  Future<void> _emitAcceptedDecisionHaptics(LabDecisionQuality quality) async {
-    await Csp11Haptics.criticalDecision();
-    await Future<void>.delayed(const Duration(milliseconds: 220));
+  void _emitAcceptedDecisionHaptics(LabDecisionQuality quality) {
+    unawaited(Csp11Haptics.criticalDecision());
 
-    switch (quality) {
-      case LabDecisionQuality.optimal:
-        await Csp11Haptics.success();
-      case LabDecisionQuality.defensible:
-        break;
-      case LabDecisionQuality.weak:
-        await Csp11Haptics.warning();
-      case LabDecisionQuality.critical:
-        await Csp11Haptics.error();
-    }
+    _decisionOutcomeHapticTimer?.cancel();
+    _decisionOutcomeHapticTimer = Timer(
+      const Duration(milliseconds: 220),
+      () {
+        if (!mounted) return;
+
+        switch (quality) {
+          case LabDecisionQuality.optimal:
+            unawaited(Csp11Haptics.success());
+          case LabDecisionQuality.defensible:
+            break;
+          case LabDecisionQuality.weak:
+            unawaited(Csp11Haptics.warning());
+          case LabDecisionQuality.critical:
+            unawaited(Csp11Haptics.error());
+        }
+      },
+    );
   }
 
   void _continueAfterConsequence() {
