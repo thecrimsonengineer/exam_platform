@@ -198,9 +198,7 @@ class FlashcardConceptCatalog {
       throw FormatException('Invalid Flashcard deck ID: ${deck.id}');
     }
     if (deck.version < 1 || FlashcardIds.deckVersion(deck.id) != deck.version) {
-      throw FormatException(
-        'Deck ${deck.id} version does not match its ID.',
-      );
+      throw FormatException('Deck ${deck.id} version does not match its ID.');
     }
 
     _validatePlacement(
@@ -238,9 +236,7 @@ class FlashcardConceptCatalog {
   static void _validatePlacement(FlashcardPlacement placement) {
     final domain = domainForContentId(placement.domainId);
     if (domain == null) {
-      throw FormatException(
-        'Unknown CSP11 Domain ID: ${placement.domainId}.',
-      );
+      throw FormatException('Unknown CSP11 Domain ID: ${placement.domainId}.');
     }
 
     final competency = competencyForId(placement.competencyId);
@@ -255,16 +251,12 @@ class FlashcardConceptCatalog {
       final topicPattern = RegExp(r'^d\d{2}_c\d{2}_t\d{2}$');
       if (!topicPattern.hasMatch(placement.topicId) ||
           !placement.topicId.startsWith('${placement.competencyId}_')) {
-        throw FormatException(
-          'Non-canonical Topic ID: ${placement.topicId}.',
-        );
+        throw FormatException('Non-canonical Topic ID: ${placement.topicId}.');
       }
     }
 
     if (placement.subtopicId.isNotEmpty) {
-      final subtopicPattern = RegExp(
-        r'^d\d{2}_c\d{2}_t\d{2}_s\d{2}$',
-      );
+      final subtopicPattern = RegExp(r'^d\d{2}_c\d{2}_t\d{2}_s\d{2}$');
       if (!subtopicPattern.hasMatch(placement.subtopicId) ||
           !placement.subtopicId.startsWith('${placement.competencyId}_')) {
         throw FormatException(

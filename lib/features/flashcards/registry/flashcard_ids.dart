@@ -1,9 +1,7 @@
 class FlashcardIds {
   FlashcardIds._();
 
-  static final RegExp _semanticSlug = RegExp(
-    r'^[a-z0-9]+(?:_[a-z0-9]+)*$',
-  );
+  static final RegExp _semanticSlug = RegExp(r'^[a-z0-9]+(?:_[a-z0-9]+)*$');
 
   static final RegExp _conceptId = RegExp(
     r'^csp11\.concept\.([a-z0-9]+(?:_[a-z0-9]+)*)$',

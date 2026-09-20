@@ -15,10 +15,7 @@ class QuestionConceptMapping {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'questionId': questionId,
-      'conceptId': conceptId,
-    };
+    return {'questionId': questionId, 'conceptId': conceptId};
   }
 }
 

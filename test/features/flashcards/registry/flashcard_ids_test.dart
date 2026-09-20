@@ -8,9 +8,7 @@ void main() {
       isTrue,
     );
     expect(
-      FlashcardIds.isValidFlashcardId(
-        'csp11.flashcard.hierarchy_of_controls',
-      ),
+      FlashcardIds.isValidFlashcardId('csp11.flashcard.hierarchy_of_controls'),
       isTrue,
     );
     expect(
@@ -24,10 +22,7 @@ void main() {
       FlashcardIds.isValidConceptId('csp11.concept.Hierarchy-Of-Controls'),
       isFalse,
     );
-    expect(
-      FlashcardIds.isValidFlashcardId('d03_c02_fc001'),
-      isFalse,
-    );
+    expect(FlashcardIds.isValidFlashcardId('d03_c02_fc001'), isFalse);
   });
 
   test('deck identity carries competency and version', () {
