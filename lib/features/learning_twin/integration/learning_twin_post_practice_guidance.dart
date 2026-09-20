@@ -115,12 +115,16 @@ class _LearningTwinPostPracticeGuidanceState
       return const SizedBox.shrink();
     }
 
-    return LearningTwinCard(
-      key: const ValueKey<String>('learning-twin-post-practice-guidance'),
-      title: message.title ?? 'Practice review',
-      message: message.body,
-      asset: _assetFor(message.state),
-      onDismiss: _dismiss,
+    return LearningTwinMotionReveal(
+      motionKey: message.id,
+      celebratory: message.state == LearningTwinState.celebrate,
+      child: LearningTwinCard(
+        key: const ValueKey<String>('learning-twin-post-practice-guidance'),
+        title: message.title ?? 'Practice review',
+        message: message.body,
+        asset: _assetFor(message.state),
+        onDismiss: _dismiss,
+      ),
     );
   }
 }

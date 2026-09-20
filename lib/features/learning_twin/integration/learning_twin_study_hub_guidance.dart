@@ -89,11 +89,15 @@ class _LearningTwinStudyHubGuidanceState
       return const SizedBox.shrink();
     }
 
-    return LearningTwinCard(
-      title: message.title ?? 'Learning Guide',
-      message: message.body,
-      asset: LearningTwinAsset.neutral,
-      onDismiss: _dismiss,
+    return LearningTwinMotionReveal(
+      motionKey: message.id,
+      celebratory: message.state == LearningTwinState.celebrate,
+      child: LearningTwinCard(
+        title: message.title ?? 'Learning Guide',
+        message: message.body,
+        asset: LearningTwinAsset.neutral,
+        onDismiss: _dismiss,
+      ),
     );
   }
 }

@@ -7,3 +7,4 @@ export 'learning_twin_coach_sheet.dart';
 export 'learning_twin_compact_tip.dart';
 export 'learning_twin_hero.dart';
 export 'learning_twin_inline_block.dart';
+export 'learning_twin_motion_reveal.dart';

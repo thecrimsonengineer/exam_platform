@@ -144,14 +144,18 @@ class _LearningTwinProgressGuidanceState
       actionCallback = () => _performAction(binding);
     }
 
-    return LearningTwinCard(
-      key: const ValueKey<String>('learning-twin-progress-guidance'),
-      title: message.title ?? 'Learning Guide',
-      message: message.body,
-      asset: _assetFor(message.state),
-      actionLabel: actionLabel,
-      onAction: actionCallback,
-      onDismiss: _dismiss,
+    return LearningTwinMotionReveal(
+      motionKey: message.id,
+      celebratory: message.state == LearningTwinState.celebrate,
+      child: LearningTwinCard(
+        key: const ValueKey<String>('learning-twin-progress-guidance'),
+        title: message.title ?? 'Learning Guide',
+        message: message.body,
+        asset: _assetFor(message.state),
+        actionLabel: actionLabel,
+        onAction: actionCallback,
+        onDismiss: _dismiss,
+      ),
     );
   }
 }

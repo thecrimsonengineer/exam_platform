@@ -167,12 +167,16 @@ class _LearningTwinPrePracticeGuidanceState
       bottom: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
-        child: LearningTwinCard(
-          key: const ValueKey<String>('learning-twin-pre-practice-guidance'),
-          title: message.title ?? 'Learning Guide',
-          message: message.body,
-          asset: _assetFor(message.state),
-          onDismiss: _dismiss,
+        child: LearningTwinMotionReveal(
+          motionKey: message.id,
+          celebratory: message.state == LearningTwinState.celebrate,
+          child: LearningTwinCard(
+            key: const ValueKey<String>('learning-twin-pre-practice-guidance'),
+            title: message.title ?? 'Learning Guide',
+            message: message.body,
+            asset: _assetFor(message.state),
+            onDismiss: _dismiss,
+          ),
         ),
       ),
     );
