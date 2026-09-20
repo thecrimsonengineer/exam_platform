@@ -46,9 +46,7 @@ void main() {
 
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: LearningTwinFlashcardGuidance(summary: summary),
-        ),
+        home: Scaffold(body: LearningTwinFlashcardGuidance(summary: summary)),
       ),
     );
 
