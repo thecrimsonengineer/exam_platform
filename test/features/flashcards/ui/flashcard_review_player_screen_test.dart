@@ -110,7 +110,12 @@ void main() {
       await tester.tap(find.byTooltip('Close source details'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const ValueKey('review-got-it-button')));
+      final gotItButton = find.byKey(
+        const ValueKey('review-got-it-button'),
+      );
+      await tester.ensureVisible(gotItButton);
+      await tester.pumpAndSettle();
+      await tester.tap(gotItButton);
       await tester.pumpAndSettle();
 
       expect(find.text('Memory session complete'), findsOneWidget);
