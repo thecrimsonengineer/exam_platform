@@ -7,6 +7,7 @@ export 'collection/flashcard_ownership.dart';
 export 'collection/flashcard_unlock_event.dart';
 export 'collection/flashcard_unlock_service.dart';
 export 'io/flashcard_package_json_codec.dart';
+export 'learner/flashcard_learner_experience_controller.dart';
 export 'memory/flashcard_interval_policy.dart';
 export 'memory/flashcard_memory_service.dart';
 export 'memory/flashcard_memory_statistics.dart';
