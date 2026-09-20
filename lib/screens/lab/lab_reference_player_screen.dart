@@ -183,23 +183,20 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     unawaited(Csp11Haptics.criticalDecision());
 
     _decisionOutcomeHapticTimer?.cancel();
-    _decisionOutcomeHapticTimer = Timer(
-      const Duration(milliseconds: 220),
-      () {
-        if (!mounted) return;
+    _decisionOutcomeHapticTimer = Timer(const Duration(milliseconds: 220), () {
+      if (!mounted) return;
 
-        switch (quality) {
-          case LabDecisionQuality.optimal:
-            unawaited(Csp11Haptics.success());
-          case LabDecisionQuality.defensible:
-            break;
-          case LabDecisionQuality.weak:
-            unawaited(Csp11Haptics.warning());
-          case LabDecisionQuality.critical:
-            unawaited(Csp11Haptics.error());
-        }
-      },
-    );
+      switch (quality) {
+        case LabDecisionQuality.optimal:
+          unawaited(Csp11Haptics.success());
+        case LabDecisionQuality.defensible:
+          break;
+        case LabDecisionQuality.weak:
+          unawaited(Csp11Haptics.warning());
+        case LabDecisionQuality.critical:
+          unawaited(Csp11Haptics.error());
+      }
+    });
   }
 
   void _continueAfterConsequence() {
