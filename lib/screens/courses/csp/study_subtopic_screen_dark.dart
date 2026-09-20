@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/features/flashcards/integration/flashcard_integration_models.dart';
+import 'package:exam_platform/screens/flashcards/widgets/flashcard_scoped_review_entry_card.dart';
+
 import 'package:exam_platform/navigation/csp11_route.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
@@ -211,6 +214,17 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
                               subtopic: subtopic,
                               domain: domain,
                             ),
+                          ),
+                          const SizedBox(height: 16),
+                          FlashcardScopedReviewEntryCard(
+                            scope: FlashcardReviewScope(
+                              domainId: widget.content.domainId,
+                              competencyId: widget.content.competencyId,
+                              subtopicId: subtopic.id,
+                            ),
+                            title: 'Subtopic Flashcard review',
+                            subtitle:
+                                'Review due concept cards from this subtopic.',
                           ),
                           const SizedBox(height: 24),
 

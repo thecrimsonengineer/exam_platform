@@ -1,6 +1,9 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_domain_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/features/flashcards/integration/flashcard_integration_models.dart';
+import 'package:exam_platform/screens/flashcards/widgets/flashcard_scoped_review_entry_card.dart';
+
 import 'package:exam_platform/navigation/csp11_route.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
@@ -120,6 +123,13 @@ class _DarkDomainScreenState extends State<DarkDomainScreen> {
                   Theme(
                     data: AppTheme.darkTheme,
                     child: LearningTwinDomainGuidance(domainId: _domain.id),
+                  ),
+                  const SizedBox(height: 16),
+                  FlashcardScopedReviewEntryCard(
+                    scope: FlashcardReviewScope(domainId: _domain.id),
+                    title: 'Domain Flashcard review',
+                    subtitle:
+                        'Review due concept cards from this CSP11 domain.',
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   _buildQuickActions(),

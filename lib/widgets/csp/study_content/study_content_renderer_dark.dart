@@ -1,6 +1,9 @@
 import 'package:exam_platform/features/learning_twin/integration/learning_twin_competency_guidance.dart';
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/features/flashcards/integration/flashcard_integration_models.dart';
+import 'package:exam_platform/screens/flashcards/widgets/flashcard_scoped_review_entry_card.dart';
+
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../../app/theme.dart';
@@ -185,6 +188,16 @@ class _DarkStudyContentRendererState extends State<DarkStudyContentRenderer> {
                               domainId: widget.content.domainId,
                               competencyId: widget.content.competencyId,
                             ),
+                          ),
+                          const SizedBox(height: 16),
+                          FlashcardScopedReviewEntryCard(
+                            scope: FlashcardReviewScope(
+                              domainId: widget.content.domainId,
+                              competencyId: widget.content.competencyId,
+                            ),
+                            title: 'Competency Flashcard review',
+                            subtitle:
+                                'Review due concept cards from this competency.',
                           ),
                           const SizedBox(height: 26),
                           _buildSectionHeader(topics.length),
