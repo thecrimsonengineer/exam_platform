@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../navigation/csp11_route.dart';
+import '../../theme/motion/csp11_motion.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../../services/haptics/csp11_haptic_service.dart';
 import '../../services/settings/theme_mode_service.dart';
@@ -28,8 +30,12 @@ class BottomNavigationScreen extends StatefulWidget {
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  int _tabDirection = 1;
+
+  late final AnimationController _tabMotionController;
+  late final Animation<double> _tabMotion;
 
   final Map<int, Widget> _lightScreens = <int, Widget>{};
   final Map<int, Widget> _darkScreens = <int, Widget>{};
@@ -38,6 +44,15 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _tabMotionController = AnimationController(
+      vsync: this,
+      duration: Csp11MotionDuration.quick,
+      value: 1,
+    );
+    _tabMotion = CurvedAnimation(
+      parent: _tabMotionController,
+      curve: Csp11MotionCurve.enter,
+    );
     _ensureScreenBuilt(0, ThemeModeService.isDarkMode.value);
     LearningActivityTracker.instance.start();
     const ProgressOverviewSnapshotService().prewarm();
@@ -55,7 +70,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
   Future<void> _openSettings() async {
     await Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const SettingsRoute()));
+    ).push(Csp11Route.forward<void>(child: const SettingsRoute()));
   }
 
   @override
@@ -74,6 +89,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     LearningActivityTracker.instance.dispose();
+    _tabMotionController.dispose();
     super.dispose();
   }
 
@@ -128,16 +144,24 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
   }
 
   void _selectTab(int index) {
-    if (!mounted) {
+    if (!mounted || _selectedIndex == index) {
       return;
     }
 
     final isDarkMode = ThemeModeService.isDarkMode.value;
+    final previousIndex = _selectedIndex;
 
     setState(() {
       _ensureScreenBuilt(index, isDarkMode);
+      _tabDirection = index > previousIndex ? 1 : -1;
       _selectedIndex = index;
     });
+
+    if (Csp11MotionPreferences.reduced(context)) {
+      _tabMotionController.value = 1;
+    } else {
+      unawaited(_tabMotionController.forward(from: 0));
+    }
   }
 
   void _selectBottomNavigationTab(int index) {
@@ -166,12 +190,33 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
           data: glassTheme.copyWith(textTheme: baseTheme.textTheme),
           child: StudentGlassScaffold(
             backgroundColor: isDarkMode ? const Color(0xFF0A111D) : null,
-            body: IndexedStack(
-              index: _selectedIndex,
-              children: List<Widget>.generate(
-                5,
-                (index) => screens[index] ?? const SizedBox.shrink(),
+            body: AnimatedBuilder(
+              animation: _tabMotion,
+              child: IndexedStack(
+                index: _selectedIndex,
+                children: List<Widget>.generate(
+                  5,
+                  (index) => screens[index] ?? const SizedBox.shrink(),
+                ),
               ),
+              builder: (context, child) {
+                final reduced = Csp11MotionPreferences.reduced(context);
+                if (reduced) {
+                  return child ?? const SizedBox.shrink();
+                }
+
+                final progress = _tabMotion.value;
+                final translation = (1 - progress) * 10 * _tabDirection;
+                final opacity = 0.94 + (0.06 * progress);
+
+                return Opacity(
+                  opacity: opacity,
+                  child: Transform.translate(
+                    offset: Offset(translation, 0),
+                    child: child,
+                  ),
+                );
+              },
             ),
             bottomNavigationBar: ClipRect(
               child: BackdropFilter(
