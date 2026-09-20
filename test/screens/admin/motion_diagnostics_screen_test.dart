@@ -8,6 +8,11 @@ void main() {
   testWidgets('Motion Diagnostics exposes local semantic motion samples', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(900, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(const MaterialApp(home: MotionDiagnosticsScreen()));
 
     expect(
