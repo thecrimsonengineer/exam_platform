@@ -7,6 +7,7 @@ on:
       - phase-fc2-provenance
       - phase-fc3-content-system
       - phase-fc4-collectibles
+      - phase-fc5-memory
 
 permissions:
   contents: read
@@ -69,6 +70,13 @@ jobs:
           flutter test test/features/flashcards/collection/flashcard_collection_repository_test.dart
           flutter test test/features/flashcards/collection/flashcard_unlock_service_test.dart
           flutter test test/features/flashcards/collection/daily_discovery_service_test.dart
+
+      - name: FC Run 5 memory-engine tests
+        run: |
+          flutter test test/features/flashcards/memory/flashcard_interval_policy_test.dart
+          flutter test test/features/flashcards/memory/flashcard_review_repository_test.dart
+          flutter test test/features/flashcards/memory/flashcard_memory_service_test.dart
+          flutter test test/features/flashcards/memory/flashcard_review_session_test.dart
 
       - name: Frozen MOT foundation regression
         run: |
