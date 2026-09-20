@@ -200,9 +200,10 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                 ),
               ),
               builder: (context, child) {
+                final content = child ?? const SizedBox.shrink();
                 final reduced = Csp11MotionPreferences.reduced(context);
                 if (reduced) {
-                  return child ?? const SizedBox.shrink();
+                  return content;
                 }
 
                 final progress = _tabMotion.value;
@@ -213,7 +214,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
                   opacity: opacity,
                   child: Transform.translate(
                     offset: Offset(translation, 0),
-                    child: child,
+                    child: content,
                   ),
                 );
               },
