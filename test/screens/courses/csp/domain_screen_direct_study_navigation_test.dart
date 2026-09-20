@@ -20,8 +20,9 @@ void main() {
       expect(source, isNot(contains("import 'competency_screen.dart';")));
     });
 
-    test('routes directly to StudyContentScreen', () {
-      expect(source, contains('builder: (_) => StudyContentScreen('));
+    test('routes directly to StudyContentScreen through CSP11 motion route', () {
+      expect(source, contains('Csp11Route.forward<void>('));
+      expect(source, contains('child: StudyContentScreen('));
       expect(source, contains('domainId: domainId,'));
       expect(source, contains('competencyId: competencyId,'));
       expect(source, contains('domainTitle: _domain.title,'));
@@ -29,7 +30,7 @@ void main() {
     });
 
     test('does not route to CompetencyScreen', () {
-      expect(source, isNot(contains('builder: (_) => CompetencyScreen(')));
+      expect(source, isNot(contains('child: CompetencyScreen(')));
     });
   });
 }

@@ -62,9 +62,10 @@ void main() {
         source,
         contains('final isDarkMode = ThemeModeService.isDarkMode.value;'),
       );
-      expect(source, contains('builder: (_) => buildCsp11QuizTagDestination('));
+      expect(source, contains('Csp11Route.detail<void>('));
+      expect(source, contains('child: buildCsp11QuizTagDestination('));
       expect(source, contains('isDarkMode: isDarkMode,'));
-      expect(source, isNot(contains('builder: (_) => StudyContentScreen(')));
+      expect(source, isNot(contains('child: StudyContentScreen(')));
     },
   );
 
