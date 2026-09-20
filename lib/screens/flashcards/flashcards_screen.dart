@@ -18,11 +18,7 @@ import 'widgets/flashcard_collectible_reveal_screen.dart';
 import 'widgets/flashcard_review_player_screen.dart';
 
 class FlashcardsScreen extends StatefulWidget {
-  const FlashcardsScreen({
-    super.key,
-    this.controller,
-    this.integrationService,
-  });
+  const FlashcardsScreen({super.key, this.controller, this.integrationService});
 
   final FlashcardLearnerExperienceController? controller;
   final FlashcardIntegrationService? integrationService;

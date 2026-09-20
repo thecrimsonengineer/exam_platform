@@ -4,10 +4,7 @@ import '../../../features/flashcards/integration/flashcard_integration_models.da
 import '../../../theme/glass/student_glass.dart';
 
 class FlashcardQuizRewardCard extends StatelessWidget {
-  const FlashcardQuizRewardCard({
-    super.key,
-    required this.result,
-  });
+  const FlashcardQuizRewardCard({super.key, required this.result});
 
   final FlashcardQuestionCompletionResult result;
 

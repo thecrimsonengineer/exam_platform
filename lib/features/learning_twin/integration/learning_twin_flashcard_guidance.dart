@@ -5,10 +5,7 @@ import '../domain/learning_twin_domain.dart';
 import '../ui/learning_twin_ui.dart';
 
 class LearningTwinFlashcardGuidance extends StatefulWidget {
-  const LearningTwinFlashcardGuidance({
-    super.key,
-    required this.summary,
-  });
+  const LearningTwinFlashcardGuidance({super.key, required this.summary});
 
   final FlashcardLearningTwinSummary summary;
 
@@ -64,7 +61,8 @@ class _LearningTwinFlashcardGuidanceState
   void didUpdateWidget(covariant LearningTwinFlashcardGuidance oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (_summarySignature(oldWidget.summary) == _summarySignature(widget.summary)) {
+    if (_summarySignature(oldWidget.summary) ==
+        _summarySignature(widget.summary)) {
       return;
     }
 

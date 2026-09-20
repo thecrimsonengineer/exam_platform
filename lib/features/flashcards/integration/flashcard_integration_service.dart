@@ -253,10 +253,7 @@ class FlashcardIntegrationService {
     );
     session.validate();
 
-    await _sessionRepository.save(
-      learnerId: learnerId,
-      state: session,
-    );
+    await _sessionRepository.save(learnerId: learnerId, state: session);
     return session;
   }
 

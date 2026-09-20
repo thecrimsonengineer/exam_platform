@@ -46,7 +46,8 @@ class _FlashcardScopedReviewEntryCardState
     _integration =
         widget.integrationService ?? FlashcardIntegrationService.local();
     _learnerController =
-        widget.learnerController ?? FlashcardLearnerExperienceController.local();
+        widget.learnerController ??
+        FlashcardLearnerExperienceController.local();
     unawaited(_refresh());
   }
 
@@ -174,11 +175,7 @@ class _FlashcardScopedReviewEntryCardState
             ),
             child: Padding(
               padding: const EdgeInsets.all(11),
-              child: Icon(
-                Icons.style_rounded,
-                color: scheme.primary,
-                size: 22,
-              ),
+              child: Icon(Icons.style_rounded, color: scheme.primary, size: 22),
             ),
           ),
           const SizedBox(width: 14),
@@ -220,8 +217,7 @@ class _FlashcardScopedReviewEntryCardState
             key: ValueKey(
               'flashcard-review-entry-action-${widget.scope.storageKey}',
             ),
-            onPressed:
-                _loading || _opening || summary?.canReview != true
+            onPressed: _loading || _opening || summary?.canReview != true
                 ? null
                 : () => unawaited(_openReview()),
             icon: _opening
