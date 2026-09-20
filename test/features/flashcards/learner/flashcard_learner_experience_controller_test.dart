@@ -96,11 +96,10 @@ void main() {
 
   test('conflicting duplicate learner card identity fails closed', () async {
     final duplicateJson = package.toJson();
-    final duplicateDeck = Map<String, dynamic>.from(
-      duplicateJson['deck']! as Map,
-    )
-      ..['id'] = 'd03_c02_flashcards_v2'
-      ..['version'] = 2;
+    final duplicateDeck =
+        Map<String, dynamic>.from(duplicateJson['deck']! as Map)
+          ..['id'] = 'd03_c02_flashcards_v2'
+          ..['version'] = 2;
     duplicateJson['deck'] = duplicateDeck;
 
     final duplicateCards = (duplicateJson['cards']! as List)
