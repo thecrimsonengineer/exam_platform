@@ -36,8 +36,14 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('flashcard-studio-preview')));
     await tester.pumpAndSettle();
 
+    final studioList = find.byKey(
+      const ValueKey('flashcard-studio-list'),
+    );
+    await tester.drag(studioList, const Offset(0, -180));
+    await tester.pumpAndSettle();
+
     final save = find.byKey(const ValueKey('flashcard-studio-save'));
-    await tester.ensureVisible(save);
+    expect(save, findsOneWidget);
     await tester.tap(save);
     await tester.pumpAndSettle();
 
@@ -46,7 +52,7 @@ void main() {
     ]);
 
     await tester.drag(
-      find.byKey(const ValueKey('flashcard-studio-list')),
+      studioList,
       const Offset(0, -700),
     );
     await tester.pumpAndSettle();
