@@ -62,12 +62,7 @@ enum SourceCopyrightMode {
   unknownBlocked,
 }
 
-enum SourceVerificationStatus {
-  verified,
-  needsReview,
-  stale,
-  blocked,
-}
+enum SourceVerificationStatus { verified, needsReview, stale, blocked }
 
 SourceAuthorityTier sourceAuthorityTierFromJson(dynamic value) {
   final raw = value?.toString() ?? '';
