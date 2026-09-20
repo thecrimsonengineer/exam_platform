@@ -72,19 +72,20 @@ class FlashcardLearnerSnapshot {
   final FlashcardReviewSessionState? activeSession;
 
   List<Flashcard> get ownedCards {
-    final values = ownershipByCardId.keys
-        .map((cardId) => cardsById[cardId])
-        .whereType<Flashcard>()
-        .toList()
-      ..sort((a, b) {
-        final ownedA = ownershipByCardId[a.id]!;
-        final ownedB = ownershipByCardId[b.id]!;
-        final acquired = ownedB.acquiredAt.compareTo(ownedA.acquiredAt);
-        if (acquired != 0) {
-          return acquired;
-        }
-        return a.frontLabel.compareTo(b.frontLabel);
-      });
+    final values =
+        ownershipByCardId.keys
+            .map((cardId) => cardsById[cardId])
+            .whereType<Flashcard>()
+            .toList()
+          ..sort((a, b) {
+            final ownedA = ownershipByCardId[a.id]!;
+            final ownedB = ownershipByCardId[b.id]!;
+            final acquired = ownedB.acquiredAt.compareTo(ownedA.acquiredAt);
+            if (acquired != 0) {
+              return acquired;
+            }
+            return a.frontLabel.compareTo(b.frontLabel);
+          });
     return List.unmodifiable(values);
   }
 
@@ -97,20 +98,21 @@ class FlashcardLearnerSnapshot {
   }
 
   List<Flashcard> get dueCards {
-    final values = reviewsByCardId.values
-        .where((review) => review.isDue(loadedAt))
-        .map((review) => cardsById[review.cardId])
-        .whereType<Flashcard>()
-        .toList()
-      ..sort((a, b) {
-        final reviewA = reviewsByCardId[a.id]!;
-        final reviewB = reviewsByCardId[b.id]!;
-        final due = reviewA.dueAt.compareTo(reviewB.dueAt);
-        if (due != 0) {
-          return due;
-        }
-        return a.frontLabel.compareTo(b.frontLabel);
-      });
+    final values =
+        reviewsByCardId.values
+            .where((review) => review.isDue(loadedAt))
+            .map((review) => cardsById[review.cardId])
+            .whereType<Flashcard>()
+            .toList()
+          ..sort((a, b) {
+            final reviewA = reviewsByCardId[a.id]!;
+            final reviewB = reviewsByCardId[b.id]!;
+            final due = reviewA.dueAt.compareTo(reviewB.dueAt);
+            if (due != 0) {
+              return due;
+            }
+            return a.frontLabel.compareTo(b.frontLabel);
+          });
     return List.unmodifiable(values);
   }
 
@@ -192,9 +194,7 @@ class FlashcardLearnerExperienceController {
     );
   }
 
-  factory FlashcardLearnerExperienceController.local({
-    String? userIdOverride,
-  }) {
+  factory FlashcardLearnerExperienceController.local({String? userIdOverride}) {
     return FlashcardLearnerExperienceController(
       packageRepository: SharedPreferencesFlashcardPackageRepository(),
       collectionRepository: SharedPreferencesFlashcardCollectionRepository(),
@@ -252,8 +252,9 @@ class FlashcardLearnerExperienceController {
             offeredAt: now,
           );
 
-    final collectionStatistics =
-        FlashcardCollectionStatistics.fromOwnership(ownership);
+    final collectionStatistics = FlashcardCollectionStatistics.fromOwnership(
+      ownership,
+    );
     final memoryStatistics = FlashcardMemoryStatistics.build(
       reviews: reviews,
       now: now,
@@ -303,10 +304,7 @@ class FlashcardLearnerExperienceController {
     return result;
   }
 
-  Future<FlashcardOwnership> revealCard(
-    String cardId, {
-    DateTime? at,
-  }) async {
+  Future<FlashcardOwnership> revealCard(String cardId, {DateTime? at}) async {
     final viewedAt = at ?? _now();
     final ownership = await _unlockService.markFirstViewed(
       cardId: cardId,
@@ -468,9 +466,7 @@ class FlashcardLearnerExperienceController {
   Future<FlashcardReviewSessionState?> _loadMostRecentActiveSession(
     String learnerId,
   ) async {
-    final ids = await _sessionRepository.listSessionIds(
-      learnerId: learnerId,
-    );
+    final ids = await _sessionRepository.listSessionIds(learnerId: learnerId);
     FlashcardReviewSessionState? best;
 
     for (final sessionId in ids) {

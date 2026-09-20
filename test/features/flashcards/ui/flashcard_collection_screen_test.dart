@@ -72,11 +72,7 @@ void main() {
   testWidgets('Collection home renders at phone width in light mode', (
     tester,
   ) async {
-    await pumpAtWidth(
-      tester,
-      width: 360,
-      themeMode: ThemeMode.light,
-    );
+    await pumpAtWidth(tester, width: 360, themeMode: ThemeMode.light);
 
     expect(find.text('My Collection'), findsWidgets);
     expect(find.text('Daily Discovery'), findsWidgets);
@@ -89,15 +85,14 @@ void main() {
   testWidgets('Collection home renders at tablet width in dark mode', (
     tester,
   ) async {
-    await pumpAtWidth(
-      tester,
-      width: 900,
-      themeMode: ThemeMode.dark,
-    );
+    await pumpAtWidth(tester, width: 900, themeMode: ThemeMode.dark);
 
     expect(find.text('My Collection'), findsWidgets);
     expect(find.text('Domain 3'), findsOneWidget);
-    expect(find.byKey(const ValueKey('flashcards-review-button')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('flashcards-review-button')),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 }

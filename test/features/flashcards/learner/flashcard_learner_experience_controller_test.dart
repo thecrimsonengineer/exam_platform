@@ -53,41 +53,46 @@ void main() {
     expect(snapshot.domainSummaries.single.totalCards, 2);
     expect(snapshot.dailyDiscovery?.status, DailyDiscoveryStatus.offered);
     expect(snapshot.dailyCard, isNotNull);
-    expect(snapshot.primarySourceFooterFor(snapshot.dailyCard!.id)?.label,
-        contains('Source: NIOSH'));
+    expect(
+      snapshot.primarySourceFooterFor(snapshot.dailyCard!.id)?.label,
+      contains('Source: NIOSH'),
+    );
   });
 
-  test('claim then first reveal activates memory without UI scheduling', () async {
-    var now = DateTime.utc(2026, 9, 20, 8);
-    final controller = buildController(() => now);
+  test(
+    'claim then first reveal activates memory without UI scheduling',
+    () async {
+      var now = DateTime.utc(2026, 9, 20, 8);
+      final controller = buildController(() => now);
 
-    final claim = await controller.claimDaily();
-    var snapshot = controller.lastSnapshot!;
+      final claim = await controller.claimDaily();
+      var snapshot = controller.lastSnapshot!;
 
-    expect(claim.state.status, DailyDiscoveryStatus.claimed);
-    expect(snapshot.collectionStatistics.totalOwned, 1);
-    expect(snapshot.collectionStatistics.unseenCount, 1);
-    expect(snapshot.memoryStatistics.activeCount, 0);
+      expect(claim.state.status, DailyDiscoveryStatus.claimed);
+      expect(snapshot.collectionStatistics.totalOwned, 1);
+      expect(snapshot.collectionStatistics.unseenCount, 1);
+      expect(snapshot.memoryStatistics.activeCount, 0);
 
-    await controller.revealCard(claim.state.cardId);
-    snapshot = controller.lastSnapshot!;
+      await controller.revealCard(claim.state.cardId);
+      snapshot = controller.lastSnapshot!;
 
-    expect(snapshot.collectionStatistics.unseenCount, 0);
-    expect(snapshot.memoryStatistics.activeCount, 1);
-    expect(snapshot.memoryStatistics.dueCount, 0);
+      expect(snapshot.collectionStatistics.unseenCount, 0);
+      expect(snapshot.memoryStatistics.activeCount, 1);
+      expect(snapshot.memoryStatistics.dueCount, 0);
 
-    now = now.add(const Duration(days: 2));
-    snapshot = await controller.load();
+      now = now.add(const Duration(days: 2));
+      snapshot = await controller.load();
 
-    expect(snapshot.memoryStatistics.dueCount, 1);
+      expect(snapshot.memoryStatistics.dueCount, 1);
 
-    final session = await controller.startOrResumeReview();
-    expect(session.cardIds, <String>[claim.state.cardId]);
+      final session = await controller.startOrResumeReview();
+      expect(session.cardIds, <String>[claim.state.cardId]);
 
-    final resumed = await controller.load();
-    expect(resumed.activeSession?.sessionId, session.sessionId);
-    expect(resumed.activeSession?.remainingCount, 1);
-  });
+      final resumed = await controller.load();
+      expect(resumed.activeSession?.sessionId, session.sessionId);
+      expect(resumed.activeSession?.remainingCount, 1);
+    },
+  );
 
   test('conflicting duplicate learner card identity fails closed', () async {
     final duplicate = FlashcardContentPackage(
@@ -112,10 +117,7 @@ void main() {
     );
 
     final repository = MemoryFlashcardPackageRepository(
-      seed: <FlashcardContentPackage>[
-        package,
-        duplicate,
-      ],
+      seed: <FlashcardContentPackage>[package, duplicate],
     );
     final controller = FlashcardLearnerExperienceController(
       packageRepository: repository,

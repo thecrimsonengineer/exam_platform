@@ -4,10 +4,7 @@ import '../../features/flashcards/learner/flashcard_learner_experience_controlle
 import 'flashcards_screen.dart';
 
 class DarkFlashcardsScreen extends StatelessWidget {
-  const DarkFlashcardsScreen({
-    super.key,
-    this.controller,
-  });
+  const DarkFlashcardsScreen({super.key, this.controller});
 
   final FlashcardLearnerExperienceController? controller;
 

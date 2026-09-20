@@ -34,7 +34,8 @@ void main() {
     expect(
       violations,
       isEmpty,
-      reason: 'FC6 UI must use frozen service/repository boundaries: '
+      reason:
+          'FC6 UI must use frozen service/repository boundaries: '
           '${violations.join(', ')}',
     );
   });

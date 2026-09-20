@@ -35,10 +35,9 @@ Future<void> showFlashcardSourceDetailsSheet(
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant
-                        .withValues(alpha: .35),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: .35),
                     borderRadius: BorderRadius.circular(99),
                   ),
                 ),
@@ -50,10 +49,9 @@ Future<void> showFlashcardSourceDetailsSheet(
                     Expanded(
                       child: Text(
                         'Source details',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontWeight: FontWeight.w900),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ),
                     IconButton(
@@ -97,9 +95,7 @@ class _SourceDetailsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: scheme.surface.withValues(alpha: .34),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: .55),
-        ),
+        border: Border.all(color: scheme.outlineVariant.withValues(alpha: .55)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -238,9 +234,9 @@ class _DetailRow extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
         ],

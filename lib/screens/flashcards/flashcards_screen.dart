@@ -15,10 +15,7 @@ import 'widgets/flashcard_collectible_reveal_screen.dart';
 import 'widgets/flashcard_review_player_screen.dart';
 
 class FlashcardsScreen extends StatefulWidget {
-  const FlashcardsScreen({
-    super.key,
-    this.controller,
-  });
+  const FlashcardsScreen({super.key, this.controller});
 
   final FlashcardLearnerExperienceController? controller;
 
@@ -97,7 +94,9 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Daily Discovery could not be claimed: $error')),
+          SnackBar(
+            content: Text('Daily Discovery could not be claimed: $error'),
+          ),
         );
       }
     } finally {
@@ -107,10 +106,7 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
     }
   }
 
-  Future<void> _openCard(
-    Flashcard card,
-    FlashcardOwnership ownership,
-  ) async {
+  Future<void> _openCard(Flashcard card, FlashcardOwnership ownership) async {
     final snapshot = _snapshot;
     if (snapshot == null) {
       return;
@@ -234,10 +230,9 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
                   Text(
                     'Flashcards could not be loaded',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w900),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -322,8 +317,7 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
                     _SectionTitle(
                       title: 'Newly Collected',
                       subtitle: 'Reveal these cards to activate memory review.',
-                      trailing:
-                          '${snapshot.newlyCollectedCards.length} unseen',
+                      trailing: '${snapshot.newlyCollectedCards.length} unseen',
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
@@ -331,17 +325,14 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.newlyCollectedCards.length,
-                        separatorBuilder: (_, _) =>
-                            const SizedBox(width: 10),
+                        separatorBuilder: (_, _) => const SizedBox(width: 10),
                         itemBuilder: (context, index) {
                           final card = snapshot.newlyCollectedCards[index];
                           final ownership =
                               snapshot.ownershipByCardId[card.id]!;
                           return _NewlyCollectedTile(
                             card: card,
-                            onTap: () => unawaited(
-                              _openCard(card, ownership),
-                            ),
+                            onTap: () => unawaited(_openCard(card, ownership)),
                           );
                         },
                       ),
@@ -413,9 +404,8 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
                                 card: card,
                                 ownership: ownership,
                                 due: review?.isDue(snapshot.loadedAt) == true,
-                                onTap: () => unawaited(
-                                  _openCard(card, ownership),
-                                ),
+                                onTap: () =>
+                                    unawaited(_openCard(card, ownership)),
                               ),
                             );
                           }).toList(),
@@ -506,8 +496,7 @@ class _CollectionHero extends StatelessWidget {
               ),
               _MetricChip(
                 icon: Icons.visibility_off_outlined,
-                label:
-                    '${snapshot.collectionStatistics.unseenCount} unseen',
+                label: '${snapshot.collectionStatistics.unseenCount} unseen',
               ),
               _MetricChip(
                 icon: Icons.schedule_rounded,
@@ -515,8 +504,7 @@ class _CollectionHero extends StatelessWidget {
               ),
               _MetricChip(
                 icon: Icons.replay_rounded,
-                label:
-                    '${snapshot.memoryStatistics.totalReviewEvents} reviews',
+                label: '${snapshot.memoryStatistics.totalReviewEvents} reviews',
               ),
             ],
           ),
@@ -537,10 +525,8 @@ class _DailyDiscoveryCard extends StatelessWidget {
   final FlashcardLearnerSnapshot snapshot;
   final bool claiming;
   final Future<void> Function() onClaim;
-  final Future<void> Function(
-    Flashcard card,
-    FlashcardOwnership ownership,
-  ) onOpenCard;
+  final Future<void> Function(Flashcard card, FlashcardOwnership ownership)
+  onOpenCard;
 
   @override
   Widget build(BuildContext context) {
@@ -595,10 +581,7 @@ class _DailyDiscoveryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.wb_sunny_outlined,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(Icons.wb_sunny_outlined, color: theme.colorScheme.primary),
           const SizedBox(height: 12),
           Text(
             'DAILY DISCOVERY',
@@ -623,10 +606,7 @@ class _DailyDiscoveryCard extends StatelessWidget {
               height: 1.4,
             ),
           ),
-          if (action != null) ...[
-            const SizedBox(height: 16),
-            action,
-          ],
+          if (action != null) ...[const SizedBox(height: 16), action],
         ],
       ),
     );
@@ -669,10 +649,7 @@ class _ReviewNowCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.psychology_alt_outlined,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(Icons.psychology_alt_outlined, color: theme.colorScheme.primary),
           const SizedBox(height: 12),
           Text(
             'MEMORY REVIEW',
@@ -718,10 +695,7 @@ class _ReviewNowCard extends StatelessWidget {
 }
 
 class _NewlyCollectedTile extends StatelessWidget {
-  const _NewlyCollectedTile({
-    required this.card,
-    required this.onTap,
-  });
+  const _NewlyCollectedTile({required this.card, required this.onTap});
 
   final Flashcard card;
   final VoidCallback onTap;
@@ -749,9 +723,9 @@ class _NewlyCollectedTile extends StatelessWidget {
                   card.frontLabel,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w900),
                 ),
               ),
             ],
@@ -863,10 +837,7 @@ class _CollectionCardTile extends StatelessWidget {
                   ),
                 if (due) ...[
                   if (ownership.isUnseen) const SizedBox(width: 6),
-                  const _TinyStatus(
-                    icon: Icons.schedule_rounded,
-                    label: 'Due',
-                  ),
+                  const _TinyStatus(icon: Icons.schedule_rounded, label: 'Due'),
                 ],
               ],
             ),
@@ -920,10 +891,9 @@ class _NoContentCard extends StatelessWidget {
           Text(
             'No learner-ready Flashcard packages yet',
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.w900),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 6),
           Text(
@@ -959,10 +929,9 @@ class _EmptyCollectionCard extends StatelessWidget {
           Text(
             'Your Collection is ready',
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.w900),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 6),
           Text(
@@ -993,9 +962,7 @@ class _MetricChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: scheme.surface.withValues(alpha: .32),
         borderRadius: BorderRadius.circular(99),
-        border: Border.all(
-          color: scheme.outlineVariant.withValues(alpha: .45),
-        ),
+        border: Border.all(color: scheme.outlineVariant.withValues(alpha: .45)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
@@ -1006,9 +973,9 @@ class _MetricChip extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               label,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
           ],
         ),

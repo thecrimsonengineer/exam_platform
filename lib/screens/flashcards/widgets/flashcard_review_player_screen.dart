@@ -152,9 +152,7 @@ class _FlashcardReviewPlayerScreenState
               unawaited(Csp11Haptics.selection());
             },
             icon: Icon(
-              _swipeEnabled
-                  ? Icons.swipe_rounded
-                  : Icons.touch_app_outlined,
+              _swipeEnabled ? Icons.swipe_rounded : Icons.touch_app_outlined,
             ),
           ),
         ],
@@ -179,10 +177,9 @@ class _FlashcardReviewPlayerScreenState
                       const SizedBox(width: 12),
                       Text(
                         '$currentNumber / $total',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelLarge
-                            ?.copyWith(fontWeight: FontWeight.w900),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ],
                   ),
@@ -193,11 +190,13 @@ class _FlashcardReviewPlayerScreenState
                     child: FlashcardCardView(
                       card: card,
                       isFlipped: _revealed,
-                      sourceFooter:
-                          widget.snapshot.primarySourceFooterFor(card.id),
+                      sourceFooter: widget.snapshot.primarySourceFooterFor(
+                        card.id,
+                      ),
                       onReveal: _revealed ? null : _reveal,
-                      onSourceTap:
-                          _revealed ? () => _showSources(card.id) : null,
+                      onSourceTap: _revealed
+                          ? () => _showSources(card.id)
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -214,9 +213,7 @@ class _FlashcardReviewPlayerScreenState
                         'Optional shortcut: swipe left for Again or right for Got It.',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     const SizedBox(height: 12),
@@ -228,8 +225,8 @@ class _FlashcardReviewPlayerScreenState
                             onPressed: _busy
                                 ? null
                                 : () => unawaited(
-                                      _rate(FlashcardReviewRating.again),
-                                    ),
+                                    _rate(FlashcardReviewRating.again),
+                                  ),
                             child: const Text('Again'),
                           ),
                         ),
@@ -240,8 +237,8 @@ class _FlashcardReviewPlayerScreenState
                             onPressed: _busy
                                 ? null
                                 : () => unawaited(
-                                      _rate(FlashcardReviewRating.hard),
-                                    ),
+                                    _rate(FlashcardReviewRating.hard),
+                                  ),
                             child: const Text('Hard'),
                           ),
                         ),
@@ -252,8 +249,8 @@ class _FlashcardReviewPlayerScreenState
                             onPressed: _busy
                                 ? null
                                 : () => unawaited(
-                                      _rate(FlashcardReviewRating.gotIt),
-                                    ),
+                                    _rate(FlashcardReviewRating.gotIt),
+                                  ),
                             child: const Text('Got It'),
                           ),
                         ),
@@ -308,9 +305,7 @@ class _CompletionView extends StatelessWidget {
                     Text(
                       'Memory session complete',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
+                      style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.w900),
                     ),
                     const SizedBox(height: 10),

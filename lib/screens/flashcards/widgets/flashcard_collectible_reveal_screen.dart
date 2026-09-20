@@ -92,8 +92,9 @@ class _FlashcardCollectibleRevealScreenState
                   FlashcardCardView(
                     card: widget.card,
                     isFlipped: _revealed,
-                    sourceFooter:
-                        widget.snapshot.primarySourceFooterFor(widget.card.id),
+                    sourceFooter: widget.snapshot.primarySourceFooterFor(
+                      widget.card.id,
+                    ),
                     onReveal: _revealed || _busy
                         ? null
                         : () => unawaited(_reveal()),

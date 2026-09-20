@@ -109,17 +109,11 @@ class FlashcardCardView extends StatelessWidget {
                 ),
                 if (card.whyItMatters.trim().isNotEmpty) ...[
                   const SizedBox(height: 18),
-                  _Section(
-                    label: 'Why it matters',
-                    text: card.whyItMatters,
-                  ),
+                  _Section(label: 'Why it matters', text: card.whyItMatters),
                 ],
                 if (card.keyPoint.trim().isNotEmpty) ...[
                   const SizedBox(height: 18),
-                  _Section(
-                    label: 'Key point',
-                    text: card.keyPoint,
-                  ),
+                  _Section(label: 'Key point', text: card.keyPoint),
                 ],
                 const Spacer(),
                 const SizedBox(height: 24),
@@ -175,11 +169,7 @@ class FlashcardCardView extends StatelessWidget {
       ),
     );
 
-    return Csp11FlipCard(
-      front: front,
-      back: back,
-      isFlipped: isFlipped,
-    );
+    return Csp11FlipCard(front: front, back: back, isFlipped: isFlipped);
   }
 }
 
