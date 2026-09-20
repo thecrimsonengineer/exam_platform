@@ -7,8 +7,12 @@ import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_learning_twin_bridge.dart';
 import 'package:exam_platform/features/lab/lab_learning_twin_emitter.dart';
 import 'package:exam_platform/features/lab/lab_session.dart';
+import 'package:exam_platform/navigation/csp11_route.dart';
 import 'package:exam_platform/services/haptics/csp11_haptic_service.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
+import 'package:exam_platform/theme/motion/csp11_motion.dart';
+import 'package:exam_platform/widgets/motion/csp11_completion_reveal.dart';
+import 'package:exam_platform/widgets/motion/csp11_state_switcher.dart';
 
 import 'lab_learner_debrief_screen.dart';
 import 'lab_scenario_catalog.dart';
@@ -255,9 +259,28 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
             ? _ErrorState(message: _error!, onRetry: _loadLab)
             : _package == null || _session == null
             ? const Center(child: CircularProgressIndicator())
-            : _buildLoaded(context, _package!, _session!),
+            : Csp11StateSwitcher(
+                child: KeyedSubtree(
+                  key: ValueKey(
+                    _motionStateKey(_package!, _session!),
+                  ),
+                  child: _buildLoaded(context, _package!, _session!),
+                ),
+              ),
       ),
     );
+  }
+
+  String _motionStateKey(LabPackage package, LabSession session) {
+    if (_pendingConsequence != null) {
+      return 'lab-motion-consequence-${session.decisionHistory.length}';
+    }
+
+    if (session.status == LabSessionStatus.completed) {
+      return 'lab-motion-completion-${session.endingId ?? 'unknown'}';
+    }
+
+    return 'lab-motion-decision-${session.currentNodeId}';
   }
 
   Widget _buildLoaded(
@@ -362,57 +385,76 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         const SizedBox(height: 16),
         ...node.options.map((option) {
           final selected = _selectedOptionId == option.id;
+          final reduced = Csp11MotionPreferences.reduced(context);
+          final optionMotionDuration = reduced
+              ? Duration.zero
+              : Csp11MotionDuration.quick;
+          final lockedOut = _busy && !selected;
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                key: ValueKey('lab-option-' + option.id),
-                borderRadius: BorderRadius.circular(18),
-                onTap: _busy ? null : () => _selectDecisionOption(option.id),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 160),
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(17),
-                  decoration: BoxDecoration(
+            child: AnimatedOpacity(
+              duration: optionMotionDuration,
+              curve: Csp11MotionCurve.standard,
+              opacity: lockedOut ? 0.48 : 1,
+              child: AnimatedScale(
+                duration: optionMotionDuration,
+                curve: Csp11MotionCurve.standard,
+                scale: selected && !reduced ? 1.006 : 1,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    key: ValueKey('lab-option-' + option.id),
                     borderRadius: BorderRadius.circular(18),
-                    color: selected
-                        ? primary.withValues(alpha: dark ? 0.18 : 0.10)
-                        : (dark
-                              ? Colors.white.withValues(alpha: 0.045)
-                              : Colors.white.withValues(alpha: 0.72)),
-                    border: Border.all(
-                      color: selected
-                          ? primary
-                          : (dark
-                                ? Colors.white.withValues(alpha: 0.10)
-                                : const Color(0xFFDCE5F2)),
-                      width: selected ? 2 : 1,
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        selected
-                            ? Icons.radio_button_checked_rounded
-                            : Icons.radio_button_off_rounded,
-                        color: selected ? primary : muted,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          option.text,
-                          style: TextStyle(
-                            color: text,
-                            height: 1.4,
-                            fontWeight: selected
-                                ? FontWeight.w800
-                                : FontWeight.w600,
-                          ),
+                    onTap: _busy
+                        ? null
+                        : () => _selectDecisionOption(option.id),
+                    child: AnimatedContainer(
+                      duration: optionMotionDuration,
+                      curve: Csp11MotionCurve.standard,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(17),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: selected
+                            ? primary.withValues(alpha: dark ? 0.18 : 0.10)
+                            : (dark
+                                  ? Colors.white.withValues(alpha: 0.045)
+                                  : Colors.white.withValues(alpha: 0.72)),
+                        border: Border.all(
+                          color: selected
+                              ? primary
+                              : (dark
+                                    ? Colors.white.withValues(alpha: 0.10)
+                                    : const Color(0xFFDCE5F2)),
+                          width: selected ? 2 : 1,
                         ),
                       ),
-                    ],
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            selected
+                                ? Icons.radio_button_checked_rounded
+                                : Icons.radio_button_off_rounded,
+                            color: selected ? primary : muted,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              option.text,
+                              style: TextStyle(
+                                color: text,
+                                height: 1.4,
+                                fontWeight: selected
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -732,10 +774,14 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         .map((event) => widget.scenario.decisionTitleFor(event.nodeId))
         .join(' → ');
 
-    return ListView(
-      key: const ValueKey('lab-completion-screen'),
-      padding: const EdgeInsets.all(20),
-      children: [
+    final celebratory = session.endingId == 'safe_completion';
+
+    return Csp11CompletionReveal(
+      celebratory: celebratory,
+      child: ListView(
+        key: const ValueKey('lab-completion-screen'),
+        padding: const EdgeInsets.all(20),
+        children: [
         StudentGlassSurface(
           padding: const EdgeInsets.all(24),
           borderRadius: BorderRadius.circular(24),
@@ -844,8 +890,8 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
           key: const ValueKey('lab-view-debrief'),
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => LabLearnerDebriefScreen(
+              Csp11Route.detail<void>(
+                child: LabLearnerDebriefScreen(
                   package: package,
                   session: session,
                   scenario: widget.scenario,
@@ -876,6 +922,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
           label: const Text('BACK TO LAB MODES'),
         ),
       ],
+      ),
     );
   }
 }
