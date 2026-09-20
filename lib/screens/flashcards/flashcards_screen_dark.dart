@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
+import 'package:exam_platform/widgets/motion/csp11_status_reveal.dart';
 
 import '../../app/app_colors.dart';
 
@@ -21,7 +22,9 @@ class DarkFlashcardsScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Center(
+        child: Csp11StatusReveal(
+          kind: Csp11StatusKind.empty,
+          child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: ConstrainedBox(
@@ -70,6 +73,7 @@ class DarkFlashcardsScreen extends StatelessWidget {
               ),
             ),
           ),
+        ),
         ),
       ),
     );
