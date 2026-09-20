@@ -179,6 +179,7 @@ void main() {
         source: FlashcardAcquisitionSource.questionCompletion,
         questionOutcome: FlashcardQuestionOutcome.correct,
         questionId: 930001,
+        occurredAt: DateTime.utc(2026, 9, 20, 10),
       ),
     );
 
