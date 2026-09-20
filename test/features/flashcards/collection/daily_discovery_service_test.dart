@@ -128,25 +128,28 @@ void main() {
     expect(offer.cardId, elimination.id);
   });
 
-  test('package that fails FCQ100 contributes no Daily Discovery card', () async {
-    final json = referencePackage.toJson();
-    final cards = json['cards'] as List<dynamic>;
-    final first = Map<String, dynamic>.from(cards.first as Map);
-    first['whyItMatters'] = '';
-    cards[0] = first;
-    final invalidPackage = FlashcardContentPackage.fromJson(json);
+  test(
+    'package that fails FCQ100 contributes no Daily Discovery card',
+    () async {
+      final json = referencePackage.toJson();
+      final cards = json['cards'] as List<dynamic>;
+      final first = Map<String, dynamic>.from(cards.first as Map);
+      first['whyItMatters'] = '';
+      cards[0] = first;
+      final invalidPackage = FlashcardContentPackage.fromJson(json);
 
-    final service = buildDaily(
-      learnerId: 'learner-invalid-package',
-      collection: MemoryFlashcardCollectionRepository(),
-    );
-    final state = await service.offerForDate(
-      localDate: DateTime(2026, 9, 20),
-      packages: <FlashcardContentPackage>[invalidPackage],
-    );
+      final service = buildDaily(
+        learnerId: 'learner-invalid-package',
+        collection: MemoryFlashcardCollectionRepository(),
+      );
+      final state = await service.offerForDate(
+        localDate: DateTime(2026, 9, 20),
+        packages: <FlashcardContentPackage>[invalidPackage],
+      );
 
-    expect(state.status, DailyDiscoveryStatus.empty);
-  });
+      expect(state.status, DailyDiscoveryStatus.empty);
+    },
+  );
 
   test('Daily Discovery rejects mismatched learner identity', () async {
     final unlock = FlashcardUnlockService(
@@ -264,17 +267,11 @@ void main() {
     await repository.saveState(learnerId: 'learner-a', state: state);
 
     expect(
-      await repository.loadState(
-        learnerId: 'learner-a',
-        dateKey: '2026-09-20',
-      ),
+      await repository.loadState(learnerId: 'learner-a', dateKey: '2026-09-20'),
       isNotNull,
     );
     expect(
-      await repository.loadState(
-        learnerId: 'learner-b',
-        dateKey: '2026-09-20',
-      ),
+      await repository.loadState(learnerId: 'learner-b', dateKey: '2026-09-20'),
       isNull,
     );
   });

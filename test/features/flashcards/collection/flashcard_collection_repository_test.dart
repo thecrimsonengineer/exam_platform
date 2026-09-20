@@ -79,11 +79,7 @@ void main() {
       lastReinforcedAt: DateTime.utc(2026, 9, 21, 9),
       correctSignalCount: 1,
       incorrectSignalCount: 1,
-      appliedEventIds: const <String>[
-        'daily:one',
-        'quiz:two',
-        'quiz:three',
-      ],
+      appliedEventIds: const <String>['daily:one', 'quiz:two', 'quiz:three'],
     );
 
     final decoded = FlashcardOwnership.fromJson(ownership.toJson());

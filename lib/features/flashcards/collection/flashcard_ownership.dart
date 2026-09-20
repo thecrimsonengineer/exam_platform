@@ -199,8 +199,7 @@ class FlashcardOwnership {
           'Question-acquired Flashcard requires a correct/incorrect signal.',
         );
       }
-    } else if (firstQuestionOutcome !=
-        FlashcardQuestionOutcome.notApplicable) {
+    } else if (firstQuestionOutcome != FlashcardQuestionOutcome.notApplicable) {
       throw const FormatException(
         'Daily Discovery acquisition cannot have a Question outcome.',
       );
