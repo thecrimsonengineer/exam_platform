@@ -66,7 +66,7 @@ void main() {
 
     expect(
       source,
-      contains(rr"ValueKey<String>('quiz-question-${question.id}')"),
+      contains(r"ValueKey<String>('quiz-question-${question.id}')"),
     );
     expect(source, contains(r"ValueKey<String>('quiz-answers-${question.id}')"));
     expect(source, contains('Csp11SlideFade('));
@@ -78,7 +78,7 @@ void main() {
 
     final actionBarIndex = source.indexOf('QuizActionBar(');
     final questionMotionIndex = source.indexOf(
-      "ValueKey<String>('quiz-question-${question.id}')",
+      r"ValueKey<String>('quiz-question-${question.id}')",
     );
     expect(actionBarIndex, greaterThan(questionMotionIndex));
   });
