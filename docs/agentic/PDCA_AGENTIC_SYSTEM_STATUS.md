@@ -13,6 +13,8 @@ Base SHA: e6d1c28fe7b7428267c343068f4471671a765dd8
 - ACT: refined expanded draft committed
 - Cross-PDCA consistency audit: completed and committed
 - Canonical Control Model: draft committed
+- Adversarial cross-state audit: completed and committed
+- Adversarial hardening controls: added to Canonical Control Model
 - Overall PDCA system: NOT FROZEN
 - Agentic implementation: NOT STARTED
 
@@ -33,7 +35,7 @@ cross-PDCA consistency audit
    ↓
 canonical control model
    ↓
-adversarial cross-state audit
+adversarial cross-state audit ✓
    ↓
 consolidate freeze-ready governance v1
    ↓

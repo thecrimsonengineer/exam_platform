@@ -523,4 +523,288 @@ ACT_CLOSED
 retrospective and governance proposals
 ~~~
 
+
+## Adversarial hardening controls
+
+These controls were added after the adversarial cross-state audit.
+
+### Event provenance and semantic deduplication
+
+Exact event-ID deduplication is necessary but not sufficient.
+
+Every authoritative event must also carry trusted provenance and a semantic deduplication key.
+
+Recommended CHECK semantic key:
+
+~~~text
+hash(
+  source_system,
+  task_id,
+  lineage_id,
+  candidate_sha,
+  validation_scope,
+  workflow_run_id,
+  check_attempt
+)
+~~~
+
+If the same underlying validation is delivered with two different event IDs, the Control Plane must still treat it as one logical event.
+
+Events from untrusted or unknown issuers are rejected.
+
+### Event ordering and lineage generation
+
+Each task lineage receives a monotonically increasing lineage generation or candidate sequence.
+
+Events include:
+
+~~~text
+lineage_generation
+candidate_sequence
+~~~
+
+An event for an older generation/sequence cannot overwrite or transition a newer lineage state.
+
+Out-of-order events are retained as evidence but ignored for state mutation.
+
+### Lease fencing tokens
+
+Writer leases require a monotonically increasing fencing token.
+
+Every Git mutation must present:
+
+~~~text
+writer_lease_id
+fencing_token
+expected_head
+~~~
+
+If a lease expires, is revoked, or is replaced, the old fencing token becomes invalid.
+
+A stale agent cannot continue writing merely because it still has local credentials.
+
+### Integration lease
+
+The authoritative phase integration branch has its own serialized integration lease.
+
+Only one integration operation may mutate it at a time.
+
+Accepted task candidates may be integrated sequentially using compare-and-swap against the expected branch HEAD.
+
+### Repair-slot reservation
+
+ACT reserves repair slots atomically before dispatching repair agents.
+
+A parallel repair consumes its reserved share of the common lineage budget.
+
+Two agents cannot independently spend the same remaining repair attempt.
+
+If multiple repair hypotheses become green, ACT selects one winner. Losing candidates are marked superseded and cannot later be integrated without a new explicit decision.
+
+### Lineage epoch and revocation
+
+Every lineage has an epoch.
+
+Rollback, quarantine, emergency stop, or material PLAN reset increments the epoch.
+
+All active:
+- writer leases;
+- repair candidates;
+- queued tasks;
+- stale CHECK events;
+- pending approvals
+
+from the previous epoch become invalid for future state transitions.
+
+A late result from a pre-rollback agent is preserved as evidence but cannot re-enter the active lineage.
+
+### Trusted Judge Manifest
+
+The Trusted Judge Set must have a manifest anchored to a protected reference.
+
+The manifest records, where practical:
+
+~~~text
+judge_manifest_version
+protected_ref
+workflow_refs
+test_refs_or_hashes
+architecture_gate_refs_or_hashes
+security_scan_refs_or_hashes
+closure_predicate_version
+governance_version
+~~~
+
+Closure validation must not rely solely on judge files from the candidate branch.
+
+### Trusted Judge Overlay
+
+For high-assurance TASK/INTEGRATION/CLOSURE checks, the validator should execute candidate production code against:
+
+1. candidate-added tests that passed integrity review; and
+2. trusted baseline judge files obtained from the protected Judge Manifest reference.
+
+If candidate-modified tests differ from trusted baseline judges, both sets are inspected. Candidate changes cannot erase baseline expectations merely by replacing the test file.
+
+### Judge provenance failure
+
+If the validator cannot establish the provenance/hash/reference of the Trusted Judge Set:
+
+~~~text
+CHECK_ESCALATE
+~~~
+
+or a dedicated judge-integrity failure is emitted.
+
+The system fails closed rather than validating with an unknown judge.
+
+### Approval lifecycle
+
+Human approvals have:
+
+~~~text
+approval_id
+approval_type
+subject_id
+exact_sha_or_object
+plan_revision
+governance_version
+issuer
+issued_at
+expires_at?
+revoked_at?
+status
+~~~
+
+ACT validates approval status at the moment it is consumed.
+
+An approval that was valid when created but expired or was revoked before the protected action is no longer valid.
+
+### Trusted time
+
+Waiver expiry, approval expiry, lease expiry and event ordering use trusted server/control-plane time.
+
+Agent-provided local timestamps are evidence only and cannot extend validity.
+
+### Approval version binding
+
+Architecture, dependency and closure approvals bind to the relevant PLAN revision and governance version.
+
+A material PLAN/governance revision invalidates approvals whose assumptions changed.
+
+### Closure capability separation
+
+Normal Builder, Repairer, Reviewer and Closer credentials must not have permission to:
+
+- create or move `phase-*-closed`;
+- merge to protected production branches;
+- weaken branch protection;
+- approve their own protected action.
+
+Closed-branch creation requires a distinct human-authorized closure capability/principal.
+
+The human approval record alone is not enough if the acting principal lacks the protected closure capability.
+
+### Ancestry and commit-provenance verification
+
+Closure/integration ancestry validation must include more than "approved base is an ancestor".
+
+CHECK should verify:
+
+- expected merge-base;
+- approved phase base;
+- allowed parent graph;
+- no unexpected unrelated merge ancestry;
+- all commits between approved base and candidate are attributable to approved task/integration lineage or an explicitly approved external change.
+
+Unexpected provenance produces a scope/ancestry failure even when tests pass.
+
+### Evidence integrity and hashing
+
+Structured evidence bundles should include content hashes and immutable references where practical.
+
+CHECK/ACT must detect replacement of evidence artifacts after the event that referenced them.
+
+Disposable branch deletion must not invalidate authoritative evidence.
+
+### Secret-contaminated evidence
+
+If a secret appears in logs or artifacts:
+
+- do not forward the raw contaminated log to normal agents;
+- rotate/revoke the secret as appropriate;
+- quarantine the candidate;
+- redact/sanitize the evidence copy used for routine diagnosis;
+- preserve incident evidence only in the authorized security channel/storage;
+- invalidate any derived artifact that republishes the secret.
+
+### Waiver time-of-use validation
+
+Waiver validity is checked:
+- when Review Accepted is evaluated;
+- during CLOSURE CHECK;
+- when ACT computes closure eligibility;
+- immediately before human-authorized closure execution.
+
+A waiver expiring between these steps becomes blocking.
+
+### Control Plane failure mode
+
+If the Control Plane cannot reliably read:
+- lineage state;
+- repair budget;
+- writer lease;
+- approval status;
+- Judge Manifest;
+- expected branch HEAD
+
+then protected mutations fail closed.
+
+The system does not "best effort" a write while authoritative control state is unavailable.
+
+### Control Plane recovery
+
+After Control Plane restart/recovery:
+
+1. reload persisted state;
+2. reconcile GitHub branch HEADs;
+3. revoke unknown/stale leases;
+4. reconcile active workflow runs;
+5. re-establish lineage epochs;
+6. require explicit recovery completion before writer leases are issued.
+
+### Cancellation race
+
+A soft cancellation allows the current atomic Git operation to finish, then increments/revokes the writer lease before any subsequent operation.
+
+An emergency stop may revoke the lease/epoch immediately. Any operation completing afterward must fail the fencing-token or epoch check before its result can be integrated.
+
+### Reviewer principal separation
+
+Authoritative review requires a reviewer principal/session different from the Builder/Repairer principal that produced the candidate.
+
+Aliases or restarted sessions of the same active writer do not count as independent review when the system can identify the principal.
+
+### Branch-protection drift
+
+Unexpected changes to repository branch protection, workflow permissions, required checks or closure permissions are governance/security incidents.
+
+Closure is blocked until protection state is reconciled.
+
+### Governance-version pinning
+
+Every PLAN task and CHECK event records the governance version or draft hash under which it was executed.
+
+After frozen governance exists, a candidate cannot silently mix decisions from incompatible governance versions.
+
+### Fail-closed invariant
+
+When the system cannot prove that a protected transition is authorized, current, in-scope, and based on trusted evidence:
+
+~~~text
+do not perform the protected transition
+~~~
+
+This rule overrides convenience and throughput.
+
 This document remains draft until the full governance freeze.
