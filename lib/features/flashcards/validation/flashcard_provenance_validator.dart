@@ -71,8 +71,7 @@ class FlashcardProvenanceValidator {
 
       if (ref.definitionMode == SourceDefinitionMode.verbatimExcerpt) {
         final copyrightModeAllowsVerbatim =
-            source.copyrightMode ==
-                SourceCopyrightMode.federalGovernmentWork ||
+            source.copyrightMode == SourceCopyrightMode.federalGovernmentWork ||
             source.copyrightMode == SourceCopyrightMode.openLicensed ||
             source.copyrightMode == SourceCopyrightMode.permissionGranted;
 
