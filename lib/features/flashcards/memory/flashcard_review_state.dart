@@ -6,9 +6,8 @@ FlashcardReviewStage flashcardReviewStageFromJson(dynamic value) {
   final raw = value?.toString().trim() ?? '';
   return FlashcardReviewStage.values.firstWhere(
     (item) => item.name == raw,
-    orElse: () => throw FormatException(
-      'Unsupported Flashcard review stage: $value',
-    ),
+    orElse: () =>
+        throw FormatException('Unsupported Flashcard review stage: $value'),
   );
 }
 
@@ -16,9 +15,8 @@ FlashcardReviewRating flashcardReviewRatingFromJson(dynamic value) {
   final raw = value?.toString().trim() ?? '';
   return FlashcardReviewRating.values.firstWhere(
     (item) => item.name == raw,
-    orElse: () => throw FormatException(
-      'Unsupported Flashcard review rating: $value',
-    ),
+    orElse: () =>
+        throw FormatException('Unsupported Flashcard review rating: $value'),
   );
 }
 
@@ -187,11 +185,8 @@ class FlashcardReviewState {
         'Flashcard review due time cannot precede activation.',
       );
     }
-    if (appliedReviewEventIds.toSet().length !=
-        appliedReviewEventIds.length) {
-      throw const FormatException(
-        'Flashcard review event IDs must be unique.',
-      );
+    if (appliedReviewEventIds.toSet().length != appliedReviewEventIds.length) {
+      throw const FormatException('Flashcard review event IDs must be unique.');
     }
     if (reviewCount != appliedReviewEventIds.length) {
       throw const FormatException(
@@ -246,9 +241,7 @@ int _nonNegativeInt(dynamic value) {
       ? value.toInt()
       : int.tryParse(value?.toString() ?? '') ?? 0;
   if (parsed < 0) {
-    throw FormatException(
-      'Flashcard review count cannot be negative: $value',
-    );
+    throw FormatException('Flashcard review count cannot be negative: $value');
   }
   return parsed;
 }

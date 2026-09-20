@@ -77,25 +77,17 @@ class FlashcardMemoryService {
       );
       state.validate();
 
-      await _repository.save(
-        learnerId: learnerId,
-        state: state,
-      );
+      await _repository.save(learnerId: learnerId, state: state);
       return state;
     });
   }
 
   Future<FlashcardReviewState?> load(String cardId) {
-    return _repository.load(
-      learnerId: requireLearnerId(),
-      cardId: cardId,
-    );
+    return _repository.load(learnerId: requireLearnerId(), cardId: cardId);
   }
 
   Future<List<FlashcardReviewState>> loadAll() {
-    return _repository.loadAll(
-      learnerId: requireLearnerId(),
-    );
+    return _repository.loadAll(learnerId: requireLearnerId());
   }
 
   Future<FlashcardReviewEventResult> rate({
@@ -111,9 +103,7 @@ class FlashcardMemoryService {
     return _serialize(lockKey, () async {
       final normalizedEventId = eventId.trim();
       if (normalizedEventId.isEmpty) {
-        throw const FormatException(
-          'Flashcard review event ID is required.',
-        );
+        throw const FormatException('Flashcard review event ID is required.');
       }
 
       final existing = await _repository.load(
@@ -121,9 +111,7 @@ class FlashcardMemoryService {
         cardId: cardId,
       );
       if (existing == null) {
-        throw StateError(
-          'Flashcard memory is not active for $cardId.',
-        );
+        throw StateError('Flashcard memory is not active for $cardId.');
       }
       if (existing.conceptId != conceptId) {
         throw const FormatException(
@@ -148,21 +136,20 @@ class FlashcardMemoryService {
         );
       }
 
-      final decision = _intervalPolicy.next(
-        current: existing,
-        rating: rating,
-      );
+      final decision = _intervalPolicy.next(current: existing, rating: rating);
       final next = existing.copyWith(
         stage: decision.stage,
         dueAt: at.add(Duration(minutes: decision.intervalMinutes)),
         intervalMinutes: decision.intervalMinutes,
         reviewCount: existing.reviewCount + 1,
         lapseCount: existing.lapseCount + decision.lapseDelta,
-        againCount: existing.againCount +
+        againCount:
+            existing.againCount +
             (rating == FlashcardReviewRating.again ? 1 : 0),
-        hardCount: existing.hardCount +
-            (rating == FlashcardReviewRating.hard ? 1 : 0),
-        gotItCount: existing.gotItCount +
+        hardCount:
+            existing.hardCount + (rating == FlashcardReviewRating.hard ? 1 : 0),
+        gotItCount:
+            existing.gotItCount +
             (rating == FlashcardReviewRating.gotIt ? 1 : 0),
         gotItStreak: decision.nextGotItStreak,
         lastReviewedAt: at,
@@ -174,10 +161,7 @@ class FlashcardMemoryService {
       );
       next.validate();
 
-      await _repository.save(
-        learnerId: learnerId,
-        state: next,
-      );
+      await _repository.save(learnerId: learnerId, state: next);
 
       return FlashcardReviewEventResult(
         eventId: normalizedEventId,

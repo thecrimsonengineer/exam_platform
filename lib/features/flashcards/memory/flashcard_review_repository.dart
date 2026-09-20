@@ -10,19 +10,14 @@ abstract class FlashcardReviewRepository {
     required String cardId,
   });
 
-  Future<List<FlashcardReviewState>> loadAll({
-    required String learnerId,
-  });
+  Future<List<FlashcardReviewState>> loadAll({required String learnerId});
 
   Future<void> save({
     required String learnerId,
     required FlashcardReviewState state,
   });
 
-  Future<void> delete({
-    required String learnerId,
-    required String cardId,
-  });
+  Future<void> delete({required String learnerId, required String cardId});
 }
 
 class MemoryFlashcardReviewRepository implements FlashcardReviewRepository {
@@ -105,9 +100,7 @@ class SharedPreferencesFlashcardReviewRepository
       Map<String, dynamic>.from(decoded),
     );
     if (state.cardId != cardId) {
-      throw FormatException(
-        'Flashcard memory key/card mismatch: $cardId',
-      );
+      throw FormatException('Flashcard memory key/card mismatch: $cardId');
     }
     return state;
   }
@@ -145,18 +138,12 @@ class SharedPreferencesFlashcardReviewRepository
     state.validate();
 
     final prefs = await SharedPreferences.getInstance();
-    final key = stateKeyForLearner(
-      learnerId: learnerId,
-      cardId: state.cardId,
-    );
+    final key = stateKeyForLearner(learnerId: learnerId, cardId: state.cardId);
     final oldRaw = prefs.getString(key);
     final oldIndex =
         prefs.getStringList(indexKeyForLearner(learnerId)) ?? <String>[];
 
-    final wroteState = await prefs.setString(
-      key,
-      jsonEncode(state.toJson()),
-    );
+    final wroteState = await prefs.setString(key, jsonEncode(state.toJson()));
     if (!wroteState) {
       throw StateError(
         'Unable to persist Flashcard review state ${state.cardId}.',
@@ -198,10 +185,7 @@ class SharedPreferencesFlashcardReviewRepository
   }
 }
 
-void _validateIdentity({
-  required String learnerId,
-  required String cardId,
-}) {
+void _validateIdentity({required String learnerId, required String cardId}) {
   if (learnerId.trim().isEmpty) {
     throw const FormatException('Flashcard memory learner ID is required.');
   }

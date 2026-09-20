@@ -58,15 +58,9 @@ class FlashcardReviewSessionState {
     );
   }
 
-  factory FlashcardReviewSessionState.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    final createdAt = DateTime.tryParse(
-      json['createdAt']?.toString() ?? '',
-    );
-    final updatedAt = DateTime.tryParse(
-      json['updatedAt']?.toString() ?? '',
-    );
+  factory FlashcardReviewSessionState.fromJson(Map<String, dynamic> json) {
+    final createdAt = DateTime.tryParse(json['createdAt']?.toString() ?? '');
+    final updatedAt = DateTime.tryParse(json['updatedAt']?.toString() ?? '');
     if (createdAt == null || updatedAt == null) {
       throw const FormatException(
         'Flashcard review session timestamps are invalid.',
@@ -110,9 +104,7 @@ class FlashcardReviewSessionState {
 
   void validate() {
     if (sessionId.trim().isEmpty) {
-      throw const FormatException(
-        'Flashcard review session ID is required.',
-      );
+      throw const FormatException('Flashcard review session ID is required.');
     }
     if (updatedAt.isBefore(createdAt)) {
       throw const FormatException(
@@ -125,9 +117,7 @@ class FlashcardReviewSessionState {
       );
     }
     if (nextIndex < 0 || nextIndex > cardIds.length) {
-      throw const FormatException(
-        'Flashcard review session index is invalid.',
-      );
+      throw const FormatException('Flashcard review session index is invalid.');
     }
     if (status == FlashcardReviewSessionStatus.completed &&
         nextIndex != cardIds.length) {
@@ -142,8 +132,7 @@ class FlashcardReviewSessionState {
         'Active Flashcard review session requires a remaining card.',
       );
     }
-    if (cardIds.isEmpty &&
-        status != FlashcardReviewSessionStatus.completed) {
+    if (cardIds.isEmpty && status != FlashcardReviewSessionStatus.completed) {
       throw const FormatException(
         'Empty Flashcard review session must be completed.',
       );

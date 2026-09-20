@@ -45,20 +45,14 @@ void main() {
     );
     final acquired = DateTime.utc(2026, 9, 20, 8);
     final viewed = DateTime.utc(2026, 9, 20, 9);
-    final owned = ownership(
-      acquiredAt: acquired,
-      firstViewedAt: viewed,
-    );
+    final owned = ownership(acquiredAt: acquired, firstViewedAt: viewed);
 
     final first = await service.activateFromOwnership(owned);
     final second = await service.activateFromOwnership(owned);
 
     expect(first, isNotNull);
     expect(first?.stage, FlashcardReviewStage.learning);
-    expect(
-      first?.dueAt,
-      viewed.add(const Duration(days: 1)),
-    );
+    expect(first?.dueAt, viewed.add(const Duration(days: 1)));
     expect(second?.toJson(), first?.toJson());
   });
 
@@ -70,10 +64,7 @@ void main() {
     );
     final acquired = DateTime.utc(2026, 9, 20, 8);
     final viewed = DateTime.utc(2026, 9, 20, 9);
-    final owned = ownership(
-      acquiredAt: acquired,
-      firstViewedAt: viewed,
-    );
+    final owned = ownership(acquiredAt: acquired, firstViewedAt: viewed);
     await service.activateFromOwnership(owned);
 
     final firstReview = viewed.add(const Duration(days: 1));
@@ -87,10 +78,7 @@ void main() {
 
     expect(gotIt.kind, FlashcardReviewEventKind.applied);
     expect(gotIt.state.stage, FlashcardReviewStage.review);
-    expect(
-      gotIt.state.dueAt,
-      firstReview.add(const Duration(days: 3)),
-    );
+    expect(gotIt.state.dueAt, firstReview.add(const Duration(days: 3)));
 
     final duplicate = await service.rate(
       eventId: 'review:one',
@@ -99,10 +87,7 @@ void main() {
       rating: FlashcardReviewRating.gotIt,
       reviewedAt: firstReview,
     );
-    expect(
-      duplicate.kind,
-      FlashcardReviewEventKind.duplicateIgnored,
-    );
+    expect(duplicate.kind, FlashcardReviewEventKind.duplicateIgnored);
     expect(duplicate.state.reviewCount, 1);
 
     final againAt = firstReview.add(const Duration(days: 3));
@@ -116,10 +101,7 @@ void main() {
 
     expect(again.state.stage, FlashcardReviewStage.relearning);
     expect(again.state.lapseCount, 1);
-    expect(
-      again.state.dueAt,
-      againAt.add(const Duration(minutes: 10)),
-    );
+    expect(again.state.dueAt, againAt.add(const Duration(minutes: 10)));
 
     final hardAt = againAt.add(const Duration(minutes: 10));
     final hard = await service.rate(
@@ -131,10 +113,7 @@ void main() {
     );
 
     expect(hard.state.stage, FlashcardReviewStage.review);
-    expect(
-      hard.state.dueAt,
-      hardAt.add(const Duration(days: 1)),
-    );
+    expect(hard.state.dueAt, hardAt.add(const Duration(days: 1)));
   });
 
   test('weak-card assessment can use incorrect MCQ evidence for priority', () {

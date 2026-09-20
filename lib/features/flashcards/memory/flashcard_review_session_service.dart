@@ -44,9 +44,7 @@ class FlashcardReviewSessionService {
     final learnerId = _requireAlignedLearnerId();
     final normalizedSessionId = sessionId.trim();
     if (normalizedSessionId.isEmpty) {
-      throw const FormatException(
-        'Flashcard review session ID is required.',
-      );
+      throw const FormatException('Flashcard review session ID is required.');
     }
 
     final existing = await _sessionRepository.load(
@@ -78,19 +76,13 @@ class FlashcardReviewSessionService {
     );
     state.validate();
 
-    await _sessionRepository.save(
-      learnerId: learnerId,
-      state: state,
-    );
+    await _sessionRepository.save(learnerId: learnerId, state: state);
     return state;
   }
 
   Future<FlashcardReviewSessionState?> load(String sessionId) {
     final learnerId = _requireAlignedLearnerId();
-    return _sessionRepository.load(
-      learnerId: learnerId,
-      sessionId: sessionId,
-    );
+    return _sessionRepository.load(learnerId: learnerId, sessionId: sessionId);
   }
 
   Future<FlashcardReviewSessionStepResult> rateCurrent({
@@ -104,9 +96,7 @@ class FlashcardReviewSessionService {
       sessionId: sessionId,
     );
     if (session == null) {
-      throw StateError(
-        'Flashcard review session does not exist: $sessionId',
-      );
+      throw StateError('Flashcard review session does not exist: $sessionId');
     }
     if (session.isCompleted || session.currentCardId == null) {
       throw StateError(
@@ -123,8 +113,7 @@ class FlashcardReviewSessionService {
     }
 
     final at = reviewedAt ?? DateTime.now();
-    final eventId =
-        'review:$sessionId:${session.nextIndex}:$cardId';
+    final eventId = 'review:$sessionId:${session.nextIndex}:$cardId';
     final reviewEvent = await _memoryService.rate(
       eventId: eventId,
       cardId: cardId,
@@ -136,10 +125,7 @@ class FlashcardReviewSessionService {
     final advanced = session.advance(at);
     advanced.validate();
 
-    await _sessionRepository.save(
-      learnerId: learnerId,
-      state: advanced,
-    );
+    await _sessionRepository.save(learnerId: learnerId, state: advanced);
 
     return FlashcardReviewSessionStepResult(
       session: advanced,
@@ -149,9 +135,7 @@ class FlashcardReviewSessionService {
 
   Future<List<String>> listSessionIds() {
     final learnerId = _requireAlignedLearnerId();
-    return _sessionRepository.listSessionIds(
-      learnerId: learnerId,
-    );
+    return _sessionRepository.listSessionIds(learnerId: learnerId);
   }
 
   String _requireAlignedLearnerId() {

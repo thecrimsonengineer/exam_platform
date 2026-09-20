@@ -18,10 +18,7 @@ void main() {
     );
   });
 
-  FlashcardOwnership owned(
-    Flashcard card, {
-    required DateTime firstViewedAt,
-  }) {
+  FlashcardOwnership owned(Flashcard card, {required DateTime firstViewedAt}) {
     final value = FlashcardOwnership(
       cardId: card.id,
       conceptId: card.conceptId,
@@ -120,19 +117,13 @@ void main() {
       now: now,
     );
 
-    expect(
-      plan.cardIds,
-      <String>[cardA.id, cardC.id, cardB.id],
-    );
+    expect(plan.cardIds, <String>[cardA.id, cardC.id, cardB.id]);
   });
 
   test('interrupted session retry does not double-count a review', () async {
     final firstViewed = DateTime.utc(2026, 9, 20, 8);
     final now = DateTime.utc(2026, 9, 22, 8);
-    final ownership = owned(
-      hierarchy,
-      firstViewedAt: firstViewed,
-    );
+    final ownership = owned(hierarchy, firstViewedAt: firstViewed);
 
     final reviewRepository = MemoryFlashcardReviewRepository();
     final memoryService = FlashcardMemoryService(
@@ -151,12 +142,8 @@ void main() {
     final started = await sessionService.startOrResume(
       sessionId: 'session-recovery',
       now: now,
-      cardsById: <String, Flashcard>{
-        hierarchy.id: hierarchy,
-      },
-      ownershipByCardId: <String, FlashcardOwnership>{
-        hierarchy.id: ownership,
-      },
+      cardsById: <String, Flashcard>{hierarchy.id: hierarchy},
+      ownershipByCardId: <String, FlashcardOwnership>{hierarchy.id: ownership},
     );
     expect(started.currentCardId, hierarchy.id);
 
@@ -182,10 +169,7 @@ void main() {
       reviewedAt: now,
     );
 
-    expect(
-      retried.reviewEvent.kind,
-      FlashcardReviewEventKind.duplicateIgnored,
-    );
+    expect(retried.reviewEvent.kind, FlashcardReviewEventKind.duplicateIgnored);
     expect(retried.session.isCompleted, isTrue);
 
     final finalState = await memoryService.load(hierarchy.id);
@@ -196,10 +180,7 @@ void main() {
   test('startOrResume returns the persisted session unchanged', () async {
     final firstViewed = DateTime.utc(2026, 9, 20, 8);
     final now = DateTime.utc(2026, 9, 22, 8);
-    final ownership = owned(
-      hierarchy,
-      firstViewedAt: firstViewed,
-    );
+    final ownership = owned(hierarchy, firstViewedAt: firstViewed);
 
     final memoryService = FlashcardMemoryService(
       repository: MemoryFlashcardReviewRepository(),
@@ -217,12 +198,8 @@ void main() {
     final first = await service.startOrResume(
       sessionId: 'session-same',
       now: now,
-      cardsById: <String, Flashcard>{
-        hierarchy.id: hierarchy,
-      },
-      ownershipByCardId: <String, FlashcardOwnership>{
-        hierarchy.id: ownership,
-      },
+      cardsById: <String, Flashcard>{hierarchy.id: hierarchy},
+      ownershipByCardId: <String, FlashcardOwnership>{hierarchy.id: ownership},
     );
     final second = await service.startOrResume(
       sessionId: 'session-same',

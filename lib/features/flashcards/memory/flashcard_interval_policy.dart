@@ -71,8 +71,6 @@ class FlashcardIntervalPolicy {
   }) {
     final scaled = ((current * numerator) / denominator).round();
     final bounded = scaled < minimum ? minimum : scaled;
-    return bounded > maximumIntervalMinutes
-        ? maximumIntervalMinutes
-        : bounded;
+    return bounded > maximumIntervalMinutes ? maximumIntervalMinutes : bounded;
   }
 }

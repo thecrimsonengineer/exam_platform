@@ -10,19 +10,14 @@ abstract class FlashcardReviewSessionRepository {
     required String sessionId,
   });
 
-  Future<List<String>> listSessionIds({
-    required String learnerId,
-  });
+  Future<List<String>> listSessionIds({required String learnerId});
 
   Future<void> save({
     required String learnerId,
     required FlashcardReviewSessionState state,
   });
 
-  Future<void> delete({
-    required String learnerId,
-    required String sessionId,
-  });
+  Future<void> delete({required String learnerId, required String sessionId});
 }
 
 class MemoryFlashcardReviewSessionRepository
@@ -39,9 +34,7 @@ class MemoryFlashcardReviewSessionRepository
   }
 
   @override
-  Future<List<String>> listSessionIds({
-    required String learnerId,
-  }) async {
+  Future<List<String>> listSessionIds({required String learnerId}) async {
     final ids = _byLearner[learnerId]?.keys.toList() ?? <String>[];
     ids.sort();
     return List.unmodifiable(ids);
@@ -87,10 +80,7 @@ class SharedPreferencesFlashcardReviewSessionRepository
     _validate(learnerId: learnerId, sessionId: sessionId);
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(
-      stateKeyForLearner(
-        learnerId: learnerId,
-        sessionId: sessionId,
-      ),
+      stateKeyForLearner(learnerId: learnerId, sessionId: sessionId),
     );
     if (raw == null || raw.trim().isEmpty) {
       return null;
@@ -115,9 +105,7 @@ class SharedPreferencesFlashcardReviewSessionRepository
   }
 
   @override
-  Future<List<String>> listSessionIds({
-    required String learnerId,
-  }) async {
+  Future<List<String>> listSessionIds({required String learnerId}) async {
     _validate(learnerId: learnerId, sessionId: 'index');
     final prefs = await SharedPreferences.getInstance();
     final ids =
@@ -143,10 +131,7 @@ class SharedPreferencesFlashcardReviewSessionRepository
     final oldIndex =
         prefs.getStringList(indexKeyForLearner(learnerId)) ?? <String>[];
 
-    final wroteState = await prefs.setString(
-      key,
-      jsonEncode(state.toJson()),
-    );
+    final wroteState = await prefs.setString(key, jsonEncode(state.toJson()));
     if (!wroteState) {
       throw StateError(
         'Unable to persist Flashcard review session '
@@ -154,8 +139,7 @@ class SharedPreferencesFlashcardReviewSessionRepository
       );
     }
 
-    final nextIndex = <String>{...oldIndex, state.sessionId}.toList()
-      ..sort();
+    final nextIndex = <String>{...oldIndex, state.sessionId}.toList()..sort();
     final wroteIndex = await prefs.setStringList(
       indexKeyForLearner(learnerId),
       nextIndex,
@@ -183,10 +167,7 @@ class SharedPreferencesFlashcardReviewSessionRepository
     final ids = prefs.getStringList(indexKey) ?? <String>[];
 
     await prefs.remove(
-      stateKeyForLearner(
-        learnerId: learnerId,
-        sessionId: sessionId,
-      ),
+      stateKeyForLearner(learnerId: learnerId, sessionId: sessionId),
     );
     ids.removeWhere((id) => id == sessionId);
     await prefs.setStringList(indexKey, ids.toSet().toList()..sort());
@@ -202,9 +183,7 @@ class SharedPreferencesFlashcardReviewSessionRepository
       );
     }
     if (sessionId.trim().isEmpty) {
-      throw const FormatException(
-        'Flashcard review session ID is required.',
-      );
+      throw const FormatException('Flashcard review session ID is required.');
     }
   }
 }

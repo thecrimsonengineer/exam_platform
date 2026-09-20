@@ -30,8 +30,7 @@ class FlashcardMemoryStatistics {
     required DateTime now,
     Map<String, FlashcardOwnership> ownershipByCardId =
         const <String, FlashcardOwnership>{},
-    FlashcardWeakCardPolicy weakCardPolicy =
-        const FlashcardWeakCardPolicy(),
+    FlashcardWeakCardPolicy weakCardPolicy = const FlashcardWeakCardPolicy(),
   }) {
     var activeCount = 0;
     var dueCount = 0;

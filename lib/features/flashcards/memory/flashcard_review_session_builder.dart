@@ -14,8 +14,7 @@ class FlashcardReviewSessionPlan {
 
 class FlashcardReviewSessionBuilder {
   const FlashcardReviewSessionBuilder({
-    FlashcardWeakCardPolicy weakCardPolicy =
-        const FlashcardWeakCardPolicy(),
+    FlashcardWeakCardPolicy weakCardPolicy = const FlashcardWeakCardPolicy(),
   }) : _weakCardPolicy = weakCardPolicy;
 
   final FlashcardWeakCardPolicy _weakCardPolicy;
@@ -28,11 +27,7 @@ class FlashcardReviewSessionBuilder {
     int maxCards = 20,
   }) {
     if (maxCards <= 0) {
-      throw ArgumentError.value(
-        maxCards,
-        'maxCards',
-        'Must be positive.',
-      );
+      throw ArgumentError.value(maxCards, 'maxCards', 'Must be positive.');
     }
 
     final candidates = <_ReviewCandidate>[];
@@ -118,9 +113,7 @@ class FlashcardReviewSessionBuilder {
       lastSiblingKey = selected.siblingKey;
     }
 
-    return FlashcardReviewSessionPlan(
-      List.unmodifiable(ordered),
-    );
+    return FlashcardReviewSessionPlan(List.unmodifiable(ordered));
   }
 
   static String _siblingKey(Flashcard card) {
