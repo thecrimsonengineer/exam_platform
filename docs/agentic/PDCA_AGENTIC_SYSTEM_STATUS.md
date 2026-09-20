@@ -12,7 +12,7 @@ Current maturity:
 
 - PLAN: expanded draft committed
 - DO: expanded draft committed
-- CHECK: not yet committed
+- CHECK: expanded draft committed
 - ACT: not yet committed
 - Overall PDCA system: **NOT FROZEN**
 - Agentic implementation: **NOT STARTED**
