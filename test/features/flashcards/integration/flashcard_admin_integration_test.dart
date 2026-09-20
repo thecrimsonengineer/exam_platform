@@ -36,9 +36,6 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('flashcard-studio-preview')));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('FCQ100 100/100 PASS'), findsOneWidget);
-    expect(find.text('Hierarchy of Controls'), findsOneWidget);
-
     final save = find.byKey(const ValueKey('flashcard-studio-save'));
     await tester.ensureVisible(save);
     await tester.tap(save);
@@ -47,6 +44,15 @@ void main() {
     expect(await repository.listPackageIds(), <String>[
       'd03_c02_flashcards_v1',
     ]);
+
+    await tester.drag(
+      find.byKey(const ValueKey('flashcard-studio-list')),
+      const Offset(0, -700),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('FCQ100 100/100 PASS'), findsOneWidget);
+    expect(find.text('Hierarchy of Controls'), findsOneWidget);
   });
 
   testWidgets('Flashcard Diagnostics renders four healthy integration panels', (
@@ -81,6 +87,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    expect(find.text('FC7 integration health is green'), findsOneWidget);
     expect(
       find.byKey(const ValueKey('flashcard-diagnostics-mapping')),
       findsOneWidget,
@@ -89,15 +96,25 @@ void main() {
       find.byKey(const ValueKey('flashcard-diagnostics-source')),
       findsOneWidget,
     );
+
+    final diagnosticsList = find.byKey(
+      const ValueKey('flashcard-diagnostics-list'),
+    );
+    await tester.drag(diagnosticsList, const Offset(0, -600));
+    await tester.pumpAndSettle();
+
     expect(
       find.byKey(const ValueKey('flashcard-diagnostics-placement')),
       findsOneWidget,
     );
+
+    await tester.drag(diagnosticsList, const Offset(0, -600));
+    await tester.pumpAndSettle();
+
     expect(
       find.byKey(const ValueKey('flashcard-diagnostics-collection')),
       findsOneWidget,
     );
-    expect(find.text('FC7 integration health is green'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
