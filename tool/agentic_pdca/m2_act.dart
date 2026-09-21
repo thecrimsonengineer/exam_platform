@@ -181,8 +181,9 @@ final class M2RepairBudgetStore {
     };
     final currentCategories = _categoryBalances[packet.lineageId];
     if (currentCategories == null) {
-      _categoryBalances[packet.lineageId] =
-          Map<M2RepairBudgetKind, int>.from(proposedCategories);
+      _categoryBalances[packet.lineageId] = Map<M2RepairBudgetKind, int>.from(
+        proposedCategories,
+      );
     } else {
       for (final entry in proposedCategories.entries) {
         currentCategories[entry.key] = _min(
@@ -203,35 +204,31 @@ final class M2RepairBudgetStore {
       _categoryBalances[lineageId]?[kind] ??
       (throw StateError('Unknown ACT-2 lineage or budget category.'));
 
-  List<M2RepairLedgerEntry> history(String lineageId) =>
-      List.unmodifiable(
-        _history[lineageId] ??
-            (throw StateError('Unknown ACT-2 repair lineage.')),
-      );
+  List<M2RepairLedgerEntry> history(String lineageId) => List.unmodifiable(
+    _history[lineageId] ?? (throw StateError('Unknown ACT-2 repair lineage.')),
+  );
 
   bool repairStrategyAlreadyUsed({
     required String lineageId,
     required String failureClass,
     required String findingCode,
     required String strategy,
-  }) =>
-      history(lineageId).any(
-        (entry) =>
-            entry.attemptType == M2ActAttemptType.repair &&
-            entry.failureClass == failureClass &&
-            entry.findingCode == findingCode &&
-            _normalize(entry.strategy) == _normalize(strategy),
-      );
+  }) => history(lineageId).any(
+    (entry) =>
+        entry.attemptType == M2ActAttemptType.repair &&
+        entry.failureClass == failureClass &&
+        entry.findingCode == findingCode &&
+        _normalize(entry.strategy) == _normalize(strategy),
+  );
 
   bool retryStrategyAlreadyUsed({
     required String lineageId,
     required String strategy,
-  }) =>
-      history(lineageId).any(
-        (entry) =>
-            entry.attemptType == M2ActAttemptType.retry &&
-            _normalize(entry.strategy) == _normalize(strategy),
-      );
+  }) => history(lineageId).any(
+    (entry) =>
+        entry.attemptType == M2ActAttemptType.retry &&
+        _normalize(entry.strategy) == _normalize(strategy),
+  );
 
   M2RepairLedgerEntry reserveRepair({
     required M2TaskPacket packet,
@@ -405,10 +402,7 @@ final class M2ActController {
     return _routeRepair(request, now);
   }
 
-  Future<M2ActDecision> _routeRetry(
-    M2ActRequest request,
-    DateTime now,
-  ) async {
+  Future<M2ActDecision> _routeRetry(M2ActRequest request, DateTime now) async {
     if (request.findingCode != null ||
         request.repairClass != null ||
         request.requestedPaths.isNotEmpty) {
@@ -462,18 +456,17 @@ final class M2ActController {
     );
   }
 
-  Future<M2ActDecision> _routeRepair(
-    M2ActRequest request,
-    DateTime now,
-  ) async {
+  Future<M2ActDecision> _routeRepair(M2ActRequest request, DateTime now) async {
     final failureClass = request.repairClass;
     final findingCode = request.findingCode;
     if (failureClass == null ||
         findingCode == null ||
         request.requestedPaths.isEmpty ||
-        request.requestedPaths.toSet().length != request.requestedPaths.length ||
+        request.requestedPaths.toSet().length !=
+            request.requestedPaths.length ||
         request.requestedPaths.any(
-          (path) => !packet.expectedPaths.contains(path) || !packet.allows(path),
+          (path) =>
+              !packet.expectedPaths.contains(path) || !packet.allows(path),
         )) {
       return _escalate(request, 'REPAIR_SCOPE_INVALID');
     }
@@ -606,21 +599,19 @@ final class M2ActController {
         !task.observedAt.toUtc().isAfter(now);
     if (!taskValid) return false;
 
-    return M2ApprovedManifest(packet: packet).trustedApproval(
-          trustedState,
-          now,
-        ) !=
+    return M2ApprovedManifest(
+          packet: packet,
+        ).trustedApproval(trustedState, now) !=
         null;
   }
 
   bool _sameStrings(List<String> a, List<String> b) =>
       a.length == b.length && a.toSet().containsAll(b);
 
-  M2ActDecision _escalate(M2ActRequest request, String reason) =>
-      M2ActDecision(
-        route: M2ActRoute.escalate,
-        reason: reason,
-        candidateSha: request.failedCandidateSha,
-        packetHash: packet.hash,
-      );
+  M2ActDecision _escalate(M2ActRequest request, String reason) => M2ActDecision(
+    route: M2ActRoute.escalate,
+    reason: reason,
+    candidateSha: request.failedCandidateSha,
+    packetHash: packet.hash,
+  );
 }

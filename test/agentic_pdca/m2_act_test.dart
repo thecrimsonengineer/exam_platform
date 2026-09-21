@@ -57,11 +57,7 @@ void main() {
     int architecture = 0,
     bool cancelled = false,
   }) {
-    final base = testState(
-      packet,
-      lineageSha: candidate,
-      cancelled: cancelled,
-    );
+    final base = testState(packet, lineageSha: candidate, cancelled: cancelled);
     return ControlPlaneSnapshot(
       maturity: base.maturity,
       governanceVersion: base.governanceVersion,
@@ -96,22 +92,21 @@ void main() {
     String code = 'BEHAVIOR_MISMATCH',
     String repairClass = 'F4',
     String evidence = 'review:finding',
-  }) =>
-      M2ReviewOutcome(
-        state: M2ReviewState.reviewRepairable,
-        candidateSha: m2TestCandidate,
-        packetHash: packet.hash,
-        reviewerPrincipal: 'reviewer',
-        findings: [
-          M2ReviewFinding(
-            code: code,
-            detail: 'bounded defect',
-            disposition: M2ReviewFindingDisposition.repairable,
-            evidenceReference: evidence,
-            repairClass: repairClass,
-          ),
-        ],
-      );
+  }) => M2ReviewOutcome(
+    state: M2ReviewState.reviewRepairable,
+    candidateSha: m2TestCandidate,
+    packetHash: packet.hash,
+    reviewerPrincipal: 'reviewer',
+    findings: [
+      M2ReviewFinding(
+        code: code,
+        detail: 'bounded defect',
+        disposition: M2ReviewFindingDisposition.repairable,
+        evidenceReference: evidence,
+        repairClass: repairClass,
+      ),
+    ],
+  );
 
   M2TransientRetryReceipt retryReceipt(M2TaskPacket packet) =>
       M2TransientRetryReceipt(
@@ -128,17 +123,14 @@ void main() {
     List<M2TransientRetryReceipt>? retries,
     M2RepairBudgetStore? store,
     ControlPlaneSnapshot? state,
-  }) =>
-      M2ActController(
-        packet: packet,
-        trustedState: state ?? stateFor(packet),
-        reviewEvidence: _ReviewStore([
-          outcome ?? repairableOutcome(packet),
-        ]),
-        retryEvidence: _RetryStore(retries ?? [retryReceipt(packet)]),
-        budgetStore: store,
-        trustedClock: () => m2TestNow,
-      );
+  }) => M2ActController(
+    packet: packet,
+    trustedState: state ?? stateFor(packet),
+    reviewEvidence: _ReviewStore([outcome ?? repairableOutcome(packet)]),
+    retryEvidence: _RetryStore(retries ?? [retryReceipt(packet)]),
+    budgetStore: store,
+    trustedClock: () => m2TestNow,
+  );
 
   M2ActRequest repairRequest(
     M2TaskPacket packet, {
@@ -148,18 +140,17 @@ void main() {
     String repairClass = 'F4',
     String evidence = 'review:finding',
     List<String>? paths,
-  }) =>
-      M2ActRequest(
-        attemptType: M2ActAttemptType.repair,
-        failedCandidateSha: m2TestCandidate,
-        repairAgent: repairAgent,
-        strategy: strategy,
-        rootCause: 'candidate-local defect',
-        evidenceReference: evidence,
-        findingCode: findingCode,
-        repairClass: repairClass,
-        requestedPaths: paths ?? [packet.expectedPaths.first],
-      );
+  }) => M2ActRequest(
+    attemptType: M2ActAttemptType.repair,
+    failedCandidateSha: m2TestCandidate,
+    repairAgent: repairAgent,
+    strategy: strategy,
+    rootCause: 'candidate-local defect',
+    evidenceReference: evidence,
+    findingCode: findingCode,
+    repairClass: repairClass,
+    requestedPaths: paths ?? [packet.expectedPaths.first],
+  );
 
   test('bounded F4 repair consumes class and behavioral budget', () async {
     final packet = packetFor('consume');
@@ -175,10 +166,7 @@ void main() {
     final first = await controller(packet).route(repairRequest(packet));
     expect(first.route, M2ActRoute.repair);
 
-    final second = await controller(
-      packet,
-      store: M2RepairBudgetStore(),
-    ).route(
+    final second = await controller(packet, store: M2RepairBudgetStore()).route(
       repairRequest(
         packet,
         repairAgent: 'repairer-b',
@@ -203,69 +191,76 @@ void main() {
     expect(second.ledgerEntry!.classRemaining, 1);
   });
 
-  test('trusted transient retry keeps same SHA and consumes no budget', () async {
-    final packet = packetFor('retry');
-    final store = M2RepairBudgetStore();
-    final request = M2ActRequest(
-      attemptType: M2ActAttemptType.retry,
-      failedCandidateSha: m2TestCandidate,
-      repairAgent: 'retry-agent',
-      strategy: 'rerun exact CI candidate',
-      rootCause: 'runner outage',
-      evidenceReference: 'caller:evidence',
-    );
-    final decision = await controller(packet, store: store).route(request);
-    expect(decision.route, M2ActRoute.retry);
-    expect(decision.candidateSha, m2TestCandidate);
-    expect(store.classRemaining(packet.lineageId, 'F4'), 3);
-    expect(decision.ledgerEntry!.classRemaining, isNull);
+  test(
+    'trusted transient retry keeps same SHA and consumes no budget',
+    () async {
+      final packet = packetFor('retry');
+      final store = M2RepairBudgetStore();
+      final request = M2ActRequest(
+        attemptType: M2ActAttemptType.retry,
+        failedCandidateSha: m2TestCandidate,
+        repairAgent: 'retry-agent',
+        strategy: 'rerun exact CI candidate',
+        rootCause: 'runner outage',
+        evidenceReference: 'caller:evidence',
+      );
+      final decision = await controller(packet, store: store).route(request);
+      expect(decision.route, M2ActRoute.retry);
+      expect(decision.candidateSha, m2TestCandidate);
+      expect(store.classRemaining(packet.lineageId, 'F4'), 3);
+      expect(decision.ledgerEntry!.classRemaining, isNull);
 
-    final repeated = await controller(
-      packet,
-      store: M2RepairBudgetStore(),
-    ).route(request);
-    expect(repeated.route, M2ActRoute.escalate);
-    expect(repeated.reason, 'REPEATED_RETRY_STRATEGY');
-  });
+      final repeated = await controller(
+        packet,
+        store: M2RepairBudgetStore(),
+      ).route(request);
+      expect(repeated.route, M2ActRoute.escalate);
+      expect(repeated.reason, 'REPEATED_RETRY_STRATEGY');
+    },
+  );
 
-  test('retry cannot request mutation or use untrusted transient evidence', () async {
-    final packet = packetFor('bad-retry');
-    final mutating = M2ActRequest(
-      attemptType: M2ActAttemptType.retry,
-      failedCandidateSha: m2TestCandidate,
-      repairAgent: 'retry-agent',
-      strategy: 'rerun',
-      rootCause: 'runner issue',
-      evidenceReference: 'evidence',
-      requestedPaths: [packet.expectedPaths.first],
-    );
-    expect((await controller(packet).route(mutating)).route, M2ActRoute.escalate);
+  test(
+    'retry cannot request mutation or use untrusted transient evidence',
+    () async {
+      final packet = packetFor('bad-retry');
+      final mutating = M2ActRequest(
+        attemptType: M2ActAttemptType.retry,
+        failedCandidateSha: m2TestCandidate,
+        repairAgent: 'retry-agent',
+        strategy: 'rerun',
+        rootCause: 'runner issue',
+        evidenceReference: 'evidence',
+        requestedPaths: [packet.expectedPaths.first],
+      );
+      expect(
+        (await controller(packet).route(mutating)).route,
+        M2ActRoute.escalate,
+      );
 
-    final invalidReceipt = M2TransientRetryReceipt(
-      candidateSha: m2TestCandidate,
-      packetHash: packet.hash,
-      transientInfrastructure: false,
-      observedAt: m2TestNow,
-      evidenceReference: 'not-transient',
-    );
-    final retry = M2ActRequest(
-      attemptType: M2ActAttemptType.retry,
-      failedCandidateSha: m2TestCandidate,
-      repairAgent: 'retry-agent',
-      strategy: 'rerun',
-      rootCause: 'runner issue',
-      evidenceReference: 'evidence',
-    );
-    expect(
-      (
-        await controller(
+      final invalidReceipt = M2TransientRetryReceipt(
+        candidateSha: m2TestCandidate,
+        packetHash: packet.hash,
+        transientInfrastructure: false,
+        observedAt: m2TestNow,
+        evidenceReference: 'not-transient',
+      );
+      final retry = M2ActRequest(
+        attemptType: M2ActAttemptType.retry,
+        failedCandidateSha: m2TestCandidate,
+        repairAgent: 'retry-agent',
+        strategy: 'rerun',
+        rootCause: 'runner issue',
+        evidenceReference: 'evidence',
+      );
+      expect(
+        (await controller(
           packet,
           retries: [invalidReceipt],
-        ).route(retry)
-      ).route,
-      M2ActRoute.escalate,
-    );
-  });
+        ).route(retry)).route,
+        M2ActRoute.escalate,
+      );
+    },
+  );
 
   test('repeated identical repair strategy escalates early', () async {
     final packet = packetFor('repeat');
@@ -282,20 +277,18 @@ void main() {
     final packet = packetFor('exhaust', f4Budget: 1);
     final first = await controller(packet).route(repairRequest(packet));
     expect(first.route, M2ActRoute.repair);
-    final second = await controller(packet).route(
-      repairRequest(packet, strategy: 'new strategy'),
-    );
+    final second = await controller(
+      packet,
+    ).route(repairRequest(packet, strategy: 'new strategy'));
     expect(second.route, M2ActRoute.escalate);
 
     final categoryPacket = packetFor('category');
     final categoryState = stateFor(categoryPacket, behavioral: 0);
     expect(
-      (
-        await controller(
-          categoryPacket,
-          state: categoryState,
-        ).route(repairRequest(categoryPacket))
-      ).route,
+      (await controller(
+        categoryPacket,
+        state: categoryState,
+      ).route(repairRequest(categoryPacket))).route,
       M2ActRoute.escalate,
     );
   });
@@ -327,15 +320,13 @@ void main() {
       repairClass: 'F7',
     );
     expect(
-      (
-        await controller(packet, outcome: badOutcome).route(
-          repairRequest(
-            packet,
-            findingCode: 'FROZEN_REGRESSION_UNKNOWN_CAUSE',
-            repairClass: 'F7',
-          ),
-        )
-      ).route,
+      (await controller(packet, outcome: badOutcome).route(
+        repairRequest(
+          packet,
+          findingCode: 'FROZEN_REGRESSION_UNKNOWN_CAUSE',
+          repairClass: 'F7',
+        ),
+      )).route,
       M2ActRoute.escalate,
     );
 
@@ -365,18 +356,17 @@ void main() {
       findings: const [],
     );
     expect(
-      (
-        await controller(packet, outcome: accepted).route(repairRequest(packet))
-      ).route,
+      (await controller(
+        packet,
+        outcome: accepted,
+      ).route(repairRequest(packet))).route,
       M2ActRoute.escalate,
     );
 
     expect(
-      (
-        await controller(packet).route(
-          repairRequest(packet, evidence: 'forged:evidence'),
-        )
-      ).route,
+      (await controller(
+        packet,
+      ).route(repairRequest(packet, evidence: 'forged:evidence'))).route,
       M2ActRoute.escalate,
     );
   });
@@ -384,39 +374,34 @@ void main() {
   test('scope expansion, cancellation and stale lineage escalate', () async {
     final packet = packetFor('trust');
     expect(
-      (
-        await controller(packet).route(
-          repairRequest(packet, paths: ['tool/agentic_pdca/m2_other.dart']),
-        )
-      ).route,
+      (await controller(packet).route(
+        repairRequest(packet, paths: ['tool/agentic_pdca/m2_other.dart']),
+      )).route,
       M2ActRoute.escalate,
     );
 
     expect(
-      (
-        await controller(
-          packet,
-          state: stateFor(packet, cancelled: true),
-        ).route(repairRequest(packet))
-      ).route,
+      (await controller(
+        packet,
+        state: stateFor(packet, cancelled: true),
+      ).route(repairRequest(packet))).route,
       M2ActRoute.escalate,
     );
 
     expect(
-      (
-        await controller(
-          packet,
-          state: stateFor(packet, candidate: packet.taskBaseSha),
-        ).route(repairRequest(packet))
-      ).route,
+      (await controller(
+        packet,
+        state: stateFor(packet, candidate: packet.taskBaseSha),
+      ).route(repairRequest(packet))).route,
       M2ActRoute.escalate,
     );
   });
 
   test('ACT-2 route surface has no closure state', () {
-    expect(
-      M2ActRoute.values.map((value) => value.name).toSet(),
-      {'retry', 'repair', 'escalate'},
-    );
+    expect(M2ActRoute.values.map((value) => value.name).toSet(), {
+      'retry',
+      'repair',
+      'escalate',
+    });
   });
 }
