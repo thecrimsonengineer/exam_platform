@@ -1,0 +1,128 @@
+name: Agentic PDCA Exact-SHA Validation
+
+on:
+  push:
+    branches:
+      - agentic-pdca-validation-ci
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agentic-pdca-exact-sha-validation
+  cancel-in-progress: true
+
+jobs:
+  validate-exact-sha:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout validation harness
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Load exact validation request
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET_SHA="$(tr -d '[:space:]' < docs/agentic/ci/TARGET_SHA)"
+          BASE_SHA="$(tr -d '[:space:]' < docs/agentic/ci/BASE_SHA)"
+          [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          echo "TARGET_SHA=$TARGET_SHA" >> "$GITHUB_ENV"
+          echo "BASE_SHA=$BASE_SHA" >> "$GITHUB_ENV"
+          echo "Target: $TARGET_SHA"
+          echo "Base:   $BASE_SHA"
+
+      - name: Fetch and detach at exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$TARGET_SHA" "$BASE_SHA"
+          test "$(git cat-file -t "$TARGET_SHA")" = "commit"
+          test "$(git cat-file -t "$BASE_SHA")" = "commit"
+          MERGE_BASE="$(git merge-base "$BASE_SHA" "$TARGET_SHA")"
+          test "$MERGE_BASE" = "$BASE_SHA"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          echo "Exact candidate checkout verified."
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Agentic formatting gate
+        run: |
+          dart format --output=none --set-exit-if-changed             tool/agentic_pdca             test/agentic_pdca
+
+      - name: Agentic PDCA test suite
+        run: flutter test test/agentic_pdca/
+
+      - name: Analyzer severity gate
+        run: flutter analyze --no-fatal-infos --fatal-warnings
+
+      - name: Architecture gate
+        run: flutter test test/agentic_pdca/m1_architecture_gate_test.dart
+
+      - name: Diff integrity and inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check "$BASE_SHA..$TARGET_SHA"
+          echo "Changed paths:"
+          git diff --name-only "$BASE_SHA..$TARGET_SHA"
+
+      - name: Restore known Flutter validation side effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          paths=(
+            linux/flutter/generated_plugin_registrant.cc
+            linux/flutter/generated_plugin_registrant.h
+            linux/flutter/generated_plugins.cmake
+            macos/Flutter/GeneratedPluginRegistrant.swift
+            windows/flutter/generated_plugin_registrant.cc
+            windows/flutter/generated_plugin_registrant.h
+            windows/flutter/generated_plugins.cmake
+          )
+          for p in "${paths[@]}"; do
+            if git ls-files --error-unmatch "$p" >/dev/null 2>&1; then
+              git restore --source=HEAD --staged --worktree -- "$p"
+            fi
+          done
+
+      - name: Require clean exact-SHA checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Validation left unexpected repository changes."
+            git status --short
+            exit 1
+          fi
+
+      - name: Validation summary
+        shell: bash
+        run: |
+          {
+            echo "## Agentic PDCA exact-SHA validation"
+            echo ""
+            echo "- Target: `$TARGET_SHA`"
+            echo "- Base: `$BASE_SHA`"
+            echo "- Exact checkout: PASS"
+            echo "- Format: PASS"
+            echo "- Agentic tests: PASS"
+            echo "- Analyzer: PASS"
+            echo "- Architecture gate: PASS"
+            echo "- Diff check: PASS"
+            echo "- Worktree clean: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
