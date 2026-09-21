@@ -1,9 +1,9 @@
 # CSP11 Phase FR5 Shadow Data Parity
 
-Status: IMPLEMENTATION GREEN / LIVE PRODUCTION PARITY PENDING
+Status: LIVE PRODUCTION PARITY GREEN / CLOSURE CANDIDATE
 Branch: phase-fr5-shadow-data-parity
 Source checkpoint: phase-fr4-closed at bce142b3a337dfc8e93e1a57a47faac1a6a207cd
-Date: 2026-09-19
+Date: 2026-09-21
 Implementation validation: GitHub Actions run 35433210098 is fully green
 
 ## Purpose
@@ -153,6 +153,50 @@ The production workflow has therefore been restored to manual-only execution. Or
 
 Live Supabase production shadow counts remain zero for content_versions, questions and fr_migration_ledger. The authoring workspace also remains empty.
 
+## Successful live production parity on 2026-09-21
+
+The quota block cleared and FR5 was resumed from the latest branch state without reopening FR4 or changing learner runtime routing.
+
+Read-only production preflight GitHub Actions run 35593809123 completed successfully.
+
+The fresh canonical Firestore source snapshot reported:
+
+- raw contentVersions = 81
+- raw questions = 3,557
+- selected published contentVersions = 78
+- selected published questions = 3,556
+- excluded authoring rows = 4
+- source issue count = 0
+
+The deterministic FR4 production manifest reported:
+
+- readyToApply = true
+- rowCount = 3,634
+- content_versions target rows = 78
+- questions target rows = 3,556
+- issueCount = 0
+- duplicateCount = 0
+- failureCount = 0
+- unmappedCount = 0
+
+Guarded production shadow apply GitHub Actions run 35594165984 completed successfully.
+
+The final FR5 parity report proved:
+
+- completeParity = true
+- matchedRowCount = 3,634
+- learnerVisibleMatchedCount = 3,634
+- ledgerMatchedCount = 3,634
+- missingCount = 0
+- checksumMismatchCount = 0
+- learnerVisibleMismatchCount = 0
+- extraCount = 0
+- ledgerMismatchCount = 0
+
+The resulting production shadow state is therefore 78 content_versions rows, 3,556 questions rows and 3,634 matching fr_migration_ledger rows.
+
+Temporary push-trigger machinery used only to resume the quota-blocked production execution has been removed. The production workflow is restored to workflow_dispatch-only operation.
+
 ## Runtime invariant
 
 Even after FR5 succeeds, learner runtime remains on Firestore. Supabase remains shadow-only.
@@ -161,8 +205,10 @@ No learner cutover occurs until later frozen FR phases.
 
 ## NEXT ACTION
 
-Run Phase FR5 Production Shadow Parity from branch phase-fr5-shadow-data-parity with apply_shadow=false after the published-only source-selection change is green.
+Run the normal Phase FR validation on this cleaned closure-candidate SHA.
 
-If extraction and preflight are green, run it again with apply_shadow=true and confirmation FR5_SHADOW_ONLY.
+The required gate remains: formatting, analyze, FR1 through FR5 tests, frozen L4 regressions, full repository regression and diff hygiene.
 
-Only after the live report has completeParity=true and the final FR/L4/full-repository gate remains green should phase-fr5-closed be created.
+If that exact SHA is fully green, create phase-fr5-closed at the same SHA without adding another commit.
+
+Then continue to FR6 Published Catalogue from the protected FR5 recovery checkpoint.
