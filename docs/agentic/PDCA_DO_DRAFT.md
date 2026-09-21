@@ -847,3 +847,75 @@ DO is ready for future freeze only when the following are settled:
 - exit criteria.
 
 This document is currently **draft only**.
+
+## PDCA execution and evidence discipline
+
+DO executes the approved PLAN baseline. It does not redefine the objective or success criteria.
+
+### Execute the planned intervention
+
+DO performs only work authorized by the active PLAN revision/task packet.
+
+If execution shows the plan is materially wrong, DO stops and routes the issue through ACT/PLAN revision rather than improvising a new objective.
+
+### Collect execution data
+
+In addition to code/test evidence, DO records process data needed for later PDCA comparison:
+
+~~~text
+start_time
+end_time
+agent_role
+model/tool used where relevant
+manual interventions
+repair attempts
+targeted test count/duration
+full CI requests triggered
+Actions minutes where available
+files/lines changed
+deviations_from_plan
+resource/cost observations
+unexpected effects
+~~~
+
+### Record deviations, do not normalize them
+
+A deviation from PLAN is evidence.
+
+DO records it explicitly.
+
+DO may not silently treat the deviation as the new normal or retroactively rewrite PLAN.
+
+### Verification inside DO is not CHECK
+
+Formatting, targeted tests and local analysis inside DO are execution verification used for fast feedback.
+
+They do not replace independent CHECK.
+
+### Preserve the baseline
+
+DO must retain enough evidence to compare:
+
+~~~text
+planned method
+vs
+actual method
+~~~
+
+and:
+
+~~~text
+planned resource/effort
+vs
+actual resource/effort
+~~~
+
+### DO output
+
+DO answers:
+
+~~~text
+Did we execute the plan as authorized?
+What actually happened during execution?
+What data and deviations must CHECK evaluate?
+~~~

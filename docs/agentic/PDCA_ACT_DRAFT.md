@@ -507,3 +507,90 @@ Automation may recover from evidence. It may never recover by redefining success
 Repeated repair is evidence that PLAN, DO or CHECK should improve.
 
 This document remains draft until adversarial cross-state audit and final governance consolidation.
+
+## PDCA disposition and standardization
+
+ACT closes the PDCA learning loop.
+
+It does more than route failures. It decides what to do with the verified result and what should become the next standard.
+
+### Four primary PDCA dispositions
+
+After CHECK evidence is available, ACT selects one of these high-level dispositions where applicable:
+
+~~~text
+ADOPT_AND_STANDARDIZE
+ADJUST_AND_REPLAN
+ABANDON_AND_ROLLBACK
+CONTAIN_AND_ESCALATE
+~~~
+
+These dispositions coexist with the more detailed ACT operational states.
+
+### ADOPT_AND_STANDARDIZE
+
+Use when CHECK shows the planned change is effective, safe and acceptable.
+
+ACT may:
+
+- retain the successful method;
+- standardize approved operating steps;
+- update future task templates/context packs through governance-approved changes;
+- preserve new controls/tests;
+- document the new baseline;
+- create governance proposals where global rules should change.
+
+Successful learning does not automatically edit frozen governance. Standardization follows the governance change-control process.
+
+### ADJUST_AND_REPLAN
+
+Use when the idea remains viable but CHECK shows targets were not fully met, assumptions were wrong, or controls need adjustment.
+
+ACT:
+
+1. preserves the evidence;
+2. records root cause;
+3. creates a PLAN revision/proposal;
+4. establishes the new baseline/target where needed;
+5. begins a new PDCA cycle.
+
+### ABANDON_AND_ROLLBACK
+
+Use when the change is ineffective, unsafe, excessively costly or no longer justified.
+
+ACT restores or retains the known-good state, preserves evidence, and records why the attempted change should not become standard.
+
+### CONTAIN_AND_ESCALATE
+
+Use for security, data-integrity, governance, architecture or other issues requiring containment and human decision.
+
+### New baseline after adoption
+
+When a successful improvement is adopted, its measured actual state becomes the reference baseline for the next relevant PLAN cycle.
+
+This makes continuous improvement cumulative rather than repeatedly comparing against an obsolete manual baseline.
+
+### Standardize success, not only failure
+
+A PDCA cycle is incomplete if ACT only fixes red outcomes.
+
+ACT also asks:
+
+~~~text
+What worked well enough to become the new standard?
+What should be retained?
+What should be taught to future agents/tasks?
+What should become a preventive control?
+~~~
+
+### Feed the next PLAN
+
+ACT produces approved lessons/proposals for the next PLAN.
+
+This closes the loop:
+
+~~~text
+PLAN → DO → CHECK → ACT
+ ↑                  ↓
+ └──── learning ────┘
+~~~

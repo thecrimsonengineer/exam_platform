@@ -808,3 +808,173 @@ do not perform the protected transition
 This rule overrides convenience and throughput.
 
 This document remains draft until the full governance freeze.
+
+## PDCA conformance model
+
+The governance system operates as nested PDCA cycles.
+
+### 1. Task micro-cycle
+
+~~~text
+PLAN
+approved task packet, objective, criteria
+  ↓
+DO
+isolated implementation and execution evidence
+  ↓
+TASK CHECK
+independent targeted validation and plan-to-evidence comparison
+  ↓
+ACT
+integrate, repair, replan, abandon or escalate
+~~~
+
+### 2. Phase cycle
+
+~~~text
+PLAN
+phase objective, scope, acceptance and baseline
+  ↓
+DO
+integrated phase work
+  ↓
+INTEGRATION/CLOSURE CHECK
+full phase, regression, architecture, security and effectiveness evaluation
+  ↓
+ACT
+standardize success, prepare closure, replan, rollback or escalate
+~~~
+
+### 3. Governance meta-cycle
+
+~~~text
+PLAN
+governance version/pilot objective
+  ↓
+DO
+operate the agentic system at approved maturity
+  ↓
+CHECK
+measure safety, quality, speed, cost and control effectiveness
+  ↓
+ACT
+retain, revise, demote/promote, or propose next governance version
+~~~
+
+The cycles are nested but must not share mutable state implicitly. Each cycle has its own objective, baseline, evidence and disposition.
+
+## PDCA baseline contract
+
+Every material PLAN cycle should define:
+
+~~~text
+cycle_id
+plan_revision
+problem_statement
+baseline
+objective
+target
+acceptance_criteria
+risks_and_opportunities
+resources
+measurement_method
+accountable_owner
+~~~
+
+DO and CHECK records bind to this PLAN revision.
+
+Material criteria changes create a new PLAN revision rather than changing the target mid-cycle.
+
+## PDCA traceability contract
+
+CHECK must be able to trace each material planned objective/criterion to evidence and actual result.
+
+ACT must be able to trace each disposition back to the relevant CHECK findings.
+
+This creates:
+
+~~~text
+PLAN criterion
+→ DO evidence
+→ CHECK result
+→ ACT disposition
+→ next PLAN lesson
+~~~
+
+## PDCA success is multidimensional
+
+A change is not successful merely because code is green.
+
+A successful PDCA outcome considers:
+
+- conformance;
+- technical correctness;
+- safety/security;
+- effectiveness against the objective;
+- efficiency/cost;
+- maintainability;
+- unintended consequences;
+- learning/standardization.
+
+## PDCA cycle completion predicate
+
+A material PDCA cycle is complete only when:
+
+~~~text
+plan_baseline_defined == true
+plan_objective_defined == true
+plan_acceptance_defined == true
+do_execution_recorded == true
+do_deviations_recorded == true
+check_plan_comparison_complete == true
+check_unintended_effects_considered == true
+act_disposition_recorded == true
+act_learning_or_standardization_recorded == true
+~~~
+
+Engineering phase closure and PDCA cycle completion should normally align for phase-level cycles.
+
+A phase may be technically green but should not be treated as a fully completed improvement cycle until ACT records its disposition and learning.
+
+## Objective hierarchy
+
+Objectives exist at three levels:
+
+- task objective;
+- phase objective;
+- governance/system objective.
+
+A lower-level success may not override a higher-level failure.
+
+Example:
+
+A formatting agent may complete its task successfully while the governance pilot still fails its objective because total cost or policy violations increased.
+
+## Agentic-system pilot baseline
+
+Before the first operational pilot, capture a historical/manual baseline from representative recent engineering work where practical.
+
+Suggested baseline fields:
+
+- median manual interventions per task;
+- median full CI runs per repair;
+- formatter/analyzer-only CI failures;
+- elapsed time from task start to accepted candidate;
+- rollback/rework incidence;
+- policy violations;
+- escaped defects;
+- approximate Actions/model cost.
+
+The first pilot CHECK compares the agentic process against this baseline.
+
+## Standardization boundary
+
+ACT may standardize a successful task/phase operating method within already-authorized rules.
+
+Changes to global frozen governance still require the Governance Proposal and versioning process.
+
+## PDCA integrity rule
+
+The system must never improve a measured target by degrading an unmeasured safety property.
+
+If an optimization makes execution faster but materially weakens correctness, security, test integrity, auditability or reversibility, CHECK reports the unintended consequence and ACT must not standardize it.

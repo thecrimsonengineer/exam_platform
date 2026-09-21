@@ -495,3 +495,113 @@ PDCA PLAN READY FOR FREEZE
 ```
 
 This document is currently **draft only**.
+
+## PDCA planning baseline and objective discipline
+
+To conform fully to PDCA, PLAN must define not only authority but also the improvement objective and the basis for later comparison.
+
+Every phase/task PLAN must include, where applicable:
+
+~~~text
+problem_statement
+current_baseline
+improvement_hypothesis
+objective
+target_metrics
+acceptance_criteria
+non_goals
+risks
+opportunities
+resources
+responsible_owner
+dependencies
+measurement_method
+timebox_or_review_point
+rollback_or_recovery_strategy
+plan_revision
+~~~
+
+### Baseline
+
+The current state is recorded before DO begins.
+
+For the agentic system this may include:
+
+- manual interventions per engineering task;
+- full CI runs per task/phase;
+- average repair loops;
+- elapsed engineering time;
+- GitHub Actions minutes;
+- model/tool cost;
+- regression/rollback rate;
+- test-integrity findings;
+- escaped defects;
+- policy violations.
+
+A PLAN without a meaningful baseline cannot later prove improvement.
+
+### Improvement hypothesis
+
+Where useful, express the change as:
+
+~~~text
+If <planned intervention>,
+then <measurable outcome should improve>,
+because <reason/mechanism>.
+~~~
+
+Example:
+
+~~~text
+If formatter/analyzer/targeted tests run inside DO before full CI,
+then full CI cycles per repair should decrease,
+because mechanical failures are removed before expensive regression gates.
+~~~
+
+### Objectives and targets
+
+Objectives must be measurable where practical.
+
+Examples:
+
+- reduce manual CI polling;
+- reduce formatter-only GitHub runs;
+- preserve zero test weakening;
+- preserve zero unauthorized closed-branch writes;
+- reduce median repair cycles without increasing escaped defects.
+
+### Risk and opportunity register
+
+PLAN records both:
+
+- risks that could make the change unsafe or ineffective; and
+- opportunities that may improve speed, quality or maintainability.
+
+Risks receive controls/owners where material.
+
+### Resources and responsibilities
+
+PLAN identifies the human/agent roles, required tools, expected compute/CI resources, and accountable human owner for approvals.
+
+### Fixed criteria per PLAN revision
+
+Success criteria are frozen for the active PLAN revision.
+
+DO, CHECK and ACT may not move the goalposts mid-cycle.
+
+If objectives, thresholds, scope or acceptance criteria materially change, create a new PLAN revision and re-baseline affected approvals/evidence as required by the Canonical Control Model.
+
+### PLAN output
+
+The authoritative PLAN output is a versioned baseline against which CHECK later compares actual performance.
+
+PLAN therefore answers:
+
+~~~text
+What problem are we solving?
+What result do we expect?
+How will we measure it?
+What could go wrong?
+What resources and controls are required?
+What will count as success?
+~~~

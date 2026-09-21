@@ -1031,3 +1031,82 @@ CHECK is ready for future freeze only when these are settled:
 - exit states.
 
 This document is currently **draft only**.
+
+## PDCA plan-to-result comparison
+
+CHECK must evaluate both conformance and effectiveness.
+
+Passing CI alone is not sufficient to prove the PDCA objective was achieved.
+
+### Plan-to-evidence traceability
+
+For every material PLAN objective/acceptance criterion, CHECK produces a traceability entry:
+
+~~~text
+plan_requirement_id
+planned_objective_or_criterion
+baseline
+target
+actual_result
+evidence_reference
+result: PASS / FAIL / NOT_MEASURED
+finding
+~~~
+
+No material PLAN criterion should disappear between PLAN and CHECK.
+
+### Three CHECK questions
+
+CHECK evaluates:
+
+1. **Conformance** - Did DO follow the approved PLAN, governance and technical rules?
+2. **Effectiveness** - Did the intervention achieve the intended outcome?
+3. **Efficiency** - Did it improve the process without disproportionate cost, churn or resource use?
+
+### Compare actual performance to baseline
+
+For the agentic system, CHECK may compare:
+
+- manual interventions before vs after;
+- full CI runs before vs after;
+- repair-loop count;
+- elapsed time;
+- Actions minutes;
+- model/tool cost;
+- rollback/rework rate;
+- escaped defects;
+- policy violations;
+- review rejection rate.
+
+### Unintended consequences
+
+CHECK explicitly looks for side effects that were not part of the target.
+
+Examples:
+
+- faster CI but more escaped defects;
+- fewer manual steps but more scope violations;
+- fewer Actions runs but much higher model cost;
+- faster implementation but weaker maintainability.
+
+A target is not considered successful if unacceptable unintended effects outweigh the improvement.
+
+### Missing measurement
+
+If a planned metric cannot be measured, CHECK records NOT_MEASURED.
+
+It must not silently infer success.
+
+ACT then decides whether more evidence is needed, the metric should be revised in the next PLAN, or the cycle can proceed with an approved limitation.
+
+### CHECK output
+
+CHECK answers:
+
+~~~text
+Did we do what we planned?
+Did it work?
+Did it work safely?
+Did it work efficiently?
+What evidence supports that conclusion?
+~~~
