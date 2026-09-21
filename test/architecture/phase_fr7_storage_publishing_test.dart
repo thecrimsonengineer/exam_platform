@@ -47,6 +47,13 @@ void main() {
     expect(cli, isNot(contains('"DELETE"')));
   });
 
+  test('FR7 recognizes only explicit legacy-wrapped Storage 404s', () {
+    expect(cli, contains("_isStorageNotFound(response, expectedCode: 'NoSuchBucket')"));
+    expect(cli, contains("_isStorageNotFound(existing, expectedCode: 'NoSuchKey')"));
+    expect(cli, contains("decoded['statusCode']?.toString() == '404'"));
+    expect(cli, contains("decoded['code']?.toString() == expectedCode"));
+  });
+
   test('FR7 package bytes are deterministic and checksum-addressed', () {
     expect(core, contains('fr4CanonicalJson(envelope)'));
     expect(core, contains('gzip.encode(uncompressed)'));
