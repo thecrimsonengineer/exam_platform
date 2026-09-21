@@ -17,6 +17,13 @@ class LearnerOnlineAccessResult {
   bool get isAuthorized => status == LearnerOnlineAccessStatus.authorized;
 }
 
+abstract interface class LearnerOnlineAccessValidator {
+  @override
+  Future<LearnerOnlineAccessResult> validate({
+    bool forceRefreshToken = false,
+  });
+}
+
 abstract interface class LearnerAccessTokenProvider {
   Future<String?> currentToken({bool forceRefresh = false});
 }
@@ -25,7 +32,7 @@ abstract interface class LearnerRemoteAuthorizationProbe {
   Future<bool> authorize({required String accessToken});
 }
 
-class LearnerOnlineAccessGate {
+class LearnerOnlineAccessGate implements LearnerOnlineAccessValidator {
   LearnerOnlineAccessGate({
     required LearnerAccessTokenProvider tokenProvider,
     required LearnerRemoteAuthorizationProbe authorizationProbe,

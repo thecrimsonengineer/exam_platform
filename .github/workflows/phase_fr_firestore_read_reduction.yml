@@ -7,6 +7,7 @@ on:
       - phase-fr5-shadow-data-parity
       - phase-fr6-published-catalogue
       - phase-fr7-storage-publishing
+      - phase-fr8-online-authorized-cache-security
   pull_request:
     branches:
       - phase-fr3-closed
@@ -83,7 +84,10 @@ jobs:
             tool/fr7_package_publish/fr7_package_publish_core.dart \
             tool/fr7_package_publish/fr7_package_publish.dart \
             test/tool/fr7_package_publish_core_test.dart \
-            test/architecture/phase_fr7_storage_publishing_test.dart
+            test/architecture/phase_fr7_storage_publishing_test.dart \
+            lib/services/online_access/learner_online_access_session_controller.dart \
+            test/services/online_access/learner_online_access_session_controller_test.dart \
+            test/architecture/phase_fr8_online_authorized_cache_security_test.dart
           git diff --
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -122,7 +126,10 @@ jobs:
             tool/fr7_package_publish/fr7_package_publish_core.dart \
             tool/fr7_package_publish/fr7_package_publish.dart \
             test/tool/fr7_package_publish_core_test.dart \
-            test/architecture/phase_fr7_storage_publishing_test.dart
+            test/architecture/phase_fr7_storage_publishing_test.dart \
+            lib/services/online_access/learner_online_access_session_controller.dart \
+            test/services/online_access/learner_online_access_session_controller_test.dart \
+            test/architecture/phase_fr8_online_authorized_cache_security_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -207,6 +214,11 @@ jobs:
           diff -qr build/fr7/run-a/packages build/fr7/run-b/packages
           grep -q '"readyToPublish": true' build/fr7/run-a/evidence.json
           grep -q '"packageCount": 4' build/fr7/run-a/evidence.json
+
+      - name: FR8 online authorization session tests
+        run: |
+          flutter test test/services/online_access/learner_online_access_session_controller_test.dart
+          flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
