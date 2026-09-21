@@ -16,7 +16,11 @@ void main() {
 
   test('learner-ready package closes source and identity integrity matrix', () {
     final validation = const Fcq100Validator().validate(package);
-    expect(validation.passed, isTrue, reason: validation.issues.join('\n'));
+    expect(
+      validation.passed,
+      isTrue,
+      reason: validation.failedRules.map((rule) => rule.message).join('\n'),
+    );
 
     final sourceIds = package.sources.map((source) => source.id).toSet();
     expect(sourceIds.length, package.sources.length);
