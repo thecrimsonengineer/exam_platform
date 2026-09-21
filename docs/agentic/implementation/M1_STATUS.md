@@ -10,7 +10,7 @@ Branch: `agentic-pdca-m1-001`
 - `89d6daa` AGENT-BUILD PDCA M1-001: establish mechanical control boundary
 - `4ed234f` AGENT-BUILD PDCA M1-002: add mechanical authority and deterministic gates
 - `2529c8f` AGENT-BUILD PDCA M1-005: add mechanical pilot and status evidence
-- pending M1 review-repair commit
+- `acb20f6` AGENT-REVIEW PDCA M1: repair trust boundaries and execution gates
 
 ## DO-1
 
