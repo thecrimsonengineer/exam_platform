@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "task_id": "M2-PILOT-B-FC8-A11Y-1",
+  "lineage_id": "M2-PILOT-B-1",
+  "maturity": "M2",
+  "plan_sha": "7a59205c550af5cc36a2c233513fc21b4f780e64",
+  "governance_sha": "43b2b3cc99839ae9de4092b4e2b7058d1964bff7",
+  "phase_base_sha": "d6a20c988027bdc25aeddc041cc16849bc259ad6",
+  "task_base_sha": "8ada71ce7b86f52a6916d1b6102a27933efba5b0",
+  "branch": "agentic-pdca-m2-bounded-feature",
+  "feature_objective": "Pilot B: harden Flashcard source-footer accessibility by exposing an explicit screen-reader action hint only when source details are actionable.",
+  "acceptance_criteria": [
+    "A tappable Flashcard source footer remains a semantic button and exposes the hint 'Activate to view source details.'",
+    "A non-tappable source footer is not exposed as a semantic button and exposes no action hint.",
+    "Visible source-footer text and existing tap behavior are unchanged.",
+    "Flashcard front reveal semantics remain unchanged.",
+    "No scheduling, provenance, collection, memory, backend or navigation behavior changes.",
+    "Targeted accessibility widget tests pass in light and dark compatible Material themes.",
+    "No Firebase, Supabase, dependency, configuration or architecture changes occur."
+  ],
+  "in_scope_requirements": [
+    "Flashcard source-footer semantic hint",
+    "Actionability-dependent button semantics",
+    "Widget-level accessibility regression tests"
+  ],
+  "out_of_scope_requirements": [
+    "Flashcard visual redesign",
+    "FC8 closure",
+    "Source provenance model changes",
+    "Navigation redesign",
+    "Backend or cloud changes",
+    "Dependencies",
+    "Authentication",
+    "Learning Twin behavior",
+    "M3 or M4 autonomy"
+  ],
+  "allowed_paths": [
+    "lib/screens/flashcards/widgets/flashcard_card_view.dart",
+    "test/features/flashcards/ui/flashcard_card_accessibility_test.dart",
+    "docs/agentic/implementation/m2/**"
+  ],
+  "forbidden_paths": [
+    "firebase/**",
+    "supabase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock",
+    "lib/services/auth/**",
+    "lib/features/flashcards/memory/**",
+    "lib/features/flashcards/collection/**",
+    "lib/features/flashcards/repository/**"
+  ],
+  "protected_paths": [
+    "firebase/**",
+    "supabase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock",
+    "lib/services/auth/**"
+  ],
+  "risk_class": "low",
+  "expected_changed_paths": [
+    "lib/screens/flashcards/widgets/flashcard_card_view.dart",
+    "test/features/flashcards/ui/flashcard_card_accessibility_test.dart",
+    "docs/agentic/implementation/m2/PILOT_B_PACKET.json",
+    "docs/agentic/implementation/m2/STATUS.md"
+  ],
+  "required_targeted_tests": [
+    "test/features/flashcards/ui/flashcard_card_accessibility_test.dart",
+    "test/features/flashcards/ui/flashcard_review_player_screen_test.dart"
+  ],
+  "required_architecture_gates": [
+    "test/features/flashcards/architecture/flashcard_run6_architecture_test.dart",
+    "test/features/flashcards/architecture/flashcard_run7_architecture_test.dart",
+    "test/agentic_pdca/m1_architecture_gate_test.dart"
+  ],
+  "required_check_gates": [
+    "FORMAT",
+    "ANALYZE",
+    "TEST",
+    "ARCHITECTURE_GATE",
+    "CHECK2",
+    "CHECK3"
+  ],
+  "permitted_repair_classes": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F7"
+  ],
+  "repair_budgets": {
+    "F1": 5,
+    "F2": 5,
+    "F3": 3,
+    "F4": 3,
+    "F5": 3,
+    "F6": 0,
+    "F7": 2,
+    "F8": 0,
+    "F9": 0,
+    "F10": 0
+  },
+  "dependencies": [],
+  "stop_conditions": [
+    "Any implementation needs files outside the allow-list",
+    "Any dependency or configuration change is required",
+    "Any backend, authentication or data-model change is required",
+    "Accessibility behavior is ambiguous",
+    "Existing visible behavior would need redesign",
+    "Architecture conflict",
+    "Test weakening",
+    "Repair budget exhaustion"
+  ],
+  "expected_handoff": [
+    "task_id",
+    "lineage_id",
+    "packet_hash",
+    "revision",
+    "base_sha",
+    "candidate_sha",
+    "branch",
+    "commits",
+    "changed_paths",
+    "diff_statistics",
+    "targeted_tests",
+    "architecture_gates",
+    "known_limitations",
+    "expected_changed_paths",
+    "clean_worktree",
+    "evidence_references"
+  ],
+  "human_approval_reference": "PENDING_EXPLICIT_APPROVAL"
+}

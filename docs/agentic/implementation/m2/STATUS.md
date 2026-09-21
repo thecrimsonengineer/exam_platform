@@ -2,41 +2,49 @@
 
 Frozen plan: 7a59205c550af5cc36a2c233513fc21b4f780e64.
 Phase base: d6a20c988027bdc25aeddc041cc16849bc259ad6.
-Status: RUN_5_PILOT_A_CANDIDATE; M2 remains open.
+Status: M2_PILOT_B_APPROVAL_PENDING; M2 remains open.
 
-## Accepted checkpoints
+## Accepted governance checkpoints
 
-- M2-1 through M2-3: REVIEW_ACCEPTED at
-  95d64b2c4b64b0f4381009e38d00c1a698f5a86c.
-- M2-4 CHECK-3: REVIEW_ACCEPTED after hardening at
-  5ad6fd505fec16af2496a4526a06c9ada3b64333.
-- M2-5 ACT-2: REVIEW_ACCEPTED at
-  5a7c524dc481168931f09521b4ec6ce97ef65495.
+- M2-1 through M2-3: REVIEW_ACCEPTED.
+- M2-4 CHECK-3: REVIEW_ACCEPTED after independent hardening.
+- M2-5 ACT-2: REVIEW_ACCEPTED.
 - M2-6 adversarial/integrity hardening: REVIEW_ACCEPTED at
-  d5357ea04d5760554690dd5e10b52f23506bb3a0 after GitHub exact-SHA
-  validation run 35586178938 passed every gate.
+  d5357ea04d5760554690dd5e10b52f23506bb3a0.
+- M2-7 Pilot A lifecycle proof: REVIEW_ACCEPTED at
+  8ada71ce7b86f52a6916d1b6102a27933efba5b0 after GitHub exact-SHA
+  validation run 35586629747 passed all gates.
 
-## Run 5: M2-7 Pilot A lifecycle proof
+## M2-8 Pilot B proposal
 
-RUN_5_PACKET.json is anchored to the accepted M2-6 SHA.
+Pilot B is deliberately a real application change from the already-open FC8
+hardening backlog, while remaining extremely narrow.
 
-The Pilot A proof composes the production M2 controls:
-- approved task packet and Control Plane state authorize DO-2 preflight;
-- a first exact candidate creates a deterministic trusted handoff;
-- independent CHECK-3 returns REVIEW_REPAIRABLE from a controlled F4 behavior
-  finding;
-- ACT-2 authorizes one bounded repair and consumes one F4 plus one behavioral
-  budget unit before repair;
-- the repaired candidate uses a different exact SHA;
-- the repaired candidate produces a fresh handoff and fresh CHECK-3 evidence;
-- CHECK-3 returns REVIEW_ACCEPTED for the repaired candidate;
-- stale first-candidate review evidence cannot authorize work on the repaired
-  candidate;
-- ACT-2 still exposes no closure route.
+Feature:
+Flashcard source-footer accessibility hardening.
 
-Pilot A is a deterministic governance-feature proof. It does not claim that
-Pilot B application authorization exists.
+Current behavior:
+- the visible source footer is already present;
+- when onSourceTap is provided, Semantics marks the footer as a button;
+- the screen-reader label is the source label;
+- no explicit action hint tells a screen-reader user what activating the
+  source footer will do.
 
-After Pilot A acceptance, the next frozen-plan boundary is M2-8: create and
-obtain explicit human approval for one real CSP11 application bounded-feature
-packet before any lib/** application change.
+Proposed bounded behavior:
+- keep all visible UI unchanged;
+- keep current tap/navigation behavior unchanged;
+- when onSourceTap is non-null, expose semantic hint:
+  "Activate to view source details.";
+- when onSourceTap is null, expose no button action and no action hint;
+- add focused widget accessibility regression tests.
+
+Allowed application path:
+- lib/screens/flashcards/widgets/flashcard_card_view.dart
+
+Allowed test path:
+- test/features/flashcards/ui/flashcard_card_accessibility_test.dart
+
+No other application files are authorized.
+
+This packet is not approved yet. No lib/** mutation may occur until explicit
+human approval is bound to this exact packet/commit.
