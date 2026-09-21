@@ -1,6 +1,6 @@
 # CSP11 Phase FR6 Published Catalogue
 
-Status: IMPLEMENTATION CANDIDATE
+Status: LIVE SCHEMA GREEN / CLOSURE CANDIDATE
 Branch: phase-fr6-published-catalogue
 Source checkpoint: phase-fr5-closed at 0c241694703bea2bc6bfae86334a36e8d125f6ba
 Date: 2026-09-21
@@ -78,10 +78,32 @@ FR6 can close only when:
 8. The exact FR6 repository SHA passes formatting, analyze, FR1-FR6 gates, frozen L4 suites, full repository regression and diff hygiene.
 9. phase-fr6-closed is created only at that exact green SHA.
 
+## Live Supabase validation
+
+The reviewed FR6 repository candidate at `f392744946d592228cd9575b473abda23ab3c9ab` passed GitHub Actions run `35595358214` before any live schema change.
+
+That exact reviewed DDL was then applied to the production `csp11-supabase` project as migration `fr6_published_catalog`.
+
+Live verification proved:
+
+- `public.published_catalog` exists.
+- RLS is enabled.
+- The table is empty: 0 catalogue rows. FR6 inserted no learner or package data.
+- `competency_id` is the primary key.
+- Content and question version/checksum/path/size/count constraints are present.
+- `anon` SELECT privilege = false.
+- `authenticated` SELECT privilege = false.
+- `service_role` SELECT/INSERT/UPDATE/DELETE privileges = true.
+- Policy `fr_edge_only_deny_direct_client` applies to `anon,authenticated` for ALL commands with `using (false)` and `with check (false)`.
+- Supabase security advisor findings = 0.
+- Supabase performance advisor remains at 24 pre-existing informational unused-index notices. FR6 introduced no new secondary index and no new performance-advisor finding.
+
+Learner runtime still routes through the existing Firestore path. FR6 does not populate catalogue pointers because immutable package creation and Storage publication belong to FR7.
+
 ## NEXT ACTION
 
-Validate the FR6 repository candidate.
+Run the normal FR validation on this live-schema-recorded closure SHA.
 
-If green, apply the published_catalog migration to csp11-supabase, verify its live schema and advisors, record the live result, rerun the exact repository gate, then freeze phase-fr6-closed.
+If the exact SHA is fully green across formatting, analyze, FR1-FR6, frozen L4 suites, full repository regression and diff hygiene, create `phase-fr6-closed` at that same SHA without another commit.
 
-After FR6 closure, continue to FR7 Supabase Storage Publishing Pipeline.
+Then continue to FR7 Supabase Storage Publishing Pipeline from the frozen FR6 recovery point.
