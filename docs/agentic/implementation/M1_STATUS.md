@@ -9,7 +9,7 @@ Branch: `agentic-pdca-m1-001`
 
 - `89d6daa` AGENT-BUILD PDCA M1-001: establish mechanical control boundary
 - `4ed234f` AGENT-BUILD PDCA M1-002: add mechanical authority and deterministic gates
-- pending final pilot/status commit
+- `2529c8f` AGENT-BUILD PDCA M1-005: add mechanical pilot and status evidence
 
 ## DO-1
 
@@ -25,11 +25,11 @@ Routes only objective formatter, import, simple analyzer, safe harness, and tran
 
 ## Evidence
 
-- Full agentic PDCA suite: 41 tests expected after pilot additions.
-- Formatting gate: `dart format --output=none --set-exit-if-changed tool/agentic_pdca test/agentic_pdca`.
-- Analyzer gate: `flutter analyze`; repository currently reports informational diagnostics only.
-- M0 regression remains covered by the original 19 control-plane tests.
-- M0 branch protection is enabled and locked at the exact M0 SHA, with admins enforced, force pushes disabled, and deletions disabled.
+- Full agentic PDCA suite: 41 tests passed.
+- Formatting gate: passed with `dart format --output=none --set-exit-if-changed tool/agentic_pdca test/agentic_pdca`.
+- Analyzer gate: completed with 402 informational diagnostics and no errors or warnings.
+- M0 regression: all original 19 control-plane tests passed.
+- M0 branch protection: PASS. The branch is protected and locked at the exact M0 SHA, admins are enforced, force pushes are disabled, and deletions are disabled.
 
 ## Known limitations
 
