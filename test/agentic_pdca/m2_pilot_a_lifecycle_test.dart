@@ -44,9 +44,7 @@ final class _RetryStore implements M2TrustedRetryEvidence {
 
 void main() {
   final packet = M2TaskPacket.parse(
-    File(
-      'docs/agentic/implementation/m2/RUN_5_PACKET.json',
-    ).readAsStringSync(),
+    File('docs/agentic/implementation/m2/RUN_5_PACKET.json').readAsStringSync(),
   );
   const firstCandidate = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
   const repairedCandidate = 'cccccccccccccccccccccccccccccccccccccccc';
@@ -55,13 +53,13 @@ void main() {
   M2FakeWorkspace workspaceAt(
     String candidate, {
     required List<String> commits,
-  }) =>
-      M2FakeWorkspace(packet)
-        ..head = candidate
-        ..changed = [changedPath]
-        ..commits = commits
-        ..diffPatch = 'diff --git a/$changedPath b/$changedPath\n'
-            '+void pilotEvidence() {}\n';
+  }) => M2FakeWorkspace(packet)
+    ..head = candidate
+    ..changed = [changedPath]
+    ..commits = commits
+    ..diffPatch =
+        'diff --git a/$changedPath b/$changedPath\n'
+        '+void pilotEvidence() {}\n';
 
   List<M2GateReceipt> receiptsFor(String candidate) =>
       greenReceipts(packet, candidate: candidate);
@@ -70,23 +68,22 @@ void main() {
     String candidate, {
     required bool behaviorMatchesTask,
     required String reference,
-  }) =>
-      M2SemanticReviewReceipt(
-        candidateSha: candidate,
-        packetHash: packet.hash,
-        reviewerPrincipal: 'pilot-a-independent-reviewer',
-        reviewerRole: 'REVIEWER',
-        readOnly: true,
-        observedAt: m2TestNow,
-        evidenceReference: reference,
-        acceptanceCriteriaSatisfied: true,
-        architectureConsistent: true,
-        testQualityAccepted: true,
-        regressionRiskAccepted: true,
-        maintainabilityAccepted: true,
-        behaviorMatchesTask: behaviorMatchesTask,
-        findings: const [],
-      );
+  }) => M2SemanticReviewReceipt(
+    candidateSha: candidate,
+    packetHash: packet.hash,
+    reviewerPrincipal: 'pilot-a-independent-reviewer',
+    reviewerRole: 'REVIEWER',
+    readOnly: true,
+    observedAt: m2TestNow,
+    evidenceReference: reference,
+    acceptanceCriteriaSatisfied: true,
+    architectureConsistent: true,
+    testQualityAccepted: true,
+    regressionRiskAccepted: true,
+    maintainabilityAccepted: true,
+    behaviorMatchesTask: behaviorMatchesTask,
+    findings: const [],
+  );
 
   ControlPlaneSnapshot stateAt(
     String candidate, {
@@ -131,14 +128,15 @@ void main() {
   }) async {
     final work = workspaceAt(candidate, commits: commits);
     final receipts = receiptsFor(candidate);
-    final handoff = await M2HandoffBuilder(
-      workspace: work,
-      gateEvidence: M2FakeGates(receipts),
-      packet: packet,
-    ).build(
-      candidateSha: candidate,
-      knownLimitations: const ['Pilot A deterministic fixture'],
-    );
+    final handoff =
+        await M2HandoffBuilder(
+          workspace: work,
+          gateEvidence: M2FakeGates(receipts),
+          packet: packet,
+        ).build(
+          candidateSha: candidate,
+          knownLimitations: const ['Pilot A deterministic fixture'],
+        );
     return M2Check3Reviewer(
       packet: packet,
       workspace: work,
@@ -159,22 +157,23 @@ void main() {
     'Pilot A completes DO to repair to new candidate to CHECK-3 acceptance',
     () async {
       final doWorkspace = M2FakeWorkspace(packet);
-      final doDecision = await M2BoundedAuthority(
-        manifest: M2ApprovedManifest(packet: packet),
-        workspace: doWorkspace,
-        trustedState: testState(packet),
-        trustedClock: () => m2TestNow,
-      ).authorize(
-        M2BuilderRequest(
-          packetHash: packet.hash,
-          revision: packet.revision,
-          expectedHead: packet.taskBaseSha,
-          writerLeaseId: 'lease',
-          writerIdentity: 'builder',
-          fencingToken: 7,
-          requestedPaths: [changedPath],
-        ),
-      );
+      final doDecision =
+          await M2BoundedAuthority(
+            manifest: M2ApprovedManifest(packet: packet),
+            workspace: doWorkspace,
+            trustedState: testState(packet),
+            trustedClock: () => m2TestNow,
+          ).authorize(
+            M2BuilderRequest(
+              packetHash: packet.hash,
+              revision: packet.revision,
+              expectedHead: packet.taskBaseSha,
+              writerLeaseId: 'lease',
+              writerIdentity: 'builder',
+              fencingToken: 7,
+              requestedPaths: [changedPath],
+            ),
+          );
       expect(doDecision.authorized, isTrue);
 
       final firstReview = await reviewCandidate(
