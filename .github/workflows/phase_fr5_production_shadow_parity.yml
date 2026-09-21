@@ -229,7 +229,9 @@ jobs:
           grep -q '"safeToApply": true' build/fr5-production/preflight.json
 
       - name: Require explicit shadow-only confirmation
-        if: (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) || (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized one-shot production shadow apply')
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) ||
+          (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized one-shot production shadow apply')
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
@@ -241,7 +243,9 @@ jobs:
           fi
 
       - name: Apply production shadow data and prove parity
-        if: (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) || (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized one-shot production shadow apply')
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.apply_shadow == true) ||
+          (github.event_name == 'push' && github.event.head_commit.message == 'FR5: authorized one-shot production shadow apply')
         run: |
           dart run tool/fr5_shadow_parity/fr5_shadow_parity.dart \
             --fr4-evidence=build/fr5-production/production_fr4_plan.json \
