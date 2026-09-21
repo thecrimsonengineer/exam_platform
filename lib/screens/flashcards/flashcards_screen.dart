@@ -582,17 +582,20 @@ class _DailyDiscoveryCard extends StatelessWidget {
     } else if (state.status == DailyDiscoveryStatus.offered && card != null) {
       title = card.frontLabel;
       message = 'Today’s concept is ready to join your Collection.';
-      action = FilledButton(
-        key: const ValueKey('daily-discovery-claim'),
-        onPressed: claiming ? null : () => unawaited(onClaim()),
-        child: _AdaptiveActionContent(
-          icon: claiming
-              ? const SizedBox.square(
-                  dimension: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.add_card_rounded),
-          label: 'Collect today’s card',
+      action = SizedBox(
+        width: double.infinity,
+        child: FilledButton(
+          key: const ValueKey('daily-discovery-claim'),
+          onPressed: claiming ? null : () => unawaited(onClaim()),
+          child: _AdaptiveActionContent(
+            icon: claiming
+                ? const SizedBox.square(
+                    dimension: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.add_card_rounded),
+            label: 'Collect today’s card',
+          ),
         ),
       );
     } else if (state.status == DailyDiscoveryStatus.claimed && card != null) {
@@ -600,11 +603,14 @@ class _DailyDiscoveryCard extends StatelessWidget {
       message = 'Collected today. Reveal it whenever you are ready.';
       final ownership = snapshot.ownershipByCardId[card.id];
       if (ownership != null) {
-        action = OutlinedButton(
-          onPressed: () => unawaited(onOpenCard(card, ownership)),
-          child: const _AdaptiveActionContent(
-            icon: Icon(Icons.visibility_outlined),
-            label: 'Open card',
+        action = SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () => unawaited(onOpenCard(card, ownership)),
+            child: const _AdaptiveActionContent(
+              icon: Icon(Icons.visibility_outlined),
+              label: 'Open card',
+            ),
           ),
         );
       }
