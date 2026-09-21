@@ -257,12 +257,24 @@ void main() {
         ...source,
         'changed_paths': ['tool/agentic_pdca/m2_other.dart'],
       },
-      {...source, 'commits': [packet.taskBaseSha]},
+      {
+        ...source,
+        'commits': [packet.taskBaseSha],
+      },
       {...source, 'diff_statistics': 'forged diff'},
-      {...source, 'targeted_tests': ['test/forged_test.dart']},
-      {...source, 'architecture_gates': ['test/forged_arch_test.dart']},
+      {
+        ...source,
+        'targeted_tests': ['test/forged_test.dart'],
+      },
+      {
+        ...source,
+        'architecture_gates': ['test/forged_arch_test.dart'],
+      },
       {...source, 'gate_results': <Object?>[]},
-      {...source, 'evidence_references': ['forged:evidence']},
+      {
+        ...source,
+        'evidence_references': ['forged:evidence'],
+      },
     ]) {
       final outcome = await reviewer(
         work,

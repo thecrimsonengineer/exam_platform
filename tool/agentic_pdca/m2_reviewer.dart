@@ -595,8 +595,9 @@ final class M2Check3Reviewer {
             );
       final handoffReferences = handoff['evidence_references'];
       if (handoffReferences is! List) return false;
-      final trustedReferences =
-          trusted.map((receipt) => receipt.evidenceReference).toList();
+      final trustedReferences = trusted
+          .map((receipt) => receipt.evidenceReference)
+          .toList();
       return m2CanonicalJson(handoffResults) ==
               m2CanonicalJson(
                 trusted.map((receipt) => receipt.toJson()).toList(),
