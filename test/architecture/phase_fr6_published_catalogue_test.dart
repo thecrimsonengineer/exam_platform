@@ -23,7 +23,7 @@ void main() {
   test('FR6 catalogue migration is schema-only', () {
     expect(
       RegExp(
-        r'^\\s*(insert|copy)\\b',
+        r'^\s*(insert|copy)\b',
         caseSensitive: false,
         multiLine: true,
       ).hasMatch(sql),
@@ -60,19 +60,16 @@ void main() {
     }
 
     expect(
-      RegExp(
-        r"content_checksum_sha256\\s+~\\s+'\\^\\[0-9a-f\\]\\{64\\}\\\\$'",
-        caseSensitive: false,
-      ).hasMatch(sql),
-      isTrue,
+      sql,
+      contains("check (content_checksum_sha256 ~ '^[0-9a-f]{64}\$')"),
     );
     expect(
-      RegExp(
-        r"question_checksum_sha256\\s+~\\s+'\\^\\[0-9a-f\\]\\{64\\}\\\\$'",
-        caseSensitive: false,
-      ).hasMatch(sql),
-      isTrue,
+      sql,
+      contains("check (question_checksum_sha256 ~ '^[0-9a-f]{64}\$')"),
     );
+    expect(sql, contains('check (content_size_bytes >= 0)'));
+    expect(sql, contains('check (question_size_bytes >= 0)'));
+    expect(sql, contains('check (published_question_count >= 0)'));
   });
 
   test('FR6 keeps direct learner Data API access fail-closed', () {
@@ -93,15 +90,22 @@ void main() {
     expect(
       sql,
       contains(
-        'on public.published_catalog for all to anon, authenticated\\n'
+        'on public.published_catalog for all to anon, authenticated\n'
         '  using (false) with check (false);',
       ),
     );
-    expect(sql, isNot(contains('grant select on table public.published_catalog to anon')));
     expect(
       sql,
       isNot(
-        contains('grant select on table public.published_catalog to authenticated'),
+        contains('grant select on table public.published_catalog to anon'),
+      ),
+    );
+    expect(
+      sql,
+      isNot(
+        contains(
+          'grant select on table public.published_catalog to authenticated',
+        ),
       ),
     );
   });
@@ -110,9 +114,7 @@ void main() {
     expect(fr3Sql, contains('create table public.published_packages'));
     expect(
       fr3Sql,
-      contains(
-        'primary key (package_kind, package_key, version)',
-      ),
+      contains('primary key (package_kind, package_key, version)'),
     );
     expect(fr3Sql, contains('published_packages_one_current_uidx'));
     expect(sql, isNot(contains('create table public.published_packages')));
@@ -121,10 +123,7 @@ void main() {
   test('FR6 is wired into the normal FR and frozen L4 validation path', () {
     expect(workflow, contains('phase-fr6-published-catalogue'));
     expect(workflow, contains('FR6 published catalogue architecture gate'));
-    expect(
-      workflow,
-      contains('phase_fr6_published_catalogue_test.dart'),
-    );
+    expect(workflow, contains('phase_fr6_published_catalogue_test.dart'));
     expect(workflow, contains('Preserve frozen Phase L4 learner regressions'));
     expect(workflow, contains('Preserve frozen Phase L4 quality gates'));
     expect(workflow, contains('Preserve exact frozen Phase L engine suite'));
