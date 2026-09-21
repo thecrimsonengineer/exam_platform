@@ -25,10 +25,6 @@ create table public.published_catalog (
   updated_at timestamptz not null default now()
 );
 
-create index published_catalog_active_competency_idx
-  on public.published_catalog (competency_id)
-  where active;
-
 create trigger published_catalog_touch_updated_at
 before update on public.published_catalog
 for each row execute function public.fr_touch_updated_at();
