@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "task_id": "M2-RUN-5-PILOT-A",
+  "lineage_id": "M2-PILOT-A-1",
+  "maturity": "M2",
+  "plan_sha": "7a59205c550af5cc36a2c233513fc21b4f780e64",
+  "governance_sha": "43b2b3cc99839ae9de4092b4e2b7058d1964bff7",
+  "phase_base_sha": "d6a20c988027bdc25aeddc041cc16849bc259ad6",
+  "task_base_sha": "d5357ea04d5760554690dd5e10b52f23506bb3a0",
+  "branch": "agentic-pdca-m2-bounded-feature",
+  "feature_objective": "M2-7 Pilot A: prove the Task Packet Validator and Handoff Builder through an end-to-end bounded DO-2, CHECK-3, ACT-2 repair lifecycle with a new candidate SHA.",
+  "acceptance_criteria": [
+    "Approved packet and trusted Control Plane state authorize bounded DO preflight.",
+    "First exact candidate produces a complete deterministic handoff and CHECK-3 REVIEW_REPAIRABLE result from a controlled bounded behavior finding.",
+    "ACT-2 authorizes one F4 repair, consumes one lineage-owned class and behavioral budget unit, and records the failed parent candidate.",
+    "Repair produces a different exact candidate SHA and returns through a fresh handoff and CHECK-3 review.",
+    "Second candidate reaches REVIEW_ACCEPTED with fresh trusted evidence.",
+    "Old candidate evidence cannot substitute for the repaired candidate and no ACT closure route exists."
+  ],
+  "in_scope_requirements": [
+    "Pilot A end-to-end lifecycle proof",
+    "Controlled repair loop",
+    "New candidate SHA proof",
+    "Fresh handoff and review proof",
+    "No autonomous closure proof"
+  ],
+  "out_of_scope_requirements": [
+    "Pilot B application code",
+    "Production deployment",
+    "Persistent cross-process database",
+    "Parallel writers",
+    "M3 or M4 autonomy",
+    "Phase closure"
+  ],
+  "allowed_paths": [
+    "test/agentic_pdca/m2_pilot_a_lifecycle_test.dart",
+    "docs/agentic/implementation/m2/**"
+  ],
+  "forbidden_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "protected_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "risk_class": "low",
+  "expected_changed_paths": [
+    "test/agentic_pdca/m2_pilot_a_lifecycle_test.dart",
+    "docs/agentic/implementation/m2/RUN_5_PACKET.json",
+    "docs/agentic/implementation/m2/STATUS.md"
+  ],
+  "required_targeted_tests": [
+    "test/agentic_pdca/m2_pilot_a_lifecycle_test.dart"
+  ],
+  "required_architecture_gates": [
+    "test/agentic_pdca/m1_architecture_gate_test.dart"
+  ],
+  "required_check_gates": [
+    "FORMAT",
+    "ANALYZE",
+    "TEST",
+    "ARCHITECTURE_GATE",
+    "CHECK2",
+    "CHECK3"
+  ],
+  "permitted_repair_classes": ["F1", "F2", "F3", "F4", "F5", "F7"],
+  "repair_budgets": {
+    "F1": 5,
+    "F2": 5,
+    "F3": 3,
+    "F4": 3,
+    "F5": 3,
+    "F6": 0,
+    "F7": 2,
+    "F8": 0,
+    "F9": 0,
+    "F10": 0
+  },
+  "dependencies": [],
+  "stop_conditions": [
+    "Pilot cannot complete without scope expansion",
+    "Repair does not require a new candidate SHA",
+    "Old evidence is accepted for repaired candidate",
+    "Budget fails to decrement",
+    "CHECK-3 cannot independently accept repaired candidate",
+    "Any closure capability appears"
+  ],
+  "expected_handoff": [
+    "task_id",
+    "lineage_id",
+    "packet_hash",
+    "revision",
+    "base_sha",
+    "candidate_sha",
+    "branch",
+    "commits",
+    "changed_paths",
+    "diff_statistics",
+    "targeted_tests",
+    "architecture_gates",
+    "known_limitations",
+    "expected_changed_paths",
+    "clean_worktree",
+    "evidence_references"
+  ],
+  "human_approval_reference": "User message: continue with phase m, 2026-09-21"
+}

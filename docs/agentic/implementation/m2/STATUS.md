@@ -2,7 +2,7 @@
 
 Frozen plan: 7a59205c550af5cc36a2c233513fc21b4f780e64.
 Phase base: d6a20c988027bdc25aeddc041cc16849bc259ad6.
-Status: RUN_4_M2_6_CANDIDATE; M2 remains open.
+Status: RUN_5_PILOT_A_CANDIDATE; M2 remains open.
 
 ## Accepted checkpoints
 
@@ -11,30 +11,32 @@ Status: RUN_4_M2_6_CANDIDATE; M2 remains open.
 - M2-4 CHECK-3: REVIEW_ACCEPTED after hardening at
   5ad6fd505fec16af2496a4526a06c9ada3b64333.
 - M2-5 ACT-2: REVIEW_ACCEPTED at
-  5a7c524dc481168931f09521b4ec6ce97ef65495 after GitHub exact-SHA
-  validation run 35585030076 passed every gate.
+  5a7c524dc481168931f09521b4ec6ce97ef65495.
+- M2-6 adversarial/integrity hardening: REVIEW_ACCEPTED at
+  d5357ea04d5760554690dd5e10b52f23506bb3a0 after GitHub exact-SHA
+  validation run 35586178938 passed every gate.
 
-## Run 4: M2-6 adversarial and CHECK-2 hardening
+## Run 5: M2-7 Pilot A lifecycle proof
 
-This candidate adds patch-aware M2 integrity evidence while retaining all M1
-CHECK-2 findings.
+RUN_5_PACKET.json is anchored to the accepted M2-6 SHA.
 
-New automated checks include:
-- committed diff-patch inventory must match trusted changed paths;
-- newly introduced test skips are blocking;
-- dependency, CI and Firebase configuration drift is explicitly identified;
-- M1 secret, assertion-weakening, deletion, binary, protected-path and
-  allow-list checks remain inherited;
-- CHECK-3 consumes the stronger M2 integrity scanner;
-- ACT-2 rejects an internally inconsistent review that claims
-  REVIEW_REPAIRABLE while carrying an escalation finding.
+The Pilot A proof composes the production M2 controls:
+- approved task packet and Control Plane state authorize DO-2 preflight;
+- a first exact candidate creates a deterministic trusted handoff;
+- independent CHECK-3 returns REVIEW_REPAIRABLE from a controlled F4 behavior
+  finding;
+- ACT-2 authorizes one bounded repair and consumes one F4 plus one behavioral
+  budget unit before repair;
+- the repaired candidate uses a different exact SHA;
+- the repaired candidate produces a fresh handoff and fresh CHECK-3 evidence;
+- CHECK-3 returns REVIEW_ACCEPTED for the repaired candidate;
+- stale first-candidate review evidence cannot authorize work on the repaired
+  candidate;
+- ACT-2 still exposes no closure route.
 
-Cross-state adversarial tests exercise packet revision drift, stale approval,
-review/ACT inconsistency, cancellation, canonical path traversal, protected
-paths and the absence of autonomous closure surfaces.
+Pilot A is a deterministic governance-feature proof. It does not claim that
+Pilot B application authorization exists.
 
-No arbitrary numerical change-size threshold was invented. M2 continues to
-fail closed on scope/path anomalies and leaves broader size policy for an
-explicit future governance decision.
-
-Pilot A lifecycle proof and Pilot B remain pending after M2-6.
+After Pilot A acceptance, the next frozen-plan boundary is M2-8: create and
+obtain explicit human approval for one real CSP11 application bounded-feature
+packet before any lib/** application change.
