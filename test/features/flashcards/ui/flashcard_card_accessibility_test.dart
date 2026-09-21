@@ -1,0 +1,119 @@
+import 'package:exam_platform/features/flashcards/models/flashcard.dart';
+import 'package:exam_platform/features/flashcards/models/flashcard_placement.dart';
+import 'package:exam_platform/features/flashcards/models/flashcard_source_provenance.dart';
+import 'package:exam_platform/features/flashcards/models/flashcard_type.dart';
+import 'package:exam_platform/screens/flashcards/widgets/flashcard_card_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  const card = Flashcard(
+    id: 'csp11.flashcard.pilot_b_accessibility',
+    conceptId: 'csp11.concept.pilot_b_accessibility',
+    version: 1,
+    type: FlashcardType.concept,
+    frontLabel: 'Pilot B accessibility',
+    backDefinition: 'A bounded Flashcard accessibility test concept.',
+    primaryPlacement: FlashcardPlacement(
+      domainId: 'd01',
+      competencyId: 'd01_c01',
+    ),
+  );
+
+  const footer = FlashcardSourceFooter(
+    sourceId: 'SRC-PILOT-B',
+    label: 'Source: NIOSH',
+    organization: 'NIOSH',
+    locator: 'Pilot B test locator',
+    url: 'https://www.cdc.gov/niosh/',
+  );
+
+  Future<void> pumpCard(
+    WidgetTester tester, {
+    VoidCallback? onSourceTap,
+    ThemeMode themeMode = ThemeMode.light,
+  }) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData.light(useMaterial3: true),
+        darkTheme: ThemeData.dark(useMaterial3: true),
+        themeMode: themeMode,
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: FlashcardCardView(
+              card: card,
+              isFlipped: true,
+              sourceFooter: footer,
+              onSourceTap: onSourceTap,
+              compact: true,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets(
+    'actionable source footer exposes button semantics and action hint',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      addTearDown(semantics.dispose);
+      var taps = 0;
+
+      await pumpCard(
+        tester,
+        onSourceTap: () => taps++,
+        themeMode: ThemeMode.light,
+      );
+
+      final sourceFinder = find.bySemanticsLabel('Source: NIOSH');
+      expect(sourceFinder, findsOneWidget);
+      expect(
+        tester.getSemantics(sourceFinder),
+        matchesSemantics(
+          label: 'Source: NIOSH',
+          hint: 'Activate to view source details.',
+          isButton: true,
+          hasTapAction: true,
+        ),
+      );
+
+      await tester.tap(
+        find.byKey(
+          const ValueKey(
+            'flashcard-source-csp11.flashcard.pilot_b_accessibility',
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(taps, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'non-actionable source footer exposes neither button action nor hint',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      addTearDown(semantics.dispose);
+
+      await pumpCard(tester, themeMode: ThemeMode.dark);
+
+      final sourceFinder = find.bySemanticsLabel('Source: NIOSH');
+      expect(sourceFinder, findsOneWidget);
+      expect(
+        tester.getSemantics(sourceFinder),
+        matchesSemantics(
+          label: 'Source: NIOSH',
+          hint: '',
+          isButton: false,
+          hasTapAction: false,
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+    },
+  );
+}
