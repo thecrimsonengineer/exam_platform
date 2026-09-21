@@ -37,15 +37,16 @@ The in-memory M0 model records:
 
 - PLAN task snapshots;
 - TASK state observations;
+- TASK transition validation with rejected-transition evidence;
 - lineage identity and candidate ordering;
 - authoritative events;
 - semantic and exact-ID event deduplication;
 - repair-budget observations;
 - expected and observed branch HEADs;
-- writer-lease observations;
+- writer-lease observations keyed by lease identity with retained history;
 - cancellation observations;
 - evidence references and content hashes;
-- human approval observations;
+- human approval observations with status, expiry, revocation and governance checks;
 - pinned governance version and governance SHA.
 
 ## Adversarial controls represented in M0
@@ -60,8 +61,11 @@ The observation layer implements or reports:
 6. stale-event preservation as evidence without allowing stale state to replace current observed lineage;
 7. canonical CHECK-state namespace validation;
 8. expected-HEAD drift diagnostics;
-9. expired approval diagnostics using a trusted Control Plane clock;
-10. explicit observation-only capability denial.
+9. TASK state namespace and lifecycle transition validation;
+10. expired, revoked, inactive and governance-mismatched approval diagnostics;
+11. concurrent branch/lineage lease diagnostics;
+12. fencing-token regression, replaced/stale lease and expected-HEAD mismatch diagnostics;
+13. explicit observation-only capability denial.
 
 ## Evidence semantics
 
@@ -95,9 +99,11 @@ The focused test suite verifies:
 - semantic duplicates are idempotent;
 - stale events cannot replace newer lineage state;
 - invalid CHECK state namespaces are rejected;
+- valid and impossible observed TASK transitions are distinguished, with attempted states retained as evidence;
 - unknown task/lineage events are rejected;
-- expected HEAD drift is visible;
-- expired approval is visible;
+- expected HEAD drift and lease expected-HEAD mismatch are visible;
+- approval validity covers active status, expiry, revocation and governance version;
+- concurrent, stale, replaced and fencing-regressed lease observations are visible;
 - budget, lease, cancellation and evidence observations are serializable.
 
 ## Deliberately deferred to later maturity

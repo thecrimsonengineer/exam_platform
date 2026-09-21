@@ -9,44 +9,45 @@ void main() {
   final now = DateTime.utc(2026, 9, 21, 2, 30);
 
   M0ObservationControlPlane plane() => M0ObservationControlPlane(
-        governanceVersion: governanceVersion,
-        governanceSha: governanceSha,
-        trustedIssuers: const {'github-actions', 'human-review'},
-        trustedClock: () => now,
-      );
+    governanceVersion: governanceVersion,
+    governanceSha: governanceSha,
+    trustedIssuers: const {'github-actions', 'human-review'},
+    trustedClock: () => now,
+  );
 
   PlanTaskSnapshot task() => PlanTaskSnapshot(
-        taskId: 'TASK-M0-001',
-        phaseId: 'AGENTIC-PDCA-M0',
-        baseBranch: 'agentic-pdca-governance-v1-closed',
-        baseSha: governanceSha,
-        riskClass: 'R0',
-        allowedPaths: const {
-          'tool/agentic_pdca/**',
-          'test/agentic_pdca/**',
-          'docs/agentic/implementation/**',
-        }.toList(),
-        forbiddenPaths: const {'lib/**', 'firebase/**', 'content/**'}.toList(),
-        requiredTests: const {'test/agentic_pdca/m0_control_plane_test.dart'}.toList(),
-        stopConditions: const {'application feature code change'}.toList(),
-        governanceVersion: governanceVersion,
-        observedAt: now,
-      );
+    taskId: 'TASK-M0-001',
+    phaseId: 'AGENTIC-PDCA-M0',
+    baseBranch: 'agentic-pdca-governance-v1-closed',
+    baseSha: governanceSha,
+    riskClass: 'R0',
+    allowedPaths: const {
+      'tool/agentic_pdca/**',
+      'test/agentic_pdca/**',
+      'docs/agentic/implementation/**',
+    }.toList(),
+    forbiddenPaths: const {'lib/**', 'firebase/**', 'content/**'}.toList(),
+    requiredTests: const {
+      'test/agentic_pdca/m0_control_plane_test.dart',
+    }.toList(),
+    stopConditions: const {'application feature code change'}.toList(),
+    governanceVersion: governanceVersion,
+    observedAt: now,
+  );
 
   LineageSnapshot lineage({
     int generation = 1,
     int sequence = 1,
     String sha = governanceSha,
-  }) =>
-      LineageSnapshot(
-        taskId: 'TASK-M0-001',
-        lineageId: 'LINEAGE-M0-001',
-        currentSha: sha,
-        lineageGeneration: generation,
-        candidateSequence: sequence,
-        governanceVersion: governanceVersion,
-        observedAt: now,
-      );
+  }) => LineageSnapshot(
+    taskId: 'TASK-M0-001',
+    lineageId: 'LINEAGE-M0-001',
+    currentSha: sha,
+    lineageGeneration: generation,
+    candidateSequence: sequence,
+    governanceVersion: governanceVersion,
+    observedAt: now,
+  );
 
   AuthoritativeEvent event({
     String eventId = 'EVENT-001',
@@ -57,25 +58,24 @@ void main() {
     int sequence = 1,
     int attempt = 1,
     String? workflowRunId = 'run-1',
-  }) =>
-      AuthoritativeEvent(
-        eventId: eventId,
-        eventType: 'CHECK_EVENT',
-        sourceSystem: source,
-        taskId: 'TASK-M0-001',
-        lineageId: 'LINEAGE-M0-001',
-        candidateSha: 'abc123',
-        validationScope: 'TASK_CHECK',
-        workflowRunId: workflowRunId,
-        checkAttempt: attempt,
-        lineageGeneration: generation,
-        candidateSequence: sequence,
-        state: state,
-        riskClass: 'R0',
-        evidenceBundleRef: 'evidence://run-1',
-        governanceVersion: governance,
-        timestamp: now,
-      );
+  }) => AuthoritativeEvent(
+    eventId: eventId,
+    eventType: 'CHECK_EVENT',
+    sourceSystem: source,
+    taskId: 'TASK-M0-001',
+    lineageId: 'LINEAGE-M0-001',
+    candidateSha: 'abc123',
+    validationScope: 'TASK_CHECK',
+    workflowRunId: workflowRunId,
+    checkAttempt: attempt,
+    lineageGeneration: generation,
+    candidateSequence: sequence,
+    state: state,
+    riskClass: 'R0',
+    evidenceBundleRef: 'evidence://run-1',
+    governanceVersion: governance,
+    timestamp: now,
+  );
 
   void seed(M0ObservationControlPlane controlPlane) {
     controlPlane.observeTask(task());
@@ -179,21 +179,81 @@ void main() {
   });
 
   group('ordering and namespace protection', () {
-    test('retains stale event as evidence without replacing current lineage', () {
+    test('accepts valid TASK transitions and preserves the previous state', () {
       final controlPlane = plane();
       controlPlane.observeTask(task());
-      controlPlane.observeLineage(
-        lineage(generation: 2, sequence: 3, sha: 'newer-sha'),
-      );
 
-      final result = controlPlane.observeAuthoritativeEvent(
-        event(generation: 2, sequence: 2),
+      expect(
+        controlPlane
+            .observeTaskState(taskId: 'TASK-M0-001', state: 'TASK_READY')
+            .disposition,
+        ObservationDisposition.accepted,
       );
-
-      expect(result.disposition, ObservationDisposition.ignoredStaleEvent);
-      expect(controlPlane.snapshot().lineages.single.currentSha, 'newer-sha');
-      expect(controlPlane.snapshot().eventEvidence, hasLength(1));
+      expect(
+        controlPlane
+            .observeTaskState(taskId: 'TASK-M0-001', state: 'TASK_RUNNING')
+            .disposition,
+        ObservationDisposition.accepted,
+      );
+      expect(controlPlane.snapshot().taskStates.single.state, 'TASK_RUNNING');
     });
+
+    test('rejects impossible TASK transitions and retains evidence', () {
+      final controlPlane = plane();
+      controlPlane.observeTask(task());
+      controlPlane.observeTaskState(taskId: 'TASK-M0-001', state: 'TASK_READY');
+
+      final result = controlPlane.observeTaskState(
+        taskId: 'TASK-M0-001',
+        state: 'TASK_HANDOFF_READY',
+      );
+
+      expect(
+        result.disposition,
+        ObservationDisposition.invalidObservedTransition,
+      );
+      expect(controlPlane.snapshot().taskStates.single.state, 'TASK_READY');
+      expect(
+        controlPlane.snapshot().taskStateEvidence.last.state,
+        'TASK_HANDOFF_READY',
+      );
+    });
+
+    test('distinguishes an unknown TASK state from an invalid transition', () {
+      final controlPlane = plane();
+      controlPlane.observeTask(task());
+
+      final result = controlPlane.observeTaskState(
+        taskId: 'TASK-M0-001',
+        state: 'TASK_NOT_REAL',
+      );
+
+      expect(result.disposition, ObservationDisposition.invalidObservedState);
+      expect(controlPlane.snapshot().taskStates.single.state, 'TASK_QUEUED');
+      expect(
+        controlPlane.snapshot().taskStateEvidence.last.state,
+        'TASK_NOT_REAL',
+      );
+    });
+
+    test(
+      'retains stale event as evidence without replacing current lineage',
+      () {
+        final controlPlane = plane();
+        controlPlane.observeTask(task());
+        controlPlane.observeLineage(
+          lineage(generation: 2, sequence: 3, sha: 'newer-sha'),
+        );
+
+        final result = controlPlane.observeAuthoritativeEvent(
+          event(generation: 2, sequence: 2),
+        );
+
+        expect(result.disposition, ObservationDisposition.ignoredStaleEvent);
+        expect(controlPlane.snapshot().lineages.single.currentSha, 'newer-sha');
+        expect(controlPlane.snapshot().eventEvidence, hasLength(1));
+      },
+    );
 
     test('rejects CHECK event with non-CHECK state', () {
       final controlPlane = plane();
@@ -203,10 +263,7 @@ void main() {
         event(state: 'ACT_CLOSED'),
       );
 
-      expect(
-        result.disposition,
-        ObservationDisposition.invalidObservedState,
-      );
+      expect(result.disposition, ObservationDisposition.invalidObservedState);
     });
 
     test('rejects unknown task and unknown lineage', () {
@@ -219,8 +276,9 @@ void main() {
       );
 
       controlPlane.observeTask(task());
-      final unknownLineageResult =
-          controlPlane.observeAuthoritativeEvent(event(eventId: 'EVENT-002'));
+      final unknownLineageResult = controlPlane.observeAuthoritativeEvent(
+        event(eventId: 'EVENT-002'),
+      );
       expect(
         unknownLineageResult.disposition,
         ObservationDisposition.rejectedUnknownLineage,
@@ -243,7 +301,9 @@ void main() {
 
       expect(
         controlPlane.anomalies(),
-        contains('BRANCH_HEAD_DRIFT:agentic-pdca-m0-control-plane:expected:actual'),
+        contains(
+          'BRANCH_HEAD_DRIFT:agentic-pdca-m0-control-plane:expected:actual',
+        ),
       );
     });
 
@@ -253,12 +313,14 @@ void main() {
         HumanApprovalSnapshot(
           approvalId: 'APPROVAL-001',
           approvalType: 'ARCHITECTURE',
-          approvedSha: governanceSha,
+          subjectId: 'TASK-M0-001',
+          exactShaOrObject: governanceSha,
           planRevision: '1',
           governanceVersion: governanceVersion,
-          approver: 'human',
-          approvedAt: now.subtract(const Duration(days: 2)),
-          validUntil: now.subtract(const Duration(days: 1)),
+          issuer: 'human',
+          issuedAt: now.subtract(const Duration(days: 2)),
+          expiresAt: now.subtract(const Duration(days: 1)),
+          status: 'ACTIVE',
         ),
       );
 
@@ -266,6 +328,95 @@ void main() {
         controlPlane.anomalies(),
         contains('EXPIRED_APPROVAL:APPROVAL-001'),
       );
+    });
+
+    test('recognizes a valid human approval', () {
+      final approval = HumanApprovalSnapshot(
+        approvalId: 'APPROVAL-VALID',
+        approvalType: 'CLOSURE',
+        subjectId: 'TASK-M0-001',
+        exactShaOrObject: governanceSha,
+        planRevision: '1',
+        governanceVersion: governanceVersion,
+        issuer: 'human',
+        issuedAt: now,
+        expiresAt: now.add(const Duration(hours: 1)),
+        status: 'ACTIVE',
+      );
+
+      expect(
+        approval.isValidAt(now, expectedGovernanceVersion: governanceVersion),
+        isTrue,
+      );
+    });
+
+    test('observes revoked, inactive, and governance-mismatched approvals', () {
+      final controlPlane = plane();
+      final base = HumanApprovalSnapshot(
+        approvalId: 'APPROVAL-BASE',
+        approvalType: 'ARCHITECTURE',
+        subjectId: 'TASK-M0-001',
+        exactShaOrObject: governanceSha,
+        planRevision: '1',
+        governanceVersion: governanceVersion,
+        issuer: 'human',
+        issuedAt: now,
+        status: 'ACTIVE',
+      );
+      controlPlane.observeHumanApproval(
+        HumanApprovalSnapshot(
+          approvalId: 'APPROVAL-REVOKED',
+          approvalType: base.approvalType,
+          subjectId: base.subjectId,
+          exactShaOrObject: base.exactShaOrObject,
+          planRevision: base.planRevision,
+          governanceVersion: base.governanceVersion,
+          issuer: base.issuer,
+          issuedAt: base.issuedAt,
+          revokedAt: now.subtract(const Duration(minutes: 1)),
+          status: base.status,
+        ),
+      );
+      controlPlane.observeHumanApproval(
+        HumanApprovalSnapshot(
+          approvalId: 'APPROVAL-INACTIVE',
+          approvalType: base.approvalType,
+          subjectId: base.subjectId,
+          exactShaOrObject: base.exactShaOrObject,
+          planRevision: base.planRevision,
+          governanceVersion: base.governanceVersion,
+          issuer: base.issuer,
+          issuedAt: base.issuedAt,
+          status: 'PENDING',
+        ),
+      );
+      controlPlane.observeHumanApproval(
+        HumanApprovalSnapshot(
+          approvalId: 'APPROVAL-DRIFT',
+          approvalType: base.approvalType,
+          subjectId: base.subjectId,
+          exactShaOrObject: base.exactShaOrObject,
+          planRevision: base.planRevision,
+          governanceVersion: 'v2.0',
+          issuer: base.issuer,
+          issuedAt: base.issuedAt,
+          status: base.status,
+        ),
+      );
+
+      expect(
+        controlPlane.anomalies(),
+        contains('REVOKED_APPROVAL:APPROVAL-REVOKED'),
+      );
+      expect(
+        controlPlane.anomalies(),
+        contains('INVALID_APPROVAL_STATUS:APPROVAL-INACTIVE'),
+      );
+      expect(
+        controlPlane.anomalies(),
+        contains('APPROVAL_GOVERNANCE_MISMATCH:APPROVAL-DRIFT'),
+      );
+      expect(base.isValidAt(now, expectedGovernanceVersion: 'v2.0'), isFalse);
     });
 
     test('records observed budget, lease, cancellation, and evidence', () {
@@ -283,10 +434,12 @@ void main() {
       );
       controlPlane.observeWriterLease(
         WriterLeaseSnapshot(
+          writerLeaseId: 'LEASE-001',
           lineageId: 'LINEAGE-M0-001',
           branch: 'agentic-pdca-m0-control-plane',
           agentPrincipal: 'observer-only',
           fencingToken: 1,
+          expectedHead: governanceSha,
           active: false,
           expiresAt: now,
           observedAt: now,
@@ -315,5 +468,82 @@ void main() {
       expect(snapshot.cancellations, hasLength(1));
       expect(snapshot.evidenceReferences, hasLength(1));
     });
+
+    test(
+      'reports adversarial writer lease observations without enforcing them',
+      () {
+        final controlPlane = plane();
+        seed(controlPlane);
+        controlPlane.observeBranchHead(
+          BranchHeadSnapshot(
+            branch: 'agentic-pdca-m0-control-plane',
+            expectedHead: governanceSha,
+            observedHead: 'actual-head',
+            observedAt: now,
+          ),
+        );
+
+        WriterLeaseSnapshot lease({
+          required String id,
+          required int token,
+          required bool active,
+        }) => WriterLeaseSnapshot(
+          writerLeaseId: id,
+          lineageId: 'LINEAGE-M0-001',
+          branch: 'agentic-pdca-m0-control-plane',
+          agentPrincipal: id,
+          fencingToken: token,
+          expectedHead: governanceSha,
+          active: active,
+          expiresAt: now.add(const Duration(hours: 1)),
+          observedAt: now,
+        );
+
+        controlPlane.observeWriterLease(
+          lease(id: 'LEASE-002', token: 2, active: true),
+        );
+        controlPlane.observeWriterLease(
+          lease(id: 'LEASE-003', token: 1, active: true),
+        );
+        controlPlane.observeWriterLease(
+          lease(id: 'LEASE-004', token: 3, active: false),
+        );
+
+        final anomalies = controlPlane.anomalies();
+        expect(controlPlane.snapshot().writerLeases, hasLength(3));
+        expect(controlPlane.snapshot().writerLeaseEvidence, hasLength(3));
+        expect(
+          anomalies,
+          contains('MULTIPLE_ACTIVE_WRITERS:agentic-pdca-m0-control-plane:2'),
+        );
+        expect(
+          anomalies,
+          contains('MULTIPLE_ACTIVE_LINEAGE_WRITERS:LINEAGE-M0-001:2'),
+        );
+        expect(
+          anomalies,
+          contains(
+            'FENCING_TOKEN_REGRESSION:LINEAGE-M0-001:agentic-pdca-m0-control-plane:2:1',
+          ),
+        );
+        expect(anomalies, contains('STALE_WRITER_LEASE:LEASE-004'));
+        expect(
+          anomalies,
+          contains(
+            'LEASE_EXPECTED_HEAD_MISMATCH:LEASE-002:' +
+                governanceSha +
+                ':actual-head',
+          ),
+        );
+
+        controlPlane.observeWriterLease(
+          lease(id: 'LEASE-004', token: 4, active: false),
+        );
+        expect(
+          controlPlane.anomalies(),
+          contains('REPLACED_WRITER_LEASE:LEASE-004'),
+        );
+      },
+    );
   });
 }

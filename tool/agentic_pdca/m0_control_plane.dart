@@ -10,8 +10,8 @@ final class M0ObservationControlPlane {
     required this.governanceSha,
     required Set<String> trustedIssuers,
     DateTime Function()? trustedClock,
-  })  : _trustedIssuers = Set.unmodifiable(trustedIssuers),
-        _trustedClock = trustedClock ?? (() => DateTime.now().toUtc());
+  }) : _trustedIssuers = Set.unmodifiable(trustedIssuers),
+       _trustedClock = trustedClock ?? (() => DateTime.now().toUtc());
 
   static const String maturity = 'M0_OBSERVATION';
 
@@ -42,6 +42,7 @@ final class M0ObservationControlPlane {
 
   final Map<String, PlanTaskSnapshot> _tasks = {};
   final Map<String, TaskStateSnapshot> _taskStates = {};
+  final List<TaskStateSnapshot> _taskStateEvidence = [];
   final Map<String, LineageSnapshot> _lineages = {};
   final Map<String, AuthoritativeEvent> _events = {};
   final Map<String, String> _semanticEvents = {};
@@ -49,6 +50,7 @@ final class M0ObservationControlPlane {
   final Map<String, RepairBudgetSnapshot> _budgets = {};
   final Map<String, BranchHeadSnapshot> _branchHeads = {};
   final Map<String, WriterLeaseSnapshot> _leases = {};
+  final List<WriterLeaseSnapshot> _leaseEvidence = [];
   final Map<String, CancellationSnapshot> _cancellations = {};
   final Map<String, EvidenceReferenceSnapshot> _evidence = {};
   final Map<String, HumanApprovalSnapshot> _approvals = {};
@@ -61,11 +63,13 @@ final class M0ObservationControlPlane {
       throw ArgumentError.value(state, 'state', 'Unknown TASK state');
     }
     _tasks[task.taskId] = task;
-    _taskStates[task.taskId] = TaskStateSnapshot(
+    final initialState = TaskStateSnapshot(
       taskId: task.taskId,
       state: state,
       observedAt: _trustedClock(),
     );
+    _taskStates[task.taskId] = initialState;
+    _taskStateEvidence.add(initialState);
   }
 
   ObservationResult observeTaskState({
@@ -79,16 +83,37 @@ final class M0ObservationControlPlane {
       );
     }
     if (!taskStates.contains(state)) {
+      _taskStateEvidence.add(
+        TaskStateSnapshot(
+          taskId: taskId,
+          state: state,
+          observedAt: _trustedClock(),
+        ),
+      );
       return ObservationResult(
         disposition: ObservationDisposition.invalidObservedState,
         reason: 'Unknown TASK state: ' + state,
       );
     }
-    _taskStates[taskId] = TaskStateSnapshot(
+    final previous = _taskStates[taskId]!;
+    final observed = TaskStateSnapshot(
       taskId: taskId,
       state: state,
       observedAt: _trustedClock(),
     );
+    _taskStateEvidence.add(observed);
+    if (!_validTaskTransition(previous.state, state)) {
+      return ObservationResult(
+        disposition: ObservationDisposition.invalidObservedTransition,
+        reason:
+            'Impossible observed TASK transition: ' +
+            previous.state +
+            ' -> ' +
+            state +
+            '.',
+      );
+    }
+    _taskStates[taskId] = observed;
     return const ObservationResult(
       disposition: ObservationDisposition.accepted,
       reason: 'TASK state observed. No transition was executed.',
@@ -98,7 +123,9 @@ final class M0ObservationControlPlane {
   void observeLineage(LineageSnapshot lineage) {
     _requireGovernance(lineage.governanceVersion);
     if (!_tasks.containsKey(lineage.taskId)) {
-      throw StateError('Cannot observe lineage for unknown task: ' + lineage.taskId);
+      throw StateError(
+        'Cannot observe lineage for unknown task: ' + lineage.taskId,
+      );
     }
     final existing = _lineages[lineage.lineageId];
     if (existing != null &&
@@ -124,7 +151,8 @@ final class M0ObservationControlPlane {
 
   void observeWriterLease(WriterLeaseSnapshot lease) {
     _requireKnownLineage(lease.lineageId);
-    _leases[lease.lineageId] = lease;
+    _leases[lease.writerLeaseId] = lease;
+    _leaseEvidence.add(lease);
   }
 
   void observeCancellation(CancellationSnapshot cancellation) {
@@ -137,7 +165,6 @@ final class M0ObservationControlPlane {
   }
 
   void observeHumanApproval(HumanApprovalSnapshot approval) {
-    _requireGovernance(approval.governanceVersion);
     _approvals[approval.approvalId] = approval;
   }
 
@@ -202,7 +229,8 @@ final class M0ObservationControlPlane {
     )) {
       return ObservationResult(
         disposition: ObservationDisposition.ignoredStaleEvent,
-        reason: 'Stale event retained as evidence and ignored as current state.',
+        reason:
+            'Stale event retained as evidence and ignored as current state.',
         eventId: event.eventId,
         semanticKey: semanticKey,
       );
@@ -253,15 +281,60 @@ final class M0ObservationControlPlane {
 
     final now = _trustedClock().toUtc();
     final activeByBranch = <String, int>{};
+    final activeByLineage = <String, int>{};
+    final latestTokenByScope = <String, int>{};
+    final observedLeaseIds = <String>{};
     for (final lease in _leases.values) {
       if (lease.active && lease.expiresAt.toUtc().isAfter(now)) {
         activeByBranch[lease.branch] = (activeByBranch[lease.branch] ?? 0) + 1;
+        activeByLineage[lease.lineageId] =
+            (activeByLineage[lease.lineageId] ?? 0) + 1;
+      }
+    }
+    for (final lease in _leaseEvidence) {
+      if (!observedLeaseIds.add(lease.writerLeaseId)) {
+        found.add('REPLACED_WRITER_LEASE:' + lease.writerLeaseId);
+      }
+      final scope = lease.lineageId + ':' + lease.branch;
+      final previousToken = latestTokenByScope[scope];
+      if (previousToken != null && lease.fencingToken < previousToken) {
+        found.add(
+          'FENCING_TOKEN_REGRESSION:' +
+              scope +
+              ':' +
+              previousToken.toString() +
+              ':' +
+              lease.fencingToken.toString(),
+        );
+      } else if (previousToken == null || lease.fencingToken > previousToken) {
+        latestTokenByScope[scope] = lease.fencingToken;
+      }
+      if (!lease.active || !lease.expiresAt.toUtc().isAfter(now)) {
+        found.add('STALE_WRITER_LEASE:' + lease.writerLeaseId);
+      }
+      final branchHead = _branchHeads[lease.branch];
+      if (branchHead != null && branchHead.observedHead != lease.expectedHead) {
+        found.add(
+          'LEASE_EXPECTED_HEAD_MISMATCH:' +
+              lease.writerLeaseId +
+              ':' +
+              lease.expectedHead +
+              ':' +
+              branchHead.observedHead,
+        );
       }
     }
     for (final entry in activeByBranch.entries) {
       if (entry.value > 1) {
         found.add(
-          'MULTIPLE_ACTIVE_WRITERS:' +
+          'MULTIPLE_ACTIVE_WRITERS:' + entry.key + ':' + entry.value.toString(),
+        );
+      }
+    }
+    for (final entry in activeByLineage.entries) {
+      if (entry.value > 1) {
+        found.add(
+          'MULTIPLE_ACTIVE_LINEAGE_WRITERS:' +
               entry.key +
               ':' +
               entry.value.toString(),
@@ -270,7 +343,15 @@ final class M0ObservationControlPlane {
     }
 
     for (final approval in _approvals.values) {
-      if (!approval.isValidAt(now)) {
+      if (approval.governanceVersion != governanceVersion) {
+        found.add('APPROVAL_GOVERNANCE_MISMATCH:' + approval.approvalId);
+      } else if (approval.status != 'ACTIVE') {
+        found.add('INVALID_APPROVAL_STATUS:' + approval.approvalId);
+      } else if (approval.revokedAt != null &&
+          !now.isBefore(approval.revokedAt!.toUtc())) {
+        found.add('REVOKED_APPROVAL:' + approval.approvalId);
+      } else if (approval.expiresAt != null &&
+          !now.isBefore(approval.expiresAt!.toUtc())) {
         found.add('EXPIRED_APPROVAL:' + approval.approvalId);
       }
     }
@@ -278,22 +359,24 @@ final class M0ObservationControlPlane {
   }
 
   ControlPlaneSnapshot snapshot() => ControlPlaneSnapshot(
-        maturity: maturity,
-        governanceVersion: governanceVersion,
-        governanceSha: governanceSha,
-        observedAt: _trustedClock(),
-        tasks: _sorted(_tasks.values, (e) => e.taskId),
-        taskStates: _sorted(_taskStates.values, (e) => e.taskId),
-        lineages: _sorted(_lineages.values, (e) => e.lineageId),
-        authoritativeEvents: _sorted(_events.values, (e) => e.eventId),
-        eventEvidence: List.unmodifiable(_eventEvidence),
-        repairBudgets: _sorted(_budgets.values, (e) => e.lineageId),
-        branchHeads: _sorted(_branchHeads.values, (e) => e.branch),
-        writerLeases: _sorted(_leases.values, (e) => e.lineageId),
-        cancellations: _sorted(_cancellations.values, (e) => e.lineageId),
-        evidenceReferences: _sorted(_evidence.values, (e) => e.referenceId),
-        humanApprovals: _sorted(_approvals.values, (e) => e.approvalId),
-      );
+    maturity: maturity,
+    governanceVersion: governanceVersion,
+    governanceSha: governanceSha,
+    observedAt: _trustedClock(),
+    tasks: _sorted(_tasks.values, (e) => e.taskId),
+    taskStates: _sorted(_taskStates.values, (e) => e.taskId),
+    taskStateEvidence: List.unmodifiable(_taskStateEvidence),
+    lineages: _sorted(_lineages.values, (e) => e.lineageId),
+    authoritativeEvents: _sorted(_events.values, (e) => e.eventId),
+    eventEvidence: List.unmodifiable(_eventEvidence),
+    repairBudgets: _sorted(_budgets.values, (e) => e.lineageId),
+    branchHeads: _sorted(_branchHeads.values, (e) => e.branch),
+    writerLeases: _sorted(_leases.values, (e) => e.lineageId),
+    cancellations: _sorted(_cancellations.values, (e) => e.lineageId),
+    evidenceReferences: _sorted(_evidence.values, (e) => e.referenceId),
+    humanApprovals: _sorted(_approvals.values, (e) => e.approvalId),
+    writerLeaseEvidence: List.unmodifiable(_leaseEvidence),
+  );
 
   String exportJson() => snapshot().toPrettyJson();
 
@@ -314,6 +397,24 @@ final class M0ObservationControlPlane {
       default:
         return false;
     }
+  }
+
+  bool _validTaskTransition(String previous, String next) {
+    const transitions = <String, Set<String>>{
+      'TASK_QUEUED': {'TASK_READY', 'TASK_CANCELLED'},
+      'TASK_READY': {'TASK_RUNNING', 'TASK_BLOCKED', 'TASK_CANCELLED'},
+      'TASK_RUNNING': {
+        'TASK_BLOCKED',
+        'TASK_HANDOFF_READY',
+        'TASK_FAILED_SAFE',
+        'TASK_CANCELLED',
+      },
+      'TASK_BLOCKED': {'TASK_READY', 'TASK_CANCELLED', 'TASK_FAILED_SAFE'},
+      'TASK_HANDOFF_READY': {},
+      'TASK_FAILED_SAFE': {},
+      'TASK_CANCELLED': {},
+    };
+    return previous == next || (transitions[previous]?.contains(next) ?? false);
   }
 
   bool _isOlder(
@@ -344,8 +445,7 @@ final class M0ObservationControlPlane {
   }
 
   List<T> _sorted<T>(Iterable<T> values, String Function(T) key) {
-    final result = values.toList()
-      ..sort((a, b) => key(a).compareTo(key(b)));
+    final result = values.toList()..sort((a, b) => key(a).compareTo(key(b)));
     return List.unmodifiable(result);
   }
 }

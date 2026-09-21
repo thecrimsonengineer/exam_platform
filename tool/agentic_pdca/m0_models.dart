@@ -39,11 +39,11 @@ final class ObservationResult {
   bool get accepted => disposition == ObservationDisposition.accepted;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'disposition': disposition.name,
-        'reason': reason,
-        if (eventId != null) 'event_id': eventId,
-        if (semanticKey != null) 'semantic_key': semanticKey,
-      };
+    'disposition': disposition.name,
+    'reason': reason,
+    if (eventId != null) 'event_id': eventId,
+    if (semanticKey != null) 'semantic_key': semanticKey,
+  };
 }
 
 final class PlanTaskSnapshot {
@@ -74,18 +74,18 @@ final class PlanTaskSnapshot {
   final DateTime observedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'task_id': taskId,
-        'phase_id': phaseId,
-        'base_branch': baseBranch,
-        'base_sha': baseSha,
-        'risk_class': riskClass,
-        'allowed_paths': allowedPaths,
-        'forbidden_paths': forbiddenPaths,
-        'required_tests': requiredTests,
-        'stop_conditions': stopConditions,
-        'governance_version': governanceVersion,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'task_id': taskId,
+    'phase_id': phaseId,
+    'base_branch': baseBranch,
+    'base_sha': baseSha,
+    'risk_class': riskClass,
+    'allowed_paths': allowedPaths,
+    'forbidden_paths': forbiddenPaths,
+    'required_tests': requiredTests,
+    'stop_conditions': stopConditions,
+    'governance_version': governanceVersion,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class TaskStateSnapshot {
@@ -100,10 +100,10 @@ final class TaskStateSnapshot {
   final DateTime observedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'task_id': taskId,
-        'state': state,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'task_id': taskId,
+    'state': state,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class LineageSnapshot {
@@ -126,14 +126,14 @@ final class LineageSnapshot {
   final DateTime observedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'task_id': taskId,
-        'lineage_id': lineageId,
-        'current_sha': currentSha,
-        'lineage_generation': lineageGeneration,
-        'candidate_sequence': candidateSequence,
-        'governance_version': governanceVersion,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'task_id': taskId,
+    'lineage_id': lineageId,
+    'current_sha': currentSha,
+    'lineage_generation': lineageGeneration,
+    'candidate_sequence': candidateSequence,
+    'governance_version': governanceVersion,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class AuthoritativeEvent {
@@ -174,33 +174,33 @@ final class AuthoritativeEvent {
   final DateTime timestamp;
 
   String semanticMaterial() => <Object?>[
-        sourceSystem,
-        taskId,
-        lineageId,
-        candidateSha,
-        validationScope,
-        workflowRunId ?? '',
-        checkAttempt,
-      ].join('\u001f');
+    sourceSystem,
+    taskId,
+    lineageId,
+    candidateSha,
+    validationScope,
+    workflowRunId ?? '',
+    checkAttempt,
+  ].join('\u001f');
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'event_id': eventId,
-        'event_type': eventType,
-        'source_system': sourceSystem,
-        'task_id': taskId,
-        'lineage_id': lineageId,
-        'candidate_sha': candidateSha,
-        'validation_scope': validationScope,
-        if (workflowRunId != null) 'workflow_run_id': workflowRunId,
-        'check_attempt': checkAttempt,
-        'lineage_generation': lineageGeneration,
-        'candidate_sequence': candidateSequence,
-        'state': state,
-        'risk_class': riskClass,
-        'evidence_bundle_ref': evidenceBundleRef,
-        'governance_version': governanceVersion,
-        'timestamp': timestamp.toUtc().toIso8601String(),
-      };
+    'event_id': eventId,
+    'event_type': eventType,
+    'source_system': sourceSystem,
+    'task_id': taskId,
+    'lineage_id': lineageId,
+    'candidate_sha': candidateSha,
+    'validation_scope': validationScope,
+    if (workflowRunId != null) 'workflow_run_id': workflowRunId,
+    'check_attempt': checkAttempt,
+    'lineage_generation': lineageGeneration,
+    'candidate_sequence': candidateSequence,
+    'state': state,
+    'risk_class': riskClass,
+    'evidence_bundle_ref': evidenceBundleRef,
+    'governance_version': governanceVersion,
+    'timestamp': timestamp.toUtc().toIso8601String(),
+  };
 }
 
 final class RepairBudgetSnapshot {
@@ -219,12 +219,12 @@ final class RepairBudgetSnapshot {
   final DateTime observedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'lineage_id': lineageId,
-        'mechanical_remaining': mechanicalRemaining,
-        'behavioral_remaining': behavioralRemaining,
-        'architecture_remaining': architectureRemaining,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'lineage_id': lineageId,
+    'mechanical_remaining': mechanicalRemaining,
+    'behavioral_remaining': behavioralRemaining,
+    'architecture_remaining': architectureRemaining,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class BranchHeadSnapshot {
@@ -245,43 +245,49 @@ final class BranchHeadSnapshot {
   bool get matchesExpected => expectedHead == observedHead;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'branch': branch,
-        'expected_head': expectedHead,
-        'observed_head': observedHead,
-        'matches_expected': matchesExpected,
-        if (ownerTaskId != null) 'owner_task_id': ownerTaskId,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'branch': branch,
+    'expected_head': expectedHead,
+    'observed_head': observedHead,
+    'matches_expected': matchesExpected,
+    if (ownerTaskId != null) 'owner_task_id': ownerTaskId,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class WriterLeaseSnapshot {
   const WriterLeaseSnapshot({
+    required this.writerLeaseId,
     required this.lineageId,
     required this.branch,
     required this.agentPrincipal,
     required this.fencingToken,
+    required this.expectedHead,
     required this.active,
     required this.expiresAt,
     required this.observedAt,
   });
 
+  final String writerLeaseId;
   final String lineageId;
   final String branch;
   final String agentPrincipal;
   final int fencingToken;
+  final String expectedHead;
   final bool active;
   final DateTime expiresAt;
   final DateTime observedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'lineage_id': lineageId,
-        'branch': branch,
-        'agent_principal': agentPrincipal,
-        'fencing_token': fencingToken,
-        'active': active,
-        'expires_at': expiresAt.toUtc().toIso8601String(),
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'writer_lease_id': writerLeaseId,
+    'lineage_id': lineageId,
+    'branch': branch,
+    'agent_principal': agentPrincipal,
+    'fencing_token': fencingToken,
+    'expected_head': expectedHead,
+    'active': active,
+    'expires_at': expiresAt.toUtc().toIso8601String(),
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class CancellationSnapshot {
@@ -298,11 +304,11 @@ final class CancellationSnapshot {
   final DateTime observedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'lineage_id': lineageId,
-        'mode': mode,
-        'reason': reason,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'lineage_id': lineageId,
+    'mode': mode,
+    'reason': reason,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class EvidenceReferenceSnapshot {
@@ -319,48 +325,62 @@ final class EvidenceReferenceSnapshot {
   final DateTime observedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'reference_id': referenceId,
-        'uri': uri,
-        'content_hash': contentHash,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-      };
+    'reference_id': referenceId,
+    'uri': uri,
+    'content_hash': contentHash,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+  };
 }
 
 final class HumanApprovalSnapshot {
   const HumanApprovalSnapshot({
     required this.approvalId,
     required this.approvalType,
-    required this.approvedSha,
+    required this.subjectId,
+    required this.exactShaOrObject,
     required this.planRevision,
     required this.governanceVersion,
-    required this.approver,
-    required this.approvedAt,
-    this.validUntil,
+    required this.issuer,
+    required this.issuedAt,
+    required this.status,
+    this.expiresAt,
+    this.revokedAt,
   });
 
   final String approvalId;
   final String approvalType;
-  final String approvedSha;
+  final String subjectId;
+  final String exactShaOrObject;
   final String planRevision;
   final String governanceVersion;
-  final String approver;
-  final DateTime approvedAt;
-  final DateTime? validUntil;
+  final String issuer;
+  final DateTime issuedAt;
+  final DateTime? expiresAt;
+  final DateTime? revokedAt;
+  final String status;
 
-  bool isValidAt(DateTime trustedNow) =>
-      validUntil == null || trustedNow.toUtc().isBefore(validUntil!.toUtc());
+  bool isValidAt(DateTime trustedNow, {String? expectedGovernanceVersion}) {
+    final now = trustedNow.toUtc();
+    return status == 'ACTIVE' &&
+        (expectedGovernanceVersion == null ||
+            governanceVersion == expectedGovernanceVersion) &&
+        (expiresAt == null || now.isBefore(expiresAt!.toUtc())) &&
+        (revokedAt == null || now.isBefore(revokedAt!.toUtc()));
+  }
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'approval_id': approvalId,
-        'approval_type': approvalType,
-        'approved_sha': approvedSha,
-        'plan_revision': planRevision,
-        'governance_version': governanceVersion,
-        'approver': approver,
-        'approved_at': approvedAt.toUtc().toIso8601String(),
-        if (validUntil != null)
-          'valid_until': validUntil!.toUtc().toIso8601String(),
-      };
+    'approval_id': approvalId,
+    'approval_type': approvalType,
+    'subject_id': subjectId,
+    'exact_sha_or_object': exactShaOrObject,
+    'plan_revision': planRevision,
+    'governance_version': governanceVersion,
+    'issuer': issuer,
+    'issued_at': issuedAt.toUtc().toIso8601String(),
+    if (expiresAt != null) 'expires_at': expiresAt!.toUtc().toIso8601String(),
+    if (revokedAt != null) 'revoked_at': revokedAt!.toUtc().toIso8601String(),
+    'status': status,
+  };
 }
 
 final class ControlPlaneSnapshot {
@@ -371,6 +391,7 @@ final class ControlPlaneSnapshot {
     required this.observedAt,
     required this.tasks,
     required this.taskStates,
+    required this.taskStateEvidence,
     required this.lineages,
     required this.authoritativeEvents,
     required this.eventEvidence,
@@ -380,6 +401,7 @@ final class ControlPlaneSnapshot {
     required this.cancellations,
     required this.evidenceReferences,
     required this.humanApprovals,
+    required this.writerLeaseEvidence,
   });
 
   final String maturity;
@@ -388,6 +410,7 @@ final class ControlPlaneSnapshot {
   final DateTime observedAt;
   final List<PlanTaskSnapshot> tasks;
   final List<TaskStateSnapshot> taskStates;
+  final List<TaskStateSnapshot> taskStateEvidence;
   final List<LineageSnapshot> lineages;
   final List<AuthoritativeEvent> authoritativeEvents;
   final List<AuthoritativeEvent> eventEvidence;
@@ -397,32 +420,36 @@ final class ControlPlaneSnapshot {
   final List<CancellationSnapshot> cancellations;
   final List<EvidenceReferenceSnapshot> evidenceReferences;
   final List<HumanApprovalSnapshot> humanApprovals;
+  final List<WriterLeaseSnapshot> writerLeaseEvidence;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'maturity': maturity,
-        'governance_version': governanceVersion,
-        'governance_sha': governanceSha,
-        'observation_only': true,
-        'observed_at': observedAt.toUtc().toIso8601String(),
-        'tasks': tasks.map((value) => value.toJson()).toList(),
-        'task_states': taskStates.map((value) => value.toJson()).toList(),
-        'lineages': lineages.map((value) => value.toJson()).toList(),
-        'authoritative_events':
-            authoritativeEvents.map((value) => value.toJson()).toList(),
-        'event_evidence':
-            eventEvidence.map((value) => value.toJson()).toList(),
-        'repair_budgets':
-            repairBudgets.map((value) => value.toJson()).toList(),
-        'branch_heads': branchHeads.map((value) => value.toJson()).toList(),
-        'writer_leases': writerLeases.map((value) => value.toJson()).toList(),
-        'cancellations':
-            cancellations.map((value) => value.toJson()).toList(),
-        'evidence_references':
-            evidenceReferences.map((value) => value.toJson()).toList(),
-        'human_approvals':
-            humanApprovals.map((value) => value.toJson()).toList(),
-      };
+    'maturity': maturity,
+    'governance_version': governanceVersion,
+    'governance_sha': governanceSha,
+    'observation_only': true,
+    'observed_at': observedAt.toUtc().toIso8601String(),
+    'tasks': tasks.map((value) => value.toJson()).toList(),
+    'task_states': taskStates.map((value) => value.toJson()).toList(),
+    'task_state_evidence': taskStateEvidence
+        .map((value) => value.toJson())
+        .toList(),
+    'lineages': lineages.map((value) => value.toJson()).toList(),
+    'authoritative_events': authoritativeEvents
+        .map((value) => value.toJson())
+        .toList(),
+    'event_evidence': eventEvidence.map((value) => value.toJson()).toList(),
+    'repair_budgets': repairBudgets.map((value) => value.toJson()).toList(),
+    'branch_heads': branchHeads.map((value) => value.toJson()).toList(),
+    'writer_leases': writerLeases.map((value) => value.toJson()).toList(),
+    'cancellations': cancellations.map((value) => value.toJson()).toList(),
+    'evidence_references': evidenceReferences
+        .map((value) => value.toJson())
+        .toList(),
+    'human_approvals': humanApprovals.map((value) => value.toJson()).toList(),
+    'writer_lease_evidence': writerLeaseEvidence
+        .map((value) => value.toJson())
+        .toList(),
+  };
 
-  String toPrettyJson() =>
-      const JsonEncoder.withIndent('  ').convert(toJson());
+  String toPrettyJson() => const JsonEncoder.withIndent('  ').convert(toJson());
 }
