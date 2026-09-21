@@ -18,10 +18,7 @@ class LearnerOnlineAccessResult {
 }
 
 abstract interface class LearnerOnlineAccessValidator {
-  @override
-  Future<LearnerOnlineAccessResult> validate({
-    bool forceRefreshToken = false,
-  });
+  Future<LearnerOnlineAccessResult> validate({bool forceRefreshToken = false});
 }
 
 abstract interface class LearnerAccessTokenProvider {
@@ -45,6 +42,7 @@ class LearnerOnlineAccessGate implements LearnerOnlineAccessValidator {
   final LearnerRemoteAuthorizationProbe _authorizationProbe;
   final DateTime Function() _clock;
 
+  @override
   Future<LearnerOnlineAccessResult> validate({
     bool forceRefreshToken = false,
   }) async {

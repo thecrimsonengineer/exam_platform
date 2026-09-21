@@ -95,10 +95,7 @@ class LearnerOnlineAccessSessionController
       return _lock(LearnerOnlineLockReason.signedOut);
     }
 
-    return authorizeForUser(
-      userId,
-      forceRefreshToken: forceRefreshToken,
-    );
+    return authorizeForUser(userId, forceRefreshToken: forceRefreshToken);
   }
 
   Future<LearnerOnlineAccessSessionSnapshot> authorizeForUser(
@@ -157,10 +154,7 @@ class LearnerOnlineAccessSessionController
       return _snapshot;
     }
 
-    return _lock(
-      _lockReasonFor(result.status),
-      invalidateGeneration: false,
-    );
+    return _lock(_lockReasonFor(result.status), invalidateGeneration: false);
   }
 
   void handleAuthUserChanged(String? userId) {
@@ -259,9 +253,7 @@ class LearnerOnlineAccessSessionController
     }
   }
 
-  LearnerOnlineLockReason _lockReasonFor(
-    LearnerOnlineAccessStatus status,
-  ) {
+  LearnerOnlineLockReason _lockReasonFor(LearnerOnlineAccessStatus status) {
     return switch (status) {
       LearnerOnlineAccessStatus.authorized => LearnerOnlineLockReason.manual,
       LearnerOnlineAccessStatus.noAuthenticatedUser =>

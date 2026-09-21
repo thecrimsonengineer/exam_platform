@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const gatePath =
-      'lib/services/online_access/learner_online_access_gate.dart';
+  const gatePath = 'lib/services/online_access/learner_online_access_gate.dart';
   const controllerPath =
       'lib/services/online_access/learner_online_access_session_controller.dart';
   const workflowPath =
@@ -25,7 +24,10 @@ void main() {
   });
 
   test('FR8 uses the FR2 online access gate as the authorization validator', () {
-    expect(gate, contains('abstract interface class LearnerOnlineAccessValidator'));
+    expect(
+      gate,
+      contains('abstract interface class LearnerOnlineAccessValidator'),
+    );
     expect(
       gate,
       contains(
@@ -71,13 +73,7 @@ void main() {
   });
 
   test('FR8 is wired into the main FR validation workflow', () {
-    expect(
-      workflow,
-      contains('phase-fr8-online-authorized-cache-security'),
-    );
-    expect(
-      workflow,
-      contains('FR8 online authorization session tests'),
-    );
+    expect(workflow, contains('phase-fr8-online-authorized-cache-security'));
+    expect(workflow, contains('FR8 online authorization session tests'));
   });
 }

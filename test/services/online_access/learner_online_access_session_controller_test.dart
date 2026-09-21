@@ -35,10 +35,7 @@ void main() {
     controller.handleAuthUserChanged(currentUserId);
 
     expect(controller.snapshot.status, LearnerOnlineSessionStatus.locked);
-    expect(
-      controller.snapshot.lockReason,
-      LearnerOnlineLockReason.userChanged,
-    );
+    expect(controller.snapshot.lockReason, LearnerOnlineLockReason.userChanged);
     expect(controller.isAuthorizedFor('user-a'), isFalse);
   });
 
@@ -77,10 +74,7 @@ void main() {
     final result = await controller.authorizeCurrentUser();
 
     expect(result.status, LearnerOnlineSessionStatus.locked);
-    expect(
-      result.lockReason,
-      LearnerOnlineLockReason.backendUnavailable,
-    );
+    expect(result.lockReason, LearnerOnlineLockReason.backendUnavailable);
   });
 
   test('FR8 resume locks first and then forces reauthorization', () async {
@@ -115,83 +109,92 @@ void main() {
     );
   });
 
-  test('FR8 confirmed network loss locks protected cache access immediately', () async {
-    final controller = LearnerOnlineAccessSessionController(
-      validator: _FakeValidator(
+  test(
+    'FR8 confirmed network loss locks protected cache access immediately',
+    () async {
+      final controller = LearnerOnlineAccessSessionController(
+        validator: _FakeValidator(
+          result: LearnerOnlineAccessResult(
+            status: LearnerOnlineAccessStatus.authorized,
+            checkedAt: checkedAt,
+          ),
+        ),
+        currentUserId: () => 'user-a',
+      );
+      addTearDown(controller.dispose);
+
+      await controller.authorizeCurrentUser();
+      expect(controller.isAuthorizedFor('user-a'), isTrue);
+
+      controller.handleConfirmedNetworkLoss();
+
+      expect(controller.isAuthorizedFor('user-a'), isFalse);
+      expect(
+        controller.snapshot.lockReason,
+        LearnerOnlineLockReason.connectivityLost,
+      );
+    },
+  );
+
+  test(
+    'FR8 transient handover keeps access during grace then revalidates',
+    () async {
+      final delayCompleter = Completer<void>();
+      final validator = _FakeValidator(
         result: LearnerOnlineAccessResult(
           status: LearnerOnlineAccessStatus.authorized,
           checkedAt: checkedAt,
         ),
-      ),
-      currentUserId: () => 'user-a',
-    );
-    addTearDown(controller.dispose);
+      );
+      final controller = LearnerOnlineAccessSessionController(
+        validator: validator,
+        currentUserId: () => 'user-a',
+        delay: (_) => delayCompleter.future,
+      );
+      addTearDown(controller.dispose);
 
-    await controller.authorizeCurrentUser();
-    expect(controller.isAuthorizedFor('user-a'), isTrue);
+      await controller.authorizeCurrentUser();
+      final handover = controller.handleTransientConnectivityLoss();
 
-    controller.handleConfirmedNetworkLoss();
+      expect(controller.isAuthorizedFor('user-a'), isTrue);
 
-    expect(controller.isAuthorizedFor('user-a'), isFalse);
-    expect(
-      controller.snapshot.lockReason,
-      LearnerOnlineLockReason.connectivityLost,
-    );
-  });
+      delayCompleter.complete();
+      final result = await handover;
 
-  test('FR8 transient handover keeps access during grace then revalidates', () async {
-    final delayCompleter = Completer<void>();
-    final validator = _FakeValidator(
-      result: LearnerOnlineAccessResult(
-        status: LearnerOnlineAccessStatus.authorized,
-        checkedAt: checkedAt,
-      ),
-    );
-    final controller = LearnerOnlineAccessSessionController(
-      validator: validator,
-      currentUserId: () => 'user-a',
-      delay: (_) => delayCompleter.future,
-    );
-    addTearDown(controller.dispose);
+      expect(result.status, LearnerOnlineSessionStatus.authorized);
+      expect(validator.calls, 2);
+      expect(validator.lastForceRefresh, isTrue);
+    },
+  );
 
-    await controller.authorizeCurrentUser();
-    final handover = controller.handleTransientConnectivityLoss();
+  test(
+    'FR8 stale in-flight validation cannot reopen a manually locked session',
+    () async {
+      final validator = _ControlledValidator();
+      final controller = LearnerOnlineAccessSessionController(
+        validator: validator,
+        currentUserId: () => 'user-a',
+      );
+      addTearDown(controller.dispose);
 
-    expect(controller.isAuthorizedFor('user-a'), isTrue);
+      final pending = controller.authorizeCurrentUser();
+      expect(controller.snapshot.status, LearnerOnlineSessionStatus.validating);
 
-    delayCompleter.complete();
-    final result = await handover;
+      controller.lock();
+      validator.complete(
+        LearnerOnlineAccessResult(
+          status: LearnerOnlineAccessStatus.authorized,
+          checkedAt: checkedAt,
+        ),
+      );
 
-    expect(result.status, LearnerOnlineSessionStatus.authorized);
-    expect(validator.calls, 2);
-    expect(validator.lastForceRefresh, isTrue);
-  });
+      final result = await pending;
 
-  test('FR8 stale in-flight validation cannot reopen a manually locked session', () async {
-    final validator = _ControlledValidator();
-    final controller = LearnerOnlineAccessSessionController(
-      validator: validator,
-      currentUserId: () => 'user-a',
-    );
-    addTearDown(controller.dispose);
-
-    final pending = controller.authorizeCurrentUser();
-    expect(controller.snapshot.status, LearnerOnlineSessionStatus.validating);
-
-    controller.lock();
-    validator.complete(
-      LearnerOnlineAccessResult(
-        status: LearnerOnlineAccessStatus.authorized,
-        checkedAt: checkedAt,
-      ),
-    );
-
-    final result = await pending;
-
-    expect(result.status, LearnerOnlineSessionStatus.locked);
-    expect(result.lockReason, LearnerOnlineLockReason.manual);
-    expect(controller.isAuthorizedFor('user-a'), isFalse);
-  });
+      expect(result.status, LearnerOnlineSessionStatus.locked);
+      expect(result.lockReason, LearnerOnlineLockReason.manual);
+      expect(controller.isAuthorizedFor('user-a'), isFalse);
+    },
+  );
 }
 
 class _FakeValidator implements LearnerOnlineAccessValidator {
@@ -216,9 +219,7 @@ class _ControlledValidator implements LearnerOnlineAccessValidator {
       Completer<LearnerOnlineAccessResult>();
 
   @override
-  Future<LearnerOnlineAccessResult> validate({
-    bool forceRefreshToken = false,
-  }) {
+  Future<LearnerOnlineAccessResult> validate({bool forceRefreshToken = false}) {
     return _completer.future;
   }
 
