@@ -36,7 +36,8 @@ void main() {
     expect(core, contains("fr7BucketId = 'csp11-published-packages'"));
     expect(cli, contains("'public': false"));
     expect(cli, contains("'x-upsert': 'false'"));
-    expect(cli, contains("'object', 'authenticated'"));
+    expect(cli, contains('Future<_ByteHttpResult> downloadObject('));
+    expect(cli, contains("'authenticated'"));
     expect(cli, isNot(contains("'DELETE'")));
     expect(cli, isNot(contains('"DELETE"')));
   });
