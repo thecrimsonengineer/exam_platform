@@ -1,0 +1,276 @@
+name: Phase FR5 Production Shadow Parity
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply_shadow:
+        description: Apply the frozen FR4 manifest to Supabase shadow tables
+        required: true
+        type: boolean
+        default: false
+      confirmation:
+        description: Type FR5_SHADOW_ONLY when apply_shadow is true
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: phase-fr5-production-shadow-parity
+  cancel-in-progress: true
+
+env:
+  FIREBASE_PROJECT_ID: csp11-exam-platform
+  SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+  SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+  FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+  GCP_WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+  GCP_FIRESTORE_READER_SERVICE_ACCOUNT: ${{ vars.GCP_FIRESTORE_READER_SERVICE_ACCOUNT }}
+
+jobs:
+  shadow-parity:
+    if: github.ref == 'refs/heads/phase-fr5-shadow-data-parity'
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - name: Checkout FR5 branch
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Require server-side Supabase secret key
+        shell: bash
+        run: |
+          if [ -z "$SUPABASE_SECRET_KEY" ]; then
+            echo "Missing repository secret SUPABASE_SECRET_KEY."
+            exit 1
+          fi
+
+      - id: auth_wif
+        name: Authenticate to Google Cloud with workload identity
+        if: env.GCP_WIF_PROVIDER != '' && env.GCP_FIRESTORE_READER_SERVICE_ACCOUNT != ''
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: csp11-exam-platform
+          workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
+          service_account: ${{ env.GCP_FIRESTORE_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          create_credentials_file: false
+          access_token_lifetime: 3600s
+
+      - id: auth_json
+        name: Authenticate to Google Cloud with service account fallback
+        if: env.GCP_WIF_PROVIDER == '' && env.FIREBASE_SERVICE_ACCOUNT_JSON != ''
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: csp11-exam-platform
+          credentials_json: ${{ env.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          token_format: access_token
+          create_credentials_file: false
+          access_token_lifetime: 3600s
+
+      - name: Require authorized Firestore reader
+        env:
+          WIF_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token }}
+          JSON_ACCESS_TOKEN: ${{ steps.auth_json.outputs.access_token }}
+        shell: bash
+        run: |
+          if [ -z "$WIF_ACCESS_TOKEN$JSON_ACCESS_TOKEN" ]; then
+            echo "No Firestore reader credential is configured."
+            echo "Preferred: GCP_WIF_PROVIDER + GCP_FIRESTORE_READER_SERVICE_ACCOUNT repository variables."
+            echo "Fallback: FIREBASE_SERVICE_ACCOUNT_JSON repository secret."
+            exit 1
+          fi
+
+      - id: fr5_source
+        name: Build canonical FR5 Firestore source snapshot
+        continue-on-error: true
+        env:
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
+        run: |
+          rm -rf build/fr5-production
+          mkdir -p build/fr5-production
+          dart run tool/fr5_shadow_parity/fr5_firestore_source.dart \
+            --firestore-project="$FIREBASE_PROJECT_ID" \
+            --output=build/fr5-production/production_source.json \
+            --evidence=build/fr5-production/production_source_selection.json
+
+      - name: Diagnose FR5 canonical source selection
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('build/fr5-production/production_source_selection.json')
+          if not path.exists():
+              print('FR5 source-selection evidence file was not created.')
+              raise SystemExit(0)
+
+          report = json.loads(path.read_text())
+          print('FR5 source ready:', report.get('ready'))
+          print('FR5 raw source counts:', report.get('rawSourceCounts'))
+          print('FR5 selected source counts:', report.get('selectedSourceCounts'))
+          print('FR5 excluded source counts:', report.get('excludedSourceCounts'))
+          print('FR5 excluded authoring rows:', report.get('excludedAuthoringCount'))
+          print('FR5 source issue count:', report.get('issueCount'))
+
+          issues = report.get('issues') or []
+          if issues:
+              print('FR5 source classification issues:')
+              for index, issue in enumerate(issues, start=1):
+                  print(
+                      f"  {index}. kind={issue.get('kind')} "
+                      f"collection={issue.get('collection')} "
+                      f"sourceId={issue.get('sourceId')} "
+                      f"message={issue.get('message')}"
+                  )
+          PY
+
+      - name: Enforce FR5 canonical source gate
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.fr5_source.outcome }}" != "success" ]; then
+            echo "FR5 canonical source selection failed. See diagnostics above."
+            exit 1
+          fi
+          test -f build/fr5-production/production_source_selection.json
+          test -f build/fr5-production/production_source.json
+          grep -q '"ready": true' build/fr5-production/production_source_selection.json
+          grep -q '"issueCount": 0' build/fr5-production/production_source_selection.json
+
+      - id: fr4_extract
+        name: Extract deterministic production FR4 manifest
+        continue-on-error: true
+        env:
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
+        run: |
+          rm -f build/fr5-production/production_fr4_plan.json
+          dart run tool/fr4_migration/fr4_migrate.dart \
+            --input=build/fr5-production/production_source.json \
+            --evidence=build/fr5-production/production_fr4_plan.json
+
+      - name: Diagnose FR4 production manifest
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('build/fr5-production/production_fr4_plan.json')
+          if not path.exists():
+              print('FR4 evidence file was not created.')
+              raise SystemExit(0)
+
+          plan = json.loads(path.read_text())
+          print('FR4 readyToApply:', plan.get('readyToApply'))
+          print('FR4 rowCount:', plan.get('rowCount'))
+          print('FR4 sourceCounts:', plan.get('sourceCounts'))
+          print('FR4 targetCounts:', plan.get('targetCounts'))
+          print('FR4 issueCount:', plan.get('issueCount'))
+          print('FR4 duplicateCount:', plan.get('duplicateCount'))
+          print('FR4 failureCount:', plan.get('failureCount'))
+          print('FR4 unmappedCount:', plan.get('unmappedCount'))
+
+          issues = plan.get('issues') or []
+          if issues:
+              print('FR4 issue details:')
+              for index, issue in enumerate(issues, start=1):
+                  print(
+                      f"  {index}. kind={issue.get('kind')} "
+                      f"collection={issue.get('collection')} "
+                      f"sourceId={issue.get('sourceId')} "
+                      f"message={issue.get('message')}"
+                  )
+          PY
+
+      - name: Enforce FR4 production manifest gate
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.fr4_extract.outcome }}" != "success" ]; then
+            echo "FR4 extraction/normalization failed. See the diagnostic step above."
+            exit 1
+          fi
+          test -f build/fr5-production/production_fr4_plan.json
+          grep -q '"readyToApply": true' build/fr5-production/production_fr4_plan.json
+          grep -q '"issueCount": 0' build/fr5-production/production_fr4_plan.json
+          grep -q '"duplicateCount": 0' build/fr5-production/production_fr4_plan.json
+          grep -q '"failureCount": 0' build/fr5-production/production_fr4_plan.json
+          grep -q '"unmappedCount": 0' build/fr5-production/production_fr4_plan.json
+
+      - name: Preflight Supabase shadow target
+        run: |
+          dart run tool/fr5_shadow_parity/fr5_shadow_parity.dart \
+            --fr4-evidence=build/fr5-production/production_fr4_plan.json \
+            --preflight \
+            --evidence=build/fr5-production/preflight.json
+          grep -q '"safeToApply": true' build/fr5-production/preflight.json
+
+      - name: Require explicit shadow-only confirmation
+        if: inputs.apply_shadow == true
+        shell: bash
+        run: |
+          if [ "${{ inputs.confirmation }}" != "FR5_SHADOW_ONLY" ]; then
+            echo "Apply requested without exact FR5_SHADOW_ONLY confirmation."
+            exit 1
+          fi
+
+      - name: Apply production shadow data and prove parity
+        if: inputs.apply_shadow == true
+        run: |
+          dart run tool/fr5_shadow_parity/fr5_shadow_parity.dart \
+            --fr4-evidence=build/fr5-production/production_fr4_plan.json \
+            --apply-shadow \
+            --confirm=FR5_SHADOW_ONLY \
+            --evidence=build/fr5-production/production_parity.json
+          grep -q '"completeParity": true' build/fr5-production/production_parity.json
+          grep -q '"missingCount": 0' build/fr5-production/production_parity.json
+          grep -q '"checksumMismatchCount": 0' build/fr5-production/production_parity.json
+          grep -q '"learnerVisibleMismatchCount": 0' build/fr5-production/production_parity.json
+          grep -q '"extraCount": 0' build/fr5-production/production_parity.json
+          grep -q '"ledgerMismatchCount": 0' build/fr5-production/production_parity.json
+
+      - name: Print non-sensitive FR5 summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          source_selection = json.loads(
+              Path('build/fr5-production/production_source_selection.json').read_text()
+          )
+          print('FR5 excluded authoring rows:', source_selection.get('excludedAuthoringCount'))
+          print('FR5 excluded source counts:', source_selection.get('excludedSourceCounts'))
+
+          plan = json.loads(Path('build/fr5-production/production_fr4_plan.json').read_text())
+          print('FR5 production manifest rows:', plan.get('rowCount'))
+          print('FR5 source counts:', plan.get('sourceCounts'))
+          print('FR5 target counts:', plan.get('targetCounts'))
+
+          parity_path = Path('build/fr5-production/production_parity.json')
+          if parity_path.exists():
+              parity = json.loads(parity_path.read_text())
+              print('FR5 completeParity:', parity.get('completeParity'))
+              print('FR5 matchedRowCount:', parity.get('matchedRowCount'))
+              print('FR5 learnerVisibleMatchedCount:', parity.get('learnerVisibleMatchedCount'))
+              print('FR5 ledgerMatchedCount:', parity.get('ledgerMatchedCount'))
+          else:
+              print('FR5 apply_shadow=false: extraction and preflight only.')
+          PY
