@@ -188,7 +188,11 @@ final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
       untrackedPaths: untracked,
       commits: commits,
       diffStatistics: '1 file changed, 1 insertion(+)',
-      diffPatch: diffPatch,
+      diffPatch: diffPatch.isNotEmpty
+          ? diffPatch
+          : changed
+                .map((path) => 'diff --git a/$path b/$path')
+                .join('\n'),
     );
   }
 }
