@@ -17,6 +17,8 @@ Base SHA: e6d1c28fe7b7428267c343068f4471671a765dd8
 - Adversarial hardening controls: added to Canonical Control Model
 - Final PDCA conformance audit: completed
 - PDCA objective/baseline/traceability loop: added
+- Phase Autopilot Contract: added for end-to-end autonomous phase execution
+- Frozen Capability Preservation Manifest: added for prior-work protection
 - Design status: READY FOR HUMAN FREEZE REVIEW
 - Overall PDCA system: NOT FROZEN
 - Agentic implementation: NOT STARTED

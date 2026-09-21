@@ -978,3 +978,30 @@ Changes to global frozen governance still require the Governance Proposal and ve
 The system must never improve a measured target by degrading an unmeasured safety property.
 
 If an optimization makes execution faster but materially weakens correctness, security, test integrity, auditability or reversibility, CHECK reports the unintended consequence and ACT must not standardize it.
+
+## Phase Autopilot Contract
+
+The phase-level hands-off execution rules are defined in
+`PDCA_PHASE_AUTOPILOT_CONTRACT_DRAFT.md`.
+
+The Phase Autopilot Contract is part of the cross-stage governance design and
+is subordinate to this Canonical Control Model.
+
+Its key invariant is:
+
+~~~text
+one approved Phase Mission
+→ autonomous task decomposition/execution/repair/integration
+→ preservation of all frozen prior capabilities
+→ inherited historical regression validation
+→ exact status-bearing SHA
+→ ACT_HUMAN_CLOSURE_PENDING
+~~~
+
+The phase, rather than the individual task, is the intended primary autonomous
+unit once system maturity reaches DO-3/DO-4 with the corresponding CHECK/ACT
+maturity.
+
+A phase orchestrator may continue automatically between ordinary task and
+repair transitions. It must stop for the protected human decisions defined by
+governance and may never bypass the final exact-SHA human closure gate.
