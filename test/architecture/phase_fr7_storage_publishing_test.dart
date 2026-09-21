@@ -48,8 +48,14 @@ void main() {
   });
 
   test('FR7 recognizes only explicit legacy-wrapped Storage 404s', () {
-    expect(cli, contains("_isStorageNotFound(response, expectedCode: 'NoSuchBucket')"));
-    expect(cli, contains("_isStorageNotFound(existing, expectedCode: 'NoSuchKey')"));
+    expect(
+      cli,
+      contains("_isStorageNotFound(response, expectedCode: 'NoSuchBucket')"),
+    );
+    expect(
+      cli,
+      contains("_isStorageNotFound(existing, expectedCode: 'NoSuchKey')"),
+    );
     expect(cli, contains("decoded['statusCode']?.toString() == '404'"));
     expect(cli, contains("decoded['code']?.toString() == expectedCode"));
   });
