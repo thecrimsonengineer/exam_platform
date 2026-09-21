@@ -39,7 +39,9 @@ void main() {
         ),
         returnsNormally,
       );
-      final primary = card.sourceRefs.where((source) => source.primary).toList();
+      final primary = card.sourceRefs
+          .where((source) => source.primary)
+          .toList();
       expect(primary, hasLength(1));
       expect(sourceIds, contains(primary.single.sourceId));
     }
@@ -48,7 +50,10 @@ void main() {
       expect(conceptIds, contains(mapping.conceptId));
     }
     expect(
-      package.questionMappings.map((mapping) => mapping.questionId).toSet().length,
+      package.questionMappings
+          .map((mapping) => mapping.questionId)
+          .toSet()
+          .length,
       package.questionMappings.length,
     );
   });
@@ -72,7 +77,11 @@ void main() {
     ];
 
     for (final root in roots) {
-      expect(root.existsSync(), isTrue, reason: 'Missing FC root: ${root.path}');
+      expect(
+        root.existsSync(),
+        isTrue,
+        reason: 'Missing FC root: ${root.path}',
+      );
       for (final entity in root.listSync(recursive: true)) {
         if (entity is! File || !entity.path.endsWith('.dart')) {
           continue;
