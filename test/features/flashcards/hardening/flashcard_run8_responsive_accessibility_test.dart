@@ -88,7 +88,8 @@ void main() {
     final exception = tester.takeException();
     if (exception != null) {
       final overflowing = <String>[];
-      for (final renderObject in tester.allRenderObjects.whereType<RenderFlex>()) {
+      for (final renderObject
+          in tester.allRenderObjects.whereType<RenderFlex>()) {
         if (renderObject.direction != Axis.horizontal ||
             !renderObject.hasSize) {
           continue;
