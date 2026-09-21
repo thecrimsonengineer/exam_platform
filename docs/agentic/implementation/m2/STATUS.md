@@ -1,30 +1,46 @@
 # M2 implementation status
 
-Frozen plan: `7a59205c550af5cc36a2c233513fc21b4f780e64`.
-Phase base: `d6a20c988027bdc25aeddc041cc16849bc259ad6`.
-Status: RUN_1_CANDIDATE; M2 remains open.
+Frozen plan: 7a59205c550af5cc36a2c233513fc21b4f780e64.
+Phase base: d6a20c988027bdc25aeddc041cc16849bc259ad6.
+Status: RUN_1_REVIEW_REPAIR_COMMITTED; local validation pending; M2 remains open.
 
 ## Run 1: M2-1 through M2-3
 
-- M2-1: strict immutable task packet, required fields, canonical scope validation, conservative Pilot A envelope, canonical JSON and SHA-256 identity; bounded repair-class budget declarations. Parsing never grants authorization.
-- M2-2: approved packet manifest bound to an exact hash/revision and trusted human approval snapshot; reuses M1 mechanical authority's branch, lineage, lease and fencing checks as a precondition for bounded Pilot A feature authority. Detects dirty tracked/untracked state, cancellation, conflicting writers, stale approvals, wrong ancestry and branch movement. No general command or mutation executor.
-- M2-3: deterministic handoff using trusted repository inventory, commit list, diff statistics and exact packet/candidate gate receipts. Missing, stale or red receipts result in CHECK_NOT_READY. A handoff is not review acceptance.
-- M1 repository/path/authority/gate implementations remain unchanged. The M2 workspace composes the M1 repository and adds fixed read-only Git operations for untracked files and handoff inventory, with raw path consistency checks.
+- M2-1 remains unchanged: strict immutable task packet, canonical scope validation, canonical JSON and SHA-256 identity, and bounded repair declarations.
+- M2-2 repair: human approval authority is now resolved only from trustedState.humanApprovals by exact packet identity. A caller-created approval object cannot grant authority. The trusted task registry must contain exactly one PlanTaskSnapshot matching M2 phase, branch, base SHA, risk, allowed/forbidden paths, targeted tests, stop conditions and governance version.
+- M2-2 continues to reuse M1 lineage, writer lease, fencing, branch, ancestry and repository checks. The packet itself was not revised, so its approved hash remains unchanged.
+- M2-3 remains deterministic and unchanged: trusted repository inventory plus exact packet/candidate gate receipts are required for DO_HANDOFF.
 
-## Validation before candidate commit
+## Independent review
 
-- Targeted and full PDCA tests: 97 passing executions, including 22 new M2 tests and all existing 75 M0/M1 executions.
-- A disposable synthetic Git repository verifies staged/unstaged cancellation, untracked files, commit lists and changed-file inventory.
-- Analyzer: exit 0; 409 infos, 0 warnings, 0 errors with `--no-fatal-infos --fatal-warnings`.
-- Formatter and diff check pass.
-- Independent read-only review is pending at the committed candidate SHA; no self-issued REVIEW_ACCEPTED.
+The first committed candidate at 3d5e9b24c50775ca90ba18e7027de942765052cc was REVIEW_REPAIRABLE.
 
-## Trust and limitations
+Findings repaired here:
 
-This run implements the control contracts and authority preflight. Runtime composition must provide trusted M0 state, current approvals/leases and gate receipts; JSON from a Builder is never such authority. Test approvals and receipts are explicitly synthetic. No live M0 approval or lease event is fabricated for this bootstrap implementation.
+1. Caller-shaped HumanApprovalSnapshot could previously be presented through M2ApprovedManifest.
+2. M2 authority previously did not require the packet to match the trusted Control Plane task registry.
 
-The conservative packet validator accepts explicit M2 Dart file paths and canonical directory `/**` patterns within the M2 documentation subtree. It rejects broader implementation globs and application paths. Pilot B is unavailable until separately authorized and implemented.
+The repair intentionally leaves human_approval_reference as a descriptive audit reference because the already-authorized packet uses descriptive text rather than an approval ID. Runtime authority instead requires exactly one active trusted approval matching approval type, task ID, packet hash, packet revision and governance version.
 
-Authority is a preflight decision, not an OS sandbox or file writer. Repository reads are checked for drift but are not atomic locks. No durable authority/repair store, automatic feature executor, reviewer verdict pipeline or autonomous closure is claimed.
+## Validation state
 
-M2-4 (review contract), M2-5 (ACT-2), the remaining M2-6 adversarial cases and M2-7 lifecycle pilot remain for the next bounded run. Pilot A's intentional controlled repair loop has not yet run. M2-8 requires separate human authorization of a concrete application packet after Pilot A passes. No application, backend, dependency, frozen-governance or M1 control changes are included.
+The prior candidate had 97 passing PDCA test executions and analyzer exit 0 with 409 infos, 0 warnings and 0 errors.
+
+This review repair adds adversarial coverage for:
+
+- absent and duplicate trusted approval records;
+- forged hash, revision and approval type;
+- revoked, future, expired and time-revoked approvals;
+- caller-shaped approval objects that are absent from trustedState;
+- missing and duplicate task registry entries;
+- phase, branch, base, risk, scope, tests, stop-condition and governance mismatches;
+- future-observed task state;
+- revised packet reuse against original approval/task state.
+
+Local formatter, targeted/full tests, analyzer and diff-check must be rerun on the committed repair SHA before REVIEW_ACCEPTED.
+
+## Remaining limitations
+
+Authority remains a preflight control, not an OS sandbox or mutation executor. Repository reads are drift-checked rather than transactionally locked. Gate-receipt provenance is a trusted interface whose concrete lifecycle remains to be completed before Pilot A acceptance. M2-4, M2-5, M2-6, Pilot A lifecycle repair, and Pilot B remain pending.
+
+No application code, backend, dependencies, frozen governance, M1 controls, M2 packet revision, M2 closure or M2-4 implementation is authorized by this repair.

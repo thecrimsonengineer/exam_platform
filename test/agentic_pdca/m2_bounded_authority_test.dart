@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../tool/agentic_pdca/m0_models.dart';
 import '../../tool/agentic_pdca/m2_bounded_authority.dart';
 import '../../tool/agentic_pdca/m2_task_packet.dart';
 import 'm2_test_support.dart';
 
 void main() {
   final packet = testPacket();
+
   M2BuilderRequest request({
     String? hash,
     int revision = 1,
@@ -13,15 +15,17 @@ void main() {
     String? path,
     String? head,
     String writer = 'builder',
-  }) => M2BuilderRequest(
-    packetHash: hash ?? packet.hash,
-    revision: revision,
-    expectedHead: head ?? packet.taskBaseSha,
-    writerLeaseId: 'lease',
-    writerIdentity: writer,
-    fencingToken: token,
-    requestedPaths: [path ?? packet.expectedPaths.first],
-  );
+  }) =>
+      M2BuilderRequest(
+        packetHash: hash ?? packet.hash,
+        revision: revision,
+        expectedHead: head ?? packet.taskBaseSha,
+        writerLeaseId: 'lease',
+        writerIdentity: writer,
+        fencingToken: token,
+        requestedPaths: [path ?? packet.expectedPaths.first],
+      );
+
   M2BoundedAuthority authority(
     M2FakeWorkspace workspace, {
     M2ApprovedManifest? manifest,
@@ -29,18 +33,23 @@ void main() {
     bool expired = false,
     bool cancelled = false,
     String? lineageSha,
-  }) => M2BoundedAuthority(
-    manifest: manifest ?? testManifest(packet),
-    workspace: workspace,
-    trustedState: testState(
-      packet,
-      conflict: conflict,
-      expired: expired,
-      cancelled: cancelled,
-      lineageSha: lineageSha,
-    ),
-    trustedClock: () => m2TestNow,
-  );
+    List<PlanTaskSnapshot>? tasks,
+    List<HumanApprovalSnapshot>? approvals,
+  }) =>
+      M2BoundedAuthority(
+        manifest: manifest ?? testManifest(packet),
+        workspace: workspace,
+        trustedState: testState(
+          packet,
+          conflict: conflict,
+          expired: expired,
+          cancelled: cancelled,
+          lineageSha: lineageSha,
+          tasks: tasks,
+          approvals: approvals,
+        ),
+        trustedClock: () => m2TestNow,
+      );
 
   test(
     'approved Pilot A packet inherits M1 authority without executing mutation',
@@ -54,6 +63,7 @@ void main() {
       expect(workspace.changed, isEmpty);
     },
   );
+
   test(
     'forged packet, revision, base, identity, token and scope are denied',
     () async {
@@ -75,38 +85,128 @@ void main() {
       }
     },
   );
+
   test(
-    'forged, stale, future, expired and revoked approval are denied',
+    'approval must come from exactly one trusted Control Plane record',
     () async {
-      for (final manifest in [
-        testManifest(packet, hash: 'forged'),
-        testManifest(packet, revision: '2'),
-        testManifest(packet, status: 'REVOKED'),
-        testManifest(packet, issuedAt: m2TestNow.add(const Duration(days: 1))),
-        testManifest(packet, expiresAt: m2TestNow),
+      final callerShapedFake = testApproval(
+        packet,
+        approvalId: 'caller-shaped',
+      );
+      expect(callerShapedFake.exactShaOrObject, packet.hash);
+
+      for (final approvals in <List<HumanApprovalSnapshot>>[
+        [],
+        [testApproval(packet), testApproval(packet, approvalId: 'duplicate')],
+        [testApproval(packet, hash: 'forged')],
+        [testApproval(packet, revision: '2')],
+        [testApproval(packet, approvalType: 'OTHER')],
+        [testApproval(packet, status: 'REVOKED')],
+        [
+          testApproval(
+            packet,
+            issuedAt: m2TestNow.add(const Duration(days: 1)),
+          ),
+        ],
+        [testApproval(packet, expiresAt: m2TestNow)],
+        [
+          testApproval(
+            packet,
+            revokedAt: m2TestNow.subtract(const Duration(seconds: 1)),
+          ),
+        ],
       ]) {
         expect(
           (await authority(
             M2FakeWorkspace(packet),
-            manifest: manifest,
+            approvals: approvals,
+          ).authorize(request())).authorized,
+          isFalse,
+        );
+      }
+
+      // A syntactically valid approval object that is not in trustedState
+      // grants no authority.
+      expect(
+        (await authority(
+          M2FakeWorkspace(packet),
+          approvals: const [],
+        ).authorize(request())).authorized,
+        isFalse,
+      );
+    },
+  );
+
+  test('trusted approval issuer name is not the trust anchor', () async {
+    final approvals = [
+      testApproval(packet, issuer: 'control-plane-human-principal'),
+    ];
+    expect(
+      (await authority(
+        M2FakeWorkspace(packet),
+        approvals: approvals,
+      ).authorize(request())).authorized,
+      isTrue,
+    );
+  });
+
+  test(
+    'trusted task registry must exactly bind packet scope and base',
+    () async {
+      final mismatches = <List<PlanTaskSnapshot>>[
+        [],
+        [testTask(packet), testTask(packet)],
+        [testTask(packet, phaseId: 'M3')],
+        [testTask(packet, baseBranch: 'other')],
+        [testTask(packet, baseSha: m2TestCandidate)],
+        [testTask(packet, riskClass: 'moderate')],
+        [
+          testTask(
+            packet,
+            allowedPaths: ['tool/agentic_pdca/m2_unplanned.dart'],
+          ),
+        ],
+        [testTask(packet, forbiddenPaths: ['lib/other/**'])],
+        [testTask(packet, requiredTests: ['test/other_test.dart'])],
+        [testTask(packet, stopConditions: ['Other stop'])],
+        [testTask(packet, governanceVersion: 'v0')],
+        [
+          testTask(
+            packet,
+            observedAt: m2TestNow.add(const Duration(minutes: 1)),
+          ),
+        ],
+      ];
+
+      for (final tasks in mismatches) {
+        expect(
+          (await authority(
+            M2FakeWorkspace(packet),
+            tasks: tasks,
           ).authorize(request())).authorized,
           isFalse,
         );
       }
     },
   );
+
   test(
-    'immutable valid revised packet cannot reuse original manifest approval',
+    'valid revised packet cannot reuse original trusted approval or task',
     () async {
       final revised = M2TaskPacket.fromJson(packetJson()..['revision'] = 2);
+      final revisedAuthority = authority(
+        M2FakeWorkspace(packet),
+        manifest: testManifest(revised),
+      );
       expect(
-        (await authority(
-          M2FakeWorkspace(packet),
-        ).authorize(request(hash: revised.hash, revision: 2))).authorized,
+        (await revisedAuthority.authorize(
+          request(hash: revised.hash, revision: 2),
+        )).authorized,
         isFalse,
       );
     },
   );
+
   test(
     'writer conflict, expired lease, cancellation and stale lineage deny DO',
     () async {
@@ -121,6 +221,7 @@ void main() {
       }
     },
   );
+
   test(
     'dirty tracked, generated and untracked files block before DO',
     () async {
@@ -141,6 +242,7 @@ void main() {
       );
     },
   );
+
   test('wrong ancestry, detached branch and branch race are denied', () async {
     final wrongBase = M2FakeWorkspace(packet)..wrongBase = m2TestCandidate;
     final detached = M2FakeWorkspace(packet)..ref = '';

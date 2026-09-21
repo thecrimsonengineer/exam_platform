@@ -10,6 +10,7 @@ import '../../tool/agentic_pdca/m2_task_packet.dart';
 
 const m2TestCandidate = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 final m2TestNow = DateTime.utc(2026, 9, 21, 12);
+
 Map<String, Object?> packetJson() =>
     (jsonDecode(
               File(
@@ -18,30 +19,67 @@ Map<String, Object?> packetJson() =>
             )
             as Map)
         .cast<String, Object?>();
+
 M2TaskPacket testPacket() => M2TaskPacket.fromJson(packetJson());
 
-M2ApprovedManifest testManifest(
+M2ApprovedManifest testManifest(M2TaskPacket packet) =>
+    M2ApprovedManifest(packet: packet);
+
+HumanApprovalSnapshot testApproval(
   M2TaskPacket packet, {
+  String approvalId = 'trusted-approval',
+  String approvalType = 'M2_TASK_PACKET',
+  String? subjectId,
   String? hash,
   String revision = '1',
+  String governanceVersion = 'v1.0',
+  String issuer = 'trusted-human-authority',
   String status = 'ACTIVE',
   DateTime? issuedAt,
   DateTime? expiresAt,
-}) => M2ApprovedManifest(
-  packet: packet,
-  approval: HumanApprovalSnapshot(
-    approvalId: 'synthetic-approval',
-    approvalType: 'M2_TASK_PACKET',
-    subjectId: packet.taskId,
-    exactShaOrObject: hash ?? packet.hash,
-    planRevision: revision,
-    governanceVersion: 'v1.0',
-    issuer: 'Naveed',
-    issuedAt: issuedAt ?? m2TestNow.subtract(const Duration(minutes: 1)),
-    expiresAt: expiresAt,
-    status: status,
-  ),
-);
+  DateTime? revokedAt,
+}) =>
+    HumanApprovalSnapshot(
+      approvalId: approvalId,
+      approvalType: approvalType,
+      subjectId: subjectId ?? packet.taskId,
+      exactShaOrObject: hash ?? packet.hash,
+      planRevision: revision,
+      governanceVersion: governanceVersion,
+      issuer: issuer,
+      issuedAt: issuedAt ?? m2TestNow.subtract(const Duration(minutes: 1)),
+      expiresAt: expiresAt,
+      revokedAt: revokedAt,
+      status: status,
+    );
+
+PlanTaskSnapshot testTask(
+  M2TaskPacket packet, {
+  String? taskId,
+  String phaseId = 'M2',
+  String? baseBranch,
+  String? baseSha,
+  String? riskClass,
+  List<String>? allowedPaths,
+  List<String>? forbiddenPaths,
+  List<String>? requiredTests,
+  List<String>? stopConditions,
+  String governanceVersion = 'v1.0',
+  DateTime? observedAt,
+}) =>
+    PlanTaskSnapshot(
+      taskId: taskId ?? packet.taskId,
+      phaseId: phaseId,
+      baseBranch: baseBranch ?? packet.branch,
+      baseSha: baseSha ?? packet.taskBaseSha,
+      riskClass: riskClass ?? packet.text('risk_class'),
+      allowedPaths: allowedPaths ?? packet.strings('allowed_paths'),
+      forbiddenPaths: forbiddenPaths ?? packet.strings('forbidden_paths'),
+      requiredTests: requiredTests ?? packet.strings('required_targeted_tests'),
+      stopConditions: stopConditions ?? packet.strings('stop_conditions'),
+      governanceVersion: governanceVersion,
+      observedAt: observedAt ?? m2TestNow,
+    );
 
 ControlPlaneSnapshot testState(
   M2TaskPacket packet, {
@@ -50,6 +88,8 @@ ControlPlaneSnapshot testState(
   bool conflict = false,
   bool expired = false,
   bool cancelled = false,
+  List<PlanTaskSnapshot>? tasks,
+  List<HumanApprovalSnapshot>? approvals,
 }) {
   WriterLeaseSnapshot lease(String id) => WriterLeaseSnapshot(
     writerLeaseId: id,
@@ -62,12 +102,13 @@ ControlPlaneSnapshot testState(
     expiresAt: m2TestNow.add(Duration(minutes: expired ? -1 : 10)),
     observedAt: m2TestNow,
   );
+
   return ControlPlaneSnapshot(
     maturity: 'M0_OBSERVATION',
     governanceVersion: 'v1.0',
     governanceSha: m2GovernanceSha,
     observedAt: m2TestNow,
-    tasks: const [],
+    tasks: tasks ?? [testTask(packet)],
     taskStates: const [],
     taskStateEvidence: const [],
     lineages: [
@@ -96,13 +137,14 @@ ControlPlaneSnapshot testState(
         ),
     ],
     evidenceReferences: const [],
-    humanApprovals: const [],
+    humanApprovals: approvals ?? [testApproval(packet)],
     writerLeaseEvidence: const [],
   );
 }
 
 final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
   M2FakeWorkspace(this.packet) : head = packet.taskBaseSha, ref = packet.branch;
+
   final M2TaskPacket packet;
   String head;
   String ref;
@@ -115,24 +157,29 @@ final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
   List<String> commits = [];
   int reads = 0;
   void Function()? onRead;
+
   @override
   String get root => '.';
+
   @override
   M1TrustedRepository get repository => this;
+
   @override
   Future<M1RepositoryFacts> readFacts({
     required String approvedBaseSha,
-  }) async => M1RepositoryFacts(
-    root: root,
-    head: head,
-    ref: ref,
-    mergeBase: wrongBase ?? approvedBaseSha,
-    changedPaths: List.of(changed),
-    deletedTestPaths: List.of(deleted),
-    dirtyTrackedPaths: List.of(dirty),
-    fileContents: const {},
-    binaryPaths: List.of(binary),
-  );
+  }) async =>
+      M1RepositoryFacts(
+        root: root,
+        head: head,
+        ref: ref,
+        mergeBase: wrongBase ?? approvedBaseSha,
+        changedPaths: List.of(changed),
+        deletedTestPaths: List.of(deleted),
+        dirtyTrackedPaths: List.of(dirty),
+        fileContents: const {},
+        binaryPaths: List.of(binary),
+      );
+
   @override
   Future<M2WorkspaceEvidence> read(String approvedBaseSha) async {
     reads++;
@@ -148,12 +195,15 @@ final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
 
 final class M2FakeGates implements M2TrustedGateEvidence {
   M2FakeGates(this.receipts);
+
   List<M2GateReceipt> receipts;
+
   @override
   Future<List<M2GateReceipt>> read(
     String candidateSha,
     String packetHash,
-  ) async => receipts;
+  ) async =>
+      receipts;
 }
 
 List<M2GateReceipt> greenReceipts(

@@ -3,21 +3,36 @@ import 'm1_mechanical_authority.dart';
 import 'm2_repository.dart';
 import 'm2_task_packet.dart';
 
-/// A manifest is supplied by the trusted host, never by the DO request.
-/// Parsing a valid packet alone grants no authority.
+/// The manifest carries only immutable packet identity. Human approval is
+/// resolved from the trusted Control Plane snapshot, never supplied by DO.
 final class M2ApprovedManifest {
-  const M2ApprovedManifest({required this.packet, required this.approval});
-  final M2TaskPacket packet;
-  final HumanApprovalSnapshot approval;
+  const M2ApprovedManifest({required this.packet});
 
-  bool validAt(DateTime now) =>
-      approval.approvalType == 'M2_TASK_PACKET' &&
-      approval.subjectId == packet.taskId &&
-      approval.exactShaOrObject == packet.hash &&
-      approval.planRevision == packet.revision.toString() &&
-      approval.issuer == 'Naveed' &&
-      !approval.issuedAt.isAfter(now) &&
-      approval.isValidAt(now, expectedGovernanceVersion: 'v1.0');
+  final M2TaskPacket packet;
+
+  HumanApprovalSnapshot? trustedApproval(
+    ControlPlaneSnapshot trustedState,
+    DateTime now,
+  ) {
+    final matches = trustedState.humanApprovals.where(
+      (approval) =>
+          approval.approvalType == 'M2_TASK_PACKET' &&
+          approval.subjectId == packet.taskId &&
+          approval.exactShaOrObject == packet.hash &&
+          approval.planRevision == packet.revision.toString() &&
+          approval.governanceVersion == 'v1.0',
+    );
+    if (matches.length != 1) return null;
+    final approval = matches.single;
+    if (approval.issuedAt.toUtc().isAfter(now.toUtc()) ||
+        !approval.isValidAt(
+          now,
+          expectedGovernanceVersion: 'v1.0',
+        )) {
+      return null;
+    }
+    return approval;
+  }
 }
 
 final class M2BuilderRequest {
@@ -30,6 +45,7 @@ final class M2BuilderRequest {
     required this.fencingToken,
     required List<String> requestedPaths,
   }) : requestedPaths = List.unmodifiable(requestedPaths);
+
   final String packetHash;
   final int revision;
   final String expectedHead;
@@ -41,6 +57,7 @@ final class M2BuilderRequest {
 
 final class M2AuthorityDecision {
   const M2AuthorityDecision(this.authorized, this.reason);
+
   final bool authorized;
   final String reason;
 }
@@ -54,6 +71,7 @@ final class M2BoundedAuthority {
     required this.trustedState,
     DateTime Function()? trustedClock,
   }) : _clock = trustedClock ?? (() => DateTime.now().toUtc());
+
   final M2ApprovedManifest manifest;
   final M2TrustedWorkspace workspace;
   final ControlPlaneSnapshot trustedState;
@@ -62,11 +80,20 @@ final class M2BoundedAuthority {
   Future<M2AuthorityDecision> authorize(M2BuilderRequest request) async {
     final packet = manifest.packet;
     final now = _clock().toUtc();
-    if (!manifest.validAt(now) ||
+
+    if (manifest.trustedApproval(trustedState, now) == null ||
         request.packetHash != packet.hash ||
         request.revision != packet.revision) {
       return const M2AuthorityDecision(false, 'PACKET_APPROVAL_MISMATCH');
     }
+
+    final tasks = trustedState.tasks.where(
+      (task) => task.taskId == packet.taskId,
+    );
+    if (tasks.length != 1 || !_taskMatchesPacket(tasks.single, packet, now)) {
+      return const M2AuthorityDecision(false, 'TRUSTED_TASK_MISMATCH');
+    }
+
     if (trustedState.governanceSha != m2GovernanceSha ||
         trustedState.governanceVersion != 'v1.0' ||
         request.expectedHead != packet.taskBaseSha ||
@@ -78,6 +105,7 @@ final class M2BoundedAuthority {
         )) {
       return const M2AuthorityDecision(false, 'BASE_OR_SCOPE_MISMATCH');
     }
+
     final active = trustedState.writerLeases.where(
       (lease) =>
           (lease.branch == packet.branch ||
@@ -97,6 +125,7 @@ final class M2BoundedAuthority {
         'WRITER_CONFLICT_OR_CANCELLATION',
       );
     }
+
     try {
       final before = await workspace.read(packet.taskBaseSha);
       final phase = await workspace.repository.readFacts(
@@ -110,6 +139,7 @@ final class M2BoundedAuthority {
           phase.mergeBase != m2PhaseBaseSha) {
         return const M2AuthorityDecision(false, 'UNCLEAN_OR_STALE_REPOSITORY');
       }
+
       final inherited =
           await M1MechanicalAuthority(
             trustedState: trustedState,
@@ -135,6 +165,7 @@ final class M2BoundedAuthority {
       if (!inherited.authorized) {
         return M2AuthorityDecision(false, inherited.reason);
       }
+
       final after = await workspace.read(packet.taskBaseSha);
       final finished = _clock().toUtc();
       if (!after.clean ||
@@ -143,9 +174,10 @@ final class M2BoundedAuthority {
           !active.single.expiresAt.isAfter(finished) ||
           (active.single.revokedAt != null &&
               !finished.isBefore(active.single.revokedAt!)) ||
-          !manifest.validAt(finished)) {
+          manifest.trustedApproval(trustedState, finished) == null) {
         return const M2AuthorityDecision(false, 'PREFLIGHT_CHANGED');
       }
+
       return const M2AuthorityDecision(
         true,
         'DO_READY: bounded Pilot A preflight only.',
@@ -154,4 +186,26 @@ final class M2BoundedAuthority {
       return const M2AuthorityDecision(false, 'TRUSTED_REPOSITORY_UNAVAILABLE');
     }
   }
+
+  bool _taskMatchesPacket(
+    PlanTaskSnapshot task,
+    M2TaskPacket packet,
+    DateTime now,
+  ) =>
+      task.phaseId == 'M2' &&
+      task.baseBranch == packet.branch &&
+      task.baseSha == packet.taskBaseSha &&
+      task.riskClass == packet.text('risk_class') &&
+      _sameStrings(task.allowedPaths, packet.strings('allowed_paths')) &&
+      _sameStrings(task.forbiddenPaths, packet.strings('forbidden_paths')) &&
+      _sameStrings(
+        task.requiredTests,
+        packet.strings('required_targeted_tests'),
+      ) &&
+      _sameStrings(task.stopConditions, packet.strings('stop_conditions')) &&
+      task.governanceVersion == 'v1.0' &&
+      !task.observedAt.toUtc().isAfter(now.toUtc());
+
+  bool _sameStrings(List<String> a, List<String> b) =>
+      a.length == b.length && a.toSet().containsAll(b);
 }
