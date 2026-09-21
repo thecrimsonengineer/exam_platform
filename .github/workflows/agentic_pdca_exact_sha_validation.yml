@@ -60,8 +60,14 @@ jobs:
         run: flutter pub get
 
       - name: Agentic formatting gate
+        shell: bash
         run: |
-          dart format --output=none --set-exit-if-changed             tool/agentic_pdca             test/agentic_pdca
+          set -euo pipefail
+          dart format tool/agentic_pdca test/agentic_pdca
+          if ! git diff --exit-code -- tool/agentic_pdca test/agentic_pdca; then
+            echo "::error::Dart formatting changes are required. Exact formatter diff is printed above."
+            exit 1
+          fi
 
       - name: Agentic PDCA test suite
         run: flutter test test/agentic_pdca/
