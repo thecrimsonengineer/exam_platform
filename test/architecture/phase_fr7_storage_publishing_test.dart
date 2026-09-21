@@ -34,7 +34,10 @@ void main() {
     expect(cli, contains("uri.path.contains('/storage/v1/')"));
     expect(cli, contains('HttpHeaders.authorizationHeader'));
     expect(cli, contains("'NoSuchBucket'"));
-    expect(cli, contains("decodedError['statusCode']?.toString() == '404'"));
+    expect(
+      cli,
+      contains("_isStorageNotFound(response, expectedCode: 'NoSuchBucket')"),
+    );
   });
 
   test('FR7 uses a private immutable package bucket', () {
