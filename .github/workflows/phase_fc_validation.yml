@@ -10,6 +10,7 @@ on:
       - phase-fc5-memory
       - phase-fc6-learner-ui
       - phase-fc7-integration
+      - phase-fc8-hardening
 
 permissions:
   contents: read
@@ -21,7 +22,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v4
@@ -66,7 +67,7 @@ jobs:
             lib/widgets/csp/study_content/study_content_renderer_dark.dart \
             test/features/flashcards
       - name: Analyze
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        run: flutter analyze --no-fatal-infos --fatal-warnings
 
       - name: FC Run 1 identity and model tests
         run: |
@@ -121,7 +122,17 @@ jobs:
           flutter test test/features/flashcards/integration/flashcard_admin_integration_test.dart
           flutter test test/features/flashcards/architecture/flashcard_run7_architecture_test.dart
 
-      - name: Frozen MOT foundation regression
+      - name: FC Run 8 hardening and closure tests
+        run: |
+          flutter test test/features/flashcards/hardening/flashcard_run8_closure_matrix_test.dart
+          flutter test test/features/flashcards/hardening/flashcard_run8_large_deck_test.dart
+          flutter test test/features/flashcards/hardening/flashcard_run8_responsive_accessibility_test.dart
+          flutter test test/features/flashcards/ui/flashcard_card_accessibility_test.dart
+
+      - name: Frozen MOT and HAP regressions
         run: |
           flutter test test/widgets/motion/csp11_flip_card_test.dart
           flutter test test/services/haptics/csp11_haptic_architecture_test.dart
+
+      - name: Full repository regression
+        run: flutter test
