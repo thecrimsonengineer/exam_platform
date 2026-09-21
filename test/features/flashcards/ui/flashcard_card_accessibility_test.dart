@@ -62,7 +62,6 @@ void main() {
     'actionable source footer exposes button semantics and action hint',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
       var taps = 0;
 
       await pumpCard(
@@ -90,6 +89,7 @@ void main() {
 
       expect(taps, 1);
       expect(tester.takeException(), isNull);
+      semantics.dispose();
     },
   );
 
@@ -97,7 +97,6 @@ void main() {
     'non-actionable source footer exposes neither button action nor hint',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
 
       await pumpCard(tester, themeMode: ThemeMode.dark);
 
@@ -116,6 +115,7 @@ void main() {
       );
 
       expect(tester.takeException(), isNull);
+      semantics.dispose();
     },
   );
 }
