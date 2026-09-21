@@ -12,7 +12,7 @@ Branch: `agentic-pdca-m1-001`
 - `2529c8f` AGENT-BUILD PDCA M1-005: add mechanical pilot and status evidence
 - `acb20f6` AGENT-REVIEW PDCA M1: repair trust boundaries and execution gates
 - `da28178` AGENT-REVIEW PDCA M1: remove caller lease model
-- pending M1 final trust-repair commit
+- `18da2ab` AGENT-REVIEW PDCA M1: bind checks to trusted repository facts
 
 ## DO-1
 
