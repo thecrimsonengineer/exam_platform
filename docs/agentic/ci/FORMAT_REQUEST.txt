@@ -1,4 +1,4 @@
 ENABLED
 agentic-pdca-m2-bounded-feature
-f2b0d6c8d932ce6a7292326fbdb0202c82361101
-test/agentic_pdca/m2_test_support.dart
+6aa47098bbd2731a5c8b1a45d967b1df8e08e8e2
+test/agentic_pdca/m2_pilot_a_lifecycle_test.dart
