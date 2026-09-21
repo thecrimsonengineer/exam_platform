@@ -1,6 +1,6 @@
 # CSP11 Phase FR7 Supabase Storage Publishing Pipeline
 
-Status: IMPLEMENTATION CANDIDATE
+Status: CLOSED CANDIDATE
 Branch: phase-fr7-storage-publishing
 Source checkpoint: phase-fr6-closed at c7689ed50a2a950cc3e79da5701c3fe9758ba3a4
 Date: 2026-09-21
@@ -107,10 +107,43 @@ FR7 can close only when:
 10. exact-SHA FR1-FR7, frozen L4, full repository and diff-hygiene gates are green;
 11. phase-fr7-closed is created only at that exact green SHA.
 
+## Production closure evidence
+
+Production publication completed on 2026-09-21 from commit
+`d31a96675cf72c0dd978820f5ef0dffb02a8a21c`.
+
+GitHub Actions evidence:
+
+- FR7 production package publish run: `35620146903` — PASS.
+- Exact-SHA FR validation run: `35620146918` — PASS.
+- Production preflight: 35 competencies and 70 packages ready.
+- Production publication: 70 immutable packages verified.
+- Total compressed package bytes: 1,823,286.
+- Bucket `csp11-published-packages`: private.
+- Publication evidence reported `completePublication: true`.
+
+Independent live Supabase verification after publication:
+
+- current content packages: 35;
+- current question packages: 35;
+- active published catalogue rows: 35;
+- duplicate current package keys: 0;
+- content-to-catalogue mismatches: 0;
+- question-to-catalogue mismatches: 0;
+- Storage objects in the package bucket: 70;
+- Supabase security advisor findings: 0.
+
+The earlier failed publication attempt wrote immutable Storage objects only. Before the
+successful retry, `published_packages` and `published_catalog` still had zero current
+publication rows. The corrected retry reused the immutable objects and committed the
+package/current/catalogue state through the atomic FR7 database function.
+
+Learner runtime has not been cut over to Supabase by FR7. Firestore remains the learner
+source until the later reviewed cutover phase.
+
 ## NEXT ACTION
 
-Run the normal FR validation on this implementation candidate.
-
-If green, run the manual FR7 production workflow with publish=false first. Only after a green production preflight may publish=true be run with exact confirmation `FR7_PUBLISH_PACKAGES`.
-
-Then verify live Storage/package/catalogue state, record evidence, rerun the exact repository gate and freeze phase-fr7-closed.
+Run the final exact repository validation on this evidence-only closure commit. If green,
+create `phase-fr7-closed` at that exact SHA. Any later FR cutover work must start from the
+frozen FR7 checkpoint and must preserve the existing online-authorization and no-learner-
+cutover boundaries until its own reviewed phase explicitly changes them.
