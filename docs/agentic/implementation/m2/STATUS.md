@@ -2,7 +2,7 @@
 
 Frozen plan: 7a59205c550af5cc36a2c233513fc21b4f780e64.
 Phase base: d6a20c988027bdc25aeddc041cc16849bc259ad6.
-Status: M2_PILOT_B_APPROVED_DO_READY; M2 remains open.
+Status: M2_PILOT_B_DO_CANDIDATE_V2; M2 remains open.
 
 ## Accepted governance checkpoints
 
@@ -15,7 +15,7 @@ Status: M2_PILOT_B_APPROVED_DO_READY; M2 remains open.
   8ada71ce7b86f52a6916d1b6102a27933efba5b0 after GitHub exact-SHA
   validation run 35586629747 passed all gates.
 
-## M2-8 Pilot B approval binding
+## M2-8 Pilot B authorization binding
 
 Task:
 M2-PILOT-B-FC8-A11Y-1.
@@ -29,39 +29,42 @@ Approved canonical packet hash:
 Approved task base:
 8ada71ce7b86f52a6916d1b6102a27933efba5b0.
 
-Explicit human approval was supplied in this ChatGPT conversation on
-2026-09-21. The approval statement bound the exact task ID, packet proposal
-commit, canonical packet hash and task base and authorized bounded DO-2,
-CHECK-2/3 and ACT-2 only.
+Explicit human approval was supplied in chat on 2026-09-21 and was persisted
+in repository status at approval-binding commit
+644828cd5dd495f2f4deeccdeaf9178ac8a07f76.
 
-The machine-readable PILOT_B_PACKET.json is intentionally unchanged so its
-approved canonical hash remains exactly the approved hash above. Its
-human_approval_reference field is descriptive packet content and is not mutated
-post-approval.
+The machine-readable PILOT_B_PACKET.json remains unchanged after approval so
+its canonical hash remains exactly the approved hash.
 
-## Prior candidate invalidation
+## Prior invalid candidate
 
-Candidate b86239350ff41efda4153d923e485a6911890a86 was reverted by ACT at
-ab7b4f95946a536d286de7f2bde901b0574ed061 because repository approval evidence
-had not yet been persisted. That candidate is not accepted and must not be used
-as Pilot B evidence.
+Candidate b86239350ff41efda4153d923e485a6911890a86 was reverted at
+ab7b4f95946a536d286de7f2bde901b0574ed061 because repository approval
+evidence had not yet been bound. It is not Pilot B evidence.
 
-This status commit is the repository approval binding. No lib/** mutation is
-contained in this commit.
+Its first CI attempt also revealed a test-fixture lookup issue: a semantics
+label finder could not locate the node through the animated FlipCard tree.
+The application change itself was not shown to be defective. This V2
+candidate repairs only the test harness by reading semantics through the
+existing keyed source widget.
 
-## Pilot B bounded behavior
+## Pilot B V2 bounded implementation
 
-Authorized application path:
-- lib/screens/flashcards/widgets/flashcard_card_view.dart
+Application change:
+- add only the conditional source-footer semantics hint
+  "Activate to view source details." when onSourceTap is non-null.
 
-Authorized test path:
-- test/features/flashcards/ui/flashcard_card_accessibility_test.dart
+Test evidence:
+- actionable light-theme footer must be a semantics button with tap action,
+  exact source label and exact action hint;
+- tapping the existing keyed source widget must still invoke the existing
+  callback;
+- non-actionable dark-theme footer must expose no button flag, no tap action
+  and no hint.
 
-Authorized behavior:
-- visible source-footer UI remains unchanged;
-- when onSourceTap is non-null, semantics expose the action hint
-  "Activate to view source details.";
-- when onSourceTap is null, no button action hint is exposed;
-- existing source tap/navigation behavior remains unchanged.
+No Firebase, Supabase, auth, dependency, configuration, scheduling, memory,
+collection, provenance-model, navigation or architecture changes are
+authorized or present.
 
-All packet stop conditions and forbidden paths remain authoritative.
+Pilot B remains pending exact-SHA CHECK-2/CHECK-3 validation. No M2 closure is
+claimed.
