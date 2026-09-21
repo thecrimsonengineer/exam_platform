@@ -108,6 +108,11 @@ void main() {
     );
     expect(productionWorkflow, contains('SUPABASE_SECRET_KEY'));
     expect(productionWorkflow, contains('FR7_PUBLISH_PACKAGES'));
+    expect(
+      productionWorkflow,
+      contains('FR7: authorized one-shot production package publish'),
+    );
+    expect(productionWorkflow, contains('.github/fr7_publish_trigger'));
     expect(productionWorkflow, contains('--preflight'));
     expect(productionWorkflow, contains('--publish'));
     expect(productionWorkflow, isNot(contains('upload-artifact')));
