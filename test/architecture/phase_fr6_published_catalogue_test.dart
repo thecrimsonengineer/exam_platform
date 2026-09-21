@@ -75,7 +75,9 @@ void main() {
   test('FR6 keeps direct learner Data API access fail-closed', () {
     expect(
       sql,
-      contains('alter table public.published_catalog enable row level security;'),
+      contains(
+        'alter table public.published_catalog enable row level security;',
+      ),
     );
     expect(
       sql,
@@ -96,9 +98,7 @@ void main() {
     );
     expect(
       sql,
-      isNot(
-        contains('grant select on table public.published_catalog to anon'),
-      ),
+      isNot(contains('grant select on table public.published_catalog to anon')),
     );
     expect(
       sql,

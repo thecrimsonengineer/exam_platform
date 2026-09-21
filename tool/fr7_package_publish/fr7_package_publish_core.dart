@@ -134,14 +134,15 @@ class Fr7PublicationPlan {
 
   final List<Fr7PlannedCompetency> competencies;
 
-  List<Fr7PlannedPackage> get packages => <Fr7PlannedPackage>[
-    for (final competency in competencies) competency.content,
-    for (final competency in competencies) competency.questions,
-  ]..sort((left, right) {
-      final key = left.competencyId.compareTo(right.competencyId);
-      if (key != 0) return key;
-      return left.kind.compareTo(right.kind);
-    });
+  List<Fr7PlannedPackage> get packages =>
+      <Fr7PlannedPackage>[
+        for (final competency in competencies) competency.content,
+        for (final competency in competencies) competency.questions,
+      ]..sort((left, right) {
+        final key = left.competencyId.compareTo(right.competencyId);
+        if (key != 0) return key;
+        return left.kind.compareTo(right.kind);
+      });
 
   int get newPackageCount =>
       packages.where((package) => !package.reusesExistingPackage).length;
@@ -276,10 +277,10 @@ class Fr7PackageBuilder {
   ) {
     final sorted = rows.toList(growable: false)
       ..sort(
-        (left, right) =>
-            _requiredPositiveInt(right, 'version').compareTo(
-              _requiredPositiveInt(left, 'version'),
-            ),
+        (left, right) => _requiredPositiveInt(
+          right,
+          'version',
+        ).compareTo(_requiredPositiveInt(left, 'version')),
       );
 
     final topVersion = _requiredPositiveInt(sorted.first, 'version');
@@ -312,10 +313,10 @@ class Fr7PackageBuilder {
     for (final questionId in ids) {
       final versions = byQuestion[questionId]!.toList(growable: false)
         ..sort(
-          (left, right) =>
-              _requiredPositiveInt(right, 'version').compareTo(
-                _requiredPositiveInt(left, 'version'),
-              ),
+          (left, right) => _requiredPositiveInt(
+            right,
+            'version',
+          ).compareTo(_requiredPositiveInt(left, 'version')),
         );
       final topVersion = _requiredPositiveInt(versions.first, 'version');
       final duplicates = versions
@@ -383,10 +384,10 @@ class Fr7PackageBuilder {
     }
 
     payloads.sort(
-      (left, right) =>
-          _requiredPositiveInt(left, 'id').compareTo(
-            _requiredPositiveInt(right, 'id'),
-          ),
+      (left, right) => _requiredPositiveInt(
+        left,
+        'id',
+      ).compareTo(_requiredPositiveInt(right, 'id')),
     );
 
     return _artifact(
@@ -485,8 +486,7 @@ class Fr7PackageBuilder {
 
     final maxVersion = history.fold<int>(
       0,
-      (value, existing) =>
-          existing.version > value ? existing.version : value,
+      (value, existing) => existing.version > value ? existing.version : value,
     );
     final nextVersion = maxVersion + 1;
 

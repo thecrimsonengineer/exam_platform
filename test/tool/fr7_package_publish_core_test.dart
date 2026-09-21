@@ -34,12 +34,20 @@ void main() {
     );
 
     final competency = plan.competencies.single;
-    final contentJson = jsonDecode(
-      utf8.decode(gzip.decode(competency.content.artifact.compressedBytes)),
-    ) as Map<String, dynamic>;
-    final questionsJson = jsonDecode(
-      utf8.decode(gzip.decode(competency.questions.artifact.compressedBytes)),
-    ) as Map<String, dynamic>;
+    final contentJson =
+        jsonDecode(
+              utf8.decode(
+                gzip.decode(competency.content.artifact.compressedBytes),
+              ),
+            )
+            as Map<String, dynamic>;
+    final questionsJson =
+        jsonDecode(
+              utf8.decode(
+                gzip.decode(competency.questions.artifact.compressedBytes),
+              ),
+            )
+            as Map<String, dynamic>;
 
     expect(contentJson['sourceVersion'], 2);
     final questions = questionsJson['questions'] as List<dynamic>;
@@ -59,10 +67,7 @@ void main() {
     expect(competency.content.version, 1);
     expect(competency.questions.version, 1);
     expect(competency.content.storagePath, 'content/d01_c01/v1.json.gz');
-    expect(
-      competency.questions.storagePath,
-      'questions/d01_c01/v1.json.gz',
-    );
+    expect(competency.questions.storagePath, 'questions/d01_c01/v1.json.gz');
     expect(plan.newPackageCount, 2);
     expect(plan.reusedPackageCount, 0);
   });
@@ -126,9 +131,7 @@ void main() {
       questionRows: changedRows,
       existingPackageRows: history,
     );
-    history.add(
-      _historyRow(v2.competencies.single.questions, isCurrent: true),
-    );
+    history.add(_historyRow(v2.competencies.single.questions, isCurrent: true));
 
     final rollback = builder.build(
       contentRows: _contentRows(),
@@ -158,10 +161,7 @@ void main() {
     rows.add(Map<String, dynamic>.from(rows[1]));
 
     expect(
-      () => builder.build(
-        contentRows: _contentRows(),
-        questionRows: rows,
-      ),
+      () => builder.build(contentRows: _contentRows(), questionRows: rows),
       throwsStateError,
     );
   });
@@ -206,34 +206,32 @@ Map<String, dynamic> _questionRow({
   required int id,
   required int version,
   required String text,
-}) =>
-    <String, dynamic>{
-      'question_id': id,
-      'version': version,
-      'competency_id': 'd01_c01',
-      'status': 'published',
-      'source_payload': <String, dynamic>{
-        'id': id,
-        'version': version,
-        'competencyId': 'd01_c01',
-        'question': text,
-        'options': const <String>['A', 'B', 'C', 'D'],
-        'correctAnswer': 0,
-      },
-    };
+}) => <String, dynamic>{
+  'question_id': id,
+  'version': version,
+  'competency_id': 'd01_c01',
+  'status': 'published',
+  'source_payload': <String, dynamic>{
+    'id': id,
+    'version': version,
+    'competencyId': 'd01_c01',
+    'question': text,
+    'options': const <String>['A', 'B', 'C', 'D'],
+    'correctAnswer': 0,
+  },
+};
 
 Map<String, dynamic> _historyRow(
   Fr7PlannedPackage package, {
   bool isCurrent = false,
-}) =>
-    <String, dynamic>{
-      'package_kind': package.kind,
-      'package_key': package.competencyId,
-      'version': package.version,
-      'storage_bucket': fr7BucketId,
-      'storage_path': package.storagePath,
-      'checksum_sha256': package.artifact.checksumSha256,
-      'compressed_bytes': package.artifact.compressedByteCount,
-      'item_count': package.artifact.itemCount,
-      'is_current': isCurrent,
-    };
+}) => <String, dynamic>{
+  'package_kind': package.kind,
+  'package_key': package.competencyId,
+  'version': package.version,
+  'storage_bucket': fr7BucketId,
+  'storage_path': package.storagePath,
+  'checksum_sha256': package.artifact.checksumSha256,
+  'compressed_bytes': package.artifact.compressedByteCount,
+  'item_count': package.artifact.itemCount,
+  'is_current': isCurrent,
+};

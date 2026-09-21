@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const corePath =
-      'tool/fr7_package_publish/fr7_package_publish_core.dart';
-  const cliPath =
-      'tool/fr7_package_publish/fr7_package_publish.dart';
+  const corePath = 'tool/fr7_package_publish/fr7_package_publish_core.dart';
+  const cliPath = 'tool/fr7_package_publish/fr7_package_publish.dart';
   const workflowPath =
       '.github/workflows/phase_fr_firestore_read_reduction.yml';
   const productionWorkflowPath =

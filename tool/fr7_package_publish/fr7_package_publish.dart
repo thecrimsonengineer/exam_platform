@@ -217,41 +217,38 @@ void _validateNoStaleCurrentRows(
 
 Map<String, dynamic> _packageCommitPayload(
   Fr7PlannedPackage package,
-) =>
-    <String, dynamic>{
-      'kind': package.kind,
-      'version': package.version,
-      'storageBucket': fr7BucketId,
-      'storagePath': package.storagePath,
-      'checksumSha256': package.artifact.checksumSha256,
-      'compressedBytes': package.artifact.compressedByteCount,
-      'itemCount': package.artifact.itemCount,
-      'metadata': <String, dynamic>{
-        'phase': 'FR7',
-        'uncompressedChecksumSha256':
-            package.artifact.uncompressedChecksumSha256,
-        ...package.artifact.sourceMetadata,
-      },
-    };
+) => <String, dynamic>{
+  'kind': package.kind,
+  'version': package.version,
+  'storageBucket': fr7BucketId,
+  'storagePath': package.storagePath,
+  'checksumSha256': package.artifact.checksumSha256,
+  'compressedBytes': package.artifact.compressedByteCount,
+  'itemCount': package.artifact.itemCount,
+  'metadata': <String, dynamic>{
+    'phase': 'FR7',
+    'uncompressedChecksumSha256': package.artifact.uncompressedChecksumSha256,
+    ...package.artifact.sourceMetadata,
+  },
+};
 
 Map<String, dynamic> _catalogPointer(
   Fr7PlannedCompetency competency, {
   required String publishedAt,
-}) =>
-    <String, dynamic>{
-      'competency_id': competency.competencyId,
-      'content_version': competency.content.version,
-      'content_checksum_sha256': competency.content.artifact.checksumSha256,
-      'content_object_path': competency.content.storagePath,
-      'content_size_bytes': competency.content.artifact.compressedByteCount,
-      'question_version': competency.questions.version,
-      'question_checksum_sha256': competency.questions.artifact.checksumSha256,
-      'question_object_path': competency.questions.storagePath,
-      'question_size_bytes': competency.questions.artifact.compressedByteCount,
-      'published_question_count': competency.questions.artifact.itemCount,
-      'active': true,
-      'published_at': publishedAt,
-    };
+}) => <String, dynamic>{
+  'competency_id': competency.competencyId,
+  'content_version': competency.content.version,
+  'content_checksum_sha256': competency.content.artifact.checksumSha256,
+  'content_object_path': competency.content.storagePath,
+  'content_size_bytes': competency.content.artifact.compressedByteCount,
+  'question_version': competency.questions.version,
+  'question_checksum_sha256': competency.questions.artifact.checksumSha256,
+  'question_object_path': competency.questions.storagePath,
+  'question_size_bytes': competency.questions.artifact.compressedByteCount,
+  'published_question_count': competency.questions.artifact.itemCount,
+  'active': true,
+  'published_at': publishedAt,
+};
 
 bool _catalogPointerMatches(
   Map<String, dynamic>? existing,
@@ -296,8 +293,7 @@ void _verifyDatabaseState(
 
   final catalog = <String, Map<String, dynamic>>{
     for (final row in catalogRows)
-      if (row['active'] == true)
-        (row['competency_id']?.toString() ?? ''): row,
+      if (row['active'] == true) (row['competency_id']?.toString() ?? ''): row,
   };
 
   for (final competency in plan.competencies) {
@@ -426,15 +422,12 @@ class _SupabaseFr7Client {
     final output = <Map<String, dynamic>>[];
 
     for (var offset = 0; ; offset += pageSize) {
-      final uri = _restUri(
-        table,
-        <String, String>{
-          'select': '*',
-          ...query,
-          'limit': '$pageSize',
-          'offset': '$offset',
-        },
-      );
+      final uri = _restUri(table, <String, String>{
+        'select': '*',
+        ...query,
+        'limit': '$pageSize',
+        'offset': '$offset',
+      });
       final response = await _jsonRequest('GET', uri);
       if (response.statusCode < 200 || response.statusCode >= 300) {
         throw HttpException(
@@ -469,19 +462,14 @@ class _SupabaseFr7Client {
       return const _BucketState(exists: false, isPublic: false);
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw HttpException(
-        'FR7 bucket lookup failed (${response.statusCode}).',
-      );
+      throw HttpException('FR7 bucket lookup failed (${response.statusCode}).');
     }
     final decoded = jsonDecode(utf8.decode(response.bytes));
     if (decoded is! Map) {
       throw const FormatException('FR7 bucket response must be an object.');
     }
     final map = Map<String, dynamic>.from(decoded);
-    return _BucketState(
-      exists: true,
-      isPublic: map['public'] == true,
-    );
+    return _BucketState(exists: true, isPublic: map['public'] == true);
   }
 
   Future<void> createPrivateBucket(String bucketId) async {
@@ -566,10 +554,7 @@ class _SupabaseFr7Client {
     }
   }
 
-  Future<_ByteHttpResult> downloadObject(
-    String bucketId,
-    String storagePath,
-  ) =>
+  Future<_ByteHttpResult> downloadObject(String bucketId, String storagePath) =>
       _byteRequest(
         'GET',
         _storageUri(<String>[
@@ -607,20 +592,18 @@ class _SupabaseFr7Client {
     }
   }
 
-
   Uri _restUri(
     String table, [
     Map<String, String> query = const <String, String>{},
-  ]) =>
-      baseUri.replace(
-        pathSegments: <String>[
-          ...baseUri.pathSegments.where((segment) => segment.isNotEmpty),
-          'rest',
-          'v1',
-          table,
-        ],
-        queryParameters: query.isEmpty ? null : query,
-      );
+  ]) => baseUri.replace(
+    pathSegments: <String>[
+      ...baseUri.pathSegments.where((segment) => segment.isNotEmpty),
+      'rest',
+      'v1',
+      table,
+    ],
+    queryParameters: query.isEmpty ? null : query,
+  );
 
   Uri _storageUri(List<String> segments) => baseUri.replace(
     pathSegments: <String>[
@@ -769,12 +752,14 @@ List<Map<String, dynamic>> _mapList(dynamic raw, String label) {
   if (raw is! List) {
     throw FormatException('FR7 fixture "$label" must be a list.');
   }
-  return raw.map((item) {
-    if (item is! Map) {
-      throw FormatException('FR7 fixture "$label" contains a non-object.');
-    }
-    return Map<String, dynamic>.from(item);
-  }).toList(growable: false);
+  return raw
+      .map((item) {
+        if (item is! Map) {
+          throw FormatException('FR7 fixture "$label" contains a non-object.');
+        }
+        return Map<String, dynamic>.from(item);
+      })
+      .toList(growable: false);
 }
 
 Map<String, dynamic> _readJsonObject(String path) {
