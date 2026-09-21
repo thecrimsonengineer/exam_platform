@@ -1,0 +1,2 @@
+lib/screens/flashcards/widgets/flashcard_card_view.dart
+test/features/flashcards/ui/flashcard_card_accessibility_test.dart

@@ -33,6 +33,14 @@ jobs:
           [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]]
           echo "TARGET_SHA=$TARGET_SHA" >> "$GITHUB_ENV"
           echo "BASE_SHA=$BASE_SHA" >> "$GITHUB_ENV"
+          {
+            echo "FORMAT_PATHS<<EOF"
+            cat docs/agentic/ci/FORMAT_PATHS.txt 2>/dev/null || true
+            echo "EOF"
+            echo "EXTRA_TEST_PATHS<<EOF"
+            cat docs/agentic/ci/EXTRA_TEST_PATHS.txt 2>/dev/null || true
+            echo "EOF"
+          } >> "$GITHUB_ENV"
           echo "Target: $TARGET_SHA"
           echo "Base:   $BASE_SHA"
 
@@ -59,18 +67,34 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Agentic formatting gate
+      - name: Formatting gate
         shell: bash
         run: |
           set -euo pipefail
-          dart format tool/agentic_pdca test/agentic_pdca
-          if ! git diff --exit-code -- tool/agentic_pdca test/agentic_pdca; then
+          paths=(tool/agentic_pdca test/agentic_pdca)
+          if [ -n "${FORMAT_PATHS//$'\n'/}" ]; then
+            while IFS= read -r p; do
+              [ -z "$p" ] || paths+=("$p")
+            done <<< "$FORMAT_PATHS"
+          fi
+          dart format "${paths[@]}"
+          if ! git diff --exit-code -- "${paths[@]}"; then
             echo "::error::Dart formatting changes are required. Exact formatter diff is printed above."
             exit 1
           fi
 
       - name: Agentic PDCA test suite
         run: flutter test test/agentic_pdca/
+
+      - name: Extra bounded tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${EXTRA_TEST_PATHS//$'\n'/}" ]; then
+            while IFS= read -r p; do
+              [ -z "$p" ] || flutter test "$p"
+            done <<< "$EXTRA_TEST_PATHS"
+          fi
 
       - name: Analyzer severity gate
         run: flutter analyze --no-fatal-infos --fatal-warnings
@@ -127,6 +151,7 @@ jobs:
             echo "- Exact checkout: PASS"
             echo "- Format: PASS"
             echo "- Agentic tests: PASS"
+            echo "- Extra bounded tests: PASS"
             echo "- Analyzer: PASS"
             echo "- Architecture gate: PASS"
             echo "- Diff check: PASS"

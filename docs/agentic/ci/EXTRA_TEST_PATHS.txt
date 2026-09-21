@@ -1,0 +1,4 @@
+test/features/flashcards/ui/flashcard_card_accessibility_test.dart
+test/features/flashcards/ui/flashcard_review_player_screen_test.dart
+test/features/flashcards/architecture/flashcard_run6_architecture_test.dart
+test/features/flashcards/architecture/flashcard_run7_architecture_test.dart
