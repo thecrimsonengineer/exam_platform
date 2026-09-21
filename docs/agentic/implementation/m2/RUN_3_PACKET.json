@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "task_id": "M2-RUN-3",
+  "lineage_id": "M2-CONTROLS-3",
+  "maturity": "M2",
+  "plan_sha": "7a59205c550af5cc36a2c233513fc21b4f780e64",
+  "governance_sha": "43b2b3cc99839ae9de4092b4e2b7058d1964bff7",
+  "phase_base_sha": "d6a20c988027bdc25aeddc041cc16849bc259ad6",
+  "task_base_sha": "5ad6fd505fec16af2496a4526a06c9ada3b64333",
+  "branch": "agentic-pdca-m2-bounded-feature",
+  "feature_objective": "M2-5: implement the ACT-2 central bounded repair router, lineage-owned per-class budgets, trusted retry evidence and fail-closed escalation.",
+  "acceptance_criteria": [
+    "ACT-2 routes only RETRY, REPAIR or ESCALATE and has no closure route.",
+    "Repair authority requires exact trusted REVIEW_REPAIRABLE evidence for the candidate and packet.",
+    "Per-class and aggregate lineage budgets cannot be replenished by creating another controller or changing repair agent.",
+    "Retry requires trusted transient evidence for the same candidate, consumes no repair budget, and repeated identical retry strategy is rejected.",
+    "Repair authorization consumes budget before mutation, is scope-bound, and records root cause, evidence, strategy and remaining budget.",
+    "Zero-budget, unpermitted, architecture, dependency, security, ambiguous and invalid F7 cases escalate."
+  ],
+  "in_scope_requirements": [
+    "ACT-2 route model",
+    "Central lineage repair budget store",
+    "Repair authorization ledger",
+    "Trusted transient retry receipt",
+    "Trusted review outcome binding",
+    "Budget reset resistance",
+    "Adversarial ACT-2 tests"
+  ],
+  "out_of_scope_requirements": [
+    "Actual repair mutation executor",
+    "Application code",
+    "Persistent cross-process database",
+    "Parallel agents",
+    "M3 or M4 autonomy",
+    "Phase closure"
+  ],
+  "allowed_paths": [
+    "tool/agentic_pdca/m2_act.dart",
+    "test/agentic_pdca/m2_act_test.dart",
+    "docs/agentic/implementation/m2/**"
+  ],
+  "forbidden_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "protected_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "risk_class": "low",
+  "expected_changed_paths": [
+    "tool/agentic_pdca/m2_act.dart",
+    "test/agentic_pdca/m2_act_test.dart",
+    "docs/agentic/implementation/m2/RUN_3_PACKET.json",
+    "docs/agentic/implementation/m2/STATUS.md"
+  ],
+  "required_targeted_tests": [
+    "test/agentic_pdca/m2_act_test.dart"
+  ],
+  "required_architecture_gates": [
+    "test/agentic_pdca/m1_architecture_gate_test.dart"
+  ],
+  "required_check_gates": [
+    "FORMAT",
+    "ANALYZE",
+    "TEST",
+    "ARCHITECTURE_GATE",
+    "CHECK2",
+    "CHECK3"
+  ],
+  "permitted_repair_classes": ["F1", "F2", "F3", "F4", "F5", "F7"],
+  "repair_budgets": {
+    "F1": 5,
+    "F2": 5,
+    "F3": 3,
+    "F4": 3,
+    "F5": 3,
+    "F6": 0,
+    "F7": 2,
+    "F8": 0,
+    "F9": 0,
+    "F10": 0
+  },
+  "dependencies": [],
+  "stop_conditions": [
+    "Untrusted or missing review evidence",
+    "Repair budget exhaustion",
+    "Repeated identical repair or retry strategy",
+    "Scope expansion",
+    "Architecture conflict",
+    "Dependency or configuration change",
+    "Security or data-integrity finding",
+    "Ambiguous product behavior",
+    "Cancellation or stale lineage"
+  ],
+  "expected_handoff": [
+    "task_id",
+    "lineage_id",
+    "packet_hash",
+    "revision",
+    "base_sha",
+    "candidate_sha",
+    "branch",
+    "commits",
+    "changed_paths",
+    "diff_statistics",
+    "targeted_tests",
+    "architecture_gates",
+    "known_limitations",
+    "expected_changed_paths",
+    "clean_worktree",
+    "evidence_references"
+  ],
+  "human_approval_reference": "User message: continue with the m phase, 2026-09-21"
+}

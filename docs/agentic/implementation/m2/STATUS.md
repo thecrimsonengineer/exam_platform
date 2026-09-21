@@ -2,62 +2,45 @@
 
 Frozen plan: 7a59205c550af5cc36a2c233513fc21b4f780e64.
 Phase base: d6a20c988027bdc25aeddc041cc16849bc259ad6.
-Status: RUN_2_M2_4_REVIEW_REPAIR; M2 remains open.
+Status: RUN_3_M2_5_CANDIDATE; M2 remains open.
 
-## Accepted Run 1 checkpoint
+## Accepted checkpoints
 
-M2-1 through M2-3 are REVIEW_ACCEPTED at exact SHA
+### Run 1: M2-1 through M2-3
+
+REVIEW_ACCEPTED at exact SHA
 95d64b2c4b64b0f4381009e38d00c1a698f5a86c.
 
-The first Run 1 candidate was REVIEW_REPAIRABLE because approval provenance and
-trusted task-registry binding were incomplete. Those findings were repaired,
-then a deterministic F1 formatter repair was applied without behavior change.
+### Run 2: M2-4 CHECK-3
 
-GitHub exact-SHA validation run 35582932213 passed:
-- exact candidate checkout and M2 ancestry;
-- Dart format: 24 files, zero changes;
-- full test/agentic_pdca suite;
-- analyzer with --no-fatal-infos --fatal-warnings: exit 0, 409 infos;
-- M1 architecture gate;
-- diff integrity;
-- known generated registration-file restoration only;
-- clean exact-SHA checkout.
+REVIEW_ACCEPTED after independent hardening at exact SHA
+5ad6fd505fec16af2496a4526a06c9ada3b64333.
 
-No local workstation or Codex validation was required.
+GitHub exact-SHA validation run 35584469393 passed format, full Agentic PDCA
+tests, analyzer severity policy, architecture gate, ancestry/diff integrity and
+clean-checkout validation. The hardening binds the exact Control Plane lineage
+candidate and independently verifies DO handoff commits, diff statistics,
+targeted tests, architecture gates, gate results and evidence references.
 
-## Run 2: M2-4 CHECK-3 independent reviewer
+## Run 3: M2-5 ACT-2 bounded repairs
 
-RUN_2_PACKET.json is anchored to the accepted Run 1 SHA and limits this run to
-one new reviewer implementation, its tests and M2 documentation.
+RUN_3_PACKET.json is anchored to the accepted M2-4 SHA.
 
-The candidate reviewer:
-- has read-only repository and evidence dependencies only;
-- rechecks trusted task and packet approval state;
-- rechecks exact candidate identity and phase ancestry;
-- independently invokes CHECK-2 integrity scanning;
-- verifies trusted gate receipts against the DO handoff;
-- consumes exactly one trusted semantic reviewer receipt;
-- rejects the Builder principal reviewing its own candidate;
-- rejects unbudgeted semantic repair classifications;
-- classifies findings only as REVIEW_ACCEPTED, REVIEW_REPAIRABLE or
-  REVIEW_ESCALATE;
-- exposes no write, process, shell, commit, repair or closure capability.
+The candidate ACT-2 controller:
+- routes only retry, repair or escalate;
+- binds decisions to trusted task, lineage, packet approval and repair budget;
+- requires exact trusted REVIEW_REPAIRABLE evidence for repairs;
+- requires trusted transient-infrastructure evidence for retry;
+- keeps retry on the same candidate SHA and consumes no repair budget;
+- rejects repeated identical retry and repair strategies;
+- reserves repair budget before mutation authorization;
+- tracks per-class and aggregate category balances;
+- keys budget/history by lineage rather than repair-agent identity;
+- prevents higher stale/replayed snapshots from replenishing spent balance;
+- records root cause, strategy, evidence, requested paths and remaining budget;
+- rejects F6/F8/F9/F10 and invalid F7 autonomous repair;
+- has no mutation executor and no closure route.
 
-M2-5 ACT-2, M2-6 adversarial expansion, Pilot A lifecycle proof and Pilot B
-remain out of scope for this candidate.
-
-
-## Run 2 independent review finding
-
-GitHub exact-SHA validation run 35584005794 passed at
-56958782d49a05f6acb0d5e26655b7d000928efa, but independent CHECK-3 design
-review returned REVIEW_REPAIRABLE before M2-4 acceptance.
-
-Two bounded findings are repaired in the next candidate:
-1. trusted task authority must bind packet lineage currentSha to the exact
-   candidate under review;
-2. DO handoff commits, diff statistics, targeted tests, architecture gates and
-   evidence references must independently match trusted repository/gate
-   evidence, not only changed paths.
-
-No M2-5 work is included in this repair.
+Current limitation: ACT-2 state is process-lifetime rather than durable
+cross-process storage. M2-6 adversarial expansion, Pilot A lifecycle proof and
+Pilot B remain pending.
