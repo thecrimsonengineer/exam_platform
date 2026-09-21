@@ -27,10 +27,8 @@ final class M2IntegrityScanner {
     );
     findings.addAll(
       inherited.map(
-        (finding) => M2IntegrityFinding(
-          'CHECK2_' + finding.code,
-          finding.detail,
-        ),
+        (finding) =>
+            M2IntegrityFinding('CHECK2_' + finding.code, finding.detail),
       ),
     );
 
@@ -48,30 +46,18 @@ final class M2IntegrityScanner {
 
     for (final path in evidence.facts.changedPaths) {
       if (_dependencyOrConfig(path)) {
-        findings.add(
-          M2IntegrityFinding(
-            'DEPENDENCY_CONFIG_CHANGE',
-            path,
-          ),
-        );
+        findings.add(M2IntegrityFinding('DEPENDENCY_CONFIG_CHANGE', path));
       }
     }
 
     for (final entry in _addedLines(evidence.diffPatch)) {
       final path = entry.$1;
       final line = entry.$2.trim();
-      if (!path.startsWith('test/') ||
-          line.isEmpty ||
-          line.startsWith('//')) {
+      if (!path.startsWith('test/') || line.isEmpty || line.startsWith('//')) {
         continue;
       }
       if (_introducesSkip(line)) {
-        findings.add(
-          M2IntegrityFinding(
-            'TEST_SKIP_ADDED',
-            path + ': ' + line,
-          ),
-        );
+        findings.add(M2IntegrityFinding('TEST_SKIP_ADDED', path + ': ' + line));
       }
     }
 

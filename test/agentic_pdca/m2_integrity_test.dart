@@ -129,7 +129,11 @@ void main() {
   });
 
   test('dependency and CI config drift is explicitly identified', () async {
-    for (final path in ['pubspec.yaml', '.github/workflows/x.yml', 'firebase/x']) {
+    for (final path in [
+      'pubspec.yaml',
+      '.github/workflows/x.yml',
+      'firebase/x',
+    ]) {
       final packet = packetFor('config-' + path.hashCode.toString());
       final workspace = M2FakeWorkspace(packet)
         ..head = m2TestCandidate
@@ -143,9 +147,7 @@ void main() {
         candidateSha: m2TestCandidate,
       );
       expect(
-        findings.any(
-          (finding) => finding.code == 'DEPENDENCY_CONFIG_CHANGE',
-        ),
+        findings.any((finding) => finding.code == 'DEPENDENCY_CONFIG_CHANGE'),
         isTrue,
       );
     }
@@ -158,7 +160,8 @@ void main() {
       ..head = m2TestCandidate
       ..changed = [path]
       ..fileContents = {
-        path: 'final token = "ghp_123456789012345678901234";\n'
+        path:
+            'final token = "ghp_123456789012345678901234";\n'
             'expect(value, isNot(true));',
       }
       ..diffPatch = 'diff --git a/' + path + ' b/' + path + '\n';

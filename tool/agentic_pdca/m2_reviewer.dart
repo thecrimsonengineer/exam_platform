@@ -267,11 +267,7 @@ final class M2Check3Reviewer {
       );
       for (final finding in integrity) {
         findings.add(
-          _escalate(
-            finding.code,
-            finding.detail,
-            'check2:' + finding.code,
-          ),
+          _escalate(finding.code, finding.detail, 'check2:' + finding.code),
         );
       }
     } catch (_) {

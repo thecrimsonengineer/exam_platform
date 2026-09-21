@@ -97,58 +97,61 @@ void main() {
     );
   }
 
-  test('packet mutation after DO cannot reuse old handoff or evidence', () async {
-    final packet = packetFor('packet-revision');
-    final work = M2FakeWorkspace(packet)
-      ..head = m2TestCandidate
-      ..changed = [packet.expectedPaths.first]
-      ..commits = [m2TestCandidate]
-      ..diffPatch =
-          'diff --git a/' +
-          packet.expectedPaths.first +
-          ' b/' +
-          packet.expectedPaths.first +
-          '\n';
-    final receipts = greenReceipts(packet);
-    final handoff = await M2HandoffBuilder(
-      workspace: work,
-      gateEvidence: M2FakeGates(receipts),
-      packet: packet,
-    ).build(candidateSha: m2TestCandidate, knownLimitations: const []);
+  test(
+    'packet mutation after DO cannot reuse old handoff or evidence',
+    () async {
+      final packet = packetFor('packet-revision');
+      final work = M2FakeWorkspace(packet)
+        ..head = m2TestCandidate
+        ..changed = [packet.expectedPaths.first]
+        ..commits = [m2TestCandidate]
+        ..diffPatch =
+            'diff --git a/' +
+            packet.expectedPaths.first +
+            ' b/' +
+            packet.expectedPaths.first +
+            '\n';
+      final receipts = greenReceipts(packet);
+      final handoff = await M2HandoffBuilder(
+        workspace: work,
+        gateEvidence: M2FakeGates(receipts),
+        packet: packet,
+      ).build(candidateSha: m2TestCandidate, knownLimitations: const []);
 
-    final revisedJson = Map<String, Object?>.from(packet.toJson());
-    revisedJson['revision'] = 2;
-    final revised = M2TaskPacket.fromJson(revisedJson);
-    final semantic = M2SemanticReviewReceipt(
-      candidateSha: m2TestCandidate,
-      packetHash: packet.hash,
-      reviewerPrincipal: 'reviewer',
-      reviewerRole: 'REVIEWER',
-      readOnly: true,
-      observedAt: m2TestNow,
-      evidenceReference: 'review:old-packet',
-      acceptanceCriteriaSatisfied: true,
-      architectureConsistent: true,
-      testQualityAccepted: true,
-      regressionRiskAccepted: true,
-      maintainabilityAccepted: true,
-      behaviorMatchesTask: true,
-      findings: const [],
-    );
-    final reviewer = M2Check3Reviewer(
-      packet: revised,
-      workspace: work,
-      gateEvidence: M2FakeGates(receipts),
-      semanticEvidence: _SemanticStore([semantic]),
-      trustedState: testState(revised, lineageSha: m2TestCandidate),
-      trustedClock: () => m2TestNow,
-    );
-    final outcome = await reviewer.review(
-      candidateSha: m2TestCandidate,
-      handoffJson: handoff.canonicalJson,
-    );
-    expect(outcome.state, M2ReviewState.reviewEscalate);
-  });
+      final revisedJson = Map<String, Object?>.from(packet.toJson());
+      revisedJson['revision'] = 2;
+      final revised = M2TaskPacket.fromJson(revisedJson);
+      final semantic = M2SemanticReviewReceipt(
+        candidateSha: m2TestCandidate,
+        packetHash: packet.hash,
+        reviewerPrincipal: 'reviewer',
+        reviewerRole: 'REVIEWER',
+        readOnly: true,
+        observedAt: m2TestNow,
+        evidenceReference: 'review:old-packet',
+        acceptanceCriteriaSatisfied: true,
+        architectureConsistent: true,
+        testQualityAccepted: true,
+        regressionRiskAccepted: true,
+        maintainabilityAccepted: true,
+        behaviorMatchesTask: true,
+        findings: const [],
+      );
+      final reviewer = M2Check3Reviewer(
+        packet: revised,
+        workspace: work,
+        gateEvidence: M2FakeGates(receipts),
+        semanticEvidence: _SemanticStore([semantic]),
+        trustedState: testState(revised, lineageSha: m2TestCandidate),
+        trustedClock: () => m2TestNow,
+      );
+      final outcome = await reviewer.review(
+        candidateSha: m2TestCandidate,
+        handoffJson: handoff.canonicalJson,
+      );
+      expect(outcome.state, M2ReviewState.reviewEscalate);
+    },
+  );
 
   test('expired approval blocks CHECK-3 authority', () async {
     final packet = packetFor('expired-approval');
@@ -212,94 +215,96 @@ void main() {
     );
   });
 
-  test('builder cannot self-approve CHECK-3 and ACT cannot hide escalation', () async {
-    final packet = packetFor('self-review');
-    final escalateFinding = M2ReviewFinding(
-      code: 'ARCHITECTURE_CONFLICT',
-      detail: 'architecture mismatch',
-      disposition: M2ReviewFindingDisposition.escalate,
-      evidenceReference: 'review:architecture',
-      repairClass: 'F6',
-    );
-    final repairFinding = M2ReviewFinding(
-      code: 'BEHAVIOR_MISMATCH',
-      detail: 'bounded behavior defect',
-      disposition: M2ReviewFindingDisposition.repairable,
-      evidenceReference: 'review:behavior',
-      repairClass: 'F4',
-    );
-    final inconsistent = M2ReviewOutcome(
-      state: M2ReviewState.reviewRepairable,
-      candidateSha: m2TestCandidate,
-      packetHash: packet.hash,
-      reviewerPrincipal: 'builder',
-      findings: [escalateFinding, repairFinding],
-    );
-    final controller = M2ActController(
-      packet: packet,
-      trustedState: withBudget(packet, m2TestCandidate),
-      reviewEvidence: _ReviewStore([inconsistent]),
-      retryEvidence: _RetryStore(const []),
-      trustedClock: () => m2TestNow,
-    );
-    final decision = await controller.route(
-      M2ActRequest(
-        attemptType: M2ActAttemptType.repair,
-        failedCandidateSha: m2TestCandidate,
-        repairAgent: 'repairer',
-        strategy: 'repair behavior only',
-        rootCause: 'candidate defect',
+  test(
+    'builder cannot self-approve CHECK-3 and ACT cannot hide escalation',
+    () async {
+      final packet = packetFor('self-review');
+      final escalateFinding = M2ReviewFinding(
+        code: 'ARCHITECTURE_CONFLICT',
+        detail: 'architecture mismatch',
+        disposition: M2ReviewFindingDisposition.escalate,
+        evidenceReference: 'review:architecture',
+        repairClass: 'F6',
+      );
+      final repairFinding = M2ReviewFinding(
+        code: 'BEHAVIOR_MISMATCH',
+        detail: 'bounded behavior defect',
+        disposition: M2ReviewFindingDisposition.repairable,
         evidenceReference: 'review:behavior',
-        findingCode: 'BEHAVIOR_MISMATCH',
         repairClass: 'F4',
-        requestedPaths: [packet.expectedPaths.first],
-      ),
-    );
-    expect(decision.route, M2ActRoute.escalate);
-  });
+      );
+      final inconsistent = M2ReviewOutcome(
+        state: M2ReviewState.reviewRepairable,
+        candidateSha: m2TestCandidate,
+        packetHash: packet.hash,
+        reviewerPrincipal: 'builder',
+        findings: [escalateFinding, repairFinding],
+      );
+      final controller = M2ActController(
+        packet: packet,
+        trustedState: withBudget(packet, m2TestCandidate),
+        reviewEvidence: _ReviewStore([inconsistent]),
+        retryEvidence: _RetryStore(const []),
+        trustedClock: () => m2TestNow,
+      );
+      final decision = await controller.route(
+        M2ActRequest(
+          attemptType: M2ActAttemptType.repair,
+          failedCandidateSha: m2TestCandidate,
+          repairAgent: 'repairer',
+          strategy: 'repair behavior only',
+          rootCause: 'candidate defect',
+          evidenceReference: 'review:behavior',
+          findingCode: 'BEHAVIOR_MISMATCH',
+          repairClass: 'F4',
+          requestedPaths: [packet.expectedPaths.first],
+        ),
+      );
+      expect(decision.route, M2ActRoute.escalate);
+    },
+  );
 
-  test('cancelled lineage blocks ACT even with valid repairable review', () async {
-    final packet = packetFor('cancelled');
-    final finding = M2ReviewFinding(
-      code: 'BEHAVIOR_MISMATCH',
-      detail: 'bounded defect',
-      disposition: M2ReviewFindingDisposition.repairable,
-      evidenceReference: 'review:cancelled',
-      repairClass: 'F4',
-    );
-    final outcome = M2ReviewOutcome(
-      state: M2ReviewState.reviewRepairable,
-      candidateSha: m2TestCandidate,
-      packetHash: packet.hash,
-      reviewerPrincipal: 'reviewer',
-      findings: [finding],
-    );
-    final controller = M2ActController(
-      packet: packet,
-      trustedState: withBudget(
-        packet,
-        m2TestCandidate,
-        cancelled: true,
-      ),
-      reviewEvidence: _ReviewStore([outcome]),
-      retryEvidence: _RetryStore(const []),
-      trustedClock: () => m2TestNow,
-    );
-    final decision = await controller.route(
-      M2ActRequest(
-        attemptType: M2ActAttemptType.repair,
-        failedCandidateSha: m2TestCandidate,
-        repairAgent: 'repairer',
-        strategy: 'bounded fix',
-        rootCause: 'candidate defect',
+  test(
+    'cancelled lineage blocks ACT even with valid repairable review',
+    () async {
+      final packet = packetFor('cancelled');
+      final finding = M2ReviewFinding(
+        code: 'BEHAVIOR_MISMATCH',
+        detail: 'bounded defect',
+        disposition: M2ReviewFindingDisposition.repairable,
         evidenceReference: 'review:cancelled',
-        findingCode: 'BEHAVIOR_MISMATCH',
         repairClass: 'F4',
-        requestedPaths: [packet.expectedPaths.first],
-      ),
-    );
-    expect(decision.route, M2ActRoute.escalate);
-  });
+      );
+      final outcome = M2ReviewOutcome(
+        state: M2ReviewState.reviewRepairable,
+        candidateSha: m2TestCandidate,
+        packetHash: packet.hash,
+        reviewerPrincipal: 'reviewer',
+        findings: [finding],
+      );
+      final controller = M2ActController(
+        packet: packet,
+        trustedState: withBudget(packet, m2TestCandidate, cancelled: true),
+        reviewEvidence: _ReviewStore([outcome]),
+        retryEvidence: _RetryStore(const []),
+        trustedClock: () => m2TestNow,
+      );
+      final decision = await controller.route(
+        M2ActRequest(
+          attemptType: M2ActAttemptType.repair,
+          failedCandidateSha: m2TestCandidate,
+          repairAgent: 'repairer',
+          strategy: 'bounded fix',
+          rootCause: 'candidate defect',
+          evidenceReference: 'review:cancelled',
+          findingCode: 'BEHAVIOR_MISMATCH',
+          repairClass: 'F4',
+          requestedPaths: [packet.expectedPaths.first],
+        ),
+      );
+      expect(decision.route, M2ActRoute.escalate);
+    },
+  );
 
   test('M2 state surfaces contain no autonomous closure route', () {
     expect(
@@ -310,10 +315,11 @@ void main() {
       M2ActRoute.values.map((value) => value.name),
       isNot(contains('close')),
     );
-    expect(
-      M2ActRoute.values.map((value) => value.name).toSet(),
-      {'retry', 'repair', 'escalate'},
-    );
+    expect(M2ActRoute.values.map((value) => value.name).toSet(), {
+      'retry',
+      'repair',
+      'escalate',
+    });
   });
 
   test('canonical path traversal and protected paths remain denied', () {
