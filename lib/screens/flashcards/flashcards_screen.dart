@@ -1000,19 +1000,19 @@ class _MetricChip extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Wrap(
+          alignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 6,
+          runSpacing: 2,
           children: [
             Icon(icon, size: 16, color: scheme.primary),
-            const SizedBox(width: 6),
-            Flexible(
-              child: Text(
-                label,
-                softWrap: true,
-                style: Theme.of(
-                  context,
-                ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w800),
-              ),
+            Text(
+              label,
+              softWrap: true,
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
           ],
         ),
@@ -1038,13 +1038,16 @@ class _TinyStatus extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Wrap(
+          alignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 4,
+          runSpacing: 2,
           children: [
             Icon(icon, size: 13, color: scheme.primary),
-            const SizedBox(width: 4),
             Text(
               label,
+              softWrap: true,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: scheme.primary,
                 fontWeight: FontWeight.w900,
