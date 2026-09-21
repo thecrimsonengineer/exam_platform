@@ -123,9 +123,6 @@ class FlashcardCardView extends StatelessWidget {
                   Semantics(
                     button: onSourceTap != null,
                     label: sourceFooter!.label,
-                    hint: onSourceTap == null
-                        ? null
-                        : 'Activate to view source details.',
                     child: InkWell(
                       key: ValueKey('flashcard-source-${card.id}'),
                       borderRadius: BorderRadius.circular(12),

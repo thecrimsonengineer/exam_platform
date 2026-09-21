@@ -2,7 +2,7 @@
 
 Frozen plan: 7a59205c550af5cc36a2c233513fc21b4f780e64.
 Phase base: d6a20c988027bdc25aeddc041cc16849bc259ad6.
-Status: M2_PILOT_B_DO_CANDIDATE; M2 remains open.
+Status: M2_PILOT_B_APPROVAL_PENDING; M2 remains open.
 
 ## Accepted governance checkpoints
 
@@ -15,33 +15,36 @@ Status: M2_PILOT_B_DO_CANDIDATE; M2 remains open.
   8ada71ce7b86f52a6916d1b6102a27933efba5b0 after GitHub exact-SHA
   validation run 35586629747 passed all gates.
 
-## M2-8 Pilot B authorization
+## M2-8 Pilot B proposal
 
-Task: M2-PILOT-B-FC8-A11Y-1.
+Pilot B is deliberately a real application change from the already-open FC8
+hardening backlog, while remaining extremely narrow.
 
-Packet proposal commit:
-65f9bc9a96836962a06d02ac26f1167f8ccc76ca.
+Feature:
+Flashcard source-footer accessibility hardening.
 
-Canonical packet hash:
-8e4c2c3da43390f65ea207500159c26e2b90da1aae615002e495600400ecb1f8.
+Current behavior:
+- the visible source footer is already present;
+- when onSourceTap is provided, Semantics marks the footer as a button;
+- the screen-reader label is the source label;
+- no explicit action hint tells a screen-reader user what activating the
+  source footer will do.
 
-Task base:
-8ada71ce7b86f52a6916d1b6102a27933efba5b0.
+Proposed bounded behavior:
+- keep all visible UI unchanged;
+- keep current tap/navigation behavior unchanged;
+- when onSourceTap is non-null, expose semantic hint:
+  "Activate to view source details.";
+- when onSourceTap is null, expose no button action and no action hint;
+- add focused widget accessibility regression tests.
 
-Explicit human approval was supplied in chat on 2026-09-21 and bound to the
-exact task ID, packet commit, packet hash and task base above.
+Allowed application path:
+- lib/screens/flashcards/widgets/flashcard_card_view.dart
 
-## Pilot B DO-2 candidate
+Allowed test path:
+- test/features/flashcards/ui/flashcard_card_accessibility_test.dart
 
-The implementation is intentionally narrow:
-- add only a conditional semantic hint to the existing Flashcard source footer;
-- preserve visible UI and existing source tap behavior;
-- add a focused accessibility widget regression test covering actionable
-  light-theme semantics and non-actionable dark-theme semantics.
+No other application files are authorized.
 
-No Firebase, Supabase, auth, dependency, configuration, scheduling, memory,
-collection, provenance-model, navigation or architecture changes are
-authorized or intended.
-
-Pilot B remains pending exact-SHA CHECK-2/CHECK-3 validation. No M2 closure is
-claimed.
+This packet is not approved yet. No lib/** mutation may occur until explicit
+human approval is bound to this exact packet/commit.
