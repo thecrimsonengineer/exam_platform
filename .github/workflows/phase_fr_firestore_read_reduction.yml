@@ -6,11 +6,13 @@ on:
       - phase-fr-firestore-read-reduction
       - phase-fr5-shadow-data-parity
       - phase-fr6-published-catalogue
+      - phase-fr7-storage-publishing
   pull_request:
     branches:
       - phase-fr3-closed
       - phase-fr4-closed
       - phase-fr5-closed
+      - phase-fr6-closed
   workflow_dispatch:
 
 permissions:
@@ -78,6 +80,14 @@ jobs:
             test/architecture/phase_fr5_shadow_parity_architecture_test.dart \
             test/architecture/phase_fr5_authoring_workspace_test.dart \
             test/architecture/phase_fr6_published_catalogue_test.dart \
+            tool/fr7_package_publish/fr7_package_publish_core.dart \
+            tool/fr7_package_publish/fr7_package_publish.dart \
+            test/tool/fr7_package_publish_core_test.dart \
+            test/architecture/phase_fr7_storage_publishing_test.dart \
+            tool/fr7_package_publish/fr7_package_publish_core.dart \
+            tool/fr7_package_publish/fr7_package_publish.dart \
+            test/tool/fr7_package_publish_core_test.dart \
+            test/architecture/phase_fr7_storage_publishing_test.dart \
             test/architecture/phase_fr5_authoring_workspace_test.dart \
             test/architecture/phase_fr6_published_catalogue_test.dart
           git diff --
@@ -176,6 +186,27 @@ jobs:
 
       - name: FR6 published catalogue architecture gate
         run: flutter test test/architecture/phase_fr6_published_catalogue_test.dart
+
+      - name: FR7 package publishing unit tests
+        run: |
+          flutter test test/tool/fr7_package_publish_core_test.dart
+          flutter test test/architecture/phase_fr7_storage_publishing_test.dart
+
+      - name: FR7 deterministic fixture packaging gate
+        run: |
+          rm -rf build/fr7
+          dart run tool/fr7_package_publish/fr7_package_publish.dart \
+            --source=test/fixtures/fr7/source_snapshot.json \
+            --package-dir=build/fr7/run-a/packages \
+            --evidence=build/fr7/run-a/evidence.json
+          dart run tool/fr7_package_publish/fr7_package_publish.dart \
+            --source=test/fixtures/fr7/source_snapshot.json \
+            --package-dir=build/fr7/run-b/packages \
+            --evidence=build/fr7/run-b/evidence.json
+          diff -u build/fr7/run-a/evidence.json build/fr7/run-b/evidence.json
+          diff -qr build/fr7/run-a/packages build/fr7/run-b/packages
+          grep -q '"readyToPublish": true' build/fr7/run-a/evidence.json
+          grep -q '"packageCount": 4' build/fr7/run-a/evidence.json
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
