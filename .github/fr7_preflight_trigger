@@ -1,2 +1,3 @@
 FR7 read-only production preflight trigger
 retry=2
+publish_retry=1
