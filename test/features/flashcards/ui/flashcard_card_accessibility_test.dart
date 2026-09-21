@@ -73,13 +73,15 @@ void main() {
 
       final sourceFinder = find.byKey(sourceKey);
       expect(sourceFinder, findsOneWidget);
+      expect(find.text('Source: NIOSH'), findsOneWidget);
       expect(
         tester.getSemantics(sourceFinder),
         matchesSemantics(
-          label: 'Source: NIOSH',
           hint: 'Activate to view source details.',
           isButton: true,
+          isFocusable: true,
           hasTapAction: true,
+          hasFocusAction: true,
         ),
       );
 
@@ -101,13 +103,15 @@ void main() {
 
       final sourceFinder = find.byKey(sourceKey);
       expect(sourceFinder, findsOneWidget);
+      expect(find.text('Source: NIOSH'), findsOneWidget);
       expect(
         tester.getSemantics(sourceFinder),
         matchesSemantics(
-          label: 'Source: NIOSH',
           hint: '',
           isButton: false,
+          isFocusable: false,
           hasTapAction: false,
+          hasFocusAction: false,
         ),
       );
 
