@@ -1,0 +1,101 @@
+name: Phase FR7 Production Package Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish immutable competency packages and update catalogue last
+        required: true
+        type: boolean
+        default: false
+      confirmation:
+        description: Type FR7_PUBLISH_PACKAGES when publish is true
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-fr7-production-package-publish
+  cancel-in-progress: false
+
+env:
+  SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+  SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+
+jobs:
+  package-publish:
+    if: github.ref == 'refs/heads/phase-fr7-storage-publishing'
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - name: Checkout FR7 branch
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Require server-side Supabase secret key
+        shell: bash
+        run: |
+          if [ -z "$SUPABASE_SECRET_KEY" ]; then
+            echo "Missing repository secret SUPABASE_SECRET_KEY."
+            exit 1
+          fi
+
+      - name: FR7 production read-only preflight
+        run: |
+          rm -rf build/fr7-production
+          mkdir -p build/fr7-production
+          dart run tool/fr7_package_publish/fr7_package_publish.dart \
+            --preflight \
+            --evidence=build/fr7-production/preflight.json
+          grep -q '"readyToPublish": true' build/fr7-production/preflight.json
+
+      - name: Require explicit package-publish confirmation
+        if: inputs.publish == true
+        shell: bash
+        run: |
+          if [ "${{ inputs.confirmation }}" != "FR7_PUBLISH_PACKAGES" ]; then
+            echo "Publish requested without exact FR7_PUBLISH_PACKAGES confirmation."
+            exit 1
+          fi
+
+      - name: Publish immutable packages and update catalogue last
+        if: inputs.publish == true
+        run: |
+          dart run tool/fr7_package_publish/fr7_package_publish.dart \
+            --publish \
+            --confirm=FR7_PUBLISH_PACKAGES \
+            --evidence=build/fr7-production/publication.json
+          grep -q '"completePublication": true' build/fr7-production/publication.json
+
+      - name: Print non-sensitive FR7 summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('build/fr7-production/publication.json')
+          if not path.exists():
+              path = Path('build/fr7-production/preflight.json')
+          report = json.loads(path.read_text())
+          print('FR7 competencies:', report.get('competencyCount'))
+          print('FR7 packages:', report.get('packageCount'))
+          print('FR7 new packages:', report.get('newPackageCount'))
+          print('FR7 reused packages:', report.get('reusedPackageCount'))
+          print('FR7 compressed bytes:', report.get('totalCompressedBytes'))
+          print('FR7 bucket private:', report.get('bucketPrivate'))
+          print('FR7 complete publication:', report.get('completePublication', False))
+          PY
