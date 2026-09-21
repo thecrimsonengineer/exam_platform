@@ -21,20 +21,6 @@ enum M1MechanicalClass {
   unknown,
 }
 
-final class M1WriterLeaseState {
-  const M1WriterLeaseState({
-    required this.writerLeaseId,
-    required this.writerIdentity,
-    required this.fencingToken,
-    required this.active,
-  });
-
-  final String writerLeaseId;
-  final String writerIdentity;
-  final int fencingToken;
-  final bool active;
-}
-
 final class M1MechanicalAuthorityRequest {
   const M1MechanicalAuthorityRequest({
     required this.taskId,
