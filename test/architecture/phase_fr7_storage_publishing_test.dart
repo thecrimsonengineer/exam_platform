@@ -31,6 +31,8 @@ void main() {
     expect(cli, isNot(contains('supabase_flutter')));
     expect(cli, contains('SUPABASE_SECRET_KEY'));
     expect(cli, contains('SUPABASE_SERVICE_ROLE_KEY'));
+    expect(cli, contains("uri.path.contains('/storage/v1/')"));
+    expect(cli, contains('HttpHeaders.authorizationHeader'));
   });
 
   test('FR7 uses a private immutable package bucket', () {
