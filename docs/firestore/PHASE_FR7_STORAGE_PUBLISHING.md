@@ -24,9 +24,10 @@ For every competency that has both published StudyContent and published question
 7. otherwise allocate the next package revision and immutable object path;
 8. upload with overwrite disabled;
 9. download and verify the exact compressed checksum;
-10. register immutable package metadata;
-11. select the package as current;
-12. update published_catalog only after every package is ready.
+10. call one service-role-only PostgreSQL transaction per competency;
+11. register or verify both immutable package metadata rows inside that transaction;
+12. switch both current package pointers inside that transaction;
+13. update published_catalog last inside that same transaction.
 
 Package paths are:
 
@@ -40,6 +41,8 @@ The package revision is independent from individual source-record versions. This
 ## Rollback
 
 If the source returns to a checksum that already exists in immutable history, FR7 reuses that historical package version and repoints the current package/catalogue state. It does not upload a duplicate object.
+
+FR7 also defines a service-role-only atomic rollback function that repoints content, questions and the competency catalogue to known-good immutable versions in one transaction. It never deletes Storage objects.
 
 ## Storage security
 
@@ -80,7 +83,7 @@ source snapshot
 -> final database + object verification
 ```
 
-A crash before the catalogue update leaves the learner-visible pointer on the prior known-good package.
+Storage objects are verified before the database transaction starts. Package registration, both current-package switches and the catalogue pointer then commit or roll back together. A crash cannot leave current package metadata ahead of the learner-visible catalogue pointer.
 
 ## Current production source shape
 

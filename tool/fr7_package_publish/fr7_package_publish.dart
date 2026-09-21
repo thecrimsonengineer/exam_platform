@@ -124,40 +124,36 @@ Future<void> main(List<String> args) async {
 
   for (final package in plan.packages) {
     await client.ensureImmutableObject(package);
-
-    if (!package.reusesExistingPackage) {
-      await client.insertPackageRegistration(
-        package,
-        publishedAt: publicationTimestamp,
-      );
-    }
   }
 
+  // Storage bytes are immutable and verified before any database pointer moves.
   await _verifyObjects(client, plan);
-
-  for (final package in plan.packages) {
-    await client.selectCurrentPackage(package);
-  }
 
   final existingCatalog = <String, Map<String, dynamic>>{
     for (final row in catalogRows)
       (row['competency_id']?.toString() ?? ''): row,
   };
+  var catalogUpdatedCount = 0;
 
-  final catalogUpserts = <Map<String, dynamic>>[];
   for (final competency in plan.competencies) {
     final expected = _catalogPointer(
       competency,
       publishedAt: publicationTimestamp,
     );
-    final existing = existingCatalog[competency.competencyId];
-    if (!_catalogPointerMatches(existing, expected)) {
-      catalogUpserts.add(expected);
+    if (!_catalogPointerMatches(
+      existingCatalog[competency.competencyId],
+      expected,
+    )) {
+      catalogUpdatedCount++;
     }
-  }
 
-  if (catalogUpserts.isNotEmpty) {
-    await client.upsertCatalogRows(catalogUpserts);
+    // Package registration, current-version selection and published_catalog
+    // switch happen in one PostgreSQL transaction. The catalogue write is
+    // last inside the RPC.
+    await client.commitCompetencyPublication(
+      competency,
+      publishedAt: publicationTimestamp,
+    );
   }
 
   final verifiedPackages = await client.fetchAll('published_packages');
@@ -172,7 +168,7 @@ Future<void> main(List<String> args) async {
     'credentialKind': config.credentialKind,
     'bucketExists': true,
     'bucketPrivate': true,
-    'catalogUpdatedCount': catalogUpserts.length,
+    'catalogUpdatedCount': catalogUpdatedCount,
     'completePublication': true,
   });
 
@@ -218,6 +214,25 @@ void _validateNoStaleCurrentRows(
     );
   }
 }
+
+Map<String, dynamic> _packageCommitPayload(
+  Fr7PlannedPackage package,
+) =>
+    <String, dynamic>{
+      'kind': package.kind,
+      'version': package.version,
+      'storageBucket': fr7BucketId,
+      'storagePath': package.storagePath,
+      'checksumSha256': package.artifact.checksumSha256,
+      'compressedBytes': package.artifact.compressedByteCount,
+      'itemCount': package.artifact.itemCount,
+      'metadata': <String, dynamic>{
+        'phase': 'FR7',
+        'uncompressedChecksumSha256':
+            package.artifact.uncompressedChecksumSha256,
+        ...package.artifact.sourceMetadata,
+      },
+    };
 
 Map<String, dynamic> _catalogPointer(
   Fr7PlannedCompetency competency, {
@@ -565,116 +580,33 @@ class _SupabaseFr7Client {
         ]),
       );
 
-  Future<void> insertPackageRegistration(
-    Fr7PlannedPackage package, {
+  Future<void> commitCompetencyPublication(
+    Fr7PlannedCompetency competency, {
     required String publishedAt,
   }) async {
-    final uri = _restUri('published_packages');
+    final uri = _restUri('rpc/fr7_commit_competency_publication');
     final response = await _jsonRequest(
       'POST',
       uri,
       body: <String, dynamic>{
-        'package_kind': package.kind,
-        'package_key': package.competencyId,
-        'version': package.version,
-        'competency_id': package.competencyId,
-        'storage_bucket': fr7BucketId,
-        'storage_path': package.storagePath,
-        'checksum_sha256': package.artifact.checksumSha256,
-        'compressed_bytes': package.artifact.compressedByteCount,
-        'item_count': package.artifact.itemCount,
-        'is_current': false,
-        'metadata': <String, dynamic>{
-          'phase': 'FR7',
-          'uncompressedChecksumSha256':
-              package.artifact.uncompressedChecksumSha256,
-          ...package.artifact.sourceMetadata,
+        'p_payload': <String, dynamic>{
+          'competencyId': competency.competencyId,
+          'publishedAt': publishedAt,
+          'content': _packageCommitPayload(competency.content),
+          'questions': _packageCommitPayload(competency.questions),
         },
-        'published_at': publishedAt,
       },
-      prefer: 'return=minimal',
     );
+
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw HttpException(
-        'FR7 package registration failed '
+        'FR7 atomic publication commit failed '
         '(${response.statusCode}): ${response.body}',
         uri: uri,
       );
     }
   }
 
-  Future<void> selectCurrentPackage(Fr7PlannedPackage package) async {
-    final clearUri = _restUri(
-      'published_packages',
-      <String, String>{
-        'package_kind': 'eq.${package.kind}',
-        'package_key': 'eq.${package.competencyId}',
-        'is_current': 'eq.true',
-      },
-    );
-    final clear = await _jsonRequest(
-      'PATCH',
-      clearUri,
-      body: const <String, dynamic>{'is_current': false},
-      prefer: 'return=minimal',
-    );
-    if (clear.statusCode < 200 || clear.statusCode >= 300) {
-      throw StateError(
-        'FR7 current-package clear failed for '
-        '${package.kind}/${package.competencyId}.',
-      );
-    }
-
-    final selectUri = _restUri(
-      'published_packages',
-      <String, String>{
-        'package_kind': 'eq.${package.kind}',
-        'package_key': 'eq.${package.competencyId}',
-        'version': 'eq.${package.version}',
-      },
-    );
-    final select = await _jsonRequest(
-      'PATCH',
-      selectUri,
-      body: const <String, dynamic>{'is_current': true},
-      prefer: 'return=representation',
-    );
-    if (select.statusCode < 200 || select.statusCode >= 300) {
-      throw StateError(
-        'FR7 current-package select failed for '
-        '${package.kind}/${package.competencyId}.',
-      );
-    }
-
-    final decoded = jsonDecode(select.body);
-    if (decoded is! List || decoded.length != 1) {
-      throw StateError(
-        'FR7 current-package select did not update exactly one row for '
-        '${package.kind}/${package.competencyId}.',
-      );
-    }
-  }
-
-  Future<void> upsertCatalogRows(List<Map<String, dynamic>> rows) async {
-    if (rows.isEmpty) return;
-    final uri = _restUri(
-      'published_catalog',
-      const <String, String>{'on_conflict': 'competency_id'},
-    );
-    final response = await _jsonRequest(
-      'POST',
-      uri,
-      body: rows,
-      prefer: 'resolution=merge-duplicates,return=minimal',
-    );
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw HttpException(
-        'FR7 catalogue-last update failed '
-        '(${response.statusCode}): ${response.body}',
-        uri: uri,
-      );
-    }
-  }
 
   Uri _restUri(
     String table, [

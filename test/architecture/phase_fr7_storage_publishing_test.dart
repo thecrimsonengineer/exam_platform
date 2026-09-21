@@ -11,17 +11,20 @@ void main() {
       '.github/workflows/phase_fr_firestore_read_reduction.yml';
   const productionWorkflowPath =
       '.github/workflows/phase_fr7_production_package_publish.yml';
+  const atomicSqlPath = 'supabase/fr7/fr7_atomic_publication.sql';
 
   late String core;
   late String cli;
   late String workflow;
   late String productionWorkflow;
+  late String atomicSql;
 
   setUpAll(() {
     core = File(corePath).readAsStringSync();
     cli = File(cliPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
     productionWorkflow = File(productionWorkflowPath).readAsStringSync();
+    atomicSql = File(atomicSqlPath).readAsStringSync();
   });
 
   test('FR7 publisher stays out of Flutter learner runtime', () {
@@ -50,16 +53,49 @@ void main() {
     expect(core, contains('reusesExistingPackage'));
   });
 
-  test('FR7 keeps catalogue mutation after object and package readiness', () {
+  test('FR7 commits package current state and catalogue atomically', () {
     final ensureObject = cli.indexOf('ensureImmutableObject(package)');
-    final registration = cli.indexOf('insertPackageRegistration(');
-    final currentSelection = cli.indexOf('selectCurrentPackage(package)');
-    final catalogue = cli.indexOf('upsertCatalogRows(catalogUpserts)');
+    final verifyObjects = cli.indexOf('await _verifyObjects(client, plan)');
+    final atomicCommit = cli.indexOf('commitCompetencyPublication(');
 
     expect(ensureObject, greaterThan(0));
-    expect(registration, greaterThan(ensureObject));
-    expect(currentSelection, greaterThan(registration));
-    expect(catalogue, greaterThan(currentSelection));
+    expect(verifyObjects, greaterThan(ensureObject));
+    expect(atomicCommit, greaterThan(verifyObjects));
+    expect(cli, isNot(contains('selectCurrentPackage(package)')));
+    expect(cli, isNot(contains('upsertCatalogRows(catalogUpserts)')));
+
+    expect(
+      atomicSql,
+      contains('function public.fr7_commit_competency_publication'),
+    );
+    expect(atomicSql, contains('security invoker'));
+    expect(atomicSql, contains('pg_advisory_xact_lock'));
+    expect(atomicSql, contains('Catalogue switch is deliberately last'));
+    expect(
+      atomicSql,
+      contains(
+        'revoke execute on function '
+        'public.fr7_commit_competency_publication(jsonb)',
+      ),
+    );
+    expect(
+      atomicSql,
+      contains(
+        'grant execute on function '
+        'public.fr7_commit_competency_publication(jsonb) to service_role;',
+      ),
+    );
+  });
+
+  test('FR7 rollback is an atomic pointer switch with no object deletion', () {
+    expect(
+      atomicSql,
+      contains('function public.fr7_rollback_competency_publication'),
+    );
+    expect(atomicSql, contains('p_content_version integer'));
+    expect(atomicSql, contains('p_question_version integer'));
+    expect(atomicSql, isNot(contains('delete from storage.objects')));
+    expect(atomicSql, isNot(contains('delete from public.published_packages')));
   });
 
   test('FR7 production workflow is manual and explicitly confirmed', () {
