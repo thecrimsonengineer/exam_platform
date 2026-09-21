@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "task_id": "M2-RUN-1",
+  "lineage_id": "M2-CONTROLS-1",
+  "maturity": "M2",
+  "plan_sha": "7a59205c550af5cc36a2c233513fc21b4f780e64",
+  "governance_sha": "43b2b3cc99839ae9de4092b4e2b7058d1964bff7",
+  "phase_base_sha": "d6a20c988027bdc25aeddc041cc16849bc259ad6",
+  "task_base_sha": "7a59205c550af5cc36a2c233513fc21b4f780e64",
+  "branch": "agentic-pdca-m2-bounded-feature",
+  "feature_objective": "M2-1 through M2-3: immutable packet validation and hashing, bounded authority and deterministic clean handoff.",
+  "acceptance_criteria": [
+    "Packets reject missing/unknown fields and contradictory scope.",
+    "Stable SHA-256 packet identity cannot change after construction.",
+    "Authority inherits M1 lease/branch/lineage checks and adds approved packet binding and clean workspace.",
+    "Handoff inventory comes from trusted repository facts and requires exact-SHA gate evidence."
+  ],
+  "in_scope_requirements": [
+    "Pilot A governance tooling only",
+    "Extend existing trusted M1 controls"
+  ],
+  "out_of_scope_requirements": [
+    "Application code",
+    "M2-4 through M2-10",
+    "New dependencies",
+    "Automatic mutation execution",
+    "Closure"
+  ],
+  "allowed_paths": [
+    "tool/agentic_pdca/m2_task_packet.dart",
+    "tool/agentic_pdca/m2_bounded_authority.dart",
+    "tool/agentic_pdca/m2_repository.dart",
+    "tool/agentic_pdca/m2_handoff.dart",
+    "test/agentic_pdca/m2_task_packet_test.dart",
+    "test/agentic_pdca/m2_bounded_authority_test.dart",
+    "test/agentic_pdca/m2_handoff_test.dart",
+    "test/agentic_pdca/m2_test_support.dart",
+    "docs/agentic/implementation/m2/**"
+  ],
+  "forbidden_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "protected_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "risk_class": "low",
+  "expected_changed_paths": [
+    "tool/agentic_pdca/m2_task_packet.dart",
+    "tool/agentic_pdca/m2_bounded_authority.dart",
+    "tool/agentic_pdca/m2_repository.dart",
+    "tool/agentic_pdca/m2_handoff.dart",
+    "test/agentic_pdca/m2_task_packet_test.dart",
+    "test/agentic_pdca/m2_bounded_authority_test.dart",
+    "test/agentic_pdca/m2_handoff_test.dart",
+    "test/agentic_pdca/m2_test_support.dart",
+    "docs/agentic/implementation/m2/RUN_1_PACKET.json",
+    "docs/agentic/implementation/m2/FREEZE.md",
+    "docs/agentic/implementation/m2/STATUS.md"
+  ],
+  "required_targeted_tests": [
+    "test/agentic_pdca/m2_task_packet_test.dart",
+    "test/agentic_pdca/m2_bounded_authority_test.dart",
+    "test/agentic_pdca/m2_handoff_test.dart"
+  ],
+  "required_architecture_gates": [
+    "test/agentic_pdca/m1_architecture_gate_test.dart"
+  ],
+  "required_check_gates": [
+    "FORMAT",
+    "ANALYZE",
+    "TEST",
+    "ARCHITECTURE_GATE",
+    "CHECK2",
+    "CHECK3"
+  ],
+  "permitted_repair_classes": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F7"
+  ],
+  "repair_budgets": {
+    "F1": 5,
+    "F2": 5,
+    "F3": 3,
+    "F4": 3,
+    "F5": 3,
+    "F6": 0,
+    "F7": 2,
+    "F8": 0,
+    "F9": 0,
+    "F10": 0
+  },
+  "dependencies": [],
+  "stop_conditions": [
+    "Scope expansion",
+    "Frozen architecture conflict",
+    "Writer conflict",
+    "Stale authority",
+    "Test weakening",
+    "Budget exhaustion"
+  ],
+  "expected_handoff": [
+    "task_id",
+    "lineage_id",
+    "packet_hash",
+    "revision",
+    "base_sha",
+    "candidate_sha",
+    "branch",
+    "commits",
+    "changed_paths",
+    "diff_statistics",
+    "targeted_tests",
+    "architecture_gates",
+    "known_limitations",
+    "expected_changed_paths",
+    "clean_worktree",
+    "evidence_references"
+  ],
+  "human_approval_reference": "User message: M2 plan freeze and implementation authorization at exact plan SHA, 2026-09-21"
+}
