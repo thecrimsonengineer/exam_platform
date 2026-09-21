@@ -458,21 +458,11 @@ class _SupabaseFr7Client {
       'GET',
       _storageUri(<String>['bucket', bucketId]),
     );
-    if (response.statusCode == 404) {
+    if (_isStorageNotFound(response, expectedCode: 'NoSuchBucket')) {
       return const _BucketState(exists: false, isPublic: false);
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
       final body = utf8.decode(response.bytes, allowMalformed: true);
-      try {
-        final decodedError = jsonDecode(body);
-        if (decodedError is Map &&
-            decodedError['code']?.toString() == 'NoSuchBucket' &&
-            decodedError['statusCode']?.toString() == '404') {
-          return const _BucketState(exists: false, isPublic: false);
-        }
-      } on FormatException {
-        // Preserve the original fail-closed HTTP error below.
-      }
       throw HttpException(
         'FR7 bucket lookup failed (${response.statusCode}): $body',
       );
@@ -525,7 +515,7 @@ class _SupabaseFr7Client {
       return;
     }
 
-    if (existing.statusCode != 404) {
+    if (!_isStorageNotFound(existing, expectedCode: 'NoSuchKey')) {
       final responseBody = utf8.decode(existing.bytes, allowMalformed: true);
       throw StateError(
         'FR7 object preflight failed for ${package.storagePath}: '
@@ -686,6 +676,23 @@ class _SupabaseFr7Client {
     } finally {
       client.close(force: true);
     }
+  }
+}
+
+bool _isStorageNotFound(
+  _ByteHttpResult response, {
+  required String expectedCode,
+}) {
+  if (response.statusCode == 404) return true;
+
+  final body = utf8.decode(response.bytes, allowMalformed: true);
+  try {
+    final decoded = jsonDecode(body);
+    return decoded is Map &&
+        decoded['code']?.toString() == expectedCode &&
+        decoded['statusCode']?.toString() == '404';
+  } on FormatException {
+    return false;
   }
 }
 
