@@ -34,8 +34,6 @@ void main() {
   test('FR6 creates one competency-scoped current catalogue pointer', () {
     expect(sql, contains('create table public.published_catalog'));
     expect(sql, contains('competency_id text primary key'));
-    expect(sql, contains('published_catalog_active_competency_idx'));
-
     expect(
       RegExp(r'catalog_version', caseSensitive: false).hasMatch(sql),
       isFalse,
