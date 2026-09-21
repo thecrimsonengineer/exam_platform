@@ -16,11 +16,7 @@ void main() {
     );
 
     store.values[repository.storageKey] = jsonEncode(<Object>[
-      _content(
-        id: 'content-a',
-        competencyId: 'd01_c01',
-        version: 1,
-      ).toJson(),
+      _content(id: 'content-a', competencyId: 'd01_c01', version: 1).toJson(),
     ]);
 
     expect(repository.loadAll, throwsStateError);
@@ -87,13 +83,10 @@ void main() {
       userId: 'user-a',
       accessBoundary: _FakeBoundary(),
     );
-    store.values[UidScopedProtectedContentCacheRepository.legacyCacheKey] =
+    store.values[UidScopedProtectedContentCacheRepository
+        .legacyCacheKey] =
         jsonEncode(<Object>[
-          _content(
-            id: 'legacy-a',
-            competencyId: 'd01_c01',
-            version: 1,
-          ).toJson(),
+      _content(id: 'legacy-a', competencyId: 'd01_c01', version: 1).toJson(),
         ]);
 
     expect(repository.migrateLegacyIfAuthorized, throwsStateError);
@@ -116,7 +109,8 @@ void main() {
         userId: 'user-a',
         accessBoundary: boundary,
       );
-      store.values[UidScopedProtectedContentCacheRepository.legacyCacheKey] =
+      store.values[UidScopedProtectedContentCacheRepository
+        .legacyCacheKey] =
           jsonEncode(<Object>[
             _content(
               id: 'legacy-a',
@@ -158,7 +152,8 @@ void main() {
         userId: 'user-a',
         accessBoundary: boundary,
       );
-      store.values[UidScopedProtectedContentCacheRepository.legacyCacheKey] =
+      store.values[UidScopedProtectedContentCacheRepository
+        .legacyCacheKey] =
           '{"invalid":"shape"}';
 
       final result = await repository.migrateLegacyIfAuthorized();
@@ -191,7 +186,8 @@ void main() {
         ).toJson(),
       ]);
       store.values[repository.storageKey] = previous;
-      store.values[UidScopedProtectedContentCacheRepository.legacyCacheKey] =
+      store.values[UidScopedProtectedContentCacheRepository
+        .legacyCacheKey] =
           jsonEncode(<Object>[
             _content(
               id: 'legacy-a',
@@ -226,13 +222,10 @@ void main() {
         accessBoundary: boundary,
       );
       store.values[repository.storageKey] = jsonEncode(<Object>[
-        _content(
-          id: 'scoped-a',
-          competencyId: 'd01_c01',
-          version: 1,
-        ).toJson(),
+        _content(id: 'scoped-a', competencyId: 'd01_c01', version: 1).toJson(),
       ]);
-      store.values[UidScopedProtectedContentCacheRepository.legacyCacheKey] =
+      store.values[UidScopedProtectedContentCacheRepository
+        .legacyCacheKey] =
           jsonEncode(<Object>[
             _content(
               id: 'legacy-a',

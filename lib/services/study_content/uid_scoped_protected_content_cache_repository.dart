@@ -292,9 +292,7 @@ class UidScopedProtectedContentCacheRepository {
           return null;
         }
 
-        final content = StudyContent.fromJson(
-          Map<String, dynamic>.from(item),
-        );
+        final content = StudyContent.fromJson(Map<String, dynamic>.from(item));
 
         if (!_isValidPublishedContent(content)) {
           return null;
@@ -325,9 +323,7 @@ class UidScopedProtectedContentCacheRepository {
 
     final result = latestByCompetency.values.toList()
       ..sort((left, right) {
-        final competencyOrder = left.competencyId.compareTo(
-          right.competencyId,
-        );
+        final competencyOrder = left.competencyId.compareTo(right.competencyId);
         if (competencyOrder != 0) {
           return competencyOrder;
         }
@@ -338,9 +334,7 @@ class UidScopedProtectedContentCacheRepository {
   }
 
   String _encode(Iterable<StudyContent> contents) {
-    return jsonEncode(
-      contents.map((content) => content.toJson()).toList(),
-    );
+    return jsonEncode(contents.map((content) => content.toJson()).toList());
   }
 
   bool _isValidPublishedContent(StudyContent content) {
