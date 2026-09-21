@@ -93,7 +93,8 @@ final class M1DeterministicCheckRunner {
 
   String _commandFor(M1CheckGate gate) => switch (gate) {
     M1CheckGate.format => 'dart format --output=none --set-exit-if-changed',
-    M1CheckGate.analyze => 'flutter analyze',
+    M1CheckGate.analyze =>
+      'flutter ${M1ProcessCommandRunner.analyzerArguments.join(' ')}',
     M1CheckGate.test => 'flutter test test/agentic_pdca/',
     M1CheckGate.architectureGate => 'architecture gate',
   };
@@ -121,6 +122,12 @@ abstract interface class M1TrustedCommandRunner {
 final class M1ProcessCommandRunner implements M1TrustedCommandRunner {
   const M1ProcessCommandRunner(this.repository);
 
+  static const analyzerArguments = <String>[
+    'analyze',
+    '--no-fatal-infos',
+    '--fatal-warnings',
+  ];
+
   final M1TrustedRepository repository;
 
   @override
@@ -139,7 +146,7 @@ final class M1ProcessCommandRunner implements M1TrustedCommandRunner {
         'tool/agentic_pdca',
         'test/agentic_pdca',
       ],
-      M1CheckGate.analyze => const ['analyze'],
+      M1CheckGate.analyze => analyzerArguments,
       M1CheckGate.test => const ['test', 'test/agentic_pdca/'],
       M1CheckGate.architectureGate => const [
         'test',

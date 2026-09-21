@@ -129,7 +129,30 @@ void main() {
     expect(command.calls, 0);
   });
 
-  test('CHECK reports deterministic red results without repairing', () async {
+  test('ANALYZE flags are fixed and cannot be altered by callers', () {
+    expect(M1ProcessCommandRunner.analyzerArguments, const [
+      'analyze',
+      '--no-fatal-infos',
+      '--fatal-warnings',
+    ]);
+    expect(
+      () => M1ProcessCommandRunner.analyzerArguments.add('--no-fatal-warnings'),
+      throwsUnsupportedError,
+    );
+    final runner = M1ProcessCommandRunner(CheckRepository());
+    expect(
+      () => Function.apply(
+        runner.run,
+        [M1CheckGate.analyze],
+        {
+          #arguments: ['analyze', '--no-fatal-warnings'],
+        },
+      ),
+      throwsNoSuchMethodError,
+    );
+  });
+
+  test('nonzero trusted ANALYZE exit remains CHECK red', () async {
     final runner = M1DeterministicCheckRunner(
       repository: CheckRepository(),
       expectedCandidateSha: sha,
@@ -144,6 +167,7 @@ void main() {
       validatorIdentity: 'test-validator',
     );
     expect(result.result, M1CheckResult.red);
+    expect(result.command, 'flutter analyze --no-fatal-infos --fatal-warnings');
   });
 
   test('CHECK executes FORMAT in trusted root without repairing', () async {

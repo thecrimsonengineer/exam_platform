@@ -1,6 +1,7 @@
 # Agentic PDCA M1 Status
 
-Status: M1_REVIEW_READY_V4 — pending independent review; M1 is not closed.
+Status: CHECK_REVIEW_ACCEPTED; analyzer normalized; exact-SHA final CHECK pending. M1 is not closed.
+Independent review: CHECK_REVIEW_ACCEPTED
 Maturity: M1 = DO-1 + CHECK-1/2 + ACT-1
 M0 base: `94d060e37358915d03a2375ebc3af54808633e15`
 V3 input: `ea0f51a948366a82f5f44bf75e57f9374e11be47`
@@ -17,15 +18,17 @@ Publication branch: `agentic-pdca-m1-001`
 
 ## Validation evidence before commit
 
-- Agentic suite: 73 passing test executions, including boundary cases repeated by the dedicated architecture gate.
+- Agentic suite: 75 passing test executions, including boundary cases repeated by the dedicated architecture gate.
 - Original M0 regression: all 19 tests passed; original M0 test file unchanged.
 - Dart format: 16 files, zero further changes.
-- `flutter analyze`: exit 1, 409 informational diagnostics, no warnings or errors. This is not a green analyzer exit and the deterministic CHECK runner reports a nonzero analyzer outcome as red.
+- Policy proof in a fresh checkout at `ea803e8ab7e0274bbe40b03e6c7de184594cbf86`: `flutter analyze --no-fatal-infos --fatal-warnings` returned exit 0, 409 infos, 0 warnings, 0 errors.
+- Analyzer policy: infos advisory; warnings blocking; errors blocking. The fixed ANALYZE argument list and evidence command use these exact flags. No request can supply flags; nonzero trusted analyzer exits still produce CHECK red.
+- No informational lint cleanup, suppression, or analysis_options.yaml change.
 - `git diff --check`: passed.
 - Merge-base: exact approved M0 SHA.
 - Only the three authorized directory trees contain repair changes.
 - Seven known Flutter registration paths appeared dirty with no semantic diff; restoration is restricted to those exact paths.
-- The committed SHA must additionally be validated in a fresh disposable checkout before publication; final SHA, checkout results and remote equality are reported with delivery, not inferred from this precommit record.
+- The committed SHA must additionally be validated in a fresh disposable checkout after all commits and publication; final SHA, checkout results and remote equality are reported with delivery, not inferred from this precommit record.
 
 ## Remaining limitations
 
@@ -34,6 +37,6 @@ Publication branch: `agentic-pdca-m1-001`
 - FORMAT is the only implemented mutation. Import, analyzer and harness transformations remain explicitly unsupported by the executor.
 - Repository reads and execution are sequential checks, not an OS-level atomic repository lock.
 - Generated-file restoration belongs to the external validation harness; CHECK itself does not repair or restore files.
-- Repository-wide informational analyzer findings remain. No analyzer gate bypass was added.
+- Repository-wide informational analyzer findings remain. Informational severity is advisory under the accepted M1 analyzer policy; warnings and errors remain fatal.
 
 M1 remains open and unprotected. No M1 closed branch, closure authority, M2 work, or protected capability is introduced.
