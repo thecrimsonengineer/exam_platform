@@ -1,0 +1,5 @@
+ENABLED
+agentic-pdca-m2-bounded-feature
+eff3448d2b8af4f96578333bc24a7ab694a5632d
+tool/agentic_pdca/m2_reviewer.dart
+test/agentic_pdca/m2_reviewer_test.dart

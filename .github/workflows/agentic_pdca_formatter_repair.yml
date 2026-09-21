@@ -1,0 +1,117 @@
+name: Agentic PDCA Exact-SHA Formatter Repair
+
+on:
+  push:
+    branches:
+      - agentic-pdca-validation-ci
+    paths:
+      - docs/agentic/ci/FORMAT_REQUEST.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agentic-pdca-formatter-repair
+  cancel-in-progress: false
+
+jobs:
+  format-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout validation harness
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parse exact formatter request
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t LINES < docs/agentic/ci/FORMAT_REQUEST.txt
+          test "${#LINES[@]}" -ge 4
+          test "${LINES[0]}" = "ENABLED"
+          TARGET_BRANCH="${LINES[1]}"
+          TARGET_SHA="${LINES[2]}"
+          shift_count=3
+          FILES=("${LINES[@]:3}")
+          [[ "$TARGET_BRANCH" =~ ^[A-Za-z0-9._/-]+$ ]]
+          [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "${#FILES[@]}" -gt 0
+          for p in "${FILES[@]}"; do
+            [[ "$p" == tool/agentic_pdca/*.dart || "$p" == test/agentic_pdca/*.dart ]]
+            [[ "$p" != *".."* ]]
+            [[ "$p" != /* ]]
+          done
+          {
+            echo "TARGET_BRANCH=$TARGET_BRANCH"
+            echo "TARGET_SHA=$TARGET_SHA"
+            echo "FILES<<EOF"
+            printf '%s\n' "${FILES[@]}"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Verify exact branch head and checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$TARGET_BRANCH"
+          REMOTE_SHA="$(git rev-parse "origin/$TARGET_BRANCH")"
+          test "$REMOTE_SHA" = "$TARGET_SHA"
+          git checkout -B "$TARGET_BRANCH" "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git status --porcelain)"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Apply Dart formatter only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t FILE_ARRAY <<< "$FILES"
+          dart format "${FILE_ARRAY[@]}"
+          mapfile -t CHANGED < <(git diff --name-only)
+          test "${#CHANGED[@]}" -gt 0
+          for changed in "${CHANGED[@]}"; do
+            allowed=false
+            for requested in "${FILE_ARRAY[@]}"; do
+              if [ "$changed" = "$requested" ]; then allowed=true; break; fi
+            done
+            if [ "$allowed" != true ]; then
+              echo "::error::Formatter changed unauthorized path: $changed"
+              exit 1
+            fi
+          done
+          git diff --check
+
+      - name: Commit exact formatter repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "agentic-pdca-ci"
+          git config user.email "agentic-pdca-ci@users.noreply.github.com"
+          mapfile -t FILE_ARRAY <<< "$FILES"
+          git add -- "${FILE_ARRAY[@]}"
+          git commit -m "AGENT-REPAIR PDCA M2: apply exact Dart formatter output"
+          NEW_SHA="$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD^)" = "$TARGET_SHA"
+          git push origin "HEAD:$TARGET_BRANCH"
+          echo "FORMAT_REPAIR_SHA=$NEW_SHA" >> "$GITHUB_ENV"
+          echo "Formatter repair SHA: $NEW_SHA"
+
+      - name: Summary
+        shell: bash
+        run: |
+          {
+            echo "## Exact-SHA formatter repair"
+            echo "- Branch: `$TARGET_BRANCH`"
+            echo "- Parent: `$TARGET_SHA`"
+            echo "- Result: `$FORMAT_REPAIR_SHA`"
+          } >> "$GITHUB_STEP_SUMMARY"
