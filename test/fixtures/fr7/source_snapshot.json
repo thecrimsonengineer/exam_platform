@@ -1,0 +1,99 @@
+{
+  "content_versions": [
+    {
+      "content_id": "content-a",
+      "version": 1,
+      "competency_id": "d01_c01",
+      "status": "published",
+      "content_payload": {
+        "id": "content-a",
+        "competencyId": "d01_c01",
+        "version": 1,
+        "topics": []
+      }
+    },
+    {
+      "content_id": "content-a",
+      "version": 2,
+      "competency_id": "d01_c01",
+      "status": "published",
+      "content_payload": {
+        "id": "content-a",
+        "competencyId": "d01_c01",
+        "version": 2,
+        "topics": [{"id": "t1"}]
+      }
+    },
+    {
+      "content_id": "content-b",
+      "version": 1,
+      "competency_id": "d01_c02",
+      "status": "published",
+      "content_payload": {
+        "id": "content-b",
+        "competencyId": "d01_c02",
+        "version": 1,
+        "topics": []
+      }
+    }
+  ],
+  "questions": [
+    {
+      "question_id": 10,
+      "version": 1,
+      "competency_id": "d01_c01",
+      "status": "published",
+      "source_payload": {
+        "id": 10,
+        "version": 1,
+        "competencyId": "d01_c01",
+        "question": "Q10 old",
+        "options": ["A", "B", "C", "D"],
+        "correctAnswer": 0
+      }
+    },
+    {
+      "question_id": 10,
+      "version": 2,
+      "competency_id": "d01_c01",
+      "status": "published",
+      "source_payload": {
+        "id": 10,
+        "version": 2,
+        "competencyId": "d01_c01",
+        "question": "Q10 current",
+        "options": ["A", "B", "C", "D"],
+        "correctAnswer": 0
+      }
+    },
+    {
+      "question_id": 11,
+      "version": 1,
+      "competency_id": "d01_c01",
+      "status": "published",
+      "source_payload": {
+        "id": 11,
+        "version": 1,
+        "competencyId": "d01_c01",
+        "question": "Q11",
+        "options": ["A", "B", "C", "D"],
+        "correctAnswer": 1
+      }
+    },
+    {
+      "question_id": 20,
+      "version": 1,
+      "competency_id": "d01_c02",
+      "status": "published",
+      "source_payload": {
+        "id": 20,
+        "version": 1,
+        "competencyId": "d01_c02",
+        "question": "Q20",
+        "options": ["A", "B", "C", "D"],
+        "correctAnswer": 2
+      }
+    }
+  ],
+  "published_packages": []
+}
