@@ -526,9 +526,10 @@ class _SupabaseFr7Client {
     }
 
     if (existing.statusCode != 404) {
+      final responseBody = utf8.decode(existing.bytes, allowMalformed: true);
       throw StateError(
         'FR7 object preflight failed for ${package.storagePath}: '
-        'HTTP ${existing.statusCode}.',
+        'HTTP ${existing.statusCode} ${responseBody.trim()}.',
       );
     }
 
