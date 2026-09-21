@@ -84,10 +84,9 @@ void main() {
       accessBoundary: _FakeBoundary(),
     );
     store.values[UidScopedProtectedContentCacheRepository
-        .legacyCacheKey] =
-        jsonEncode(<Object>[
+        .legacyCacheKey] = jsonEncode(<Object>[
       _content(id: 'legacy-a', competencyId: 'd01_c01', version: 1).toJson(),
-        ]);
+    ]);
 
     expect(repository.migrateLegacyIfAuthorized, throwsStateError);
     expect(
@@ -110,19 +109,14 @@ void main() {
         accessBoundary: boundary,
       );
       store.values[UidScopedProtectedContentCacheRepository
-        .legacyCacheKey] =
-          jsonEncode(<Object>[
-            _content(
-              id: 'legacy-a',
-              competencyId: 'd01_c01',
-              version: 1,
-            ).toJson(),
-            _content(
-              id: 'legacy-newer',
-              competencyId: 'd01_c01',
-              version: 2,
-            ).toJson(),
-          ]);
+          .legacyCacheKey] = jsonEncode(<Object>[
+        _content(id: 'legacy-a', competencyId: 'd01_c01', version: 1).toJson(),
+        _content(
+          id: 'legacy-newer',
+          competencyId: 'd01_c01',
+          version: 2,
+        ).toJson(),
+      ]);
 
       final result = await repository.migrateLegacyIfAuthorized();
 
@@ -152,8 +146,7 @@ void main() {
         userId: 'user-a',
         accessBoundary: boundary,
       );
-      store.values[UidScopedProtectedContentCacheRepository
-        .legacyCacheKey] =
+      store.values[UidScopedProtectedContentCacheRepository.legacyCacheKey] =
           '{"invalid":"shape"}';
 
       final result = await repository.migrateLegacyIfAuthorized();
@@ -187,14 +180,9 @@ void main() {
       ]);
       store.values[repository.storageKey] = previous;
       store.values[UidScopedProtectedContentCacheRepository
-        .legacyCacheKey] =
-          jsonEncode(<Object>[
-            _content(
-              id: 'legacy-a',
-              competencyId: 'd01_c01',
-              version: 1,
-            ).toJson(),
-          ]);
+          .legacyCacheKey] = jsonEncode(<Object>[
+        _content(id: 'legacy-a', competencyId: 'd01_c01', version: 1).toJson(),
+      ]);
       store.corruptNextStringWriteForKey = repository.storageKey;
 
       final result = await repository.migrateLegacyIfAuthorized();
@@ -225,14 +213,9 @@ void main() {
         _content(id: 'scoped-a', competencyId: 'd01_c01', version: 1).toJson(),
       ]);
       store.values[UidScopedProtectedContentCacheRepository
-        .legacyCacheKey] =
-          jsonEncode(<Object>[
-            _content(
-              id: 'legacy-a',
-              competencyId: 'd01_c01',
-              version: 1,
-            ).toJson(),
-          ]);
+          .legacyCacheKey] = jsonEncode(<Object>[
+        _content(id: 'legacy-a', competencyId: 'd01_c01', version: 1).toJson(),
+      ]);
       store.bools[repository.migrationMarkerKey] = true;
 
       final result = await repository.migrateLegacyIfAuthorized();
