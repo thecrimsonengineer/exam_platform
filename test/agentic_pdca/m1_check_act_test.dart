@@ -2,64 +2,77 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../tool/agentic_pdca/m1_check_act.dart';
 
+final class FakeRunner implements M1TrustedCommandRunner {
+  FakeRunner(this.result);
+
+  final M1CommandResult result;
+
+  @override
+  Future<M1CommandResult> run(M1CheckGate gate) async => result;
+}
+
 void main() {
   const sha = '94d060e37358915d03a2375ebc3af54808633e15';
 
   test(
     'CHECK binds evidence to exact SHA and accepts known generated side effects',
-    () {
-      const runner = M1DeterministicCheckRunner();
-      final result = runner.evaluate(
+    () async {
+      final runner = M1DeterministicCheckRunner(
+        commandRunner: FakeRunner(
+          const M1CommandResult(exitCode: 0, stdout: 'ok', stderr: ''),
+        ),
+      );
+      final result = await runner.run(
         checkId: 'CHECK-1-FORMAT',
         candidateSha: sha,
         expectedSha: sha,
         gate: M1CheckGate.format,
-        command: 'dart format --output=none --set-exit-if-changed',
-        gatePassed: true,
-        duration: Duration.zero,
         dirtyPaths: const ['linux/flutter/generated_plugins.cmake'],
+        validatorIdentity: 'test-validator',
       );
       expect(result.result, M1CheckResult.green);
     },
   );
 
-  test('CHECK blocks SHA drift and unrelated dirty paths', () {
-    const runner = M1DeterministicCheckRunner();
-    final wrongSha = runner.evaluate(
+  test('CHECK blocks SHA drift and unrelated dirty paths', () async {
+    final runner = M1DeterministicCheckRunner(
+      commandRunner: FakeRunner(
+        const M1CommandResult(exitCode: 0, stdout: 'ok', stderr: ''),
+      ),
+    );
+    final wrongSha = await runner.run(
       checkId: 'CHECK-1-TEST',
       candidateSha: 'wrong',
       expectedSha: sha,
       gate: M1CheckGate.test,
-      command: 'flutter test',
-      gatePassed: true,
-      duration: Duration.zero,
       dirtyPaths: const [],
+      validatorIdentity: 'test-validator',
     );
-    final dirty = runner.evaluate(
+    final dirty = await runner.run(
       checkId: 'CHECK-1-TEST',
       candidateSha: sha,
       expectedSha: sha,
       gate: M1CheckGate.test,
-      command: 'flutter test',
-      gatePassed: true,
-      duration: Duration.zero,
       dirtyPaths: const ['lib/main.dart'],
+      validatorIdentity: 'test-validator',
     );
     expect(wrongSha.result, M1CheckResult.blocked);
     expect(dirty.result, M1CheckResult.blocked);
   });
 
-  test('CHECK reports deterministic red results without repairing', () {
-    const runner = M1DeterministicCheckRunner();
-    final result = runner.evaluate(
+  test('CHECK reports deterministic red results without repairing', () async {
+    final runner = M1DeterministicCheckRunner(
+      commandRunner: FakeRunner(
+        const M1CommandResult(exitCode: 1, stdout: '', stderr: 'failed'),
+      ),
+    );
+    final result = await runner.run(
       checkId: 'CHECK-1-ANALYZE',
       candidateSha: sha,
       expectedSha: sha,
       gate: M1CheckGate.analyze,
-      command: 'flutter analyze',
-      gatePassed: false,
-      duration: Duration.zero,
       dirtyPaths: const [],
+      validatorIdentity: 'test-validator',
     );
     expect(result.result, M1CheckResult.red);
   });
@@ -102,16 +115,85 @@ void main() {
     'ACT routes only objective mechanical outcomes and escalates ambiguity',
     () {
       const router = M1ActRouter();
-      expect(router.route('formatter_red'), M1ActRoute.format);
-      expect(router.route('import_issue'), M1ActRoute.importFix);
       expect(
-        router.route('simple_analyzer_issue'),
+        router.route(
+          const M1ActEvidence(
+            failureClass: M1FailureClass.formatting,
+            candidateSha: sha,
+            evidence: 'formatter red',
+          ),
+        ),
+        M1ActRoute.format,
+      );
+      expect(
+        router.route(
+          const M1ActEvidence(
+            failureClass: M1FailureClass.simpleAnalyzerIssue,
+            candidateSha: sha,
+            evidence: 'import issue',
+          ),
+        ),
         M1ActRoute.simpleAnalyzerFix,
       );
-      expect(router.route('safe_harness_issue'), M1ActRoute.safeTestHarnessFix);
-      expect(router.route('transient_environment'), M1ActRoute.retry);
-      expect(router.route('feature_defect'), M1ActRoute.escalate);
-      expect(router.route('dependency_change'), M1ActRoute.escalate);
+      expect(
+        router.route(
+          const M1ActEvidence(
+            failureClass: M1FailureClass.safeHarness,
+            candidateSha: sha,
+            evidence: 'safe harness issue',
+          ),
+        ),
+        M1ActRoute.safeTestHarnessFix,
+      );
+      expect(
+        router.route(
+          const M1ActEvidence(
+            failureClass: M1FailureClass.transientInfrastructure,
+            candidateSha: sha,
+            evidence: 'transient environment',
+          ),
+        ),
+        M1ActRoute.retry,
+      );
+      for (final failureClass in [
+        M1FailureClass.featureBehavior,
+        M1FailureClass.dependency,
+        M1FailureClass.ambiguous,
+      ]) {
+        expect(
+          router.route(
+            M1ActEvidence(
+              failureClass: failureClass,
+              candidateSha: sha,
+              evidence: 'escalate',
+            ),
+          ),
+          M1ActRoute.escalate,
+        );
+      }
     },
   );
+
+  test('ACT ledger does not consume budget for retry', () {
+    final ledger = M1RepairLedger(budgets: {'LINEAGE-1': 2});
+    final retry = ledger.record(
+      lineageId: 'LINEAGE-1',
+      failureClass: M1FailureClass.transientInfrastructure,
+      parentCandidateSha: sha,
+      retry: true,
+      evidence: 'same-SHA retry',
+      timestamp: DateTime.utc(2026, 9, 21),
+    );
+    final repair = ledger.record(
+      lineageId: 'LINEAGE-1',
+      failureClass: M1FailureClass.formatting,
+      parentCandidateSha: sha,
+      retry: false,
+      evidence: 'formatter repair',
+      timestamp: DateTime.utc(2026, 9, 21),
+    );
+    expect(retry.attemptType, 'RETRY');
+    expect(repair.attemptType, 'REPAIR');
+    expect(ledger.remaining('LINEAGE-1'), 1);
+  });
 }

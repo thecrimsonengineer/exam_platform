@@ -1,4 +1,5 @@
 import 'm1_mechanical_models.dart';
+import 'm1_path_guard.dart';
 
 final class M1MechanicalEligibilityClassifier {
   static const Set<String> allowedActionNames = <String>{
@@ -17,6 +18,7 @@ final class M1MechanicalEligibilityClassifier {
   };
 
   M1EligibilityResult classify(M1MechanicalRequest request) {
+    final pathGuard = const M1RepositoryPathGuard();
     final actionClass = _parseActionClass(request.actionClass);
     if (actionClass == M1MechanicalActionClass.unknown) {
       return _rejected(actionClass, 'Unknown mechanical action class.');
@@ -57,7 +59,7 @@ final class M1MechanicalEligibilityClassifier {
         'Expected changed paths and required gates are required.',
       );
     }
-    final forbiddenPath = _firstForbiddenPath(request);
+    final forbiddenPath = _firstForbiddenPath(request, pathGuard);
     if (forbiddenPath != null) {
       return _rejected(
         actionClass,
@@ -113,34 +115,21 @@ final class M1MechanicalEligibilityClassifier {
       actionClass == M1MechanicalActionClass.simpleAnalyzerFixes ||
       actionClass == M1MechanicalActionClass.safeTestHarnessCorrections;
 
-  String? _firstForbiddenPath(M1MechanicalRequest request) {
+  String? _firstForbiddenPath(
+    M1MechanicalRequest request,
+    M1RepositoryPathGuard pathGuard,
+  ) {
     final paths = <String>[
       ...request.requestedPaths,
       ...request.expectedChangedPaths,
     ];
     for (final path in paths) {
-      if (_isForbiddenPath(path) ||
-          !_matchesAllowedPath(path, request.allowedPaths)) {
+      if (pathGuard.isProtected(path) ||
+          !pathGuard.isAllowed(path, request.allowedPaths)) {
         return path;
       }
     }
     return null;
-  }
-
-  bool _isForbiddenPath(String path) =>
-      forbiddenPathPrefixes.any(path.startsWith);
-
-  bool _matchesAllowedPath(String path, List<String> allowedPaths) {
-    for (final allowed in allowedPaths) {
-      if (allowed.endsWith('/**') &&
-          path.startsWith(allowed.substring(0, allowed.length - 2))) {
-        return true;
-      }
-      if (path == allowed) {
-        return true;
-      }
-    }
-    return false;
   }
 
   bool _isSha(String value) => RegExp(r'^[0-9a-fA-F]{40}$').hasMatch(value);

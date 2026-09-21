@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'm0_models.dart';
 import 'm1_mechanical_models.dart';
+import 'm1_path_guard.dart';
 
 enum M1MechanicalClass {
   format,
@@ -37,7 +41,7 @@ final class M1MechanicalAuthorityRequest {
     required this.lineageId,
     required this.baseSha,
     required this.expectedHead,
-    required this.actualHead,
+    required this.branch,
     required this.allowedPaths,
     required this.expectedChangedPaths,
     required this.actionClass,
@@ -45,14 +49,13 @@ final class M1MechanicalAuthorityRequest {
     required this.writerLeaseId,
     required this.writerIdentity,
     required this.fencingToken,
-    required this.lease,
   });
 
   final String taskId;
   final String lineageId;
   final String baseSha;
   final String expectedHead;
-  final String actualHead;
+  final String branch;
   final List<String> allowedPaths;
   final List<String> expectedChangedPaths;
   final String actionClass;
@@ -60,7 +63,6 @@ final class M1MechanicalAuthorityRequest {
   final String writerLeaseId;
   final String writerIdentity;
   final int fencingToken;
-  final M1WriterLeaseState lease;
 }
 
 final class M1MechanicalAuthorityResult {
@@ -76,6 +78,18 @@ final class M1MechanicalAuthorityResult {
 }
 
 final class M1MechanicalAuthority {
+  M1MechanicalAuthority({
+    required this.trustedState,
+    required Map<String, String> actualHeads,
+    DateTime Function()? trustedClock,
+  }) : _actualHeads = Map.unmodifiable(actualHeads),
+       _trustedClock = trustedClock ?? (() => DateTime.now().toUtc());
+
+  final ControlPlaneSnapshot trustedState;
+  final Map<String, String> _actualHeads;
+  final DateTime Function() _trustedClock;
+  final M1RepositoryPathGuard _pathGuard = const M1RepositoryPathGuard();
+
   M1MechanicalAuthorityResult authorize(M1MechanicalAuthorityRequest request) {
     final actionClass = _parse(request.actionClass);
     if (!_isAllowed(actionClass)) {
@@ -91,7 +105,8 @@ final class M1MechanicalAuthority {
         'Exact base SHA and expected HEAD are required.',
       );
     }
-    if (request.expectedHead != request.actualHead) {
+    final actualHead = _actualHeads[request.branch];
+    if (actualHead == null || request.expectedHead != actualHead) {
       return _deny(actionClass, 'Expected HEAD does not match actual HEAD.');
     }
     if (request.taskId.isEmpty ||
@@ -102,17 +117,37 @@ final class M1MechanicalAuthority {
         'Task, lineage and required gates are required.',
       );
     }
-    if (request.writerLeaseId != request.lease.writerLeaseId ||
-        request.writerIdentity != request.lease.writerIdentity ||
-        request.fencingToken != request.lease.fencingToken ||
-        !request.lease.active) {
+    final lineages = trustedState.lineages.where(
+      (value) => value.lineageId == request.lineageId,
+    );
+    if (lineages.length != 1 || lineages.single.taskId != request.taskId) {
       return _deny(
         actionClass,
-        'Active writer identity or fencing state is invalid.',
+        'Trusted lineage state does not match request.',
+      );
+    }
+    final leases = trustedState.writerLeases.where(
+      (value) => value.writerLeaseId == request.writerLeaseId,
+    );
+    final now = _trustedClock().toUtc();
+    if (leases.length != 1 ||
+        leases.single.lineageId != request.lineageId ||
+        leases.single.branch != request.branch ||
+        leases.single.agentPrincipal != request.writerIdentity ||
+        leases.single.fencingToken != request.fencingToken ||
+        !leases.single.active ||
+        !leases.single.expiresAt.toUtc().isAfter(now) ||
+        (leases.single.revokedAt != null &&
+            !now.isBefore(leases.single.revokedAt!.toUtc())) ||
+        leases.single.expectedHead != request.expectedHead) {
+      return _deny(
+        actionClass,
+        'Trusted writer lease identity or fencing state is invalid.',
       );
     }
     for (final path in request.expectedChangedPaths) {
-      if (!_allowedPath(path, request.allowedPaths)) {
+      if (_pathGuard.isProtected(path) ||
+          !_pathGuard.isAllowed(path, request.allowedPaths)) {
         return _deny(
           actionClass,
           'Changed path is outside the allow-list: ' + path,
@@ -164,24 +199,6 @@ final class M1MechanicalAuthority {
       value == M1MechanicalClass.importFix ||
       value == M1MechanicalClass.simpleAnalyzerFix ||
       value == M1MechanicalClass.safeTestHarnessFix;
-
-  bool _allowedPath(String path, List<String> allowedPaths) {
-    if (path.startsWith('lib/') ||
-        path.startsWith('content/') ||
-        path.startsWith('firebase/') ||
-        path.startsWith('docs/agentic/v1/') ||
-        path.startsWith('.github/') ||
-        path == 'pubspec.yaml' ||
-        path == 'pubspec.lock') {
-      return false;
-    }
-    return allowedPaths.any(
-      (allowed) =>
-          (allowed.endsWith('/**') &&
-              path.startsWith(allowed.substring(0, allowed.length - 2))) ||
-          path == allowed,
-    );
-  }
 
   bool _isSha(String value) => RegExp(r'^[0-9a-fA-F]{40}$').hasMatch(value);
 
@@ -286,6 +303,62 @@ final class M1MechanicalExecutor {
     duration: duration,
     timestamp: timestamp,
   );
+
+  Future<M1ExecutionRecord> executeFormat({
+    required M1MechanicalAuthority authority,
+    required M1MechanicalAuthorityRequest request,
+    required String actionId,
+  }) async {
+    final authorization = authority.authorize(request);
+    if (!authorization.authorized ||
+        authorization.actionClass != M1MechanicalClass.format) {
+      throw StateError('FORMAT execution requires valid DO-1 authority.');
+    }
+    final guard = const M1RepositoryPathGuard();
+    final paths = request.expectedChangedPaths
+        .map(guard.canonicalize)
+        .whereType<String>()
+        .toList();
+    if (paths.length != request.expectedChangedPaths.length || paths.isEmpty) {
+      throw ArgumentError('FORMAT paths must be canonical repository paths.');
+    }
+    final started = DateTime.now().toUtc();
+    final result = await Process.run(_dartExecutable, <String>[
+      'format',
+      ...paths,
+    ], runInShell: false);
+    final finished = DateTime.now().toUtc();
+    return record(
+      taskId: request.taskId,
+      actionId: actionId,
+      actionClass: authorization.actionClass,
+      baseSha: request.baseSha,
+      preHead: request.expectedHead,
+      postHead: request.expectedHead,
+      paths: paths,
+      operation: M1StructuredOperation.format,
+      exitCode: result.exitCode as int,
+      stdoutSummary: _summary(result.stdout),
+      stderrSummary: _summary(result.stderr),
+      duration: finished.difference(started),
+      timestamp: finished,
+    );
+  }
+
+  String _summary(Object value) {
+    final text = value.toString();
+    return text.length <= 512 ? text : text.substring(0, 512);
+  }
+
+  String get _dartExecutable {
+    final flutterRoot = Platform.environment['FLUTTER_ROOT'];
+    if (flutterRoot != null && flutterRoot.isNotEmpty) {
+      return '$flutterRoot${Platform.pathSeparator}bin${Platform.pathSeparator}cache'
+          '${Platform.pathSeparator}dart-sdk${Platform.pathSeparator}bin'
+          '${Platform.pathSeparator}dart${Platform.isWindows ? '.exe' : ''}';
+    }
+    return Platform.resolvedExecutable;
+  }
 
   String _quotePath(String path) {
     if (path.startsWith('lib/') ||

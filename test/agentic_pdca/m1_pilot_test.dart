@@ -7,6 +7,12 @@ import '../../tool/agentic_pdca/m1_mechanical_models.dart';
 import '../../tool/agentic_pdca/m0_control_plane.dart';
 import '../../tool/agentic_pdca/m0_models.dart';
 
+final class PilotFakeRunner implements M1TrustedCommandRunner {
+  @override
+  Future<M1CommandResult> run(M1CheckGate gate) async =>
+      const M1CommandResult(exitCode: 0, stdout: 'ok', stderr: '');
+}
+
 void main() {
   const sha = '94d060e37358915d03a2375ebc3af54808633e15';
 
@@ -52,19 +58,22 @@ void main() {
     },
   );
 
-  test('pilot records generated side effects as allowed CHECK evidence', () {
-    const runner = M1DeterministicCheckRunner();
-    final evidence = runner.evaluate(
-      checkId: 'PILOT-GENERATED-1',
-      candidateSha: sha,
-      expectedSha: sha,
-      gate: M1CheckGate.test,
-      command: 'flutter test',
-      gatePassed: true,
-      duration: Duration.zero,
-      dirtyPaths: const ['windows/flutter/generated_plugins.cmake'],
-    );
-    expect(evidence.result, M1CheckResult.green);
-    expect(evidence.evidence, contains('passed'));
-  });
+  test(
+    'pilot records generated side effects as allowed CHECK evidence',
+    () async {
+      final runner = M1DeterministicCheckRunner(
+        commandRunner: PilotFakeRunner(),
+      );
+      final evidence = await runner.run(
+        checkId: 'PILOT-GENERATED-1',
+        candidateSha: sha,
+        expectedSha: sha,
+        gate: M1CheckGate.test,
+        dirtyPaths: const ['windows/flutter/generated_plugins.cmake'],
+        validatorIdentity: 'pilot-validator',
+      );
+      expect(evidence.result, M1CheckResult.green);
+      expect(evidence.evidence, contains('exit_code=0'));
+    },
+  );
 }

@@ -265,6 +265,7 @@ final class WriterLeaseSnapshot {
     required this.active,
     required this.expiresAt,
     required this.observedAt,
+    this.revokedAt,
   });
 
   final String writerLeaseId;
@@ -276,6 +277,7 @@ final class WriterLeaseSnapshot {
   final bool active;
   final DateTime expiresAt;
   final DateTime observedAt;
+  final DateTime? revokedAt;
 
   Map<String, Object?> toJson() => <String, Object?>{
     'writer_lease_id': writerLeaseId,
@@ -287,6 +289,7 @@ final class WriterLeaseSnapshot {
     'active': active,
     'expires_at': expiresAt.toUtc().toIso8601String(),
     'observed_at': observedAt.toUtc().toIso8601String(),
+    if (revokedAt != null) 'revoked_at': revokedAt!.toUtc().toIso8601String(),
   };
 }
 
