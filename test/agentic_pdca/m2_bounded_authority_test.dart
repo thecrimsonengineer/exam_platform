@@ -15,16 +15,15 @@ void main() {
     String? path,
     String? head,
     String writer = 'builder',
-  }) =>
-      M2BuilderRequest(
-        packetHash: hash ?? packet.hash,
-        revision: revision,
-        expectedHead: head ?? packet.taskBaseSha,
-        writerLeaseId: 'lease',
-        writerIdentity: writer,
-        fencingToken: token,
-        requestedPaths: [path ?? packet.expectedPaths.first],
-      );
+  }) => M2BuilderRequest(
+    packetHash: hash ?? packet.hash,
+    revision: revision,
+    expectedHead: head ?? packet.taskBaseSha,
+    writerLeaseId: 'lease',
+    writerIdentity: writer,
+    fencingToken: token,
+    requestedPaths: [path ?? packet.expectedPaths.first],
+  );
 
   M2BoundedAuthority authority(
     M2FakeWorkspace workspace, {
@@ -35,21 +34,20 @@ void main() {
     String? lineageSha,
     List<PlanTaskSnapshot>? tasks,
     List<HumanApprovalSnapshot>? approvals,
-  }) =>
-      M2BoundedAuthority(
-        manifest: manifest ?? testManifest(packet),
-        workspace: workspace,
-        trustedState: testState(
-          packet,
-          conflict: conflict,
-          expired: expired,
-          cancelled: cancelled,
-          lineageSha: lineageSha,
-          tasks: tasks,
-          approvals: approvals,
-        ),
-        trustedClock: () => m2TestNow,
-      );
+  }) => M2BoundedAuthority(
+    manifest: manifest ?? testManifest(packet),
+    workspace: workspace,
+    trustedState: testState(
+      packet,
+      conflict: conflict,
+      expired: expired,
+      cancelled: cancelled,
+      lineageSha: lineageSha,
+      tasks: tasks,
+      approvals: approvals,
+    ),
+    trustedClock: () => m2TestNow,
+  );
 
   test(
     'approved Pilot A packet inherits M1 authority without executing mutation',
@@ -166,9 +164,15 @@ void main() {
             allowedPaths: ['tool/agentic_pdca/m2_unplanned.dart'],
           ),
         ],
-        [testTask(packet, forbiddenPaths: ['lib/other/**'])],
-        [testTask(packet, requiredTests: ['test/other_test.dart'])],
-        [testTask(packet, stopConditions: ['Other stop'])],
+        [
+          testTask(packet, forbiddenPaths: ['lib/other/**']),
+        ],
+        [
+          testTask(packet, requiredTests: ['test/other_test.dart']),
+        ],
+        [
+          testTask(packet, stopConditions: ['Other stop']),
+        ],
         [testTask(packet, governanceVersion: 'v0')],
         [
           testTask(

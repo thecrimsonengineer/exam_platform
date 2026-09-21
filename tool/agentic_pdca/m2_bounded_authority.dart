@@ -25,10 +25,7 @@ final class M2ApprovedManifest {
     if (matches.length != 1) return null;
     final approval = matches.single;
     if (approval.issuedAt.toUtc().isAfter(now.toUtc()) ||
-        !approval.isValidAt(
-          now,
-          expectedGovernanceVersion: 'v1.0',
-        )) {
+        !approval.isValidAt(now, expectedGovernanceVersion: 'v1.0')) {
       return null;
     }
     return approval;

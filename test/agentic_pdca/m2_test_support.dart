@@ -38,20 +38,19 @@ HumanApprovalSnapshot testApproval(
   DateTime? issuedAt,
   DateTime? expiresAt,
   DateTime? revokedAt,
-}) =>
-    HumanApprovalSnapshot(
-      approvalId: approvalId,
-      approvalType: approvalType,
-      subjectId: subjectId ?? packet.taskId,
-      exactShaOrObject: hash ?? packet.hash,
-      planRevision: revision,
-      governanceVersion: governanceVersion,
-      issuer: issuer,
-      issuedAt: issuedAt ?? m2TestNow.subtract(const Duration(minutes: 1)),
-      expiresAt: expiresAt,
-      revokedAt: revokedAt,
-      status: status,
-    );
+}) => HumanApprovalSnapshot(
+  approvalId: approvalId,
+  approvalType: approvalType,
+  subjectId: subjectId ?? packet.taskId,
+  exactShaOrObject: hash ?? packet.hash,
+  planRevision: revision,
+  governanceVersion: governanceVersion,
+  issuer: issuer,
+  issuedAt: issuedAt ?? m2TestNow.subtract(const Duration(minutes: 1)),
+  expiresAt: expiresAt,
+  revokedAt: revokedAt,
+  status: status,
+);
 
 PlanTaskSnapshot testTask(
   M2TaskPacket packet, {
@@ -66,20 +65,19 @@ PlanTaskSnapshot testTask(
   List<String>? stopConditions,
   String governanceVersion = 'v1.0',
   DateTime? observedAt,
-}) =>
-    PlanTaskSnapshot(
-      taskId: taskId ?? packet.taskId,
-      phaseId: phaseId,
-      baseBranch: baseBranch ?? packet.branch,
-      baseSha: baseSha ?? packet.taskBaseSha,
-      riskClass: riskClass ?? packet.text('risk_class'),
-      allowedPaths: allowedPaths ?? packet.strings('allowed_paths'),
-      forbiddenPaths: forbiddenPaths ?? packet.strings('forbidden_paths'),
-      requiredTests: requiredTests ?? packet.strings('required_targeted_tests'),
-      stopConditions: stopConditions ?? packet.strings('stop_conditions'),
-      governanceVersion: governanceVersion,
-      observedAt: observedAt ?? m2TestNow,
-    );
+}) => PlanTaskSnapshot(
+  taskId: taskId ?? packet.taskId,
+  phaseId: phaseId,
+  baseBranch: baseBranch ?? packet.branch,
+  baseSha: baseSha ?? packet.taskBaseSha,
+  riskClass: riskClass ?? packet.text('risk_class'),
+  allowedPaths: allowedPaths ?? packet.strings('allowed_paths'),
+  forbiddenPaths: forbiddenPaths ?? packet.strings('forbidden_paths'),
+  requiredTests: requiredTests ?? packet.strings('required_targeted_tests'),
+  stopConditions: stopConditions ?? packet.strings('stop_conditions'),
+  governanceVersion: governanceVersion,
+  observedAt: observedAt ?? m2TestNow,
+);
 
 ControlPlaneSnapshot testState(
   M2TaskPacket packet, {
@@ -167,18 +165,17 @@ final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
   @override
   Future<M1RepositoryFacts> readFacts({
     required String approvedBaseSha,
-  }) async =>
-      M1RepositoryFacts(
-        root: root,
-        head: head,
-        ref: ref,
-        mergeBase: wrongBase ?? approvedBaseSha,
-        changedPaths: List.of(changed),
-        deletedTestPaths: List.of(deleted),
-        dirtyTrackedPaths: List.of(dirty),
-        fileContents: const {},
-        binaryPaths: List.of(binary),
-      );
+  }) async => M1RepositoryFacts(
+    root: root,
+    head: head,
+    ref: ref,
+    mergeBase: wrongBase ?? approvedBaseSha,
+    changedPaths: List.of(changed),
+    deletedTestPaths: List.of(deleted),
+    dirtyTrackedPaths: List.of(dirty),
+    fileContents: const {},
+    binaryPaths: List.of(binary),
+  );
 
   @override
   Future<M2WorkspaceEvidence> read(String approvedBaseSha) async {
@@ -202,8 +199,7 @@ final class M2FakeGates implements M2TrustedGateEvidence {
   Future<List<M2GateReceipt>> read(
     String candidateSha,
     String packetHash,
-  ) async =>
-      receipts;
+  ) async => receipts;
 }
 
 List<M2GateReceipt> greenReceipts(
