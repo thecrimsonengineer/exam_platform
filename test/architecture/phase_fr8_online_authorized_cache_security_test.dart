@@ -8,18 +8,23 @@ void main() {
       'lib/services/online_access/learner_online_access_session_controller.dart';
   const workflowPath =
       '.github/workflows/phase_fr_firestore_read_reduction.yml';
+  const protectedCachePath =
+      'lib/services/study_content/'
+      'uid_scoped_protected_content_cache_repository.dart';
   const phasePath =
       'docs/firestore/PHASE_FR8_ONLINE_AUTHORIZED_CACHE_SECURITY.md';
 
   late String gate;
   late String controller;
   late String workflow;
+  late String protectedCache;
   late String phase;
 
   setUpAll(() {
     gate = File(gatePath).readAsStringSync();
     controller = File(controllerPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
+    protectedCache = File(protectedCachePath).readAsStringSync();
     phase = File(phasePath).readAsStringSync();
   });
 
@@ -63,6 +68,28 @@ void main() {
       controller,
       contains('implements LearnerProtectedCacheAccessBoundary'),
     );
+  });
+
+  test('FR8 protected cache is UID-scoped and authorization-gated', () {
+    expect(protectedCache, contains('storageKeyForUser(String userId)'));
+    expect(
+      protectedCache,
+      contains('LearnerProtectedCacheAccessBoundary _accessBoundary'),
+    );
+    expect(protectedCache, contains('_requireAuthorized()'));
+    expect(protectedCache, contains('protected_study_content_cache.v2'));
+  });
+
+  test('FR8 legacy cache migration is verify-before-retire', () {
+    expect(
+      protectedCache,
+      contains("legacyCacheKey = 'csp11.student_content_cache.v1'"),
+    );
+    expect(protectedCache, contains('migrateLegacyIfAuthorized()'));
+    expect(protectedCache, contains('final readBack = _store.getString'));
+    expect(protectedCache, contains('setBool(migrationMarkerKey, true)'));
+    expect(protectedCache, contains('remove(legacyCacheKey)'));
+    expect(protectedCache, contains('_restoreScopedValue(previousScopedRaw)'));
   });
 
   test('FR8 remains before learner delivery cutover', () {

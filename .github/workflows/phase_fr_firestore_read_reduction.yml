@@ -86,7 +86,9 @@ jobs:
             test/tool/fr7_package_publish_core_test.dart \
             test/architecture/phase_fr7_storage_publishing_test.dart \
             lib/services/online_access/learner_online_access_session_controller.dart \
+            lib/services/study_content/uid_scoped_protected_content_cache_repository.dart \
             test/services/online_access/learner_online_access_session_controller_test.dart \
+            test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart \
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart
           git diff --
           git diff --exit-code -- \
@@ -128,7 +130,9 @@ jobs:
             test/tool/fr7_package_publish_core_test.dart \
             test/architecture/phase_fr7_storage_publishing_test.dart \
             lib/services/online_access/learner_online_access_session_controller.dart \
+            lib/services/study_content/uid_scoped_protected_content_cache_repository.dart \
             test/services/online_access/learner_online_access_session_controller_test.dart \
+            test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart \
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart
 
       - name: Analyze
@@ -218,6 +222,7 @@ jobs:
       - name: FR8 online authorization session tests
         run: |
           flutter test test/services/online_access/learner_online_access_session_controller_test.dart
+          flutter test test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart
           flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions

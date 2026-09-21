@@ -111,6 +111,12 @@ package sizes and device behavior rather than an arbitrary full-bank cache.
 
 ### FR8A — Authorization session core
 
+Status: COMPLETE on exact SHA
+`14e26a6e1e75e00e41f8ad4ce046100faac7becf`.
+
+Validation run `35645884484` passed FR1-FR8, frozen L4, full repository
+regression and diff hygiene.
+
 - reuse the frozen FR2 `LearnerOnlineAccessGate`;
 - add a UID-bound authorization-session controller;
 - reject stale in-flight authorization results;
@@ -122,12 +128,21 @@ package sizes and device behavior rather than an arbitrary full-bank cache.
 
 ### FR8B — UID-scoped protected StudyContent cache
 
-- replace the device-global cache namespace with a Firebase-UID namespace;
-- require the FR8 protected-cache unlock boundary before reads;
+Status: IMPLEMENTATION CANDIDATE.
+
+FR8B stages the secure cache repository beside the current learner runtime.
+The existing `StudyContentLoader` is not switched to this repository until
+FR8C owns a live authorization session.
+
+- create a Firebase-UID-scoped protected cache namespace;
+- require the FR8 protected-cache unlock boundary before reads and writes;
 - migrate the legacy cache only after successful online authorization;
-- use copy/validate/write/read-back/switch semantics;
+- merge the newest valid published competency versions during migration;
+- use copy/validate/write/read-back/marker/switch semantics;
+- retire the legacy cache only after read-back verification;
+- restore the previous scoped cache if verification or marker write fails;
 - preserve legacy bytes on migration failure;
-- add cross-user and offline-blocking tests.
+- add cross-user, offline-blocking and interrupted-migration tests.
 
 ### FR8C — Runtime lifecycle integration
 
@@ -158,6 +173,10 @@ package sizes and device behavior rather than an arbitrary full-bank cache.
 
 ## NEXT ACTION
 
-Implement FR8A only. Do not modify learner delivery repositories or migrate
-persistent cache bytes until the authorization-session core and its regression
-tests are green.
+Validate FR8B on the full FR gate. If green, continue to FR8C runtime lifecycle
+integration from the exact green FR8B SHA.
+
+FR8C may switch learner cache consumers only after it binds the verified
+student shell to a live FR8 authorization session. Do not permit protected
+cache rendering before that session reports AUTHORIZED for the same Firebase
+UID.
