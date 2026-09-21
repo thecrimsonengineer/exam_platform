@@ -3,6 +3,7 @@ import 'dart:io';
 import 'm0_models.dart';
 import 'm1_mechanical_models.dart';
 import 'm1_path_guard.dart';
+import 'm1_repository.dart';
 
 enum M1MechanicalClass {
   format,
@@ -66,17 +67,20 @@ final class M1MechanicalAuthorityResult {
 final class M1MechanicalAuthority {
   M1MechanicalAuthority({
     required this.trustedState,
-    required Map<String, String> actualHeads,
+    required this.repository,
+    required this.approvedBaseSha,
     DateTime Function()? trustedClock,
-  }) : _actualHeads = Map.unmodifiable(actualHeads),
-       _trustedClock = trustedClock ?? (() => DateTime.now().toUtc());
+  }) : _trustedClock = trustedClock ?? (() => DateTime.now().toUtc());
 
   final ControlPlaneSnapshot trustedState;
-  final Map<String, String> _actualHeads;
+  final M1TrustedRepository repository;
+  final String approvedBaseSha;
   final DateTime Function() _trustedClock;
   final M1RepositoryPathGuard _pathGuard = const M1RepositoryPathGuard();
 
-  M1MechanicalAuthorityResult authorize(M1MechanicalAuthorityRequest request) {
+  Future<M1MechanicalAuthorityResult> authorize(
+    M1MechanicalAuthorityRequest request,
+  ) async {
     final actionClass = _parse(request.actionClass);
     if (!_isAllowed(actionClass)) {
       return M1MechanicalAuthorityResult(
@@ -85,14 +89,17 @@ final class M1MechanicalAuthority {
         reason: 'Action class is not authorized for DO-1.',
       );
     }
-    if (!_isSha(request.baseSha) || request.expectedHead.isEmpty) {
+    final facts = await repository.readFacts(approvedBaseSha: approvedBaseSha);
+    if (!_isSha(request.baseSha) ||
+        request.baseSha != approvedBaseSha ||
+        request.expectedHead.isEmpty) {
       return _deny(
         actionClass,
         'Exact base SHA and expected HEAD are required.',
       );
     }
-    final actualHead = _actualHeads[request.branch];
-    if (actualHead == null || request.expectedHead != actualHead) {
+    if (facts.head != request.expectedHead ||
+        facts.mergeBase != approvedBaseSha) {
       return _deny(actionClass, 'Expected HEAD does not match actual HEAD.');
     }
     if (request.taskId.isEmpty ||
@@ -295,10 +302,16 @@ final class M1MechanicalExecutor {
     required M1MechanicalAuthorityRequest request,
     required String actionId,
   }) async {
-    final authorization = authority.authorize(request);
+    final authorization = await authority.authorize(request);
     if (!authorization.authorized ||
         authorization.actionClass != M1MechanicalClass.format) {
       throw StateError('FORMAT execution requires valid DO-1 authority.');
+    }
+    final preFacts = await authority.repository.readFacts(
+      approvedBaseSha: authority.approvedBaseSha,
+    );
+    if (preFacts.head != request.expectedHead) {
+      throw StateError('FORMAT pre-head changed before mutation.');
     }
     final guard = const M1RepositoryPathGuard();
     final paths = request.expectedChangedPaths
@@ -309,18 +322,26 @@ final class M1MechanicalExecutor {
       throw ArgumentError('FORMAT paths must be canonical repository paths.');
     }
     final started = DateTime.now().toUtc();
-    final result = await Process.run(_dartExecutable, <String>[
-      'format',
-      ...paths,
-    ], runInShell: false);
+    final result = await Process.run(
+      _dartExecutable,
+      <String>['format', ...paths],
+      workingDirectory: authority.repository.root,
+      runInShell: false,
+    );
     final finished = DateTime.now().toUtc();
+    final postFacts = await authority.repository.readFacts(
+      approvedBaseSha: authority.approvedBaseSha,
+    );
+    if (postFacts.head != preFacts.head) {
+      throw StateError('FORMAT unexpectedly changed repository HEAD.');
+    }
     return record(
       taskId: request.taskId,
       actionId: actionId,
       actionClass: authorization.actionClass,
       baseSha: request.baseSha,
-      preHead: request.expectedHead,
-      postHead: request.expectedHead,
+      preHead: preFacts.head,
+      postHead: postFacts.head,
       paths: paths,
       operation: M1StructuredOperation.format,
       exitCode: result.exitCode as int,

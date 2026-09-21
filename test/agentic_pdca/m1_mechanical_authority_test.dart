@@ -4,6 +4,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../tool/agentic_pdca/m0_models.dart';
 import '../../tool/agentic_pdca/m1_mechanical_authority.dart';
+import '../../tool/agentic_pdca/m1_repository.dart';
+
+final class FakeRepository implements M1TrustedRepository {
+  FakeRepository(this.facts);
+
+  final M1RepositoryFacts facts;
+
+  @override
+  String get root => '.';
+
+  @override
+  Future<M1RepositoryFacts> readFacts({
+    required String approvedBaseSha,
+  }) async => facts;
+}
 
 void main() {
   const sha = '94d060e37358915d03a2375ebc3af54808633e15';
@@ -53,7 +68,20 @@ void main() {
       humanApprovals: const [],
       writerLeaseEvidence: const [],
     ),
-    actualHeads: const {'agentic-pdca-m1-001': sha},
+    repository: FakeRepository(
+      M1RepositoryFacts(
+        root: '.',
+        head: sha,
+        ref: 'agentic-pdca-m1-001',
+        mergeBase: sha,
+        changedPaths: const [],
+        deletedTestPaths: const [],
+        dirtyTrackedPaths: const [],
+        fileContents: const {},
+        binaryPaths: const [],
+      ),
+    ),
+    approvedBaseSha: sha,
     trustedClock: () => now,
   );
 
@@ -79,7 +107,7 @@ void main() {
     fencingToken: fencingToken,
   );
 
-  test('authorizes each DO-1 class with matching lease fencing', () {
+  test('authorizes each DO-1 class with matching lease fencing', () async {
     final controlAuthority = authority();
     for (final actionClass in [
       'FORMAT',
@@ -87,7 +115,7 @@ void main() {
       'SIMPLE_ANALYZER_FIX',
       'SAFE_TEST_HARNESS_FIX',
     ]) {
-      final result = controlAuthority.authorize(
+      final result = await controlAuthority.authorize(
         request(actionClass: actionClass),
       );
       expect(result.authorized, isTrue, reason: result.reason);
@@ -96,31 +124,39 @@ void main() {
 
   test(
     'rejects HEAD drift, stale lease, identity mismatch, and stale token',
-    () {
+    () async {
       final controlAuthority = authority();
       expect(
-        controlAuthority.authorize(request(expectedHead: 'wrong')).authorized,
+        (await controlAuthority.authorize(
+          request(expectedHead: 'wrong'),
+        )).authorized,
         isFalse,
       );
       expect(
-        controlAuthority.authorize(request(branch: 'other-branch')).authorized,
+        (await controlAuthority.authorize(
+          request(branch: 'other-branch'),
+        )).authorized,
         isFalse,
       );
       expect(
-        controlAuthority.authorize(request(writerIdentity: 'other')).authorized,
+        (await controlAuthority.authorize(
+          request(writerIdentity: 'other'),
+        )).authorized,
         isFalse,
       );
       expect(
-        controlAuthority.authorize(request(fencingToken: 8)).authorized,
+        (await controlAuthority.authorize(request(fencingToken: 8))).authorized,
         isFalse,
       );
     },
   );
 
-  test('rejects protected paths and non-mechanical classes', () {
+  test('rejects protected paths and non-mechanical classes', () async {
     final controlAuthority = authority();
     expect(
-      controlAuthority.authorize(request(path: 'lib/main.dart')).authorized,
+      (await controlAuthority.authorize(
+        request(path: 'lib/main.dart'),
+      )).authorized,
       isFalse,
     );
     for (final actionClass in [
@@ -136,9 +172,9 @@ void main() {
       'UNKNOWN',
     ]) {
       expect(
-        controlAuthority
-            .authorize(request(actionClass: actionClass))
-            .authorized,
+        (await controlAuthority.authorize(
+          request(actionClass: actionClass),
+        )).authorized,
         isFalse,
       );
     }

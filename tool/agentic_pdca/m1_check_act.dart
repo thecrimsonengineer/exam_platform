@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'm0_models.dart';
+import 'm1_path_guard.dart';
+import 'm1_repository.dart';
+
 enum M1CheckGate { format, analyze, test, architectureGate }
 
 enum M1CheckResult { green, red, blocked }
@@ -118,9 +122,7 @@ final class M1ProcessCommandRunner implements M1TrustedCommandRunner {
     final executable = switch (gate) {
       M1CheckGate.format => Platform.resolvedExecutable,
       M1CheckGate.analyze || M1CheckGate.test => 'flutter',
-      M1CheckGate.architectureGate => throw UnsupportedError(
-        'Architecture gate requires a trusted repository adapter.',
-      ),
+      M1CheckGate.architectureGate => 'flutter',
     };
     final arguments = switch (gate) {
       M1CheckGate.format => const [
@@ -132,7 +134,10 @@ final class M1ProcessCommandRunner implements M1TrustedCommandRunner {
       ],
       M1CheckGate.analyze => const ['analyze'],
       M1CheckGate.test => const ['test', 'test/agentic_pdca/'],
-      M1CheckGate.architectureGate => const <String>[],
+      M1CheckGate.architectureGate => const [
+        'test',
+        'test/agentic_pdca/m1_architecture_gate_test.dart',
+      ],
     };
     final result = await Process.run(executable, arguments, runInShell: false);
     return M1CommandResult(
@@ -214,6 +219,63 @@ final class M1IntegrityScanner {
     }
     return List.unmodifiable(findings);
   }
+
+  Future<List<M1IntegrityFinding>> scanRepository({
+    required M1TrustedRepository repository,
+    required String approvedBaseSha,
+    required String candidateSha,
+    required List<String> expectedPaths,
+  }) async {
+    final facts = await repository.readFacts(approvedBaseSha: approvedBaseSha);
+    final findings = <M1IntegrityFinding>[];
+    if (!_isSha(approvedBaseSha) || facts.mergeBase != approvedBaseSha) {
+      findings.add(
+        const M1IntegrityFinding(
+          'WRONG_ANCESTRY',
+          'Trusted merge-base mismatch.',
+        ),
+      );
+    }
+    if (!_isSha(candidateSha) || facts.head != candidateSha) {
+      findings.add(
+        const M1IntegrityFinding(
+          'CANDIDATE_MISMATCH',
+          'Trusted candidate HEAD mismatch.',
+        ),
+      );
+    }
+    final guard = const M1RepositoryPathGuard();
+    for (final path in facts.changedPaths) {
+      if (guard.isProtected(path)) {
+        findings.add(M1IntegrityFinding('PROTECTED_PATH', path));
+      }
+      if (!guard.isAllowed(path, expectedPaths)) {
+        findings.add(M1IntegrityFinding('ALLOW_LIST', path));
+      }
+    }
+    for (final path in facts.deletedTestPaths) {
+      findings.add(M1IntegrityFinding('TEST_DELETION', path));
+    }
+    for (final path in facts.binaryPaths) {
+      findings.add(M1IntegrityFinding('UNEXPECTED_BINARY', path));
+    }
+    findings.addAll(
+      scan(
+        M1IntegrityInput(
+          baseSha: approvedBaseSha,
+          candidateSha: candidateSha,
+          expectedBaseSha: approvedBaseSha,
+          expectedPaths: expectedPaths,
+          changedPaths: facts.changedPaths,
+          deletedTestPaths: facts.deletedTestPaths,
+          fileContents: facts.fileContents,
+        ),
+      ),
+    );
+    return List.unmodifiable(findings);
+  }
+
+  bool _isSha(String value) => RegExp(r'^[0-9a-fA-F]{40}$').hasMatch(value);
 }
 
 enum M1FailureClass {
@@ -272,11 +334,26 @@ final class M1RepairLedgerEntry {
 }
 
 final class M1RepairLedger {
-  M1RepairLedger({required Map<String, int> budgets})
-    : _budgets = Map<String, int>.from(budgets);
+  M1RepairLedger({
+    required ControlPlaneSnapshot trustedState,
+    required String lineageId,
+  }) : _budgets = _trustedBudget(trustedState, lineageId);
 
   final Map<String, int> _budgets;
   final List<M1RepairLedgerEntry> _entries = [];
+
+  static Map<String, int> _trustedBudget(
+    ControlPlaneSnapshot trustedState,
+    String lineageId,
+  ) {
+    final budgets = trustedState.repairBudgets.where(
+      (value) => value.lineageId == lineageId,
+    );
+    if (budgets.length != 1) {
+      throw StateError('Trusted repair budget is unavailable for lineage.');
+    }
+    return <String, int>{lineageId: budgets.single.mechanicalRemaining};
+  }
 
   List<M1RepairLedgerEntry> get entries => List.unmodifiable(_entries);
 

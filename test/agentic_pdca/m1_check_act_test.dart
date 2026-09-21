@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../tool/agentic_pdca/m0_models.dart';
 import '../../tool/agentic_pdca/m1_check_act.dart';
 
 final class FakeRunner implements M1TrustedCommandRunner {
@@ -175,7 +176,36 @@ void main() {
   );
 
   test('ACT ledger does not consume budget for retry', () {
-    final ledger = M1RepairLedger(budgets: {'LINEAGE-1': 2});
+    final ledger = M1RepairLedger(
+      trustedState: ControlPlaneSnapshot(
+        maturity: 'M0_OBSERVATION',
+        governanceVersion: 'v1.0',
+        governanceSha: sha,
+        observedAt: DateTime.utc(2026, 9, 21),
+        tasks: const [],
+        taskStates: const [],
+        taskStateEvidence: const [],
+        lineages: const [],
+        authoritativeEvents: const [],
+        eventEvidence: const [],
+        repairBudgets: [
+          RepairBudgetSnapshot(
+            lineageId: 'LINEAGE-1',
+            mechanicalRemaining: 2,
+            behavioralRemaining: 0,
+            architectureRemaining: 0,
+            observedAt: DateTime.utc(2026, 9, 21),
+          ),
+        ],
+        branchHeads: const [],
+        writerLeases: const [],
+        cancellations: const [],
+        evidenceReferences: const [],
+        humanApprovals: const [],
+        writerLeaseEvidence: const [],
+      ),
+      lineageId: 'LINEAGE-1',
+    );
     final retry = ledger.record(
       lineageId: 'LINEAGE-1',
       failureClass: M1FailureClass.transientInfrastructure,
