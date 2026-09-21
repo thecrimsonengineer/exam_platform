@@ -33,6 +33,8 @@ void main() {
     expect(cli, contains('SUPABASE_SERVICE_ROLE_KEY'));
     expect(cli, contains("uri.path.contains('/storage/v1/')"));
     expect(cli, contains('HttpHeaders.authorizationHeader'));
+    expect(cli, contains("'NoSuchBucket'"));
+    expect(cli, contains("decodedError['statusCode']?.toString() == '404'"));
   });
 
   test('FR7 uses a private immutable package bucket', () {
