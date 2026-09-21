@@ -9,6 +9,7 @@ final class M2WorkspaceEvidence {
     required List<String> untrackedPaths,
     required List<String> commits,
     required this.diffStatistics,
+    this.diffPatch = '',
   }) : untrackedPaths = List.unmodifiable(untrackedPaths),
        commits = List.unmodifiable(commits);
 
@@ -16,6 +17,7 @@ final class M2WorkspaceEvidence {
   final List<String> untrackedPaths;
   final List<String> commits;
   final String diffStatistics;
+  final String diffPatch;
   bool get clean => facts.dirtyTrackedPaths.isEmpty && untrackedPaths.isEmpty;
 }
 
@@ -51,6 +53,12 @@ final class M2GitWorkspace implements M2TrustedWorkspace {
       '$approvedBaseSha..HEAD',
     ]);
     final statistics = await _git(['diff', '--stat', '$approvedBaseSha..HEAD']);
+    final patch = await _git([
+      'diff',
+      '--no-ext-diff',
+      '--unified=0',
+      '$approvedBaseSha..HEAD',
+    ]);
     final rawChanged = (await _git([
       'diff',
       '--name-only',
@@ -85,6 +93,7 @@ final class M2GitWorkspace implements M2TrustedWorkspace {
           .where((s) => s.isNotEmpty)
           .toList(),
       diffStatistics: statistics.trim(),
+      diffPatch: patch,
     );
   }
 

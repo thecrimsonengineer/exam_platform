@@ -147,6 +147,8 @@ final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
   String head;
   String ref;
   String? wrongBase;
+  String diffPatch = '';
+  Map<String, String> fileContents = {};
   List<String> dirty = [];
   List<String> untracked = [];
   List<String> changed = [];
@@ -173,7 +175,7 @@ final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
     changedPaths: List.of(changed),
     deletedTestPaths: List.of(deleted),
     dirtyTrackedPaths: List.of(dirty),
-    fileContents: const {},
+    fileContents: Map.of(fileContents),
     binaryPaths: List.of(binary),
   );
 
@@ -186,6 +188,7 @@ final class M2FakeWorkspace implements M2TrustedWorkspace, M1TrustedRepository {
       untrackedPaths: untracked,
       commits: commits,
       diffStatistics: '1 file changed, 1 insertion(+)',
+      diffPatch: diffPatch,
     );
   }
 }

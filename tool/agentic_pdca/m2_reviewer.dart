@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'm0_models.dart';
-import 'm1_check_act.dart';
 import 'm2_handoff.dart';
+import 'm2_integrity.dart';
 import 'm2_repository.dart';
 import 'm2_task_packet.dart';
 
@@ -259,16 +259,16 @@ final class M2Check3Reviewer {
     }
 
     try {
-      final integrity = await M1IntegrityScanner().scanRepository(
-        repository: workspace.repository,
-        approvedBaseSha: packet.taskBaseSha,
+      final integrity = await M2IntegrityScanner().scan(
+        workspace: workspace,
+        evidence: evidence,
+        packet: packet,
         candidateSha: candidateSha,
-        expectedPaths: packet.expectedPaths,
       );
       for (final finding in integrity) {
         findings.add(
           _escalate(
-            'CHECK2_' + finding.code,
+            finding.code,
             finding.detail,
             'check2:' + finding.code,
           ),
@@ -278,7 +278,7 @@ final class M2Check3Reviewer {
       findings.add(
         _escalate(
           'CHECK2_UNAVAILABLE',
-          'Independent CHECK-2 integrity scan could not complete.',
+          'Independent M2 CHECK-2 integrity scan could not complete.',
           'reviewer:check2',
         ),
       );

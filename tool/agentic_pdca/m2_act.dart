@@ -495,7 +495,11 @@ final class M2ActController {
     final review = outcomes.single;
     if (review.candidateSha != request.failedCandidateSha ||
         review.packetHash != packet.hash ||
-        review.state != M2ReviewState.reviewRepairable) {
+        review.state != M2ReviewState.reviewRepairable ||
+        review.findings.any(
+          (finding) =>
+              finding.disposition == M2ReviewFindingDisposition.escalate,
+        )) {
       return _escalate(request, 'REVIEW_NOT_REPAIRABLE');
     }
 

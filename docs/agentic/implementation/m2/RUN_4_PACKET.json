@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "task_id": "M2-RUN-4",
+  "lineage_id": "M2-CONTROLS-4",
+  "maturity": "M2",
+  "plan_sha": "7a59205c550af5cc36a2c233513fc21b4f780e64",
+  "governance_sha": "43b2b3cc99839ae9de4092b4e2b7058d1964bff7",
+  "phase_base_sha": "d6a20c988027bdc25aeddc041cc16849bc259ad6",
+  "task_base_sha": "5a7c524dc481168931f09521b4ec6ce97ef65495",
+  "branch": "agentic-pdca-m2-bounded-feature",
+  "feature_objective": "M2-6: add patch-aware CHECK-2 integrity hardening and adversarial cross-state tests across DO-2, CHECK-3 and ACT-2.",
+  "acceptance_criteria": [
+    "Trusted M2 workspace captures the exact committed diff patch alongside changed-path evidence.",
+    "M2 integrity detects newly skipped tests, dependency/config changes and patch/path inconsistencies while retaining all M1 CHECK-2 findings.",
+    "CHECK-3 consumes the stronger M2 integrity result.",
+    "ACT-2 rejects internally inconsistent trusted review outcomes containing escalation findings.",
+    "Adversarial tests cover stale packet/approval/lineage, scope and ancestry attacks, handoff forgery, review self-approval, repair budget reset, retry loops, test weakening/skip, dependency drift and closure-surface absence."
+  ],
+  "in_scope_requirements": [
+    "M2 patch-aware integrity scanner",
+    "Workspace diff-patch evidence",
+    "CHECK-3 integration",
+    "ACT-2 defense in depth",
+    "Cross-state adversarial tests"
+  ],
+  "out_of_scope_requirements": [
+    "Pilot B application code",
+    "Production deployment",
+    "Persistent cross-process database",
+    "Parallel writers",
+    "M3 or M4 autonomy",
+    "Phase closure"
+  ],
+  "allowed_paths": [
+    "tool/agentic_pdca/m2_integrity.dart",
+    "tool/agentic_pdca/m2_repository.dart",
+    "tool/agentic_pdca/m2_reviewer.dart",
+    "tool/agentic_pdca/m2_act.dart",
+    "test/agentic_pdca/m2_integrity_test.dart",
+    "test/agentic_pdca/m2_adversarial_test.dart",
+    "test/agentic_pdca/m2_test_support.dart",
+    "docs/agentic/implementation/m2/**"
+  ],
+  "forbidden_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "protected_paths": [
+    "lib/**",
+    "content/**",
+    "firebase/**",
+    ".github/**",
+    "docs/agentic/v1/**",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "risk_class": "low",
+  "expected_changed_paths": [
+    "tool/agentic_pdca/m2_integrity.dart",
+    "tool/agentic_pdca/m2_repository.dart",
+    "tool/agentic_pdca/m2_reviewer.dart",
+    "tool/agentic_pdca/m2_act.dart",
+    "test/agentic_pdca/m2_integrity_test.dart",
+    "test/agentic_pdca/m2_adversarial_test.dart",
+    "test/agentic_pdca/m2_test_support.dart",
+    "docs/agentic/implementation/m2/RUN_4_PACKET.json",
+    "docs/agentic/implementation/m2/STATUS.md"
+  ],
+  "required_targeted_tests": [
+    "test/agentic_pdca/m2_integrity_test.dart",
+    "test/agentic_pdca/m2_adversarial_test.dart"
+  ],
+  "required_architecture_gates": [
+    "test/agentic_pdca/m1_architecture_gate_test.dart"
+  ],
+  "required_check_gates": [
+    "FORMAT",
+    "ANALYZE",
+    "TEST",
+    "ARCHITECTURE_GATE",
+    "CHECK2",
+    "CHECK3"
+  ],
+  "permitted_repair_classes": ["F1", "F2", "F3", "F4", "F5", "F7"],
+  "repair_budgets": {
+    "F1": 5,
+    "F2": 5,
+    "F3": 3,
+    "F4": 3,
+    "F5": 3,
+    "F6": 0,
+    "F7": 2,
+    "F8": 0,
+    "F9": 0,
+    "F10": 0
+  },
+  "dependencies": [],
+  "stop_conditions": [
+    "Adversarial test exposes architecture conflict",
+    "Required control needs protected-path change",
+    "Integrity policy cannot be determined without arbitrary threshold",
+    "Evidence provenance ambiguity",
+    "Security/data-integrity issue",
+    "Need for M3 or M4 capability"
+  ],
+  "expected_handoff": [
+    "task_id",
+    "lineage_id",
+    "packet_hash",
+    "revision",
+    "base_sha",
+    "candidate_sha",
+    "branch",
+    "commits",
+    "changed_paths",
+    "diff_statistics",
+    "targeted_tests",
+    "architecture_gates",
+    "known_limitations",
+    "expected_changed_paths",
+    "clean_worktree",
+    "evidence_references"
+  ],
+  "human_approval_reference": "User message: continue with the m phase, 2026-09-21"
+}
