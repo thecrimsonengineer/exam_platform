@@ -84,7 +84,7 @@ void main() {
     workspace: work,
     gateEvidence: M2FakeGates(receipts ?? greenReceipts(packet)),
     semanticEvidence: _SemanticStore(assessments ?? [assessment()]),
-    trustedState: testState(packet),
+    trustedState: testState(packet, lineageSha: m2TestCandidate),
     trustedClock: () => m2TestNow,
   );
 
@@ -144,6 +144,27 @@ void main() {
     expect(outcome.state, M2ReviewState.reviewEscalate);
     expect(
       outcome.findings.any((finding) => finding.code == 'SELF_REVIEW'),
+      isTrue,
+    );
+  });
+
+  test('stale Control Plane lineage candidate escalates', () async {
+    final work = workspace();
+    final staleReviewer = M2Check3Reviewer(
+      packet: packet,
+      workspace: work,
+      gateEvidence: M2FakeGates(greenReceipts(packet)),
+      semanticEvidence: _SemanticStore([assessment()]),
+      trustedState: testState(packet),
+      trustedClock: () => m2TestNow,
+    );
+    final outcome = await staleReviewer.review(
+      candidateSha: m2TestCandidate,
+      handoffJson: await handoff(work),
+    );
+    expect(outcome.state, M2ReviewState.reviewEscalate);
+    expect(
+      outcome.findings.any((finding) => finding.code == 'TASK_AUTHORITY'),
       isTrue,
     );
   });
@@ -236,7 +257,12 @@ void main() {
         ...source,
         'changed_paths': ['tool/agentic_pdca/m2_other.dart'],
       },
+      {...source, 'commits': [packet.taskBaseSha]},
+      {...source, 'diff_statistics': 'forged diff'},
+      {...source, 'targeted_tests': ['test/forged_test.dart']},
+      {...source, 'architecture_gates': ['test/forged_arch_test.dart']},
       {...source, 'gate_results': <Object?>[]},
+      {...source, 'evidence_references': ['forged:evidence']},
     ]) {
       final outcome = await reviewer(
         work,

@@ -136,7 +136,7 @@ final class M2Check3Reviewer {
       ]);
     }
 
-    if (!_trustedTaskAndApprovalValid(now)) {
+    if (!_trustedTaskAndApprovalValid(now, candidateSha)) {
       findings.add(
         _escalate(
           'TASK_AUTHORITY',
@@ -200,7 +200,7 @@ final class M2Check3Reviewer {
     }
 
     final handoff = _decodeHandoff(handoffJson);
-    if (!_validHandoff(handoff, candidateSha, facts.changedPaths)) {
+    if (!_validHandoff(handoff, candidateSha, evidence)) {
       findings.add(
         _escalate(
           'HANDOFF_MISMATCH',
@@ -342,7 +342,24 @@ final class M2Check3Reviewer {
     );
   }
 
-  bool _trustedTaskAndApprovalValid(DateTime now) {
+  bool _trustedTaskAndApprovalValid(DateTime now, String candidateSha) {
+    if (trustedState.governanceSha != m2GovernanceSha ||
+        trustedState.governanceVersion != 'v1.0') {
+      return false;
+    }
+
+    final lineages = trustedState.lineages.where(
+      (lineage) =>
+          lineage.lineageId == packet.lineageId &&
+          lineage.taskId == packet.taskId,
+    );
+    if (lineages.length != 1 ||
+        lineages.single.currentSha != candidateSha ||
+        lineages.single.governanceVersion != 'v1.0' ||
+        lineages.single.observedAt.toUtc().isAfter(now)) {
+      return false;
+    }
+
     final tasks = trustedState.tasks.where(
       (task) => task.taskId == packet.taskId,
     );
@@ -517,17 +534,26 @@ final class M2Check3Reviewer {
   bool _validHandoff(
     Map<String, Object?>? handoff,
     String candidateSha,
-    List<String> trustedChangedPaths,
+    M2WorkspaceEvidence evidence,
   ) {
     try {
       if (handoff == null) return false;
       final changed = handoff['changed_paths'];
       final expected = handoff['expected_changed_paths'];
       final commits = handoff['commits'];
-      if (changed is! List || expected is! List || commits is! List) {
+      final targetedTests = handoff['targeted_tests'];
+      final architectureGates = handoff['architecture_gates'];
+      final knownLimitations = handoff['known_limitations'];
+      if (changed is! List ||
+          expected is! List ||
+          commits is! List ||
+          targetedTests is! List ||
+          architectureGates is! List ||
+          knownLimitations is! List) {
         return false;
       }
-      final trustedChanged = [...trustedChangedPaths]..sort();
+
+      final trustedChanged = [...evidence.facts.changedPaths]..sort();
       final handoffChanged = changed.cast<String>()..sort();
       return handoff['task_id'] == packet.taskId &&
           handoff['lineage_id'] == packet.lineageId &&
@@ -540,8 +566,14 @@ final class M2Check3Reviewer {
           handoff['clean_worktree'] == true &&
           commits.isNotEmpty &&
           commits.last == candidateSha &&
+          m2CanonicalJson(commits) == m2CanonicalJson(evidence.commits) &&
+          handoff['diff_statistics'] == evidence.diffStatistics &&
           m2CanonicalJson(handoffChanged) == m2CanonicalJson(trustedChanged) &&
-          m2CanonicalJson(expected) == m2CanonicalJson(packet.expectedPaths);
+          m2CanonicalJson(expected) == m2CanonicalJson(packet.expectedPaths) &&
+          m2CanonicalJson(targetedTests) ==
+              m2CanonicalJson(packet.strings('required_targeted_tests')) &&
+          m2CanonicalJson(architectureGates) ==
+              m2CanonicalJson(packet.strings('required_architecture_gates'));
     } catch (_) {
       return false;
     }
@@ -561,8 +593,16 @@ final class M2Check3Reviewer {
             ..sort(
               (a, b) => (a['gate'] as String).compareTo(b['gate'] as String),
             );
+      final handoffReferences = handoff['evidence_references'];
+      if (handoffReferences is! List) return false;
+      final trustedReferences =
+          trusted.map((receipt) => receipt.evidenceReference).toList();
       return m2CanonicalJson(handoffResults) ==
-          m2CanonicalJson(trusted.map((receipt) => receipt.toJson()).toList());
+              m2CanonicalJson(
+                trusted.map((receipt) => receipt.toJson()).toList(),
+              ) &&
+          m2CanonicalJson(handoffReferences) ==
+              m2CanonicalJson(trustedReferences);
     } catch (_) {
       return false;
     }

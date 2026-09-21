@@ -2,7 +2,7 @@
 
 Frozen plan: 7a59205c550af5cc36a2c233513fc21b4f780e64.
 Phase base: d6a20c988027bdc25aeddc041cc16849bc259ad6.
-Status: RUN_2_M2_4_CANDIDATE; M2 remains open.
+Status: RUN_2_M2_4_REVIEW_REPAIR; M2 remains open.
 
 ## Accepted Run 1 checkpoint
 
@@ -45,3 +45,19 @@ The candidate reviewer:
 
 M2-5 ACT-2, M2-6 adversarial expansion, Pilot A lifecycle proof and Pilot B
 remain out of scope for this candidate.
+
+
+## Run 2 independent review finding
+
+GitHub exact-SHA validation run 35584005794 passed at
+56958782d49a05f6acb0d5e26655b7d000928efa, but independent CHECK-3 design
+review returned REVIEW_REPAIRABLE before M2-4 acceptance.
+
+Two bounded findings are repaired in the next candidate:
+1. trusted task authority must bind packet lineage currentSha to the exact
+   candidate under review;
+2. DO handoff commits, diff statistics, targeted tests, architecture gates and
+   evidence references must independently match trusted repository/gate
+   evidence, not only changed paths.
+
+No M2-5 work is included in this repair.
