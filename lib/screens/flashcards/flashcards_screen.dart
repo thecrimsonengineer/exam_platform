@@ -664,7 +664,10 @@ class _AdaptiveActionContent extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 8,
       runSpacing: 4,
-      children: [icon, Text(label, textAlign: TextAlign.center)],
+      children: [
+        icon,
+        Text(label, textAlign: TextAlign.center),
+      ],
     );
   }
 }
