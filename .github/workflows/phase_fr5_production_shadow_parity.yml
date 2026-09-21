@@ -1,6 +1,11 @@
 name: Phase FR5 Production Shadow Parity
 
 on:
+  push:
+    branches:
+      - phase-fr5-shadow-data-parity
+    paths:
+      - .github/fr5_preflight_trigger
   workflow_dispatch:
     inputs:
       apply_shadow:
