@@ -582,26 +582,30 @@ class _DailyDiscoveryCard extends StatelessWidget {
     } else if (state.status == DailyDiscoveryStatus.offered && card != null) {
       title = card.frontLabel;
       message = 'Today’s concept is ready to join your Collection.';
-      action = FilledButton.icon(
+      action = FilledButton(
         key: const ValueKey('daily-discovery-claim'),
         onPressed: claiming ? null : () => unawaited(onClaim()),
-        icon: claiming
-            ? const SizedBox.square(
-                dimension: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Icon(Icons.add_card_rounded),
-        label: const Text('Collect today’s card'),
+        child: _AdaptiveActionContent(
+          icon: claiming
+              ? const SizedBox.square(
+                  dimension: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.add_card_rounded),
+          label: 'Collect today’s card',
+        ),
       );
     } else if (state.status == DailyDiscoveryStatus.claimed && card != null) {
       title = card.frontLabel;
       message = 'Collected today. Reveal it whenever you are ready.';
       final ownership = snapshot.ownershipByCardId[card.id];
       if (ownership != null) {
-        action = OutlinedButton.icon(
+        action = OutlinedButton(
           onPressed: () => unawaited(onOpenCard(card, ownership)),
-          icon: const Icon(Icons.visibility_outlined),
-          label: const Text('Open card'),
+          child: const _AdaptiveActionContent(
+            icon: Icon(Icons.visibility_outlined),
+            label: 'Open card',
+          ),
         );
       }
     } else {
@@ -643,6 +647,24 @@ class _DailyDiscoveryCard extends StatelessWidget {
           if (action != null) ...[const SizedBox(height: 16), action],
         ],
       ),
+    );
+  }
+}
+
+class _AdaptiveActionContent extends StatelessWidget {
+  const _AdaptiveActionContent({required this.icon, required this.label});
+
+  final Widget icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 8,
+      runSpacing: 4,
+      children: [icon, Text(label, textAlign: TextAlign.center)],
     );
   }
 }
