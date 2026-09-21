@@ -225,7 +225,9 @@ final class M2Check3Reviewer {
     final requiredGates = {
       ...packet.strings('required_targeted_tests'),
       ...packet.strings('required_architecture_gates'),
-      ...packet.strings('required_check_gates').where((gate) => gate != 'CHECK3'),
+      ...packet
+          .strings('required_check_gates')
+          .where((gate) => gate != 'CHECK3'),
     };
     final gateNames = receipts.map((receipt) => receipt.gate).toSet();
     final validGates =
@@ -341,7 +343,9 @@ final class M2Check3Reviewer {
   }
 
   bool _trustedTaskAndApprovalValid(DateTime now) {
-    final tasks = trustedState.tasks.where((task) => task.taskId == packet.taskId);
+    final tasks = trustedState.tasks.where(
+      (task) => task.taskId == packet.taskId,
+    );
     if (tasks.length != 1) return false;
     final task = tasks.single;
     final taskValid =
@@ -550,12 +554,13 @@ final class M2Check3Reviewer {
     try {
       if (handoff == null || handoff['gate_results'] is! List) return false;
       final trusted = [...receipts]..sort((a, b) => a.gate.compareTo(b.gate));
-      final handoffResults = (handoff['gate_results'] as List)
-          .map((value) => (value as Map).cast<String, Object?>())
-          .toList()
-        ..sort(
-          (a, b) => (a['gate'] as String).compareTo(b['gate'] as String),
-        );
+      final handoffResults =
+          (handoff['gate_results'] as List)
+              .map((value) => (value as Map).cast<String, Object?>())
+              .toList()
+            ..sort(
+              (a, b) => (a['gate'] as String).compareTo(b['gate'] as String),
+            );
       return m2CanonicalJson(handoffResults) ==
           m2CanonicalJson(trusted.map((receipt) => receipt.toJson()).toList());
     } catch (_) {
@@ -568,10 +573,11 @@ final class M2Check3Reviewer {
     String reviewerPrincipal,
     List<M2ReviewFinding> findings,
   ) {
-    final state = findings.any(
-      (finding) =>
-          finding.disposition == M2ReviewFindingDisposition.escalate,
-    )
+    final state =
+        findings.any(
+          (finding) =>
+              finding.disposition == M2ReviewFindingDisposition.escalate,
+        )
         ? M2ReviewState.reviewEscalate
         : findings.any(
             (finding) =>
@@ -597,26 +603,24 @@ final class M2Check3Reviewer {
     String detail,
     String evidenceReference,
     String repairClass,
-  ) =>
-      M2ReviewFinding(
-        code: code,
-        detail: detail,
-        disposition: M2ReviewFindingDisposition.repairable,
-        evidenceReference: evidenceReference,
-        repairClass: repairClass,
-      );
+  ) => M2ReviewFinding(
+    code: code,
+    detail: detail,
+    disposition: M2ReviewFindingDisposition.repairable,
+    evidenceReference: evidenceReference,
+    repairClass: repairClass,
+  );
 
   M2ReviewFinding _escalate(
     String code,
     String detail,
     String evidenceReference, {
     String? repairClass,
-  }) =>
-      M2ReviewFinding(
-        code: code,
-        detail: detail,
-        disposition: M2ReviewFindingDisposition.escalate,
-        evidenceReference: evidenceReference,
-        repairClass: repairClass,
-      );
+  }) => M2ReviewFinding(
+    code: code,
+    detail: detail,
+    disposition: M2ReviewFindingDisposition.escalate,
+    evidenceReference: evidenceReference,
+    repairClass: repairClass,
+  );
 }

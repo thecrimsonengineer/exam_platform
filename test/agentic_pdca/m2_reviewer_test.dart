@@ -22,9 +22,7 @@ final class _SemanticStore implements M2TrustedSemanticReviewEvidence {
 
 void main() {
   final packet = M2TaskPacket.parse(
-    File(
-      'docs/agentic/implementation/m2/RUN_2_PACKET.json',
-    ).readAsStringSync(),
+    File('docs/agentic/implementation/m2/RUN_2_PACKET.json').readAsStringSync(),
   );
 
   M2FakeWorkspace workspace() => M2FakeWorkspace(packet)
@@ -46,52 +44,49 @@ void main() {
     bool maintainability = true,
     bool behavior = true,
     List<M2ReviewFinding> findings = const [],
-  }) =>
-      M2SemanticReviewReceipt(
-        candidateSha: candidate ?? m2TestCandidate,
-        packetHash: hash ?? packet.hash,
-        reviewerPrincipal: reviewer,
-        reviewerRole: role,
-        readOnly: readOnly,
-        observedAt: observedAt ?? m2TestNow,
-        evidenceReference: 'semantic:review',
-        acceptanceCriteriaSatisfied: acceptance,
-        architectureConsistent: architecture,
-        testQualityAccepted: tests,
-        regressionRiskAccepted: regression,
-        maintainabilityAccepted: maintainability,
-        behaviorMatchesTask: behavior,
-        findings: findings,
-      );
+  }) => M2SemanticReviewReceipt(
+    candidateSha: candidate ?? m2TestCandidate,
+    packetHash: hash ?? packet.hash,
+    reviewerPrincipal: reviewer,
+    reviewerRole: role,
+    readOnly: readOnly,
+    observedAt: observedAt ?? m2TestNow,
+    evidenceReference: 'semantic:review',
+    acceptanceCriteriaSatisfied: acceptance,
+    architectureConsistent: architecture,
+    testQualityAccepted: tests,
+    regressionRiskAccepted: regression,
+    maintainabilityAccepted: maintainability,
+    behaviorMatchesTask: behavior,
+    findings: findings,
+  );
 
   Future<String> handoff(
     M2FakeWorkspace work, {
     List<M2GateReceipt>? receipts,
   }) async =>
-      (
-        await M2HandoffBuilder(
-          workspace: work,
-          gateEvidence: M2FakeGates(receipts ?? greenReceipts(packet)),
-          packet: packet,
-        ).build(
-          candidateSha: m2TestCandidate,
-          knownLimitations: ['CHECK-3 test fixture'],
-        )
-      ).canonicalJson;
+      (await M2HandoffBuilder(
+            workspace: work,
+            gateEvidence: M2FakeGates(receipts ?? greenReceipts(packet)),
+            packet: packet,
+          ).build(
+            candidateSha: m2TestCandidate,
+            knownLimitations: ['CHECK-3 test fixture'],
+          ))
+          .canonicalJson;
 
   M2Check3Reviewer reviewer(
     M2FakeWorkspace work, {
     List<M2SemanticReviewReceipt>? assessments,
     List<M2GateReceipt>? receipts,
-  }) =>
-      M2Check3Reviewer(
-        packet: packet,
-        workspace: work,
-        gateEvidence: M2FakeGates(receipts ?? greenReceipts(packet)),
-        semanticEvidence: _SemanticStore(assessments ?? [assessment()]),
-        trustedState: testState(packet),
-        trustedClock: () => m2TestNow,
-      );
+  }) => M2Check3Reviewer(
+    packet: packet,
+    workspace: work,
+    gateEvidence: M2FakeGates(receipts ?? greenReceipts(packet)),
+    semanticEvidence: _SemanticStore(assessments ?? [assessment()]),
+    trustedState: testState(packet),
+    trustedClock: () => m2TestNow,
+  );
 
   test('clean exact candidate with independent evidence is accepted', () async {
     final work = workspace();
@@ -128,9 +123,7 @@ void main() {
       final work = workspace();
       final outcome = await reviewer(
         work,
-        assessments: [
-          assessment(acceptance: false, architecture: false),
-        ],
+        assessments: [assessment(acceptance: false, architecture: false)],
       ).review(candidateSha: m2TestCandidate, handoffJson: await handoff(work));
       expect(outcome.state, M2ReviewState.reviewEscalate);
       expect(
@@ -169,22 +162,25 @@ void main() {
     }
   });
 
-  test('stale, mutable-role or wrongly bound semantic receipt escalates', () async {
-    for (final receipt in [
-      assessment(candidate: packet.taskBaseSha),
-      assessment(hash: 'forged'),
-      assessment(role: 'BUILDER'),
-      assessment(readOnly: false),
-      assessment(observedAt: m2TestNow.add(const Duration(minutes: 1))),
-    ]) {
-      final work = workspace();
-      final outcome = await reviewer(
-        work,
-        assessments: [receipt],
-      ).review(candidateSha: m2TestCandidate, handoffJson: await handoff(work));
-      expect(outcome.state, M2ReviewState.reviewEscalate);
-    }
-  });
+  test(
+    'stale, mutable-role or wrongly bound semantic receipt escalates',
+    () async {
+      for (final receipt in [
+        assessment(candidate: packet.taskBaseSha),
+        assessment(hash: 'forged'),
+        assessment(role: 'BUILDER'),
+        assessment(readOnly: false),
+        assessment(observedAt: m2TestNow.add(const Duration(minutes: 1))),
+      ]) {
+        final work = workspace();
+        final outcome = await reviewer(work, assessments: [receipt]).review(
+          candidateSha: m2TestCandidate,
+          handoffJson: await handoff(work),
+        );
+        expect(outcome.state, M2ReviewState.reviewEscalate);
+      }
+    },
+  );
 
   test('red or missing trusted gate evidence escalates', () async {
     for (final receipts in <List<M2GateReceipt>>[
@@ -202,21 +198,24 @@ void main() {
     }
   });
 
-  test('dirty, out-of-scope and wrong ancestry repository state escalates', () async {
-    final cases = [
-      workspace()..dirty = ['README.md'],
-      workspace()..changed = ['lib/main.dart'],
-      workspace()..wrongBase = m2TestCandidate,
-    ];
-    for (final work in cases) {
-      final cleanForHandoff = workspace();
-      final outcome = await reviewer(work).review(
-        candidateSha: m2TestCandidate,
-        handoffJson: await handoff(cleanForHandoff),
-      );
-      expect(outcome.state, M2ReviewState.reviewEscalate);
-    }
-  });
+  test(
+    'dirty, out-of-scope and wrong ancestry repository state escalates',
+    () async {
+      final cases = [
+        workspace()..dirty = ['README.md'],
+        workspace()..changed = ['lib/main.dart'],
+        workspace()..wrongBase = m2TestCandidate,
+      ];
+      for (final work in cases) {
+        final cleanForHandoff = workspace();
+        final outcome = await reviewer(work).review(
+          candidateSha: m2TestCandidate,
+          handoffJson: await handoff(cleanForHandoff),
+        );
+        expect(outcome.state, M2ReviewState.reviewEscalate);
+      }
+    },
+  );
 
   test('detached exact read-only checkout is valid for CHECK-3', () async {
     final work = workspace()..ref = '';
@@ -233,7 +232,10 @@ void main() {
     final source = jsonDecode(await handoff(work)) as Map<String, dynamic>;
     for (final forged in [
       {...source, 'candidate_sha': packet.taskBaseSha},
-      {...source, 'changed_paths': ['tool/agentic_pdca/m2_other.dart']},
+      {
+        ...source,
+        'changed_paths': ['tool/agentic_pdca/m2_other.dart'],
+      },
       {...source, 'gate_results': <Object?>[]},
     ]) {
       final outcome = await reviewer(
@@ -254,7 +256,9 @@ void main() {
     );
     final outcome = await reviewer(
       work,
-      assessments: [assessment(findings: [invalidFinding])],
+      assessments: [
+        assessment(findings: [invalidFinding]),
+      ],
     ).review(candidateSha: m2TestCandidate, handoffJson: await handoff(work));
     expect(outcome.state, M2ReviewState.reviewEscalate);
     expect(
