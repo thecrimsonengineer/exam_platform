@@ -47,21 +47,19 @@ void main() {
     expect(buildSection, isNot(contains('Csp11Haptics.')));
   });
 
-  test(
-    'Flashcards empty state is animated without inventing review behavior',
-    () {
-      for (final path in <String>[
-        'lib/screens/flashcards/flashcards_screen.dart',
-        'lib/screens/flashcards/flashcards_screen_dark.dart',
-      ]) {
-        final source = read(path);
-        expect(source, contains('Csp11StatusKind.empty'));
-        expect(source, contains('No flashcard decks are published yet.'));
-        expect(source, isNot(contains('Csp11FlipCard')));
-        expect(source, isNot(contains('Csp11Haptics.')));
-      }
-    },
-  );
+  test('Flashcards motion follows implemented FC learner states', () {
+    final source = read('lib/screens/flashcards/flashcards_screen.dart');
+    final dark = read('lib/screens/flashcards/flashcards_screen_dark.dart');
+
+    expect(source, contains('Csp11StatusKind.loading'));
+    expect(source, contains('Csp11StatusKind.error'));
+    expect(source, contains('Csp11StaggeredReveal('));
+    expect(source, contains('FlashcardReviewPlayerScreen('));
+    expect(source, isNot(contains('Csp11FlipCard')));
+
+    expect(dark, contains('return FlashcardsScreen(controller: controller);'));
+    expect(dark, isNot(contains('Csp11FlipCard')));
+  });
 
   test('motion and haptics share the same semantic learner transitions', () {
     final navigation = read('lib/screens/navigation/bottom_navigation.dart');

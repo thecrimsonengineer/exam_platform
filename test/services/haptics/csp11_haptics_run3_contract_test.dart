@@ -58,14 +58,19 @@ void main() {
     expect(navigation, isNot(contains('/admin/haptic-diagnostics')));
   });
 
-  test('Flashcards remain intentionally silent without a review engine', () {
-    for (final path in <String>[
-      'lib/screens/flashcards/flashcards_screen.dart',
-      'lib/screens/flashcards/flashcards_screen_dark.dart',
-    ]) {
-      final source = read(path);
-      expect(source, contains('No flashcard decks are published yet.'));
-      expect(source, isNot(contains('Csp11Haptics.')));
-    }
+  test('Flashcards use centralized haptics after FC review activation', () {
+    final collection = read('lib/screens/flashcards/flashcards_screen.dart');
+    final review = read(
+      'lib/screens/flashcards/widgets/flashcard_review_player_screen.dart',
+    );
+    final dark = read('lib/screens/flashcards/flashcards_screen_dark.dart');
+
+    expect(collection, contains('Csp11Haptics.success()'));
+    expect(collection, contains('Csp11Haptics.navigation()'));
+    expect(review, contains('Csp11Haptics.selection()'));
+    expect(review, contains('Csp11Haptics.completion()'));
+    expect(collection, isNot(contains('HapticFeedback.')));
+    expect(review, isNot(contains('HapticFeedback.')));
+    expect(dark, isNot(contains('HapticFeedback.')));
   });
 }

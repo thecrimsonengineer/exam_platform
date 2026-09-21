@@ -64,6 +64,11 @@ void main() {
     ).readAsStringSync();
 
     expect(source, isNot(contains('option.quality.name')));
-    expect(source, isNot(contains('selectedOption.quality')));
+    expect(source, isNot(contains('Text(selectedOption.quality')));
+    expect(source, isNot(contains('\${selectedOption.quality')));
+    expect(
+      source,
+      contains('_emitAcceptedDecisionHaptics(selectedOption.quality)'),
+    );
   });
 }

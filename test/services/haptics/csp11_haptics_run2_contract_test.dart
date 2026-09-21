@@ -69,16 +69,27 @@ void main() {
     },
   );
 
-  test('Flashcards remain silent until a real review engine exists', () {
-    for (final path in <String>[
-      'lib/screens/flashcards/flashcards_screen.dart',
-      'lib/screens/flashcards/flashcards_screen_dark.dart',
-    ]) {
-      final source = read(path);
+  test('Flashcard haptics follow accepted collection and review events', () {
+    final collection = read('lib/screens/flashcards/flashcards_screen.dart');
+    final review = read(
+      'lib/screens/flashcards/widgets/flashcard_review_player_screen.dart',
+    );
 
-      expect(source, contains('No flashcard decks are published yet.'));
-      expect(source, isNot(contains('Csp11Haptics.')));
-      expect(source, isNot(contains('HapticFeedback.')));
-    }
+    final claimIndex = collection.indexOf(
+      'final result = await _controller.claimDaily();',
+    );
+    final rewardIndex = collection.indexOf('await Csp11Haptics.success();');
+    expect(claimIndex, greaterThanOrEqualTo(0));
+    expect(rewardIndex, greaterThan(claimIndex));
+
+    expect(collection, contains('Csp11Haptics.navigation()'));
+    expect(review, contains('Csp11Haptics.selection()'));
+    expect(review, contains('Csp11Haptics.warning()'));
+    expect(review, contains('Csp11Haptics.confirm()'));
+    expect(review, contains('Csp11Haptics.success()'));
+    expect(review, contains('Csp11Haptics.completion()'));
+
+    expect(collection, isNot(contains('HapticFeedback.')));
+    expect(review, isNot(contains('HapticFeedback.')));
   });
 }

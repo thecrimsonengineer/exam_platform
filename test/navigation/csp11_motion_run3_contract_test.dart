@@ -75,25 +75,22 @@ void main() {
     }
   });
 
-  test(
-    'future Flashcard motion foundation does not invent review behavior',
-    () {
-      final flip = read('lib/widgets/motion/csp11_flip_card.dart');
+  test('Flashcard flip motion stays centralized in the card view', () {
+    final flip = read('lib/widgets/motion/csp11_flip_card.dart');
+    final cardView = read(
+      'lib/screens/flashcards/widgets/flashcard_card_view.dart',
+    );
+    final collection = read('lib/screens/flashcards/flashcards_screen.dart');
+    final dark = read('lib/screens/flashcards/flashcards_screen_dark.dart');
 
-      expect(flip, contains('class Csp11FlipCard'));
-      expect(flip, contains('Matrix4.rotationY'));
-      expect(flip, contains('Csp11MotionPreferences.reduced(context)'));
+    expect(flip, contains('class Csp11FlipCard'));
+    expect(flip, contains('Matrix4.rotationY'));
+    expect(flip, contains('Csp11MotionPreferences.reduced(context)'));
 
-      for (final path in <String>[
-        'lib/screens/flashcards/flashcards_screen.dart',
-        'lib/screens/flashcards/flashcards_screen_dark.dart',
-      ]) {
-        final source = read(path);
-        expect(source, contains('No flashcard decks are published yet.'));
-        expect(source, isNot(contains('Csp11FlipCard')));
-      }
-    },
-  );
+    expect(cardView, contains('Csp11FlipCard('));
+    expect(collection, isNot(contains('Csp11FlipCard')));
+    expect(dark, isNot(contains('Csp11FlipCard')));
+  });
 
   test('Run 3 motion foundation remains Firebase and Supabase free', () {
     for (final path in <String>[

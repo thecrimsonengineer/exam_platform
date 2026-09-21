@@ -27,7 +27,6 @@ void main() {
       'lib/screens/courses/csp/csp_study_hub_screen.dart',
       'lib/screens/courses/csp/csp_study_hub_screen_dark.dart',
       'lib/screens/flashcards/flashcards_screen.dart',
-      'lib/screens/flashcards/flashcards_screen_dark.dart',
       'lib/screens/progress/progress_analytics_screen.dart',
       'lib/screens/practice/practice_hub_screen.dart',
       'lib/screens/settings/settings_screen.dart',
@@ -44,6 +43,15 @@ void main() {
         reason: '$path must stay on the student glass shell.',
       );
     }
+
+    final darkFlashcards = read(
+      'lib/screens/flashcards/flashcards_screen_dark.dart',
+    );
+    expect(
+      darkFlashcards,
+      contains('return FlashcardsScreen(controller: controller);'),
+      reason: 'Dark Flashcards must delegate to the shared glass shell.',
+    );
   });
 
   test('all core Exam Readiness pages keep the glass shell', () {
