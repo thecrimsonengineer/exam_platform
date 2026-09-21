@@ -68,7 +68,10 @@ void main() {
   test('FR8 remains before learner delivery cutover', () {
     expect(phase, contains('FR8 does not perform learner delivery cutover'));
     expect(phase, contains('Firestore remains the learner'));
-    expect(phase, contains('source until the later reviewed FR cutover phases.'));
+    expect(
+      phase,
+      contains('source until the later reviewed FR cutover phases.'),
+    );
     expect(phase, contains('no uninstall'));
     expect(phase, contains('copy -> validate -> write -> read-back -> switch'));
   });
