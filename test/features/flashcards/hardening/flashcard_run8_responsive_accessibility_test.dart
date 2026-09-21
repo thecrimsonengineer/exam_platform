@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:exam_platform/features/flashcards/flashcards.dart';
 import 'package:exam_platform/screens/flashcards/flashcards_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -83,7 +84,43 @@ void main() {
     expect(find.text('My Collection'), findsWidgets);
     expect(find.text('DAILY DISCOVERY'), findsOneWidget);
     expect(find.text('Collection by Domain'), findsOneWidget);
-    expect(tester.takeException(), isNull);
+
+    final exception = tester.takeException();
+    if (exception != null) {
+      final overflowing = <String>[];
+      for (final renderObject in tester.allRenderObjects.whereType<RenderFlex>()) {
+        if (renderObject.direction != Axis.horizontal ||
+            !renderObject.hasSize) {
+          continue;
+        }
+
+        var childWidth = 0.0;
+        var childCount = 0;
+        renderObject.visitChildren((child) {
+          if (child is RenderBox && child.hasSize) {
+            childWidth += child.size.width;
+            childCount++;
+          }
+        });
+
+        final overflow = childWidth - renderObject.size.width;
+        if (overflow > 0.5) {
+          overflowing.add(
+            'overflow=${overflow.toStringAsFixed(1)} '
+            'flexWidth=${renderObject.size.width.toStringAsFixed(1)} '
+            'childrenWidth=${childWidth.toStringAsFixed(1)} '
+            'children=$childCount '
+            'creator=${renderObject.debugCreator}',
+          );
+        }
+      }
+
+      fail(
+        'Unexpected Flutter exception: $exception\n'
+        'Horizontal RenderFlex diagnostics:\n'
+        '${overflowing.isEmpty ? '(none measured)' : overflowing.join('\n')}',
+      );
+    }
   }
 
   tearDown(() {
