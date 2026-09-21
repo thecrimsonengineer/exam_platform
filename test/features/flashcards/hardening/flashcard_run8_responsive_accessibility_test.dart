@@ -97,16 +97,8 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     for (final width in <double>[360, 390, 412, 430]) {
-      await pump(
-        tester,
-        width: width,
-        themeMode: ThemeMode.light,
-      );
-      await pump(
-        tester,
-        width: width,
-        themeMode: ThemeMode.dark,
-      );
+      await pump(tester, width: width, themeMode: ThemeMode.light);
+      await pump(tester, width: width, themeMode: ThemeMode.dark);
     }
   });
 
