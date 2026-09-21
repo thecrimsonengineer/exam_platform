@@ -1,6 +1,11 @@
 name: Phase FR7 Production Package Publish
 
 on:
+  push:
+    branches:
+      - phase-fr7-storage-publishing
+    paths:
+      - .github/fr7_preflight_trigger
   workflow_dispatch:
     inputs:
       publish:
