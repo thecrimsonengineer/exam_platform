@@ -462,9 +462,19 @@ class _SupabaseFr7Client {
       return const _BucketState(exists: false, isPublic: false);
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
+      final body = utf8.decode(response.bytes, allowMalformed: true);
+      try {
+        final decodedError = jsonDecode(body);
+        if (decodedError is Map &&
+            decodedError['code']?.toString() == 'NoSuchBucket' &&
+            decodedError['statusCode']?.toString() == '404') {
+          return const _BucketState(exists: false, isPublic: false);
+        }
+      } on FormatException {
+        // Preserve the original fail-closed HTTP error below.
+      }
       throw HttpException(
-        'FR7 bucket lookup failed (${response.statusCode}): '
-        '${utf8.decode(response.bytes, allowMalformed: true)}',
+        'FR7 bucket lookup failed (${response.statusCode}): $body',
       );
     }
     final decoded = jsonDecode(utf8.decode(response.bytes));
