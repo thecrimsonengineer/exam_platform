@@ -573,7 +573,7 @@ class _SupabaseFr7Client {
     Fr7PlannedCompetency competency, {
     required String publishedAt,
   }) async {
-    final uri = _restUri('rpc/fr7_commit_competency_publication');
+    final uri = _rpcUri('fr7_commit_competency_publication');
     final response = await _jsonRequest(
       'POST',
       uri,
@@ -595,6 +595,16 @@ class _SupabaseFr7Client {
       );
     }
   }
+
+  Uri _rpcUri(String functionName) => baseUri.replace(
+    pathSegments: <String>[
+      ...baseUri.pathSegments.where((segment) => segment.isNotEmpty),
+      'rest',
+      'v1',
+      'rpc',
+      functionName,
+    ],
+  );
 
   Uri _restUri(
     String table, [

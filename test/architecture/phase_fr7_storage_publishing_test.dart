@@ -105,6 +105,20 @@ void main() {
     );
   });
 
+  test('FR7 PostgREST RPC route preserves rpc as a path segment', () {
+    expect(
+      cli,
+      contains("_rpcUri('fr7_commit_competency_publication')"),
+    );
+    expect(
+      cli,
+      isNot(
+        contains("_restUri('rpc/fr7_commit_competency_publication')"),
+      ),
+    );
+    expect(cli, contains("'rpc',\n      functionName,"));
+  });
+
   test('FR7 rollback is an atomic pointer switch with no object deletion', () {
     expect(
       atomicSql,
