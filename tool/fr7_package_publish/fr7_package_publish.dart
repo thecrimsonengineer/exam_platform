@@ -462,7 +462,10 @@ class _SupabaseFr7Client {
       return const _BucketState(exists: false, isPublic: false);
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw HttpException('FR7 bucket lookup failed (${response.statusCode}).');
+      throw HttpException(
+        'FR7 bucket lookup failed (${response.statusCode}): '
+        '${utf8.decode(response.bytes, allowMalformed: true)}',
+      );
     }
     final decoded = jsonDecode(utf8.decode(response.bytes));
     if (decoded is! Map) {
@@ -646,7 +649,8 @@ class _SupabaseFr7Client {
     try {
       final request = await client.openUrl(method, uri);
       request.headers.set('apikey', apiKey);
-      if (legacyJwt) {
+      final isStorageRequest = uri.path.contains('/storage/v1/');
+      if (legacyJwt || isStorageRequest) {
         request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $apiKey');
       }
       request.headers.set(HttpHeaders.userAgentHeader, 'csp11-fr7-publisher/1');
