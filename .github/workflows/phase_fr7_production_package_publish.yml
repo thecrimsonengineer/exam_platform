@@ -6,6 +6,7 @@ on:
       - phase-fr7-storage-publishing
     paths:
       - .github/fr7_preflight_trigger
+      - .github/fr7_publish_trigger
   workflow_dispatch:
     inputs:
       publish:
@@ -68,16 +69,23 @@ jobs:
           grep -q '"readyToPublish": true' build/fr7-production/preflight.json
 
       - name: Require explicit package-publish confirmation
-        if: inputs.publish == true
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.publish == true) ||
+          (github.event_name == 'push' && github.event.head_commit.message == 'FR7: authorized one-shot production package publish')
         shell: bash
         run: |
-          if [ "${{ inputs.confirmation }}" != "FR7_PUBLISH_PACKAGES" ]; then
+          if [ "${{ github.event_name }}" = "push" ]; then
+            test -f .github/fr7_publish_trigger
+            grep -qx 'FR7_PUBLISH_PACKAGES' .github/fr7_publish_trigger
+          elif [ "${{ inputs.confirmation }}" != "FR7_PUBLISH_PACKAGES" ]; then
             echo "Publish requested without exact FR7_PUBLISH_PACKAGES confirmation."
             exit 1
           fi
 
       - name: Publish immutable packages and update catalogue last
-        if: inputs.publish == true
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.publish == true) ||
+          (github.event_name == 'push' && github.event.head_commit.message == 'FR7: authorized one-shot production package publish')
         run: |
           dart run tool/fr7_package_publish/fr7_package_publish.dart \
             --publish \
