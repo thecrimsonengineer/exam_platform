@@ -1,47 +1,39 @@
 # Agentic PDCA M1 Status
 
-Status: REVIEW_READY_V3 pending independent review
+Status: M1_REVIEW_READY_V4 — pending independent review; M1 is not closed.
 Maturity: M1 = DO-1 + CHECK-1/2 + ACT-1
-M0 base SHA: `94d060e37358915d03a2375ebc3af54808633e15`
-Branch: `agentic-pdca-m1-001`
+M0 base: `94d060e37358915d03a2375ebc3af54808633e15`
+V3 input: `ea0f51a948366a82f5f44bf75e57f9374e11be47`
+Publication branch: `agentic-pdca-m1-001`
 
-## Commits
+## Final binding repair
 
-- `89d6daa` AGENT-BUILD PDCA M1-001: establish mechanical control boundary
-- `4ed234f` AGENT-BUILD PDCA M1-002: add mechanical authority and deterministic gates
-- `2529c8f` AGENT-BUILD PDCA M1-005: add mechanical pilot and status evidence
-- `acb20f6` AGENT-REVIEW PDCA M1: repair trust boundaries and execution gates
-- `da28178` AGENT-REVIEW PDCA M1: remove caller lease model
-- `18da2ab` AGENT-REVIEW PDCA M1: bind checks to trusted repository facts
+- CHECK identity: the runner receives a trusted repository and fixed expected candidate/base identities at construction. A CHECK request supplies no candidate facts, comparison facts, or dirty paths. Repository HEAD supplies the evidence identity. Pre/post HEAD, merge-base, and dirty tracked state must satisfy the contract; failed preconditions prevent command execution.
+- CHECK working directory: every fixed gate uses the same direct process invocation with `workingDirectory: repository.root` and `runInShell: false`. Flutter gates invoke the installed Flutter tools snapshot through Dart, avoiding Windows batch-shell execution. No request controls executable, arguments, or working directory.
+- CHECK-2: both scan paths use `M1RepositoryPathGuard`; canonical glob descendants are accepted, sibling/prefix tricks, traversal, absolute paths and backslashes are rejected. Unknown dirty tracked paths block even inside the allow-list. Generated validation paths are available separately through `generatedSideEffects`; CHECK-1 records them in evidence. Git reads staged and unstaged tracked paths separately using NUL delimiters, including cancelling index/worktree edits.
+- DO-1: actual repository ref must equal the requested lease branch and be nonempty. Trusted lineage task, lineage ID and current SHA must match the request. Repository HEAD, lease expected HEAD and requested expected HEAD must agree, with exact approved M0 ancestry. FORMAT rechecks HEAD, branch and ancestry immediately before mutation.
+- ACT-1: a central process-lifetime repair-budget store initializes each lineage once from the trusted M0 budget snapshot. New stores/controllers and writer handles share its authoritative balance and history. Reinitializing with the original snapshot does not replenish it. Unknown lineages fail closed. Same-SHA infrastructure retries consume zero; a mechanical repair requires a different exact candidate SHA and consumes one. Unsupported failure classes escalate; there is no closure route.
+- Architecture gate: the fixed test executes the authority, CHECK and path boundary suites, plus M0 capability denial, actual ACT routing, unsupported executor operations and traversal denial. It includes a real CHECK formatter process that leaves an unformatted fixture unchanged, and a denied DO-1 FORMAT call.
 
-## DO-1
+## Validation evidence before commit
 
-Prepared mechanical classification and action plans for formatting, imports, simple analyzer fixes, and safe test-harness corrections. Authority now reads current HEAD and ancestry from one trusted repository adapter, and binds task/lineage, approved base, branch, allowed paths, required gates, and a matching active lease observed by the M0 Control Plane, including writer identity, fencing token, expected HEAD, expiry and revocation state. Protected paths, non-mechanical classes, test weakening, dependency mutation, and unknown actions fail closed.
+- Agentic suite: 73 passing test executions, including boundary cases repeated by the dedicated architecture gate.
+- Original M0 regression: all 19 tests passed; original M0 test file unchanged.
+- Dart format: 16 files, zero further changes.
+- `flutter analyze`: exit 1, 409 informational diagnostics, no warnings or errors. This is not a green analyzer exit and the deterministic CHECK runner reports a nonzero analyzer outcome as red.
+- `git diff --check`: passed.
+- Merge-base: exact approved M0 SHA.
+- Only the three authorized directory trees contain repair changes.
+- Seven known Flutter registration paths appeared dirty with no semantic diff; restoration is restricted to those exact paths.
+- The committed SHA must additionally be validated in a fresh disposable checkout before publication; final SHA, checkout results and remote equality are reported with delivery, not inferred from this precommit record.
 
-## CHECK-1/2
+## Remaining limitations
 
-CHECK evidence binds each result to an exact candidate SHA and fixed gate definitions for FORMAT, ANALYZE, TEST, and ARCHITECTURE_GATE. The architecture gate is a fixed dedicated test. Outcomes come from an injected trusted command runner, not caller-supplied success flags or commands. CHECK-2 derives HEAD, ancestry, changed paths, deletions, content, binary paths, and dirty paths from the trusted repository adapter; unrelated or unavailable evidence fails closed.
+- The trusted composition root owns repository/command adapters, approved identities, M0 snapshots and SDK environment. They are not untrusted request fields.
+- Budget authority is shared within one Dart isolate/process lifetime. Durable cross-process or distributed budget coordination is not implemented; restarting the host requires an authoritative current snapshot. This does not claim M2 persistence.
+- FORMAT is the only implemented mutation. Import, analyzer and harness transformations remain explicitly unsupported by the executor.
+- Repository reads and execution are sequential checks, not an OS-level atomic repository lock.
+- Generated-file restoration belongs to the external validation harness; CHECK itself does not repair or restore files.
+- Repository-wide informational analyzer findings remain. No analyzer gate bypass was added.
 
-## ACT-1
-
-Routes typed objective formatter, import, simple analyzer, safe harness, and transient-environment evidence only. Ambiguous, behavioral, architectural, security, dependency, and weakening outcomes escalate. The lineage ledger distinguishes same-SHA retry from budget-consuming repair; no closure route exists.
-
-## Evidence
-
-- Full agentic PDCA suite: 46 tests passed.
-- Formatting gate: passed with `dart format --output=none --set-exit-if-changed tool/agentic_pdca test/agentic_pdca`.
-- Analyzer gate: completed with repository informational diagnostics and no errors or warnings.
-- M0 regression: all original 19 control-plane tests passed.
-- M0 branch protection: PASS. The branch is protected and locked at the exact M0 SHA, admins are enforced, force pushes are disabled, and deletions are disabled.
-- Independent review repair: canonical path traversal is rejected; forged lease state is not authoritative; typed CHECK evidence cannot be caller-forged; direct FORMAT execution is authority-gated; typed ACT routes and retry/repair ledger are covered.
-- Final trust repair: repository facts are adapter-bound, FORMAT verifies trusted pre/post HEAD in the trusted root, ARCHITECTURE_GATE is fixed and executable, CHECK-2 uses trusted repository facts, and the ledger initializes from M0 repair-budget observations.
-
-## Known limitations
-
-- FORMAT is executable through direct `dart` process invocation after trusted authority, in the trusted repository root with verified pre/post HEAD. Import, analyzer, and test-harness fixes are authorized/routable but remain explicitly unsupported for mutation until deterministic reviewed transformations exist.
-- No arbitrary shell runner, Git commit/push executor, dependency installer, or protected-path mutation exists.
-- CHECK side-effect restoration is performed by the validation harness; the control-plane model records known generated paths but does not mutate the repository.
-
-## Deferred to M2
-
-Feature behavior changes, architecture changes, security/backend changes, dependency installation or mutation, persistent multi-agent coordination, autonomous closure, production merge, and any protected mutation authority remain deferred.
+M1 remains open and unprotected. No M1 closed branch, closure authority, M2 work, or protected capability is introduced.

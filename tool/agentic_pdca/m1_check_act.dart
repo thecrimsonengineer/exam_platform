@@ -29,47 +29,61 @@ final class M1CheckEvidence {
 }
 
 final class M1DeterministicCheckRunner {
-  const M1DeterministicCheckRunner({
-    M1TrustedCommandRunner commandRunner = const M1ProcessCommandRunner(),
-  }) : _commandRunner = commandRunner;
-
+  M1DeterministicCheckRunner({
+    required this.repository,
+    required this.expectedCandidateSha,
+    required this.approvedBaseSha,
+    M1TrustedCommandRunner? commandRunner,
+  }) : _commandRunner = commandRunner ?? M1ProcessCommandRunner(repository);
+  final M1TrustedRepository repository;
+  final String expectedCandidateSha;
+  final String approvedBaseSha;
   final M1TrustedCommandRunner _commandRunner;
-
   Future<M1CheckEvidence> run({
     required String checkId,
-    required String candidateSha,
-    required String expectedSha,
     required M1CheckGate gate,
-    required List<String> dirtyPaths,
     required String validatorIdentity,
   }) async {
-    final command = _commandFor(gate);
     final started = DateTime.now().toUtc();
-    final commandResult = await _commandRunner.run(gate);
-    final finished = DateTime.now().toUtc();
-    final unexpected = dirtyPaths
-        .where((path) => !_isKnownGeneratedSideEffect(path))
-        .toList();
-    final result =
-        candidateSha != expectedSha ||
-            unexpected.isNotEmpty ||
-            commandResult.exitCode != 0
-        ? candidateSha != expectedSha || unexpected.isNotEmpty
-              ? M1CheckResult.blocked
-              : M1CheckResult.red
-        : M1CheckResult.green;
+    final before = await repository.readFacts(approvedBaseSha: approvedBaseSha);
+    bool valid(M1RepositoryFacts facts) =>
+        RegExp(r'^[0-9a-f]{40}$').hasMatch(expectedCandidateSha) &&
+        RegExp(r'^[0-9a-f]{40}$').hasMatch(approvedBaseSha) &&
+        facts.head == expectedCandidateSha &&
+        facts.mergeBase == approvedBaseSha &&
+        facts.dirtyTrackedPaths.every(
+          const M1RepositoryPathGuard().isKnownGeneratedSideEffect,
+        );
+    final commandResult = valid(before)
+        ? await _commandRunner.run(gate)
+        : const M1CommandResult(
+            exitCode: -1,
+            stdout: '',
+            stderr: 'Trusted repository precondition failed',
+          );
+    final after = await repository.readFacts(approvedBaseSha: approvedBaseSha);
+    final generated = {
+      ...before.dirtyTrackedPaths,
+      ...after.dirtyTrackedPaths,
+    }.where(const M1RepositoryPathGuard().isKnownGeneratedSideEffect).toList();
     return M1CheckEvidence(
       checkId: checkId,
-      candidateSha: candidateSha,
+      candidateSha: before.head,
       gate: gate,
-      command: command,
-      result: result,
-      duration: finished.difference(started),
+      command: _commandFor(gate),
+      result: !valid(before) || !valid(after)
+          ? M1CheckResult.blocked
+          : commandResult.exitCode == 0
+          ? M1CheckResult.green
+          : M1CheckResult.red,
+      duration: DateTime.now().toUtc().difference(started),
       evidence:
           'validator=' +
           validatorIdentity +
           ';exit_code=' +
           commandResult.exitCode.toString() +
+          ';generated_side_effects=' +
+          generated.toString() +
           ';stdout=' +
           _summary(commandResult.stdout) +
           ';stderr=' +
@@ -86,16 +100,6 @@ final class M1DeterministicCheckRunner {
 
   String _summary(String value) =>
       value.length <= 512 ? value : value.substring(0, 512);
-
-  bool _isKnownGeneratedSideEffect(String path) => <String>{
-    'linux/flutter/generated_plugin_registrant.cc',
-    'linux/flutter/generated_plugin_registrant.h',
-    'linux/flutter/generated_plugins.cmake',
-    'macos/Flutter/GeneratedPluginRegistrant.swift',
-    'windows/flutter/generated_plugin_registrant.cc',
-    'windows/flutter/generated_plugin_registrant.h',
-    'windows/flutter/generated_plugins.cmake',
-  }.contains(path);
 }
 
 final class M1CommandResult {
@@ -115,15 +119,18 @@ abstract interface class M1TrustedCommandRunner {
 }
 
 final class M1ProcessCommandRunner implements M1TrustedCommandRunner {
-  const M1ProcessCommandRunner();
+  const M1ProcessCommandRunner(this.repository);
+
+  final M1TrustedRepository repository;
 
   @override
   Future<M1CommandResult> run(M1CheckGate gate) async {
-    final executable = switch (gate) {
-      M1CheckGate.format => Platform.resolvedExecutable,
-      M1CheckGate.analyze || M1CheckGate.test => 'flutter',
-      M1CheckGate.architectureGate => 'flutter',
-    };
+    final flutterRoot = Platform.environment['FLUTTER_ROOT'];
+    final dart = flutterRoot == null
+        ? Platform.resolvedExecutable
+        : '$flutterRoot/bin/cache/dart-sdk/bin/dart' +
+              (Platform.isWindows ? '.exe' : '');
+    final executable = dart;
     final arguments = switch (gate) {
       M1CheckGate.format => const [
         'format',
@@ -139,9 +146,22 @@ final class M1ProcessCommandRunner implements M1TrustedCommandRunner {
         'test/agentic_pdca/m1_architecture_gate_test.dart',
       ],
     };
-    final result = await Process.run(executable, arguments, runInShell: false);
+    if (gate != M1CheckGate.format && flutterRoot == null) {
+      throw StateError('Trusted Flutter SDK root is unavailable.');
+    }
+    final result = await Process.run(
+      executable,
+      gate == M1CheckGate.format
+          ? arguments
+          : <String>[
+              '$flutterRoot/bin/cache/flutter_tools.snapshot',
+              ...arguments,
+            ],
+      workingDirectory: repository.root,
+      runInShell: false,
+    );
     return M1CommandResult(
-      exitCode: result.exitCode as int,
+      exitCode: result.exitCode,
       stdout: result.stdout.toString(),
       stderr: result.stderr.toString(),
     );
@@ -175,13 +195,12 @@ final class M1IntegrityFinding {
 }
 
 final class M1IntegrityScanner {
-  static const Set<String> protectedPrefixes = <String>{
-    'lib/',
-    'content/',
-    'firebase/',
-    'docs/agentic/v1/',
-    '.github/',
-  };
+  List<String> generatedSideEffects(M1RepositoryFacts facts) =>
+      List.unmodifiable(
+        facts.dirtyTrackedPaths.where(
+          const M1RepositoryPathGuard().isKnownGeneratedSideEffect,
+        ),
+      );
 
   List<M1IntegrityFinding> scan(M1IntegrityInput input) {
     final findings = <M1IntegrityFinding>[];
@@ -191,12 +210,10 @@ final class M1IntegrityScanner {
       );
     }
     for (final path in input.changedPaths) {
-      if (protectedPrefixes.any(path.startsWith) ||
-          path == 'pubspec.yaml' ||
-          path == 'pubspec.lock') {
+      if (const M1RepositoryPathGuard().isProtected(path)) {
         findings.add(M1IntegrityFinding('PROTECTED_PATH', path));
       }
-      if (!input.expectedPaths.contains(path)) {
+      if (!const M1RepositoryPathGuard().isAllowed(path, input.expectedPaths)) {
         findings.add(M1IntegrityFinding('ALLOW_LIST', path));
       }
     }
@@ -244,17 +261,10 @@ final class M1IntegrityScanner {
         ),
       );
     }
-    final guard = const M1RepositoryPathGuard();
-    for (final path in facts.changedPaths) {
-      if (guard.isProtected(path)) {
-        findings.add(M1IntegrityFinding('PROTECTED_PATH', path));
+    for (final path in facts.dirtyTrackedPaths) {
+      if (!const M1RepositoryPathGuard().isKnownGeneratedSideEffect(path)) {
+        findings.add(M1IntegrityFinding('DIRTY_TRACKED_PATH', path));
       }
-      if (!guard.isAllowed(path, expectedPaths)) {
-        findings.add(M1IntegrityFinding('ALLOW_LIST', path));
-      }
-    }
-    for (final path in facts.deletedTestPaths) {
-      findings.add(M1IntegrityFinding('TEST_DELETION', path));
     }
     for (final path in facts.binaryPaths) {
       findings.add(M1IntegrityFinding('UNEXPECTED_BINARY', path));
@@ -333,44 +343,72 @@ final class M1RepairLedgerEntry {
   final DateTime timestamp;
 }
 
-final class M1RepairLedger {
-  M1RepairLedger({
-    required ControlPlaneSnapshot trustedState,
-    required String lineageId,
-  }) : _budgets = _trustedBudget(trustedState, lineageId);
-
-  final Map<String, int> _budgets;
-  final List<M1RepairLedgerEntry> _entries = [];
-
-  static Map<String, int> _trustedBudget(
-    ControlPlaneSnapshot trustedState,
-    String lineageId,
-  ) {
+/// Trusted process-lifetime budget authority shared by all controllers.
+/// Cross-process persistence is outside this M1 boundary.
+final class M1RepairBudgetStore {
+  M1RepairBudgetStore();
+  static final Map<String, int> _balances = {};
+  static final Map<String, List<M1RepairLedgerEntry>> _history = {};
+  void initialize(ControlPlaneSnapshot trustedState, String lineageId) {
     final budgets = trustedState.repairBudgets.where(
-      (value) => value.lineageId == lineageId,
+      (b) => b.lineageId == lineageId,
     );
-    if (budgets.length != 1) {
+    if (budgets.length != 1 || budgets.single.mechanicalRemaining < 0) {
       throw StateError('Trusted repair budget is unavailable for lineage.');
     }
-    return <String, int>{lineageId: budgets.single.mechanicalRemaining};
+    _balances.putIfAbsent(lineageId, () => budgets.single.mechanicalRemaining);
+    _history.putIfAbsent(lineageId, () => []);
   }
 
-  List<M1RepairLedgerEntry> get entries => List.unmodifiable(_entries);
+  int remaining(String lineageId) =>
+      _balances[lineageId] ?? (throw StateError('Unknown repair lineage.'));
+}
 
+final class M1RepairLedger {
+  M1RepairLedger({required M1RepairBudgetStore store, required this.lineageId})
+    : _store = store {
+    store.remaining(lineageId);
+  }
+  final M1RepairBudgetStore _store;
+  final String lineageId;
+  List<M1RepairLedgerEntry> get entries =>
+      List.unmodifiable(M1RepairBudgetStore._history[lineageId]!);
   M1RepairLedgerEntry record({
     required String lineageId,
     required M1FailureClass failureClass,
     required String parentCandidateSha,
+    required String candidateSha,
     required bool retry,
     required String evidence,
     required DateTime timestamp,
   }) {
-    final current = _budgets[lineageId] ?? 0;
-    final remaining = retry ? current : current - 1;
-    if (remaining < 0) {
-      throw StateError('Mechanical repair budget is exhausted.');
+    if (lineageId != this.lineageId) throw StateError('Wrong repair lineage.');
+    final sha = RegExp(r'^[0-9a-f]{40}$');
+    if (!sha.hasMatch(parentCandidateSha) ||
+        !sha.hasMatch(candidateSha) ||
+        (retry
+            ? candidateSha != parentCandidateSha
+            : candidateSha == parentCandidateSha)) {
+      throw StateError(
+        'RETRY requires same SHA; REPAIR requires a new candidate SHA.',
+      );
     }
-    _budgets[lineageId] = remaining;
+    final route = const M1ActRouter().route(
+      M1ActEvidence(
+        failureClass: failureClass,
+        candidateSha: parentCandidateSha,
+        evidence: evidence,
+      ),
+    );
+    if (route == M1ActRoute.escalate ||
+        (retry != (route == M1ActRoute.retry))) {
+      throw StateError('Failure class does not authorize this attempt.');
+    }
+    final current = _store.remaining(lineageId);
+    final remaining = retry ? current : current - 1;
+    if (remaining < 0)
+      throw StateError('Mechanical repair budget is exhausted.');
+    M1RepairBudgetStore._balances[lineageId] = remaining;
     final entry = M1RepairLedgerEntry(
       lineageId: lineageId,
       failureClass: failureClass,
@@ -380,11 +418,11 @@ final class M1RepairLedger {
       evidence: evidence,
       timestamp: timestamp,
     );
-    _entries.add(entry);
+    M1RepairBudgetStore._history[lineageId]!.add(entry);
     return entry;
   }
 
-  int remaining(String lineageId) => _budgets[lineageId] ?? 0;
+  int remaining(String lineageId) => _store.remaining(lineageId);
 }
 
 final class M1ActRouter {

@@ -1,6 +1,17 @@
 final class M1RepositoryPathGuard {
   const M1RepositoryPathGuard();
 
+  bool isKnownGeneratedSideEffect(String path) =>
+      canonicalize(path) != null &&
+      const {
+        'linux/flutter/generated_plugin_registrant.cc',
+        'linux/flutter/generated_plugin_registrant.h',
+        'linux/flutter/generated_plugins.cmake',
+        'macos/Flutter/GeneratedPluginRegistrant.swift',
+        'windows/flutter/generated_plugin_registrant.cc',
+        'windows/flutter/generated_plugin_registrant.h',
+        'windows/flutter/generated_plugins.cmake',
+      }.contains(path);
   String? canonicalize(String path) {
     if (path.isEmpty || path.contains('\u0000')) {
       return null;

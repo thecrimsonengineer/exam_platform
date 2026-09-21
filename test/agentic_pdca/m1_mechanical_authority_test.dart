@@ -26,7 +26,10 @@ void main() {
 
   final now = DateTime.utc(2026, 9, 21);
 
-  M1MechanicalAuthority authority() => M1MechanicalAuthority(
+  M1MechanicalAuthority authority({
+    String ref = 'agentic-pdca-m1-001',
+    String lineageSha = sha,
+  }) => M1MechanicalAuthority(
     trustedState: ControlPlaneSnapshot(
       maturity: 'M0_OBSERVATION',
       governanceVersion: 'v1.0',
@@ -39,7 +42,7 @@ void main() {
         LineageSnapshot(
           taskId: 'TASK-M1-002',
           lineageId: 'LINEAGE-M1-001',
-          currentSha: sha,
+          currentSha: lineageSha,
           lineageGeneration: 1,
           candidateSequence: 1,
           governanceVersion: 'v1.0',
@@ -72,7 +75,7 @@ void main() {
       M1RepositoryFacts(
         root: '.',
         head: sha,
-        ref: 'agentic-pdca-m1-001',
+        ref: ref,
         mergeBase: sha,
         changedPaths: const [],
         deletedTestPaths: const [],
@@ -106,6 +109,33 @@ void main() {
     writerIdentity: writerIdentity,
     fencingToken: fencingToken,
   );
+
+  test('wrong branch, detached and unexpected ref deny mutation', () async {
+    for (final ref in ['', 'HEAD', 'other-branch']) {
+      expect(
+        (await authority(ref: ref).authorize(request())).authorized,
+        isFalse,
+      );
+    }
+  });
+  test('stale lineage currentSha denies mutation', () async {
+    expect(
+      (await authority(
+        lineageSha: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      ).authorize(request())).authorized,
+      isFalse,
+    );
+  });
+  test('FORMAT requires authority before any process execution', () async {
+    await expectLater(
+      const M1MechanicalExecutor().executeFormat(
+        authority: authority(ref: ''),
+        request: request(),
+        actionId: 'denied',
+      ),
+      throwsStateError,
+    );
+  });
 
   test('authorizes each DO-1 class with matching lease fencing', () async {
     final controlAuthority = authority();
@@ -218,12 +248,18 @@ void main() {
   });
 
   test('executes FORMAT directly only after trusted authority', () async {
-    final fixture = File('test/agentic_pdca/.m1_format_fixture.dart');
+    final fixture = File(
+      'test/agentic_pdca/.m1_format_fixture_' +
+          DateTime.now().microsecondsSinceEpoch.toString() +
+          '.dart',
+    );
     await fixture.writeAsString('void main( ) {print("x");}\n');
     try {
       final record = await const M1MechanicalExecutor().executeFormat(
         authority: authority(),
-        request: request(path: 'test/agentic_pdca/.m1_format_fixture.dart'),
+        request: request(
+          path: fixture.path.replaceAll(Platform.pathSeparator, "/"),
+        ),
         actionId: 'ACTION-FORMAT-1',
       );
       expect(record.exitCode, 0);

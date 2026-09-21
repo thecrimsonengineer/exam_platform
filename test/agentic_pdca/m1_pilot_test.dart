@@ -1,9 +1,8 @@
+import 'm1_test_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../tool/agentic_pdca/m1_check_act.dart';
 import '../../tool/agentic_pdca/m1_mechanical_authority.dart';
-import '../../tool/agentic_pdca/m1_mechanical_control.dart';
-import '../../tool/agentic_pdca/m1_mechanical_models.dart';
 import '../../tool/agentic_pdca/m0_control_plane.dart';
 import '../../tool/agentic_pdca/m0_models.dart';
 
@@ -62,14 +61,16 @@ void main() {
     'pilot records generated side effects as allowed CHECK evidence',
     () async {
       final runner = M1DeterministicCheckRunner(
+        repository: CheckRepository(
+          dirty: ['windows/flutter/generated_plugins.cmake'],
+        ),
+        expectedCandidateSha: sha,
+        approvedBaseSha: sha,
         commandRunner: PilotFakeRunner(),
       );
       final evidence = await runner.run(
         checkId: 'PILOT-GENERATED-1',
-        candidateSha: sha,
-        expectedSha: sha,
         gate: M1CheckGate.test,
-        dirtyPaths: const ['windows/flutter/generated_plugins.cmake'],
         validatorIdentity: 'pilot-validator',
       );
       expect(evidence.result, M1CheckResult.green);

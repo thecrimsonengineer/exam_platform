@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'm0_models.dart';
-import 'm1_mechanical_models.dart';
 import 'm1_path_guard.dart';
 import 'm1_repository.dart';
 
@@ -92,13 +91,15 @@ final class M1MechanicalAuthority {
     final facts = await repository.readFacts(approvedBaseSha: approvedBaseSha);
     if (!_isSha(request.baseSha) ||
         request.baseSha != approvedBaseSha ||
-        request.expectedHead.isEmpty) {
+        !_isSha(request.expectedHead)) {
       return _deny(
         actionClass,
         'Exact base SHA and expected HEAD are required.',
       );
     }
-    if (facts.head != request.expectedHead ||
+    if (facts.ref.isEmpty ||
+        facts.ref != request.branch ||
+        facts.head != request.expectedHead ||
         facts.mergeBase != approvedBaseSha) {
       return _deny(actionClass, 'Expected HEAD does not match actual HEAD.');
     }
@@ -113,7 +114,9 @@ final class M1MechanicalAuthority {
     final lineages = trustedState.lineages.where(
       (value) => value.lineageId == request.lineageId,
     );
-    if (lineages.length != 1 || lineages.single.taskId != request.taskId) {
+    if (lineages.length != 1 ||
+        lineages.single.taskId != request.taskId ||
+        lineages.single.currentSha != request.expectedHead) {
       return _deny(
         actionClass,
         'Trusted lineage state does not match request.',
@@ -310,7 +313,9 @@ final class M1MechanicalExecutor {
     final preFacts = await authority.repository.readFacts(
       approvedBaseSha: authority.approvedBaseSha,
     );
-    if (preFacts.head != request.expectedHead) {
+    if (preFacts.head != request.expectedHead ||
+        preFacts.ref != request.branch ||
+        preFacts.mergeBase != authority.approvedBaseSha) {
       throw StateError('FORMAT pre-head changed before mutation.');
     }
     final guard = const M1RepositoryPathGuard();
@@ -344,7 +349,7 @@ final class M1MechanicalExecutor {
       postHead: postFacts.head,
       paths: paths,
       operation: M1StructuredOperation.format,
-      exitCode: result.exitCode as int,
+      exitCode: result.exitCode,
       stdoutSummary: _summary(result.stdout),
       stderrSummary: _summary(result.stderr),
       duration: finished.difference(started),
@@ -368,13 +373,8 @@ final class M1MechanicalExecutor {
   }
 
   String _quotePath(String path) {
-    if (path.startsWith('lib/') ||
-        path.startsWith('content/') ||
-        path.startsWith('firebase/') ||
-        path.startsWith('.github/') ||
-        path == 'pubspec.yaml' ||
-        path == 'pubspec.lock') {
-      throw ArgumentError('Protected path cannot be executed: ' + path);
+    if (const M1RepositoryPathGuard().isProtected(path)) {
+      throw ArgumentError('Protected or noncanonical path: ' + path);
     }
     if (path.contains('"') || path.contains('\n')) {
       throw ArgumentError('Unsafe path cannot be executed.');

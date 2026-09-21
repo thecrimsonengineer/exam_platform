@@ -58,7 +58,9 @@ final class M1GitRepository implements M1TrustedRepository {
       '--name-only',
       '$approvedBaseSha..HEAD',
     ]);
-    final status = await _git(const ['status', '--porcelain=v1']);
+    final unstaged = await _git(const ['diff', '--name-only', '-z']);
+    final staged = await _git(const ['diff', '--cached', '--name-only', '-z']);
+    final status = unstaged + staged;
     final paths = _lines(changed);
     final contents = <String, String>{};
     final binaries = <String>[];
@@ -89,9 +91,9 @@ final class M1GitRepository implements M1TrustedRepository {
       ),
       dirtyTrackedPaths: List.unmodifiable(
         status
-            .split('\n')
-            .where((line) => line.length > 3)
-            .map((line) => line.substring(3))
+            .split('\u0000')
+            .where((path) => path.isNotEmpty)
+            .toSet()
             .toList(),
       ),
       fileContents: Map.unmodifiable(contents),
@@ -109,7 +111,9 @@ final class M1GitRepository implements M1TrustedRepository {
     if (result.exitCode != 0) {
       throw StateError('Trusted git read failed for fixed operation.');
     }
-    return result.stdout.toString().trim();
+    return arguments.contains('-z')
+        ? result.stdout.toString()
+        : result.stdout.toString().trim();
   }
 
   List<String> _lines(String value) => value
