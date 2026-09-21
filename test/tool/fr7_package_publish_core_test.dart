@@ -155,7 +155,7 @@ void main() {
 
   test('FR7 fails closed on duplicate latest question version', () {
     final rows = _questionRows();
-    rows.add(Map<String, dynamic>.from(rows.first));
+    rows.add(Map<String, dynamic>.from(rows[1]));
 
     expect(
       () => builder.build(
