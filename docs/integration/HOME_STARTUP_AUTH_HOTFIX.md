@@ -13,6 +13,14 @@ Hotfix branch:
 
 - `phase-home-startup-integration-auth-hotfix`
 
+## INT-R9A1 provisioning checkpoint
+
+The repository owner has confirmed that the GitHub Actions secret `SUPABASE_PUBLISHABLE_KEY` has been saved.
+
+The authorization hotfix workflow is therefore permitted to rerun its configuration preflight. The workflow remains fail-closed: it must still prove that the secret is present and uses the expected `sb_publishable_` format before any APK compilation is allowed.
+
+This checkpoint records owner provisioning only. INT-R9A1 is not considered closed until GitHub Actions produces successful runtime-configuration evidence.
+
 ## Defect
 
 The frozen INT-R9 APK was built without the compile-time Supabase runtime values required by:
