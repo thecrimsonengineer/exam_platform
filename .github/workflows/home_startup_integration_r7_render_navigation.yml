@@ -1,0 +1,119 @@
+name: Home Startup Integration R7 Render Navigation
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration
+    paths:
+      - 'lib/main.dart'
+      - 'lib/screens/startup/**'
+      - 'lib/screens/auth/**'
+      - 'lib/screens/navigation/**'
+      - 'lib/screens/home/**'
+      - 'lib/features/exam_readiness/screens/**'
+      - 'lib/widgets/csp/home/**'
+      - 'lib/services/settings/theme_mode_service.dart'
+      - 'lib/services/student_learning_position_service.dart'
+      - 'test/integration/home_startup/**'
+      - 'test/startup/**'
+      - 'test/screens/auth/**'
+      - 'test/screens/navigation/**'
+      - 'test/screens/home/**'
+      - '.github/workflows/home_startup_integration_r7_render_navigation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-integration-r7-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  R6_SHA: '3437e069a0ae2a93305868eed1b4664c33a3eff8'
+  HOME_R_SHA: '243d9fdf93c55775321468eb17ce85cd3b7c557f'
+  STARTUP_SHA: '9c1697b1d01c8db85fe535bc77ea6b6aa6f39565'
+
+jobs:
+  integrated-render-navigation:
+    name: Integrated learner render and navigation
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and frozen ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${HOME_R_SHA}" HEAD
+          git merge-base --is-ancestor "${STARTUP_SHA}" HEAD
+          git merge-base --is-ancestor "${R6_SHA}" HEAD
+          git diff --check
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify lockfile stability
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Verify R7 formatting
+        run: dart format --output=none --set-exit-if-changed test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+
+      - name: Analyze integrated render scope
+        run: |
+          flutter analyze --no-fatal-infos             lib/main.dart             lib/screens/startup             lib/screens/auth/learner_authorized_shell.dart             lib/screens/navigation/bottom_navigation.dart             lib/screens/home             lib/features/exam_readiness/screens/todays_plan_screen.dart             test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+
+      - name: Run INT-R7 integrated render and navigation
+        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+
+      - name: Replay full and balanced Startup rendering
+        run: flutter test test/startup/startup_release_render_smoke_test.dart
+
+      - name: Replay Startup lifecycle reduced-motion and fail-open hardening
+        run: flutter test test/startup/startup_screen_hardening_test.dart test/startup/startup_motion_policy_test.dart
+
+      - name: Replay learner-shell authorization and resume behavior
+        run: flutter test test/screens/auth/learner_authorized_shell_test.dart
+
+      - name: Replay HOME-R Today Plan render routing
+        run: |
+          flutter test test/screens/home/home_r4_today_plan_home_section_test.dart
+          flutter test test/screens/home/home_r6_execution_router_contract_test.dart
+
+      - name: Replay learner navigation contracts
+        run: |
+          flutter test test/screens/navigation/bottom_navigation_contract_test.dart
+          flutter test test/screens/navigation/progress_v2_navigation_contract_test.dart
+
+      - name: Replay R5 behavioral seam
+        run: flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+
+      - name: Confirm verification made no repository changes
+        run: git diff --exit-code
+
+  r7-closure:
+    name: R7 render-navigation closure
+    needs:
+      - integrated-render-navigation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record exact-SHA render-navigation closure
+        run: |
+          echo "INT-R7 integrated render and navigation passed for ${GITHUB_SHA}"
+          echo "R6 base: ${R6_SHA}"
+          echo "Home R ancestor: ${HOME_R_SHA}"
+          echo "Startup Motion ancestor: ${STARTUP_SHA}"
