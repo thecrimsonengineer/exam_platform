@@ -1,11 +1,12 @@
+import 'dart:math';
+
 import 'package:exam_platform/models/question.dart';
 import 'package:exam_platform/models/student_question_progress.dart';
-import 'package:exam_platform/services/cloud_question_repository.dart';
 import 'package:exam_platform/services/practice/practice_mode_service.dart';
+import 'package:exam_platform/services/questions/learner_question_package_delivery_service.dart';
+import 'package:exam_platform/services/questions/published_question_package.dart';
 import 'package:exam_platform/services/quiz_service.dart';
 import 'package:exam_platform/services/ultra_hard_question_contract.dart';
-import 'package:exam_platform/services/study_content/cloud_content_repository.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Question _question({
@@ -21,13 +22,13 @@ Question _question({
     id: id,
     domain: domain,
     competencyId: resolvedCompetencyId,
-    subtopicId: '${resolvedCompetencyId}_st01',
+    subtopicId: '${resolvedCompetencyId}_t01_s01',
     topicId: '${resolvedCompetencyId}_t01',
-    quizId: 'practice_$domainId',
-    contentPackageId: 'content_$domainId',
+    quizId: '${resolvedCompetencyId}_quiz',
+    contentPackageId: '',
     question:
         'A safety professional reviews a workplace scenario and must select the best available control for the identified risk.',
-    options: const [
+    options: const <String>[
       'Apply the strongest practical control at the source of the hazard.',
       'Rely only on worker attention while leaving the hazard unchanged.',
       'Delay action until another unwanted event confirms the concern.',
@@ -42,7 +43,7 @@ Question _question({
     questionType: 'scenario_mcq',
     status: 'published',
     version: 1,
-    tags: [
+    tags: <String>[
       'practice',
       'risk-control',
       if (ultraHard) UltraHardQuestionContract.classificationTag,
@@ -70,45 +71,105 @@ StudentQuestionProgress _progress({
   );
 }
 
-Future<QuizService> _quizService({
+class _FakePracticeDelivery extends LearnerQuestionPackageDeliveryService {
+  _FakePracticeDelivery();
+
+  final Map<String, List<Question>> questionsByCompetency =
+      <String, List<Question>>{};
+  final List<String> loadedCompetencies = <String>[];
+
+  @override
+  Future<List<PublishedQuestionPackageDescriptor>> loadCatalog() async {
+    final descriptors = questionsByCompetency.entries.map((entry) {
+      final ultraHardCount = entry.value
+          .where(
+            (question) => question.tags.contains(
+              UltraHardQuestionContract.classificationTag,
+            ),
+          )
+          .length;
+
+      return PublishedQuestionPackageDescriptor(
+        competencyId: entry.key,
+        version: 1,
+        checksumSha256: List<String>.filled(64, '0').join(),
+        compressedBytes: 1,
+        publishedQuestionCount: entry.value.length,
+        ultraHardCount: ultraHardCount,
+      );
+    }).toList()
+      ..sort(
+        (left, right) => left.competencyId.compareTo(right.competencyId),
+      );
+
+    return List<PublishedQuestionPackageDescriptor>.unmodifiable(descriptors);
+  }
+
+  @override
+  Future<List<Question>> loadCompetency(String competencyId) async {
+    final normalized = competencyId.trim().toLowerCase();
+    loadedCompetencies.add(normalized);
+    return List<Question>.unmodifiable(
+      questionsByCompetency[normalized] ?? const <Question>[],
+    );
+  }
+}
+
+class _PracticeFixture {
+  _PracticeFixture({
+    required this.quizService,
+    required this.delivery,
+    required this.questions,
+  });
+
+  final QuizService quizService;
+  final _FakePracticeDelivery delivery;
+  final List<Question> questions;
+}
+
+_PracticeFixture _fixture({
   required Map<int, int> questionsPerDomain,
   Set<int> ultraHardQuestionIds = const <int>{},
-}) async {
-  final firestore = FakeFirebaseFirestore();
-  final questionRepository = CloudQuestionRepository(firestore: firestore);
-  final contentRepository = CloudContentRepository(firestore: firestore);
-
+}) {
+  final delivery = _FakePracticeDelivery();
+  final questions = <Question>[];
   var id = 1;
 
   for (final entry in questionsPerDomain.entries) {
+    final competencyId = 'd${entry.key.toString().padLeft(2, '0')}_c01';
+    final competencyQuestions = <Question>[];
+
     for (var index = 0; index < entry.value; index++) {
-      await questionRepository.save(
-        _question(
-          id: id,
-          domain: entry.key,
-          ultraHard: ultraHardQuestionIds.contains(id),
-        ),
+      final question = _question(
+        id: id,
+        domain: entry.key,
+        competencyId: competencyId,
+        ultraHard: ultraHardQuestionIds.contains(id),
       );
+      competencyQuestions.add(question);
+      questions.add(question);
       id++;
     }
+
+    delivery.questionsByCompetency[competencyId] = competencyQuestions;
   }
 
-  return QuizService(
-    questionRepository: questionRepository,
-    contentRepository: contentRepository,
+  return _PracticeFixture(
+    quizService: QuizService(deliveryService: delivery),
+    delivery: delivery,
+    questions: List<Question>.unmodifiable(questions),
   );
 }
 
 void main() {
   test('Daily Challenge is stable for the same local calendar date', () async {
-    final quizService = await _quizService(
-      questionsPerDomain: const {1: 8, 2: 8},
-    );
+    final fixture = _fixture(questionsPerDomain: const <int, int>{1: 8, 2: 8});
 
     final service = PracticeModeService(
-      quizService: quizService,
+      quizService: fixture.quizService,
       questionProgressLoader: () async => <int, StudentQuestionProgress>{},
       now: () => DateTime(2026, 9, 16, 8),
+      random: Random(1),
     );
 
     final first = await service.build(PracticeMode.dailyChallenge);
@@ -121,16 +182,18 @@ void main() {
     );
     expect(first.usedFallback, isFalse);
     expect(first.domainNumber, 0);
+    expect(fixture.delivery.loadedCompetencies.toSet().length, 1);
   });
 
   test('Random Quiz returns ten unique published questions', () async {
-    final quizService = await _quizService(
-      questionsPerDomain: const {1: 10, 2: 10},
+    final fixture = _fixture(
+      questionsPerDomain: const <int, int>{1: 10, 2: 10},
     );
 
     final service = PracticeModeService(
-      quizService: quizService,
+      quizService: fixture.quizService,
       questionProgressLoader: () async => <int, StudentQuestionProgress>{},
+      random: Random(7),
     );
 
     final plan = await service.build(PracticeMode.randomQuiz);
@@ -139,19 +202,21 @@ void main() {
     expect(plan.questions.map((question) => question.id).toSet().length, 10);
     expect(plan.usedFallback, isFalse);
     expect(plan.domainNumber, 0);
+    expect(fixture.delivery.loadedCompetencies, hasLength(1));
   });
 
   test(
     'Ultra Hard mode uses only DQG300-classified published questions',
     () async {
-      final quizService = await _quizService(
-        questionsPerDomain: const {1: 8, 2: 8},
-        ultraHardQuestionIds: const {1, 2, 3, 4, 5, 9, 10},
+      final fixture = _fixture(
+        questionsPerDomain: const <int, int>{1: 8, 2: 8},
+        ultraHardQuestionIds: const <int>{1, 2, 3, 4, 5, 9, 10},
       );
 
       final service = PracticeModeService(
-        quizService: quizService,
+        quizService: fixture.quizService,
         questionProgressLoader: () async => <int, StudentQuestionProgress>{},
+        random: Random(11),
       );
 
       final plan = await service.build(PracticeMode.ultraHardExamReadiness);
@@ -168,114 +233,83 @@ void main() {
       expect(plan.title, contains('Exam Readiness'));
       expect(plan.notice, contains('300/300'));
       expect(plan.usedFallback, isFalse);
+      expect(fixture.delivery.loadedCompetencies.toSet(), <String>{
+        'd01_c01',
+        'd02_c01',
+      });
     },
   );
 
-  test(
-    'Ultra Hard refresh sees newly published D01 C01 and D06 C04 questions',
-    () async {
-      final firestore = FakeFirebaseFirestore();
-      final questionRepository = CloudQuestionRepository(firestore: firestore);
-      final contentRepository = CloudContentRepository(firestore: firestore);
-      final quizService = QuizService(
-        questionRepository: questionRepository,
-        contentRepository: contentRepository,
-      );
+  test('Ultra Hard metadata sees newly available competency packages', () async {
+    final fixture = _fixture(questionsPerDomain: const <int, int>{1: 1});
+    final service = PracticeModeService(
+      quizService: fixture.quizService,
+      questionProgressLoader: () async => <int, StudentQuestionProgress>{},
+      random: Random(3),
+    );
 
-      // Prime the shared-style catalogue before the Ultra Hard batches exist.
-      await questionRepository.save(
-        _question(id: 1, domain: 1, ultraHard: false),
-      );
-      await quizService.initialize();
-
-      expect(
-        quizService.getAllQuestions().where(
-          (question) => question.tags.contains(
-            UltraHardQuestionContract.classificationTag,
-          ),
+    fixture.delivery.questionsByCompetency['d01_c01'] = <Question>[
+      for (var index = 0; index < 5; index++)
+        _question(
+          id: 100 + index,
+          domain: 1,
+          competencyId: 'd01_c01',
+          ultraHard: true,
         ),
-        isEmpty,
-      );
-
-      var id = 100;
-      for (var index = 0; index < 5; index++) {
-        await questionRepository.save(
-          _question(
-            id: id++,
-            domain: 1,
-            competencyId: 'd01_c01',
-            ultraHard: true,
-          ),
-        );
-      }
-      for (var index = 0; index < 5; index++) {
-        await questionRepository.save(
-          _question(
-            id: id++,
-            domain: 6,
-            competencyId: 'd06_c04',
-            ultraHard: true,
-          ),
-        );
-      }
-
-      final plan = await PracticeModeService(
-        quizService: quizService,
-        questionProgressLoader: () async => <int, StudentQuestionProgress>{},
-      ).build(PracticeMode.ultraHardExamReadiness);
-
-      expect(plan.questions, hasLength(10));
-      expect(
-        plan.questions.where((question) => question.competencyId == 'd01_c01'),
-        hasLength(5),
-      );
-      expect(
-        plan.questions.where((question) => question.competencyId == 'd06_c04'),
-        hasLength(5),
-      );
-      expect(
-        plan.questions.every(
-          (question) => question.tags.contains(
-            UltraHardQuestionContract.classificationTag,
-          ),
+    ];
+    fixture.delivery.questionsByCompetency['d06_c04'] = <Question>[
+      for (var index = 0; index < 5; index++)
+        _question(
+          id: 200 + index,
+          domain: 6,
+          competencyId: 'd06_c04',
+          ultraHard: true,
         ),
-        isTrue,
-      );
-    },
-  );
+    ];
+
+    final plan = await service.build(PracticeMode.ultraHardExamReadiness);
+
+    expect(plan.questions, hasLength(10));
+    expect(
+      plan.questions.where((question) => question.competencyId == 'd01_c01'),
+      hasLength(5),
+    );
+    expect(
+      plan.questions.where((question) => question.competencyId == 'd06_c04'),
+      hasLength(5),
+    );
+  });
 
   test(
     'Ultra Hard mode fails closed when fewer than five are available',
     () async {
-      final quizService = await _quizService(
-        questionsPerDomain: const {1: 10},
-        ultraHardQuestionIds: const {1, 2, 3, 4},
+      final fixture = _fixture(
+        questionsPerDomain: const <int, int>{1: 10},
+        ultraHardQuestionIds: const <int>{1, 2, 3, 4},
       );
 
       final service = PracticeModeService(
-        quizService: quizService,
+        quizService: fixture.quizService,
         questionProgressLoader: () async => <int, StudentQuestionProgress>{},
       );
 
-      expect(
-        () => service.build(PracticeMode.ultraHardExamReadiness),
-        throwsA(isA<StateError>()),
+      await expectLater(
+        service.build(PracticeMode.ultraHardExamReadiness),
+        throwsStateError,
       );
+      expect(fixture.delivery.loadedCompetencies, isEmpty);
     },
   );
 
   test('Weak Areas selects the lowest evidence-backed weak domain', () async {
-    final quizService = await _quizService(
-      questionsPerDomain: const {1: 10, 2: 10},
+    final fixture = _fixture(
+      questionsPerDomain: const <int, int>{1: 10, 2: 10},
     );
 
-    await quizService.initialize();
-
-    final questions = quizService.getAllQuestions();
-    final domain1 = questions
+    final domain1 = fixture.questions
         .where((question) => question.domain == 1)
         .toList();
-    final domain2 = questions
+    final domain2 = fixture.questions
         .where((question) => question.domain == 2)
         .toList();
 
@@ -294,8 +328,9 @@ void main() {
     }
 
     final service = PracticeModeService(
-      quizService: quizService,
+      quizService: fixture.quizService,
       questionProgressLoader: () async => progress,
+      random: Random(5),
     );
 
     final plan = await service.build(PracticeMode.weakAreas);
@@ -305,25 +340,24 @@ void main() {
     expect(plan.questions.length, 10);
     expect(plan.questions.every((question) => question.domain == 2), isTrue);
     expect(plan.notice, contains('Domain 02'));
+    expect(fixture.delivery.loadedCompetencies.toSet(), <String>{'d02_c01'});
   });
 
   test('Weak Areas clearly falls back when evidence is insufficient', () async {
-    final quizService = await _quizService(
-      questionsPerDomain: const {1: 10, 2: 10},
+    final fixture = _fixture(
+      questionsPerDomain: const <int, int>{1: 10, 2: 10},
     );
 
-    await quizService.initialize();
-
-    final questions = quizService.getAllQuestions();
     final progress = <int, StudentQuestionProgress>{};
 
-    for (final question in questions.take(4)) {
+    for (final question in fixture.questions.take(4)) {
       progress[question.id] = _progress(question: question, everCorrect: false);
     }
 
     final service = PracticeModeService(
-      quizService: quizService,
+      quizService: fixture.quizService,
       questionProgressLoader: () async => progress,
+      random: Random(9),
     );
 
     final plan = await service.build(PracticeMode.weakAreas);
@@ -332,30 +366,30 @@ void main() {
     expect(plan.domainNumber, 0);
     expect(plan.questions.length, 10);
     expect(plan.notice, contains('not enough answered-question history'));
+    expect(fixture.delivery.loadedCompetencies, hasLength(1));
   });
 
   test('Weak Areas falls back when no domain is below the threshold', () async {
-    final quizService = await _quizService(
-      questionsPerDomain: const {1: 10, 2: 10},
+    final fixture = _fixture(
+      questionsPerDomain: const <int, int>{1: 10, 2: 10},
     );
 
-    await quizService.initialize();
-
-    final questions = quizService.getAllQuestions();
     final progress = <int, StudentQuestionProgress>{};
 
-    for (final question in questions.take(10)) {
+    for (final question in fixture.questions.take(10)) {
       progress[question.id] = _progress(question: question, everCorrect: true);
     }
 
     final service = PracticeModeService(
-      quizService: quizService,
+      quizService: fixture.quizService,
       questionProgressLoader: () async => progress,
+      random: Random(13),
     );
 
     final plan = await service.build(PracticeMode.weakAreas);
 
     expect(plan.usedFallback, isTrue);
     expect(plan.notice, contains('No evidence-backed weak domain'));
+    expect(fixture.delivery.loadedCompetencies, hasLength(1));
   });
 }
