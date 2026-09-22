@@ -10,10 +10,7 @@ void main() {
     return MaterialApp(
       home: Csp11StartupScreen(
         motionPolicyOverride: policy,
-        child: const SizedBox(
-          key: destinationKey,
-          child: Text('Destination'),
-        ),
+        child: const SizedBox(key: destinationKey, child: Text('Destination')),
       ),
     );
   }
