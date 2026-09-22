@@ -102,7 +102,12 @@ jobs:
               --data '{"operation":"content_catalog"}' \
               "$FR10_ENDPOINT"
           )"
-          test "$catalog_status" = "200"
+          if [ "$catalog_status" != "200" ]; then
+            echo "FR10F authorized catalog HTTP $catalog_status"
+            jq -c '{error:(.error // "unknown")}' "$catalog_json" 2>/dev/null || true
+            exit 1
+          fi
+          echo "FR10F stage: authorized catalog HTTP 200"
 
           jq -e '
             (.catalog | type == "array" and length > 0) and
@@ -143,7 +148,12 @@ jobs:
               --data "$changed_request" \
               "$FR10_ENDPOINT"
           )"
-          test "$changed_status" = "200"
+          if [ "$changed_status" != "200" ]; then
+            echo "FR10F changed-package resolution HTTP $changed_status"
+            jq -c '{error:(.error // "unknown")}' "$changed_json" 2>/dev/null || true
+            exit 1
+          fi
+          echo "FR10F stage: changed-package resolution HTTP 200"
 
           jq -e \
             --arg competencyId "$competency_id" \
