@@ -462,40 +462,7 @@ class PracticeModeService {
 
   int _domainNumberForCompetency(String competencyId) {
     final match = RegExp(
-      r'^d(\d{2})_c\d{2}
-
-    return match == null ? 0 : int.tryParse(match.group(1)!) ?? 0;
-  }
-
-  int _dailyCompetencyRank(String competencyId, int daySeed) {
-    var hash = daySeed & 0x7fffffff;
-
-    for (final codeUnit in competencyId.codeUnits) {
-      hash = ((hash * 31) + codeUnit) & 0x7fffffff;
-    }
-
-    return hash;
-  }
-
-  int _dailyRank(int questionId, int daySeed) {
-    var value = (questionId * 1103515245 + daySeed * 12345) & 0x7fffffff;
-    value = (value ^ (value >> 16)) & 0x7fffffff;
-    return value;
-  }
-}
-
-class _WeakDomainCandidate {
-  const _WeakDomainCandidate({
-    required this.domainNumber,
-    required this.answeredQuestions,
-    required this.mastery,
-  });
-
-  final int domainNumber;
-  final int answeredQuestions;
-  final double mastery;
-}
-,
+      r'^d(\d{2})_c\d{2}$',
     ).firstMatch(competencyId.trim().toLowerCase());
 
     return match == null ? 0 : int.tryParse(match.group(1)!) ?? 0;
