@@ -113,7 +113,13 @@ class _QuizScreenState extends State<QuizScreen> {
         controller = QuizController.review(questions: widget.customQuestions!);
       } else {
         final quizService = QuizService();
-        await quizService.initialize();
+        await quizService.prepareScope(
+          domain: widget.domain,
+          quizId: widget.quizId,
+          competencyId: widget.competencyId,
+          subtopicId: widget.subtopicId,
+          topicId: widget.topicId,
+        );
 
         if (widget.topicId != null) {
           controller = QuizController.byTopic(
