@@ -108,7 +108,8 @@ jobs:
             test/services/study_content/study_content_session_refresh_test.dart \
             test/widget_test.dart \
             test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart \
-            test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+            test/architecture/phase_fr8_online_authorized_cache_security_test.dart \
+            test/architecture/phase_fr8_closure_test.dart
           git diff --
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -166,7 +167,8 @@ jobs:
             test/services/study_content/study_content_session_refresh_test.dart \
             test/widget_test.dart \
             test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart \
-            test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+            test/architecture/phase_fr8_online_authorized_cache_security_test.dart \
+            test/architecture/phase_fr8_closure_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -259,6 +261,9 @@ jobs:
           flutter test test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart
           flutter test test/screens/auth/learner_authorized_shell_test.dart
           flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+
+      - name: FR8 closure evidence gate
+        run: flutter test test/architecture/phase_fr8_closure_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
