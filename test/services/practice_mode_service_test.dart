@@ -81,8 +81,7 @@ Map<String, List<Question>> _packages({
   var id = 1;
 
   for (final entry in questionsPerDomain.entries) {
-    final competencyId =
-        'd${entry.key.toString().padLeft(2, '0')}_c01';
+    final competencyId = 'd${entry.key.toString().padLeft(2, '0')}_c01';
     final questions = <Question>[];
 
     for (var index = 0; index < entry.value; index++) {
@@ -149,9 +148,7 @@ class _FakeDeliveryService extends LearnerQuestionPackageDeliveryService {
   @override
   Future<List<Question>> loadCompetency(String competencyId) async {
     loadedCompetencies.add(competencyId);
-    return List<Question>.from(
-      packages[competencyId] ?? const <Question>[],
-    );
+    return List<Question>.from(packages[competencyId] ?? const <Question>[]);
   }
 }
 
@@ -236,55 +233,58 @@ void main() {
     },
   );
 
-  test('Ultra Hard catalog refresh sees newly published competencies', () async {
-    final delivery = _FakeDeliveryService(<String, List<Question>>{
-      'd01_c01': <Question>[_question(id: 1, domain: 1)],
-    });
+  test(
+    'Ultra Hard catalog refresh sees newly published competencies',
+    () async {
+      final delivery = _FakeDeliveryService(<String, List<Question>>{
+        'd01_c01': <Question>[_question(id: 1, domain: 1)],
+      });
 
-    var nextId = 100;
-    delivery.packages['d01_c01'] = List<Question>.generate(
-      5,
-      (_) => _question(
-        id: nextId++,
-        domain: 1,
-        competencyId: 'd01_c01',
-        ultraHard: true,
-      ),
-    );
-    delivery.packages['d06_c04'] = List<Question>.generate(
-      5,
-      (_) => _question(
-        id: nextId++,
-        domain: 6,
-        competencyId: 'd06_c04',
-        ultraHard: true,
-      ),
-    );
-
-    final plan = await PracticeModeService(
-      deliveryService: delivery,
-      questionProgressLoader: () async => <int, StudentQuestionProgress>{},
-      random: Random(4),
-    ).build(PracticeMode.ultraHardExamReadiness);
-
-    expect(plan.questions, hasLength(10));
-    expect(
-      plan.questions.where((question) => question.competencyId == 'd01_c01'),
-      hasLength(5),
-    );
-    expect(
-      plan.questions.where((question) => question.competencyId == 'd06_c04'),
-      hasLength(5),
-    );
-    expect(
-      plan.questions.every(
-        (question) => question.tags.contains(
-          UltraHardQuestionContract.classificationTag,
+      var nextId = 100;
+      delivery.packages['d01_c01'] = List<Question>.generate(
+        5,
+        (_) => _question(
+          id: nextId++,
+          domain: 1,
+          competencyId: 'd01_c01',
+          ultraHard: true,
         ),
-      ),
-      isTrue,
-    );
-  });
+      );
+      delivery.packages['d06_c04'] = List<Question>.generate(
+        5,
+        (_) => _question(
+          id: nextId++,
+          domain: 6,
+          competencyId: 'd06_c04',
+          ultraHard: true,
+        ),
+      );
+
+      final plan = await PracticeModeService(
+        deliveryService: delivery,
+        questionProgressLoader: () async => <int, StudentQuestionProgress>{},
+        random: Random(4),
+      ).build(PracticeMode.ultraHardExamReadiness);
+
+      expect(plan.questions, hasLength(10));
+      expect(
+        plan.questions.where((question) => question.competencyId == 'd01_c01'),
+        hasLength(5),
+      );
+      expect(
+        plan.questions.where((question) => question.competencyId == 'd06_c04'),
+        hasLength(5),
+      );
+      expect(
+        plan.questions.every(
+          (question) => question.tags.contains(
+            UltraHardQuestionContract.classificationTag,
+          ),
+        ),
+        isTrue,
+      );
+    },
+  );
 
   test(
     'Ultra Hard mode fails closed when fewer than five are advertised',
