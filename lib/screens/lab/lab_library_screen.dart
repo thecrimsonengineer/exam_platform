@@ -139,15 +139,29 @@ class _ScenarioCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 13),
-          Row(
+          Wrap(
+            spacing: 18,
+            runSpacing: 8,
             children: [
-              Icon(Icons.schedule_rounded, size: 18, color: muted),
-              const SizedBox(width: 6),
-              Text(scenario.estimatedTime, style: TextStyle(color: muted)),
-              const SizedBox(width: 18),
-              Icon(Icons.alt_route_rounded, size: 18, color: muted),
-              const SizedBox(width: 6),
-              Text(scenario.decisionCountLabel, style: TextStyle(color: muted)),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.schedule_rounded, size: 18, color: muted),
+                  const SizedBox(width: 6),
+                  Text(scenario.estimatedTime, style: TextStyle(color: muted)),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.alt_route_rounded, size: 18, color: muted),
+                  const SizedBox(width: 6),
+                  Text(
+                    scenario.decisionCountLabel,
+                    style: TextStyle(color: muted),
+                  ),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 17),
