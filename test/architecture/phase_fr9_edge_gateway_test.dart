@@ -54,7 +54,6 @@ void main() {
     expect(source, contains('Deno.env.get("SUPABASE_SECRET_KEYS")'));
     expect(source, contains('secretKey.startsWith("sb_secret_")'));
     expect(source, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
-    expect(source, isNot(contains('sb_secret_')));
   });
 
   test('FR9C source contains no literal privileged secret value', () {
