@@ -114,7 +114,10 @@ void main() {
     final packageA = _package('d01_c01', 101);
     final packageB = _package('d02_c01', 201);
     final packageC = _package('d03_c01', 301);
-    final twoPackageBudget = packageA.bytes.length + packageB.bytes.length;
+    final largerPeerBytes = packageB.bytes.length > packageC.bytes.length
+        ? packageB.bytes.length
+        : packageC.bytes.length;
+    final twoPackageBudget = packageA.bytes.length + largerPeerBytes;
     final cache = UidScopedQuestionPackageCache(
       store: store,
       userId: 'user-a',
