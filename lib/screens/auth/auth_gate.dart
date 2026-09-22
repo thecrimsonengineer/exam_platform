@@ -7,6 +7,7 @@ import '../../services/auth/auth_state_provider.dart';
 import '../../services/auth/auth_state_service.dart';
 import '../../services/auth/learner_local_identity.dart';
 import '../../services/online_access/learner_online_access_runtime.dart';
+import '../../services/online_access/learner_online_access_session_controller.dart';
 import '../admin/admin_home_screen.dart';
 import 'learner_authorized_shell.dart';
 import 'login_screen.dart';
@@ -18,11 +19,13 @@ class AuthGate extends StatelessWidget {
     this.authStateService,
     this.loginScreen,
     this.verificationScreen,
+    this.learnerOnlineAccessController,
   });
 
   final AuthStateProvider? authStateService;
   final Widget? loginScreen;
   final Widget? verificationScreen;
+  final LearnerOnlineAccessSessionController? learnerOnlineAccessController;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +80,7 @@ class AuthGate extends StatelessWidget {
         return LearnerAuthorizedShell(
           key: ValueKey('student-shell-${appUser.uid}'),
           userId: appUser.uid,
+          controller: learnerOnlineAccessController,
         );
       },
     );
