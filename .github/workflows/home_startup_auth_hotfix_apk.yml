@@ -1,0 +1,170 @@
+name: Home Startup Authorization Hotfix APK
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration-auth-hotfix
+    paths:
+      - '.github/workflows/home_startup_auth_hotfix_apk.yml'
+      - 'docs/integration/HOME_STARTUP_AUTH_HOTFIX.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-auth-hotfix-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  BASE_FREEZE_SHA: 'b9a8150adaf21a3f43cb2120b5dbfcc0ce119c8a'
+  SUPABASE_URL: 'https://esfycnmfywxczfillioj.supabase.co'
+
+jobs:
+  validate-and-build:
+    name: Validate runtime authorization config and build APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+
+    steps:
+      - name: Checkout exact hotfix candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen integration ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${BASE_FREEZE_SHA}" HEAD
+          git diff --check
+
+      - name: Require safe Supabase client configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_URL:-}" ]; then
+            echo "SUPABASE_URL is missing."
+            exit 1
+          fi
+
+          if [ -z "${SUPABASE_PUBLISHABLE_KEY:-}" ]; then
+            echo "SUPABASE_PUBLISHABLE_KEY GitHub secret is missing."
+            exit 1
+          fi
+
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*)
+              ;;
+            *)
+              echo "SUPABASE_PUBLISHABLE_KEY does not have the expected sb_publishable_ prefix."
+              exit 1
+              ;;
+          esac
+
+          echo "Supabase public runtime configuration is present."
+          echo "Server-side secret keys are not injected into the APK."
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Run Supabase runtime configuration tests
+        run: |
+          flutter test \
+            --dart-define=SUPABASE_URL="${SUPABASE_URL}" \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY}" \
+            test/services/supabase/supabase_runtime_config_test.dart
+
+      - name: Replay learner online authorization tests
+        run: |
+          flutter test test/services/online_access/learner_online_access_gate_test.dart
+          flutter test test/services/online_access/learner_online_access_session_controller_test.dart
+          flutter test test/screens/auth/learner_authorized_shell_test.dart
+
+      - name: Replay integrated Startup to Home journey
+        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+
+      - name: Ensure CI debug signing key exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${HOME}/.android"
+          if [ ! -f "${HOME}/.android/debug.keystore" ]; then
+            keytool -genkeypair \
+              -keystore "${HOME}/.android/debug.keystore" \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=CSP11 Authorization Hotfix,C=US"
+          fi
+
+      - name: Build authorization-configured Android release APK
+        run: |
+          flutter build apk --release \
+            --dart-define=SUPABASE_URL="${SUPABASE_URL}" \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY}"
+
+      - name: Verify APK package
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          test -s "${APK}"
+
+          cp "${APK}" "CSP11-auth-hotfix-${GITHUB_SHA}.apk"
+
+          {
+            echo "Authorization packaging hotfix APK verified."
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "BASE_FREEZE_SHA=${BASE_FREEZE_SHA}"
+            echo "SUPABASE_URL_CONFIGURED=true"
+            echo "SUPABASE_PUBLISHABLE_KEY_CONFIGURED=true"
+            echo "SUPABASE_SERVER_SECRET_EMBEDDED=false"
+            sha256sum "CSP11-auth-hotfix-${GITHUB_SHA}.apk"
+            ls -lh "CSP11-auth-hotfix-${GITHUB_SHA}.apk"
+          } | tee auth-hotfix-apk-evidence.txt
+
+      - name: Upload authorization hotfix APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-auth-hotfix-android-apk
+          path: CSP11-auth-hotfix-${{ github.sha }}.apk
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Upload hotfix evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-auth-hotfix-evidence
+          path: auth-hotfix-apk-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
