@@ -227,31 +227,112 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
         widget.child,
         if (_showOverlay)
           IgnorePointer(
-            child: AnimatedBuilder(
-              animation: _controller,
-              builder: (context, _) {
-                final value = _controller.value;
-                final exitProgress = ((value - (132 / 144)) / (12 / 144))
-                    .clamp(0.0, 1.0)
-                    .toDouble();
-                final opacity = 1 - Curves.easeInCubic.transform(exitProgress);
-                final scale = 1 + (0.018 * exitProgress);
+            key: const ValueKey('csp11-startup-overlay'),
+            child: Semantics(
+              container: true,
+              label: 'CSP11 Learning System',
+              child: ExcludeSemantics(
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, _) {
+                    if (_motionPolicy.isReduced) {
+                      return _ReducedStartupCanvas(
+                        personalization: _personalization,
+                        highContrast: _highContrast,
+                      );
+                    }
 
-                return Opacity(
-                  opacity: opacity,
-                  child: Transform.scale(
-                    scale: scale,
-                    child: _StartupCanvas(
-                      progress: value,
-                      animation: _controller,
-                      personalization: _personalization,
-                    ),
-                  ),
-                );
-              },
+                    final value = _controller.value;
+                    final exitProgress =
+                        ((value - (132 / 144)) / (12 / 144))
+                            .clamp(0.0, 1.0)
+                            .toDouble();
+                    final opacity =
+                        1 - Curves.easeInCubic.transform(exitProgress);
+                    final scale = 1 + (0.018 * exitProgress);
+
+                    return Opacity(
+                      opacity: opacity,
+                      child: Transform.scale(
+                        scale: scale,
+                        child: _StartupCanvas(
+                          progress: value,
+                          animation: _controller,
+                          personalization: _personalization,
+                          motionPolicy: _motionPolicy,
+                          lottieReady: _lottieReady,
+                          startupAssetPath: widget.startupAssetPath,
+                          highContrast: _highContrast,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
       ],
+    );
+  }
+}
+
+class _ReducedStartupCanvas extends StatelessWidget {
+  const _ReducedStartupCanvas({
+    required this.personalization,
+    required this.highContrast,
+  });
+
+  final StartupPersonalizationSnapshot personalization;
+  final bool highContrast;
+
+  @override
+  Widget build(BuildContext context) {
+    final secondary =
+        personalization.todaySummary ??
+        (personalization.hasResume
+            ? 'Continue ${personalization.resumeCode}'
+            : 'Your learning continues');
+
+    return ColoredBox(
+      color: const Color(0xFF080B10),
+      child: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'CSP11',
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 3.4,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'LEARNING SYSTEM',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: highContrast ? Colors.white : Colors.white70,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 2,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  secondary,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: highContrast ? Colors.white : Colors.white70,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -261,11 +342,19 @@ class _StartupCanvas extends StatelessWidget {
     required this.progress,
     required this.animation,
     required this.personalization,
+    required this.motionPolicy,
+    required this.lottieReady,
+    required this.startupAssetPath,
+    required this.highContrast,
   });
 
   final double progress;
   final Animation<double> animation;
   final StartupPersonalizationSnapshot personalization;
+  final StartupMotionPolicy motionPolicy;
+  final bool lottieReady;
+  final String startupAssetPath;
+  final bool highContrast;
 
   @override
   Widget build(BuildContext context) {
@@ -285,7 +374,9 @@ class _StartupCanvas extends StatelessWidget {
             center: const Alignment(0, -0.05),
             radius: 1.08,
             colors: [
-              presentation.accent.withValues(alpha: 0.13),
+              presentation.accent.withValues(
+                alpha: highContrast ? 0.18 : 0.13,
+              ),
               const Color(0xFF0A1018),
               const Color(0xFF080B10),
             ],
@@ -304,41 +395,51 @@ class _StartupCanvas extends StatelessWidget {
               return Stack(
                 fit: StackFit.expand,
                 children: [
-                  CustomPaint(
-                    painter: _ParticleFieldPainter(
-                      progress: progress,
-                      beat: beat,
-                      accent: presentation.accent,
+                  if (motionPolicy.animateAmbient) ...[
+                    RepaintBoundary(
+                      child: CustomPaint(
+                        painter: _ParticleFieldPainter(
+                          progress: progress,
+                          beat: beat,
+                          accent: presentation.accent,
+                          particleCount: motionPolicy.particleCount,
+                        ),
+                      ),
                     ),
-                  ),
-                  CustomPaint(
-                    painter: _KnowledgeCorePainter(
-                      progress: progress,
-                      beat: beat,
-                      accent: presentation.accent,
+                    RepaintBoundary(
+                      child: CustomPaint(
+                        painter: _KnowledgeCorePainter(
+                          progress: progress,
+                          beat: beat,
+                          accent: presentation.accent,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                   Align(
                     alignment: const Alignment(0, -0.82),
                     child: Opacity(
                       opacity: brandOpacity,
                       child: Transform.scale(
                         scale: brandScale,
-                        child: const _BrandLockup(),
+                        child: const RepaintBoundary(child: _BrandLockup()),
                       ),
                     ),
                   ),
-                  Center(
-                    child: SizedBox.square(
-                      dimension: lottieSize,
-                      child: Lottie.asset(
-                        'assets/startup/csp11_startup_master.json',
-                        controller: animation,
-                        repeat: false,
-                        fit: BoxFit.contain,
+                  if (motionPolicy.playLottie && lottieReady)
+                    Center(
+                      child: RepaintBoundary(
+                        child: SizedBox.square(
+                          dimension: lottieSize,
+                          child: Lottie.asset(
+                            startupAssetPath,
+                            controller: animation,
+                            repeat: false,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
                   Align(
                     alignment: const Alignment(0, 0.69),
                     child: Padding(
@@ -346,6 +447,8 @@ class _StartupCanvas extends StatelessWidget {
                       child: _BeatGlassCard(
                         presentation: presentation,
                         beatProgress: beatProgress,
+                        blurSigma: motionPolicy.blurSigma,
+                        highContrast: highContrast,
                       ),
                     ),
                   ),
