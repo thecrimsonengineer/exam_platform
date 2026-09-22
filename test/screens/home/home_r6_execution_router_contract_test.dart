@@ -55,17 +55,20 @@ void main() {
     expect(startIndex, greaterThan(resolveIndex));
   });
 
-  test('HOME-R6 practice uses protected quiz scope, not global initialization', () {
-    final source = File(
-      'lib/features/exam_readiness/screens/study_plan_practice_session_screen.dart',
-    ).readAsStringSync();
+  test(
+    'HOME-R6 practice uses protected quiz scope, not global initialization',
+    () {
+      final source = File(
+        'lib/features/exam_readiness/screens/study_plan_practice_session_screen.dart',
+      ).readAsStringSync();
 
-    expect(source, contains('await service.prepareScope('));
-    expect(source, contains('service.buildQuiz('));
-    expect(source, contains('UltraHardQuestionContract.classificationTag'));
-    expect(source, isNot(contains('service.initialize(')));
-    expect(source, isNot(contains('StudentQuizBuilder')));
-  });
+      expect(source, contains('await service.prepareScope('));
+      expect(source, contains('service.buildQuiz('));
+      expect(source, contains('UltraHardQuestionContract.classificationTag'));
+      expect(source, isNot(contains('service.initialize(')));
+      expect(source, isNot(contains('StudentQuizBuilder')));
+    },
+  );
 
   test('HOME-R6 execution target model does not depend on navigation', () {
     final source = File(

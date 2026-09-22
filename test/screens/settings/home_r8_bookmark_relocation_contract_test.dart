@@ -25,9 +25,7 @@ void main() {
       expect(source, contains("title: 'Bookmarked Questions'"));
       expect(
         source,
-        contains(
-          "'Review questions you saved from quizzes on this device.'",
-        ),
+        contains("'Review questions you saved from quizzes on this device.'"),
       );
       expect(source, contains('_openBookmarkedQuestions(context)'));
     }

@@ -58,10 +58,10 @@ void main() {
       });
     }
 
-
     test('bottom navigation removes obsolete Home callbacks', () {
-      final source =
-          File('lib/screens/navigation/bottom_navigation.dart').readAsStringSync();
+      final source = File(
+        'lib/screens/navigation/bottom_navigation.dart',
+      ).readAsStringSync();
 
       expect(source, isNot(contains('onOpenStudy')));
       expect(source, isNot(contains('onOpenFlashcards')));
