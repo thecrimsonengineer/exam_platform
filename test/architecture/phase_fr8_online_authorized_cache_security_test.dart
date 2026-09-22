@@ -134,12 +134,13 @@ void main() {
 
   test('FR8C clears protected process memory on lock boundaries', () {
     expect(runtime, contains('StudentStudyContentSessionCache.clear()'));
-    expect(runtime, contains('QuizService.shared.clearProtectedSession()'));
+    expect(runtime, contains('QuizService.clearSharedProtectedSession()'));
     expect(
       runtime,
       contains('StudentProgressDashboardSessionCache.clearAll()'),
     );
     expect(quiz, contains('_protectedSessionGeneration'));
+    expect(quiz, contains('static QuizService get shared => _shared ??= QuizService()'));
     expect(quiz, contains('generation != _protectedSessionGeneration'));
   });
 
