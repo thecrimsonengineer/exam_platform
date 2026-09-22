@@ -4,44 +4,10 @@ import '../../../data/csp11_blueprint.dart';
 import '../../../screens/courses/csp/study_content_screen.dart';
 import '../../../screens/courses/csp/study_content_screen_dark.dart';
 import '../models/study_plan_block.dart';
+import '../models/study_plan_execution_target.dart';
 import '../models/today_plan_task_category.dart';
 import '../screens/study_plan_practice_session_screen.dart';
 import '../services/today_plan_task_category_policy.dart';
-
-enum StudyPlanExecutionTargetKind {
-  studyContent,
-  practiceSession,
-  review,
-  examSimulation,
-}
-
-class StudyPlanExecutionTarget {
-  const StudyPlanExecutionTarget({
-    required this.kind,
-    required this.blockType,
-    required this.domainId,
-    required this.domainNumber,
-    required this.domainTitle,
-    required this.competencyId,
-    required this.competencyTitle,
-    required this.plannedMinutes,
-    required this.questionCount,
-    this.topicId,
-    this.subtopicId,
-  });
-
-  final StudyPlanExecutionTargetKind kind;
-  final StudyPlanBlockType blockType;
-  final String domainId;
-  final int domainNumber;
-  final String domainTitle;
-  final String competencyId;
-  final String competencyTitle;
-  final int plannedMinutes;
-  final int questionCount;
-  final String? topicId;
-  final String? subtopicId;
-}
 
 class StudyPlanBlockLauncher {
   const StudyPlanBlockLauncher({

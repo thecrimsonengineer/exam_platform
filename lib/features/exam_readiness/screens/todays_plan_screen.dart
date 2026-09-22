@@ -229,6 +229,10 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     final plan = data.plan;
     if (plan == null) return;
 
+    // Resolve before mutating lifecycle state. A malformed or unavailable
+    // execution target must never turn a planned task into a started task.
+    widget.blockLauncher.resolve(block);
+
     var activePlan = plan;
     var activeBlock = block;
 

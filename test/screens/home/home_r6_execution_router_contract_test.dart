@@ -45,6 +45,11 @@ void main() {
     final launchBody = source.substring(launchStart, completionStart);
     expect(launchBody, isNot(contains('completeBlock(')));
     expect(launchBody, isNot(contains('_complete(')));
+
+    final resolveIndex = launchBody.indexOf('widget.blockLauncher.resolve(block);');
+    final startIndex = launchBody.indexOf('widget.planService.startBlock(');
+    expect(resolveIndex, greaterThanOrEqualTo(0));
+    expect(startIndex, greaterThan(resolveIndex));
   });
 
   test('HOME-R6 practice uses protected quiz scope, not global initialization', () {
@@ -59,3 +64,13 @@ void main() {
     expect(source, isNot(contains('StudentQuizBuilder')));
   });
 }
+
+  test('HOME-R6 execution target model does not depend on navigation', () {
+    final source = File(
+      'lib/features/exam_readiness/models/study_plan_execution_target.dart',
+    ).readAsStringSync();
+
+    expect(source, isNot(contains('package:flutter/')));
+    expect(source, isNot(contains('/screens/')));
+    expect(source, isNot(contains('/navigation/')));
+  });

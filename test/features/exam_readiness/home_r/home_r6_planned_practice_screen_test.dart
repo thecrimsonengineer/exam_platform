@@ -1,5 +1,5 @@
 import 'package:exam_platform/features/exam_readiness/models/study_plan_block.dart';
-import 'package:exam_platform/features/exam_readiness/navigation/study_plan_block_launcher.dart';
+import 'package:exam_platform/features/exam_readiness/models/study_plan_execution_target.dart';
 import 'package:exam_platform/features/exam_readiness/screens/study_plan_practice_session_screen.dart';
 import 'package:exam_platform/models/question.dart';
 import 'package:flutter/material.dart';

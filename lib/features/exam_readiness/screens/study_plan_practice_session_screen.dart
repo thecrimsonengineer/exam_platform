@@ -9,8 +9,8 @@ import '../../../models/question.dart';
 import '../../../screens/courses/csp/quiz/quiz_screen.dart';
 import '../../../services/quiz_service.dart';
 import '../../../services/ultra_hard_question_contract.dart';
-import '../navigation/study_plan_block_launcher.dart';
 import '../models/study_plan_block.dart';
+import '../models/study_plan_execution_target.dart';
 
 class StudyPlanPracticeSessionScreen extends StatefulWidget {
   const StudyPlanPracticeSessionScreen({
@@ -139,6 +139,7 @@ class _StudyPlanPracticeSessionScreenState
             return _PracticePreparationState(
               title: _sessionTitle,
               message: 'Preparing the published questions for this planned task.',
+              isLoading: true,
             );
           }
 
@@ -193,12 +194,14 @@ class _PracticePreparationState extends StatelessWidget {
   const _PracticePreparationState({
     required this.title,
     required this.message,
+    this.isLoading = false,
     this.actionLabel,
     this.onAction,
   });
 
   final String title;
   final String message;
+  final bool isLoading;
   final String? actionLabel;
   final VoidCallback? onAction;
 
@@ -229,7 +232,7 @@ class _PracticePreparationState extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (actionLabel == null)
+                    if (isLoading)
                       const SizedBox(
                         width: 28,
                         height: 28,
