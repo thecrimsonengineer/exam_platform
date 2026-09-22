@@ -108,9 +108,7 @@ class StartupPersonalizationService {
           .where(_isOutstanding)
           .fold<int>(0, (sum, block) => sum + block.plannedMinutes),
       todayCompletedActivities: plan?.blocks
-          .where(
-            (block) => block.status == StudyPlanBlockStatus.completed,
-          )
+          .where((block) => block.status == StudyPlanBlockStatus.completed)
           .length,
       todayTotalActivities: plan?.blocks.length,
     );
