@@ -80,7 +80,7 @@ void main() {
       sessionTests,
       contains('FR8 resume locks first and then forces reauthorization'),
     );
-    expect(sessionTests, contains('forceRefreshToken: true'));
+    expect(sessionTests, contains('validator.lastForceRefresh, isTrue'));
   });
 
   test('FR8E proves interrupted protected-cache migration is non-destructive', () {
