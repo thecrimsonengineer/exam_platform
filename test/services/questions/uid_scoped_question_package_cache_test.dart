@@ -82,7 +82,10 @@ void main() {
     final loaded = await cache.loadVerified('d01_c01');
 
     expect(loaded, isNotNull);
-    expect(loaded!.descriptor.checksumSha256, package.descriptor.checksumSha256);
+    expect(
+      loaded!.descriptor.checksumSha256,
+      package.descriptor.checksumSha256,
+    );
     expect(loaded.compressedBytes, package.bytes);
   });
 
@@ -107,133 +110,139 @@ void main() {
     expect(store.values, isEmpty);
   });
 
-  test('FR9B evicts the least-recently-used package by compressed bytes', () async {
-    final store = _MemoryStore();
-    final boundary = _FakeBoundary()..authorize('user-a');
-    var now = DateTime.utc(2026, 9, 22, 1);
-    final packageA = _package('d01_c01', 101);
-    final packageB = _package('d02_c01', 201);
-    final packageC = _package('d03_c01', 301);
-    final largerPeerBytes = packageB.bytes.length > packageC.bytes.length
-        ? packageB.bytes.length
-        : packageC.bytes.length;
-    final twoPackageBudget = packageA.bytes.length + largerPeerBytes;
-    final cache = UidScopedQuestionPackageCache(
-      store: store,
-      userId: 'user-a',
-      accessBoundary: boundary,
-      maxCompressedBytes: twoPackageBudget,
-      clock: () => now,
-    );
+  test(
+    'FR9B evicts the least-recently-used package by compressed bytes',
+    () async {
+      final store = _MemoryStore();
+      final boundary = _FakeBoundary()..authorize('user-a');
+      var now = DateTime.utc(2026, 9, 22, 1);
+      final packageA = _package('d01_c01', 101);
+      final packageB = _package('d02_c01', 201);
+      final packageC = _package('d03_c01', 301);
+      final largerPeerBytes = packageB.bytes.length > packageC.bytes.length
+          ? packageB.bytes.length
+          : packageC.bytes.length;
+      final twoPackageBudget = packageA.bytes.length + largerPeerBytes;
+      final cache = UidScopedQuestionPackageCache(
+        store: store,
+        userId: 'user-a',
+        accessBoundary: boundary,
+        maxCompressedBytes: twoPackageBudget,
+        clock: () => now,
+      );
 
-    await cache.saveVerified(
-      descriptor: packageA.descriptor,
-      compressedBytes: packageA.bytes,
-    );
-    now = now.add(const Duration(minutes: 1));
-    await cache.saveVerified(
-      descriptor: packageB.descriptor,
-      compressedBytes: packageB.bytes,
-    );
+      await cache.saveVerified(
+        descriptor: packageA.descriptor,
+        compressedBytes: packageA.bytes,
+      );
+      now = now.add(const Duration(minutes: 1));
+      await cache.saveVerified(
+        descriptor: packageB.descriptor,
+        compressedBytes: packageB.bytes,
+      );
 
-    now = now.add(const Duration(minutes: 1));
-    expect(await cache.loadVerified('d01_c01'), isNotNull);
+      now = now.add(const Duration(minutes: 1));
+      expect(await cache.loadVerified('d01_c01'), isNotNull);
 
-    now = now.add(const Duration(minutes: 1));
-    await cache.saveVerified(
-      descriptor: packageC.descriptor,
-      compressedBytes: packageC.bytes,
-    );
+      now = now.add(const Duration(minutes: 1));
+      await cache.saveVerified(
+        descriptor: packageC.descriptor,
+        compressedBytes: packageC.bytes,
+      );
 
-    final ids = await cache.cachedCompetencyIds();
+      final ids = await cache.cachedCompetencyIds();
 
-    expect(ids, contains('d01_c01'));
-    expect(ids, contains('d03_c01'));
-    expect(ids, isNot(contains('d02_c01')));
-    expect(await cache.totalCompressedBytes(), lessThanOrEqualTo(twoPackageBudget));
-  });
+      expect(ids, contains('d01_c01'));
+      expect(ids, contains('d03_c01'));
+      expect(ids, isNot(contains('d02_c01')));
+      expect(
+        await cache.totalCompressedBytes(),
+        lessThanOrEqualTo(twoPackageBudget),
+      );
+    },
+  );
 
-  test('FR9B invalid replacement leaves the previous verified entry intact', () async {
-    final store = _MemoryStore();
-    final boundary = _FakeBoundary()..authorize('user-a');
-    final cache = UidScopedQuestionPackageCache(
-      store: store,
-      userId: 'user-a',
-      accessBoundary: boundary,
-    );
-    final original = _package('d01_c01', 101);
+  test(
+    'FR9B invalid replacement leaves the previous verified entry intact',
+    () async {
+      final store = _MemoryStore();
+      final boundary = _FakeBoundary()..authorize('user-a');
+      final cache = UidScopedQuestionPackageCache(
+        store: store,
+        userId: 'user-a',
+        accessBoundary: boundary,
+      );
+      final original = _package('d01_c01', 101);
 
-    await cache.saveVerified(
-      descriptor: original.descriptor,
-      compressedBytes: original.bytes,
-    );
-    final before = store.values[cache.storageKey];
-
-    final invalidDescriptor = PublishedQuestionPackageDescriptor(
-      competencyId: 'd01_c01',
-      version: original.descriptor.version + 1,
-      checksumSha256: _hex64('0'),
-      compressedBytes: original.bytes.length,
-      publishedQuestionCount: 1,
-    );
-
-    expect(
-      () => cache.saveVerified(
-        descriptor: invalidDescriptor,
+      await cache.saveVerified(
+        descriptor: original.descriptor,
         compressedBytes: original.bytes,
-      ),
-      throwsFormatException,
-    );
+      );
+      final before = store.values[cache.storageKey];
 
-    expect(store.values[cache.storageKey], before);
-    final loaded = await cache.loadVerified('d01_c01');
-    expect(loaded!.descriptor.version, original.descriptor.version);
-  });
+      final invalidDescriptor = PublishedQuestionPackageDescriptor(
+        competencyId: 'd01_c01',
+        version: original.descriptor.version + 1,
+        checksumSha256: _hex64('0'),
+        compressedBytes: original.bytes.length,
+        publishedQuestionCount: 1,
+      );
 
-  test('FR9B corrupted read-back restores the previous cache atomically', () async {
-    final store = _MemoryStore();
-    final boundary = _FakeBoundary()..authorize('user-a');
-    final cache = UidScopedQuestionPackageCache(
-      store: store,
-      userId: 'user-a',
-      accessBoundary: boundary,
-    );
-    final original = _package('d01_c01', 101);
-    final replacement = _package('d01_c01', 102, version: 2);
+      expect(
+        () => cache.saveVerified(
+          descriptor: invalidDescriptor,
+          compressedBytes: original.bytes,
+        ),
+        throwsFormatException,
+      );
 
-    await cache.saveVerified(
-      descriptor: original.descriptor,
-      compressedBytes: original.bytes,
-    );
-    final before = store.values[cache.storageKey];
+      expect(store.values[cache.storageKey], before);
+      final loaded = await cache.loadVerified('d01_c01');
+      expect(loaded!.descriptor.version, original.descriptor.version);
+    },
+  );
 
-    store.corruptNextWriteForKey = cache.storageKey;
+  test(
+    'FR9B corrupted read-back restores the previous cache atomically',
+    () async {
+      final store = _MemoryStore();
+      final boundary = _FakeBoundary()..authorize('user-a');
+      final cache = UidScopedQuestionPackageCache(
+        store: store,
+        userId: 'user-a',
+        accessBoundary: boundary,
+      );
+      final original = _package('d01_c01', 101);
+      final replacement = _package('d01_c01', 102, version: 2);
 
-    expect(
-      () => cache.saveVerified(
-        descriptor: replacement.descriptor,
-        compressedBytes: replacement.bytes,
-      ),
-      throwsStateError,
-    );
+      await cache.saveVerified(
+        descriptor: original.descriptor,
+        compressedBytes: original.bytes,
+      );
+      final before = store.values[cache.storageKey];
 
-    expect(store.values[cache.storageKey], before);
-    final loaded = await cache.loadVerified('d01_c01');
-    expect(loaded!.descriptor.version, original.descriptor.version);
-  });
+      store.corruptNextWriteForKey = cache.storageKey;
+
+      expect(
+        () => cache.saveVerified(
+          descriptor: replacement.descriptor,
+          compressedBytes: replacement.bytes,
+        ),
+        throwsStateError,
+      );
+
+      expect(store.values[cache.storageKey], before);
+      final loaded = await cache.loadVerified('d01_c01');
+      expect(loaded!.descriptor.version, original.descriptor.version);
+    },
+  );
 
   test('FR9B default cache budget is exactly 512 KiB', () {
-    expect(
-      UidScopedQuestionPackageCache.defaultMaxCompressedBytes,
-      512 * 1024,
-    );
+    expect(UidScopedQuestionPackageCache.defaultMaxCompressedBytes, 512 * 1024);
   });
 }
 
-({
-  PublishedQuestionPackageDescriptor descriptor,
-  List<int> bytes,
-}) _package(
+({PublishedQuestionPackageDescriptor descriptor, List<int> bytes}) _package(
   String competencyId,
   int questionId, {
   int version = 1,
