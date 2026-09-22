@@ -176,3 +176,20 @@ Tests:
 - blank UID performs zero personalization source calls
 - SM-2 master timing remains 4.8 seconds
 - Home R remains isolated on its own branch
+
+
+## Validation procedure
+
+SM-3 must pass the existing startup-motion gate in this order:
+
+1. startup Dart formatting
+2. SM-1 Lottie JSON contract
+3. all tests under `test/startup/`
+4. strict analysis of `lib/main.dart`, `lib/screens/startup` and `test/startup`
+5. full repository analysis with baseline info-level lint debt non-fatal and warnings/errors still fatal
+
+The personalization service tests verify:
+- resume and daily-plan data combine correctly
+- completed plans do not invent remaining work
+- local-source failures fall back safely
+- blank learner identity performs zero source calls
