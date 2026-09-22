@@ -109,7 +109,7 @@ void main() {
       final descriptor = PublishedQuestionPackageDescriptor(
         competencyId: package.descriptor.competencyId,
         version: package.descriptor.version,
-        checksumSha256: '0' * 64,
+        checksumSha256: _hex64('0'),
         compressedBytes: package.descriptor.compressedBytes,
         publishedQuestionCount: package.descriptor.publishedQuestionCount,
       );
@@ -233,7 +233,7 @@ void main() {
 Map<String, dynamic> _descriptorJson() => <String, dynamic>{
   'competencyId': 'd01_c01',
   'questionVersion': 3,
-  'questionChecksumSha256': 'a' * 64,
+  'questionChecksumSha256': _hex64('a'),
   'questionSizeBytes': 1234,
   'publishedQuestionCount': 2,
   'ultraHardCount': 1,
@@ -312,4 +312,12 @@ Map<String, dynamic> _questionJson({required int id}) {
     version: 2,
     tags: const <String>['risk-control'],
   ).toJson();
+}
+
+
+String _hex64(String character) {
+  if (character.length != 1) {
+    throw ArgumentError.value(character, 'character');
+  }
+  return List<String>.filled(64, character).join();
 }
