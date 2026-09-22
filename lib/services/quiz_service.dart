@@ -38,6 +38,7 @@ class QuizService implements QuizServiceInterface {
   List<Question> _questions = const <Question>[];
   List<StudyContent> _publishedContent = const <StudyContent>[];
   Future<void>? _initializationFuture;
+  int _protectedSessionGeneration = 0;
 
   bool _initialized = false;
 
@@ -91,6 +92,8 @@ class QuizService implements QuizServiceInterface {
   }
 
   Future<void> _loadPublishedCatalog() async {
+    final generation = _protectedSessionGeneration;
+
     // Start both learner-safe Firebase reads before awaiting either result.
     // This avoids the previous sequential network waterfall.
     final independentFuture = _questionRepository.loadPublished();
@@ -98,6 +101,10 @@ class QuizService implements QuizServiceInterface {
 
     final independentQuestions = await independentFuture;
     final publishedContent = await publishedContentFuture;
+
+    if (generation != _protectedSessionGeneration) {
+      return;
+    }
 
     final merged = <int, Question>{};
 
@@ -120,6 +127,10 @@ class QuizService implements QuizServiceInterface {
     final nextQuestions = merged.values.toList()
       ..sort((a, b) => a.id.compareTo(b.id));
 
+    if (generation != _protectedSessionGeneration) {
+      return;
+    }
+
     // Commit the new catalogue atomically only after both Firebase reads
     // succeed. An existing session cache is not destroyed by a failed refresh.
     _questions = nextQuestions;
@@ -131,6 +142,14 @@ class QuizService implements QuizServiceInterface {
 
   Future<void> refresh() async {
     await initialize(forceRefresh: true);
+  }
+
+  void clearProtectedSession() {
+    _protectedSessionGeneration++;
+    _questions = const <Question>[];
+    _publishedContent = const <StudyContent>[];
+    _initializationFuture = null;
+    _initialized = false;
   }
 
   // ==========================================================
