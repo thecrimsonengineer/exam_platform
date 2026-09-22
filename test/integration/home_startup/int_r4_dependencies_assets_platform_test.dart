@@ -136,8 +136,21 @@ String _packageSection(String lock, String packageName) {
     return '';
   }
 
-  final next = lock.indexOf('\n  ', start + marker.length);
-  return next < 0 ? lock.substring(start) : lock.substring(start, next);
+  var searchFrom = start + marker.length;
+
+  while (true) {
+    final next = lock.indexOf('\n  ', searchFrom);
+    if (next < 0) {
+      return lock.substring(start);
+    }
+
+    final contentIndex = next + 3;
+    if (contentIndex < lock.length && lock[contentIndex] != ' ') {
+      return lock.substring(start, next);
+    }
+
+    searchFrom = contentIndex;
+  }
 }
 
 int _occurrences(String source, String needle) {
