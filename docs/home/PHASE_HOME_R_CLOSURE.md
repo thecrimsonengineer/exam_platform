@@ -1,13 +1,13 @@
 # CSP11 HOME-R Closure Record
 
-Status: CLOSED CANDIDATE VALIDATED  
-Date: 22 September 2026  
-Working branch: `phase-home-r`  
-Frozen base branch: `phase-fr10-closed`  
-Frozen base SHA: `b54740c394e8c0b0cdc6d7c2acd165f6a3ba1123`  
-HOME-R0 architecture SHA: `c27772a315489c6493077dc75d950937d8d8f517`  
-Validated implementation SHA: `243d9fdf93c55775321468eb17ce85cd3b7c557f`  
-Validation workflow: `HOME-R Final Closure`  
+Status: CLOSED CANDIDATE VALIDATED
+Date: 22 September 2026
+Working branch: `phase-home-r`
+Frozen base branch: `phase-fr10-closed`
+Frozen base SHA: `b54740c394e8c0b0cdc6d7c2acd165f6a3ba1123`
+HOME-R0 architecture SHA: `c27772a315489c6493077dc75d950937d8d8f517`
+Validated implementation SHA: `243d9fdf93c55775321468eb17ce85cd3b7c557f`
+Validation workflow: `HOME-R Final Closure`
 Green workflow run: `35735054680`
 
 ## 1. Final Home contract
