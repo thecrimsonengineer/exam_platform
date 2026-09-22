@@ -352,6 +352,9 @@ jobs:
           flutter test test/services/study_content/published_content_package_test.dart
           flutter test test/architecture/phase_fr10_study_content_delivery_test.dart
 
+      - name: FR10 protected content-package cache tests
+        run: flutter test test/services/study_content/uid_scoped_content_package_cache_test.dart
+
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
 

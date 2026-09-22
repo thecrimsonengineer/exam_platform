@@ -188,6 +188,12 @@ untouched.
 
 ### FR10A - contract and strict decoder
 
+Status: COMPLETE on exact SHA
+`3ba5e961e06c541cb982d85a894366870969c467`.
+
+Validation run `35706488537` passed FR1-FR10A, frozen Phase L4, full repository
+regression and diff hygiene.
+
 - freeze this design;
 - add content package descriptor/resolution models;
 - add strict FR7 content-package decoder;
@@ -196,6 +202,8 @@ untouched.
 - no learner runtime cutover.
 
 ### FR10B - UID-scoped bounded content package cache
+
+Status: IMPLEMENTATION IN PROGRESS.
 
 - add 512 KiB compressed-byte LRU cache;
 - require same-UID current online authorization for every cache operation;
@@ -276,7 +284,8 @@ migration phase explicitly changes it.
 
 ## NEXT ACTION
 
-Execute FR10A only.
+Complete FR10B only.
 
-Do not cut learner runtime over during FR10A. First prove the content package
-contract and strict decoder under the full inherited FR and frozen L4 gates.
+Do not cut learner runtime over during FR10B. First prove the UID-scoped
+compressed-byte LRU cache, verification and rollback behavior under the full
+inherited FR and frozen L4 gates.

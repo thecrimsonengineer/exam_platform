@@ -7,6 +7,8 @@ void main() {
       'docs/firestore/PHASE_FR10_STUDY_CONTENT_DELIVERY_CUTOVER.md';
   const packagePath =
       'lib/services/study_content/published_content_package.dart';
+  const cachePath =
+      'lib/services/study_content/uid_scoped_content_package_cache.dart';
   const fr7BuilderPath =
       'tool/fr7_package_publish/fr7_package_publish_core.dart';
   const workflowPath =
@@ -14,12 +16,14 @@ void main() {
 
   late String phase;
   late String packageSource;
+  late String cacheSource;
   late String fr7Builder;
   late String workflow;
 
   setUpAll(() {
     phase = File(phasePath).readAsStringSync();
     packageSource = File(packagePath).readAsStringSync();
+    cacheSource = File(cachePath).readAsStringSync();
     fr7Builder = File(fr7BuilderPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
   });
@@ -101,6 +105,49 @@ void main() {
       packageSource,
       contains('Content package source version does not match StudyContent'),
     );
+  });
+
+  test('FR10B cache is UID-scoped and authorization-gated', () {
+    expect(cacheSource, contains('storageKeyForUser(String userId)'));
+    expect(
+      cacheSource,
+      contains('LearnerProtectedCacheAccessBoundary _accessBoundary'),
+    );
+    expect(cacheSource, contains('_requireAuthorized()'));
+    expect(cacheSource, contains('protected_content_packages.v1'));
+  });
+
+  test('FR10B cache enforces the frozen compressed-byte LRU budget', () {
+    expect(cacheSource, contains('defaultMaxCompressedBytes = 512 * 1024'));
+    expect(cacheSource, contains('totalCompressedBytes'));
+    expect(cacheSource, contains('_evictToBudget'));
+    expect(cacheSource, contains('lastAccessEpochMs'));
+    expect(cacheSource, contains('candidates.sort'));
+  });
+
+  test('FR10B verifies replacement before write and after read-back', () {
+    final preWriteDecode = cacheSource.indexOf(
+      'decoder.decode(descriptor: descriptor, compressedBytes: compressedBytes);',
+    );
+    final write = cacheSource.indexOf(
+      'final written = await _store.setString(storageKey, encoded)',
+    );
+    final readBack = cacheSource.indexOf(
+      'final readBackRaw = _store.getString(storageKey)',
+    );
+    final restore = cacheSource.indexOf('await _restoreRaw(previousRaw)');
+
+    expect(preWriteDecode, greaterThanOrEqualTo(0));
+    expect(write, greaterThan(preWriteDecode));
+    expect(readBack, greaterThan(write));
+    expect(restore, greaterThan(readBack));
+  });
+
+  test('FR10B cache never references learner-owned progress namespaces', () {
+    expect(cacheSource, isNot(contains('question_progress')));
+    expect(cacheSource, isNot(contains('readiness')));
+    expect(cacheSource, isNot(contains('bookmark')));
+    expect(cacheSource, isNot(contains('attempt')));
   });
 
   test('FR10A does not cut learner runtime over yet', () {
