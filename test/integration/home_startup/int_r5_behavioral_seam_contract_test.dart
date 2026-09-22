@@ -65,10 +65,7 @@ void main() {
 
         expect(after, equals(before));
         expect(snapshot.resumeCode, 'D04 · C01');
-        expect(
-          snapshot.resumeTitle,
-          'Reliability and probability foundations',
-        );
+        expect(snapshot.resumeTitle, 'Reliability and probability foundations');
         expect(snapshot.todayRemainingActivities, 1);
         expect(snapshot.todayRemainingMinutes, 20);
         expect(snapshot.todayCompletedActivities, 1);
@@ -80,9 +77,7 @@ void main() {
       final personalization = _read(
         'lib/screens/startup/startup_personalization_service.dart',
       );
-      final startup = _read(
-        'lib/screens/startup/csp11_startup_screen.dart',
-      );
+      final startup = _read('lib/screens/startup/csp11_startup_screen.dart');
 
       expect(
         personalization,
@@ -112,7 +107,8 @@ void main() {
         expect(
           startup,
           isNot(contains(forbidden)),
-          reason: 'Startup presentation must not own learner lifecycle: $forbidden',
+          reason:
+              'Startup presentation must not own learner lifecycle: $forbidden',
         );
       }
     });
@@ -126,9 +122,7 @@ void main() {
       final learnerShell = _read(
         'lib/screens/auth/learner_authorized_shell.dart',
       );
-      final navigation = _read(
-        'lib/screens/navigation/bottom_navigation.dart',
-      );
+      final navigation = _read('lib/screens/navigation/bottom_navigation.dart');
 
       expect(
         main,
@@ -147,47 +141,50 @@ void main() {
       expect(_occurrences(navigation, 'IndexedStack('), 1);
     });
 
-    test('Home R remains the post-startup learner destination in both themes', () {
-      for (final path in <String>[
-        'lib/screens/home/home_screen.dart',
-        'lib/screens/home/home_screen_dark.dart',
-      ]) {
-        final source = _read(path);
-
-        final hero = source.indexOf('_buildHero(context, snapshot, data)');
-        final search = source.indexOf('StudyContentSearchPanel(');
-        final resume = source.indexOf(
-          '_buildContinueLearning(snapshot, data)',
-        );
-        final today = source.indexOf('FutureBuilder<TodayPlanSummary?>(');
-        final progress = source.indexOf(
-          '_buildProgressIntelligence(snapshot, data)',
-        );
-        final readiness = source.indexOf('EXAM READINESS');
-
-        expect(hero, greaterThanOrEqualTo(0));
-        expect(search, greaterThan(hero));
-        expect(resume, greaterThan(search));
-        expect(today, greaterThan(resume));
-        expect(progress, greaterThan(today));
-        expect(readiness, greaterThanOrEqualTo(0));
-
-        expect(
-          source,
-          contains('TodaysPlanScreen(initialCategory: category)'),
-        );
-
-        for (final forbidden in <String>[
-          'QUICK PRACTICE',
-          'Train with intent',
-          'PracticeQuickLaunchScreen',
-          'BookmarkedQuestionsScreen',
-          'settings-bookmarked-questions',
+    test(
+      'Home R remains the post-startup learner destination in both themes',
+      () {
+        for (final path in <String>[
+          'lib/screens/home/home_screen.dart',
+          'lib/screens/home/home_screen_dark.dart',
         ]) {
-          expect(source, isNot(contains(forbidden)));
+          final source = _read(path);
+
+          final hero = source.indexOf('_buildHero(context, snapshot, data)');
+          final search = source.indexOf('StudyContentSearchPanel(');
+          final resume = source.indexOf(
+            '_buildContinueLearning(snapshot, data)',
+          );
+          final today = source.indexOf('FutureBuilder<TodayPlanSummary?>(');
+          final progress = source.indexOf(
+            '_buildProgressIntelligence(snapshot, data)',
+          );
+          final readiness = source.indexOf('EXAM READINESS');
+
+          expect(hero, greaterThanOrEqualTo(0));
+          expect(search, greaterThan(hero));
+          expect(resume, greaterThan(search));
+          expect(today, greaterThan(resume));
+          expect(progress, greaterThan(today));
+          expect(readiness, greaterThanOrEqualTo(0));
+
+          expect(
+            source,
+            contains('TodaysPlanScreen(initialCategory: category)'),
+          );
+
+          for (final forbidden in <String>[
+            'QUICK PRACTICE',
+            'Train with intent',
+            'PracticeQuickLaunchScreen',
+            'BookmarkedQuestionsScreen',
+            'settings-bookmarked-questions',
+          ]) {
+            expect(source, isNot(contains(forbidden)));
+          }
         }
-      }
-    });
+      },
+    );
 
     test('Today Plan category launch stays a presentation filter only', () {
       final today = _read(
@@ -196,35 +193,41 @@ void main() {
 
       expect(today, contains('final TodayPlanTaskCategory? initialCategory;'));
       expect(today, contains('TodayPlanPresentationFilter presentationFilter'));
-      expect(today, contains('visibleBlocks = widget.presentationFilter.apply('));
+      expect(
+        today,
+        contains('visibleBlocks = widget.presentationFilter.apply('),
+      );
       expect(today, contains('blocks: plan.blocks,'));
       expect(today, contains('category: _activeCategory,'));
       expect(today, isNot(contains('copyWith(blocks: visibleBlocks')));
     });
 
-    test('Bookmarks remain outside Home under Settings Learning and Progress', () {
-      for (final path in <String>[
-        'lib/screens/settings/settings_screen.dart',
-        'lib/screens/settings/settings_screen_dark.dart',
-      ]) {
-        final source = _read(path);
-        final section = source.indexOf("'LEARNING & PROGRESS'");
-        final bookmarks = source.indexOf("'settings-bookmarked-questions'");
+    test(
+      'Bookmarks remain outside Home under Settings Learning and Progress',
+      () {
+        for (final path in <String>[
+          'lib/screens/settings/settings_screen.dart',
+          'lib/screens/settings/settings_screen_dark.dart',
+        ]) {
+          final source = _read(path);
+          final section = source.indexOf("'LEARNING & PROGRESS'");
+          final bookmarks = source.indexOf("'settings-bookmarked-questions'");
 
-        expect(section, greaterThanOrEqualTo(0));
-        expect(bookmarks, greaterThan(section));
-        expect(source, contains('BookmarkedQuestionsScreen('));
-      }
+          expect(section, greaterThanOrEqualTo(0));
+          expect(bookmarks, greaterThan(section));
+          expect(source, contains('BookmarkedQuestionsScreen('));
+        }
 
-      for (final path in <String>[
-        'lib/screens/home/home_screen.dart',
-        'lib/screens/home/home_screen_dark.dart',
-      ]) {
-        final source = _read(path);
-        expect(source, isNot(contains('BookmarkedQuestionsScreen(')));
-        expect(source, isNot(contains('settings-bookmarked-questions')));
-      }
-    });
+        for (final path in <String>[
+          'lib/screens/home/home_screen.dart',
+          'lib/screens/home/home_screen_dark.dart',
+        ]) {
+          final source = _read(path);
+          expect(source, isNot(contains('BookmarkedQuestionsScreen(')));
+          expect(source, isNot(contains('settings-bookmarked-questions')));
+        }
+      },
+    );
   });
 }
 
@@ -232,9 +235,7 @@ String _read(String path) => File(path).readAsStringSync();
 
 Map<String, Object?> _snapshotPreferences(SharedPreferences prefs) {
   final keys = prefs.getKeys().toList()..sort();
-  return <String, Object?>{
-    for (final key in keys) key: prefs.get(key),
-  };
+  return <String, Object?>{for (final key in keys) key: prefs.get(key)};
 }
 
 DailyStudyPlan _plan({
