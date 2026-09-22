@@ -37,7 +37,9 @@ void main() {
       expect(find.text('Verifying secure online access...'), findsOneWidget);
 
       validator.completeNext(LearnerOnlineAccessStatus.authorized);
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(
         find.byKey(const ValueKey('protected-learner-ui')),
@@ -67,7 +69,9 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     expect(find.byKey(const ValueKey('protected-learner-ui')), findsNothing);
     expect(
