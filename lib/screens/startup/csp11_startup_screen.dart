@@ -795,10 +795,6 @@ class _KnowledgeCorePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (particleCount <= 0) {
-      return;
-    }
-
     final center = size.center(Offset.zero);
     final radius = math.min(size.width, size.height) * 0.27;
     final intro = (progress / (18 / 144)).clamp(0.0, 1.0).toDouble();
@@ -911,8 +907,7 @@ class _KnowledgeCorePainter extends CustomPainter {
   bool shouldRepaint(covariant _KnowledgeCorePainter oldDelegate) {
     return oldDelegate.progress != progress ||
         oldDelegate.beat != beat ||
-        oldDelegate.accent != accent ||
-        oldDelegate.particleCount != particleCount;
+        oldDelegate.accent != accent;
   }
 }
 
@@ -931,6 +926,10 @@ class _ParticleFieldPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (particleCount <= 0) {
+      return;
+    }
+
     final center = size.center(Offset.zero);
     final shortest = math.min(size.width, size.height);
     final converge = beat == StartupBeat.converge
@@ -971,6 +970,7 @@ class _ParticleFieldPainter extends CustomPainter {
   bool shouldRepaint(covariant _ParticleFieldPainter oldDelegate) {
     return oldDelegate.progress != progress ||
         oldDelegate.beat != beat ||
-        oldDelegate.accent != accent;
+        oldDelegate.accent != accent ||
+        oldDelegate.particleCount != particleCount;
   }
 }
