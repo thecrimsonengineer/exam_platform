@@ -183,3 +183,11 @@ SM-4 must not:
 - strict startup analysis passes
 - full repository analysis passes with existing info-level lint debt non-fatal and warnings/errors fatal
 - `phase-home-r` remains isolated
+
+
+## Lifecycle test synchronization note
+
+Flutter 3.44.9 test binding dispatches `handleAppLifecycleStateChanged` synchronously.
+The SM-4 widget test therefore dispatches the lifecycle state, pumps one frame to apply the observer transition, and only then advances simulated elapsed time.
+
+This keeps the test aligned with the runtime contract without awaiting a void test-binding API.
