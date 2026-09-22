@@ -1,232 +1,156 @@
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:exam_platform/models/question.dart';
-import 'package:exam_platform/models/study_content.dart';
-import 'package:exam_platform/services/cloud_question_repository.dart';
+import 'package:exam_platform/services/questions/learner_question_package_delivery_service.dart';
 import 'package:exam_platform/services/quiz_service.dart';
-import 'package:exam_platform/services/study_content/cloud_content_repository.dart';
+
+class _FakeDeliveryService extends LearnerQuestionPackageDeliveryService {
+  _FakeDeliveryService(this.questions);
+
+  final List<Question> questions;
+  int calls = 0;
+  int? lastDomain;
+  String? lastCompetencyId;
+  String? lastTopicId;
+  String? lastSubtopicId;
+  String? lastQuizId;
+
+  @override
+  Future<List<Question>> loadForScope({
+    required int domain,
+    String? competencyId,
+    String? topicId,
+    String? subtopicId,
+    String? quizId,
+  }) async {
+    calls++;
+    lastDomain = domain;
+    lastCompetencyId = competencyId;
+    lastTopicId = topicId;
+    lastSubtopicId = subtopicId;
+    lastQuizId = quizId;
+    return List<Question>.from(questions);
+  }
+}
 
 Question _question({
   required int id,
-  required String status,
-  String subtopicId = 'd01_c01_st01',
+  String status = 'published',
+  String competencyId = 'd01_c01',
+  String topicId = 'd01_c01_t01',
+  String subtopicId = 'd01_c01_t01_s01',
+  String quizId = 'd01_c01_quiz',
 }) {
   return Question(
     id: id,
     domain: 1,
-    competencyId: 'd01_c01',
+    competencyId: competencyId,
     subtopicId: subtopicId,
-    topicId: 'd01_c01_t01',
-    quizId: 'quiz_01',
-    contentPackageId: 'cp_01',
-    question:
-        'A safety professional reviews a workplace scenario and must select the best control strategy for the identified risk.',
-    options: const [
-      'Implement the most effective control at the source of the hazard.',
-      'Provide additional training and rely on worker compliance.',
-      'Increase administrative checks without changing the hazard.',
-      'Wait for another incident before changing the control plan.',
+    topicId: topicId,
+    quizId: quizId,
+    contentPackageId: '',
+    question: 'Which control is the strongest available choice?',
+    options: const <String>[
+      'Eliminate the hazard.',
+      'Add a warning.',
+      'Rely on training.',
+      'Accept the exposure.',
     ],
     correctAnswer: 0,
-    explanation:
-        'The best answer applies the hierarchy of controls by selecting a control that addresses the hazard at its source and provides the strongest practical risk reduction.',
+    explanation: 'Elimination removes the hazard at source.',
     reference: 'CSP11 reference',
     difficulty: 'Hard',
     cognitiveLevel: 'application',
     questionType: 'scenario_mcq',
     status: status,
     version: 1,
-    tags: const ['risk-control', 'hierarchy-of-controls'],
-  );
-}
-
-StudyContent _contentWithQuestions({
-  required List<Question> questions,
-  String id = 'cp_content_01',
-  String status = 'published',
-}) {
-  return StudyContent(
-    id: id,
-    domainId: 'd01',
-    competencyId: 'd01_c01',
-    competencyNumber: 1,
-    title: 'Risk Management',
-    status: status,
-    version: 1,
-    topics: [
-      StudyTopic(
-        id: 'd01_c01_t01',
-        title: 'Risk Management',
-        subtopics: [
-          StudySubtopic(
-            id: 'd01_c01_st01',
-            title: 'Risk Control',
-            learningObjectives: const [],
-            blocks: const [],
-            questions: questions,
-            keyPoints: const [],
-            examples: const [],
-            caseStudies: const [],
-            formulas: const [],
-            references: const [],
-            examTips: const [],
-            commonMistakes: const [],
-            keyTakeaways: const [],
-            quizzes: const [],
-          ),
-        ],
-      ),
-    ],
+    tags: const <String>['risk-control'],
   );
 }
 
 void main() {
-  group('QuizService Firebase question integration', () {
-    test('loads only published independent questions from Firebase', () async {
-      final firestore = FakeFirebaseFirestore();
-
-      final questionRepository = CloudQuestionRepository(firestore: firestore);
-
-      final contentRepository = CloudContentRepository(firestore: firestore);
-
-      await questionRepository.save(_question(id: 1, status: 'published'));
-
-      await questionRepository.save(_question(id: 2, status: 'draft'));
-
-      await questionRepository.save(_question(id: 3, status: 'validated'));
-
+  group('FR9D QuizService prepared scopes', () {
+    test('global initialize fails closed', () async {
       final service = QuizService(
-        questionRepository: questionRepository,
-        contentRepository: contentRepository,
+        deliveryService: _FakeDeliveryService(const <Question>[]),
       );
 
-      await service.initialize();
-
-      expect(service.getAllQuestions().map((q) => q.id), [1]);
-
-      expect(service.getTotalQuestions(), 1);
+      await expectLater(service.initialize(), throwsStateError);
+      expect(service.isInitialized, isFalse);
     });
 
-    test('does not expose unpublished independent questions', () async {
-      final firestore = FakeFirebaseFirestore();
+    test('prepares exactly the requested competency scope', () async {
+      final delivery = _FakeDeliveryService(<Question>[_question(id: 1)]);
+      final service = QuizService(deliveryService: delivery);
 
-      final questionRepository = CloudQuestionRepository(firestore: firestore);
-
-      final contentRepository = CloudContentRepository(firestore: firestore);
-
-      await questionRepository.save(_question(id: 10, status: 'published'));
-
-      await questionRepository.save(_question(id: 11, status: 'review'));
-
-      await questionRepository.save(_question(id: 12, status: 'archived'));
-
-      final service = QuizService(
-        questionRepository: questionRepository,
-        contentRepository: contentRepository,
+      await service.prepareScope(
+        domain: 1,
+        competencyId: 'd01_c01',
       );
 
-      await service.initialize();
-
-      final questions = service.getQuestionsBySubtopic('d01_c01_st01');
-
-      expect(questions.map((q) => q.id), [10]);
+      expect(delivery.calls, 1);
+      expect(delivery.lastDomain, 1);
+      expect(delivery.lastCompetencyId, 'd01_c01');
+      expect(service.getAllQuestions().map((q) => q.id), <int>[1]);
+      expect(service.isInitialized, isTrue);
     });
 
-    test('loads questions embedded inside published content', () async {
-      final firestore = FakeFirebaseFirestore();
+    test('topic and subtopic selectors survive scope preparation', () async {
+      final delivery = _FakeDeliveryService(<Question>[
+        _question(id: 10, subtopicId: 'd01_c01_t01_s01'),
+        _question(id: 11, subtopicId: 'd01_c01_t01_s02'),
+      ]);
+      final service = QuizService(deliveryService: delivery);
 
-      final questionRepository = CloudQuestionRepository(firestore: firestore);
-
-      final contentRepository = CloudContentRepository(firestore: firestore);
-
-      final embeddedQuestion = _question(id: 100, status: 'published');
-
-      final content = _contentWithQuestions(questions: [embeddedQuestion]);
-
-      await contentRepository.publish(content);
-
-      final service = QuizService(
-        questionRepository: questionRepository,
-        contentRepository: contentRepository,
+      await service.prepareScope(
+        domain: 1,
+        topicId: 'd01_c01_t01',
+        subtopicId: 'd01_c01_t01_s01',
       );
 
-      await service.initialize();
-
-      final questions = service.getQuestionsBySubtopic('d01_c01_st01');
-
-      expect(questions.map((q) => q.id), [100]);
-
-      expect(questions.single.contentPackageId, 'cp_01');
+      expect(
+        service.getQuestionsBySubtopic('d01_c01_t01_s01').map((q) => q.id),
+        <int>[10],
+      );
+      expect(
+        service.getQuestionsByTopic('d01_c01_t01').map((q) => q.id),
+        <int>[10, 11],
+      );
     });
 
-    test('merges independent and content-version questions', () async {
-      final firestore = FakeFirebaseFirestore();
+    test('prepared scope keeps only published positive unique IDs', () async {
+      final delivery = _FakeDeliveryService(<Question>[
+        _question(id: 20),
+        _question(id: 20),
+        _question(id: 21, status: 'draft'),
+        _question(id: -1),
+      ]);
+      final service = QuizService(deliveryService: delivery);
 
-      final questionRepository = CloudQuestionRepository(firestore: firestore);
+      await service.prepareScope(domain: 1, competencyId: 'd01_c01');
 
-      final contentRepository = CloudContentRepository(firestore: firestore);
-
-      await questionRepository.save(_question(id: 200, status: 'published'));
-
-      final contentQuestion = _question(id: 201, status: 'published');
-
-      final content = _contentWithQuestions(
-        id: 'cp_content_02',
-        questions: [contentQuestion],
-      );
-
-      await contentRepository.publish(content);
-
-      final service = QuizService(
-        questionRepository: questionRepository,
-        contentRepository: contentRepository,
-      );
-
-      await service.initialize();
-
-      final questions = service.getQuestionsBySubtopic('d01_c01_st01');
-
-      expect(questions.map((q) => q.id), containsAll(<int>[200, 201]));
-
-      expect(questions.length, 2);
+      expect(service.getAllQuestions().map((q) => q.id), <int>[20]);
     });
 
-    test('independent question takes precedence when the same ID '
-        'exists in both sources', () async {
-      final firestore = FakeFirebaseFirestore();
+    test('same prepared scope is reused without another delivery call', () async {
+      final delivery = _FakeDeliveryService(<Question>[_question(id: 30)]);
+      final service = QuizService(deliveryService: delivery);
 
-      final questionRepository = CloudQuestionRepository(firestore: firestore);
+      await service.prepareScope(domain: 1, competencyId: 'd01_c01');
+      await service.prepareScope(domain: 1, competencyId: 'd01_c01');
 
-      final contentRepository = CloudContentRepository(firestore: firestore);
+      expect(delivery.calls, 1);
+    });
 
-      final independent = _question(id: 300, status: 'published');
+    test('clearProtectedSession removes prepared protected questions', () async {
+      final delivery = _FakeDeliveryService(<Question>[_question(id: 40)]);
+      final service = QuizService(deliveryService: delivery);
 
-      await questionRepository.save(independent);
+      await service.prepareScope(domain: 1, competencyId: 'd01_c01');
+      service.clearProtectedSession();
 
-      final embedded = _question(id: 300, status: 'published');
-
-      final content = _contentWithQuestions(
-        id: 'cp_content_03',
-        questions: [embedded],
-      );
-
-      await contentRepository.publish(content);
-
-      final service = QuizService(
-        questionRepository: questionRepository,
-        contentRepository: contentRepository,
-      );
-
-      await service.initialize();
-
-      final questions = service.getQuestionsBySubtopic('d01_c01_st01');
-
-      expect(questions.length, 1);
-
-      expect(questions.single.id, 300);
-
-      expect(questions.single.contentPackageId, 'cp_01');
+      expect(service.getAllQuestions(), isEmpty);
+      expect(service.isInitialized, isFalse);
     });
   });
 }
