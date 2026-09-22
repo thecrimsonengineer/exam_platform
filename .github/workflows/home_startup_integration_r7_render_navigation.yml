@@ -70,12 +70,8 @@ jobs:
       - name: Verify lockfile stability
         run: git diff --exit-code -- pubspec.lock
 
-      - name: Canonicalize R7 test and expose formatter patch
-        shell: bash
-        run: |
-          set -euo pipefail
-          dart format test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
-          git diff -- test/integration/home_startup/int_r7_integrated_render_navigation_test.dart || true
+      - name: Verify R7 formatting
+        run: dart format --output=none --set-exit-if-changed test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
 
       - name: Analyze integrated render scope
         run: |
