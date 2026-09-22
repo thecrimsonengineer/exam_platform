@@ -158,7 +158,9 @@ class _StudyPlanPracticeSessionScreenState
               actionLabel: 'Retry',
               onAction: () {
                 final next = _loadQuestions();
-                setState(() => _questionsFuture = next);
+                setState(() {
+                  _questionsFuture = next;
+                });
               },
             );
           }
