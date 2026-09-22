@@ -4,6 +4,7 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../models/daily_study_plan.dart';
 import '../models/study_plan_block.dart';
+import '../models/today_plan_task_category.dart';
 import '../repositories/daily_study_plan_repository.dart';
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/exam_study_plan_repository.dart';
@@ -12,6 +13,7 @@ import '../repositories/readiness_snapshot_repository.dart';
 import '../services/daily_study_plan_service.dart';
 import '../services/learning_state_update_coordinator.dart';
 import '../services/phase_aware_daily_plan_service.dart';
+import '../services/today_plan_presentation_filter.dart';
 import '../services/readiness_evidence_bootstrap_service.dart';
 import '../services/study_plan_outcome_service.dart';
 import '../services/readiness_profile_service.dart';
@@ -31,6 +33,8 @@ class TodaysPlanScreen extends StatefulWidget {
     this.attemptRepository,
     this.outcomeService = const StudyPlanOutcomeService(),
     this.learningStateCoordinator = const LearningStateUpdateCoordinator(),
+    this.presentationFilter = const TodayPlanPresentationFilter(),
+    this.initialCategory,
     this.now,
   });
 
@@ -44,6 +48,8 @@ class TodaysPlanScreen extends StatefulWidget {
   final LearnerAssessmentAttemptRepository? attemptRepository;
   final StudyPlanOutcomeService outcomeService;
   final LearningStateUpdateCoordinator learningStateCoordinator;
+  final TodayPlanPresentationFilter presentationFilter;
+  final TodayPlanTaskCategory? initialCategory;
   final DateTime Function()? now;
 
   @override
@@ -52,6 +58,7 @@ class TodaysPlanScreen extends StatefulWidget {
 
 class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   late Future<_TodayPlanViewData> _future;
+  TodayPlanTaskCategory? _activeCategory;
 
   ExamStudyPlanRepository get _examPlanRepository =>
       widget.examPlanRepository ?? ExamStudyPlanRepository();
@@ -73,6 +80,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   @override
   void initState() {
     super.initState();
+    _activeCategory = widget.initialCategory;
     _future = _load();
   }
 
@@ -332,6 +340,19 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
               );
             }
 
+            late final List<StudyPlanBlock> visibleBlocks;
+            try {
+              visibleBlocks = widget.presentationFilter.apply(
+                blocks: plan.blocks,
+                category: _activeCategory,
+              );
+            } catch (error) {
+              return _ErrorState(
+                message: error.toString(),
+                onRetry: _regenerate,
+              );
+            }
+
             return RefreshIndicator(
               onRefresh: _regenerate,
               child: ListView(
@@ -343,72 +364,95 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                     const SizedBox(height: 12),
                   ],
                   _TodayHero(plan: plan),
+                  if (_activeCategory != null) ...[
+                    const SizedBox(height: 12),
+                    _TodayPlanFilterBanner(
+                      category: _activeCategory!,
+                      onViewAll: () => setState(() => _activeCategory = null),
+                    ),
+                  ],
                   const SizedBox(height: 14),
                   if (plan.blocks.isEmpty)
                     _NoStudyToday(availableMinutes: plan.availableMinutes)
+                  else if (visibleBlocks.isEmpty && _activeCategory != null)
+                    _NoCategoryTasks(
+                      category: _activeCategory!,
+                      onViewAll: () => setState(() => _activeCategory = null),
+                    )
                   else
                     for (
-                      var index = 0;
-                      index < plan.blocks.length;
-                      index++
+                      var visibleIndex = 0;
+                      visibleIndex < visibleBlocks.length;
+                      visibleIndex++
                     ) ...[
-                      _PlanBlockCard(
-                        block: plan.blocks[index],
-                        index: index,
-                        onStart: () => _apply(
-                          (current, at) => widget.planService.startBlock(
-                            current,
-                            plan.blocks[index].blockId,
-                            at: at,
-                          ),
-                        ),
-                        onComplete: () => _complete(plan.blocks[index].blockId),
-                        onSkip: () => _apply(
-                          (current, at) => widget.planService.skipBlock(
-                            current,
-                            plan.blocks[index].blockId,
-                            at: at,
-                          ),
-                        ),
-                        onMove: () => _apply(
-                          (current, at) => widget.planService.moveToTomorrow(
-                            current,
-                            plan.blocks[index].blockId,
-                            at: at,
-                          ),
-                        ),
-                        onReplace: () => _apply(
-                          (current, at) =>
-                              widget.planService.replaceWithAlternative(
+                      Builder(
+                        builder: (context) {
+                          final block = visibleBlocks[visibleIndex];
+                          final originalIndex = plan.blocks.indexWhere(
+                            (item) => item.blockId == block.blockId,
+                          );
+
+                          return _PlanBlockCard(
+                            block: block,
+                            index: originalIndex,
+                            onStart: () => _apply(
+                              (current, at) => widget.planService.startBlock(
                                 current,
-                                plan.blocks[index].blockId,
+                                block.blockId,
                                 at: at,
                               ),
-                        ),
-                        onShorten: () => _apply(
-                          (current, at) => widget.planService.shortenBlock(
-                            current,
-                            plan.blocks[index].blockId,
-                            newMinutes: (plan.blocks[index].plannedMinutes - 5)
-                                .clamp(5, plan.blocks[index].plannedMinutes)
-                                .toInt(),
-                            at: at,
-                          ),
-                        ),
-                        onUnavailable: () => _apply(
-                          (current, at) => widget.planService.markUnavailable(
-                            current,
-                            plan.blocks[index].blockId,
-                            at: at,
-                          ),
-                        ),
+                            ),
+                            onComplete: () => _complete(block.blockId),
+                            onSkip: () => _apply(
+                              (current, at) => widget.planService.skipBlock(
+                                current,
+                                block.blockId,
+                                at: at,
+                              ),
+                            ),
+                            onMove: () => _apply(
+                              (current, at) =>
+                                  widget.planService.moveToTomorrow(
+                                    current,
+                                    block.blockId,
+                                    at: at,
+                                  ),
+                            ),
+                            onReplace: () => _apply(
+                              (current, at) =>
+                                  widget.planService.replaceWithAlternative(
+                                    current,
+                                    block.blockId,
+                                    at: at,
+                                  ),
+                            ),
+                            onShorten: () => _apply(
+                              (current, at) => widget.planService.shortenBlock(
+                                current,
+                                block.blockId,
+                                newMinutes: (block.plannedMinutes - 5)
+                                    .clamp(5, block.plannedMinutes)
+                                    .toInt(),
+                                at: at,
+                              ),
+                            ),
+                            onUnavailable: () => _apply(
+                              (current, at) =>
+                                  widget.planService.markUnavailable(
+                                    current,
+                                    block.blockId,
+                                    at: at,
+                                  ),
+                            ),
+                          );
+                        },
                       ),
-                      if (index < plan.blocks.length - 1)
+                      if (visibleIndex < visibleBlocks.length - 1)
                         const SizedBox(height: 12),
                     ],
-                  if (plan.blocks.isNotEmpty) ...[
+                  if (visibleBlocks.isNotEmpty) ...[
                     const SizedBox(height: 18),
-                    _WhyThisPlan(plan: plan),
+                    _WhyThisPlan(blocks: visibleBlocks),
                   ],
                 ],
               ),
@@ -650,14 +694,14 @@ class _PlanBlockCard extends StatelessWidget {
 }
 
 class _WhyThisPlan extends StatelessWidget {
-  const _WhyThisPlan({required this.plan});
+  const _WhyThisPlan({required this.blocks});
 
-  final DailyStudyPlan plan;
+  final List<StudyPlanBlock> blocks;
 
   @override
   Widget build(BuildContext context) {
     final reasons = <String>[];
-    for (final block in plan.blocks) {
+    for (final block in blocks) {
       if (!reasons.contains(block.reasonText)) {
         reasons.add(block.reasonText);
       }
@@ -689,6 +733,116 @@ class _WhyThisPlan extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _TodayPlanFilterBanner extends StatelessWidget {
+  const _TodayPlanFilterBanner({
+    required this.category,
+    required this.onViewAll,
+  });
+
+  final TodayPlanTaskCategory category;
+  final VoidCallback onViewAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return StudentGlassSurface(
+      key: const ValueKey('home-r5-active-filter'),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: BorderRadius.circular(18),
+      tint: scheme.primaryContainer.withValues(alpha: 0.42),
+      borderColor: scheme.primary.withValues(alpha: 0.18),
+      child: Row(
+        children: [
+          Icon(_categoryIcon(category), color: scheme.primary, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Showing ${_categoryLabel(category)} tasks from today\'s plan',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          TextButton(
+            key: const ValueKey('home-r5-view-all'),
+            onPressed: onViewAll,
+            child: const Text('View all'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NoCategoryTasks extends StatelessWidget {
+  const _NoCategoryTasks({
+    required this.category,
+    required this.onViewAll,
+  });
+
+  final TodayPlanTaskCategory category;
+  final VoidCallback onViewAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return StudentGlassSurface(
+      key: const ValueKey('home-r5-filter-empty'),
+      padding: const EdgeInsets.all(20),
+      borderRadius: BorderRadius.circular(20),
+      tint: scheme.surfaceContainerLow.withValues(alpha: 0.54),
+      borderColor: scheme.outlineVariant.withValues(alpha: 0.60),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Nothing scheduled under ${_categoryLabel(category)} today.',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'The rest of today\'s authoritative plan is unchanged.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextButton.icon(
+            onPressed: onViewAll,
+            icon: const Icon(Icons.view_list_rounded, size: 18),
+            label: const Text('View all tasks'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+String _categoryLabel(TodayPlanTaskCategory category) {
+  switch (category) {
+    case TodayPlanTaskCategory.learn:
+      return 'Learn';
+    case TodayPlanTaskCategory.practice:
+      return 'Practice';
+    case TodayPlanTaskCategory.remember:
+      return 'Remember';
+  }
+}
+
+IconData _categoryIcon(TodayPlanTaskCategory category) {
+  switch (category) {
+    case TodayPlanTaskCategory.learn:
+      return Icons.menu_book_rounded;
+    case TodayPlanTaskCategory.practice:
+      return Icons.quiz_rounded;
+    case TodayPlanTaskCategory.remember:
+      return Icons.psychology_alt_rounded;
   }
 }
 

@@ -19,7 +19,7 @@ void main() {
           'loadLatestForDate(DateTime.now())',
           'FutureBuilder<TodayPlanSummary?>',
           'TodayPlanHomeSection',
-          'const TodaysPlanScreen()',
+          'TodaysPlanScreen(',
           'StudyContentSearchPanel',
           '_buildContinueLearning(snapshot, data)',
           '_buildProgressIntelligence(snapshot, data)',

@@ -6,6 +6,7 @@ import '../../app/app_colors.dart';
 import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
 import '../../features/exam_readiness/screens/exam_readiness_route.dart';
 import '../../features/exam_readiness/models/today_plan_summary.dart';
+import '../../features/exam_readiness/models/today_plan_task_category.dart';
 import '../../features/exam_readiness/repositories/daily_study_plan_repository.dart';
 import '../../features/exam_readiness/screens/todays_plan_screen.dart';
 import '../../features/exam_readiness/services/today_plan_summary_service.dart';
@@ -119,10 +120,12 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     }
   }
 
-  Future<void> _openTodaysPlan() async {
+  Future<void> _openTodaysPlan({
+    TodayPlanTaskCategory? category,
+  }) async {
     await Navigator.of(context).push(
       examReadinessRoute<void>(
-        child: const TodaysPlanScreen(),
+        child: TodaysPlanScreen(initialCategory: category),
         isDarkMode: true,
       ),
     );
@@ -232,8 +235,9 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
                                   builder: (context, todaySnapshot) {
                                     return TodayPlanHomeSection(
                                       snapshot: todaySnapshot,
-                                      onCategoryTap: (_) => _openTodaysPlan(),
-                                      onViewFullPlan: _openTodaysPlan,
+                                      onCategoryTap: (category) =>
+                                          _openTodaysPlan(category: category),
+                                      onViewFullPlan: () => _openTodaysPlan(),
                                       onRetry: _retryTodayPlan,
                                     );
                                   },
