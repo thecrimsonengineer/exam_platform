@@ -158,10 +158,7 @@ class _StudyPlanPracticeSessionScreenState
               actionLabel: 'Retry',
               onAction: () {
                 final next = _loadQuestions();
-                next.then<void>(
-                  (_) {},
-                  onError: (Object _, StackTrace __) {},
-                );
+                next.ignore();
                 setState(() {
                   _questionsFuture = next;
                 });
