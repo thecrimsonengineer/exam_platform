@@ -14,10 +14,7 @@ void main() {
       home: Csp11StartupScreen(
         motionPolicyOverride: policy,
         startupAssetPath: assetPath,
-        child: const SizedBox(
-          key: destinationKey,
-          child: Text('Destination'),
-        ),
+        child: const SizedBox(key: destinationKey, child: Text('Destination')),
       ),
     );
   }
@@ -35,7 +32,9 @@ void main() {
     expect(find.byKey(destinationKey), findsOneWidget);
   });
 
-  testWidgets('missing startup asset fails open to the real app', (tester) async {
+  testWidgets('missing startup asset fails open to the real app', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       app(
         policy: StartupMotionPolicy.full,

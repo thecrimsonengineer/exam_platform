@@ -61,8 +61,9 @@ class StartupMotionPolicy {
     final pixelRatio = devicePixelRatio.clamp(1.0, 8.0).toDouble();
     final physicalPixelLoad =
         logicalSize.width * logicalSize.height * pixelRatio * pixelRatio;
-    final shortestSide =
-        logicalSize.width < logicalSize.height ? logicalSize.width : logicalSize.height;
+    final shortestSide = logicalSize.width < logicalSize.height
+        ? logicalSize.width
+        : logicalSize.height;
 
     if (physicalPixelLoad >= 4500000 || shortestSide < 360) {
       return balanced;

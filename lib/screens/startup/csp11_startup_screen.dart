@@ -56,17 +56,18 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
     _personalizationService =
         widget.personalizationService ?? StartupPersonalizationService();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: StartupMotionPolicy.full.duration,
-      animationBehavior: AnimationBehavior.normal,
-    )
-      ..addListener(_maybeLoadPersonalization)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _dismissOverlay();
-        }
-      });
+    _controller =
+        AnimationController(
+            vsync: this,
+            duration: StartupMotionPolicy.full.duration,
+            animationBehavior: AnimationBehavior.normal,
+          )
+          ..addListener(_maybeLoadPersonalization)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _dismissOverlay();
+            }
+          });
 
     _watchdog = Timer(_hardTimeout, _dismissOverlay);
     unawaited(_preflightStartupAsset());
@@ -246,10 +247,9 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
                     }
 
                     final value = _controller.value;
-                    final exitProgress =
-                        ((value - (132 / 144)) / (12 / 144))
-                            .clamp(0.0, 1.0)
-                            .toDouble();
+                    final exitProgress = ((value - (132 / 144)) / (12 / 144))
+                        .clamp(0.0, 1.0)
+                        .toDouble();
                     final opacity =
                         1 - Curves.easeInCubic.transform(exitProgress);
                     final scale = 1 + (0.018 * exitProgress);
@@ -377,9 +377,7 @@ class _StartupCanvas extends StatelessWidget {
             center: const Alignment(0, -0.05),
             radius: 1.08,
             colors: [
-              presentation.accent.withValues(
-                alpha: highContrast ? 0.18 : 0.13,
-              ),
+              presentation.accent.withValues(alpha: highContrast ? 0.18 : 0.13),
               const Color(0xFF0A1018),
               const Color(0xFF080B10),
             ],
