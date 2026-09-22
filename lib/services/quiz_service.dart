@@ -143,7 +143,7 @@ class QuizService implements QuizServiceInterface {
     _initialized = false;
   }
 
-// ==========================================================
+  // ==========================================================
   // BASIC PUBLISHED QUESTION ACCESS
   // ==========================================================
 
