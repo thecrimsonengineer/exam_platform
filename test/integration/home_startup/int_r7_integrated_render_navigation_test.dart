@@ -51,10 +51,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 350));
       await tester.pump(const Duration(milliseconds: 100));
 
-      expect(
-        find.byKey(const ValueKey('csp11-startup-overlay')),
-        findsNothing,
-      );
+      expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
       expect(find.byType(BottomNavigationScreen), findsOneWidget);
       expect(find.byType(NavigationBar), findsOneWidget);
       expect(find.byType(HomeScreen), findsOneWidget);
@@ -80,68 +77,82 @@ void main() {
     },
   );
 
-  testWidgets('bottom navigation renders each learner destination exactly once', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(430, 932);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  testWidgets(
+    'bottom navigation renders each learner destination exactly once',
+    (tester) async {
+      tester.view.physicalSize = const Size(430, 932);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(_integratedApp(userId));
-    await tester.pump(const Duration(milliseconds: 450));
+      await tester.pumpWidget(_integratedApp(userId));
+      await tester.pump(const Duration(milliseconds: 450));
 
-    final destinations = <String>['Learn', 'Practice', 'LAB', 'Flashcards', 'Home'];
+      final destinations = <String>[
+        'Learn',
+        'Practice',
+        'LAB',
+        'Flashcards',
+        'Home',
+      ];
 
-    for (var index = 0; index < destinations.length; index++) {
-      final label = destinations[index];
-      await tester.tap(find.text(label));
+      for (var index = 0; index < destinations.length; index++) {
+        final label = destinations[index];
+        await tester.tap(find.text(label));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+
+        final navigation = tester.widget<NavigationBar>(
+          find.byType(NavigationBar),
+        );
+        final expectedIndex = label == 'Home' ? 0 : index + 1;
+        expect(navigation.selectedIndex, expectedIndex);
+        expect(find.byType(NavigationBar), findsOneWidget);
+
+        final exception = tester.takeException();
+        expect(
+          exception,
+          isNull,
+          reason: 'Destination $label must render without overflow.',
+        );
+      }
+
+      expect(find.byType(HomeScreen), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'theme switch replaces Home presentation without duplicating shell',
+    (tester) async {
+      tester.view.physicalSize = const Size(430, 932);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(_integratedApp(userId));
+      await tester.pump(const Duration(milliseconds: 450));
+
+      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.byType(DarkHomeScreen), findsNothing);
+
+      ThemeModeService.isDarkMode.value = true;
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 150));
 
-      final navigation = tester.widget<NavigationBar>(
-        find.byType(NavigationBar),
-      );
-      final expectedIndex = label == 'Home' ? 0 : index + 1;
-      expect(navigation.selectedIndex, expectedIndex);
+      expect(find.byType(HomeScreen), findsNothing);
+      expect(find.byType(DarkHomeScreen), findsOneWidget);
+      expect(find.byType(BottomNavigationScreen), findsOneWidget);
       expect(find.byType(NavigationBar), findsOneWidget);
+
+      ThemeModeService.isDarkMode.value = false;
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+
+      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.byType(DarkHomeScreen), findsNothing);
       expect(tester.takeException(), isNull);
-    }
-
-    expect(find.byType(HomeScreen), findsOneWidget);
-  });
-
-  testWidgets('theme switch replaces Home presentation without duplicating shell', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(430, 932);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    await tester.pumpWidget(_integratedApp(userId));
-    await tester.pump(const Duration(milliseconds: 450));
-
-    expect(find.byType(HomeScreen), findsOneWidget);
-    expect(find.byType(DarkHomeScreen), findsNothing);
-
-    ThemeModeService.isDarkMode.value = true;
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 150));
-
-    expect(find.byType(HomeScreen), findsNothing);
-    expect(find.byType(DarkHomeScreen), findsOneWidget);
-    expect(find.byType(BottomNavigationScreen), findsOneWidget);
-    expect(find.byType(NavigationBar), findsOneWidget);
-
-    ThemeModeService.isDarkMode.value = false;
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 150));
-
-    expect(find.byType(HomeScreen), findsOneWidget);
-    expect(find.byType(DarkHomeScreen), findsNothing);
-    expect(tester.takeException(), isNull);
-  });
+    },
+  );
 
   testWidgets('Home opens authoritative Today Plan after Startup handoff', (
     tester,
@@ -155,10 +166,17 @@ void main() {
     await tester.pump(const Duration(milliseconds: 450));
     await tester.pump(const Duration(milliseconds: 250));
 
-    final openPlan = find.text("Open Today's Plan");
+    final openPlan = find.widgetWithText(TextButton, "Open Today's Plan");
     expect(openPlan, findsOneWidget);
 
-    await tester.ensureVisible(openPlan);
+    await tester.scrollUntilVisible(
+      openPlan,
+      300,
+      scrollable: find.byKey(
+        const PageStorageKey<String>('csp11-home-scroll'),
+      ),
+    );
+    await tester.pump();
     await tester.tap(openPlan);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 250));
@@ -168,45 +186,40 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('repeat app launch creates one fresh Startup overlay and one shell', (
-    tester,
-  ) async {
-    await tester.pumpWidget(_integratedApp(userId));
-    await tester.pump();
+  testWidgets(
+    'repeat app launch creates one fresh Startup overlay and one shell',
+    (tester) async {
+      await tester.pumpWidget(_integratedApp(userId));
+      await tester.pump();
 
-    expect(
-      find.byKey(const ValueKey('csp11-startup-overlay')),
-      findsOneWidget,
-    );
+      expect(
+        find.byKey(const ValueKey('csp11-startup-overlay')),
+        findsOneWidget,
+      );
 
-    await tester.pump(const Duration(milliseconds: 450));
-    expect(
-      find.byKey(const ValueKey('csp11-startup-overlay')),
-      findsNothing,
-    );
-    expect(find.byType(BottomNavigationScreen), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 450));
+      expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
+      expect(find.byType(BottomNavigationScreen), findsOneWidget);
 
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
 
-    await tester.pumpWidget(_integratedApp(userId));
-    await tester.pump();
+      await tester.pumpWidget(_integratedApp(userId));
+      await tester.pump();
 
-    expect(
-      find.byKey(const ValueKey('csp11-startup-overlay')),
-      findsOneWidget,
-    );
+      expect(
+        find.byKey(const ValueKey('csp11-startup-overlay')),
+        findsOneWidget,
+      );
 
-    await tester.pump(const Duration(milliseconds: 450));
+      await tester.pump(const Duration(milliseconds: 450));
 
-    expect(
-      find.byKey(const ValueKey('csp11-startup-overlay')),
-      findsNothing,
-    );
-    expect(find.byType(BottomNavigationScreen), findsOneWidget);
-    expect(find.byType(NavigationBar), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
+      expect(find.byType(BottomNavigationScreen), findsOneWidget);
+      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
 
 Widget _integratedApp(String userId) {
