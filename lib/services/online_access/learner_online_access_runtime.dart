@@ -102,7 +102,7 @@ class LearnerOnlineAccessRuntime {
   static void clearProtectedProcessMemory() {
     StudentStudyContentSessionCache.clear();
     StudentProgressDashboardSessionCache.clearAll();
-    QuizService.shared.clearProtectedSession();
+    QuizService.clearSharedProtectedSession();
   }
 
   static String _normalizeUserId(String userId) {
