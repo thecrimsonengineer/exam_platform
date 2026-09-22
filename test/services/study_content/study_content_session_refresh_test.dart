@@ -1,4 +1,8 @@
 import 'package:exam_platform/models/study_content.dart';
+import 'package:exam_platform/services/auth/learner_local_identity.dart';
+import 'package:exam_platform/services/online_access/learner_online_access_gate.dart';
+import 'package:exam_platform/services/online_access/learner_online_access_runtime.dart';
+import 'package:exam_platform/services/online_access/learner_online_access_session_controller.dart';
 import 'package:exam_platform/services/study_content/cloud_content_repository.dart';
 import 'package:exam_platform/services/study_content/cloud_published_content_repository.dart';
 import 'package:exam_platform/services/study_content/student_content_cache_repository.dart';
@@ -24,8 +28,28 @@ StudyContent _content({required String id, required int version}) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
+  late LearnerOnlineAccessSessionController accessController;
+
+  setUp(() async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
+    StudentStudyContentSessionCache.clear();
+    LearnerLocalIdentity.activate('student-test');
+
+    accessController = LearnerOnlineAccessSessionController(
+      validator: _AuthorizedValidator(),
+      currentUserId: () => LearnerLocalIdentity.currentUserId,
+    );
+    LearnerOnlineAccessRuntime.bind(
+      userId: 'student-test',
+      controller: accessController,
+    );
+    await accessController.authorizeForUser('student-test');
+  });
+
+  tearDown(() {
+    LearnerOnlineAccessRuntime.unbind(accessController);
+    accessController.dispose();
+    LearnerLocalIdentity.clear();
     StudentStudyContentSessionCache.clear();
   });
 
@@ -94,4 +118,17 @@ void main() {
       );
     },
   );
+}
+
+
+class _AuthorizedValidator implements LearnerOnlineAccessValidator {
+  @override
+  Future<LearnerOnlineAccessResult> validate({
+    bool forceRefreshToken = false,
+  }) async {
+    return LearnerOnlineAccessResult(
+      status: LearnerOnlineAccessStatus.authorized,
+      checkedAt: DateTime.utc(2026),
+    );
+  }
 }
