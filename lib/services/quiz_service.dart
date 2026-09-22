@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:exam_platform/models/question.dart';
+import 'package:exam_platform/models/study_content.dart';
 
 import 'questions/learner_question_package_delivery_service.dart';
 import 'quiz_service_interface.dart';
@@ -18,9 +19,13 @@ class QuizService implements QuizServiceInterface {
     _shared?.clearProtectedSession();
   }
 
-  QuizService({LearnerQuestionPackageDeliveryService? deliveryService})
-    : _deliveryService =
-          deliveryService ?? LearnerQuestionPackageDeliveryService();
+  QuizService({
+    LearnerQuestionPackageDeliveryService? deliveryService,
+    Object? repository,
+    Object? questionRepository,
+    Object? contentRepository,
+  }) : _deliveryService =
+           deliveryService ?? LearnerQuestionPackageDeliveryService();
 
   final LearnerQuestionPackageDeliveryService _deliveryService;
 
@@ -32,6 +37,11 @@ class QuizService implements QuizServiceInterface {
   bool _initialized = false;
 
   bool get isInitialized => _initialized;
+
+  /// Compatibility view for legacy widgets.
+  ///
+  /// FR9 learner quiz assembly no longer consumes StudyContent.
+  List<StudyContent> getPublishedContent() => const <StudyContent>[];
 
   /// The former whole-bank initializer is permanently disabled for learners.
   Future<void> initialize({bool forceRefresh = false}) async {
