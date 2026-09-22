@@ -6,13 +6,17 @@ void main() {
   const sourcePath =
       'supabase/functions/learner-question-packages/index.ts';
   const configPath = 'supabase/config.toml';
+  const workflowPath =
+      '.github/workflows/phase_fr_firestore_read_reduction.yml';
 
   late String source;
   late String config;
+  late String workflow;
 
   setUpAll(() {
     source = File(sourcePath).readAsStringSync();
     config = File(configPath).readAsStringSync();
+    workflow = File(workflowPath).readAsStringSync();
   });
 
   test('FR9C gateway verifies only the CSP11 Firebase project', () {
@@ -117,5 +121,13 @@ void main() {
 
   test('FR9C responses are explicitly non-cacheable', () {
     expect(source, contains('"Cache-Control": "no-store"'));
+  });
+
+  test('FR9C security guard remains in the main FR workflow', () {
+    expect(workflow, contains('FR9 Edge gateway security tests'));
+    expect(
+      workflow,
+      contains('flutter test test/architecture/phase_fr9_edge_gateway_test.dart'),
+    );
   });
 }
