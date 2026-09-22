@@ -2,8 +2,8 @@ import 'dart:math';
 
 import '../../models/question.dart';
 import '../../models/student_question_progress.dart';
+import '../questions/learner_question_package_delivery_service.dart';
 import '../questions/published_question_package.dart';
-import '../quiz_service.dart';
 import '../student_question_progress_service.dart';
 import '../ultra_hard_question_contract.dart';
 
@@ -39,11 +39,12 @@ class PracticeSessionPlan {
 
 class PracticeModeService {
   PracticeModeService({
-    QuizService? quizService,
+    LearnerQuestionPackageDeliveryService? deliveryService,
     QuestionProgressLoader? questionProgressLoader,
     DateTime Function()? now,
     Random? random,
-  }) : _quizService = quizService ?? QuizService.shared,
+  }) : _deliveryService =
+           deliveryService ?? LearnerQuestionPackageDeliveryService(),
        _loadQuestionProgress =
            questionProgressLoader ?? _defaultQuestionProgressLoader,
        _now = now ?? DateTime.now,
@@ -58,7 +59,7 @@ class PracticeModeService {
   static const int minWeakDomainEvidence = 5;
   static const double weakMasteryThreshold = 0.65;
 
-  final QuizService _quizService;
+  final LearnerQuestionPackageDeliveryService _deliveryService;
   final QuestionProgressLoader _loadQuestionProgress;
   final DateTime Function() _now;
   final Random _random;
@@ -69,7 +70,9 @@ class PracticeModeService {
   }
 
   Future<PracticeSessionPlan> build(PracticeMode mode) async {
-    final catalog = await _quizService.loadCatalogMetadata();
+    final catalog = (await _deliveryService.loadCatalog())
+        .where((descriptor) => descriptor.publishedQuestionCount > 0)
+        .toList(growable: false);
 
     if (catalog.isEmpty) {
       throw StateError(
@@ -94,13 +97,11 @@ class PracticeModeService {
   ) async {
     final now = _now();
     final daySeed = now.year * 10000 + now.month * 100 + now.day;
-    final rankedPackages = List<PublishedQuestionPackageDescriptor>.from(
-      catalog,
-    );
+    final ordered = List<PublishedQuestionPackageDescriptor>.from(catalog);
 
-    rankedPackages.sort((left, right) {
-      final leftRank = _textRank(left.competencyId, daySeed);
-      final rightRank = _textRank(right.competencyId, daySeed);
+    ordered.sort((left, right) {
+      final leftRank = _dailyCompetencyRank(left.competencyId, daySeed);
+      final rightRank = _dailyCompetencyRank(right.competencyId, daySeed);
       final rankCompare = leftRank.compareTo(rightRank);
 
       if (rankCompare != 0) {
@@ -110,15 +111,17 @@ class PracticeModeService {
       return left.competencyId.compareTo(right.competencyId);
     });
 
-    final selected = _selectUntilQuestionCapacity(
-      rankedPackages,
+    final published = await _loadUntilQuestionCount(
+      ordered,
       dailyQuestionCount,
     );
-    await _quizService.prepareCompetencies(
-      selected.map((descriptor) => descriptor.competencyId),
-    );
 
-    final published = _quizService.getAllQuestions();
+    if (published.isEmpty) {
+      throw StateError(
+        'No published CSP11 questions are available for today’s challenge.',
+      );
+    }
+
     final ranked = List<Question>.from(published);
 
     ranked.sort((left, right) {
@@ -134,10 +137,6 @@ class PracticeModeService {
     });
 
     final count = min(dailyQuestionCount, ranked.length);
-    if (count == 0) {
-      throw StateError('No published questions are available for today.');
-    }
-
     final questions = ranked.take(count).toList(growable: false);
 
     return PracticeSessionPlan(
@@ -146,8 +145,8 @@ class PracticeModeService {
       questions: List<Question>.unmodifiable(questions),
       domainNumber: 0,
       notice:
-          'Today’s $count-question challenge uses a bounded set of current '
-          'CSP11 competency packages.',
+          'Today’s $count-question challenge uses a bounded selection of '
+          'published CSP11 competency packages.',
       usedFallback: false,
     );
   }
@@ -155,26 +154,23 @@ class PracticeModeService {
   Future<PracticeSessionPlan> _buildRandomQuiz(
     List<PublishedQuestionPackageDescriptor> catalog,
   ) async {
-    final shuffled = List<PublishedQuestionPackageDescriptor>.from(catalog)
+    final ordered = List<PublishedQuestionPackageDescriptor>.from(catalog)
       ..shuffle(_random);
-    final selected = _selectUntilQuestionCapacity(
-      shuffled,
+
+    final published = await _loadUntilQuestionCount(
+      ordered,
       randomQuestionCount,
     );
 
-    await _quizService.prepareCompetencies(
-      selected.map((descriptor) => descriptor.competencyId),
-      forceRefresh: true,
-    );
-
-    final published = _quizService.getAllQuestions();
-    final count = min(randomQuestionCount, published.length);
-
-    if (count == 0) {
-      throw StateError('No published questions are available for Random Quiz.');
+    if (published.isEmpty) {
+      throw StateError(
+        'No published CSP11 questions are available for random practice.',
+      );
     }
 
-    final questions = _quizService.buildQuiz(numberOfQuestions: count);
+    final shuffled = List<Question>.from(published)..shuffle(_random);
+    final count = min(randomQuestionCount, shuffled.length);
+    final questions = shuffled.take(count).toList(growable: false);
 
     return PracticeSessionPlan(
       mode: PracticeMode.randomQuiz,
@@ -182,8 +178,8 @@ class PracticeModeService {
       questions: List<Question>.unmodifiable(questions),
       domainNumber: 0,
       notice:
-          '$count published questions were mixed from a bounded randomized '
-          'competency set.',
+          '$count published questions were selected from only the competency '
+          'packages needed for this session.',
       usedFallback: false,
     );
   }
@@ -193,64 +189,53 @@ class PracticeModeService {
   ) async {
     final candidates = catalog
         .where((descriptor) => descriptor.ultraHardCount > 0)
-        .toList(growable: true)
-      ..sort((left, right) {
-        final countCompare = right.ultraHardCount.compareTo(
-          left.ultraHardCount,
-        );
+        .toList(growable: false)
+      ..sort(
+        (left, right) => left.competencyId.compareTo(right.competencyId),
+      );
 
-        if (countCompare != 0) {
-          return countCompare;
-        }
+    final advertisedUltraHard = candidates.fold<int>(
+      0,
+      (total, descriptor) => total + descriptor.ultraHardCount,
+    );
 
-        return left.competencyId.compareTo(right.competencyId);
-      });
+    if (advertisedUltraHard < ultraHardMinimumQuestionCount) {
+      throw StateError(
+        'Ultra Hard Exam Readiness requires at least '
+        '$ultraHardMinimumQuestionCount published DQG300 questions. '
+        'Currently available: $advertisedUltraHard.',
+      );
+    }
 
-    final selected = <PublishedQuestionPackageDescriptor>[];
-    var discoveryCount = 0;
+    final ultraHard = <int, Question>{};
 
     for (final descriptor in candidates) {
-      selected.add(descriptor);
-      discoveryCount += descriptor.ultraHardCount;
+      final questions = await _deliveryService.loadCompetency(
+        descriptor.competencyId,
+      );
 
-      if (discoveryCount >= ultraHardQuestionCount) {
+      for (final question in questions) {
+        if (_isUltraHard(question)) {
+          ultraHard.putIfAbsent(question.id, () => question);
+        }
+      }
+
+      if (ultraHard.length >= ultraHardQuestionCount) {
         break;
       }
     }
 
-    if (discoveryCount < ultraHardMinimumQuestionCount) {
-      throw StateError(
-        'Ultra Hard Exam Readiness requires at least '
-        '$ultraHardMinimumQuestionCount published DQG300 questions. '
-        'Currently available: $discoveryCount.',
-      );
-    }
-
-    await _quizService.prepareCompetencies(
-      selected.map((descriptor) => descriptor.competencyId),
-      forceRefresh: true,
-    );
-
-    final ultraHard = _quizService
-        .getAllQuestions()
-        .where(
-          (question) => question.tags.any(
-            (tag) =>
-                tag.trim().toLowerCase() ==
-                UltraHardQuestionContract.classificationTag,
-          ),
-        )
-        .toList(growable: true);
-
     if (ultraHard.length < ultraHardMinimumQuestionCount) {
       throw StateError(
-        'Ultra Hard package metadata did not match verified package content.',
+        'Ultra Hard Exam Readiness requires at least '
+        '$ultraHardMinimumQuestionCount verified DQG300 questions. '
+        'Currently available: ${ultraHard.length}.',
       );
     }
 
-    ultraHard.shuffle(_random);
-    final count = min(ultraHardQuestionCount, ultraHard.length);
-    final questions = ultraHard.take(count).toList(growable: false);
+    final shuffled = ultraHard.values.toList(growable: true)..shuffle(_random);
+    final count = min(ultraHardQuestionCount, shuffled.length);
+    final questions = shuffled.take(count).toList(growable: false);
 
     return PracticeSessionPlan(
       mode: PracticeMode.ultraHardExamReadiness,
@@ -258,8 +243,8 @@ class PracticeModeService {
       questions: List<Question>.unmodifiable(questions),
       domainNumber: 0,
       notice:
-          'This $count-question readiness session uses only verified questions '
-          'that passed the strict DQG300 300/300 gate with DQS 100.',
+          'This $count-question readiness session uses only questions that '
+          'passed the strict DQG300 300/300 gate with DQS 100.',
       usedFallback: false,
     );
   }
@@ -275,8 +260,8 @@ class PracticeModeService {
     final matched = progress.values
         .where(
           (record) =>
-              record.domainNumber > 0 &&
-              activeCompetencies.contains(record.competencyId.toLowerCase()),
+              activeCompetencies.contains(record.competencyId.trim()) &&
+              record.domainNumber > 0,
         )
         .toList(growable: false);
 
@@ -331,7 +316,6 @@ class PracticeModeService {
 
     candidates.sort((left, right) {
       final masteryCompare = left.mastery.compareTo(right.mastery);
-
       if (masteryCompare != 0) {
         return masteryCompare;
       }
@@ -339,7 +323,6 @@ class PracticeModeService {
       final evidenceCompare = right.answeredQuestions.compareTo(
         left.answeredQuestions,
       );
-
       if (evidenceCompare != 0) {
         return evidenceCompare;
       }
@@ -348,32 +331,20 @@ class PracticeModeService {
     });
 
     final target = candidates.first;
-    final prefix = "d${target.domainNumber.toString().padLeft(2, '0')}_";
-    final domainPackages = catalog
-        .where((descriptor) => descriptor.competencyId.startsWith(prefix))
+    final domainCatalog = catalog
+        .where(
+          (descriptor) =>
+              _domainNumberForCompetency(descriptor.competencyId) ==
+              target.domainNumber,
+        )
         .toList(growable: false);
 
-    final selected = _selectUntilQuestionCapacity(
-      domainPackages,
-      weakQuestionCount,
+    final advertised = domainCatalog.fold<int>(
+      0,
+      (total, descriptor) => total + descriptor.publishedQuestionCount,
     );
 
-    if (selected.isEmpty) {
-      return _buildWeakFallback(
-        catalog,
-        'A weak area was detected, but no active package is currently '
-        'available for that domain. This session uses a bounded mixed quiz.',
-      );
-    }
-
-    await _quizService.prepareCompetencies(
-      selected.map((descriptor) => descriptor.competencyId),
-      forceRefresh: true,
-    );
-
-    final available = _quizService.getDomainQuestionCount(target.domainNumber);
-
-    if (available < minWeakDomainEvidence) {
+    if (advertised < minWeakDomainEvidence) {
       return _buildWeakFallback(
         catalog,
         'A weak area was detected, but there are not enough currently '
@@ -382,11 +353,26 @@ class PracticeModeService {
       );
     }
 
-    final count = min(weakQuestionCount, available);
-    final questions = _quizService.getDomainQuiz(
-      domain: target.domainNumber,
-      numberOfQuestions: count,
+    final published = await _loadUntilQuestionCount(
+      domainCatalog,
+      weakQuestionCount,
     );
+    final domainQuestions = published
+        .where((question) => question.domain == target.domainNumber)
+        .toList(growable: true);
+
+    if (domainQuestions.length < minWeakDomainEvidence) {
+      return _buildWeakFallback(
+        catalog,
+        'A weak area was detected, but the verified package data did not '
+        'contain enough questions for a focused session. '
+        'This session uses a bounded mixed quiz instead.',
+      );
+    }
+
+    domainQuestions.shuffle(_random);
+    final count = min(weakQuestionCount, domainQuestions.length);
+    final questions = domainQuestions.take(count).toList(growable: false);
 
     return PracticeSessionPlan(
       mode: PracticeMode.weakAreas,
@@ -406,34 +392,22 @@ class PracticeModeService {
     List<PublishedQuestionPackageDescriptor> catalog,
     String reason,
   ) async {
-    final ranked = List<PublishedQuestionPackageDescriptor>.from(catalog)
-      ..sort((left, right) {
-        final countCompare = right.publishedQuestionCount.compareTo(
-          left.publishedQuestionCount,
-        );
-
-        if (countCompare != 0) {
-          return countCompare;
-        }
-
-        return left.competencyId.compareTo(right.competencyId);
-      });
-
-    final selected = _selectUntilQuestionCapacity(ranked, weakQuestionCount);
-
-    await _quizService.prepareCompetencies(
-      selected.map((descriptor) => descriptor.competencyId),
-      forceRefresh: true,
+    final ordered = List<PublishedQuestionPackageDescriptor>.from(catalog)
+      ..shuffle(_random);
+    final published = await _loadUntilQuestionCount(
+      ordered,
+      weakQuestionCount,
     );
 
-    final published = _quizService.getAllQuestions();
-    final count = min(weakQuestionCount, published.length);
-
-    if (count == 0) {
-      throw StateError('No published questions are available for Weak Areas.');
+    if (published.isEmpty) {
+      throw StateError(
+        'No published CSP11 questions are available for weak-area fallback.',
+      );
     }
 
-    final questions = _quizService.buildQuiz(numberOfQuestions: count);
+    final shuffled = List<Question>.from(published)..shuffle(_random);
+    final count = min(weakQuestionCount, shuffled.length);
+    final questions = shuffled.take(count).toList(growable: false);
 
     return PracticeSessionPlan(
       mode: PracticeMode.weakAreas,
@@ -445,43 +419,71 @@ class PracticeModeService {
     );
   }
 
-  List<PublishedQuestionPackageDescriptor> _selectUntilQuestionCapacity(
-    Iterable<PublishedQuestionPackageDescriptor> candidates,
-    int requiredQuestions,
-  ) {
-    final selected = <PublishedQuestionPackageDescriptor>[];
-    var capacity = 0;
+  Future<List<Question>> _loadUntilQuestionCount(
+    Iterable<PublishedQuestionPackageDescriptor> descriptors,
+    int requestedCount,
+  ) async {
+    final merged = <int, Question>{};
 
-    for (final descriptor in candidates) {
+    for (final descriptor in descriptors) {
       if (descriptor.publishedQuestionCount <= 0) {
         continue;
       }
 
-      selected.add(descriptor);
-      capacity += descriptor.publishedQuestionCount;
+      final questions = await _deliveryService.loadCompetency(
+        descriptor.competencyId,
+      );
 
-      if (capacity >= requiredQuestions) {
+      for (final question in questions) {
+        if (question.id <= 0 ||
+            question.status.trim().toLowerCase() != 'published') {
+          continue;
+        }
+
+        merged.putIfAbsent(question.id, () => question);
+      }
+
+      if (merged.length >= requestedCount) {
         break;
       }
     }
 
-    return List<PublishedQuestionPackageDescriptor>.unmodifiable(selected);
+    final questions = merged.values.toList()
+      ..sort((left, right) => left.id.compareTo(right.id));
+
+    return List<Question>.unmodifiable(questions);
+  }
+
+  bool _isUltraHard(Question question) {
+    return question.tags.any(
+      (tag) =>
+          tag.trim().toLowerCase() ==
+          UltraHardQuestionContract.classificationTag,
+    );
+  }
+
+  int _domainNumberForCompetency(String competencyId) {
+    final match = RegExp(r'^d(\d{2})_c\d{2}$').firstMatch(
+      competencyId.trim().toLowerCase(),
+    );
+
+    return match == null ? 0 : int.tryParse(match.group(1)!) ?? 0;
+  }
+
+  int _dailyCompetencyRank(String competencyId, int daySeed) {
+    var hash = daySeed & 0x7fffffff;
+
+    for (final codeUnit in competencyId.codeUnits) {
+      hash = ((hash * 31) + codeUnit) & 0x7fffffff;
+    }
+
+    return hash;
   }
 
   int _dailyRank(int questionId, int daySeed) {
     var value = (questionId * 1103515245 + daySeed * 12345) & 0x7fffffff;
     value = (value ^ (value >> 16)) & 0x7fffffff;
     return value;
-  }
-
-  int _textRank(String value, int seed) {
-    var hash = seed & 0x7fffffff;
-
-    for (final codeUnit in value.codeUnits) {
-      hash = ((hash * 31) ^ codeUnit) & 0x7fffffff;
-    }
-
-    return hash;
   }
 }
 
