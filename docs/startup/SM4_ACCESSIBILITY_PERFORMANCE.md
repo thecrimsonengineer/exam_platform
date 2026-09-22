@@ -191,3 +191,10 @@ Flutter 3.44.9 test binding dispatches `handleAppLifecycleStateChanged` synchron
 The SM-4 widget test therefore dispatches the lifecycle state, pumps one frame to apply the observer transition, and only then advances simulated elapsed time.
 
 This keeps the test aligned with the runtime contract without awaiting a void test-binding API.
+
+
+## Formatted lifecycle checkpoint
+
+The lifecycle hardening test is normalized on formatted head `7ba993da81613ee864bc8b4ea313414bf490929f`.
+
+The pause/resume test uses synchronous lifecycle dispatch followed by an explicit widget pump before simulated time advances.
