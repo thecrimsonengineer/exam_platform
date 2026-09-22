@@ -1,0 +1,319 @@
+name: Home Startup Integration R8 Platform Closure
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration
+    paths:
+      - 'lib/**'
+      - 'assets/startup/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'android/**'
+      - 'web/**'
+      - 'windows/**'
+      - 'test/integration/home_startup/**'
+      - 'test/startup/**'
+      - '.github/workflows/home_startup_integration_r8_platform_closure.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-integration-r8-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  R7_SHA: '8147b397a601789a1190ddd53dc4cb219745602c'
+  HOME_R_SHA: '243d9fdf93c55775321468eb17ce85cd3b7c557f'
+  STARTUP_SHA: '9c1697b1d01c8db85fe535bc77ea6b6aa6f39565'
+
+jobs:
+  release-render-gate:
+    name: Integrated release render gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and frozen ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${HOME_R_SHA}" HEAD
+          git merge-base --is-ancestor "${STARTUP_SHA}" HEAD
+          git merge-base --is-ancestor "${R7_SHA}" HEAD
+          git diff --check
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Verify integration formatting
+        run: dart format --output=none --set-exit-if-changed test/integration/home_startup
+
+      - name: Analyze integrated release scope
+        run: |
+          flutter analyze --no-fatal-infos             lib/main.dart             lib/screens/startup             lib/screens/auth/learner_authorized_shell.dart             lib/screens/navigation/bottom_navigation.dart             lib/screens/home             lib/screens/lab/lab_library_screen.dart             lib/features/exam_readiness/screens/todays_plan_screen.dart             test/integration/home_startup
+
+      - name: Run integrated Startup to Home render and navigation
+        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+
+      - name: Run Startup release-render smoke
+        run: flutter test test/startup/startup_release_render_smoke_test.dart
+
+      - name: Run Startup hardening
+        run: flutter test test/startup/startup_screen_hardening_test.dart test/startup/startup_motion_policy_test.dart
+
+      - name: Run R5 behavioral seam
+        run: flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+
+      - name: Run R4 packaging contracts
+        run: flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+
+      - name: Confirm render gate made no repository changes
+        run: git diff --exit-code
+
+  android-release:
+    name: Android release build
+    needs: release-render-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+
+      - name: Verify exact integration SHA
+        run: test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Ensure CI debug signing key exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${HOME}/.android"
+          if [ ! -f "${HOME}/.android/debug.keystore" ]; then
+            keytool -genkeypair               -keystore "${HOME}/.android/debug.keystore"               -storepass android               -alias androiddebugkey               -keypass android               -keyalg RSA               -keysize 2048               -validity 10000               -dname "CN=Android Debug,O=CSP11 CI,C=US"
+          fi
+
+      - name: Build Android release APK
+        run: flutter build apk --release
+
+      - name: Verify Android release package
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          ASSET="assets/flutter_assets/assets/startup/csp11_startup_master.json"
+
+          test -s "${APK}"
+          unzip -Z1 "${APK}" | grep -q "^${ASSET}$"
+          unzip -p "${APK}" "${ASSET}" | grep -q 'CSP11 Startup Master SM-1'
+
+          {
+            echo "INT-R8 Android release build verified."
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "NOTE=release currently uses debug signing config; this proves release-mode compilation and packaging, not store signing readiness."
+            sha256sum "${APK}"
+            ls -lh "${APK}"
+          } | tee int-r8-android-release-evidence.txt
+
+      - name: Upload Android release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: int-r8-android-release-evidence
+          path: int-r8-android-release-evidence.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  web-release:
+    name: Web release build
+    needs: release-render-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+
+      - name: Verify exact integration SHA
+        run: test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Build web release
+        run: flutter build web --release
+
+      - name: Verify Web release bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s build/web/main.dart.js
+          test -s build/web/flutter_bootstrap.js
+          ASSET="build/web/assets/assets/startup/csp11_startup_master.json"
+          test -s "${ASSET}"
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("build/web/assets/assets/startup/csp11_startup_master.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert payload["nm"] == "CSP11 Startup Master SM-1"
+          assert payload["w"] == 512
+          assert payload["h"] == 512
+          assert payload["fr"] == 30
+          assert payload["op"] == 144
+          PY
+
+          {
+            echo "INT-R8 Web release build verified."
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            sha256sum build/web/main.dart.js
+            sha256sum "${ASSET}"
+            du -sh build/web
+          } | tee int-r8-web-release-evidence.txt
+
+      - name: Upload Web release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: int-r8-web-release-evidence
+          path: int-r8-web-release-evidence.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  windows-release:
+    name: Windows release build
+    needs: release-render-gate
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+
+      - name: Verify exact integration SHA
+        shell: pwsh
+        run: |
+          if ((git rev-parse HEAD).Trim() -ne "${env:GITHUB_SHA}") {
+            throw "Checkout SHA does not match GITHUB_SHA."
+          }
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Verify Windows release bundle
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $release = "build\windows\x64\runner\Release"
+          $exe = Join-Path $release "exam_platform.exe"
+          $asset = Join-Path $release "data\flutter_assets\assets\startup\csp11_startup_master.json"
+
+          if (-not (Test-Path $exe)) {
+            throw "Windows release executable is missing: $exe"
+          }
+          if ((Get-Item $exe).Length -le 0) {
+            throw "Windows release executable is empty."
+          }
+          if (-not (Test-Path $asset)) {
+            throw "Packaged startup asset is missing: $asset"
+          }
+
+          $payload = Get-Content -Raw $asset | ConvertFrom-Json
+          if ($payload.nm -ne "CSP11 Startup Master SM-1" -or
+              $payload.w -ne 512 -or
+              $payload.h -ne 512 -or
+              $payload.fr -ne 30 -or
+              $payload.op -ne 144) {
+            throw "Windows packaged startup asset violates the frozen contract."
+          }
+
+          $exeHash = (Get-FileHash $exe -Algorithm SHA256).Hash
+          $assetHash = (Get-FileHash $asset -Algorithm SHA256).Hash
+          @(
+            "INT-R8 Windows release build verified."
+            "GITHUB_SHA=${env:GITHUB_SHA}"
+            "EXE_SHA256=$exeHash"
+            "STARTUP_ASSET_SHA256=$assetHash"
+            "EXE_BYTES=$((Get-Item $exe).Length)"
+          ) | Set-Content int-r8-windows-release-evidence.txt
+
+      - name: Upload Windows release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: int-r8-windows-release-evidence
+          path: int-r8-windows-release-evidence.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  r8-closure:
+    name: R8 platform release closure
+    needs:
+      - release-render-gate
+      - android-release
+      - web-release
+      - windows-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Record exact-SHA platform closure
+        run: |
+          echo "INT-R8 platform release closure passed for ${GITHUB_SHA}"
+          echo "R7 base: ${R7_SHA}"
+          echo "Home R ancestor: ${HOME_R_SHA}"
+          echo "Startup Motion ancestor: ${STARTUP_SHA}"
