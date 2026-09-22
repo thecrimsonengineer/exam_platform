@@ -98,8 +98,8 @@ class _StartupCanvas extends StatelessWidget {
                 width: 330,
                 height: 330,
                 child: Lottie.asset(
-                  'assets/startup/csp11_glaxnimate_placeholder.json',
-                  repeat: true,
+                  'assets/startup/csp11_startup_master.json',
+                  repeat: false,
                   fit: BoxFit.contain,
                 ),
               ),
