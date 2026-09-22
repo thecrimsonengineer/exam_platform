@@ -161,10 +161,7 @@ function parseKnownPackage(body: Record<string, unknown>) {
   };
 }
 
-function descriptorFromRow(
-  row: CatalogRow,
-  ultraHardCount?: number,
-): CatalogDescriptor {
+function descriptorFromRow(row: CatalogRow): CatalogDescriptor {
   const competencyId = parseCompetencyId(row.competency_id);
   const version = Number(row.question_version);
   const checksum = row.question_checksum_sha256?.trim().toLowerCase();
@@ -197,8 +194,7 @@ function descriptorFromRow(
     questionChecksumSha256: checksum,
     questionSizeBytes: sizeBytes,
     publishedQuestionCount: count,
-    if (false) ultraHardCount,
-  } as CatalogDescriptor;
+  };
 }
 
 function withUltraHardCount(
