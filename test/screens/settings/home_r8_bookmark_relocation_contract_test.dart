@@ -41,6 +41,9 @@ void main() {
     expect(light, contains('isDarkMode: false'));
     expect(dark, contains('BookmarkedQuestionsScreen('));
     expect(dark, contains('isDarkMode: true'));
+
+    expect(light, contains('const ProgressScreen()'));
+    expect(dark, contains('const DarkProgressScreen()'));
   });
 
   test('HOME-R8 Home has no Bookmarked Questions navigation destination', () {
@@ -53,6 +56,8 @@ void main() {
       expect(source, isNot(contains('BookmarkedQuestionsScreen')));
       expect(source, isNot(contains('settings-bookmarked-questions')));
       expect(source, isNot(contains("title: 'Bookmarked Questions'")));
+      expect(source, isNot(contains('Icons.bookmark_border_rounded')));
+      expect(source, contains('Icons.track_changes_rounded'));
     }
   });
 
@@ -74,5 +79,17 @@ void main() {
     expect(bookmarkScreen, contains('final BookmarkService _bookmarkService'));
     expect(bookmarkScreen, contains('getBookmarkedQuestions()'));
     expect(bookmarkScreen, contains('removeBookmark(question.id)'));
+
+    final bookmarkService = read('lib/services/bookmark_service.dart');
+    expect(
+      bookmarkService,
+      contains("static const String _bookmarkKey = 'bookmarked_question_ids'"),
+    );
+    expect(
+      bookmarkService,
+      contains(
+        "static const String _snapshotKey = 'bookmarked_question_snapshots_v2'",
+      ),
+    );
   });
 }

@@ -884,7 +884,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
                     label: '$inProgress in progress',
                   ),
                   _progressChip(
-                    icon: Icons.bookmark_border_rounded,
+                    icon: Icons.track_changes_rounded,
                     label: '$tracked tracked',
                   ),
                 ],
