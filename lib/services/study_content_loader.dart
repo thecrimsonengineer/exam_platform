@@ -276,7 +276,6 @@ class StudyContentLoader {
     return latest;
   }
 
-  @visibleForTesting
   Future<StudyContent> _loadStudyContentFromInjectedRepository({
     required String domainId,
     required String competencyId,
