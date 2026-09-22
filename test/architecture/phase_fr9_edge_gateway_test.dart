@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const sourcePath =
-      'supabase/functions/learner-question-packages/index.ts';
+  const sourcePath = 'supabase/functions/learner-question-packages/index.ts';
   const configPath = 'supabase/config.toml';
   const workflowPath =
       '.github/workflows/phase_fr_firestore_read_reduction.yml';
@@ -33,9 +32,7 @@ void main() {
     expect(config, contains('[functions.learner-question-packages]'));
     expect(
       config,
-      contains(
-        '[functions.learner-question-packages]\nverify_jwt = false',
-      ),
+      contains('[functions.learner-question-packages]\nverify_jwt = false'),
     );
   });
 
@@ -54,11 +51,14 @@ void main() {
     expect(clientIndex, greaterThan(unauthorizedIndex));
   });
 
-  test('FR9C privileged client uses server-only modern secret key environment', () {
-    expect(source, contains('Deno.env.get("SUPABASE_SECRET_KEYS")'));
-    expect(source, contains('secretKey.startsWith("sb_secret_")'));
-    expect(source, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
-  });
+  test(
+    'FR9C privileged client uses server-only modern secret key environment',
+    () {
+      expect(source, contains('Deno.env.get("SUPABASE_SECRET_KEYS")'));
+      expect(source, contains('secretKey.startsWith("sb_secret_")'));
+      expect(source, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
+    },
+  );
 
   test('FR9C source contains no literal privileged secret value', () {
     final literalSecretPattern = RegExp(r'sb_secret_[A-Za-z0-9_-]{12,}');
@@ -75,10 +75,7 @@ void main() {
   });
 
   test('FR9C validates canonical immutable question package paths', () {
-    expect(
-      source,
-      contains('questions/${competencyId}/v${version}.json.gz'),
-    );
+    expect(source, contains('questions/${competencyId}/v${version}.json.gz'));
     expect(source, contains('row.question_object_path !== expectedPath'));
     expect(source, contains('catalog_integrity_error'));
   });
@@ -127,7 +124,9 @@ void main() {
     expect(workflow, contains('FR9 Edge gateway security tests'));
     expect(
       workflow,
-      contains('flutter test test/architecture/phase_fr9_edge_gateway_test.dart'),
+      contains(
+        'flutter test test/architecture/phase_fr9_edge_gateway_test.dart',
+      ),
     );
   });
 }
