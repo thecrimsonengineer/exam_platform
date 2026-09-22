@@ -17,9 +17,11 @@ import '../services/phase_aware_daily_plan_service.dart';
 import '../services/today_plan_presentation_filter.dart';
 import '../services/readiness_evidence_bootstrap_service.dart';
 import '../services/study_plan_outcome_service.dart';
+import '../services/study_plan_completion_evidence_service.dart';
 import '../services/readiness_profile_service.dart';
 import '../services/exam_study_capacity_service.dart';
 import '../services/ultra_hard_availability_service.dart';
+import '../../../services/student_learning_progress_service.dart';
 
 class TodaysPlanScreen extends StatefulWidget {
   const TodaysPlanScreen({
@@ -34,6 +36,7 @@ class TodaysPlanScreen extends StatefulWidget {
     this.attemptRepository,
     this.outcomeService = const StudyPlanOutcomeService(),
     this.learningStateCoordinator = const LearningStateUpdateCoordinator(),
+    this.completionEvidenceService = const StudyPlanCompletionEvidenceService(),
     this.presentationFilter = const TodayPlanPresentationFilter(),
     this.blockLauncher = const StudyPlanBlockLauncher(),
     this.initialCategory,
@@ -50,6 +53,7 @@ class TodaysPlanScreen extends StatefulWidget {
   final LearnerAssessmentAttemptRepository? attemptRepository;
   final StudyPlanOutcomeService outcomeService;
   final LearningStateUpdateCoordinator learningStateCoordinator;
+  final StudyPlanCompletionEvidenceService completionEvidenceService;
   final TodayPlanPresentationFilter presentationFilter;
   final StudyPlanBlockLauncher blockLauncher;
   final TodayPlanTaskCategory? initialCategory;
@@ -62,6 +66,9 @@ class TodaysPlanScreen extends StatefulWidget {
 class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   late Future<_TodayPlanViewData> _future;
   TodayPlanTaskCategory? _activeCategory;
+  final Set<String> _completionInFlight = <String>{};
+  final StudentLearningProgressService _studyProgressService =
+      const StudentLearningProgressService();
 
   ExamStudyPlanRepository get _examPlanRepository =>
       widget.examPlanRepository ?? ExamStudyPlanRepository();
@@ -231,7 +238,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
     // Resolve before mutating lifecycle state. A malformed or unavailable
     // execution target must never turn a planned task into a started task.
-    widget.blockLauncher.resolve(block);
+    final target = widget.blockLauncher.resolve(block);
 
     var activePlan = plan;
     var activeBlock = block;
@@ -268,7 +275,40 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
         context,
         block: activeBlock,
         isDarkMode: Theme.of(context).brightness == Brightness.dark,
+        onPracticeSessionCompleted:
+            target.kind == StudyPlanExecutionTargetKind.practiceSession ||
+                target.kind == StudyPlanExecutionTargetKind.examSimulation
+            ? () => _complete(
+                activeBlock.blockId,
+                source:
+                    StudyPlanCompletionEvidenceSource.plannedPracticeSession,
+                silentIfBlocked: true,
+              )
+            : null,
       );
+
+      if (!mounted) return;
+
+      if (target.kind == StudyPlanExecutionTargetKind.studyContent ||
+          target.kind == StudyPlanExecutionTargetKind.review) {
+        final completed = await _complete(
+          activeBlock.blockId,
+          source: StudyPlanCompletionEvidenceSource.studyContent,
+          silentIfBlocked: true,
+        );
+
+        if (!completed &&
+            target.kind == StudyPlanExecutionTargetKind.review &&
+            mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Review remains in progress. Complete a reviewed subtopic to finish it.',
+              ),
+            ),
+          );
+        }
+      }
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -281,57 +321,92 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     }
   }
 
-  Future<void> _complete(String blockId) async {
-    final data = await _future;
-    final plan = data.plan;
-    if (plan == null) return;
-
-    final block = plan.blocks.firstWhere(
-      (item) => item.blockId == blockId,
-      orElse: () => throw StateError('Study-plan block not found.'),
-    );
-    if (block.status != StudyPlanBlockStatus.started) {
-      return;
+  Future<bool> _complete(
+    String blockId, {
+    required StudyPlanCompletionEvidenceSource source,
+    bool silentIfBlocked = false,
+  }) async {
+    if (!_completionInFlight.add(blockId)) {
+      return false;
     }
 
-    final at = _now;
-    final attempts = await _attemptRepository.loadAll();
-    final outcome = widget.outcomeService.build(
-      plan: plan,
-      block: block,
-      attempts: attempts,
-      completedAt: at,
-    );
+    try {
+      final data = await _future;
+      final plan = data.plan;
+      if (plan == null) return false;
 
-    final update = await widget.learningStateCoordinator.processOutcome(
-      outcome: outcome,
-      now: at,
-      attemptRepository: _attemptRepository,
-      readinessRepository: _readinessRepository,
-      planRepository: _dailyPlanRepository,
-    );
+      final block = plan.blocks.firstWhere(
+        (item) => item.blockId == blockId,
+        orElse: () => throw StateError('Study-plan block not found.'),
+      );
 
-    final changed = widget.planService.completeBlock(plan, blockId, at: at);
-    await _dailyPlanRepository.savePlan(changed, syncRemote: false);
+      if (block.status == StudyPlanBlockStatus.completed) {
+        return true;
+      }
+      if (block.status != StudyPlanBlockStatus.started) {
+        return false;
+      }
 
-    final signalNotice = update.misconceptionSignals.isEmpty
-        ? ''
-        : ' A misconception or confidence pattern was detected.';
-    final staleNotice = update.stalePlanVersionsCreated == 0
-        ? ' Future planning will use the updated evidence.'
-        : ' ${update.stalePlanVersionsCreated} future plan version(s) were marked for adaptation.';
+      final at = _now;
+      final attempts = await _attemptRepository.loadAll();
+      final progress = await _studyProgressService.loadAllProgress();
+      final decision = widget.completionEvidenceService.evaluate(
+        block: block,
+        source: source,
+        attempts: attempts,
+        studyProgress: progress.values,
+        completedAt: at,
+      );
 
-    if (!mounted) return;
-    setState(
-      () => _future = Future.value(
-        _TodayPlanViewData(
-          plan: changed,
-          hasExamPlan: true,
-          notice:
-              'Readiness updated for ${block.competencyId.toUpperCase()}.$signalNotice$staleNotice',
+      if (!decision.eligible) {
+        if (!silentIfBlocked && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(decision.message)),
+          );
+        }
+        return false;
+      }
+
+      final outcome = widget.outcomeService.build(
+        plan: plan,
+        block: block,
+        attempts: attempts,
+        completedAt: at,
+      );
+
+      final update = await widget.learningStateCoordinator.processOutcome(
+        outcome: outcome,
+        now: at,
+        attemptRepository: _attemptRepository,
+        readinessRepository: _readinessRepository,
+        planRepository: _dailyPlanRepository,
+      );
+
+      final changed = widget.planService.completeBlock(plan, blockId, at: at);
+      await _dailyPlanRepository.savePlan(changed, syncRemote: false);
+
+      final signalNotice = update.misconceptionSignals.isEmpty
+          ? ''
+          : ' A misconception or confidence pattern was detected.';
+      final staleNotice = update.stalePlanVersionsCreated == 0
+          ? ' Future planning will use the updated evidence.'
+          : ' ${update.stalePlanVersionsCreated} future plan version(s) were marked for adaptation.';
+
+      if (!mounted) return true;
+      setState(
+        () => _future = Future.value(
+          _TodayPlanViewData(
+            plan: changed,
+            hasExamPlan: true,
+            notice:
+                'Readiness updated for ${block.competencyId.toUpperCase()}.$signalNotice$staleNotice',
+          ),
         ),
-      ),
-    );
+      );
+      return true;
+    } finally {
+      _completionInFlight.remove(blockId);
+    }
   }
 
   Future<void> _apply(
@@ -456,7 +531,15 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                             block: block,
                             index: originalIndex,
                             onLaunch: () => _launchBlock(block),
-                            onComplete: () => _complete(block.blockId),
+                            allowManualFinish: widget.completionEvidenceService
+                                .allowsExplicitLearnerFinish(block),
+                            completionHint: widget.completionEvidenceService
+                                .startedTaskHint(block),
+                            onComplete: () => _complete(
+                              block.blockId,
+                              source: StudyPlanCompletionEvidenceSource
+                                  .explicitLearnerFinish,
+                            ),
                             onSkip: () => _apply(
                               (current, at) => widget.planService.skipBlock(
                                 current,
@@ -583,6 +666,8 @@ class _PlanBlockCard extends StatelessWidget {
     required this.block,
     required this.index,
     required this.onLaunch,
+    required this.allowManualFinish,
+    required this.completionHint,
     required this.onComplete,
     required this.onSkip,
     required this.onMove,
@@ -594,6 +679,8 @@ class _PlanBlockCard extends StatelessWidget {
   final StudyPlanBlock block;
   final int index;
   final VoidCallback onLaunch;
+  final bool allowManualFinish;
+  final String completionHint;
   final VoidCallback onComplete;
   final VoidCallback onSkip;
   final VoidCallback onMove;
@@ -669,21 +756,39 @@ class _PlanBlockCard extends StatelessWidget {
               ),
             )
           else if (block.status == StudyPlanBlockStatus.started)
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FilledButton.tonalIcon(
-                  key: ValueKey('home-r6-continue-$index'),
-                  onPressed: onLaunch,
-                  icon: const Icon(Icons.play_arrow_rounded, size: 18),
-                  label: const Text('Continue task'),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilledButton.tonalIcon(
+                      key: ValueKey('home-r6-continue-$index'),
+                      onPressed: onLaunch,
+                      icon: const Icon(Icons.play_arrow_rounded, size: 18),
+                      label: const Text('Continue task'),
+                    ),
+                    if (allowManualFinish)
+                      OutlinedButton.icon(
+                        key: ValueKey('m7e-complete-$index'),
+                        onPressed: onComplete,
+                        icon: const Icon(
+                          Icons.check_circle_outline_rounded,
+                          size: 18,
+                        ),
+                        label: const Text('Finish planned task'),
+                      ),
+                  ],
                 ),
-                OutlinedButton.icon(
-                  key: ValueKey('m7e-complete-$index'),
-                  onPressed: onComplete,
-                  icon: const Icon(Icons.check_circle_outline_rounded, size: 18),
-                  label: const Text('Finish planned task'),
+                const SizedBox(height: 8),
+                Text(
+                  completionHint,
+                  key: ValueKey('home-r7-completion-hint-$index'),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             )

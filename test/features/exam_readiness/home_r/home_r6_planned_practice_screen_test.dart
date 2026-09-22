@@ -11,6 +11,7 @@ void main() {
   ) async {
     final target = const StudyPlanExecutionTarget(
       kind: StudyPlanExecutionTargetKind.practiceSession,
+      blockId: 'home-r6-practice',
       blockType: StudyPlanBlockType.standardPractice,
       domainId: 'd04',
       domainNumber: 4,
@@ -45,6 +46,7 @@ void main() {
     var calls = 0;
     final target = const StudyPlanExecutionTarget(
       kind: StudyPlanExecutionTargetKind.practiceSession,
+      blockId: 'home-r6-practice',
       blockType: StudyPlanBlockType.standardPractice,
       domainId: 'd04',
       domainNumber: 4,
