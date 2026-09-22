@@ -150,7 +150,11 @@ FR8C owns a live authorization session.
 
 ### FR8C — Runtime lifecycle integration
 
-Status: IMPLEMENTATION CANDIDATE.
+Status: COMPLETE on exact SHA
+`02309eaa4a0e7b2e3f24c9b0755d1c60b1ed468f`.
+
+Validation run `35681733913` passed FR1-FR8, the frozen Phase L4 learner,
+quality and engine suites, 2,530 full-repository tests and diff hygiene.
 
 - bind the verified student shell to the FR8 session controller;
 - authorize before protected learner content is rendered;
@@ -164,11 +168,20 @@ Status: IMPLEMENTATION CANDIDATE.
 
 ### FR8D — Network-loss integration
 
-- connect platform network change signals to the FR8 controller;
-- use a short reconnect debounce for handover;
-- revalidate after recovery;
-- lock when loss is confirmed;
-- never treat connectivity state alone as authorization.
+Status: IMPLEMENTATION CANDIDATE.
+
+- use `connectivity_plus 7.3.1` only as a cross-platform transport signal;
+- keep connectivity state separate from authorization state;
+- fail closed on an offline launch or connectivity-monitor failure;
+- use the frozen short reconnect grace for Wi-Fi/mobile handover;
+- remotely revalidate the current Firebase token after transport recovery;
+- cancel stale loss handling when transport recovers and a newer authorization
+  generation wins;
+- keep protected content locked whenever remote authorization fails;
+- inject the connectivity source in tests so shell behavior remains
+  deterministic;
+- never treat Wi-Fi, mobile or other transport presence as proof of Internet
+  reachability or learner authorization.
 
 ### FR8E — Closure
 
@@ -183,8 +196,13 @@ Status: IMPLEMENTATION CANDIDATE.
 
 ## NEXT ACTION
 
-Validate FR8C on the full FR gate. If green, continue to FR8D network-loss
-integration from the exact green FR8C SHA.
+Validate FR8D on the full FR gate. If green, continue to FR8E closure from the
+exact green FR8D SHA.
+
+FR8E must explicitly cover offline launch, cached-content offline blocking,
+logout/account-switch isolation, resume revalidation, interrupted cache
+migration and existing learner-data preservation before `phase-fr8-closed`
+may be frozen.
 
 Do not begin learner source cutover during FR8. Firestore remains the learner
 content/question source until the later reviewed cutover phases.
