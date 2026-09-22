@@ -11,6 +11,12 @@ void main() {
   const protectedCachePath =
       'lib/services/study_content/'
       'uid_scoped_protected_content_cache_repository.dart';
+  const runtimePath =
+      'lib/services/online_access/learner_online_access_runtime.dart';
+  const authorizedShellPath = 'lib/screens/auth/learner_authorized_shell.dart';
+  const authGatePath = 'lib/screens/auth/auth_gate.dart';
+  const loaderPath = 'lib/services/study_content_loader.dart';
+  const quizPath = 'lib/services/quiz_service.dart';
   const phasePath =
       'docs/firestore/PHASE_FR8_ONLINE_AUTHORIZED_CACHE_SECURITY.md';
 
@@ -18,6 +24,11 @@ void main() {
   late String controller;
   late String workflow;
   late String protectedCache;
+  late String runtime;
+  late String authorizedShell;
+  late String authGate;
+  late String loader;
+  late String quiz;
   late String phase;
 
   setUpAll(() {
@@ -25,6 +36,11 @@ void main() {
     controller = File(controllerPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
     protectedCache = File(protectedCachePath).readAsStringSync();
+    runtime = File(runtimePath).readAsStringSync();
+    authorizedShell = File(authorizedShellPath).readAsStringSync();
+    authGate = File(authGatePath).readAsStringSync();
+    loader = File(loaderPath).readAsStringSync();
+    quiz = File(quizPath).readAsStringSync();
     phase = File(phasePath).readAsStringSync();
   });
 
@@ -90,6 +106,44 @@ void main() {
     expect(protectedCache, contains('setBool(migrationMarkerKey, true)'));
     expect(protectedCache, contains('remove(legacyCacheKey)'));
     expect(protectedCache, contains('_restoreScopedValue(previousScopedRaw)'));
+  });
+
+  test('FR8C gates the verified learner shell behind online authorization', () {
+    expect(authGate, contains('LearnerAuthorizedShell'));
+    expect(
+      authGate,
+      contains('LearnerOnlineAccessRuntime.handleAuthUserChanged'),
+    );
+    expect(
+      authorizedShell,
+      contains('snapshot.isAuthorizedFor(widget.userId)'),
+    );
+    expect(authorizedShell, contains('revalidateOnResume()'));
+    expect(authorizedShell, contains('fr8-retry-online-authorization'));
+  });
+
+  test('FR8C defaults StudyContent to the protected UID cache', () {
+    expect(loader, contains('UidScopedProtectedContentCacheRepository'));
+    expect(
+      loader,
+      contains('LearnerOnlineAccessRuntime.requireBoundaryFor'),
+    );
+    expect(loader, contains('migrateLegacyIfAuthorized()'));
+    expect(
+      loader,
+      isNot(contains('return StudentContentCacheRepository(preferences:')),
+    );
+  });
+
+  test('FR8C clears protected process memory on lock boundaries', () {
+    expect(runtime, contains('StudentStudyContentSessionCache.clear()'));
+    expect(runtime, contains('QuizService.shared.clearProtectedSession()'));
+    expect(
+      runtime,
+      contains('StudentProgressDashboardSessionCache.clearAll()'),
+    );
+    expect(quiz, contains('_protectedSessionGeneration'));
+    expect(quiz, contains('generation != _protectedSessionGeneration'));
   });
 
   test('FR8 remains before learner delivery cutover', () {
