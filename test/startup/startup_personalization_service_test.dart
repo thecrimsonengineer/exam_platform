@@ -44,19 +44,13 @@ void main() {
         },
       );
 
-      final snapshot = await service.loadForUser(
-        'learner-1',
-        now: now,
-      );
+      final snapshot = await service.loadForUser('learner-1', now: now);
 
       expect(positionUserId, 'learner-1');
       expect(planUserId, 'learner-1');
       expect(requestedDate, now);
       expect(snapshot.resumeCode, 'D04 · C01');
-      expect(
-        snapshot.resumeTitle,
-        'Reliability and probability foundations',
-      );
+      expect(snapshot.resumeTitle, 'Reliability and probability foundations');
       expect(snapshot.todayRemainingActivities, 2);
       expect(snapshot.todayRemainingMinutes, 35);
       expect(snapshot.todayCompletedActivities, 1);
@@ -92,18 +86,21 @@ void main() {
       expect(snapshot.todaySummary, 'Today\'s plan complete');
     });
 
-    test('fails soft when local personalization sources are unavailable', () async {
-      final service = StartupPersonalizationService(
-        positionLoader: (_) async => throw StateError('position unavailable'),
-        planLoader: (_, _) async => throw StateError('plan unavailable'),
-      );
+    test(
+      'fails soft when local personalization sources are unavailable',
+      () async {
+        final service = StartupPersonalizationService(
+          positionLoader: (_) async => throw StateError('position unavailable'),
+          planLoader: (_, _) async => throw StateError('plan unavailable'),
+        );
 
-      final snapshot = await service.loadForUser('learner-3');
+        final snapshot = await service.loadForUser('learner-3');
 
-      expect(snapshot.hasAnyData, isFalse);
-      expect(snapshot.resumeCode, isNull);
-      expect(snapshot.todaySummary, isNull);
-    });
+        expect(snapshot.hasAnyData, isFalse);
+        expect(snapshot.resumeCode, isNull);
+        expect(snapshot.todaySummary, isNull);
+      },
+    );
 
     test('does not load any source for a blank learner id', () async {
       var positionCalls = 0;

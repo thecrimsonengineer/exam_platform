@@ -19,12 +19,12 @@ class StartupPersonalizationSnapshot {
   });
 
   const StartupPersonalizationSnapshot.empty()
-      : resumeCode = null,
-        resumeTitle = null,
-        todayRemainingActivities = null,
-        todayRemainingMinutes = null,
-        todayCompletedActivities = null,
-        todayTotalActivities = null;
+    : resumeCode = null,
+      resumeTitle = null,
+      todayRemainingActivities = null,
+      todayRemainingMinutes = null,
+      todayCompletedActivities = null,
+      todayTotalActivities = null;
 
   final String? resumeCode;
   final String? resumeTitle;
@@ -33,8 +33,7 @@ class StartupPersonalizationSnapshot {
   final int? todayCompletedActivities;
   final int? todayTotalActivities;
 
-  bool get hasResume =>
-      resumeCode != null && resumeCode!.trim().isNotEmpty;
+  bool get hasResume => resumeCode != null && resumeCode!.trim().isNotEmpty;
 
   bool get hasTodayPlan => todayTotalActivities != null;
 
@@ -69,8 +68,8 @@ class StartupPersonalizationService {
   StartupPersonalizationService({
     StartupPositionLoader? positionLoader,
     StartupPlanLoader? planLoader,
-  })  : _positionLoader = positionLoader ?? _loadPositionLocally,
-        _planLoader = planLoader ?? _loadPlanLocally;
+  }) : _positionLoader = positionLoader ?? _loadPositionLocally,
+       _planLoader = planLoader ?? _loadPlanLocally;
 
   final StartupPositionLoader _positionLoader;
   final StartupPlanLoader _planLoader;
@@ -110,22 +109,20 @@ class StartupPersonalizationService {
       todayRemainingMinutes: plan == null
           ? null
           : plan.blocks
-              .where(_isOutstanding)
-              .fold<int>(0, (sum, block) => sum + block.plannedMinutes),
+                .where(_isOutstanding)
+                .fold<int>(0, (sum, block) => sum + block.plannedMinutes),
       todayCompletedActivities: plan == null
           ? null
           : plan.blocks
-              .where(
-                (block) => block.status == StudyPlanBlockStatus.completed,
-              )
-              .length,
+                .where(
+                  (block) => block.status == StudyPlanBlockStatus.completed,
+                )
+                .length,
       todayTotalActivities: plan?.blocks.length,
     );
   }
 
-  static Future<StudentLearningPosition?> _loadPositionLocally(
-    String userId,
-  ) {
+  static Future<StudentLearningPosition?> _loadPositionLocally(String userId) {
     return StudentLearningPositionService(
       userIdOverride: userId,
     ).loadPosition();
@@ -137,10 +134,7 @@ class StartupPersonalizationService {
   ) {
     return DailyStudyPlanRepository(
       userIdOverride: userId,
-    ).loadLatestForDate(
-      date,
-      refreshRemote: false,
-    );
+    ).loadLatestForDate(date, refreshRemote: false);
   }
 
   static bool _isOutstanding(StudyPlanBlock block) {
