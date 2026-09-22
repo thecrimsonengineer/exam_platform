@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../services/online_access/learner_connectivity_signal_source.dart';
 import '../../services/online_access/learner_online_access_runtime.dart';
 import '../../services/online_access/learner_online_access_session_controller.dart';
+import '../../services/online_access/learner_online_connectivity_coordinator.dart';
 import '../navigation/bottom_navigation.dart';
 
 class LearnerAuthorizedShell extends StatefulWidget {
@@ -11,11 +13,13 @@ class LearnerAuthorizedShell extends StatefulWidget {
     super.key,
     required this.userId,
     this.controller,
+    this.connectivitySignalSource,
     this.authorizedChild,
   });
 
   final String userId;
   final LearnerOnlineAccessSessionController? controller;
+  final LearnerConnectivitySignalSource? connectivitySignalSource;
   final Widget? authorizedChild;
 
   @override
@@ -25,6 +29,7 @@ class LearnerAuthorizedShell extends StatefulWidget {
 class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
     with WidgetsBindingObserver {
   late final LearnerOnlineAccessSessionController _controller;
+  late final LearnerOnlineConnectivityCoordinator _connectivityCoordinator;
   late final bool _ownsController;
   StreamSubscription<LearnerOnlineAccessSessionSnapshot>? _subscription;
 
@@ -53,7 +58,26 @@ class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
       }
     });
 
-    unawaited(_authorize());
+    _connectivityCoordinator = LearnerOnlineConnectivityCoordinator(
+      controller: _controller,
+      signalSource:
+          widget.connectivitySignalSource ??
+          ConnectivityPlusLearnerConnectivitySignalSource(),
+    );
+
+    unawaited(_startOnlineSession());
+  }
+
+  Future<void> _startOnlineSession() async {
+    final hasConnectivity = await _connectivityCoordinator.start();
+    if (!hasConnectivity) {
+      if (mounted) {
+        setState(() {});
+      }
+      return;
+    }
+
+    await _authorize();
   }
 
   Future<void> _authorize({bool forceRefreshToken = false}) async {
@@ -86,6 +110,7 @@ class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _subscription?.cancel();
+    unawaited(_connectivityCoordinator.dispose());
     _controller.lock(reason: LearnerOnlineLockReason.manual);
     LearnerOnlineAccessRuntime.unbind(_controller);
 
