@@ -19,14 +19,14 @@ void main() {
     );
     final package = _package('d01_c01', 101);
 
-    expect(
-      () => cache.saveVerified(
+    await expectLater(
+      cache.saveVerified(
         descriptor: package.descriptor,
         compressedBytes: package.bytes,
       ),
       throwsStateError,
     );
-    expect(() => cache.descriptorFor('d01_c01'), throwsStateError);
+    await expectLater(cache.descriptorFor('d01_c01'), throwsStateError);
     expect(store.values, isEmpty);
   });
 
@@ -100,8 +100,8 @@ void main() {
       maxCompressedBytes: package.bytes.length - 1,
     );
 
-    expect(
-      () => cache.saveVerified(
+    await expectLater(
+      cache.saveVerified(
         descriptor: package.descriptor,
         compressedBytes: package.bytes,
       ),
@@ -188,8 +188,8 @@ void main() {
         publishedQuestionCount: 1,
       );
 
-      expect(
-        () => cache.saveVerified(
+      await expectLater(
+        cache.saveVerified(
           descriptor: invalidDescriptor,
           compressedBytes: original.bytes,
         ),
@@ -223,8 +223,8 @@ void main() {
 
       store.corruptNextWriteForKey = cache.storageKey;
 
-      expect(
-        () => cache.saveVerified(
+      await expectLater(
+        cache.saveVerified(
           descriptor: replacement.descriptor,
           compressedBytes: replacement.bytes,
         ),
