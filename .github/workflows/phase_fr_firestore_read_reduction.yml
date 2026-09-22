@@ -112,7 +112,9 @@ jobs:
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart \
             test/architecture/phase_fr8_closure_test.dart \
             lib/services/questions/published_question_package.dart \
+            lib/services/questions/uid_scoped_question_package_cache.dart \
             test/services/questions/published_question_package_test.dart \
+            test/services/questions/uid_scoped_question_package_cache_test.dart \
             test/architecture/phase_fr9_question_delivery_test.dart
           git diff --
           git diff --exit-code -- \
@@ -174,7 +176,9 @@ jobs:
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart \
             test/architecture/phase_fr8_closure_test.dart \
             lib/services/questions/published_question_package.dart \
+            lib/services/questions/uid_scoped_question_package_cache.dart \
             test/services/questions/published_question_package_test.dart \
+            test/services/questions/uid_scoped_question_package_cache_test.dart \
             test/architecture/phase_fr9_question_delivery_test.dart
 
       - name: Analyze
@@ -276,6 +280,9 @@ jobs:
         run: |
           flutter test test/services/questions/published_question_package_test.dart
           flutter test test/architecture/phase_fr9_question_delivery_test.dart
+
+      - name: FR9 protected question cache tests
+        run: flutter test test/services/questions/uid_scoped_question_package_cache_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
