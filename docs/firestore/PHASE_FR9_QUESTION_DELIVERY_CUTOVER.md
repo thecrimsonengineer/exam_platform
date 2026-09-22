@@ -297,7 +297,12 @@ Deployed `learner-question-packages` version 1 to Supabase project
 
 ### FR9D — competency-scoped QuizService
 
-Status: IMPLEMENTATION CANDIDATE.
+Status: COMPLETE on exact SHA
+`59a4c8d17cd509c55495cd3f573b32a13055fd5e`.
+
+Validation run `35696960133` passed dependency locking, formatting, analysis,
+FR1-FR9, the scoped QuizService cutover gate, all frozen Phase L4 suites,
+full repository regression and diff hygiene.
 
 - replace global initialization with explicit scope preparation;
 - remove learner calls to `CloudQuestionRepository.loadPublished()`;
@@ -308,6 +313,14 @@ Status: IMPLEMENTATION CANDIDATE.
 - add competency/topic/subtopic/domain tests.
 
 ### FR9E — practice mode cutover
+
+Status: COMPLETE on exact SHA
+`59a4c8d17cd509c55495cd3f573b32a13055fd5e`.
+
+Validation run `35696960133` passed the bounded Daily, Random, Weak Areas and
+Ultra Hard package-delivery tests, the updated Learning Twin architecture
+guards, all inherited FR gates, all frozen Phase L4 suites, full repository
+regression and diff hygiene.
 
 - Daily, Random, Weak Areas and Ultra Hard use compact discovery metadata;
 - download only the selected competency packages;
@@ -345,7 +358,9 @@ repositories until their own later migration phase explicitly changes them.
 
 ## NEXT ACTION
 
-Implement and validate FR9D only.
+Execute FR9F production validation and closure evidence only.
 
-Do not begin FR9E practice-mode cutover until the competency/topic/subtopic/
-domain QuizService path is green on the exact-SHA full FR gate.
+Do not add new learner delivery behavior during FR9F. Validate the deployed
+gateway, private package catalogue/storage invariants, fail-closed
+authentication, absence of global learner Firestore question reads and the
+final exact-SHA repository gate before freezing `phase-fr9-closed`.
