@@ -61,8 +61,7 @@ class StudyContentLoader {
   }) {
     final userId = LearnerLocalIdentity.currentUserId;
 
-    if (userId == null ||
-        !LearnerOnlineAccessRuntime.isAuthorizedFor(userId)) {
+    if (userId == null || !LearnerOnlineAccessRuntime.isAuthorizedFor(userId)) {
       return null;
     }
 
