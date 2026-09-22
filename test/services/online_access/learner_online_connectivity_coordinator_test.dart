@@ -103,47 +103,50 @@ void main() {
     },
   );
 
-  test('FR8D recovery cancels stale loss grace and reauthorizes remotely', () async {
-    final delay = _ControlledDelay();
-    final validator = _SequenceValidator([
-      LearnerOnlineAccessStatus.authorized,
-      LearnerOnlineAccessStatus.authorized,
-    ]);
-    final controller = LearnerOnlineAccessSessionController(
-      validator: validator,
-      currentUserId: () => 'student-1',
-      delay: delay.call,
-    );
-    final source = _FakeConnectivitySource(initial: true);
-    final coordinator = LearnerOnlineConnectivityCoordinator(
-      controller: controller,
-      signalSource: source,
-    );
-    addTearDown(coordinator.dispose);
-    addTearDown(controller.dispose);
-    addTearDown(source.dispose);
+  test(
+    'FR8D recovery cancels stale loss grace and reauthorizes remotely',
+    () async {
+      final delay = _ControlledDelay();
+      final validator = _SequenceValidator([
+        LearnerOnlineAccessStatus.authorized,
+        LearnerOnlineAccessStatus.authorized,
+      ]);
+      final controller = LearnerOnlineAccessSessionController(
+        validator: validator,
+        currentUserId: () => 'student-1',
+        delay: delay.call,
+      );
+      final source = _FakeConnectivitySource(initial: true);
+      final coordinator = LearnerOnlineConnectivityCoordinator(
+        controller: controller,
+        signalSource: source,
+      );
+      addTearDown(coordinator.dispose);
+      addTearDown(controller.dispose);
+      addTearDown(source.dispose);
 
-    await controller.authorizeCurrentUser();
-    await coordinator.start();
+      await controller.authorizeCurrentUser();
+      await coordinator.start();
 
-    source.emit(false);
-    await Future<void>.delayed(Duration.zero);
-    expect(delay.calls, 1);
+      source.emit(false);
+      await Future<void>.delayed(Duration.zero);
+      expect(delay.calls, 1);
 
-    source.emit(true);
-    await Future<void>.delayed(Duration.zero);
-    await Future<void>.delayed(Duration.zero);
+      source.emit(true);
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
-    expect(controller.isAuthorizedFor('student-1'), isTrue);
-    expect(validator.calls, 2);
-    expect(validator.lastForceRefresh, isTrue);
+      expect(controller.isAuthorizedFor('student-1'), isTrue);
+      expect(validator.calls, 2);
+      expect(validator.lastForceRefresh, isTrue);
 
-    delay.complete();
-    await Future<void>.delayed(Duration.zero);
+      delay.complete();
+      await Future<void>.delayed(Duration.zero);
 
-    expect(controller.isAuthorizedFor('student-1'), isTrue);
-    expect(validator.calls, 2);
-  });
+      expect(controller.isAuthorizedFor('student-1'), isTrue);
+      expect(validator.calls, 2);
+    },
+  );
 
   test('FR8D connectivity monitor failure locks protected access', () async {
     final validator = _SequenceValidator([
@@ -180,8 +183,9 @@ class _FakeConnectivitySource implements LearnerConnectivitySignalSource {
   _FakeConnectivitySource({required this.initial});
 
   final bool initial;
-  final StreamController<bool> _changes =
-      StreamController<bool>.broadcast(sync: true);
+  final StreamController<bool> _changes = StreamController<bool>.broadcast(
+    sync: true,
+  );
 
   @override
   Future<bool> hasConnectivity() async => initial;
