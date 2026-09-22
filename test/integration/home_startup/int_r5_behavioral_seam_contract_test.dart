@@ -115,9 +115,7 @@ void main() {
 
     test('startup hands into one existing learner-shell chain', () {
       final main = _read('lib/main.dart');
-      final startup = _read(
-        'lib/screens/startup/csp11_startup_screen.dart',
-      );
+      final startup = _read('lib/screens/startup/csp11_startup_screen.dart');
       final auth = _read('lib/screens/auth/auth_gate.dart');
       final learnerShell = _read(
         'lib/screens/auth/learner_authorized_shell.dart',
