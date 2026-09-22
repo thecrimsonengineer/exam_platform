@@ -164,8 +164,38 @@ Validation:
 - full repository analysis passes with only pre-existing info-level lint debt treated as non-fatal
 - warnings and errors remain fatal in the full repository analyzer gate
 
-### SM-3 — personalization
-Connect learner-safe local state such as resume position and today's plan. Do not introduce extra remote reads merely for startup decoration.
+### SM-3 — personalization ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM3_PERSONALIZATION.md`
+
+Frozen characteristics:
+- personalization begins only after `AuthGate` activates the verified learner UID
+- startup does not persist or display the Firebase UID
+- Continue CSP reads only the existing UID-scoped `StudentLearningPositionService` cache
+- Today's Plan reads only the existing UID-scoped `DailyStudyPlanRepository` local cache
+- daily-plan lookup explicitly uses `refreshRemote: false`
+- the startup personalization repository is created without a remote store
+- no Firestore read is introduced by startup personalization
+- no Supabase read is introduced by startup personalization
+- no network request is required for personalization
+- the 4.8 second master choreography never waits for learner data
+- resume context can render as `D04 · C01`
+- cached subtopic title is preferred, with competency title as fallback
+- Today's Plan can show remaining activity count and remaining minutes
+- completed plans can show `Today's plan complete`
+- local-source failures fail soft to generic startup copy
+- blank learner UID performs zero personalization source calls
+- admin, unauthenticated and unverified paths remain generic
+- Decision LAB and Remember remain generic in SM-3 to avoid unnecessary repository reads
+- Home R remains isolated on `phase-home-r`
+
+Validation:
+- formatted implementation head `8786ddf8d565b6b52835b64563f61e71dfa70535`
+- green implementation validation run 21 on `671fbe1dc30f19fec0b6ef4d774c29331a66e91b`
+- all `test/startup/` tests pass
+- strict startup analysis passes
+- full repository analysis passes with baseline info-only lint debt non-fatal and warnings/errors fatal
 
 ### SM-4 — accessibility and performance
 Reduced motion, low-end device behavior, frame timing, memory and startup validation.
