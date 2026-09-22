@@ -20,7 +20,14 @@ import 'study_content/cloud_content_repository.dart';
 /// Offline caching and synchronization are intentionally deferred to
 /// Phase K.
 class QuizService implements QuizServiceInterface {
-  static final QuizService shared = QuizService();
+  static QuizService? _shared;
+
+  static QuizService get shared => _shared ??= QuizService();
+
+  static void clearSharedProtectedSession() {
+    _shared?.clearProtectedSession();
+  }
+
   QuizService({
     CloudQuestionRepository? repository,
     CloudQuestionRepository? questionRepository,
