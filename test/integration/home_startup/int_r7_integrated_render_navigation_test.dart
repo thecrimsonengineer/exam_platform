@@ -169,18 +169,13 @@ void main() {
     final openPlan = find.widgetWithText(TextButton, "Open Today's Plan");
     expect(openPlan, findsOneWidget);
 
-    final homeScroll = find.descendant(
-      of: find.byKey(const PageStorageKey<String>('csp11-home-scroll')),
-      matching: find.byType(Scrollable),
+    final homeScroll = find.byKey(
+      const PageStorageKey<String>('csp11-home-scroll'),
     );
     expect(homeScroll, findsOneWidget);
 
-    await tester.scrollUntilVisible(
-      openPlan,
-      300,
-      scrollable: homeScroll,
-    );
-    await tester.pump();
+    await tester.drag(homeScroll, const Offset(0, -700));
+    await tester.pump(const Duration(milliseconds: 200));
     await tester.tap(openPlan);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 250));
