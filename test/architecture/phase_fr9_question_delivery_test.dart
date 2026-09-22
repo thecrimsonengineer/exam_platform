@@ -97,7 +97,7 @@ void main() {
     expect(phase, contains('1,040,943'));
     expect(
       phase,
-      contains('preventing the whole bank from becoming a permanent device cache'),
+      contains('below the complete current question bank'),
     );
   });
 
