@@ -128,7 +128,11 @@ regression and diff hygiene.
 
 ### FR8B — UID-scoped protected StudyContent cache
 
-Status: IMPLEMENTATION CANDIDATE.
+Status: COMPLETE on exact SHA
+`9ab4a812e5d565fc16a71e9bda5776bf34218bb0`.
+
+Validation run `35646970175` passed the FR8 secure-cache tests, frozen L4,
+full repository regression and diff hygiene.
 
 FR8B stages the secure cache repository beside the current learner runtime.
 The existing `StudyContentLoader` is not switched to this repository until
@@ -146,11 +150,17 @@ FR8C owns a live authorization session.
 
 ### FR8C — Runtime lifecycle integration
 
+Status: IMPLEMENTATION CANDIDATE.
+
 - bind the verified student shell to the FR8 session controller;
 - authorize before protected learner content is rendered;
-- lock on logout/account switch;
+- switch the default StudyContent cache to the FR8B UID-scoped repository;
+- migrate legacy protected StudyContent bytes only after authorization;
+- lock on logout and account switch;
 - lock first and revalidate on resume;
-- clear or UID-scope protected process-memory caches.
+- clear StudyContent, quiz-catalogue and progress-dashboard process memory;
+- generation-guard quiz preload so stale reads cannot repopulate after lock;
+- keep Firestore as the current content/question source in FR8.
 
 ### FR8D — Network-loss integration
 
@@ -173,10 +183,8 @@ FR8C owns a live authorization session.
 
 ## NEXT ACTION
 
-Validate FR8B on the full FR gate. If green, continue to FR8C runtime lifecycle
-integration from the exact green FR8B SHA.
+Validate FR8C on the full FR gate. If green, continue to FR8D network-loss
+integration from the exact green FR8C SHA.
 
-FR8C may switch learner cache consumers only after it binds the verified
-student shell to a live FR8 authorization session. Do not permit protected
-cache rendering before that session reports AUTHORIZED for the same Firebase
-UID.
+Do not begin learner source cutover during FR8. Firestore remains the learner
+content/question source until the later reviewed cutover phases.
