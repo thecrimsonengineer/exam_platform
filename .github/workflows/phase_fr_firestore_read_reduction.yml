@@ -9,6 +9,7 @@ on:
       - phase-fr7-storage-publishing
       - phase-fr8-online-authorized-cache-security
       - phase-fr9-question-delivery-cutover
+      - phase-fr10-studycontent-delivery-cutover
   pull_request:
     branches:
       - phase-fr3-closed
@@ -345,6 +346,11 @@ jobs:
           grep -q '"error":"invalid_firebase_token"' /tmp/fr9-invalid-auth.json
 
           echo "FR9 production gateway fail-closed smoke: PASS"
+
+      - name: FR10 StudyContent delivery foundation tests
+        run: |
+          flutter test test/services/study_content/published_content_package_test.dart
+          flutter test test/architecture/phase_fr10_study_content_delivery_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
