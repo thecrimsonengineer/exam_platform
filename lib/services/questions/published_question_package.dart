@@ -31,8 +31,10 @@ class PublishedQuestionPackageDescriptor {
       throw const FormatException('Invalid question-package competency ID.');
     }
 
-    final checksum = _requiredString(json, 'questionChecksumSha256')
-        .toLowerCase();
+    final checksum = _requiredString(
+      json,
+      'questionChecksumSha256',
+    ).toLowerCase();
     if (!_sha256Pattern.hasMatch(checksum)) {
       throw const FormatException('Invalid question-package SHA-256.');
     }
