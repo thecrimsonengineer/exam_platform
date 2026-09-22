@@ -135,3 +135,19 @@ Android, web and Windows. Extend to iOS when the iOS target is active.
 - animation cannot trap the learner
 - Home redesign remains independently mergeable
 - production asset can be replaced by exporting a new Glaxnimate Lottie JSON without rewriting startup architecture
+
+
+## Parallel branch isolation rule
+
+`phase-home-r` and `phase-startup-motion` are active parallel workstreams.
+
+Until an explicit integration step:
+- do not merge `phase-home-r` into `phase-startup-motion`
+- do not merge `phase-startup-motion` into `phase-home-r`
+- do not cherry-pick feature commits between them
+- each branch must remain independently runnable and testable
+- Home work continues only on `phase-home-r`
+- startup-motion work continues only on `phase-startup-motion`
+- integration happens only after either workstream reaches a stable closure checkpoint
+- the integration branch will resolve shared-file changes deliberately, especially `lib/main.dart` and `pubspec.yaml`
+- neither branch is considered the integration source of truth until that explicit integration checkpoint
