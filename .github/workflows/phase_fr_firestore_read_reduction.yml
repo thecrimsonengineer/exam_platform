@@ -358,6 +358,12 @@ jobs:
       - name: FR10 content gateway security tests
         run: flutter test test/architecture/phase_fr10_content_gateway_test.dart
 
+      - name: FR10 StudyContentLoader cutover tests
+        run: |
+          flutter test test/services/study_content/learner_content_package_delivery_service_test.dart
+          flutter test test/services/study_content/study_content_session_refresh_test.dart
+          flutter test test/architecture/phase_fr10_study_content_loader_cutover_test.dart
+
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
 

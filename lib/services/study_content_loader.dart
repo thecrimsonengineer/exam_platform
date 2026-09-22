@@ -5,27 +5,49 @@ import '../models/study_content.dart';
 import 'auth/learner_local_identity.dart';
 import 'online_access/learner_online_access_runtime.dart';
 import 'study_content/cloud_published_content_repository.dart';
+import 'study_content/learner_content_package_delivery_service.dart';
 import 'study_content/student_content_cache.dart';
 import 'study_content/student_study_content_session_cache.dart';
 import 'study_content/uid_scoped_protected_content_cache_repository.dart';
 
 /// Loads CSP study content for the student-facing portal.
 ///
-/// Firebase is the authoritative source for published content.
+/// Learner StudyContent is delivered through Firebase-authorized immutable
+/// packages from the private Supabase package boundary.
 ///
-/// When Firebase is unavailable, the loader falls back to the last valid
-/// published content stored in the student cache.
+/// Persistent protected bytes are never an offline fallback. They are readable
+/// only while the same Firebase UID is currently online-authorized.
 ///
 /// Draft, Review, Validated, and Archived content are never exposed through
 /// this service.
 class StudyContentLoader {
-  const StudyContentLoader({this.repository, this.cacheRepository});
+  const StudyContentLoader({
+    this.repository,
+    this.cacheRepository,
+    this.deliveryService,
+  });
 
+  /// Explicit legacy repository injection is retained for non-runtime
+  /// compatibility tests and tooling only. The zero-argument learner loader
+  /// never constructs or reads this Firestore repository.
   final CloudPublishedContentRepository? repository;
   final StudentContentCache? cacheRepository;
+  final LearnerContentPackageDeliveryService? deliveryService;
 
-  CloudPublishedContentRepository get _repository =>
-      repository ?? CloudPublishedContentRepository();
+  CloudPublishedContentRepository get _injectedRepository {
+    final injected = repository;
+
+    if (injected == null) {
+      throw StateError(
+        'Legacy StudyContent repository access requires explicit injection.',
+      );
+    }
+
+    return injected;
+  }
+
+  LearnerContentPackageDeliveryService get _deliveryService =>
+      deliveryService ?? LearnerContentPackageDeliveryService();
 
   /// Creates the default student cache repository.
   ///
@@ -79,24 +101,23 @@ class StudyContentLoader {
     required String domainId,
     required String competencyId,
   }) async {
-    final cache = await _resolveCache();
-    final latest = await _repository.loadPublishedCompetency(
-      domainId: domainId,
-      competencyId: competencyId,
-    );
-
-    if (latest == null) {
-      throw StateError(
-        'Published competency "$competencyId" was not found '
-        'in domain "$domainId".',
+    if (repository != null) {
+      return _loadStudyContentFromInjectedRepository(
+        domainId: domainId,
+        competencyId: competencyId,
       );
     }
 
-    await cache.save(latest);
+    final latest = await _deliveryService.loadCompetency(competencyId);
+    _validateDeliveredScope(
+      content: latest,
+      domainId: domainId,
+      competencyId: competencyId,
+    );
     StudentStudyContentSessionCache.put(latest);
-
     return latest;
   }
+
 
   // ==========================================================
   // Published Repository + Cache
@@ -118,7 +139,7 @@ class StudyContentLoader {
     final cache = await _resolveCache();
 
     try {
-      final published = await _repository.loadPublishedDomain(domainId);
+      final published = await _injectedRepository.loadPublishedDomain(domainId);
 
       final latest = _latestPublishedVersions(
         published
@@ -160,7 +181,7 @@ class StudyContentLoader {
     final cache = await _resolveCache();
 
     try {
-      final published = await _repository.loadPublished();
+      final published = await _injectedRepository.loadPublished();
 
       final latest = _latestPublishedVersions(published);
 
@@ -210,7 +231,7 @@ class StudyContentLoader {
     final cache = await _resolveCache();
 
     try {
-      final content = await _repository.loadPublishedContent(contentId);
+      final content = await _injectedRepository.loadPublishedContent(contentId);
 
       if (content == null) {
         throw StateError('Published content "$contentId" was not found.');
@@ -239,39 +260,60 @@ class StudyContentLoader {
     required String domainId,
     required String competencyId,
   }) async {
-    final cache = await _resolveCache();
-
-    try {
-      final latest = await _repository.loadPublishedCompetency(
+    if (repository != null) {
+      return _loadStudyContentFromInjectedRepository(
         domainId: domainId,
         competencyId: competencyId,
       );
+    }
 
-      if (latest != null) {
-        await cache.save(latest);
-        StudentStudyContentSessionCache.put(latest);
-        return latest;
-      }
+    final latest = await _deliveryService.loadCompetency(competencyId);
+    _validateDeliveredScope(
+      content: latest,
+      domainId: domainId,
+      competencyId: competencyId,
+    );
+    StudentStudyContentSessionCache.put(latest);
+    return latest;
+  }
 
+  @visibleForTesting
+  Future<StudyContent> _loadStudyContentFromInjectedRepository({
+    required String domainId,
+    required String competencyId,
+  }) async {
+    final cache = await _resolveCache();
+    final latest = await _injectedRepository.loadPublishedCompetency(
+      domainId: domainId,
+      competencyId: competencyId,
+    );
+
+    if (latest == null) {
       throw StateError(
         'Published competency "$competencyId" was not found '
         'in domain "$domainId".',
       );
-    } catch (_) {
-      final cached = await cache.loadLatestForCompetency(competencyId);
+    }
 
-      if (cached != null &&
-          cached.domainId == domainId &&
-          cached.status.toLowerCase() == 'published') {
-        return cached;
-      }
+    await cache.save(latest);
+    StudentStudyContentSessionCache.put(latest);
+    return latest;
+  }
 
+  void _validateDeliveredScope({
+    required StudyContent content,
+    required String domainId,
+    required String competencyId,
+  }) {
+    if (content.domainId != domainId ||
+        content.competencyId != competencyId ||
+        content.status.toLowerCase() != 'published') {
       throw StateError(
-        'Published competency "$competencyId" is unavailable '
-        'in domain "$domainId".',
+        'Verified content package does not match the requested learner scope.',
       );
     }
   }
+
 
   // ==========================================================
   // Published Domains
@@ -345,8 +387,8 @@ class StudyContentLoader {
   @visibleForTesting
   Future<Never> loadContentIndex() async {
     throw UnsupportedError(
-      'Student content is loaded from the Firebase Published Repository '
-      'or the published student cache.',
+      'Student content is loaded from the online-authorized published package '
+      'boundary.',
     );
   }
 
@@ -354,8 +396,8 @@ class StudyContentLoader {
   @visibleForTesting
   Future<Never> loadDomain(String domainId) async {
     throw UnsupportedError(
-      'Student content is loaded from the Firebase Published Repository '
-      'or the published student cache.',
+      'Student content is loaded from the online-authorized published package '
+      'boundary.',
     );
   }
 
@@ -363,8 +405,8 @@ class StudyContentLoader {
   @visibleForTesting
   Future<Never> loadCompetencyFile(String assetPath) async {
     throw UnsupportedError(
-      'Student content is loaded from the Firebase Published Repository '
-      'or the published student cache.',
+      'Student content is loaded from the online-authorized published package '
+      'boundary.',
     );
   }
 }

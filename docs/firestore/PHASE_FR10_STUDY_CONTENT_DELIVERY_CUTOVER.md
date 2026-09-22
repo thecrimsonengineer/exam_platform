@@ -217,7 +217,23 @@ regression and diff hygiene.
 
 ### FR10C - authorized content gateway
 
-Status: IMPLEMENTATION IN PROGRESS.
+Status: COMPLETE.
+
+Repository gateway checkpoint: `f4d9b4aecdcac9f67e696538c21adba570daff49`.  
+Validation run: `35707994960` — PASS.  
+Production function: `learner-question-packages` version 2 — ACTIVE.  
+Authorized production proof SHA:
+`811672cfac888eafde2e63d0d98b8cb7ea7ae835`.  
+Authorized proof run: `35708961544` — PASS.  
+Full FR run on proof SHA: `35708961310` — PASS.
+
+The live proof returned 35 compact content descriptors. Competency `d01_c01`
+downloaded as content package version 1 at exactly 13,006 compressed bytes,
+matched SHA-256
+`1b4455c812ff4b79acc10fdfe58375cb1e98812a0c3c92242fd16336c75af27b`,
+passed gzip integrity, received one 60-second signed URL when changed, and
+returned `current: true` with no signed URL when unchanged. The sanitized
+artifact persisted no learner token or signed URL.
 
 Extend the reviewed learner package Edge boundary with content-specific
 operations while keeping existing FR9 question operations byte-compatible.
@@ -235,6 +251,8 @@ Required operations:
 Deploy only after exact-SHA repository gates are green.
 
 ### FR10D - targeted StudyContentLoader cutover
+
+Status: IMPLEMENTATION IN PROGRESS.
 
 - route `loadStudyContent` through the verified content-package delivery
   service;
@@ -290,7 +308,9 @@ migration phase explicitly changes it.
 
 ## NEXT ACTION
 
-Complete FR10C only.
+Complete FR10D only.
 
-Extend and deploy the reviewed Edge gateway only after exact-SHA repository
-validation is green. Do not cut StudyContentLoader over during FR10C.
+Cut over the zero-argument learner StudyContentLoader targeted load and refresh
+paths to the verified package service. Preserve explicit injected repository
+compatibility only for tests/tooling. Do not perform FR10E broad navigation
+retirement yet.
