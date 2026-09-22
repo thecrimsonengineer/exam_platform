@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/study_content.dart';
 import '../online_access/learner_online_access_session_controller.dart';
+import 'student_content_cache.dart';
 
 abstract interface class ProtectedStudentContentCacheStore {
   String? getString(String key);
@@ -78,7 +79,7 @@ class ProtectedCacheMigrationResult {
 ///
 /// Protected bytes may be read or written only while the same Firebase UID is
 /// currently online-authorized.
-class UidScopedProtectedContentCacheRepository {
+class UidScopedProtectedContentCacheRepository implements StudentContentCache {
   UidScopedProtectedContentCacheRepository({
     required ProtectedStudentContentCacheStore store,
     required String userId,
