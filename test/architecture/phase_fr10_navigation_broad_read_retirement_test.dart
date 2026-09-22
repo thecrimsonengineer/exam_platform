@@ -5,18 +5,26 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const loaderPath = 'lib/services/study_content_loader.dart';
   const domainScreenPath = 'lib/screens/courses/csp/domain_screen.dart';
+  const darkDomainScreenPath =
+      'lib/screens/courses/csp/domain_screen_dark.dart';
+  const contentTestScreenPath =
+      'lib/screens/courses/csp/content_test_screen.dart';
   const studyScreenPath = 'lib/screens/courses/csp/study_content_screen.dart';
   const workflowPath =
       '.github/workflows/phase_fr_firestore_read_reduction.yml';
 
   late String loader;
   late String domainScreen;
+  late String darkDomainScreen;
+  late String contentTestScreen;
   late String studyScreen;
   late String workflow;
 
   setUpAll(() {
     loader = File(loaderPath).readAsStringSync();
     domainScreen = File(domainScreenPath).readAsStringSync();
+    darkDomainScreen = File(darkDomainScreenPath).readAsStringSync();
+    contentTestScreen = File(contentTestScreenPath).readAsStringSync();
     studyScreen = File(studyScreenPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
   });
@@ -29,6 +37,27 @@ void main() {
     expect(domainScreen, isNot(contains('loadPublishedDomainContent')));
     expect(domainScreen, isNot(contains('StudentStudyContentPrefetchService')));
     expect(domainScreen, isNot(contains('_contentFuture')));
+  });
+
+  test('FR10E dark navigation uses the same canonical path', () {
+    expect(darkDomainScreen, contains('_domain.competencies'));
+    expect(darkDomainScreen, contains('Csp11Competency'));
+    expect(darkDomainScreen, contains('domainId: _domain.id'));
+    expect(darkDomainScreen, contains('competencyId: content.id'));
+    expect(darkDomainScreen, isNot(contains('loadPublishedDomainContent')));
+    expect(
+      darkDomainScreen,
+      isNot(contains('StudentStudyContentPrefetchService')),
+    );
+    expect(darkDomainScreen, isNot(contains('_contentFuture')));
+  });
+
+  test('FR10E development content test uses targeted canonical navigation', () {
+    expect(contentTestScreen, contains('csp11Domains.first'));
+    expect(contentTestScreen, contains('domain.competencies.first'));
+    expect(contentTestScreen, contains('StudyContentScreen('));
+    expect(contentTestScreen, isNot(contains('loadPublishedContent')));
+    expect(contentTestScreen, isNot(contains('StudyContentLoader')));
   });
 
   test('FR10E structural loader uses the canonical CSP11 blueprint', () {
