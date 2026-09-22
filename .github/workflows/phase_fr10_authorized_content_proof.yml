@@ -176,14 +176,18 @@ jobs:
           curl --silent --show-error --fail --location \
             --output "$package_gz" \
             "$signed_url"
+          echo "FR10F changed stage: download PASS"
           package_downloads=$((package_downloads + 1))
 
           measured_size="$(wc -c < "$package_gz" | tr -d '[:space:]')"
           measured_checksum="$(sha256sum "$package_gz" | awk '{print $1}')"
 
           test "$measured_size" = "$expected_size"
+          echo "FR10F changed stage: size PASS"
           test "$measured_checksum" = "$expected_checksum"
+          echo "FR10F changed stage: checksum PASS"
           gzip -t "$package_gz"
+          echo "FR10F changed stage: gzip PASS"
 
           {
             echo "FR10_PROOF_PACKAGE_PATH=$package_gz"
@@ -194,6 +198,7 @@ jobs:
             echo "FR10_PROOF_CATALOG_COUNT=$catalog_count"
             echo "FR10_PROOF_PACKAGE_DOWNLOADS=$package_downloads"
           } >> "$GITHUB_ENV"
+          echo "FR10F changed stage: metadata export PASS"
 
       - name: Decode live package with app ContentPackageDecoder
         run: flutter test test/production/fr10_content_package_production_decode_test.dart
