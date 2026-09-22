@@ -18,10 +18,9 @@ class QuizService implements QuizServiceInterface {
     _shared?.clearProtectedSession();
   }
 
-  QuizService({
-    LearnerQuestionPackageDeliveryService? deliveryService,
-  }) : _deliveryService =
-           deliveryService ?? LearnerQuestionPackageDeliveryService();
+  QuizService({LearnerQuestionPackageDeliveryService? deliveryService})
+    : _deliveryService =
+          deliveryService ?? LearnerQuestionPackageDeliveryService();
 
   final LearnerQuestionPackageDeliveryService _deliveryService;
 
@@ -84,10 +83,7 @@ class QuizService implements QuizServiceInterface {
     }
   }
 
-  Future<void> _prepare(
-    _PreparedQuizScope scope,
-    int generation,
-  ) async {
+  Future<void> _prepare(_PreparedQuizScope scope, int generation) async {
     final loaded = await _deliveryService.loadForScope(
       domain: scope.domain,
       quizId: scope.quizId,
