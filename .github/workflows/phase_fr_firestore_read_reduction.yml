@@ -43,7 +43,12 @@ jobs:
         run: flutter pub get
 
       - name: Dependency lock gate
-        run: git diff --exit-code -- pubspec.lock
+        run: |
+          git diff --exit-code -- \
+            pubspec.lock \
+            macos/Flutter/GeneratedPluginRegistrant.swift \
+            windows/flutter/generated_plugin_registrant.cc \
+            windows/flutter/generated_plugins.cmake
 
       - name: FR formatting gate
         run: |
