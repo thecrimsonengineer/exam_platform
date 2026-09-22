@@ -266,6 +266,7 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
                           lottieReady: _lottieReady,
                           startupAssetPath: widget.startupAssetPath,
                           highContrast: _highContrast,
+                          onLottieError: _dismissOverlay,
                         ),
                       ),
                     );
@@ -349,6 +350,7 @@ class _StartupCanvas extends StatelessWidget {
     required this.lottieReady,
     required this.startupAssetPath,
     required this.highContrast,
+    required this.onLottieError,
   });
 
   final double progress;
@@ -358,6 +360,7 @@ class _StartupCanvas extends StatelessWidget {
   final bool lottieReady;
   final String startupAssetPath;
   final bool highContrast;
+  final VoidCallback onLottieError;
 
   @override
   Widget build(BuildContext context) {
@@ -437,6 +440,12 @@ class _StartupCanvas extends StatelessWidget {
                             controller: animation,
                             repeat: false,
                             fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                onLottieError();
+                              });
+                              return const SizedBox.shrink();
+                            },
                           ),
                         ),
                       ),
