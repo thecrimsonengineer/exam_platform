@@ -506,16 +506,107 @@ class _BeatGlassCard extends StatelessWidget {
   const _BeatGlassCard({
     required this.presentation,
     required this.beatProgress,
+    required this.blurSigma,
+    required this.highContrast,
   });
 
   final _BeatPresentation presentation;
   final double beatProgress;
+  final double blurSigma;
+  final bool highContrast;
 
   @override
   Widget build(BuildContext context) {
     final enter = Curves.easeOutCubic.transform(
       (beatProgress / 0.28).clamp(0.0, 1.0).toDouble(),
     );
+
+    final card = Container(
+      constraints: const BoxConstraints(maxWidth: 430),
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 15),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: highContrast ? 0.16 : 0.055),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: presentation.accent.withValues(
+            alpha: highContrast ? 0.58 : 0.23,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: presentation.accent.withValues(
+                alpha: highContrast ? 0.22 : 0.12,
+              ),
+              border: Border.all(
+                color: presentation.accent.withValues(
+                  alpha: highContrast ? 0.72 : 0.32,
+                ),
+              ),
+            ),
+            child: Icon(
+              presentation.icon,
+              size: 20,
+              color: highContrast ? Colors.white : presentation.accent,
+            ),
+          ),
+          const SizedBox(width: 13),
+          Flexible(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  presentation.title,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: highContrast ? Colors.white : presentation.accent,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  presentation.message,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: highContrast
+                        ? Colors.white
+                        : Colors.white.withValues(alpha: 0.78),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (presentation.detail != null) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    presentation.detail!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: highContrast
+                          ? Colors.white70
+                          : Colors.white.withValues(alpha: 0.50),
+                      height: 1.25,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    final glassCard = blurSigma > 0
+        ? BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
+            child: card,
+          )
+        : card;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 220),
@@ -542,81 +633,7 @@ class _BeatGlassCard extends StatelessWidget {
           opacity: enter,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(22),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 430),
-                padding: const EdgeInsets.fromLTRB(18, 14, 18, 15),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.055),
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(
-                    color: presentation.accent.withValues(alpha: 0.23),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: presentation.accent.withValues(alpha: 0.12),
-                        border: Border.all(
-                          color: presentation.accent.withValues(alpha: 0.32),
-                        ),
-                      ),
-                      child: Icon(
-                        presentation.icon,
-                        size: 20,
-                        color: presentation.accent,
-                      ),
-                    ),
-                    const SizedBox(width: 13),
-                    Flexible(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            presentation.title,
-                            style: Theme.of(context).textTheme.labelMedium
-                                ?.copyWith(
-                                  color: presentation.accent,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.1,
-                                ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            presentation.message,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.78),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                          if (presentation.detail != null) ...[
-                            const SizedBox(height: 3),
-                            Text(
-                              presentation.detail!,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.50),
-                                    height: 1.25,
-                                  ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            child: glassCard,
           ),
         ),
       ),
