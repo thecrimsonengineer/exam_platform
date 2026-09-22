@@ -6,45 +6,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('HOME-R4 renders live category summaries and aggregate progress', (
-    tester,
-  ) async {
-    TodayPlanTaskCategory? tapped;
-    var fullPlanTaps = 0;
+  testWidgets(
+    'HOME-R4 renders live category summaries and aggregate progress',
+    (tester) async {
+      TodayPlanTaskCategory? tapped;
+      var fullPlanTaps = 0;
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: SizedBox(
-            width: 1000,
-            child: TodayPlanHomeSection(
-              snapshot: AsyncSnapshot<TodayPlanSummary?>.withData(
-                ConnectionState.done,
-                _summary(),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 1000,
+              child: TodayPlanHomeSection(
+                snapshot: AsyncSnapshot<TodayPlanSummary?>.withData(
+                  ConnectionState.done,
+                  _summary(),
+                ),
+                onCategoryTap: (category) => tapped = category,
+                onViewFullPlan: () => fullPlanTaps++,
+                onRetry: () {},
               ),
-              onCategoryTap: (category) => tapped = category,
-              onViewFullPlan: () => fullPlanTaps++,
-              onRetry: () {},
             ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.byKey(const ValueKey('home-today-learn')), findsOneWidget);
-    expect(find.byKey(const ValueKey('home-today-practice')), findsOneWidget);
-    expect(find.byKey(const ValueKey('home-today-remember')), findsOneWidget);
-    expect(find.text('1 task · 15 min'), findsOneWidget);
-    expect(find.text('4 questions remaining'), findsOneWidget);
-    expect(find.text('Nothing scheduled today'), findsOneWidget);
-    expect(find.text('2 of 4 tasks complete · 30 of 55 min'), findsOneWidget);
+      expect(find.byKey(const ValueKey('home-today-learn')), findsOneWidget);
+      expect(find.byKey(const ValueKey('home-today-practice')), findsOneWidget);
+      expect(find.byKey(const ValueKey('home-today-remember')), findsOneWidget);
+      expect(find.text('1 task · 15 min'), findsOneWidget);
+      expect(find.text('4 questions remaining'), findsOneWidget);
+      expect(find.text('Nothing scheduled today'), findsOneWidget);
+      expect(find.text('2 of 4 tasks complete · 30 of 55 min'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('home-today-practice')));
-    expect(tapped, TodayPlanTaskCategory.practice);
+      await tester.tap(find.byKey(const ValueKey('home-today-practice')));
+      expect(tapped, TodayPlanTaskCategory.practice);
 
-    await tester.tap(find.byKey(const ValueKey('home-view-full-plan')));
-    expect(fullPlanTaps, 1);
-  });
+      await tester.tap(find.byKey(const ValueKey('home-view-full-plan')));
+      expect(fullPlanTaps, 1);
+    },
+  );
 
   testWidgets('HOME-R4 does not present loading as an empty plan', (
     tester,
@@ -89,10 +90,7 @@ void main() {
       ),
     );
 
-    expect(
-      find.byKey(const ValueKey('home-today-plan-error')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('home-today-plan-error')), findsOneWidget);
     expect(
       find.text(
         'Search and Continue CSP still work. Retry this section when ready.',
@@ -155,10 +153,7 @@ void main() {
       ),
     );
 
-    expect(
-      find.byKey(const ValueKey('home-today-plan-empty')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('home-today-plan-empty')), findsOneWidget);
     await tester.tap(find.text("Open Today's Plan"));
     expect(opens, 1);
   });

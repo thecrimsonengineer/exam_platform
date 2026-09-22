@@ -38,8 +38,7 @@ class TodayPlanSummaryService {
     }
 
     final categories = <TodayPlanTaskCategory, TodayPlanCategorySummary>{
-      for (final entry in accumulators.entries)
-        entry.key: entry.value.build(),
+      for (final entry in accumulators.entries) entry.key: entry.value.build(),
     };
 
     return TodayPlanSummary(

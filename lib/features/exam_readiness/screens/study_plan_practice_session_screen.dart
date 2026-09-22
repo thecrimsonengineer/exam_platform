@@ -25,7 +25,7 @@ class StudyPlanPracticeSessionScreen extends StatefulWidget {
   final StudyPlanExecutionTarget target;
   final bool isDarkMode;
   final Future<List<Question>> Function(StudyPlanExecutionTarget target)?
-      questionLoader;
+  questionLoader;
   final Future<void> Function()? onSessionCompleted;
 
   @override
@@ -64,17 +64,18 @@ class _StudyPlanPracticeSessionScreenState
     );
 
     if (target.blockType == StudyPlanBlockType.ultraHardPractice) {
-      final candidates = service
-          .getAllQuestions()
-          .where(
-            (question) => question.allTags.any(
-              (tag) =>
-                  tag.trim().toLowerCase() ==
-                  UltraHardQuestionContract.classificationTag,
-            ),
-          )
-          .toList(growable: true)
-        ..shuffle();
+      final candidates =
+          service
+              .getAllQuestions()
+              .where(
+                (question) => question.allTags.any(
+                  (tag) =>
+                      tag.trim().toLowerCase() ==
+                      UltraHardQuestionContract.classificationTag,
+                ),
+              )
+              .toList(growable: true)
+            ..shuffle();
 
       if (candidates.length < target.questionCount) {
         throw StateError(
@@ -141,7 +142,8 @@ class _StudyPlanPracticeSessionScreenState
               !snapshot.hasData) {
             return _PracticePreparationState(
               title: _sessionTitle,
-              message: 'Preparing the published questions for this planned task.',
+              message:
+                  'Preparing the published questions for this planned task.',
               isLoading: true,
             );
           }
@@ -149,9 +151,10 @@ class _StudyPlanPracticeSessionScreenState
           if (snapshot.hasError) {
             return _PracticePreparationState(
               title: 'Planned practice unavailable',
-              message: snapshot.error
-                  .toString()
-                  .replaceFirst('Bad state: ', ''),
+              message: snapshot.error.toString().replaceFirst(
+                'Bad state: ',
+                '',
+              ),
               actionLabel: 'Retry',
               onAction: () {
                 setState(() => _questionsFuture = _loadQuestions());

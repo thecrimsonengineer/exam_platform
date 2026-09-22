@@ -126,7 +126,8 @@ StudyPlanBlock _block(
   int? questionCount,
   List<String> reasonCodes = const <String>['TEST_REASON'],
 }) {
-  final resolvedQuestionCount = questionCount ??
+  final resolvedQuestionCount =
+      questionCount ??
       switch (type) {
         StudyPlanBlockType.diagnostic ||
         StudyPlanBlockType.standardPractice ||

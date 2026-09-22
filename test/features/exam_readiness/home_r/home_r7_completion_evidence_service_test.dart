@@ -16,8 +16,9 @@ void main() {
         questionCount: 2,
         startedAt: startedAt,
       );
-      final session =
-          StudyPlanCompletionEvidenceService.sessionKindForBlock(block.blockId);
+      final session = StudyPlanCompletionEvidenceService.sessionKindForBlock(
+        block.blockId,
+      );
 
       final blocked = service.evaluate(
         block: block,
@@ -70,8 +71,9 @@ void main() {
         questionCount: 2,
         startedAt: startedAt,
       );
-      final session =
-          StudyPlanCompletionEvidenceService.sessionKindForBlock(block.blockId);
+      final session = StudyPlanCompletionEvidenceService.sessionKindForBlock(
+        block.blockId,
+      );
 
       final decision = service.evaluate(
         block: block,

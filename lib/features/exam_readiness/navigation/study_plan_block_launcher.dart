@@ -89,23 +89,24 @@ class StudyPlanBlockLauncher {
 
     final destination = switch (target.kind) {
       StudyPlanExecutionTargetKind.studyContent ||
-      StudyPlanExecutionTargetKind.review => isDarkMode
-          ? DarkStudyContentScreen(
-              domainId: target.domainId,
-              competencyId: target.competencyId,
-              domainTitle: target.domainTitle,
-              loadingTitle: target.competencyId.toUpperCase(),
-              initialTopicId: target.topicId,
-              initialSubtopicId: target.subtopicId,
-            )
-          : StudyContentScreen(
-              domainId: target.domainId,
-              competencyId: target.competencyId,
-              domainTitle: target.domainTitle,
-              loadingTitle: target.competencyId.toUpperCase(),
-              initialTopicId: target.topicId,
-              initialSubtopicId: target.subtopicId,
-            ),
+      StudyPlanExecutionTargetKind.review =>
+        isDarkMode
+            ? DarkStudyContentScreen(
+                domainId: target.domainId,
+                competencyId: target.competencyId,
+                domainTitle: target.domainTitle,
+                loadingTitle: target.competencyId.toUpperCase(),
+                initialTopicId: target.topicId,
+                initialSubtopicId: target.subtopicId,
+              )
+            : StudyContentScreen(
+                domainId: target.domainId,
+                competencyId: target.competencyId,
+                domainTitle: target.domainTitle,
+                loadingTitle: target.competencyId.toUpperCase(),
+                initialTopicId: target.topicId,
+                initialSubtopicId: target.subtopicId,
+              ),
       StudyPlanExecutionTargetKind.practiceSession ||
       StudyPlanExecutionTargetKind.examSimulation =>
         StudyPlanPracticeSessionScreen(
@@ -115,9 +116,9 @@ class StudyPlanBlockLauncher {
         ),
     };
 
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => destination),
-    );
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => destination));
   }
 
   static String? _optionalId(String value) {

@@ -164,17 +164,15 @@ class DarkSettingsScreen extends StatelessWidget {
   }
 
   void _openFullProgress(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const DarkProgressScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const DarkProgressScreen()));
   }
 
   void _openBookmarkedQuestions(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => const BookmarkedQuestionsScreen(
-          isDarkMode: true,
-        ),
+        builder: (_) => const BookmarkedQuestionsScreen(isDarkMode: true),
       ),
     );
   }
@@ -328,8 +326,7 @@ class DarkSettingsScreen extends StatelessWidget {
                                 title: 'Bookmarked Questions',
                                 subtitle:
                                     'Review questions you saved from quizzes on this device.',
-                                onTap: () =>
-                                    _openBookmarkedQuestions(context),
+                                onTap: () => _openBookmarkedQuestions(context),
                               ),
                             ],
                           ),

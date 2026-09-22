@@ -87,7 +87,10 @@ void main() {
     ).readAsStringSync();
 
     expect(model, contains('final DateTime? lastCompletedAt;'));
-    expect(model, contains("'lastCompletedAt': lastCompletedAt?.toIso8601String()"));
+    expect(
+      model,
+      contains("'lastCompletedAt': lastCompletedAt?.toIso8601String()"),
+    );
     expect(service, contains('lastCompletedAt: now'));
     expect(
       evidence,
@@ -95,23 +98,25 @@ void main() {
     );
   });
 
-  test('HOME-R7 completed study content exposes explicit review evidence action', () {
-    for (final path in <String>[
-      'lib/screens/courses/csp/study_subtopic_screen.dart',
-      'lib/screens/courses/csp/study_subtopic_screen_dark.dart',
-    ]) {
-      final source = File(path).readAsStringSync();
+  test(
+    'HOME-R7 completed study content exposes explicit review evidence action',
+    () {
+      for (final path in <String>[
+        'lib/screens/courses/csp/study_subtopic_screen.dart',
+        'lib/screens/courses/csp/study_subtopic_screen_dark.dart',
+      ]) {
+        final source = File(path).readAsStringSync();
 
-      expect(source, contains("'MARK REVIEW COMPLETE'"));
-      expect(source, contains('onPressed: _completeSubtopic'));
-      expect(source, contains('progress.lastCompletedAt'));
-      expect(
-        source,
-        isNot(contains(
-          "if (!completed) ...[const SizedBox(height: 16), button]",
-        )),
-      );
-    }
-  });
-
+        expect(source, contains("'MARK REVIEW COMPLETE'"));
+        expect(source, contains('onPressed: _completeSubtopic'));
+        expect(source, contains('progress.lastCompletedAt'));
+        expect(
+          source,
+          isNot(
+            contains("if (!completed) ...[const SizedBox(height: 16), button]"),
+          ),
+        );
+      }
+    },
+  );
 }

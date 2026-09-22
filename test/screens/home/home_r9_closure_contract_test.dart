@@ -5,39 +5,44 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   String read(String path) => File(path).readAsStringSync();
 
-  test('HOME-R9 freezes final Home information architecture in both themes', () {
-    for (final path in <String>[
-      'lib/screens/home/home_screen.dart',
-      'lib/screens/home/home_screen_dark.dart',
-    ]) {
-      final source = read(path);
-
-      final hero = source.indexOf('_buildHero(context, snapshot, data)');
-      final search = source.indexOf('StudyContentSearchPanel(');
-      final resume = source.indexOf('_buildContinueLearning(snapshot, data)');
-      final today = source.indexOf('FutureBuilder<TodayPlanSummary?>(');
-      final progress = source.indexOf('_buildProgressIntelligence(snapshot, data)');
-
-      expect(hero, greaterThanOrEqualTo(0));
-      expect(search, greaterThan(hero));
-      expect(resume, greaterThan(search));
-      expect(today, greaterThan(resume));
-      expect(progress, greaterThan(today));
-
-      for (final forbidden in <String>[
-        'YOUR WORKSPACE',
-        'QUICK PRACTICE',
-        'Train with intent',
-        'BookmarkedQuestionsScreen',
-        'PracticeQuickLaunchScreen',
-        'onOpenStudy',
-        'onOpenFlashcards',
-        'Icons.bookmark_border_rounded',
+  test(
+    'HOME-R9 freezes final Home information architecture in both themes',
+    () {
+      for (final path in <String>[
+        'lib/screens/home/home_screen.dart',
+        'lib/screens/home/home_screen_dark.dart',
       ]) {
-        expect(source, isNot(contains(forbidden)));
+        final source = read(path);
+
+        final hero = source.indexOf('_buildHero(context, snapshot, data)');
+        final search = source.indexOf('StudyContentSearchPanel(');
+        final resume = source.indexOf('_buildContinueLearning(snapshot, data)');
+        final today = source.indexOf('FutureBuilder<TodayPlanSummary?>(');
+        final progress = source.indexOf(
+          '_buildProgressIntelligence(snapshot, data)',
+        );
+
+        expect(hero, greaterThanOrEqualTo(0));
+        expect(search, greaterThan(hero));
+        expect(resume, greaterThan(search));
+        expect(today, greaterThan(resume));
+        expect(progress, greaterThan(today));
+
+        for (final forbidden in <String>[
+          'YOUR WORKSPACE',
+          'QUICK PRACTICE',
+          'Train with intent',
+          'BookmarkedQuestionsScreen',
+          'PracticeQuickLaunchScreen',
+          'onOpenStudy',
+          'onOpenFlashcards',
+          'Icons.bookmark_border_rounded',
+        ]) {
+          expect(source, isNot(contains(forbidden)));
+        }
       }
-    }
-  });
+    },
+  );
 
   test('HOME-R9 preserves one authoritative daily-plan path', () {
     for (final path in <String>[
@@ -55,34 +60,37 @@ void main() {
     }
   });
 
-  test('HOME-R9 category summary filter launch and completion layers remain shared', () {
-    expect(
-      read(
-        'lib/features/exam_readiness/models/today_plan_task_category.dart',
-      ),
-      contains('enum TodayPlanTaskCategory { learn, practice, remember }'),
-    );
+  test(
+    'HOME-R9 category summary filter launch and completion layers remain shared',
+    () {
+      expect(
+        read(
+          'lib/features/exam_readiness/models/today_plan_task_category.dart',
+        ),
+        contains('enum TodayPlanTaskCategory { learn, practice, remember }'),
+      );
 
-    expect(
-      read(
-        'lib/features/exam_readiness/services/today_plan_summary_service.dart',
-      ),
-      contains('categoryPolicy.categoryFor(block)'),
-    );
+      expect(
+        read(
+          'lib/features/exam_readiness/services/today_plan_summary_service.dart',
+        ),
+        contains('categoryPolicy.categoryFor(block)'),
+      );
 
-    final today = read(
-      'lib/features/exam_readiness/screens/todays_plan_screen.dart',
-    );
-    expect(today, contains('TodayPlanPresentationFilter presentationFilter'));
-    expect(today, contains('StudyPlanBlockLauncher blockLauncher'));
-    expect(
-      today,
-      contains(
-        'StudyPlanCompletionEvidenceService completionEvidenceService',
-      ),
-    );
-    expect(today, isNot(contains('copyWith(blocks: visibleBlocks')));
-  });
+      final today = read(
+        'lib/features/exam_readiness/screens/todays_plan_screen.dart',
+      );
+      expect(today, contains('TodayPlanPresentationFilter presentationFilter'));
+      expect(today, contains('StudyPlanBlockLauncher blockLauncher'));
+      expect(
+        today,
+        contains(
+          'StudyPlanCompletionEvidenceService completionEvidenceService',
+        ),
+      );
+      expect(today, isNot(contains('copyWith(blocks: visibleBlocks')));
+    },
+  );
 
   test('HOME-R9 completion still requires real evidence', () {
     final completion = read(
@@ -101,19 +109,22 @@ void main() {
     expect(progress, contains('final DateTime? lastCompletedAt;'));
   });
 
-  test('HOME-R9 Bookmarks live under Settings and storage keys stay frozen', () {
-    for (final path in <String>[
-      'lib/screens/settings/settings_screen.dart',
-      'lib/screens/settings/settings_screen_dark.dart',
-    ]) {
-      final source = read(path);
-      expect(source, contains('settings-full-progress'));
-      expect(source, contains('settings-bookmarked-questions'));
-      expect(source, contains('BookmarkedQuestionsScreen('));
-    }
+  test(
+    'HOME-R9 Bookmarks live under Settings and storage keys stay frozen',
+    () {
+      for (final path in <String>[
+        'lib/screens/settings/settings_screen.dart',
+        'lib/screens/settings/settings_screen_dark.dart',
+      ]) {
+        final source = read(path);
+        expect(source, contains('settings-full-progress'));
+        expect(source, contains('settings-bookmarked-questions'));
+        expect(source, contains('BookmarkedQuestionsScreen('));
+      }
 
-    final bookmarkService = read('lib/services/bookmark_service.dart');
-    expect(bookmarkService, contains("'bookmarked_question_ids'"));
-    expect(bookmarkService, contains("'bookmarked_question_snapshots_v2'"));
-  });
+      final bookmarkService = read('lib/services/bookmark_service.dart');
+      expect(bookmarkService, contains("'bookmarked_question_ids'"));
+      expect(bookmarkService, contains("'bookmarked_question_snapshots_v2'"));
+    },
+  );
 }

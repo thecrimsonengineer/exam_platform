@@ -11,18 +11,9 @@ void main() {
       final source = File(path).readAsStringSync();
 
       expect(source, contains('TodayPlanTaskCategory? category'));
-      expect(
-        source,
-        contains('TodaysPlanScreen(initialCategory: category)'),
-      );
-      expect(
-        source,
-        contains('_openTodaysPlan(category: category)'),
-      );
-      expect(
-        source,
-        contains('onViewFullPlan: () => _openTodaysPlan()'),
-      );
+      expect(source, contains('TodaysPlanScreen(initialCategory: category)'));
+      expect(source, contains('_openTodaysPlan(category: category)'));
+      expect(source, contains('onViewFullPlan: () => _openTodaysPlan()'));
     }
   });
 

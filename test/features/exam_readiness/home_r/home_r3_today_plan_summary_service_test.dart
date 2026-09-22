@@ -27,7 +27,10 @@ void main() {
       expect(summary.completedQuestionCount, 0);
       expect(summary.isEmpty, isTrue);
       expect(summary.isComplete, isFalse);
-      expect(summary.categories.keys.toSet(), TodayPlanTaskCategory.values.toSet());
+      expect(
+        summary.categories.keys.toSet(),
+        TodayPlanTaskCategory.values.toSet(),
+      );
 
       for (final category in TodayPlanTaskCategory.values) {
         final item = summary.category(category);
@@ -237,26 +240,26 @@ void main() {
 
       final summary = service.summarize(plan);
 
-      expect(
-        summary.category(TodayPlanTaskCategory.remember).taskCount,
-        1,
-      );
+      expect(summary.category(TodayPlanTaskCategory.remember).taskCount, 1);
     });
 
-    test('ambiguous recovery fails closed instead of being silently counted', () {
-      final plan = _plan(<StudyPlanBlock>[
-        _block(
-          id: 'ambiguous-recovery',
-          type: StudyPlanBlockType.recovery,
-          competencyId: 'd07_c02',
-          minutes: 10,
-          status: StudyPlanBlockStatus.planned,
-          reasonCodes: const <String>['ASSESSMENT_BALANCE'],
-        ),
-      ]);
+    test(
+      'ambiguous recovery fails closed instead of being silently counted',
+      () {
+        final plan = _plan(<StudyPlanBlock>[
+          _block(
+            id: 'ambiguous-recovery',
+            type: StudyPlanBlockType.recovery,
+            competencyId: 'd07_c02',
+            minutes: 10,
+            status: StudyPlanBlockStatus.planned,
+            reasonCodes: const <String>['ASSESSMENT_BALANCE'],
+          ),
+        ]);
 
-      expect(() => service.summarize(plan), throwsStateError);
-    });
+        expect(() => service.summarize(plan), throwsStateError);
+      },
+    );
 
     test('summary creation does not mutate the authoritative plan', () {
       final plan = _plan(<StudyPlanBlock>[

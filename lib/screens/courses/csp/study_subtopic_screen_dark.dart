@@ -309,7 +309,9 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
                   if (completed &&
                       progress?.lastCompletedAt != null &&
                       progress!.completedAt != null &&
-                      progress.lastCompletedAt!.isAfter(progress.completedAt!)) ...[
+                      progress.lastCompletedAt!.isAfter(
+                        progress.completedAt!,
+                      )) ...[
                     const SizedBox(height: 3),
                     Text(
                       'Last reviewed ${_formatCompletedDate(progress.lastCompletedAt!)}',
@@ -351,11 +353,7 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
           child: compact
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    content,
-                    const SizedBox(height: 16),
-                    button,
-                  ],
+                  children: [content, const SizedBox(height: 16), button],
                 )
               : Row(
                   children: [

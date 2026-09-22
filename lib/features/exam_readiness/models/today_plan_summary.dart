@@ -49,9 +49,10 @@ class TodayPlanSummary {
     required this.questionCount,
     required this.completedQuestionCount,
     required Map<TodayPlanTaskCategory, TodayPlanCategorySummary> categories,
-  }) : categories = Map<TodayPlanTaskCategory, TodayPlanCategorySummary>.unmodifiable(
-         categories,
-       ) {
+  }) : categories =
+           Map<TodayPlanTaskCategory, TodayPlanCategorySummary>.unmodifiable(
+             categories,
+           ) {
     for (final category in TodayPlanTaskCategory.values) {
       if (!this.categories.containsKey(category)) {
         throw StateError(

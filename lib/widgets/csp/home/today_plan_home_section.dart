@@ -338,9 +338,9 @@ class _TodayPlanAggregateBar extends StatelessWidget {
               children: [
                 Text(
                   progressText,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 6),
                 Align(alignment: Alignment.centerRight, child: action),
@@ -353,9 +353,9 @@ class _TodayPlanAggregateBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   progressText,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
                 ),
               ),
               const SizedBox(width: 12),
@@ -463,10 +463,7 @@ class _TodayPlanStatusSurface extends StatelessWidget {
               leading,
               const SizedBox(width: 14),
               Expanded(child: copy),
-              if (action != null) ...[
-                const SizedBox(width: 12),
-                action,
-              ],
+              if (action != null) ...[const SizedBox(width: 12), action],
             ],
           );
         },
