@@ -11,6 +11,7 @@ import '../../../services/quiz_service.dart';
 import '../../../services/ultra_hard_question_contract.dart';
 import '../models/study_plan_block.dart';
 import '../models/study_plan_execution_target.dart';
+import '../services/study_plan_completion_evidence_service.dart';
 
 class StudyPlanPracticeSessionScreen extends StatefulWidget {
   const StudyPlanPracticeSessionScreen({
@@ -18,12 +19,14 @@ class StudyPlanPracticeSessionScreen extends StatefulWidget {
     required this.target,
     required this.isDarkMode,
     this.questionLoader,
+    this.onSessionCompleted,
   });
 
   final StudyPlanExecutionTarget target;
   final bool isDarkMode;
   final Future<List<Question>> Function(StudyPlanExecutionTarget target)?
       questionLoader;
+  final Future<void> Function()? onSessionCompleted;
 
   @override
   State<StudyPlanPracticeSessionScreen> createState() =>
@@ -182,6 +185,11 @@ class _StudyPlanPracticeSessionScreenState
               sessionTitle: _sessionTitle,
               sessionNotice: _sessionNotice,
               learningTwinPracticeContext: practiceContext,
+              assessmentSessionKind:
+                  StudyPlanCompletionEvidenceService.sessionKindForBlock(
+                    widget.target.blockId,
+                  ),
+              onSessionCompleted: widget.onSessionCompleted,
             ),
           );
         },

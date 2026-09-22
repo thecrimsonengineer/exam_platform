@@ -10,6 +10,7 @@ enum StudyPlanExecutionTargetKind {
 class StudyPlanExecutionTarget {
   const StudyPlanExecutionTarget({
     required this.kind,
+    required this.blockId,
     required this.blockType,
     required this.domainId,
     required this.domainNumber,
@@ -23,6 +24,7 @@ class StudyPlanExecutionTarget {
   });
 
   final StudyPlanExecutionTargetKind kind;
+  final String blockId;
   final StudyPlanBlockType blockType;
   final String domainId;
   final int domainNumber;

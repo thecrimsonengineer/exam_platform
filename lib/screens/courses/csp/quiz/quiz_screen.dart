@@ -66,6 +66,8 @@ class QuizScreen extends StatefulWidget {
   final String? sessionTitle;
   final String? sessionNotice;
   final LearningTwinPracticeContext? learningTwinPracticeContext;
+  final String assessmentSessionKind;
+  final Future<void> Function()? onSessionCompleted;
 
   const QuizScreen({
     super.key,
@@ -78,6 +80,8 @@ class QuizScreen extends StatefulWidget {
     this.sessionTitle,
     this.sessionNotice,
     this.learningTwinPracticeContext,
+    this.assessmentSessionKind = 'practice',
+    this.onSessionCompleted,
   });
 
   @override
@@ -94,6 +98,8 @@ class _QuizScreenState extends State<QuizScreen> {
       const StudentQuestionProgressService();
 
   Set<int> _bookmarkedQuestions = <int>{};
+  final Set<Future<void>> _pendingQuestionWrites = <Future<void>>{};
+  bool _sessionCompletionNotified = false;
 
   @override
   void initState() {
@@ -212,7 +218,9 @@ class _QuizScreenState extends State<QuizScreen> {
       quizController.submitAnswer();
     });
 
-    _recordQuestionCompletion(question, correct);
+    final write = _recordQuestionCompletion(question, correct);
+    _pendingQuestionWrites.add(write);
+    write.whenComplete(() => _pendingQuestionWrites.remove(write));
   }
 
   Future<void> _recordQuestionCompletion(
@@ -223,6 +231,7 @@ class _QuizScreenState extends State<QuizScreen> {
       await _questionProgressService.recordAnswer(
         question: question,
         correct: correct,
+        sessionKind: widget.assessmentSessionKind,
       );
     } catch (_) {
       // Question-history persistence must never interrupt the active quiz.
@@ -296,6 +305,22 @@ class _QuizScreenState extends State<QuizScreen> {
   Future<void> _showResult() async {
     final quizController = controller;
     if (quizController == null) return;
+
+    if (_pendingQuestionWrites.isNotEmpty) {
+      await Future.wait(List<Future<void>>.from(_pendingQuestionWrites));
+    }
+
+    if (!_sessionCompletionNotified) {
+      _sessionCompletionNotified = true;
+      final callback = widget.onSessionCompleted;
+      if (callback != null) {
+        try {
+          await callback();
+        } catch (_) {
+          // Completion integration must never block the learner's result page.
+        }
+      }
+    }
 
     final bookmarkedCount = await _bookmarkService.getBookmarkCount();
 

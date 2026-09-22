@@ -65,6 +65,7 @@ class StudyPlanBlockLauncher {
 
     return StudyPlanExecutionTarget(
       kind: kind,
+      blockId: block.blockId,
       blockType: block.type,
       domainId: domain.id,
       domainNumber: domain.number,
@@ -82,6 +83,7 @@ class StudyPlanBlockLauncher {
     BuildContext context, {
     required StudyPlanBlock block,
     required bool isDarkMode,
+    Future<void> Function()? onPracticeSessionCompleted,
   }) async {
     final target = resolve(block);
 
@@ -109,6 +111,7 @@ class StudyPlanBlockLauncher {
         StudyPlanPracticeSessionScreen(
           target: target,
           isDarkMode: isDarkMode,
+          onSessionCompleted: onPracticeSessionCompleted,
         ),
     };
 
