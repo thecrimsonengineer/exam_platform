@@ -5,6 +5,7 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../models/daily_study_plan.dart';
 import '../models/study_plan_block.dart';
 import '../models/today_plan_task_category.dart';
+import '../navigation/study_plan_block_launcher.dart';
 import '../repositories/daily_study_plan_repository.dart';
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/exam_study_plan_repository.dart';
@@ -34,6 +35,7 @@ class TodaysPlanScreen extends StatefulWidget {
     this.outcomeService = const StudyPlanOutcomeService(),
     this.learningStateCoordinator = const LearningStateUpdateCoordinator(),
     this.presentationFilter = const TodayPlanPresentationFilter(),
+    this.blockLauncher = const StudyPlanBlockLauncher(),
     this.initialCategory,
     this.now,
   });
@@ -49,6 +51,7 @@ class TodaysPlanScreen extends StatefulWidget {
   final StudyPlanOutcomeService outcomeService;
   final LearningStateUpdateCoordinator learningStateCoordinator;
   final TodayPlanPresentationFilter presentationFilter;
+  final StudyPlanBlockLauncher blockLauncher;
   final TodayPlanTaskCategory? initialCategory;
   final DateTime Function()? now;
 
@@ -219,6 +222,59 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     }
 
     return false;
+  }
+
+  Future<void> _launchBlock(StudyPlanBlock block) async {
+    final data = await _future;
+    final plan = data.plan;
+    if (plan == null) return;
+
+    var activePlan = plan;
+    var activeBlock = block;
+
+    if (block.status == StudyPlanBlockStatus.planned ||
+        block.status == StudyPlanBlockStatus.shortened) {
+      activePlan = widget.planService.startBlock(plan, block.blockId, at: _now);
+      await _dailyPlanRepository.savePlan(activePlan, syncRemote: false);
+      activeBlock = activePlan.blocks.firstWhere(
+        (item) => item.blockId == block.blockId,
+      );
+
+      if (mounted) {
+        setState(
+          () => _future = Future.value(
+            _TodayPlanViewData(
+              plan: activePlan,
+              hasExamPlan: true,
+              notice: data.notice,
+            ),
+          ),
+        );
+      }
+    } else if (block.status != StudyPlanBlockStatus.started) {
+      throw StateError(
+        'Only planned, shortened, or started tasks can be launched.',
+      );
+    }
+
+    if (!mounted) return;
+
+    try {
+      await widget.blockLauncher.launch(
+        context,
+        block: activeBlock,
+        isDarkMode: Theme.of(context).brightness == Brightness.dark,
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            error.toString().replaceFirst('Bad state: ', ''),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _complete(String blockId) async {
@@ -395,13 +451,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                           return _PlanBlockCard(
                             block: block,
                             index: originalIndex,
-                            onStart: () => _apply(
-                              (current, at) => widget.planService.startBlock(
-                                current,
-                                block.blockId,
-                                at: at,
-                              ),
-                            ),
+                            onLaunch: () => _launchBlock(block),
                             onComplete: () => _complete(block.blockId),
                             onSkip: () => _apply(
                               (current, at) => widget.planService.skipBlock(
@@ -528,7 +578,7 @@ class _PlanBlockCard extends StatelessWidget {
   const _PlanBlockCard({
     required this.block,
     required this.index,
-    required this.onStart,
+    required this.onLaunch,
     required this.onComplete,
     required this.onSkip,
     required this.onMove,
@@ -539,7 +589,7 @@ class _PlanBlockCard extends StatelessWidget {
 
   final StudyPlanBlock block;
   final int index;
-  final VoidCallback onStart;
+  final VoidCallback onLaunch;
   final VoidCallback onComplete;
   final VoidCallback onSkip;
   final VoidCallback onMove;
@@ -615,21 +665,38 @@ class _PlanBlockCard extends StatelessWidget {
               ),
             )
           else if (block.status == StudyPlanBlockStatus.started)
-            FilledButton.icon(
-              key: ValueKey('m7e-complete-$index'),
-              onPressed: onComplete,
-              icon: const Icon(Icons.check_circle_rounded),
-              label: const Text('Complete'),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                FilledButton.tonalIcon(
+                  key: ValueKey('home-r6-continue-$index'),
+                  onPressed: onLaunch,
+                  icon: const Icon(Icons.play_arrow_rounded, size: 18),
+                  label: const Text('Continue task'),
+                ),
+                OutlinedButton.icon(
+                  key: ValueKey('m7e-complete-$index'),
+                  onPressed: onComplete,
+                  icon: const Icon(Icons.check_circle_outline_rounded, size: 18),
+                  label: const Text('Finish planned task'),
+                ),
+              ],
             )
           else
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                FilledButton.tonal(
+                FilledButton.tonalIcon(
                   key: ValueKey('m7d-start-$index'),
-                  onPressed: onStart,
-                  child: const Text('Start'),
+                  onPressed:
+                      block.status == StudyPlanBlockStatus.planned ||
+                          block.status == StudyPlanBlockStatus.shortened
+                      ? onLaunch
+                      : null,
+                  icon: const Icon(Icons.play_arrow_rounded, size: 18),
+                  label: const Text('Start task'),
                 ),
                 OutlinedButton(
                   key: ValueKey('m7d-skip-$index'),
