@@ -188,6 +188,7 @@ class StudentLearningProgressService {
       state: StudentLearningState.completed,
       lastOpenedAt: now,
       completedAt: completedAt,
+      lastCompletedAt: now,
     );
 
     await _saveAllProgressForUser(userId, all);

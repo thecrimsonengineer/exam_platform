@@ -128,6 +128,40 @@ void main() {
       expect(newDecision.eligible, isTrue);
     });
 
+    test('Remember can use a later explicit re-completion of old content', () {
+      final block = _block(
+        StudyPlanBlockType.spacedReview,
+        startedAt: startedAt,
+        reasonCodes: const <String>['RETENTION_DUE'],
+      );
+
+      final progress = StudentSubtopicProgress(
+        domainId: 'd04',
+        domainNumber: 4,
+        domainTitle: 'Emergency Management',
+        competencyId: 'd04_c01',
+        competencyTitle: 'Emergency response planning',
+        subtopicId: 'd04_c01_t01_s01',
+        subtopicTitle: 'Review subtopic',
+        studyContentId: 'content-d04-c01',
+        studyContentVersion: 1,
+        state: StudentLearningState.completed,
+        lastOpenedAt: startedAt.add(const Duration(minutes: 4)),
+        completedAt: startedAt.subtract(const Duration(days: 20)),
+        lastCompletedAt: startedAt.add(const Duration(minutes: 4)),
+      );
+
+      final decision = service.evaluate(
+        block: block,
+        source: StudyPlanCompletionEvidenceSource.studyContent,
+        attempts: const <LearnerAssessmentAttempt>[],
+        studyProgress: <StudentSubtopicProgress>[progress],
+        completedAt: startedAt.add(const Duration(minutes: 10)),
+      );
+
+      expect(decision.eligible, isTrue);
+    });
+
     test('exact Remember target rejects another subtopic', () {
       final block = _block(
         StudyPlanBlockType.spacedReview,
@@ -276,5 +310,6 @@ StudentSubtopicProgress _progress({
     state: StudentLearningState.completed,
     lastOpenedAt: completedAt,
     completedAt: completedAt,
+    lastCompletedAt: completedAt,
   );
 }

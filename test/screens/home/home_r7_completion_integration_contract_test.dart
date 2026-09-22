@@ -75,4 +75,24 @@ void main() {
     final preCompletion = source.substring(launchStart, completionStart);
     expect(preCompletion, isNot(contains('completeBlock(')));
   });
+  test('HOME-R7 review evidence distinguishes re-completion from route-open', () {
+    final model = File(
+      'lib/models/student_learning_progress.dart',
+    ).readAsStringSync();
+    final service = File(
+      'lib/services/student_learning_progress_service.dart',
+    ).readAsStringSync();
+    final evidence = File(
+      'lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart',
+    ).readAsStringSync();
+
+    expect(model, contains('final DateTime? lastCompletedAt;'));
+    expect(model, contains("'lastCompletedAt': lastCompletedAt?.toIso8601String()"));
+    expect(service, contains('lastCompletedAt: now'));
+    expect(
+      evidence,
+      contains('progress.lastCompletedAt ?? progress.completedAt'),
+    );
+  });
+
 }

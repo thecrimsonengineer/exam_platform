@@ -62,6 +62,13 @@ class StudentSubtopicProgress {
   final DateTime lastOpenedAt;
   final DateTime? completedAt;
 
+  /// Most recent explicit completion/review action for this subtopic.
+  ///
+  /// [completedAt] remains the first completion timestamp. This separate
+  /// timestamp lets a later planned review produce genuine evidence without
+  /// treating route-open as completion.
+  final DateTime? lastCompletedAt;
+
   const StudentSubtopicProgress({
     required this.domainId,
     required this.domainNumber,
@@ -75,6 +82,7 @@ class StudentSubtopicProgress {
     required this.state,
     required this.lastOpenedAt,
     required this.completedAt,
+    this.lastCompletedAt,
   });
 
   StudentSubtopicProgress copyWith({
@@ -90,7 +98,9 @@ class StudentSubtopicProgress {
     StudentLearningState? state,
     DateTime? lastOpenedAt,
     DateTime? completedAt,
+    DateTime? lastCompletedAt,
     bool clearCompletedAt = false,
+    bool clearLastCompletedAt = false,
   }) {
     return StudentSubtopicProgress(
       domainId: domainId ?? this.domainId,
@@ -105,6 +115,9 @@ class StudentSubtopicProgress {
       state: state ?? this.state,
       lastOpenedAt: lastOpenedAt ?? this.lastOpenedAt,
       completedAt: clearCompletedAt ? null : completedAt ?? this.completedAt,
+      lastCompletedAt: clearLastCompletedAt
+          ? null
+          : lastCompletedAt ?? this.lastCompletedAt,
     );
   }
 
@@ -122,6 +135,7 @@ class StudentSubtopicProgress {
       'state': state.value,
       'lastOpenedAt': lastOpenedAt.toIso8601String(),
       'completedAt': completedAt?.toIso8601String(),
+      'lastCompletedAt': lastCompletedAt?.toIso8601String(),
     };
   }
 
@@ -137,6 +151,9 @@ class StudentSubtopicProgress {
     final completedAt = DateTime.tryParse(
       json['completedAt']?.toString() ?? '',
     );
+    final lastCompletedAt =
+        DateTime.tryParse(json['lastCompletedAt']?.toString() ?? '') ??
+        completedAt;
 
     return StudentSubtopicProgress(
       domainId: json['domainId']?.toString() ?? '',
@@ -151,6 +168,7 @@ class StudentSubtopicProgress {
       state: StudentLearningStateX.fromValue(json['state']?.toString()),
       lastOpenedAt: lastOpenedAt,
       completedAt: completedAt,
+      lastCompletedAt: lastCompletedAt,
     );
   }
 

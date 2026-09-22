@@ -165,7 +165,7 @@ class StudyPlanCompletionEvidenceService {
     final competency = block.competencyId.trim().toLowerCase();
 
     for (final progress in studyProgress) {
-      final evidenceAt = progress.completedAt;
+      final evidenceAt = progress.lastCompletedAt ?? progress.completedAt;
       if (progress.state != StudentLearningState.completed ||
           evidenceAt == null ||
           evidenceAt.isBefore(startedAt) ||
