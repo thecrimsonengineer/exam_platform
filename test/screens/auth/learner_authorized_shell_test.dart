@@ -80,6 +80,96 @@ void main() {
       findsOneWidget,
     );
   });
+  testWidgets('FR8E offline launch never renders protected learner UI', (
+    tester,
+  ) async {
+    final validator = _CountingValidator();
+    final controller = LearnerOnlineAccessSessionController(
+      validator: validator,
+      currentUserId: () => 'student-1',
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: LearnerAuthorizedShell(
+          userId: 'student-1',
+          controller: controller,
+          connectivitySignalSource: _AlwaysOfflineConnectivitySource(),
+          authorizedChild: const Text(
+            'Protected learner UI',
+            key: ValueKey('protected-learner-ui'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.byKey(const ValueKey('protected-learner-ui')), findsNothing);
+    expect(
+      find.byKey(const ValueKey('fr8-retry-online-authorization')),
+      findsOneWidget,
+    );
+    expect(controller.snapshot.status, LearnerOnlineSessionStatus.locked);
+    expect(
+      controller.snapshot.lockReason,
+      LearnerOnlineLockReason.connectivityLost,
+    );
+    expect(validator.calls, 0);
+  });
+
+  testWidgets('FR8E app resume locks protected UI until reauthorization', (
+    tester,
+  ) async {
+    final validator = _ResumeValidator();
+    final controller = LearnerOnlineAccessSessionController(
+      validator: validator,
+      currentUserId: () => 'student-1',
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: LearnerAuthorizedShell(
+          userId: 'student-1',
+          controller: controller,
+          connectivitySignalSource: _AlwaysOnlineConnectivitySource(),
+          authorizedChild: const Text(
+            'Protected learner UI',
+            key: ValueKey('protected-learner-ui'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(
+      find.byKey(const ValueKey('protected-learner-ui')),
+      findsOneWidget,
+    );
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+
+    expect(find.byKey(const ValueKey('protected-learner-ui')), findsNothing);
+    expect(find.text('Verifying secure online access...'), findsOneWidget);
+    expect(validator.lastForceRefresh, isTrue);
+
+    validator.completeResume();
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(
+      find.byKey(const ValueKey('protected-learner-ui')),
+      findsOneWidget,
+    );
+  });
+
 }
 
 class _ControlledValidator implements LearnerOnlineAccessValidator {
@@ -113,6 +203,67 @@ class _ImmediateValidator implements LearnerOnlineAccessValidator {
       checkedAt: DateTime.utc(2026),
     );
   }
+}
+
+class _CountingValidator implements LearnerOnlineAccessValidator {
+  int calls = 0;
+
+  @override
+  Future<LearnerOnlineAccessResult> validate({
+    bool forceRefreshToken = false,
+  }) async {
+    calls++;
+    return LearnerOnlineAccessResult(
+      status: LearnerOnlineAccessStatus.authorized,
+      checkedAt: DateTime.utc(2026, 9, 22),
+    );
+  }
+}
+
+class _ResumeValidator implements LearnerOnlineAccessValidator {
+  int calls = 0;
+  bool? lastForceRefresh;
+  final Completer<LearnerOnlineAccessResult> _resume =
+      Completer<LearnerOnlineAccessResult>();
+
+  @override
+  Future<LearnerOnlineAccessResult> validate({
+    bool forceRefreshToken = false,
+  }) async {
+    calls++;
+    lastForceRefresh = forceRefreshToken;
+
+    if (calls == 1) {
+      return LearnerOnlineAccessResult(
+        status: LearnerOnlineAccessStatus.authorized,
+        checkedAt: DateTime.utc(2026, 9, 22),
+      );
+    }
+
+    return _resume.future;
+  }
+
+  void completeResume() {
+    if (_resume.isCompleted) {
+      return;
+    }
+
+    _resume.complete(
+      LearnerOnlineAccessResult(
+        status: LearnerOnlineAccessStatus.authorized,
+        checkedAt: DateTime.utc(2026, 9, 22, 1),
+      ),
+    );
+  }
+}
+
+class _AlwaysOfflineConnectivitySource
+    implements LearnerConnectivitySignalSource {
+  @override
+  Future<bool> hasConnectivity() async => false;
+
+  @override
+  Stream<bool> get changes => const Stream<bool>.empty();
 }
 
 class _AlwaysOnlineConnectivitySource
