@@ -2,3 +2,6 @@ project_id = "csp11-supabase"
 
 [functions.firebase-auth-probe]
 verify_jwt = false
+
+[functions.learner-question-packages]
+verify_jwt = false
