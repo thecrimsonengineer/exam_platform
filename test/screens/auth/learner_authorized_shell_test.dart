@@ -37,7 +37,10 @@ void main() {
       validator.completeNext(LearnerOnlineAccessStatus.authorized);
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const ValueKey('protected-learner-ui')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('protected-learner-ui')),
+        findsOneWidget,
+      );
     },
   );
 
@@ -77,18 +80,13 @@ class _ControlledValidator implements LearnerOnlineAccessValidator {
       Completer<LearnerOnlineAccessResult>();
 
   @override
-  Future<LearnerOnlineAccessResult> validate({
-    bool forceRefreshToken = false,
-  }) {
+  Future<LearnerOnlineAccessResult> validate({bool forceRefreshToken = false}) {
     return _next.future;
   }
 
   void completeNext(LearnerOnlineAccessStatus status) {
     _next.complete(
-      LearnerOnlineAccessResult(
-        status: status,
-        checkedAt: DateTime.utc(2026),
-      ),
+      LearnerOnlineAccessResult(status: status, checkedAt: DateTime.utc(2026)),
     );
     _next = Completer<LearnerOnlineAccessResult>();
   }
