@@ -61,6 +61,7 @@ void main() {
         home: LearnerAuthorizedShell(
           userId: 'student-1',
           controller: controller,
+          connectivitySignalSource: _AlwaysOnlineConnectivitySource(),
           authorizedChild: const Text(
             'Protected learner UI',
             key: ValueKey('protected-learner-ui'),
