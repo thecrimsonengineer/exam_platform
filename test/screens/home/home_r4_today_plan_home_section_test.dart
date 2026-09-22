@@ -104,6 +104,36 @@ void main() {
     expect(retries, 1);
   });
 
+  testWidgets('HOME-R4 status action remains usable on narrow phones', (
+    tester,
+  ) async {
+    var opens = 0;
+    tester.view.physicalSize = const Size(320, 700);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: TodayPlanHomeSection(
+            snapshot: const AsyncSnapshot<TodayPlanSummary?>.withData(
+              ConnectionState.done,
+              null,
+            ),
+            onCategoryTap: (_) {},
+            onViewFullPlan: () => opens++,
+            onRetry: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text("Open Today's Plan"));
+    expect(opens, 1);
+  });
+
   testWidgets('HOME-R4 null plan offers authoritative Today Plan entry', (
     tester,
   ) async {
