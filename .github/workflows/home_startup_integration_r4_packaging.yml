@@ -1,0 +1,110 @@
+name: Home Startup Integration R4 Packaging
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration
+    paths:
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'assets/startup/**'
+      - 'lib/screens/startup/**'
+      - 'android/**'
+      - 'web/**'
+      - 'windows/**'
+      - 'test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart'
+      - '.github/workflows/home_startup_integration_r4_packaging.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-integration-r4-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-packaging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify integration ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 243d9fdf93c55775321468eb17ce85cd3b7c557f HEAD
+          git merge-base --is-ancestor 9c1697b1d01c8db85fe535bc77ea6b6aa6f39565 HEAD
+          git merge-base --is-ancestor 1b9ea556640727a3c96a48f06e6fca987f5ab68a HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve frozen dependency graph
+        run: flutter pub get
+
+      - name: Verify lockfile stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Verify resolved Startup packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path(".dart_tool/package_config.json").read_text())
+          packages = {item["name"] for item in payload["packages"]}
+          assert "lottie" in packages
+          assert "flutter_animate" in packages
+          print("INT-R4 Startup dependencies resolved.")
+          PY
+
+      - name: Verify R4 formatting
+        run: dart format --output=none --set-exit-if-changed test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+
+      - name: Analyze R4 integration scope
+        run: flutter analyze --no-fatal-infos lib/screens/startup test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+
+      - name: Run R4 dependency and platform contracts
+        run: flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+
+      - name: Preserve Startup asset contract
+        run: flutter test test/startup/csp11_startup_asset_contract_test.dart
+
+      - name: Assemble Flutter release asset bundle
+        run: flutter build bundle --release
+
+      - name: Verify assembled Startup asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          ASSET="build/flutter_assets/assets/startup/csp11_startup_master.json"
+          test -s "${ASSET}"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("build/flutter_assets/assets/startup/csp11_startup_master.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert payload["nm"] == "CSP11 Startup Master SM-1"
+          assert payload["w"] == 512
+          assert payload["h"] == 512
+          assert payload["fr"] == 30
+          assert payload["op"] == 144
+          print("INT-R4 assembled Startup asset verified.")
+          PY
+
+      - name: Confirm repository stayed clean
+        run: git diff --exit-code
