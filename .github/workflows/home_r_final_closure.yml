@@ -1,0 +1,80 @@
+name: HOME-R Final Closure
+
+on:
+  push:
+    branches:
+      - phase-home-r
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-r-final-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-home-r-final:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    steps:
+      - name: Checkout exact HOME-R SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record and verify exact SHA ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "HOME-R exact SHA: ${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor             b54740c394e8c0b0cdc6d7c2acd165f6a3ba1123             HEAD
+          git diff --check             b54740c394e8c0b0cdc6d7c2acd165f6a3ba1123...HEAD
+
+      - name: Verify frozen HOME-R architecture
+        run: python3 tools/verify_home_r_contract.py
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify HOME-R formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed             lib/screens/home/home_screen.dart             lib/screens/home/home_screen_dark.dart             lib/widgets/csp/home/today_plan_home_section.dart             lib/features/exam_readiness/models/today_plan_task_category.dart             lib/features/exam_readiness/models/today_plan_summary.dart             lib/features/exam_readiness/models/study_plan_execution_target.dart             lib/features/exam_readiness/services/today_plan_task_category_policy.dart             lib/features/exam_readiness/services/today_plan_summary_service.dart             lib/features/exam_readiness/services/today_plan_presentation_filter.dart             lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart             lib/features/exam_readiness/services/study_plan_outcome_service.dart             lib/features/exam_readiness/navigation/study_plan_block_launcher.dart             lib/features/exam_readiness/screens/study_plan_practice_session_screen.dart             lib/features/exam_readiness/screens/todays_plan_screen.dart             lib/screens/courses/csp/quiz/quiz_screen.dart             lib/models/student_learning_progress.dart             lib/services/student_learning_progress_service.dart             lib/screens/courses/csp/study_subtopic_screen.dart             lib/screens/courses/csp/study_subtopic_screen_dark.dart             lib/screens/settings/settings_screen.dart             lib/screens/settings/settings_screen_dark.dart             test/features/exam_readiness/home_r             test/screens/home             test/screens/settings/home_r8_bookmark_relocation_contract_test.dart
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run HOME-R tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test test/features/exam_readiness/home_r
+          flutter test test/screens/home
+          flutter test test/screens/settings/home_r8_bookmark_relocation_contract_test.dart
+
+      - name: Run planner and feedback regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test test/features/exam_readiness/m7d
+          flutter test test/features/exam_readiness/m7e
+
+      - name: Run complete Flutter regression suite
+        run: flutter test
+
+      - name: Build production web
+        run: flutter build web --release
+
+      - name: Build Android debug validation APK
+        run: flutter build apk --debug
