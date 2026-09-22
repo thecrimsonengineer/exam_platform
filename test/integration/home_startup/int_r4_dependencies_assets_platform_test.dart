@@ -5,24 +5,28 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('INT-R4 dependencies assets and platform wiring', () {
-    test('Startup dependencies and asset registration are frozen exactly once', () {
-      final pubspec = File('pubspec.yaml').readAsStringSync();
+    test(
+      'Startup dependencies and asset registration are frozen exactly once',
+      () {
+        final pubspec = File('pubspec.yaml').readAsStringSync();
 
-      expect(_occurrences(pubspec, '  lottie: ^3.6.1'), 1);
-      expect(_occurrences(pubspec, '  flutter_animate: ^4.5.2'), 1);
-      expect(_occurrences(pubspec, '    - assets/startup/'), 1);
+        expect(_occurrences(pubspec, '  lottie: ^3.6.1'), 1);
+        expect(_occurrences(pubspec, '  flutter_animate: ^4.5.2'), 1);
+        expect(_occurrences(pubspec, '    - assets/startup/'), 1);
 
-      expect(
-        pubspec,
-        contains('    - assets/learning_twin/'),
-        reason: 'Startup integration must preserve existing learner assets.',
-      );
-      expect(
-        pubspec,
-        contains('    - assets/learning_twin/candidates/'),
-        reason: 'Startup integration must preserve existing candidate assets.',
-      );
-    });
+        expect(
+          pubspec,
+          contains('    - assets/learning_twin/'),
+          reason: 'Startup integration must preserve existing learner assets.',
+        );
+        expect(
+          pubspec,
+          contains('    - assets/learning_twin/candidates/'),
+          reason:
+              'Startup integration must preserve existing candidate assets.',
+        );
+      },
+    );
 
     test('lockfile resolves both frozen Startup direct dependencies', () {
       final lock = File('pubspec.lock').readAsStringSync();
@@ -75,14 +79,9 @@ void main() {
     });
 
     test('Android remains wired through Flutter asset packaging', () {
-      final gradle = File(
-        'android/app/build.gradle.kts',
-      ).readAsStringSync();
+      final gradle = File('android/app/build.gradle.kts').readAsStringSync();
 
-      expect(
-        gradle,
-        contains('id("dev.flutter.flutter-gradle-plugin")'),
-      );
+      expect(gradle, contains('id("dev.flutter.flutter-gradle-plugin")'));
       expect(gradle, contains('flutter {'));
       expect(gradle, contains('source = "../.."'));
 
@@ -103,14 +102,11 @@ void main() {
     test('Windows installation copies the generated Flutter asset bundle', () {
       final cmake = File('windows/CMakeLists.txt').readAsStringSync();
 
-      expect(
-        cmake,
-        contains('set(FLUTTER_ASSET_DIR_NAME "flutter_assets")'),
-      );
+      expect(cmake, contains('set(FLUTTER_ASSET_DIR_NAME "flutter_assets")'));
       expect(
         cmake,
         contains(
-          'install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"',
+          r'install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"',
         ),
       );
     });
