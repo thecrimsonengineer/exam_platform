@@ -87,6 +87,8 @@ jobs:
             test/architecture/phase_fr7_storage_publishing_test.dart \
             lib/services/online_access/learner_online_access_session_controller.dart \
             lib/services/online_access/learner_online_access_runtime.dart \
+            lib/services/online_access/learner_connectivity_signal_source.dart \
+            lib/services/online_access/learner_online_connectivity_coordinator.dart \
             lib/services/study_content/student_content_cache.dart \
             lib/services/study_content/student_content_cache_repository.dart \
             lib/services/study_content/uid_scoped_protected_content_cache_repository.dart \
@@ -95,6 +97,7 @@ jobs:
             lib/screens/auth/auth_gate.dart \
             lib/screens/auth/learner_authorized_shell.dart \
             test/services/online_access/learner_online_access_session_controller_test.dart \
+            test/services/online_access/learner_online_connectivity_coordinator_test.dart \
             test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart \
             test/screens/auth/learner_authorized_shell_test.dart \
             test/services/study_content/study_content_session_refresh_test.dart \
@@ -142,6 +145,8 @@ jobs:
             test/architecture/phase_fr7_storage_publishing_test.dart \
             lib/services/online_access/learner_online_access_session_controller.dart \
             lib/services/online_access/learner_online_access_runtime.dart \
+            lib/services/online_access/learner_connectivity_signal_source.dart \
+            lib/services/online_access/learner_online_connectivity_coordinator.dart \
             lib/services/study_content/student_content_cache.dart \
             lib/services/study_content/student_content_cache_repository.dart \
             lib/services/study_content/uid_scoped_protected_content_cache_repository.dart \
@@ -150,6 +155,7 @@ jobs:
             lib/screens/auth/auth_gate.dart \
             lib/screens/auth/learner_authorized_shell.dart \
             test/services/online_access/learner_online_access_session_controller_test.dart \
+            test/services/online_access/learner_online_connectivity_coordinator_test.dart \
             test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart \
             test/screens/auth/learner_authorized_shell_test.dart \
             test/services/study_content/study_content_session_refresh_test.dart \
@@ -244,6 +250,7 @@ jobs:
       - name: FR8 online authorization session tests
         run: |
           flutter test test/services/online_access/learner_online_access_session_controller_test.dart
+          flutter test test/services/online_access/learner_online_connectivity_coordinator_test.dart
           flutter test test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart
           flutter test test/screens/auth/learner_authorized_shell_test.dart
           flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
