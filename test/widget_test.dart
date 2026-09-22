@@ -5,6 +5,7 @@ import 'package:exam_platform/models/app_user.dart';
 import 'package:exam_platform/screens/auth/auth_gate.dart';
 import 'package:exam_platform/services/auth/auth_state_provider.dart';
 import 'package:exam_platform/services/auth/learner_local_identity.dart';
+import 'package:exam_platform/services/online_access/learner_connectivity_signal_source.dart';
 import 'package:exam_platform/services/online_access/learner_online_access_gate.dart';
 import 'package:exam_platform/services/online_access/learner_online_access_session_controller.dart';
 
@@ -73,6 +74,7 @@ void main() {
         home: AuthGate(
           authStateService: authStateProvider,
           learnerOnlineAccessController: accessController,
+          learnerConnectivitySignalSource: _AlwaysOnlineConnectivitySource(),
         ),
       ),
     );
@@ -125,4 +127,13 @@ class _FakeAuthStateProvider implements AuthStateProvider {
 
   @override
   Future<void> signOut() async {}
+}
+
+class _AlwaysOnlineConnectivitySource
+    implements LearnerConnectivitySignalSource {
+  @override
+  Future<bool> hasConnectivity() async => true;
+
+  @override
+  Stream<bool> get changes => const Stream<bool>.empty();
 }
