@@ -59,16 +59,13 @@ class SupabaseLearnerQuestionPackageGateway
       'operation': 'competency',
       'competencyId': normalized,
       if (knownPackage != null)
-        ...knownPackage.toKnownRequestJson()
-          ..remove('competencyId'),
+        ...knownPackage.toKnownRequestJson()..remove('competencyId'),
     };
 
     final response = await _resolvedClient.functions.invoke(
       'learner-question-packages',
       body: body,
-      headers: <String, String>{
-        'Authorization': 'Bearer $token',
-      },
+      headers: <String, String>{'Authorization': 'Bearer $token'},
     );
 
     final data = response.data;
@@ -166,18 +163,13 @@ class LearnerQuestionPackageDeliveryService {
     );
 
     if (resolution.current) {
-      final cached = await cache.loadVerified(
-        normalized,
-        decoder: _decoder,
-      );
+      final cached = await cache.loadVerified(normalized, decoder: _decoder);
 
       if (cached != null) {
         return _decodeQuestions(cached);
       }
 
-      resolution = await _gateway.resolveCompetency(
-        competencyId: normalized,
-      );
+      resolution = await _gateway.resolveCompetency(competencyId: normalized);
     }
 
     final signedUrl = resolution.signedUrl;
@@ -195,10 +187,7 @@ class LearnerQuestionPackageDeliveryService {
       decoder: _decoder,
     );
 
-    final cached = await cache.loadVerified(
-      normalized,
-      decoder: _decoder,
-    );
+    final cached = await cache.loadVerified(normalized, decoder: _decoder);
 
     if (cached == null) {
       throw StateError(
