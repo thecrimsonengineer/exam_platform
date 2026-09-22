@@ -18,7 +18,7 @@ void main() {
   );
 
   test(
-    'QuizService exposes one shared in-flight published catalogue',
+    'QuizService exposes shared bounded FR9 question preparation',
     () async {
       final service = await File(
         'lib/services/quiz_service.dart',
@@ -29,16 +29,17 @@ void main() {
         service,
         contains('static QuizService get shared => _shared ??= QuizService();'),
       );
-      expect(service, contains('Future<void>? _initializationFuture'));
+      expect(service, contains('prepareScope'));
+      expect(service, contains('prepareCompetencies'));
+      expect(service, contains('loadCatalogMetadata'));
       expect(service, contains('getPublishedContent()'));
-      expect(service, contains('final independentFuture ='));
-      expect(service, contains('final publishedContentFuture ='));
-      expect(service, contains('initialize({bool forceRefresh = false})'));
+      expect(service, isNot(contains('CloudQuestionRepository')));
+      expect(service, isNot(contains('CloudContentRepository')));
     },
   );
 
   test(
-    'learner shell prewarms practice and keeps Settings reachable',
+    'learner shell keeps Practice and Settings without whole-bank prewarm',
     () async {
       final nav = await File(
         'lib/screens/navigation/bottom_navigation.dart',
@@ -46,7 +47,8 @@ void main() {
 
       expect(nav, contains("label: 'Practice'"));
       expect(nav, contains('const PracticeHubScreen()'));
-      expect(nav, contains('QuizService.shared.initialize()'));
+      expect(nav, isNot(contains('QuizService.shared.initialize()')));
+      expect(nav, isNot(contains('_prewarmQuizCatalog')));
       expect(nav, contains('Future<void> _openSettings()'));
       expect(nav, contains('onOpenSettings: _openSettings'));
     },
