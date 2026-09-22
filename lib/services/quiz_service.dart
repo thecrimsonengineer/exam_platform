@@ -52,8 +52,7 @@ class QuizService implements QuizServiceInterface {
     );
   }
 
-  Future<List<PublishedQuestionPackageDescriptor>>
-  loadCatalogMetadata() {
+  Future<List<PublishedQuestionPackageDescriptor>> loadCatalogMetadata() {
     return _deliveryService.loadCatalog();
   }
 
@@ -61,12 +60,13 @@ class QuizService implements QuizServiceInterface {
     Iterable<String> competencyIds, {
     bool forceRefresh = false,
   }) async {
-    final normalized = competencyIds
-        .map((id) => id.trim().toLowerCase())
-        .where((id) => id.isNotEmpty)
-        .toSet()
-        .toList()
-      ..sort();
+    final normalized =
+        competencyIds
+            .map((id) => id.trim().toLowerCase())
+            .where((id) => id.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
 
     if (normalized.isEmpty) {
       throw StateError('At least one competency is required for practice.');
