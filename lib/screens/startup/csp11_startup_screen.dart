@@ -104,14 +104,17 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
         if (!_controller.isCompleted && !_controller.isAnimating) {
           _controller.forward();
         }
+        return;
       case AppLifecycleState.inactive:
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
         if (_controller.isAnimating) {
           _controller.stop(canceled: false);
         }
+        return;
       case AppLifecycleState.detached:
         _controller.stop(canceled: false);
+        return;
     }
   }
 
