@@ -111,7 +111,7 @@ void main() {
 
   test('FR9B cache verifies replacement before and after persistence', () {
     final preWriteDecode = cacheSource.indexOf(
-      'decoder.decode(\n      descriptor: descriptor',
+      'decoder.decode(descriptor: descriptor, compressedBytes: compressedBytes);',
     );
     final write = cacheSource.indexOf(
       'final written = await _store.setString(storageKey, encoded)',
