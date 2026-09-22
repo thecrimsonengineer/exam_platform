@@ -108,10 +108,7 @@ class UidScopedQuestionPackageCache {
         compressedBytes: entry.compressedBytes,
       );
     } on FormatException {
-      await _removeInvalidEntry(
-        state: state,
-        competencyId: normalized,
-      );
+      await _removeInvalidEntry(state: state, competencyId: normalized);
       return null;
     }
 
@@ -140,10 +137,7 @@ class UidScopedQuestionPackageCache {
       );
     }
 
-    decoder.decode(
-      descriptor: descriptor,
-      compressedBytes: compressedBytes,
-    );
+    decoder.decode(descriptor: descriptor, compressedBytes: compressedBytes);
 
     final previousRaw = _store.getString(storageKey);
     final previous = _readStateFromRaw(previousRaw);
@@ -169,8 +163,7 @@ class UidScopedQuestionPackageCache {
       final readBack = _readStateFromRaw(readBackRaw);
       final readBackEntry = readBack.entries[competencyId];
 
-      if (readBackEntry == null ||
-          _encodeState(readBack) != encoded) {
+      if (readBackEntry == null || _encodeState(readBack) != encoded) {
         throw const FormatException(
           'Question-package cache read-back mismatch.',
         );
@@ -182,9 +175,7 @@ class UidScopedQuestionPackageCache {
       );
     } catch (_) {
       await _restoreRaw(previousRaw);
-      throw StateError(
-        'Protected question-package cache verification failed.',
-      );
+      throw StateError('Protected question-package cache verification failed.');
     }
   }
 
@@ -319,9 +310,7 @@ class UidScopedQuestionPackageCache {
       final entries = <String, _QuestionCacheEntry>{};
 
       for (final rawEntry in rawEntries.entries) {
-        final competencyId = _normalizeCompetencyId(
-          rawEntry.key.toString(),
-        );
+        final competencyId = _normalizeCompetencyId(rawEntry.key.toString());
 
         if (rawEntry.value is! Map) {
           throw const FormatException(
@@ -329,9 +318,7 @@ class UidScopedQuestionPackageCache {
           );
         }
 
-        final entryJson = Map<String, dynamic>.from(
-          rawEntry.value as Map,
-        );
+        final entryJson = Map<String, dynamic>.from(rawEntry.value as Map);
 
         final descriptor = PublishedQuestionPackageDescriptor.fromJson(
           Map<String, dynamic>.from(
@@ -488,10 +475,7 @@ class _QuestionCacheState {
     _QuestionCacheEntry entry,
   ) {
     return _QuestionCacheState(
-      entries: <String, _QuestionCacheEntry>{
-        ...entries,
-        competencyId: entry,
-      },
+      entries: <String, _QuestionCacheEntry>{...entries, competencyId: entry},
     );
   }
 
