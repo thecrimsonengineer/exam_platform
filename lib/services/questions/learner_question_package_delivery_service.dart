@@ -18,6 +18,8 @@ abstract interface class LearnerQuestionPackageGateway {
     required String competencyId,
     PublishedQuestionPackageDescriptor? knownPackage,
   });
+
+  Future<List<PublishedQuestionPackageDescriptor>> loadCatalog();
 }
 
 class SupabaseLearnerQuestionPackageGateway
@@ -42,18 +44,53 @@ class SupabaseLearnerQuestionPackageGateway
   }
 
   @override
+  Future<List<PublishedQuestionPackageDescriptor>> loadCatalog() async {
+    final token = await _currentFirebaseToken();
+    final response = await _resolvedClient.functions.invoke(
+      'learner-question-packages',
+      body: const <String, dynamic>{'operation': 'catalog'},
+      headers: <String, String>{'Authorization': 'Bearer $token'},
+    );
+
+    final data = _responseMap(response.data);
+    final rawCatalog = data['catalog'];
+
+    if (rawCatalog is! List) {
+      throw const FormatException(
+        'Question-package catalog response must contain a list.',
+      );
+    }
+
+    final descriptors = <PublishedQuestionPackageDescriptor>[];
+
+    for (final rawDescriptor in rawCatalog) {
+      if (rawDescriptor is! Map) {
+        throw const FormatException(
+          'Question-package catalog entries must be objects.',
+        );
+      }
+
+      descriptors.add(
+        PublishedQuestionPackageDescriptor.fromJson(
+          Map<String, dynamic>.from(rawDescriptor),
+        ),
+      );
+    }
+
+    descriptors.sort(
+      (left, right) => left.competencyId.compareTo(right.competencyId),
+    );
+
+    return List<PublishedQuestionPackageDescriptor>.unmodifiable(descriptors);
+  }
+
+  @override
   Future<QuestionPackageResolution> resolveCompetency({
     required String competencyId,
     PublishedQuestionPackageDescriptor? knownPackage,
   }) async {
     final normalized = _normalizeCompetencyId(competencyId);
-    final token = await _tokenProvider.currentToken();
-
-    if (token == null || token.trim().isEmpty) {
-      throw StateError(
-        'A current Firebase ID token is required for question delivery.',
-      );
-    }
+    final token = await _currentFirebaseToken();
 
     final body = <String, dynamic>{
       'operation': 'competency',
@@ -68,24 +105,34 @@ class SupabaseLearnerQuestionPackageGateway
       headers: <String, String>{'Authorization': 'Bearer $token'},
     );
 
-    final data = response.data;
+    return QuestionPackageResolution.fromJson(_responseMap(response.data));
+  }
 
+  Future<String> _currentFirebaseToken() async {
+    final token = await _tokenProvider.currentToken();
+
+    if (token == null || token.trim().isEmpty) {
+      throw StateError(
+        'A current Firebase ID token is required for question delivery.',
+      );
+    }
+
+    return token.trim();
+  }
+
+  Map<String, dynamic> _responseMap(Object? data) {
     if (data is Map<String, dynamic>) {
-      return QuestionPackageResolution.fromJson(data);
+      return data;
     }
 
     if (data is Map) {
-      return QuestionPackageResolution.fromJson(
-        Map<String, dynamic>.from(data),
-      );
+      return Map<String, dynamic>.from(data);
     }
 
     if (data is String) {
       final decoded = jsonDecode(data);
       if (decoded is Map) {
-        return QuestionPackageResolution.fromJson(
-          Map<String, dynamic>.from(decoded),
-        );
+        return Map<String, dynamic>.from(decoded);
       }
     }
 
@@ -137,17 +184,16 @@ class LearnerQuestionPackageDeliveryService {
   final SignedQuestionPackageDownloader _downloader;
   final QuestionPackageDecoder _decoder;
 
+  Future<List<PublishedQuestionPackageDescriptor>> loadCatalog() async {
+    _requireAuthorizedUser();
+    final gateway = _gateway ??= SupabaseLearnerQuestionPackageGateway();
+    return gateway.loadCatalog();
+  }
+
   Future<List<Question>> loadCompetency(String competencyId) async {
     final normalized = _normalizeCompetencyId(competencyId);
-    final userId = LearnerLocalIdentity.requireCurrentUserId();
+    final userId = _requireAuthorizedUser();
     final boundary = LearnerOnlineAccessRuntime.requireBoundaryFor(userId);
-
-    if (!boundary.isAuthorizedFor(userId)) {
-      throw StateError(
-        'Protected questions remain locked until current online '
-        'authorization succeeds.',
-      );
-    }
 
     final preferences = await SharedPreferences.getInstance();
     final cache = UidScopedQuestionPackageCache(
@@ -238,6 +284,20 @@ class LearnerQuestionPackageDeliveryService {
     }
 
     return loadDomain(domain);
+  }
+
+  String _requireAuthorizedUser() {
+    final userId = LearnerLocalIdentity.requireCurrentUserId();
+    final boundary = LearnerOnlineAccessRuntime.requireBoundaryFor(userId);
+
+    if (!boundary.isAuthorizedFor(userId)) {
+      throw StateError(
+        'Protected questions remain locked until current online '
+        'authorization succeeds.',
+      );
+    }
+
+    return userId;
   }
 
   List<Question> _decodeQuestions(CachedQuestionPackage cached) {
