@@ -13,6 +13,10 @@ void main() {
       'uid_scoped_protected_content_cache_repository.dart';
   const runtimePath =
       'lib/services/online_access/learner_online_access_runtime.dart';
+  const connectivitySourcePath =
+      'lib/services/online_access/learner_connectivity_signal_source.dart';
+  const connectivityCoordinatorPath =
+      'lib/services/online_access/learner_online_connectivity_coordinator.dart';
   const authorizedShellPath = 'lib/screens/auth/learner_authorized_shell.dart';
   const authGatePath = 'lib/screens/auth/auth_gate.dart';
   const loaderPath = 'lib/services/study_content_loader.dart';
@@ -25,6 +29,8 @@ void main() {
   late String workflow;
   late String protectedCache;
   late String runtime;
+  late String connectivitySource;
+  late String connectivityCoordinator;
   late String authorizedShell;
   late String authGate;
   late String loader;
@@ -37,6 +43,10 @@ void main() {
     workflow = File(workflowPath).readAsStringSync();
     protectedCache = File(protectedCachePath).readAsStringSync();
     runtime = File(runtimePath).readAsStringSync();
+    connectivitySource = File(connectivitySourcePath).readAsStringSync();
+    connectivityCoordinator = File(
+      connectivityCoordinatorPath,
+    ).readAsStringSync();
     authorizedShell = File(authorizedShellPath).readAsStringSync();
     authGate = File(authGatePath).readAsStringSync();
     loader = File(loaderPath).readAsStringSync();
@@ -145,6 +155,39 @@ void main() {
       contains('static QuizService get shared => _shared ??= QuizService()'),
     );
     expect(quiz, contains('generation != _protectedSessionGeneration'));
+  });
+
+  test('FR8D uses platform connectivity only as a transport signal', () {
+    expect(
+      connectivitySource,
+      contains("package:connectivity_plus/connectivity_plus.dart"),
+    );
+    expect(connectivitySource, contains('ConnectivityResult.none'));
+    expect(
+      connectivityCoordinator,
+      contains('_controller.handleConnectivityRestored()'),
+    );
+    expect(
+      connectivityCoordinator,
+      contains('_controller.handleTransientConnectivityLoss()'),
+    );
+    expect(
+      connectivityCoordinator,
+      contains('_controller.handleConfirmedNetworkLoss()'),
+    );
+  });
+
+  test('FR8D learner shell owns and disposes the connectivity coordinator', () {
+    expect(
+      authorizedShell,
+      contains('LearnerOnlineConnectivityCoordinator'),
+    );
+    expect(authorizedShell, contains('_connectivityCoordinator.start()'));
+    expect(authorizedShell, contains('_connectivityCoordinator.dispose()'));
+    expect(
+      authorizedShell,
+      contains('ConnectivityPlusLearnerConnectivitySignalSource()'),
+    );
   });
 
   test('FR8 remains before learner delivery cutover', () {
