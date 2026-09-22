@@ -129,11 +129,11 @@ class LearnerQuestionPackageDeliveryService {
     LearnerQuestionPackageGateway? gateway,
     SignedQuestionPackageDownloader? downloader,
     QuestionPackageDecoder decoder = const QuestionPackageDecoder(),
-  }) : _gateway = gateway ?? SupabaseLearnerQuestionPackageGateway(),
+  }) : _gateway = gateway,
        _downloader = downloader ?? const HttpSignedQuestionPackageDownloader(),
        _decoder = decoder;
 
-  final LearnerQuestionPackageGateway _gateway;
+  LearnerQuestionPackageGateway? _gateway;
   final SignedQuestionPackageDownloader _downloader;
   final QuestionPackageDecoder _decoder;
 
@@ -156,8 +156,9 @@ class LearnerQuestionPackageDeliveryService {
       accessBoundary: boundary,
     );
 
+    final gateway = _gateway ??= SupabaseLearnerQuestionPackageGateway();
     final cachedDescriptor = await cache.descriptorFor(normalized);
-    var resolution = await _gateway.resolveCompetency(
+    var resolution = await gateway.resolveCompetency(
       competencyId: normalized,
       knownPackage: cachedDescriptor,
     );
@@ -169,7 +170,7 @@ class LearnerQuestionPackageDeliveryService {
         return _decodeQuestions(cached);
       }
 
-      resolution = await _gateway.resolveCompetency(competencyId: normalized);
+      resolution = await gateway.resolveCompetency(competencyId: normalized);
     }
 
     final signedUrl = resolution.signedUrl;
