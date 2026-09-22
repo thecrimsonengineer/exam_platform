@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../services/auth/learner_local_identity.dart';
+import 'startup_motion_policy.dart';
 import 'startup_personalization_service.dart';
 import 'startup_timeline.dart';
 
@@ -14,27 +17,36 @@ class Csp11StartupScreen extends StatefulWidget {
     super.key,
     required this.child,
     this.personalizationService,
+    this.motionPolicyOverride,
+    this.startupAssetPath = 'assets/startup/csp11_startup_master.json',
   });
 
   final Widget child;
   final StartupPersonalizationService? personalizationService;
+  final StartupMotionPolicy? motionPolicyOverride;
+  final String startupAssetPath;
 
   @override
   State<Csp11StartupScreen> createState() => _Csp11StartupScreenState();
 }
 
 class _Csp11StartupScreenState extends State<Csp11StartupScreen>
-    with SingleTickerProviderStateMixin {
-  static const _duration = Duration(milliseconds: 4800);
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  static const _hardTimeout = Duration(seconds: 7);
 
   late final AnimationController _controller;
   late final StartupPersonalizationService _personalizationService;
 
+  Timer? _watchdog;
+  StartupMotionPolicy _motionPolicy = StartupMotionPolicy.full;
   StartupPersonalizationSnapshot _personalization =
       const StartupPersonalizationSnapshot.empty();
   bool _personalizationLoadStarted = false;
   String? _personalizationUserId;
   bool _showOverlay = true;
+  bool _animationStarted = false;
+  bool _lottieReady = false;
+  bool _highContrast = false;
 
   @override
   void initState() {
