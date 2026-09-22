@@ -369,6 +369,9 @@ jobs:
           flutter test test/services/study_content/study_content_navigation_blueprint_test.dart
           flutter test test/architecture/phase_fr10_navigation_broad_read_retirement_test.dart
 
+      - name: FR10 final closure architecture gate
+        run: flutter test test/architecture/phase_fr10_closure_test.dart
+
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
 

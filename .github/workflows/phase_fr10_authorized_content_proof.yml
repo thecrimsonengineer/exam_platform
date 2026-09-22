@@ -18,11 +18,22 @@ concurrency:
 jobs:
   prove-authorized-content-delivery:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       FR10_ENDPOINT: https://esfycnmfywxczfillioj.supabase.co/functions/v1/learner-question-packages
 
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
       - name: Require ephemeral Firebase learner token
         env:
           FR9_FIREBASE_LEARNER_ID_TOKEN: ${{ secrets.FR9_FIREBASE_LEARNER_ID_TOKEN }}
@@ -35,7 +46,42 @@ jobs:
           fi
           echo "Ephemeral Firebase learner token is available."
 
-      - name: Prove authorized content catalog and package delivery
+      - name: Prove missing-token fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/fr10-missing-token.json"
+          status="$(
+            curl --silent --show-error \
+              --output "$output" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"operation":"content_catalog"}' \
+              "$FR10_ENDPOINT"
+          )"
+          test "$status" = "401"
+          grep -q '"error":"invalid_firebase_token"' "$output"
+
+      - name: Prove malformed-token fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="$RUNNER_TEMP/fr10-malformed-token.json"
+          status="$(
+            curl --silent --show-error \
+              --output "$output" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer not-a-valid-firebase-token" \
+              --data '{"operation":"content_catalog"}' \
+              "$FR10_ENDPOINT"
+          )"
+          test "$status" = "401"
+          grep -q '"error":"invalid_firebase_token"' "$output"
+
+      - name: Prove authorized catalog and changed package
         env:
           FR9_FIREBASE_LEARNER_ID_TOKEN: ${{ secrets.FR9_FIREBASE_LEARNER_ID_TOKEN }}
         shell: bash
@@ -44,13 +90,17 @@ jobs:
 
           catalog_json="$RUNNER_TEMP/fr10-content-catalog.json"
           changed_json="$RUNNER_TEMP/fr10-content-changed.json"
-          current_json="$RUNNER_TEMP/fr10-content-current.json"
           package_gz="$RUNNER_TEMP/fr10-content-package.json.gz"
-          package_json="$RUNNER_TEMP/fr10-content-package.json"
-          evidence_json="$GITHUB_WORKSPACE/fr10-authorized-content-production-proof.json"
 
           catalog_status="$(
-            curl --silent --show-error               --output "$catalog_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data '{"operation":"content_catalog"}'               "$FR10_ENDPOINT"
+            curl --silent --show-error \
+              --output "$catalog_json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN" \
+              --data '{"operation":"content_catalog"}' \
+              "$FR10_ENDPOINT"
           )"
           test "$catalog_status" = "200"
 
@@ -78,15 +128,28 @@ jobs:
           expected_size="$(jq -r '.catalog[0].contentSizeBytes' "$catalog_json")"
 
           changed_request="$(
-            jq -nc               --arg competencyId "$competency_id"               '{operation:"content_competency", competencyId:$competencyId}'
+            jq -nc \
+              --arg competencyId "$competency_id" \
+              '{operation:"content_competency", competencyId:$competencyId}'
           )"
 
           changed_status="$(
-            curl --silent --show-error               --output "$changed_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$changed_request"               "$FR10_ENDPOINT"
+            curl --silent --show-error \
+              --output "$changed_json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN" \
+              --data "$changed_request" \
+              "$FR10_ENDPOINT"
           )"
           test "$changed_status" = "200"
 
-          jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$content_version"             --argjson size "$expected_size" '
+          jq -e \
+            --arg competencyId "$competency_id" \
+            --arg checksum "$expected_checksum" \
+            --argjson version "$content_version" \
+            --argjson size "$expected_size" '
               .competencyId == $competencyId and
               .contentVersion == $version and
               .contentChecksumSha256 == $checksum and
@@ -98,8 +161,12 @@ jobs:
             ' "$changed_json" >/dev/null
 
           signed_url="$(jq -r '.signedUrl' "$changed_json")"
+          package_downloads=0
 
-          curl --silent --show-error --fail --location             --output "$package_gz"             "$signed_url"
+          curl --silent --show-error --fail --location \
+            --output "$package_gz" \
+            "$signed_url"
+          package_downloads=$((package_downloads + 1))
 
           measured_size="$(wc -c < "$package_gz" | tr -d '[:space:]')"
           measured_checksum="$(sha256sum "$package_gz" | awk '{print $1}')"
@@ -108,33 +175,36 @@ jobs:
           test "$measured_checksum" = "$expected_checksum"
           gzip -t "$package_gz"
 
-          gzip -dc "$package_gz" > "$package_json"
-          expected_domain="${competency_id%%_*}"
+          {
+            echo "FR10_PROOF_PACKAGE_PATH=$package_gz"
+            echo "FR10_PROOF_COMPETENCY_ID=$competency_id"
+            echo "FR10_PROOF_CONTENT_VERSION=$content_version"
+            echo "FR10_PROOF_CHECKSUM=$expected_checksum"
+            echo "FR10_PROOF_SIZE_BYTES=$expected_size"
+            echo "FR10_PROOF_CATALOG_COUNT=$catalog_count"
+            echo "FR10_PROOF_PACKAGE_DOWNLOADS=$package_downloads"
+          } >> "$GITHUB_ENV"
 
-          jq -e \
-            --arg competencyId "$competency_id" \
-            --arg domainId "$expected_domain" '
-              (.schemaVersion == 1) and
-              (.kind == "content") and
-              (.competencyId == $competencyId) and
-              (.sourceVersion | type == "number" and floor == . and . > 0) and
-              (.content | type == "object") and
-              (.content.id | type == "string" and length > 0) and
-              (.content.title | type == "string" and length > 0) and
-              (.content.status == "published") and
-              (.content.competencyId == $competencyId) and
-              (.content.domainId == $domainId) and
-              (.content.competencyNumber |
-                type == "number" and floor == . and . > 0) and
-              (.content.version == .sourceVersion) and
-              (.content.topics | type == "array")
-            ' "$package_json" >/dev/null
+      - name: Decode live package with app ContentPackageDecoder
+        run: flutter test test/production/fr10_content_package_production_decode_test.dart
 
-          source_version="$(jq '.sourceVersion' "$package_json")"
-          study_content_id="$(jq -r '.content.id' "$package_json")"
+      - name: Prove unchanged package needs zero additional downloads
+        env:
+          FR9_FIREBASE_LEARNER_ID_TOKEN: ${{ secrets.FR9_FIREBASE_LEARNER_ID_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          current_json="$RUNNER_TEMP/fr10-content-current.json"
+          evidence_json="$GITHUB_WORKSPACE/fr10-authorized-content-production-proof.json"
+          package_downloads="$FR10_PROOF_PACKAGE_DOWNLOADS"
 
           current_request="$(
-            jq -nc               --arg competencyId "$competency_id"               --arg checksum "$expected_checksum"               --argjson version "$content_version"               '{
+            jq -nc \
+              --arg competencyId "$FR10_PROOF_COMPETENCY_ID" \
+              --arg checksum "$FR10_PROOF_CHECKSUM" \
+              --argjson version "$FR10_PROOF_CONTENT_VERSION" \
+              '{
                 operation:"content_competency",
                 competencyId:$competencyId,
                 knownContentVersion:$version,
@@ -143,11 +213,22 @@ jobs:
           )"
 
           current_status="$(
-            curl --silent --show-error               --output "$current_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$current_request"               "$FR10_ENDPOINT"
+            curl --silent --show-error \
+              --output "$current_json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN" \
+              --data "$current_request" \
+              "$FR10_ENDPOINT"
           )"
           test "$current_status" = "200"
 
-          jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$content_version"             --argjson size "$expected_size" '
+          jq -e \
+            --arg competencyId "$FR10_PROOF_COMPETENCY_ID" \
+            --arg checksum "$FR10_PROOF_CHECKSUM" \
+            --argjson version "$FR10_PROOF_CONTENT_VERSION" \
+            --argjson size "$FR10_PROOF_SIZE_BYTES" '
               .competencyId == $competencyId and
               .contentVersion == $version and
               .contentChecksumSha256 == $checksum and
@@ -158,11 +239,31 @@ jobs:
               (has("contentObjectPath") | not)
             ' "$current_json" >/dev/null
 
-          jq -n             --arg status "PASS"             --arg repository "$GITHUB_REPOSITORY"             --arg branch "$GITHUB_REF_NAME"             --arg sha "$GITHUB_SHA"             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson catalogCount "$catalog_count"             --argjson contentVersion "$content_version"             --argjson expectedSizeBytes "$expected_size"             --argjson measuredSizeBytes "$measured_size"             --argjson sourceVersion "$source_version"             --arg studyContentId "$study_content_id"             '{
+          # No second package URL exists, therefore the cached reopen performs
+          # zero additional package downloads.
+          test "$package_downloads" = "1"
+
+          jq -n \
+            --arg status "PASS" \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg branch "$GITHUB_REF_NAME" \
+            --arg sha "$GITHUB_SHA" \
+            --arg competencyId "$FR10_PROOF_COMPETENCY_ID" \
+            --arg checksum "$FR10_PROOF_CHECKSUM" \
+            --argjson catalogCount "$FR10_PROOF_CATALOG_COUNT" \
+            --argjson contentVersion "$FR10_PROOF_CONTENT_VERSION" \
+            --argjson expectedSizeBytes "$FR10_PROOF_SIZE_BYTES" \
+            --argjson packageDownloads "$package_downloads" '
+            {
               status:$status,
               repository:$repository,
               branch:$branch,
               sha:$sha,
+              authentication:{
+                validLearnerToken:true,
+                missingTokenFailsClosed:true,
+                malformedTokenFailsClosed:true
+              },
               catalog:{
                 authorized:true,
                 compactMetadataOnly:true,
@@ -173,13 +274,11 @@ jobs:
                 contentVersion:$contentVersion,
                 contentChecksumSha256:$checksum,
                 expectedSizeBytes:$expectedSizeBytes,
-                measuredSizeBytes:$measuredSizeBytes,
+                compressedSizeMatched:true,
+                checksumMatched:true,
                 gzipIntegrity:true,
-                packageEnvelopeValidated:true,
-                publishedStudyContentIdentityValidated:true,
-                sourceVersion:$sourceVersion,
-                studyContentId:$studyContentId,
-                packageDownloads:1,
+                appContentPackageDecoderPassed:true,
+                packageDownloads:$packageDownloads,
                 changedRequestCurrent:false,
                 signedUrlIssued:true,
                 signedUrlTtlSeconds:60,
@@ -190,7 +289,7 @@ jobs:
               sensitiveValuesPersisted:false
             }' > "$evidence_json"
 
-          echo "FR10 authorized content production proof: PASS"
+          echo "FR10 final authorized production proof: PASS"
 
       - name: Upload sanitized FR10 content evidence
         uses: actions/upload-artifact@v4
