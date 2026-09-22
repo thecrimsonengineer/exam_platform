@@ -42,7 +42,7 @@ jobs:
         run: flutter pub get
 
       - name: Check startup Dart formatting
-        run: dart format --output=none --set-exit-if-changed lib/main.dart lib/screens/startup/csp11_startup_screen.dart lib/screens/startup/startup_timeline.dart test/startup/csp11_startup_asset_contract_test.dart test/startup/startup_timeline_test.dart
+        run: dart format --output=none --set-exit-if-changed lib/main.dart lib/screens/startup/csp11_startup_screen.dart lib/screens/startup/startup_timeline.dart lib/screens/startup/startup_personalization_service.dart test/startup/csp11_startup_asset_contract_test.dart test/startup/startup_timeline_test.dart test/startup/startup_personalization_service_test.dart
 
       - name: Validate Lottie JSON syntax
         shell: bash
