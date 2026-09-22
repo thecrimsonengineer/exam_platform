@@ -191,8 +191,8 @@ Frozen characteristics:
 - Home R remains isolated on `phase-home-r`
 
 Validation:
-- formatted implementation head `8786ddf8d565b6b52835b64563f61e71dfa70535`
-- green implementation validation run 21 on `671fbe1dc30f19fec0b6ef4d774c29331a66e91b`
+- final SM-3 freeze SHA: `6c33111c61cbdb8d9880a5b4318d8647788e02c3`
+- exact-SHA validation Run 22 passed on that freeze commit
 - all `test/startup/` tests pass
 - strict startup analysis passes
 - full repository analysis passes with baseline info-only lint debt non-fatal and warnings/errors fatal
