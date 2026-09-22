@@ -81,16 +81,18 @@ void main() {
     await tester.pumpWidget(app(policy: StartupMotionPolicy.full));
     await tester.pump();
 
-    await tester.binding.handleAppLifecycleStateChanged(
+    tester.binding.handleAppLifecycleStateChanged(
       AppLifecycleState.paused,
     );
+    await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsOneWidget);
 
-    await tester.binding.handleAppLifecycleStateChanged(
+    tester.binding.handleAppLifecycleStateChanged(
       AppLifecycleState.resumed,
     );
+    await tester.pump();
     await tester.pump(const Duration(seconds: 5));
 
     expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
