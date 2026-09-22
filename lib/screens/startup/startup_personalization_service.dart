@@ -62,6 +62,9 @@ class StartupPersonalizationSnapshot {
   }
 }
 
+/// Builds startup-only context from UID-scoped local caches.
+///
+/// The default loaders never refresh remote state.
 class StartupPersonalizationService {
   StartupPersonalizationService({
     StartupPositionLoader? positionLoader,
