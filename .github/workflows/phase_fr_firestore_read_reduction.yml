@@ -312,6 +312,40 @@ jobs:
           flutter test test/architecture/phase_fr9_practice_mode_cutover_test.dart
           flutter test test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart
 
+      - name: FR9 production gateway fail-closed smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          endpoint="https://esfycnmfywxczfillioj.supabase.co/functions/v1/learner-question-packages"
+
+          no_auth_status="$(
+            curl --silent --show-error \
+              --output /tmp/fr9-no-auth.json \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --data '{"operation":"catalog"}' \
+              "$endpoint"
+          )"
+          test "$no_auth_status" = "401"
+          grep -q '"error":"invalid_firebase_token"' /tmp/fr9-no-auth.json
+
+          invalid_auth_status="$(
+            curl --silent --show-error \
+              --output /tmp/fr9-invalid-auth.json \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer not-a-valid-firebase-token" \
+              --data '{"operation":"catalog"}' \
+              "$endpoint"
+          )"
+          test "$invalid_auth_status" = "401"
+          grep -q '"error":"invalid_firebase_token"' /tmp/fr9-invalid-auth.json
+
+          echo "FR9 production gateway fail-closed smoke: PASS"
+
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
 
