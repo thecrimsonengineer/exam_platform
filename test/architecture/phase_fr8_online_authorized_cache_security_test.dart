@@ -178,10 +178,7 @@ void main() {
   });
 
   test('FR8D learner shell owns and disposes the connectivity coordinator', () {
-    expect(
-      authorizedShell,
-      contains('LearnerOnlineConnectivityCoordinator'),
-    );
+    expect(authorizedShell, contains('LearnerOnlineConnectivityCoordinator'));
     expect(authorizedShell, contains('_connectivityCoordinator.start()'));
     expect(authorizedShell, contains('_connectivityCoordinator.dispose()'));
     expect(
