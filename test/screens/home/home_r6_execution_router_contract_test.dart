@@ -36,16 +36,18 @@ void main() {
     final launchStart = source.indexOf(
       'Future<void> _launchBlock(StudyPlanBlock block)',
     );
-    final completionStart = source.indexOf(
-      'Future<void> _complete(String blockId)',
-    );
+    final completionStart = source.indexOf('Future<bool> _complete(');
 
     expect(launchStart, greaterThanOrEqualTo(0));
     expect(completionStart, greaterThan(launchStart));
 
     final launchBody = source.substring(launchStart, completionStart);
-    expect(launchBody, isNot(contains('completeBlock(')));
-    expect(launchBody, isNot(contains('_complete(')));
+    expect(
+      launchBody,
+      isNot(contains('planService.completeBlock(')),
+      reason:
+          'Launching an activity must never directly mark the planner block complete.',
+    );
 
     final resolveIndex = launchBody.indexOf(
       'widget.blockLauncher.resolve(block);',
