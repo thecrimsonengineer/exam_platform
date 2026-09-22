@@ -1,0 +1,236 @@
+name: Startup Motion SM-5 Platform Closure
+
+on:
+  push:
+    branches:
+      - phase-startup-motion
+    paths:
+      - 'assets/startup/**'
+      - 'lib/screens/startup/**'
+      - 'lib/main.dart'
+      - 'pubspec.yaml'
+      - 'android/**'
+      - 'web/**'
+      - 'windows/**'
+      - 'test/startup/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: startup-motion-sm5-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render-smoke:
+    name: Startup render smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout exact branch SHA
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Run release rendering smoke tests
+        run: flutter test test/startup/startup_release_render_smoke_test.dart test/startup/startup_screen_hardening_test.dart test/startup/startup_motion_policy_test.dart
+
+  android-release:
+    name: Android release build
+    needs: render-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout exact branch SHA
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Ensure CI debug signing key exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${HOME}/.android"
+          if [ ! -f "${HOME}/.android/debug.keystore" ]; then
+            keytool -genkeypair               -keystore "${HOME}/.android/debug.keystore"               -storepass android               -alias androiddebugkey               -keypass android               -keyalg RSA               -keysize 2048               -validity 10000               -dname "CN=Android Debug,O=CSP11 CI,C=US"
+          fi
+
+      - name: Build Android release APK
+        run: flutter build apk --release
+
+      - name: Verify Android release package
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          test -s "${APK}"
+          unzip -Z1 "${APK}" | grep -q '^assets/flutter_assets/assets/startup/csp11_startup_master.json$'
+          unzip -p "${APK}" assets/flutter_assets/assets/startup/csp11_startup_master.json | grep -q 'CSP11 Startup Master SM-1'
+          {
+            echo "SM-5 Android release build verified."
+            echo "NOTE: android/app/build.gradle.kts currently signs release with the debug signing configuration."
+            echo "This gate proves release-mode compilation and packaging, not production-store signing readiness."
+            sha256sum "${APK}"
+            ls -lh "${APK}"
+          } | tee sm5-android-release-evidence.txt
+
+      - name: Upload Android validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm5-android-release-evidence
+          path: sm5-android-release-evidence.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  web-release:
+    name: Web release build
+    needs: render-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout exact branch SHA
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Build web release
+        run: flutter build web --release
+
+      - name: Verify web release bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s build/web/main.dart.js
+          test -s build/web/flutter_bootstrap.js
+          ASSET="build/web/assets/assets/startup/csp11_startup_master.json"
+          test -s "${ASSET}"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("build/web/assets/assets/startup/csp11_startup_master.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert payload["w"] == 512
+          assert payload["h"] == 512
+          assert payload["fr"] == 30
+          assert payload["op"] == 144
+          assert payload["nm"] == "CSP11 Startup Master SM-1"
+          PY
+          {
+            echo "SM-5 web release build verified."
+            sha256sum build/web/main.dart.js
+            sha256sum "${ASSET}"
+            du -sh build/web
+          } | tee sm5-web-release-evidence.txt
+
+      - name: Upload web validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm5-web-release-evidence
+          path: sm5-web-release-evidence.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  windows-release:
+    name: Windows release build
+    needs: render-smoke
+    runs-on: windows-latest
+    timeout-minutes: 50
+
+    steps:
+      - name: Checkout exact branch SHA
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Verify Windows release bundle
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $release = "build\windows\x64\runner\Release"
+          $exe = Join-Path $release "exam_platform.exe"
+          $asset = Join-Path $release "data\flutter_assets\assets\startup\csp11_startup_master.json"
+
+          if (-not (Test-Path $exe)) {
+            throw "Windows release executable is missing: $exe"
+          }
+          if ((Get-Item $exe).Length -le 0) {
+            throw "Windows release executable is empty."
+          }
+          if (-not (Test-Path $asset)) {
+            throw "Packaged startup asset is missing: $asset"
+          }
+
+          $payload = Get-Content -Raw $asset | ConvertFrom-Json
+          if ($payload.w -ne 512 -or
+              $payload.h -ne 512 -or
+              $payload.fr -ne 30 -or
+              $payload.op -ne 144 -or
+              $payload.nm -ne "CSP11 Startup Master SM-1") {
+            throw "Packaged Windows startup asset does not match the frozen Lottie contract."
+          }
+
+          $exeHash = (Get-FileHash $exe -Algorithm SHA256).Hash
+          $assetHash = (Get-FileHash $asset -Algorithm SHA256).Hash
+          @(
+            "SM-5 Windows release build verified."
+            "EXE_SHA256=$exeHash"
+            "STARTUP_ASSET_SHA256=$assetHash"
+            "EXE_BYTES=$((Get-Item $exe).Length)"
+          ) | Set-Content sm5-windows-release-evidence.txt
+
+      - name: Upload Windows validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm5-windows-release-evidence
+          path: sm5-windows-release-evidence.txt
+          if-no-files-found: error
+          retention-days: 14

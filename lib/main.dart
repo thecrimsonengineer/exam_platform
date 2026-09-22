@@ -7,6 +7,7 @@ import 'services/local_question_repository.dart';
 import 'services/settings/theme_mode_service.dart';
 import 'services/supabase/supabase_bootstrap_service.dart';
 import 'screens/auth/auth_gate.dart';
+import 'screens/startup/csp11_startup_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ class ExamPlatformApp extends StatelessWidget {
           theme: AppTheme.studentGlassLightTheme,
           darkTheme: AppTheme.studentGlassDarkTheme,
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          home: const AuthGate(),
+          home: const Csp11StartupScreen(child: AuthGate()),
         );
       },
     );

@@ -1,0 +1,301 @@
+# CSP11 Startup Motion — Free Stack Freeze
+
+## Status
+Foundation branch: `phase-startup-motion`
+
+Base branch: `phase-home-r`
+
+Base SHA: `bf01d8fd2776cc7e741f6811d1640105e4496f35`
+
+## Frozen technology stack
+
+The startup experience must remain subscription-free.
+
+1. Glaxnimate for authored vector animation.
+2. Lottie JSON as the export format.
+3. Flutter `lottie` for runtime playback.
+4. `flutter_animate` for UI choreography.
+5. Native Flutter `CustomPainter`, animation controllers and shaders for dynamic learner-aware motion.
+
+Rive is not required.
+
+## Architectural rule
+
+The startup animation is an overlay above `AuthGate`.
+
+Authentication, learner authorization, Firebase initialization, Supabase initialization and FR online-access enforcement remain authoritative and must not be weakened, bypassed or delayed by the animation.
+
+The authenticated destination is allowed to initialize beneath the overlay.
+
+## Startup sequence
+
+Target normal-launch duration: approximately 4.8 seconds.
+
+1. Dark CSP11 glass background.
+2. CSP11 knowledge core appears.
+3. Seven domain nodes form around the core.
+4. Glaxnimate/Lottie vector sequence runs in the centre.
+5. Feature messages rotate:
+   - Continue where you stopped
+   - Follow today's learning plan
+   - Practice intelligently
+   - Make decisions in LAB
+   - Remember with flashcards
+6. Overlay dissolves into the already-loading authenticated destination.
+
+## Glaxnimate asset contract
+
+Primary exported animation:
+
+`assets/startup/csp11_startup_master.json`
+
+Development placeholder:
+
+`assets/startup/csp11_glaxnimate_placeholder.json`
+
+Recommended Glaxnimate document:
+- 512 × 512 logical canvas
+- 30 fps
+- 3 to 5 second loopable central sequence
+- no embedded raster imagery unless necessary
+- keep text out of the Lottie file when the text must be personalized
+- use vector paths, opacity, transform, scale and rotation first
+- export as Lottie JSON
+
+## Separation of responsibilities
+
+Glaxnimate/Lottie owns:
+- book opening
+- flashcard rotation
+- target formation
+- LAB branch motif
+- icon morphs
+- decorative vector motion
+
+Native Flutter owns:
+- actual learner name
+- current domain and competency
+- today's plan count
+- learning position
+- readiness/progress values
+- authorization state
+- responsive layout
+- final transition into Home
+
+CustomPainter/shaders own:
+- domain orbit
+- particles
+- glow/pulse
+- knowledge network
+- ambient background motion
+
+## Performance rules
+
+- Startup must never wait for remote animation assets.
+- Production Lottie files are bundled locally.
+- Prefer vector-only Lottie.
+- Avoid very large path counts and excessive masks.
+- Avoid continuous shader work after startup overlay exits.
+- Dispose all animation controllers.
+- Respect reduced-motion accessibility in a later hardening run.
+- Animation failure must fall back to the authenticated app instead of blocking entry.
+
+## Implementation runs
+
+### SM-0 — foundation
+- branch isolation
+- dependencies
+- startup asset path
+- startup overlay
+- native knowledge-core painter
+- Lottie integration point
+- architecture freeze
+
+### SM-1 — Glaxnimate master artwork ✅ IMPLEMENTED
+Production asset: `assets/startup/csp11_startup_master.json`
+
+Frozen characteristics:
+- 512 × 512 vector canvas
+- 30 fps
+- 144 frames / 4.8 seconds
+- 25 vector layers
+- six timeline markers: ignite, learn, practice, lab, remember, converge
+- seven domain nodes
+- Learn/book motif
+- Practice/target motif
+- LAB branching motif
+- Remember/flashcard motif
+- final convergence pulse
+- no embedded text
+- no remote assets
+- obsolete placeholder removed
+
+Validation is enforced by:
+- `test/startup/csp11_startup_asset_contract_test.dart`
+- `.github/workflows/startup_motion_validation.yml`
+
+### SM-2 — choreography ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM2_CHOREOGRAPHY.md`
+
+Frozen characteristics:
+- one 4.8 second master `AnimationController`
+- Lottie playback is driven by the same master progress as Flutter motion
+- exact beat boundaries mirror Lottie marker frames 0, 18, 44, 70, 96 and 132
+- deterministic particle field
+- seven-node ambient knowledge orbit
+- center-to-domain and perimeter network links
+- moving accent arc and core pulse
+- beat-synchronized glass feature card
+- six-segment startup timeline
+- convergence begins at frame 132
+- overlay exit completes at frame 144
+- authentication and learner authorization continue underneath the overlay
+- no independent decorative timer is used by the startup choreography
+- no remote animation asset is introduced
+- no `phase-home-r` work is merged into this branch
+
+Validation:
+- startup formatting gate passes
+- SM-1 Lottie asset contract passes
+- all `test/startup/` tests pass
+- strict analysis of `lib/main.dart`, `lib/screens/startup` and `test/startup` passes
+- full repository analysis passes with only pre-existing info-level lint debt treated as non-fatal
+- warnings and errors remain fatal in the full repository analyzer gate
+
+### SM-3 — personalization ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM3_PERSONALIZATION.md`
+
+Frozen characteristics:
+- personalization begins only after `AuthGate` activates the verified learner UID
+- startup does not persist or display the Firebase UID
+- Continue CSP reads only the existing UID-scoped `StudentLearningPositionService` cache
+- Today's Plan reads only the existing UID-scoped `DailyStudyPlanRepository` local cache
+- daily-plan lookup explicitly uses `refreshRemote: false`
+- the startup personalization repository is created without a remote store
+- no Firestore read is introduced by startup personalization
+- no Supabase read is introduced by startup personalization
+- no network request is required for personalization
+- the 4.8 second master choreography never waits for learner data
+- resume context can render as `D04 · C01`
+- cached subtopic title is preferred, with competency title as fallback
+- Today's Plan can show remaining activity count and remaining minutes
+- completed plans can show `Today's plan complete`
+- local-source failures fail soft to generic startup copy
+- blank learner UID performs zero personalization source calls
+- admin, unauthenticated and unverified paths remain generic
+- Decision LAB and Remember remain generic in SM-3 to avoid unnecessary repository reads
+- Home R remains isolated on `phase-home-r`
+
+Validation:
+- final SM-3 freeze SHA: `6c33111c61cbdb8d9880a5b4318d8647788e02c3`
+- exact-SHA validation Run 22 passed on that freeze commit
+- all `test/startup/` tests pass
+- strict startup analysis passes
+- full repository analysis passes with baseline info-only lint debt non-fatal and warnings/errors fatal
+
+### SM-4 — accessibility and performance ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM4_ACCESSIBILITY_PERFORMANCE.md`
+
+Frozen characteristics:
+- full, balanced and reduced motion policies
+- normal full choreography remains 4.8 seconds
+- balanced profile reduces particles from 34 to 20
+- balanced profile reduces backdrop blur from 15 to 8
+- reduced-motion profile uses a 250 ms static handoff
+- reduced-motion profile renders no Lottie, particles, ambient knowledge network or backdrop blur
+- Android/system disable-animation requests are honored
+- platform reduce-motion requests are honored
+- high-contrast mode strengthens startup text, icon and border contrast
+- startup observes app lifecycle state
+- inactive, hidden and paused states stop animation work
+- resumed state continues from existing progress
+- detached state stops animation work
+- bundled Lottie JSON is preflighted against the frozen 512 × 512 / 30 fps / 144-frame contract
+- invalid or missing startup assets fail open to the real app
+- Lottie runtime errors fail open through `errorBuilder`
+- a seven-second watchdog provides an absolute overlay exit ceiling
+- startup animation remains decorative and cannot become an availability dependency
+- accessibility semantics expose one stable `CSP11 Learning System` container
+- rapid decorative feature changes are excluded from repeated semantic announcements
+- no Firebase read is added
+- no Supabase read is added
+- no remote animation asset is added
+- Home R remains isolated on `phase-home-r`
+
+Validation:
+- green implementation validation Run 40 on `382ec357b2969459ed00513f2b555df81d8cb826`
+- startup formatting passes
+- SM-1 Lottie contract passes
+- all `test/startup/` tests pass
+- reduced-motion behavior test passes
+- missing-asset fail-open test passes
+- seven-second watchdog test passes
+- lifecycle pause/resume test passes
+- strict startup analysis passes
+- full repository analysis passes with baseline info-only lint debt non-fatal and warnings/errors fatal
+
+### SM-5 — platform validation ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM5_PLATFORM_CLOSURE.md`
+
+Frozen characteristics:
+- release-render smoke gate runs before platform builds
+- full-mode startup rendering smoke passes
+- balanced-mode startup rendering smoke passes
+- Android release-mode APK compilation passes
+- Android APK packaging contains `assets/startup/csp11_startup_master.json`
+- Android release validation uses the repository's current debug signing configuration and does not claim production-store signing readiness
+- web release compilation passes
+- web release bundle contains the frozen CSP11 startup Lottie asset
+- Windows release compilation passes
+- Windows release bundle contains the frozen CSP11 startup Lottie asset
+- compact SHA/size evidence artifacts are retained for Android, web and Windows
+- platform closure workflow is retained for manual reruns and future startup-code changes
+- documentation-only commits no longer trigger the expensive three-platform closure matrix
+- no Home R commits are merged into Startup Motion
+- iOS remains outside SM-5 until an active iOS target is introduced
+
+Validation:
+- exact implementation SHA: `e7eee657e85739883523a503e1a13ebf60ded105`
+- Startup Motion Validation Run 43 passed on the exact implementation SHA
+- Startup Motion SM-5 Platform Closure Run 2 passed on the exact implementation SHA
+- render smoke: PASS
+- Android release build and packaged-asset verification: PASS
+- web release build and packaged-asset verification: PASS
+- Windows release build and packaged-asset verification: PASS
+- Android evidence artifact: `sm5-android-release-evidence`
+- web evidence artifact: `sm5-web-release-evidence`
+- Windows evidence artifact: `sm5-windows-release-evidence`
+
+## Acceptance criteria
+
+- no paid animation service
+- no Rive dependency
+- no authentication bypass
+- no startup network dependency for animation
+- animation cannot trap the learner
+- Home redesign remains independently mergeable
+- production asset can be replaced by exporting a new Glaxnimate Lottie JSON without rewriting startup architecture
+
+
+## Parallel branch isolation rule
+
+`phase-home-r` and `phase-startup-motion` are active parallel workstreams.
+
+Until an explicit integration step:
+- do not merge `phase-home-r` into `phase-startup-motion`
+- do not merge `phase-startup-motion` into `phase-home-r`
+- do not cherry-pick feature commits between them
+- each branch must remain independently runnable and testable
+- Home work continues only on `phase-home-r`
+- startup-motion work continues only on `phase-startup-motion`
+- integration happens only after either workstream reaches a stable closure checkpoint
+- the integration branch will resolve shared-file changes deliberately, especially `lib/main.dart` and `pubspec.yaml`
+- neither branch is considered the integration source of truth until that explicit integration checkpoint

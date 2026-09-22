@@ -1,0 +1,77 @@
+name: Startup Motion Validation
+
+on:
+  push:
+    branches:
+      - phase-startup-motion
+    paths:
+      - 'assets/startup/**'
+      - 'lib/screens/startup/**'
+      - 'lib/main.dart'
+      - 'pubspec.yaml'
+      - 'test/startup/**'
+      - 'docs/startup/**'
+      - '.github/workflows/startup_motion_validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: startup-motion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate free startup motion stack
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check startup Dart formatting
+        run: dart format --output=none --set-exit-if-changed lib/main.dart lib/screens/startup test/startup
+
+      - name: Validate Lottie JSON syntax
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("assets/startup/csp11_startup_master.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+
+          assert payload["w"] == 512
+          assert payload["h"] == 512
+          assert payload["fr"] == 30
+          assert payload["op"] == 144
+          assert len(payload["layers"]) >= 20
+          assert payload["assets"] == []
+
+          markers = {item["cm"] for item in payload["markers"]}
+          required = {"ignite", "learn", "practice", "lab", "remember", "converge"}
+          assert required <= markers
+          print("SM-1 Lottie contract validated.")
+          PY
+
+      - name: Run startup asset contract test
+        run: flutter test test/startup/
+
+      - name: Analyze startup scope strictly
+        run: flutter analyze lib/main.dart lib/screens/startup test/startup
+
+      - name: Analyze full project without failing on baseline info lints
+        run: flutter analyze --no-fatal-infos
