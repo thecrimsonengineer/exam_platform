@@ -1,24 +1,14 @@
 import 'dart:math';
 
 import 'package:exam_platform/models/question.dart';
-import '../models/study_content.dart';
-import 'cloud_question_repository.dart';
-import 'quiz_service_interface.dart';
-import 'study_content/cloud_content_repository.dart';
 
-/// Central quiz service for the CSP11 application.
+import 'questions/learner_question_package_delivery_service.dart';
+import 'quiz_service_interface.dart';
+
+/// Learner quiz service backed by FR9 verified competency packages.
 ///
-/// Student quizzes can receive questions from two Firebase-backed sources:
-///
-/// 1. Independently managed questions in the `questions` collection.
-/// 2. Questions embedded inside published StudyContent packages/versions.
-///
-/// Both sources are combined into one published student question pool.
-///
-/// Only Published questions are exposed to the student quiz system.
-///
-/// Offline caching and synchronization are intentionally deferred to
-/// Phase K.
+/// The service owns only the currently prepared protected question scope.
+/// It never performs a global learner Firestore question/content preload.
 class QuizService implements QuizServiceInterface {
   static QuizService? _shared;
 
@@ -29,85 +19,82 @@ class QuizService implements QuizServiceInterface {
   }
 
   QuizService({
-    CloudQuestionRepository? repository,
-    CloudQuestionRepository? questionRepository,
-    CloudContentRepository? contentRepository,
-  }) : _questionRepository =
-           questionRepository ?? repository ?? CloudQuestionRepository(),
-       _contentRepository = contentRepository ?? CloudContentRepository();
+    LearnerQuestionPackageDeliveryService? deliveryService,
+  }) : _deliveryService =
+           deliveryService ?? LearnerQuestionPackageDeliveryService();
 
-  /// Firebase repository for independently managed questions.
-  final CloudQuestionRepository _questionRepository;
-
-  /// Firebase repository for published StudyContent packages/versions.
-  final CloudContentRepository _contentRepository;
+  final LearnerQuestionPackageDeliveryService _deliveryService;
 
   List<Question> _questions = const <Question>[];
-  List<StudyContent> _publishedContent = const <StudyContent>[];
-  Future<void>? _initializationFuture;
+  Future<void>? _preparationFuture;
   int _protectedSessionGeneration = 0;
+  _PreparedQuizScope? _preparedScope;
 
   bool _initialized = false;
 
   bool get isInitialized => _initialized;
 
-  List<StudyContent> getPublishedContent() {
-    return List<StudyContent>.unmodifiable(_publishedContent);
+  /// The former whole-bank initializer is permanently disabled for learners.
+  Future<void> initialize({bool forceRefresh = false}) async {
+    throw StateError(
+      'Global learner quiz initialization is disabled. '
+      'Prepare an explicit FR9 question scope instead.',
+    );
   }
 
-  // ==========================================================
-  // INITIALIZATION
-  // ==========================================================
+  Future<void> prepareScope({
+    required int domain,
+    String? quizId,
+    String? competencyId,
+    String? subtopicId,
+    String? topicId,
+    bool forceRefresh = false,
+  }) async {
+    final scope = _PreparedQuizScope(
+      domain: domain,
+      quizId: quizId,
+      competencyId: competencyId,
+      subtopicId: subtopicId,
+      topicId: topicId,
+    );
 
-  /// Loads the complete published student question pool.
-  ///
-  /// Questions are collected from:
-  ///
-  /// - the Firebase `questions` collection
-  /// - questions embedded inside published StudyContent
-  ///
-  /// Duplicate question IDs are removed.
-  ///
-  /// Questions originating from published StudyContent are treated as
-  /// published because the containing content package/version itself is
-  /// published.
-  Future<void> initialize({bool forceRefresh = false}) async {
-    if (_initialized && !forceRefresh) {
+    if (_initialized && !forceRefresh && _preparedScope == scope) {
       return;
     }
 
-    final activeInitialization = _initializationFuture;
+    final activePreparation = _preparationFuture;
+    if (activePreparation != null) {
+      await activePreparation;
 
-    if (activeInitialization != null) {
-      await activeInitialization;
-
-      if (!forceRefresh) {
+      if (_initialized && !forceRefresh && _preparedScope == scope) {
         return;
       }
     }
 
-    final nextInitialization = _loadPublishedCatalog();
-    _initializationFuture = nextInitialization;
+    final generation = _protectedSessionGeneration;
+    final nextPreparation = _prepare(scope, generation);
+    _preparationFuture = nextPreparation;
 
     try {
-      await nextInitialization;
+      await nextPreparation;
     } finally {
-      if (identical(_initializationFuture, nextInitialization)) {
-        _initializationFuture = null;
+      if (identical(_preparationFuture, nextPreparation)) {
+        _preparationFuture = null;
       }
     }
   }
 
-  Future<void> _loadPublishedCatalog() async {
-    final generation = _protectedSessionGeneration;
-
-    // Start both learner-safe Firebase reads before awaiting either result.
-    // This avoids the previous sequential network waterfall.
-    final independentFuture = _questionRepository.loadPublished();
-    final publishedContentFuture = _contentRepository.loadPublished();
-
-    final independentQuestions = await independentFuture;
-    final publishedContent = await publishedContentFuture;
+  Future<void> _prepare(
+    _PreparedQuizScope scope,
+    int generation,
+  ) async {
+    final loaded = await _deliveryService.loadForScope(
+      domain: scope.domain,
+      quizId: scope.quizId,
+      competencyId: scope.competencyId,
+      subtopicId: scope.subtopicId,
+      topicId: scope.topicId,
+    );
 
     if (generation != _protectedSessionGeneration) {
       return;
@@ -115,51 +102,52 @@ class QuizService implements QuizServiceInterface {
 
     final merged = <int, Question>{};
 
-    for (final question in independentQuestions) {
+    for (final question in loaded) {
       if (!_isPublished(question) || question.id <= 0) {
         continue;
       }
 
-      merged[question.id] = question;
-    }
-
-    final normalizedPublishedContent = publishedContent
-        .where(_isPublishedContent)
-        .toList();
-
-    for (final content in normalizedPublishedContent) {
-      _addContentQuestions(content: content, target: merged);
+      merged.putIfAbsent(question.id, () => question);
     }
 
     final nextQuestions = merged.values.toList()
-      ..sort((a, b) => a.id.compareTo(b.id));
+      ..sort((left, right) => left.id.compareTo(right.id));
 
     if (generation != _protectedSessionGeneration) {
       return;
     }
 
-    // Commit the new catalogue atomically only after both Firebase reads
-    // succeed. An existing session cache is not destroyed by a failed refresh.
-    _questions = nextQuestions;
-    _publishedContent = List<StudyContent>.unmodifiable(
-      normalizedPublishedContent,
-    );
+    _questions = List<Question>.unmodifiable(nextQuestions);
+    _preparedScope = scope;
     _initialized = true;
   }
 
   Future<void> refresh() async {
-    await initialize(forceRefresh: true);
+    final scope = _preparedScope;
+
+    if (scope == null) {
+      throw StateError('No learner quiz scope is prepared.');
+    }
+
+    await prepareScope(
+      domain: scope.domain,
+      quizId: scope.quizId,
+      competencyId: scope.competencyId,
+      subtopicId: scope.subtopicId,
+      topicId: scope.topicId,
+      forceRefresh: true,
+    );
   }
 
   void clearProtectedSession() {
     _protectedSessionGeneration++;
     _questions = const <Question>[];
-    _publishedContent = const <StudyContent>[];
-    _initializationFuture = null;
+    _preparationFuture = null;
+    _preparedScope = null;
     _initialized = false;
   }
 
-  // ==========================================================
+// ==========================================================
   // BASIC PUBLISHED QUESTION ACCESS
   // ==========================================================
 
@@ -650,103 +638,6 @@ class QuizService implements QuizServiceInterface {
   }
 
   // ==========================================================
-  // CONTENT-VERSION QUESTION IMPORT
-  // ==========================================================
-
-  /// Adds questions embedded in one published StudyContent package.
-  ///
-  /// The containing StudyContent is already published because it came
-  /// from CloudContentRepository.loadPublished().
-  ///
-  /// Missing hierarchy metadata is filled from the content hierarchy:
-  ///
-  /// domain       <- StudyContent.domainId
-  /// competency   <- StudyContent.competencyId
-  /// subtopic     <- StudySubtopic.id
-  /// content      <- StudyContent.id
-  /// version      <- StudyContent.version
-  /// status       <- published
-  void _addContentQuestions({
-    required StudyContent content,
-    required Map<int, Question> target,
-  }) {
-    final domain = _parseDomainNumber(content.domainId);
-    final competencyId = content.competencyId.trim();
-    final contentPackageId = content.id.trim();
-
-    for (final topic in content.topics) {
-      for (final subtopic in topic.subtopics) {
-        final subtopicId = subtopic.id.trim();
-
-        for (final question in subtopic.questions) {
-          if (question.id <= 0) {
-            continue;
-          }
-
-          if (!_isPublished(question)) {
-            continue;
-          }
-
-          final normalized = _normalizeContentQuestion(
-            question: question,
-            domain: domain,
-            competencyId: competencyId,
-            subtopicId: subtopicId,
-            contentPackageId: contentPackageId,
-            contentVersion: content.version,
-          );
-
-          // Do not overwrite an independently managed Firebase
-          // question with an embedded copy using the same ID.
-          //
-          // The central questions collection is the stronger managed
-          // source when both sources contain the same question ID.
-          target.putIfAbsent(normalized.id, () => normalized);
-        }
-      }
-    }
-  }
-
-  /// Creates the student-facing representation of an embedded
-  /// content question.
-  Question _normalizeContentQuestion({
-    required Question question,
-    required int domain,
-    required String competencyId,
-    required String subtopicId,
-    required String contentPackageId,
-    required int contentVersion,
-  }) {
-    return Question(
-      id: question.id,
-      domain: question.domain > 0 ? question.domain : domain,
-      competencyId: question.competencyId.trim().isNotEmpty
-          ? question.competencyId.trim()
-          : competencyId,
-      subtopicId: question.subtopicId.trim().isNotEmpty
-          ? question.subtopicId.trim()
-          : subtopicId,
-      topicId: question.topicId.trim(),
-      quizId: question.quizId.trim(),
-      contentPackageId: question.contentPackageId.trim().isNotEmpty
-          ? question.contentPackageId.trim()
-          : contentPackageId,
-      question: question.question,
-      options: List<String>.from(question.options),
-      correctAnswer: question.correctAnswer,
-      explanation: question.explanation,
-      bestAnswerRationale: question.bestAnswerRationale,
-      reference: question.reference,
-      difficulty: question.difficulty,
-      cognitiveLevel: question.cognitiveLevel,
-      questionType: question.questionType,
-      status: 'published',
-      version: question.version > 0 ? question.version : contentVersion,
-      tags: List<String>.from(question.tags),
-    );
-  }
-
-  // ==========================================================
   // STATUS / ID HELPERS
   // ==========================================================
 
@@ -754,31 +645,8 @@ class QuizService implements QuizServiceInterface {
     return question.status.trim().toLowerCase() == 'published';
   }
 
-  bool _isPublishedContent(StudyContent content) {
-    return content.status.trim().toLowerCase() == 'published';
-  }
-
   List<Question> _published(Iterable<Question> questions) {
     return questions.where(_isPublished).toList();
-  }
-
-  int _parseDomainNumber(String domainId) {
-    final normalized = domainId.trim();
-
-    if (normalized.isEmpty) {
-      return 0;
-    }
-
-    final match = RegExp(
-      r'(?:d|domain[_-]?)(\d+)',
-      caseSensitive: false,
-    ).firstMatch(normalized);
-
-    if (match != null) {
-      return int.tryParse(match.group(1)!) ?? 0;
-    }
-
-    return int.tryParse(normalized) ?? 0;
   }
 
   // ==========================================================
@@ -792,4 +660,41 @@ class QuizService implements QuizServiceInterface {
 
     return result;
   }
+}
+
+class _PreparedQuizScope {
+  const _PreparedQuizScope({
+    required this.domain,
+    this.quizId,
+    this.competencyId,
+    this.subtopicId,
+    this.topicId,
+  });
+
+  final int domain;
+  final String? quizId;
+  final String? competencyId;
+  final String? subtopicId;
+  final String? topicId;
+
+  @override
+  bool operator ==(Object other) {
+    return other is _PreparedQuizScope &&
+        domain == other.domain &&
+        _normalize(quizId) == _normalize(other.quizId) &&
+        _normalize(competencyId) == _normalize(other.competencyId) &&
+        _normalize(subtopicId) == _normalize(other.subtopicId) &&
+        _normalize(topicId) == _normalize(other.topicId);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    domain,
+    _normalize(quizId),
+    _normalize(competencyId),
+    _normalize(subtopicId),
+    _normalize(topicId),
+  );
+
+  static String _normalize(String? value) => value?.trim().toLowerCase() ?? '';
 }
