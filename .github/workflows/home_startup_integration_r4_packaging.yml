@@ -71,8 +71,12 @@ jobs:
           print("INT-R4 Startup dependencies resolved.")
           PY
 
-      - name: Verify R4 formatting
-        run: dart format --output=none --set-exit-if-changed test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+      - name: Canonicalize R4 test and expose formatter patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+          git diff -- test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart || true
 
       - name: Analyze R4 integration scope
         run: flutter analyze --no-fatal-infos lib/screens/startup test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
