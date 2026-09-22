@@ -5,6 +5,8 @@ import 'package:exam_platform/models/app_user.dart';
 import 'package:exam_platform/screens/auth/auth_gate.dart';
 import 'package:exam_platform/services/auth/auth_state_provider.dart';
 import 'package:exam_platform/services/auth/learner_local_identity.dart';
+import 'package:exam_platform/services/online_access/learner_online_access_gate.dart';
+import 'package:exam_platform/services/online_access/learner_online_access_session_controller.dart';
 
 void main() {
   setUp(LearnerLocalIdentity.clear);
@@ -61,12 +63,21 @@ void main() {
     );
 
     final authStateProvider = _FakeAuthStateProvider(appUser: studentUser);
-
-    await tester.pumpWidget(
-      MaterialApp(home: AuthGate(authStateService: authStateProvider)),
+    final accessController = LearnerOnlineAccessSessionController(
+      validator: _AuthorizedValidator(),
+      currentUserId: () => LearnerLocalIdentity.currentUserId,
     );
 
-    await tester.pump();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AuthGate(
+          authStateService: authStateProvider,
+          learnerOnlineAccessController: accessController,
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
 
     expect(find.text('Home'), findsOneWidget);
     expect(LearnerLocalIdentity.currentUserId, 'student-1');
@@ -74,7 +85,22 @@ void main() {
       find.byKey(const ValueKey('student-shell-student-1')),
       findsOneWidget,
     );
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    accessController.dispose();
   });
+}
+
+class _AuthorizedValidator implements LearnerOnlineAccessValidator {
+  @override
+  Future<LearnerOnlineAccessResult> validate({
+    bool forceRefreshToken = false,
+  }) async {
+    return LearnerOnlineAccessResult(
+      status: LearnerOnlineAccessStatus.authorized,
+      checkedAt: DateTime.utc(2026),
+    );
+  }
 }
 
 class _FakeAuthStateProvider implements AuthStateProvider {
