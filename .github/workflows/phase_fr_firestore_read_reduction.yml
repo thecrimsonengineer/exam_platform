@@ -97,6 +97,9 @@ jobs:
             test/services/online_access/learner_online_access_session_controller_test.dart \
             test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart \
             test/screens/auth/learner_authorized_shell_test.dart \
+            test/services/study_content/study_content_session_refresh_test.dart \
+            test/widget_test.dart \
+            test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart \
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart
           git diff --
           git diff --exit-code -- \
@@ -149,6 +152,9 @@ jobs:
             test/services/online_access/learner_online_access_session_controller_test.dart \
             test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart \
             test/screens/auth/learner_authorized_shell_test.dart \
+            test/services/study_content/study_content_session_refresh_test.dart \
+            test/widget_test.dart \
+            test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart \
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart
 
       - name: Analyze
