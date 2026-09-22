@@ -38,7 +38,11 @@ void main() {
       proofWorkflow,
       contains('fr10_content_package_production_decode_test.dart'),
     );
-    expect(proofWorkflow, contains('package_downloads=1'));
+    expect(
+      proofWorkflow,
+      contains('package_downloads=\$((package_downloads + 1))'),
+    );
+    expect(proofWorkflow, contains('test "\$package_downloads" = "1"'));
     expect(proofWorkflow, contains('unchangedRequestRequiredAdditionalDownload'));
   });
 
