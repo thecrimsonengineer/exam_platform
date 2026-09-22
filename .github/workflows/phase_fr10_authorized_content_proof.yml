@@ -108,6 +108,31 @@ jobs:
           test "$measured_checksum" = "$expected_checksum"
           gzip -t "$package_gz"
 
+          gzip -dc "$package_gz" > "$package_json"
+          expected_domain="${competency_id%%_*}"
+
+          jq -e \
+            --arg competencyId "$competency_id" \
+            --arg domainId "$expected_domain" '
+              (.schemaVersion == 1) and
+              (.kind == "content") and
+              (.competencyId == $competencyId) and
+              (.sourceVersion | type == "number" and floor == . and . > 0) and
+              (.content | type == "object") and
+              (.content.id | type == "string" and length > 0) and
+              (.content.title | type == "string" and length > 0) and
+              (.content.status == "published") and
+              (.content.competencyId == $competencyId) and
+              (.content.domainId == $domainId) and
+              (.content.competencyNumber |
+                type == "number" and floor == . and . > 0) and
+              (.content.version == .sourceVersion) and
+              (.content.topics | type == "array")
+            ' "$package_json" >/dev/null
+
+          source_version="$(jq '.sourceVersion' "$package_json")"
+          study_content_id="$(jq -r '.content.id' "$package_json")"
+
           current_request="$(
             jq -nc               --arg competencyId "$competency_id"               --arg checksum "$expected_checksum"               --argjson version "$content_version"               '{
                 operation:"content_competency",
