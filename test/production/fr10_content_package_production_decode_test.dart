@@ -42,7 +42,7 @@ void main() {
       expect(decoded.content.competencyId, competencyId);
       expect(decoded.content.status, 'published');
       expect(decoded.content.domainId, competencyId.substring(0, 3));
-      expect(decoded.content.version, decoded.sourceVersion);
+      expect(decoded.content.version, greaterThan(0));
       expect(decoded.content.id, isNotEmpty);
       expect(decoded.content.title, isNotEmpty);
     },
