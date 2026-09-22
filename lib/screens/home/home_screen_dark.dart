@@ -1088,12 +1088,16 @@ class _HomeInlineLoading extends StatelessWidget {
           child: CircularProgressIndicator(strokeWidth: 2),
         ),
         SizedBox(width: 12),
-        Text(
-          'Preparing your learning position…',
-          style: TextStyle(
-            color: _DarkHomeScreenState._textMuted,
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: Text(
+            'Preparing your learning position…',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: _DarkHomeScreenState._textMuted,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
