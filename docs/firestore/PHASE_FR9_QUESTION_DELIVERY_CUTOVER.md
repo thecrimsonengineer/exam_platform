@@ -277,6 +277,16 @@ suites, full repository regression and diff hygiene.
 
 ### FR9C — Firebase-authorized Edge delivery gateway
 
+Status: COMPLETE on exact SHA
+`22f454ef965fef98ba890d71c2302b18fcc4e4af`.
+
+Validation run `35693824624` passed dependency locking, formatting, analysis,
+FR1-FR9, the FR9C Edge gateway security gate, all frozen Phase L4 suites,
+full repository regression and diff hygiene.
+
+Deployed `learner-question-packages` version 1 to Supabase project
+`csp11-supabase` after the exact-SHA gate completed green.
+
 - implement `learner-question-packages`;
 - verify the exact CSP11 Firebase project;
 - query service-role-only `published_catalog`;
@@ -286,6 +296,8 @@ suites, full repository regression and diff hygiene.
 - deploy only after exact-SHA CI is green.
 
 ### FR9D — competency-scoped QuizService
+
+Status: IMPLEMENTATION CANDIDATE.
 
 - replace global initialization with explicit scope preparation;
 - remove learner calls to `CloudQuestionRepository.loadPublished()`;
@@ -333,8 +345,7 @@ repositories until their own later migration phase explicitly changes them.
 
 ## NEXT ACTION
 
-Implement and validate FR9C only.
+Implement and validate FR9D only.
 
-Do not deploy the Edge function until its repository implementation and
-security guards are green on the exact-SHA FR gate. Do not cut learner
-QuizService over during FR9C.
+Do not begin FR9E practice-mode cutover until the competency/topic/subtopic/
+domain QuizService path is green on the exact-SHA full FR gate.
