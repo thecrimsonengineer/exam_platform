@@ -329,15 +329,44 @@ regression and diff hygiene.
 
 ### FR9F — production validation and closure
 
-- deploy the Edge function;
-- run authorized live metadata smoke tests;
-- verify unchanged package returns no signed URL/package download;
-- verify changed/missing package returns one signed URL;
-- verify invalid/wrong-project/missing Firebase token fails closed;
-- verify private Storage remains private;
-- verify learner Firestore global question reads are absent by architecture gate;
-- run FR1-FR9, frozen L4 and full repository regression;
-- freeze `phase-fr9-closed` only at the exact green SHA.
+Status: PRODUCTION VALIDATION IN PROGRESS. CLOSURE NOT YET AUTHORIZED.
+
+Green repository checkpoint:
+`c1cadb82c9a551604249083f091b2311ea377848`.
+
+Validation run `35697656070` passed dependency locking, formatting, analysis,
+FR1-FR9, the live missing/invalid-token gateway smoke, all frozen Phase L4
+suites, full repository regression and diff hygiene.
+
+Live production evidence recorded in
+`docs/firestore/PHASE_FR9F_PRODUCTION_VALIDATION_EVIDENCE.md`.
+
+Completed:
+
+- Edge function deployed and ACTIVE;
+- deployed function source matches the reviewed repository source byte-for-byte;
+- missing Firebase token returns HTTP 401;
+- malformed Firebase token returns HTTP 401;
+- package Storage bucket is private;
+- all 35 active catalogue rows map to 35 stored question objects;
+- `published_catalog` RLS is enabled;
+- anon/authenticated direct catalogue access is explicitly denied;
+- package Storage has no direct SELECT policy;
+- learner global Firestore question preload remains absent by architecture gate;
+- FR1-FR9, frozen L4, full regression and diff hygiene are green.
+
+Still required before closure:
+
+- one live request using a pre-existing valid signed Firebase learner token;
+- verify catalog metadata succeeds for that authorized token;
+- verify a missing/changed competency package returns exactly one 60-second
+  signed URL and the downloaded bytes match catalogue size/checksum;
+- verify the same current version/checksum returns `current: true` with no
+  signed URL/package download;
+- retain issuer/audience rejection for tokens from any other Firebase project.
+
+Do not freeze `phase-fr9-closed` until the authorized-token proof above is
+captured on the exact closure SHA.
 
 ## Permanent FR9 guard
 
@@ -358,9 +387,14 @@ repositories until their own later migration phase explicitly changes them.
 
 ## NEXT ACTION
 
-Execute FR9F production validation and closure evidence only.
+Complete the remaining FR9F authorized-token production proof only.
 
-Do not add new learner delivery behavior during FR9F. Validate the deployed
-gateway, private package catalogue/storage invariants, fail-closed
-authentication, absence of global learner Firestore question reads and the
-final exact-SHA repository gate before freezing `phase-fr9-closed`.
+Use a pre-existing valid Firebase ID token issued by
+`csp11-exam-platform`. Do not create a replacement authentication scheme,
+make Storage public, bypass Firebase verification or use a Supabase privileged
+credential in the learner client.
+
+After the authorized live catalog + changed-package + unchanged-package proof
+is captured, rerun the exact-SHA full FR gate. Freeze `phase-fr9-closed` only
+if that final run is green and the production evidence document has no pending
+closure items.
