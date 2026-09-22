@@ -153,10 +153,7 @@ void main() {
           contains('loadLatestForDate(date, refreshRemote: false)'),
         );
         expect(personalization, isNot(contains('DailyStudyPlanService(')));
-        expect(
-          personalization,
-          isNot(contains('PhaseAwareDailyPlanService(')),
-        );
+        expect(personalization, isNot(contains('PhaseAwareDailyPlanService(')));
         expect(personalization, isNot(contains('savePlan(')));
         expect(personalization, isNot(contains('markCompleted')));
       },
