@@ -140,7 +140,10 @@ void main() {
       contains('StudentProgressDashboardSessionCache.clearAll()'),
     );
     expect(quiz, contains('_protectedSessionGeneration'));
-    expect(quiz, contains('static QuizService get shared => _shared ??= QuizService()'));
+    expect(
+      quiz,
+      contains('static QuizService get shared => _shared ??= QuizService()'),
+    );
     expect(quiz, contains('generation != _protectedSessionGeneration'));
   });
 
