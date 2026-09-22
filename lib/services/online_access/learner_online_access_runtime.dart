@@ -75,9 +75,7 @@ class LearnerOnlineAccessRuntime {
     clearProtectedProcessMemory();
   }
 
-  static LearnerProtectedCacheAccessBoundary requireBoundaryFor(
-    String userId,
-  ) {
+  static LearnerProtectedCacheAccessBoundary requireBoundaryFor(String userId) {
     final normalized = _normalizeUserId(userId);
     final controller = _controller;
 
