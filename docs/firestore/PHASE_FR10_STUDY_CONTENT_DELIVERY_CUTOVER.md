@@ -2,7 +2,7 @@
 
 ## Status
 
-**PLAN FROZEN FOR IMPLEMENTATION**
+**IMPLEMENTATION COMPLETE - FINAL SAME-SHA FREEZE GATE**
 
 Working branch: `phase-fr10-studycontent-delivery-cutover`  
 Frozen source branch: `phase-fr9-closed`  
@@ -289,7 +289,35 @@ unconditional background content revalidation.
 
 ### FR10F - production validation and closure
 
-Status: IMPLEMENTATION IN PROGRESS.
+Status: IMPLEMENTATION COMPLETE. FINAL SAME-SHA FREEZE GATE PENDING.
+
+Verified functional closure candidate:
+`ef51a7960219b58282ff20f6e068b97bd0c57f33`.
+
+Authorized production proof run `35715777666`: PASS.  
+Full FR validation run `35715777759`: PASS.
+
+Sanitized production evidence:
+
+- valid Firebase learner token authorized successfully;
+- missing token failed closed;
+- malformed token failed closed;
+- authorized compact content catalogue returned 35 competencies;
+- changed `d01_c01` content package version 1 returned one 60-second signed URL;
+- compressed package size matched exactly at 13,006 bytes;
+- SHA-256 matched
+  `1b4455c812ff4b79acc10fdfe58375cb1e98812a0c3c92242fd16336c75af27b`;
+- gzip integrity passed;
+- the live package passed the app's real `ContentPackageDecoder`;
+- exactly one package download occurred;
+- unchanged re-open returned `current: true`;
+- unchanged response contained no signed URL;
+- unchanged re-open required zero additional package downloads;
+- no learner token or signed URL was persisted in evidence.
+
+The final documentation/freeze commit must now pass the same authorized production
+proof plus the full FR1-FR10, frozen L4 and repository regression. Only that
+same exact green SHA may become `phase-fr10-closed`.
 
 Prove on production:
 
