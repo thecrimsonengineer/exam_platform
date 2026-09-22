@@ -252,7 +252,11 @@ Deploy only after exact-SHA repository gates are green.
 
 ### FR10D - targeted StudyContentLoader cutover
 
-Status: IMPLEMENTATION IN PROGRESS.
+Status: COMPLETE on exact SHA
+`d68e37c901dc7a666a29e1ce5856070cefc94063`.
+
+Validation run `35710217566` passed formatting, analysis, FR1-FR10D,
+frozen Phase L4, full repository regression and diff hygiene.
 
 - route `loadStudyContent` through the verified content-package delivery
   service;
@@ -263,6 +267,8 @@ Status: IMPLEMENTATION IN PROGRESS.
   tests, without restoring learner Firestore behavior.
 
 ### FR10E - navigation and broad-read retirement
+
+Status: IMPLEMENTATION IN PROGRESS.
 
 - replace `loadDomains` and `loadCompetencies` data discovery with the
   canonical blueprint registry;
@@ -308,9 +314,9 @@ migration phase explicitly changes it.
 
 ## NEXT ACTION
 
-Complete FR10D only.
+Complete FR10E only.
 
-Cut over the zero-argument learner StudyContentLoader targeted load and refresh
-paths to the verified package service. Preserve explicit injected repository
-compatibility only for tests/tooling. Do not perform FR10E broad navigation
-retirement yet.
+Retire learner broad navigation reads, use the canonical CSP11 blueprint for
+structural domain/competency navigation, and remove unconditional session-RAM
+navigation revalidation. Keep legacy injected repository APIs only for
+non-runtime tests/tooling.

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/csp11_blueprint.dart';
 import '../models/study_content.dart';
 import 'auth/learner_local_identity.dart';
 import 'online_access/learner_online_access_runtime.dart';
@@ -135,6 +136,14 @@ class StudyContentLoader {
   /// existing published student cache may be used as a fallback for this
   /// domain only.
   Future<List<StudyContent>> loadPublishedDomainContent(String domainId) async {
+    if (repository == null) {
+      throw UnsupportedError(
+        'Broad learner StudyContent domain reads were retired in FR10E. '
+        'Use the canonical CSP11 blueprint for navigation and load one '
+        'competency package only when it is opened.',
+      );
+    }
+
     final cache = await _resolveCache();
 
     try {
@@ -177,6 +186,14 @@ class StudyContentLoader {
   }
 
   Future<List<StudyContent>> loadPublishedContent() async {
+    if (repository == null) {
+      throw UnsupportedError(
+        'Broad learner StudyContent reads were retired in FR10E. '
+        'Use the canonical CSP11 blueprint for navigation and targeted '
+        'content-package delivery for learner content.',
+      );
+    }
+
     final cache = await _resolveCache();
 
     try {
@@ -316,60 +333,67 @@ class StudyContentLoader {
   // Published Domains
   // ==========================================================
 
-  /// Returns unique published domains.
+  /// Returns the canonical CSP11 structural domains.
+  ///
+  /// Navigation metadata is generated locally from the frozen CSP11 blueprint.
+  /// It does not download StudyContent and performs no Firestore/Supabase read.
   Future<List<Map<String, dynamic>>> loadDomains() async {
-    final published = await loadPublishedContent();
+    return <Map<String, dynamic>>[
+      for (final domain in csp11Domains)
+        <String, dynamic>{
+          'id': domain.id,
+          'domainNumber': domain.number,
+          'title': domain.title,
+          'weightPercent': domain.weightPercent,
+        },
+    ];
+  }
 
-    final domains = <String, Map<String, dynamic>>{};
+  // ==========================================================
+  // Canonical Competency Navigation
+  // ==========================================================
 
-    for (final content in published) {
-      domains[content.domainId] = {
-        'id': content.domainId,
-        'title': content.domainId,
-      };
+  /// Returns canonical competency descriptors for one CSP11 domain.
+  ///
+  /// A descriptor is structural navigation only. Published StudyContent is
+  /// requested later through the targeted content-package delivery boundary.
+  Future<List<Map<String, dynamic>>> loadCompetencies(String domainId) async {
+    final domain = domainForContentId(domainId);
+
+    if (domain == null) {
+      return const <Map<String, dynamic>>[];
     }
 
-    return domains.values.toList();
+    return <Map<String, dynamic>>[
+      for (final competency in domain.competencies)
+        <String, dynamic>{
+          'id': competency.id,
+          'domainId': domain.id,
+          'competencyNumber': competency.number,
+          'title': competency.statement,
+        },
+    ];
   }
 
-  // ==========================================================
-  // Published Competencies
-  // ==========================================================
-
-  /// Returns the latest published version of each competency
-  /// belonging to a domain.
-  Future<List<Map<String, dynamic>>> loadCompetencies(String domainId) async {
-    final published = await loadPublishedDomainContent(domainId);
-
-    return published
-        .where(
-          (content) =>
-              content.domainId == domainId &&
-              content.status.toLowerCase() == 'published',
-        )
-        .map(
-          (content) => <String, dynamic>{
-            'id': content.competencyId,
-            'domainId': content.domainId,
-            'competencyNumber': content.competencyNumber,
-            'title': content.title,
-            'status': content.status,
-            'version': content.version,
-          },
-        )
-        .toList();
-  }
-
-  /// Finds a published competency.
+  /// Finds a canonical competency navigation descriptor.
   Future<Map<String, dynamic>?> loadCompetencyIndexEntry(
     String domainId,
     String competencyId,
   ) async {
-    final competencies = await loadCompetencies(domainId);
+    final domain = domainForContentId(domainId);
 
-    for (final competency in competencies) {
-      if (competency['id']?.toString() == competencyId) {
-        return competency;
+    if (domain == null) {
+      return null;
+    }
+
+    for (final competency in domain.competencies) {
+      if (competency.id == competencyId.trim().toLowerCase()) {
+        return <String, dynamic>{
+          'id': competency.id,
+          'domainId': domain.id,
+          'competencyNumber': competency.number,
+          'title': competency.statement,
+        };
       }
     }
 

@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
-import '../../../models/study_content.dart';
-
 import '../../../data/csp11_blueprint.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/app_radius.dart';
 import '../../../app/app_spacing.dart';
 import '../../../app/app_text_styles.dart';
-import '../../../services/study_content_loader.dart';
-import '../../../services/study_content/student_study_content_prefetch_service.dart';
 import 'study_content_screen.dart';
 import 'quiz/quiz_screen.dart';
 
@@ -25,14 +21,7 @@ class DomainScreen extends StatefulWidget {
 }
 
 class _DomainScreenState extends State<DomainScreen> {
-  final StudyContentLoader _loader = const StudyContentLoader();
-  final StudentStudyContentPrefetchService _prefetchService =
-      const StudentStudyContentPrefetchService();
-
-  bool _prefetchScheduled = false;
-
   late Csp11Domain _domain;
-  Future<List<dynamic>>? _contentFuture;
 
   @override
   void initState() {
@@ -42,33 +31,6 @@ class _DomainScreenState extends State<DomainScreen> {
       (domain) => domain.number == widget.domainNumber,
     );
 
-    _contentFuture = _loadDomainContent();
-  }
-
-  Future<List<dynamic>> _loadDomainContent() async {
-    return _loader.loadPublishedDomainContent(_domain.id);
-  }
-
-  void _scheduleSmartPrefetch(List<dynamic> content) {
-    if (_prefetchScheduled || content.isEmpty) {
-      return;
-    }
-
-    final published = content.whereType<StudyContent>().toList(growable: false);
-
-    if (published.isEmpty) {
-      return;
-    }
-
-    _prefetchScheduled = true;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) {
-        return;
-      }
-
-      _prefetchService.warmOne(domainId: _domain.id, contents: published);
-    });
   }
 
   void _openPracticeQuiz() {
@@ -628,6 +590,8 @@ class _DomainScreenState extends State<DomainScreen> {
   }
 
   Widget _buildLearningAreas() {
+    final competencies = _domain.competencies;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -637,62 +601,29 @@ class _DomainScreenState extends State<DomainScreen> {
           subtitle: 'Choose a competency to open its published learning path.',
         ),
         const SizedBox(height: AppSpacing.md),
-        FutureBuilder<List<dynamic>>(
-          future: _contentFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return _premiumLoadingCard();
-            }
-
-            if (snapshot.hasError) {
-              return _premiumMessageCard(
-                icon: Icons.cloud_off_rounded,
-                title: 'Content Unavailable',
-                message:
-                    'Published study content could not be loaded right now.',
-                color: Colors.red,
-              );
-            }
-
-            final content = snapshot.data ?? [];
-
-            if (content.isEmpty) {
-              return _premiumMessageCard(
-                icon: Icons.auto_stories_outlined,
-                title: 'Content Coming Soon',
-                message:
-                    'Published learning areas for this domain will appear here when available.',
-                color: Colors.orange,
-              );
-            }
-
-            _scheduleSmartPrefetch(content);
-
-            return Column(
-              children: List.generate(
-                content.length,
-                (index) => Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: _premiumContentCard(content[index], index),
-                ),
-              ),
-            );
-          },
+        Column(
+          children: List.generate(
+            competencies.length,
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: _premiumContentCard(competencies[index], index),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _premiumContentCard(dynamic content, int index) {
+  Widget _premiumContentCard(Csp11Competency content, int index) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.card),
         onTap: () {
           _openCompetency(
-            domainId: content.domainId,
-            competencyId: content.competencyId,
-            title: content.title,
+            domainId: _domain.id,
+            competencyId: content.id,
+            title: 'Competency ${content.number}',
           );
         },
         child: StudentGlassSurface(
@@ -738,7 +669,7 @@ class _DomainScreenState extends State<DomainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        content.title,
+                        content.statement,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.subtitle.copyWith(

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
@@ -75,52 +73,12 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
       return;
     }
 
-    // P4A: render cloud-verified process memory in this very first build.
-    // Do not wrap a RAM hit in Future.value()/FutureBuilder.
+    // Render already verified current-session RAM immediately.
+    //
+    // FR10E deliberately performs no unconditional background revalidation
+    // when navigating back to an already-open competency. Package version
+    // checks occur on targeted package loads rather than structural navigation.
     _visibleContent = sessionContent;
-
-    // Revalidate only this competency in the background.
-    unawaited(
-      _refreshSessionContent(
-        visibleContent: sessionContent,
-        domainId: widget.domainId,
-        competencyId: widget.competencyId,
-      ),
-    );
-  }
-
-  Future<void> _refreshSessionContent({
-    required StudyContent visibleContent,
-    required String domainId,
-    required String competencyId,
-  }) async {
-    try {
-      final refreshed = await _loader.refreshStudyContent(
-        domainId: domainId,
-        competencyId: competencyId,
-      );
-
-      if (!mounted ||
-          widget.domainId != domainId ||
-          widget.competencyId != competencyId) {
-        return;
-      }
-
-      final changed =
-          refreshed.id != visibleContent.id ||
-          refreshed.version != visibleContent.version;
-
-      if (!changed) {
-        return;
-      }
-
-      setState(() {
-        _visibleContent = refreshed;
-      });
-    } catch (_) {
-      // Current-session RAM content was already verified from the published
-      // cloud boundary. A transient refresh failure must not blank the screen.
-    }
   }
 
   void _retry() {

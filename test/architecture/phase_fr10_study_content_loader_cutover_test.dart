@@ -78,9 +78,8 @@ void main() {
     expect(preferencesIndex, greaterThan(boundaryIndex));
   });
 
-  test('FR10D keeps existing first-frame RAM and targeted refresh behavior', () {
+  test('FR10D keeps existing first-frame RAM and targeted package load', () {
     expect(screen, contains('peekSessionStudyContent'));
-    expect(screen, contains('refreshStudyContent'));
     expect(screen, contains('loadStudyContent'));
   });
 
