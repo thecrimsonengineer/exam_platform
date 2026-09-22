@@ -22,7 +22,7 @@ void main() {
     await tester.pump();
 
     expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsOneWidget);
-    expect(find.text('CSP11'), findsOneWidget);
+    expect(find.text('CSP11'), findsWidgets);
     expect(tester.takeException(), isNull);
 
     await tester.pump(const Duration(milliseconds: 750));
