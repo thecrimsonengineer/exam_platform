@@ -1,0 +1,238 @@
+name: Home Startup Integration R6 Dual Regression
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration
+    paths:
+      - 'lib/**'
+      - 'assets/startup/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'test/**'
+      - 'tools/verify_home_r_contract.py'
+      - '.github/workflows/home_startup_integration_r6_dual_regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-integration-r6-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  R5_SHA: '59932d84645008f215123dfb9400562c148779ad'
+  HOME_R_SHA: '243d9fdf93c55775321468eb17ce85cd3b7c557f'
+  STARTUP_SHA: '9c1697b1d01c8db85fe535bc77ea6b6aa6f39565'
+
+jobs:
+  integrity-and-analysis:
+    name: Integrity and full analyzer
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and frozen ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${HOME_R_SHA}" HEAD
+          git merge-base --is-ancestor "${STARTUP_SHA}" HEAD
+          git merge-base --is-ancestor "${R5_SHA}" HEAD
+          git diff --check
+
+      - name: Verify frozen HOME-R architecture
+        run: python3 tools/verify_home_r_contract.py
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Verify integration test formatting
+        run: dart format --output=none --set-exit-if-changed test/integration/home_startup
+
+      - name: Analyze full repository
+        run: flutter analyze --no-fatal-infos
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
+
+  startup-home-core:
+    name: Startup + HOME-R core
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact SHA
+        run: test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Startup Motion regression family
+        run: flutter test test/startup
+      - name: Integration seam regression family
+        run: flutter test test/integration/home_startup
+      - name: HOME-R service regression family
+        run: flutter test test/features/exam_readiness/home_r
+      - name: HOME-R screen regression family
+        run: flutter test test/screens/home
+      - name: HOME-R settings regression
+        run: flutter test test/screens/settings/home_r8_bookmark_relocation_contract_test.dart
+      - name: Navigation and learner-shell regression
+        run: |
+          flutter test test/screens/navigation/bottom_navigation_contract_test.dart
+          flutter test test/screens/auth/learner_authorized_shell_test.dart
+          flutter test test/screens/auth/auth_gate_email_verification_test.dart
+
+  planner-readiness:
+    name: Planner + readiness regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: M7A through M7F readiness and planner suite
+        run: |
+          flutter test test/features/exam_readiness/m7a
+          flutter test test/features/exam_readiness/m7b
+          flutter test test/features/exam_readiness/m7c
+          flutter test test/features/exam_readiness/m7d
+          flutter test test/features/exam_readiness/m7e
+          flutter test test/features/exam_readiness/m7f
+      - name: Readiness theme and entry contracts
+        run: |
+          flutter test test/features/exam_readiness/exam_readiness_dark_mode_contract_test.dart
+          flutter test test/screens/practice/exam_readiness_entry_contract_test.dart
+
+  learning-delivery-quiz:
+    name: Study content + quiz regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: FR learner-delivery architecture regressions
+        run: |
+          flutter test test/architecture/phase_fr10_study_content_delivery_test.dart
+          flutter test test/architecture/phase_fr10_study_content_loader_cutover_test.dart
+          flutter test test/architecture/phase_fr9_quiz_service_cutover_test.dart
+          flutter test test/architecture/phase_fr_edge_auth_gateway_test.dart
+      - name: Study-content service regressions
+        run: |
+          flutter test test/services/study_content
+          flutter test test/services/study_content_loader_test.dart
+          flutter test test/services/study_content_search_service_test.dart
+      - name: Quiz service and controller regressions
+        run: |
+          flutter test test/services/quiz_semantics_test.dart
+          flutter test test/services/quiz_service_firebase_test.dart
+          flutter test test/controllers/quiz_controller_randomizer_test.dart
+      - name: Quiz presentation regressions
+        run: |
+          flutter test test/screens/courses/csp/quiz_domain_label_test.dart
+          flutter test test/screens/courses/csp/quiz_tag_dark_mode_navigation_test.dart
+          flutter test test/screens/courses/csp/csp11_p6_3_1_quiz_question_contrast_contract_test.dart
+
+  settings-progress-theme:
+    name: Settings + progress + theme regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Settings and bookmark regressions
+        run: |
+          flutter test test/screens/settings/csp11_settings_p5_contract_test.dart
+          flutter test test/screens/settings/csp11_settings_p6_dark_mode_contract_test.dart
+          flutter test test/screens/settings/home_r8_bookmark_relocation_contract_test.dart
+          flutter test test/services/settings/csp11_dark_mode_default_contract_test.dart
+          flutter test test/services/bookmark_service_test.dart
+      - name: Progress regressions
+        run: |
+          flutter test test/screens/progress
+          flutter test test/models/progress_analytics_snapshot_test.dart
+          flutter test test/services/progress_analytics_event_bus_test.dart
+          flutter test test/services/student_progress_dashboard_detail_test.dart
+          flutter test test/services/student_progress_dashboard_indexing_test.dart
+          flutter test test/services/student_progress_dashboard_service_test.dart
+          flutter test test/services/student_progress_dashboard_session_cache_test.dart
+          flutter test test/services/student_question_progress_service_test.dart
+
+  full-flutter-regression:
+    name: Complete Flutter regression suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact SHA and R5 ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${R5_SHA}" HEAD
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Run every Flutter test
+        run: flutter test
+      - name: Confirm complete suite made no repository changes
+        run: git diff --exit-code
+
+  r6-closure:
+    name: R6 dual-regression closure
+    needs:
+      - integrity-and-analysis
+      - startup-home-core
+      - planner-readiness
+      - learning-delivery-quiz
+      - settings-progress-theme
+      - full-flutter-regression
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record green exact-SHA regression closure
+        run: |
+          echo "INT-R6 dual regression passed for ${GITHUB_SHA}"
+          echo "Home R ancestor: ${HOME_R_SHA}"
+          echo "Startup Motion ancestor: ${STARTUP_SHA}"
+          echo "R5 base: ${R5_SHA}"
