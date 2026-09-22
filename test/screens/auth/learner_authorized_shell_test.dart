@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:exam_platform/screens/auth/learner_authorized_shell.dart';
+import 'package:exam_platform/services/online_access/learner_connectivity_signal_source.dart';
 import 'package:exam_platform/services/online_access/learner_online_access_gate.dart';
 import 'package:exam_platform/services/online_access/learner_online_access_session_controller.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ void main() {
           home: LearnerAuthorizedShell(
             userId: 'student-1',
             controller: controller,
+            connectivitySignalSource: _AlwaysOnlineConnectivitySource(),
             authorizedChild: const Text(
               'Protected learner UI',
               key: ValueKey('protected-learner-ui'),
@@ -106,4 +108,13 @@ class _ImmediateValidator implements LearnerOnlineAccessValidator {
       checkedAt: DateTime.utc(2026),
     );
   }
+}
+
+class _AlwaysOnlineConnectivitySource
+    implements LearnerConnectivitySignalSource {
+  @override
+  Future<bool> hasConnectivity() async => true;
+
+  @override
+  Stream<bool> get changes => const Stream<bool>.empty();
 }
