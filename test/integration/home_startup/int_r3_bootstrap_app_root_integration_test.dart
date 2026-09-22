@@ -7,39 +7,42 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('INT-R3 bootstrap and app-root integration', () {
-    test('production source keeps one application root and one learner shell path', () {
-      final main = File('lib/main.dart').readAsStringSync();
-      final startup = File(
-        'lib/screens/startup/csp11_startup_screen.dart',
-      ).readAsStringSync();
-      final auth = File('lib/screens/auth/auth_gate.dart').readAsStringSync();
-      final learnerShell = File(
-        'lib/screens/auth/learner_authorized_shell.dart',
-      ).readAsStringSync();
-      final bottomNavigation = File(
-        'lib/screens/navigation/bottom_navigation.dart',
-      ).readAsStringSync();
+    test(
+      'production source keeps one application root and one learner shell path',
+      () {
+        final main = File('lib/main.dart').readAsStringSync();
+        final startup = File(
+          'lib/screens/startup/csp11_startup_screen.dart',
+        ).readAsStringSync();
+        final auth = File('lib/screens/auth/auth_gate.dart').readAsStringSync();
+        final learnerShell = File(
+          'lib/screens/auth/learner_authorized_shell.dart',
+        ).readAsStringSync();
+        final bottomNavigation = File(
+          'lib/screens/navigation/bottom_navigation.dart',
+        ).readAsStringSync();
 
-      expect(_occurrences(main, 'MaterialApp('), 1);
-      expect(
-        main,
-        contains('home: const Csp11StartupScreen(child: AuthGate())'),
-      );
+        expect(_occurrences(main, 'MaterialApp('), 1);
+        expect(
+          main,
+          contains('home: const Csp11StartupScreen(child: AuthGate())'),
+        );
 
-      expect(_occurrences(startup, 'MaterialApp('), 0);
-      expect(_occurrences(startup, 'Navigator('), 0);
-      expect(_occurrences(startup, 'widget.child'), 1);
+        expect(_occurrences(startup, 'MaterialApp('), 0);
+        expect(_occurrences(startup, 'Navigator('), 0);
+        expect(_occurrences(startup, 'widget.child'), 1);
 
-      expect(_occurrences(auth, 'MaterialApp('), 0);
-      expect(auth, contains('return LearnerAuthorizedShell('));
+        expect(_occurrences(auth, 'MaterialApp('), 0);
+        expect(auth, contains('return LearnerAuthorizedShell('));
 
-      expect(_occurrences(learnerShell, 'MaterialApp('), 0);
-      expect(learnerShell, contains('BottomNavigationScreen('));
+        expect(_occurrences(learnerShell, 'MaterialApp('), 0);
+        expect(learnerShell, contains('BottomNavigationScreen('));
 
-      expect(bottomNavigation, contains('HomeScreen('));
-      expect(bottomNavigation, contains('DarkHomeScreen('));
-      expect(_occurrences(bottomNavigation, 'IndexedStack('), 1);
-    });
+        expect(bottomNavigation, contains('HomeScreen('));
+        expect(bottomNavigation, contains('DarkHomeScreen('));
+        expect(_occurrences(bottomNavigation, 'IndexedStack('), 1);
+      },
+    );
 
     testWidgets(
       'reduced startup removes only the overlay and does not remount the app child',
@@ -130,25 +133,34 @@ void main() {
       },
     );
 
-    test('startup remains a presentation layer over existing application state', () {
-      final startup = File(
-        'lib/screens/startup/csp11_startup_screen.dart',
-      ).readAsStringSync();
-      final personalization = File(
-        'lib/screens/startup/startup_personalization_service.dart',
-      ).readAsStringSync();
+    test(
+      'startup remains a presentation layer over existing application state',
+      () {
+        final startup = File(
+          'lib/screens/startup/csp11_startup_screen.dart',
+        ).readAsStringSync();
+        final personalization = File(
+          'lib/screens/startup/startup_personalization_service.dart',
+        ).readAsStringSync();
 
-      expect(startup, contains('return Stack('));
-      expect(startup, contains('widget.child,'));
-      expect(startup, contains('if (_showOverlay)'));
-      expect(startup, contains('setState(() => _showOverlay = false)'));
+        expect(startup, contains('return Stack('));
+        expect(startup, contains('widget.child,'));
+        expect(startup, contains('if (_showOverlay)'));
+        expect(startup, contains('setState(() => _showOverlay = false)'));
 
-      expect(personalization, contains('loadLatestForDate(date, refreshRemote: false)'));
-      expect(personalization, isNot(contains('DailyStudyPlanService(')));
-      expect(personalization, isNot(contains('PhaseAwareDailyPlanService(')));
-      expect(personalization, isNot(contains('savePlan(')));
-      expect(personalization, isNot(contains('markCompleted')));
-    });
+        expect(
+          personalization,
+          contains('loadLatestForDate(date, refreshRemote: false)'),
+        );
+        expect(personalization, isNot(contains('DailyStudyPlanService(')));
+        expect(
+          personalization,
+          isNot(contains('PhaseAwareDailyPlanService(')),
+        );
+        expect(personalization, isNot(contains('savePlan(')));
+        expect(personalization, isNot(contains('markCompleted')));
+      },
+    );
   });
 }
 
