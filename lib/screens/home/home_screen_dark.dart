@@ -14,16 +14,12 @@ import '../courses/csp/domain_screen_dark.dart';
 import '../courses/csp/study_content_screen_dark.dart';
 
 class DarkHomeScreen extends StatefulWidget {
-  final VoidCallback? onOpenStudy;
-  final VoidCallback? onOpenFlashcards;
   final VoidCallback? onOpenSettings;
   final Future<StudentLearningPosition?> Function()? loadLearningPosition;
   final Future<Map<String, StudentSubtopicProgress>> Function()? loadProgress;
 
   const DarkHomeScreen({
     super.key,
-    this.onOpenStudy,
-    this.onOpenFlashcards,
     this.onOpenSettings,
     this.loadLearningPosition,
     this.loadProgress,
@@ -615,7 +611,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
           ),
         ),
         const SizedBox(width: 10),
-        _ArrowButton(tooltip: 'Open Study', onTap: widget.onOpenStudy),
+        _ArrowButton(tooltip: 'Retry', onTap: () => _refreshHome()),
       ],
     );
   }

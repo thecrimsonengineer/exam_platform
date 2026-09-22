@@ -79,8 +79,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
       switch (index) {
         case 0:
           return DarkHomeScreen(
-            onOpenStudy: () => _selectTab(1),
-            onOpenFlashcards: () => _selectTab(4),
             onOpenSettings: _openSettings,
           );
         case 1:
@@ -99,8 +97,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     switch (index) {
       case 0:
         return HomeScreen(
-          onOpenStudy: () => _selectTab(1),
-          onOpenFlashcards: () => _selectTab(4),
           onOpenSettings: _openSettings,
         );
       case 1:

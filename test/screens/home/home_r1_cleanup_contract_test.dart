@@ -27,6 +27,8 @@ void main() {
           'PracticeMode.',
           'class _PrimaryActionData',
           'class _QuickActionData',
+          'onOpenStudy',
+          'onOpenFlashcards',
         ]) {
           expect(
             source,
@@ -45,6 +47,7 @@ void main() {
           '_buildProgressIntelligence(snapshot, data)',
           'StudentLearningPositionService',
           'home-exam-readiness',
+          "tooltip: 'Retry'",
         ]) {
           expect(
             source,
@@ -54,5 +57,15 @@ void main() {
         }
       });
     }
+
+
+    test('bottom navigation removes obsolete Home callbacks', () {
+      final source =
+          File('lib/screens/navigation/bottom_navigation.dart').readAsStringSync();
+
+      expect(source, isNot(contains('onOpenStudy')));
+      expect(source, isNot(contains('onOpenFlashcards')));
+      expect(source, contains('onOpenSettings: _openSettings'));
+    });
   });
 }
