@@ -1,5 +1,5 @@
 import 'daily_study_plan.dart';
-import '../services/today_plan_task_category_policy.dart';
+import 'today_plan_task_category.dart';
 
 class TodayPlanCategorySummary {
   const TodayPlanCategorySummary({

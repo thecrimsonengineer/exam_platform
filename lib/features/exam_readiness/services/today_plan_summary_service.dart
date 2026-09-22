@@ -47,10 +47,7 @@ class TodayPlanSummaryService {
       date: plan.date,
       planStatus: plan.status,
       availableMinutes: plan.availableMinutes,
-      allocatedMinutes: plan.blocks.fold<int>(
-        0,
-        (sum, block) => sum + block.plannedMinutes,
-      ),
+      allocatedMinutes: plan.allocatedMinutes,
       completedMinutes: completedMinutes,
       taskCount: plan.blocks.length,
       completedTaskCount: completedTaskCount,

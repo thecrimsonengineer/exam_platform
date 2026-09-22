@@ -1,6 +1,5 @@
 import '../models/study_plan_block.dart';
-
-enum TodayPlanTaskCategory { learn, practice, remember }
+import '../models/today_plan_task_category.dart';
 
 class TodayPlanTaskCategoryPolicy {
   const TodayPlanTaskCategoryPolicy();
