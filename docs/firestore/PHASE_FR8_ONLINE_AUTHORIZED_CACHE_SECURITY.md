@@ -1,6 +1,6 @@
 # CSP11 Phase FR8 Online-Authorized Cache Security
 
-Status: IMPLEMENTATION CANDIDATE
+Status: CLOSED CANDIDATE
 Branch: phase-fr8-online-authorized-cache-security
 Source checkpoint: phase-fr7-closed
 Source SHA: 4c160881fc1661221b8a9f2f67cd55db35cfa5da
@@ -190,7 +190,13 @@ regression and diff hygiene.
 
 ### FR8E — Closure
 
-Status: CLOSURE CANDIDATE.
+Status: COMPLETE on exact SHA
+`1dfed6439045be4a9964613307f33530c75869b2`.
+
+Validation run `35683479860` passed the dependency/native-registration
+checks, formatting, analysis, FR1-FR8, the executable FR8 closure evidence
+matrix, all frozen Phase L4 suites, full repository regression and diff
+hygiene.
 
 The closure matrix is executable in
 `test/architecture/phase_fr8_closure_test.dart` and requires all of the
@@ -209,11 +215,29 @@ following evidence to remain present and green:
 No uninstall, Clear Data operation, package-ID change or learner-data rewrite is
 required by FR8.
 
+## FR8 closure evidence
+
+FR8 is ready to freeze subject to one final evidence-only exact-SHA validation.
+
+The closure candidate proves:
+
+- FR8A authorization sessions are UID-bound and fail closed;
+- FR8B protected StudyContent storage is Firebase-UID scoped;
+- legacy protected cache migration is verify-before-retire and rollback-safe;
+- FR8C protected learner UI renders only after current remote authorization;
+- logout, account switch and resume transitions clear or lock protected
+  process-memory state;
+- FR8D transport recovery never substitutes connectivity for authorization;
+- offline launch and confirmed network loss leave protected content locked;
+- existing learner progress and Exam Readiness namespaces remain preserved;
+- Firestore remains the learner content/question source after FR8;
+- no uninstall, Clear Data operation, package-ID change or learner-data rewrite
+  is required.
+
 ## NEXT ACTION
 
-Run the full FR validation on this FR8E closure candidate. If green, record the
-exact closure evidence, rerun the final exact-SHA repository gate and create
-`phase-fr8-closed` at that exact green SHA.
+Run the final exact repository validation on this evidence-only closure commit.
+If green, create `phase-fr8-closed` at that exact SHA.
 
 Do not begin learner source cutover during FR8. Firestore remains the learner
 content/question source until the later reviewed cutover phases.
