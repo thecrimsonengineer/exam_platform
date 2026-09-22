@@ -278,12 +278,14 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
         onPracticeSessionCompleted:
             target.kind == StudyPlanExecutionTargetKind.practiceSession ||
                 target.kind == StudyPlanExecutionTargetKind.examSimulation
-            ? () => _complete(
-                activeBlock.blockId,
-                source:
-                    StudyPlanCompletionEvidenceSource.plannedPracticeSession,
-                silentIfBlocked: true,
-              )
+            ? () async {
+                await _complete(
+                  activeBlock.blockId,
+                  source:
+                      StudyPlanCompletionEvidenceSource.plannedPracticeSession,
+                  silentIfBlocked: true,
+                );
+              }
             : null,
       );
 
@@ -372,6 +374,10 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
         block: block,
         attempts: attempts,
         completedAt: at,
+        assessmentSessionKind:
+            source == StudyPlanCompletionEvidenceSource.plannedPracticeSession
+            ? StudyPlanCompletionEvidenceService.sessionKindForBlock(blockId)
+            : null,
       );
 
       final update = await widget.learningStateCoordinator.processOutcome(

@@ -135,6 +135,45 @@ void main() {
       expect(outcome.ultraHardAccuracy, 1);
     });
 
+    test('can scope outcome capture to one planned session', () {
+      final block = m7eBlock(
+        status: StudyPlanBlockStatus.started,
+      ).copyWith(startedAt: DateTime(2026, 9, 18, 10));
+
+      final outcome = service.build(
+        plan: m7ePlan(blocks: [block]),
+        block: block,
+        completedAt: DateTime(2026, 9, 18, 10, 30),
+        assessmentSessionKind: 'study_plan:block-1',
+        attempts: [
+          LearnerAssessmentAttempt(
+            attemptId: 'planned',
+            questionId: 1,
+            domainNumber: 3,
+            competencyId: 'd03_c02',
+            topicId: 'd03_c02_t01',
+            subtopicId: 'd03_c02_t01_s01',
+            correct: true,
+            answeredAt: DateTime(2026, 9, 18, 10, 5),
+            cognitiveLevel: 'application',
+            questionType: 'scenario_mcq',
+            difficultyLane: AttemptDifficultyLane.hard,
+            publishedAtAttempt: true,
+            questionVersion: 1,
+            sessionKind: 'study_plan:block-1',
+          ),
+          m7eAttempt(
+            attemptId: 'unrelated',
+            questionId: 2,
+            answeredAt: DateTime(2026, 9, 18, 10, 10),
+          ),
+        ],
+      );
+
+      expect(outcome.questionsAttempted, 1);
+      expect(outcome.questionsCorrect, 1);
+    });
+
     test('does not fabricate question accuracy when no attempts occurred', () {
       final block = m7eBlock(
         status: StudyPlanBlockStatus.started,

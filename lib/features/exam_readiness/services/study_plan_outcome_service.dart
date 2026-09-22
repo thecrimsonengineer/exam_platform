@@ -11,6 +11,7 @@ class StudyPlanOutcomeService {
     required StudyPlanBlock block,
     required Iterable<LearnerAssessmentAttempt> attempts,
     required DateTime completedAt,
+    String? assessmentSessionKind,
     int? learnerRating,
     bool abandoned = false,
   }) {
@@ -30,6 +31,8 @@ class StudyPlanOutcomeService {
           (attempt) =>
               attempt.publishedAtAttempt &&
               attempt.competencyId.trim().toLowerCase() == competencyId &&
+              (assessmentSessionKind == null ||
+                  attempt.sessionKind == assessmentSessionKind) &&
               !attempt.answeredAt.isBefore(startedAt) &&
               !attempt.answeredAt.isAfter(completedAt),
         )
