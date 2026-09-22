@@ -31,7 +31,7 @@ jobs:
           echo "HOME-R exact SHA: ${GITHUB_SHA}"
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
           git merge-base --is-ancestor             b54740c394e8c0b0cdc6d7c2acd165f6a3ba1123             HEAD
-          git diff --check             b54740c394e8c0b0cdc6d7c2acd165f6a3ba1123...HEAD
+          git diff --check             c27772a315489c6493077dc75d950937d8d8f517...HEAD
 
       - name: Verify frozen HOME-R architecture
         run: python3 tools/verify_home_r_contract.py
