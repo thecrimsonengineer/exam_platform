@@ -24,9 +24,10 @@ void main() {
         'lib/services/quiz_service.dart',
       ).readAsString();
 
+      expect(service, contains('static QuizService? _shared;'));
       expect(
         service,
-        contains('static final QuizService shared = QuizService();'),
+        contains('static QuizService get shared => _shared ??= QuizService();'),
       );
       expect(service, contains('Future<void>? _initializationFuture'));
       expect(service, contains('getPublishedContent()'));
