@@ -19,8 +19,7 @@ class LearnerAuthorizedShell extends StatefulWidget {
   final Widget? authorizedChild;
 
   @override
-  State<LearnerAuthorizedShell> createState() =>
-      _LearnerAuthorizedShellState();
+  State<LearnerAuthorizedShell> createState() => _LearnerAuthorizedShellState();
 }
 
 class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
@@ -36,7 +35,8 @@ class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
 
     _ownsController = widget.controller == null;
     _controller =
-        widget.controller ?? LearnerOnlineAccessRuntime.createDefaultController();
+        widget.controller ??
+        LearnerOnlineAccessRuntime.createDefaultController();
 
     LearnerOnlineAccessRuntime.bind(
       userId: widget.userId,
