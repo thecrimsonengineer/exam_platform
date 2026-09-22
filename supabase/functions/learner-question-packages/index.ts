@@ -42,6 +42,21 @@ type CatalogDescriptor = {
   ultraHardCount?: number;
 };
 
+type ContentCatalogRow = {
+  competency_id: string;
+  content_version: number;
+  content_checksum_sha256: string;
+  content_object_path: string;
+  content_size_bytes: number;
+};
+
+type ContentCatalogDescriptor = {
+  competencyId: string;
+  contentVersion: number;
+  contentChecksumSha256: string;
+  contentSizeBytes: number;
+};
+
 function jsonResponse(status: number, body: Record<string, unknown>) {
   return new Response(JSON.stringify(body), {
     status,
@@ -161,6 +176,35 @@ function parseKnownPackage(body: Record<string, unknown>) {
   };
 }
 
+function parseKnownContentPackage(body: Record<string, unknown>) {
+  const rawVersion = body.knownContentVersion;
+  const rawChecksum = body.knownContentChecksumSha256;
+
+  if (rawVersion == null && rawChecksum == null) {
+    return null;
+  }
+
+  if (
+    typeof rawVersion !== "number" ||
+    !Number.isInteger(rawVersion) ||
+    rawVersion <= 0 ||
+    typeof rawChecksum !== "string"
+  ) {
+    throw new Error("invalid_known_content_package");
+  }
+
+  const checksum = rawChecksum.trim().toLowerCase();
+
+  if (!checksumPattern.test(checksum)) {
+    throw new Error("invalid_known_content_package");
+  }
+
+  return {
+    version: rawVersion,
+    checksum,
+  };
+}
+
 function descriptorFromRow(row: CatalogRow): CatalogDescriptor {
   const competencyId = parseCompetencyId(row.competency_id);
   const version = Number(row.question_version);
@@ -194,6 +238,40 @@ function descriptorFromRow(row: CatalogRow): CatalogDescriptor {
     questionChecksumSha256: checksum,
     questionSizeBytes: sizeBytes,
     publishedQuestionCount: count,
+  };
+}
+
+function contentDescriptorFromRow(
+  row: ContentCatalogRow,
+): ContentCatalogDescriptor {
+  const competencyId = parseCompetencyId(row.competency_id);
+  const version = Number(row.content_version);
+  const checksum = row.content_checksum_sha256?.trim().toLowerCase();
+  const sizeBytes = Number(row.content_size_bytes);
+
+  if (
+    competencyId == null ||
+    !Number.isInteger(version) ||
+    version <= 0 ||
+    !checksumPattern.test(checksum) ||
+    !Number.isInteger(sizeBytes) ||
+    sizeBytes < 0
+  ) {
+    throw new Error("catalog_integrity_error");
+  }
+
+  const expectedPath =
+    `content/${competencyId}/v${version}.json.gz`;
+
+  if (row.content_object_path !== expectedPath) {
+    throw new Error("catalog_integrity_error");
+  }
+
+  return {
+    competencyId,
+    contentVersion: version,
+    contentChecksumSha256: checksum,
+    contentSizeBytes: sizeBytes,
   };
 }
 
@@ -347,6 +425,112 @@ async function handleCatalog(
   }
 }
 
+async function handleContentCompetency(
+  supabase: ReturnType<typeof createClient>,
+  body: Record<string, unknown>,
+) {
+  const competencyId = parseCompetencyId(body.competencyId);
+
+  if (competencyId == null) {
+    return jsonResponse(400, { error: "invalid_competency_id" });
+  }
+
+  let knownPackage: { version: number; checksum: string } | null;
+
+  try {
+    knownPackage = parseKnownContentPackage(body);
+  } catch {
+    return jsonResponse(400, { error: "invalid_known_content_package" });
+  }
+
+  const { data, error } = await supabase
+    .from("published_catalog")
+    .select(
+      "competency_id,content_version,content_checksum_sha256,content_object_path,content_size_bytes",
+    )
+    .eq("competency_id", competencyId)
+    .eq("active", true)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("Learner content catalogue lookup failed:", error.code);
+    return jsonResponse(503, { error: "catalog_unavailable" });
+  }
+
+  if (data == null) {
+    return jsonResponse(404, { error: "package_not_found" });
+  }
+
+  let descriptor: ContentCatalogDescriptor;
+
+  try {
+    descriptor = contentDescriptorFromRow(data as ContentCatalogRow);
+  } catch {
+    return jsonResponse(503, { error: "catalog_integrity_error" });
+  }
+
+  const current =
+    knownPackage != null &&
+    knownPackage.version === descriptor.contentVersion &&
+    knownPackage.checksum === descriptor.contentChecksumSha256;
+
+  if (current) {
+    return jsonResponse(200, {
+      ...descriptor,
+      current: true,
+    });
+  }
+
+  const { data: signed, error: signedError } = await supabase.storage
+    .from(packageBucket)
+    .createSignedUrl(
+      `content/${descriptor.competencyId}/v${descriptor.contentVersion}.json.gz`,
+      signedUrlTtlSeconds,
+    );
+
+  if (signedError || !signed?.signedUrl) {
+    console.warn(
+      "Learner content signed URL creation failed:",
+      signedError?.name ?? "unknown_error",
+    );
+    return jsonResponse(503, { error: "package_url_unavailable" });
+  }
+
+  return jsonResponse(200, {
+    ...descriptor,
+    current: false,
+    signedUrl: signed.signedUrl,
+    signedUrlTtlSeconds,
+  });
+}
+
+async function handleContentCatalog(
+  supabase: ReturnType<typeof createClient>,
+) {
+  const { data: rows, error } = await supabase
+    .from("published_catalog")
+    .select(
+      "competency_id,content_version,content_checksum_sha256,content_object_path,content_size_bytes",
+    )
+    .eq("active", true)
+    .order("competency_id");
+
+  if (error) {
+    console.warn("Learner content catalogue list failed:", error.code);
+    return jsonResponse(503, { error: "catalog_unavailable" });
+  }
+
+  try {
+    const catalog = (rows ?? []).map((row) =>
+      contentDescriptorFromRow(row as ContentCatalogRow)
+    );
+
+    return jsonResponse(200, { catalog });
+  } catch {
+    return jsonResponse(503, { error: "catalog_integrity_error" });
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -390,6 +574,14 @@ Deno.serve(async (req: Request) => {
 
   if (operation === "catalog") {
     return await handleCatalog(supabase);
+  }
+
+  if (operation === "content_competency") {
+    return await handleContentCompetency(supabase, body);
+  }
+
+  if (operation === "content_catalog") {
+    return await handleContentCatalog(supabase);
   }
 
   return jsonResponse(400, { error: "invalid_operation" });

@@ -203,7 +203,11 @@ regression and diff hygiene.
 
 ### FR10B - UID-scoped bounded content package cache
 
-Status: IMPLEMENTATION IN PROGRESS.
+Status: COMPLETE on exact SHA
+`7121eea1e40a917f357e81297da1a3857c02ddba`.
+
+Validation run `35707297545` passed FR1-FR10B, frozen Phase L4, full repository
+regression and diff hygiene.
 
 - add 512 KiB compressed-byte LRU cache;
 - require same-UID current online authorization for every cache operation;
@@ -212,6 +216,8 @@ Status: IMPLEMENTATION IN PROGRESS.
 - add cross-user, locked-state, eviction and corruption tests.
 
 ### FR10C - authorized content gateway
+
+Status: IMPLEMENTATION IN PROGRESS.
 
 Extend the reviewed learner package Edge boundary with content-specific
 operations while keeping existing FR9 question operations byte-compatible.
@@ -284,8 +290,7 @@ migration phase explicitly changes it.
 
 ## NEXT ACTION
 
-Complete FR10B only.
+Complete FR10C only.
 
-Do not cut learner runtime over during FR10B. First prove the UID-scoped
-compressed-byte LRU cache, verification and rollback behavior under the full
-inherited FR and frozen L4 gates.
+Extend and deploy the reviewed Edge gateway only after exact-SHA repository
+validation is green. Do not cut StudyContentLoader over during FR10C.
