@@ -43,19 +43,13 @@ void main() {
     test('filters Practice and Remember through the shared R2 policy', () {
       expect(
         filter
-            .apply(
-              blocks: blocks,
-              category: TodayPlanTaskCategory.practice,
-            )
+            .apply(blocks: blocks, category: TodayPlanTaskCategory.practice)
             .map((block) => block.blockId),
         <String>['practice'],
       );
       expect(
         filter
-            .apply(
-              blocks: blocks,
-              category: TodayPlanTaskCategory.remember,
-            )
+            .apply(blocks: blocks, category: TodayPlanTaskCategory.remember)
             .map((block) => block.blockId),
         <String>['remember'],
       );
@@ -72,25 +66,25 @@ void main() {
       expect(visible, isEmpty);
     });
 
-    test('ambiguous recovery fails closed only when classification is needed', () {
-      final recovery = _block(
-        'recovery',
-        StudyPlanBlockType.recovery,
-        reasonCodes: const <String>['ASSESSMENT_BALANCE'],
-      );
+    test(
+      'ambiguous recovery fails closed only when classification is needed',
+      () {
+        final recovery = _block(
+          'recovery',
+          StudyPlanBlockType.recovery,
+          reasonCodes: const <String>['ASSESSMENT_BALANCE'],
+        );
 
-      expect(
-        filter.apply(blocks: <StudyPlanBlock>[recovery]),
-        hasLength(1),
-      );
-      expect(
-        () => filter.apply(
-          blocks: <StudyPlanBlock>[recovery],
-          category: TodayPlanTaskCategory.remember,
-        ),
-        throwsStateError,
-      );
-    });
+        expect(filter.apply(blocks: <StudyPlanBlock>[recovery]), hasLength(1));
+        expect(
+          () => filter.apply(
+            blocks: <StudyPlanBlock>[recovery],
+            category: TodayPlanTaskCategory.remember,
+          ),
+          throwsStateError,
+        );
+      },
+    );
   });
 }
 

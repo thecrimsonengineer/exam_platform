@@ -33,10 +33,10 @@ void main() {
     });
 
     test('test matrix remains exhaustive when StudyPlanBlockType changes', () {
-      expect(
-        <StudyPlanBlockType>{...expected.keys, StudyPlanBlockType.recovery},
-        StudyPlanBlockType.values.toSet(),
-      );
+      expect(<StudyPlanBlockType>{
+        ...expected.keys,
+        StudyPlanBlockType.recovery,
+      }, StudyPlanBlockType.values.toSet());
     });
 
     test('review-oriented recovery maps to Remember', () {

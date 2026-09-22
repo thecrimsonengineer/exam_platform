@@ -74,7 +74,10 @@ void main() {
     await tester.pump();
 
     expect(find.text('Planned practice unavailable'), findsWidgets);
-    expect(find.textContaining('No planned questions available.'), findsOneWidget);
+    expect(
+      find.textContaining('No planned questions available.'),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('Retry'));
     await tester.pump();
