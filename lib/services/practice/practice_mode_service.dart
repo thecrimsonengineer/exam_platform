@@ -348,7 +348,7 @@ class PracticeModeService {
     });
 
     final target = candidates.first;
-    final prefix = 'd${target.domainNumber.toString().padLeft(2, '0')}_';
+    final prefix = "d${target.domainNumber.toString().padLeft(2, '0')}_";
     final domainPackages = catalog
         .where((descriptor) => descriptor.competencyId.startsWith(prefix))
         .toList(growable: false);
