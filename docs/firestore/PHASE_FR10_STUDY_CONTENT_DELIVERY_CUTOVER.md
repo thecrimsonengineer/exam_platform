@@ -268,7 +268,17 @@ frozen Phase L4, full repository regression and diff hygiene.
 
 ### FR10E - navigation and broad-read retirement
 
-Status: IMPLEMENTATION IN PROGRESS.
+Status: COMPLETE on exact SHA
+`76df4eb28dc760077331e92869928ea8bbcebb1a`.
+
+Validation run `35713353625` passed formatting, analysis, FR1-FR10E,
+frozen Phase L4, full repository regression and diff hygiene.
+
+The learner light and dark domain screens now build competency navigation from
+the canonical CSP11 blueprint. The development content test route also uses
+canonical targeted navigation. No student-facing CSP screen calls broad
+published-content loaders, and session-RAM navigation no longer performs an
+unconditional background content revalidation.
 
 - replace `loadDomains` and `loadCompetencies` data discovery with the
   canonical blueprint registry;
@@ -278,6 +288,8 @@ Status: IMPLEMENTATION IN PROGRESS.
 - architecture-gate against broad learner StudyContent reads.
 
 ### FR10F - production validation and closure
+
+Status: IMPLEMENTATION IN PROGRESS.
 
 Prove on production:
 
@@ -314,9 +326,9 @@ migration phase explicitly changes it.
 
 ## NEXT ACTION
 
-Complete FR10E only.
+Complete FR10F and freeze FR10.
 
-Retire learner broad navigation reads, use the canonical CSP11 blueprint for
-structural domain/competency navigation, and remove unconditional session-RAM
-navigation revalidation. Keep legacy injected repository APIs only for
-non-runtime tests/tooling.
+Run the strengthened authorized production proof against the final learner
+delivery architecture, record sanitized closure evidence, require a completely
+green exact-SHA FR1-FR10 + frozen L4 + full repository gate, and freeze
+`phase-fr10-closed` only at that exact reviewed evidence SHA.
