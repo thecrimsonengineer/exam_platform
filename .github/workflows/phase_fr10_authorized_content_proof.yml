@@ -46,6 +46,7 @@ jobs:
           changed_json="$RUNNER_TEMP/fr10-content-changed.json"
           current_json="$RUNNER_TEMP/fr10-content-current.json"
           package_gz="$RUNNER_TEMP/fr10-content-package.json.gz"
+          package_json="$RUNNER_TEMP/fr10-content-package.json"
           evidence_json="$GITHUB_WORKSPACE/fr10-authorized-content-production-proof.json"
 
           catalog_status="$(
@@ -132,7 +133,7 @@ jobs:
               (has("contentObjectPath") | not)
             ' "$current_json" >/dev/null
 
-          jq -n             --arg status "PASS"             --arg repository "$GITHUB_REPOSITORY"             --arg branch "$GITHUB_REF_NAME"             --arg sha "$GITHUB_SHA"             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson catalogCount "$catalog_count"             --argjson contentVersion "$content_version"             --argjson expectedSizeBytes "$expected_size"             --argjson measuredSizeBytes "$measured_size"             '{
+          jq -n             --arg status "PASS"             --arg repository "$GITHUB_REPOSITORY"             --arg branch "$GITHUB_REF_NAME"             --arg sha "$GITHUB_SHA"             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson catalogCount "$catalog_count"             --argjson contentVersion "$content_version"             --argjson expectedSizeBytes "$expected_size"             --argjson measuredSizeBytes "$measured_size"             --argjson sourceVersion "$source_version"             --arg studyContentId "$study_content_id"             '{
               status:$status,
               repository:$repository,
               branch:$branch,
@@ -149,11 +150,17 @@ jobs:
                 expectedSizeBytes:$expectedSizeBytes,
                 measuredSizeBytes:$measuredSizeBytes,
                 gzipIntegrity:true,
+                packageEnvelopeValidated:true,
+                publishedStudyContentIdentityValidated:true,
+                sourceVersion:$sourceVersion,
+                studyContentId:$studyContentId,
+                packageDownloads:1,
                 changedRequestCurrent:false,
                 signedUrlIssued:true,
                 signedUrlTtlSeconds:60,
                 unchangedRequestCurrent:true,
-                unchangedResponseSignedUrlAbsent:true
+                unchangedResponseSignedUrlAbsent:true,
+                unchangedRequestRequiredAdditionalDownload:false
               },
               sensitiveValuesPersisted:false
             }' > "$evidence_json"
