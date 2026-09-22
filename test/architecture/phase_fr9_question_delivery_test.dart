@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const phasePath = 'docs/firestore/PHASE_FR9_QUESTION_DELIVERY_CUTOVER.md';
   const packagePath = 'lib/services/questions/published_question_package.dart';
+  const cachePath =
+      'lib/services/questions/uid_scoped_question_package_cache.dart';
   const fr7BuilderPath =
       'tool/fr7_package_publish/fr7_package_publish_core.dart';
   const workflowPath =
@@ -12,12 +14,14 @@ void main() {
 
   late String phase;
   late String packageSource;
+  late String cacheSource;
   late String fr7Builder;
   late String workflow;
 
   setUpAll(() {
     phase = File(phasePath).readAsStringSync();
     packageSource = File(packagePath).readAsStringSync();
+    cacheSource = File(cachePath).readAsStringSync();
     fr7Builder = File(fr7BuilderPath).readAsStringSync();
     workflow = File(workflowPath).readAsStringSync();
   });
@@ -87,8 +91,52 @@ void main() {
     expect(phase, contains('below the complete current question bank'));
   });
 
+  test('FR9B question-package cache is UID-scoped and authorization-gated', () {
+    expect(cacheSource, contains('storageKeyForUser(String userId)'));
+    expect(
+      cacheSource,
+      contains('LearnerProtectedCacheAccessBoundary _accessBoundary'),
+    );
+    expect(cacheSource, contains('_requireAuthorized()'));
+    expect(cacheSource, contains('protected_question_packages.v1'));
+  });
+
+  test('FR9B cache enforces the frozen compressed-byte LRU budget', () {
+    expect(cacheSource, contains('defaultMaxCompressedBytes = 512 * 1024'));
+    expect(cacheSource, contains('totalCompressedBytes'));
+    expect(cacheSource, contains('_evictToBudget'));
+    expect(cacheSource, contains('lastAccessEpochMs'));
+    expect(cacheSource, contains('candidates.sort'));
+  });
+
+  test('FR9B cache verifies replacement before and after persistence', () {
+    final preWriteDecode = cacheSource.indexOf(
+      'decoder.decode(\n      descriptor: descriptor',
+    );
+    final write = cacheSource.indexOf(
+      'final written = await _store.setString(storageKey, encoded)',
+    );
+    final readBack = cacheSource.indexOf(
+      'final readBackRaw = _store.getString(storageKey)',
+    );
+    final restore = cacheSource.indexOf('await _restoreRaw(previousRaw)');
+
+    expect(preWriteDecode, greaterThanOrEqualTo(0));
+    expect(write, greaterThan(preWriteDecode));
+    expect(readBack, greaterThan(write));
+    expect(restore, greaterThan(readBack));
+  });
+
+  test('FR9B cache never references learner-owned progress namespaces', () {
+    expect(cacheSource, isNot(contains('question_progress')));
+    expect(cacheSource, isNot(contains('readiness')));
+    expect(cacheSource, isNot(contains('bookmark')));
+    expect(cacheSource, isNot(contains('attempt')));
+  });
+
   test('FR9 is wired into the main FR validation workflow', () {
     expect(workflow, contains('phase-fr9-question-delivery-cutover'));
     expect(workflow, contains('FR9 question delivery foundation tests'));
+    expect(workflow, contains('FR9 protected question cache tests'));
   });
 }
