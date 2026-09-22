@@ -22,7 +22,7 @@ class StartupTimeline {
   };
 
   static StartupBeat beatForProgress(double progress) {
-    final normalized = progress.clamp(0.0, 1.0);
+    final normalized = progress.clamp(0.0, 1.0).toDouble();
     final frame = normalized * totalFrames;
 
     if (frame >= startFrames[StartupBeat.converge]!) {
@@ -44,7 +44,7 @@ class StartupTimeline {
   }
 
   static double beatProgress(double progress, StartupBeat beat) {
-    final normalized = progress.clamp(0.0, 1.0);
+    final normalized = progress.clamp(0.0, 1.0).toDouble();
     final frame = normalized * totalFrames;
     final start = startFrames[beat]!.toDouble();
     final next = _nextStartFrame(beat).toDouble();
