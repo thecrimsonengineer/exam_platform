@@ -223,6 +223,7 @@ jobs:
               "$FR10_ENDPOINT"
           )"
           test "$current_status" = "200"
+          echo "FR10F stage: unchanged request HTTP 200"
 
           jq -e \
             --arg competencyId "$FR10_PROOF_COMPETENCY_ID" \
