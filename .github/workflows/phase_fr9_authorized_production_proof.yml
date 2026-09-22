@@ -2,6 +2,11 @@ name: Phase FR9 Authorized Production Proof
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - phase-fr9-question-delivery-cutover
+    paths:
+      - .github/fr9_authorized_proof_trigger
 
 permissions:
   contents: read
@@ -48,7 +53,6 @@ jobs:
           catalog_status="$(
             curl --silent --show-error               --output "$catalog_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data '{"operation":"catalog"}'               "$FR9_ENDPOINT"
           )"
-
           test "$catalog_status" = "200"
 
           jq -e '
@@ -86,7 +90,6 @@ jobs:
           changed_status="$(
             curl --silent --show-error               --output "$changed_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$changed_request"               "$FR9_ENDPOINT"
           )"
-
           test "$changed_status" = "200"
 
           jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$question_version"             --argjson size "$expected_size"             --argjson count "$published_question_count" '
@@ -124,7 +127,6 @@ jobs:
           current_status="$(
             curl --silent --show-error               --output "$current_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$current_request"               "$FR9_ENDPOINT"
           )"
-
           test "$current_status" = "200"
 
           jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$question_version"             --argjson size "$expected_size"             --argjson count "$published_question_count" '
