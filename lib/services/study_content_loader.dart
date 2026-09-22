@@ -2,9 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/study_content.dart';
+import 'auth/learner_local_identity.dart';
+import 'online_access/learner_online_access_runtime.dart';
 import 'study_content/cloud_published_content_repository.dart';
-import 'study_content/student_content_cache_repository.dart';
+import 'study_content/student_content_cache.dart';
 import 'study_content/student_study_content_session_cache.dart';
+import 'study_content/uid_scoped_protected_content_cache_repository.dart';
 
 /// Loads CSP study content for the student-facing portal.
 ///
@@ -19,7 +22,7 @@ class StudyContentLoader {
   const StudyContentLoader({this.repository, this.cacheRepository});
 
   final CloudPublishedContentRepository? repository;
-  final StudentContentCacheRepository? cacheRepository;
+  final StudentContentCache? cacheRepository;
 
   CloudPublishedContentRepository get _repository =>
       repository ?? CloudPublishedContentRepository();
@@ -28,14 +31,24 @@ class StudyContentLoader {
   ///
   /// SharedPreferences is resolved asynchronously because the student cache
   /// is backed by local persistent storage.
-  Future<StudentContentCacheRepository> _resolveCache() async {
+  Future<StudentContentCache> _resolveCache() async {
     if (cacheRepository != null) {
       return cacheRepository!;
     }
 
+    final userId = LearnerLocalIdentity.requireCurrentUserId();
+    final accessBoundary = LearnerOnlineAccessRuntime.requireBoundaryFor(
+      userId,
+    );
     final preferences = await SharedPreferences.getInstance();
+    final cache = UidScopedProtectedContentCacheRepository(
+      store: SharedPreferencesProtectedStudentContentCacheStore(preferences),
+      userId: userId,
+      accessBoundary: accessBoundary,
+    );
 
-    return StudentContentCacheRepository(preferences: preferences);
+    await cache.migrateLegacyIfAuthorized();
+    return cache;
   }
 
   /// Returns published content already verified during this app session.
@@ -46,6 +59,13 @@ class StudyContentLoader {
     required String domainId,
     required String competencyId,
   }) {
+    final userId = LearnerLocalIdentity.currentUserId;
+
+    if (userId == null ||
+        !LearnerOnlineAccessRuntime.isAuthorizedFor(userId)) {
+      return null;
+    }
+
     return StudentStudyContentSessionCache.get(
       domainId: domainId,
       competencyId: competencyId,
