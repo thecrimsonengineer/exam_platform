@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../../services/settings/theme_mode_service.dart';
 import '../../services/learning_activity_tracker.dart';
 import '../../services/progress_overview_snapshot_service.dart';
-import '../../services/quiz_service.dart';
 import '../courses/csp/csp_study_hub_screen.dart';
 import '../courses/csp/csp_study_hub_screen_dark.dart';
 import '../flashcards/flashcards_screen.dart';
@@ -41,15 +39,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
     _ensureScreenBuilt(0, ThemeModeService.isDarkMode.value);
     LearningActivityTracker.instance.start();
     const ProgressOverviewSnapshotService().prewarm();
-    unawaited(_prewarmQuizCatalog());
-  }
-
-  Future<void> _prewarmQuizCatalog() async {
-    try {
-      await QuizService.shared.initialize();
-    } catch (_) {
-      // Practice screens retain their normal retry/error path.
-    }
   }
 
   Future<void> _openSettings() async {
