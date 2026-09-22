@@ -20,7 +20,7 @@ void main() {
   );
 
   test(
-    'Home quick-practice cards are direct in light and dark variants',
+    'Home quick-practice shortcuts stay removed after HOME-R',
     () async {
       final light = await File(
         'lib/screens/home/home_screen.dart',
@@ -32,10 +32,17 @@ void main() {
       for (final source in [light, dark]) {
         expect(
           source,
-          contains('_openQuickPractice(PracticeMode.dailyChallenge)'),
+          isNot(contains('_openQuickPractice(PracticeMode.dailyChallenge)')),
         );
-        expect(source, contains('_openQuickPractice(PracticeMode.weakAreas)'));
-        expect(source, contains('_openQuickPractice(PracticeMode.randomQuiz)'));
+        expect(
+          source,
+          isNot(contains('_openQuickPractice(PracticeMode.weakAreas)')),
+        );
+        expect(
+          source,
+          isNot(contains('_openQuickPractice(PracticeMode.randomQuiz)')),
+        );
+        expect(source, isNot(contains('PracticeQuickLaunchScreen')));
       }
     },
   );

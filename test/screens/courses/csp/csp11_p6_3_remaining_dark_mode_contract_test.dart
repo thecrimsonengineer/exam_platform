@@ -61,6 +61,10 @@ void main() {
 
   test('P6.3 dark Practice and Legal routes are wired', () {
     final home = read('lib/screens/home/home_screen_dark.dart');
+    final bottomNavigation = read(
+      'lib/screens/navigation/bottom_navigation.dart',
+    );
+    final practiceHub = read('lib/screens/practice/practice_hub_screen.dart');
     final settings = read('lib/screens/settings/settings_screen_dark.dart');
     final practice = read(
       'lib/screens/courses/csp/csp_practice_screen_dark.dart',
@@ -68,9 +72,12 @@ void main() {
     final legal = read('lib/screens/settings/legal_document_screen_dark.dart');
     final builder = read('lib/widgets/csp/student_quiz_builder.dart');
 
-    expect(home, contains('DarkCspPracticeScreen'));
+    expect(home, isNot(contains('DarkCspPracticeScreen')));
     expect(home, contains('DarkDomainScreen'));
     expect(home, contains('DarkStudyContentScreen'));
+    expect(bottomNavigation, contains("label: 'Practice'"));
+    expect(bottomNavigation, contains('PracticeHubScreen'));
+    expect(practiceHub, contains('DarkCspPracticeScreen'));
     expect(settings, contains('DarkLegalDocumentScreen'));
     expect(practice, contains('AppTheme.darkTheme'));
     expect(legal, contains('Color(0xFFC4CDDA)'));

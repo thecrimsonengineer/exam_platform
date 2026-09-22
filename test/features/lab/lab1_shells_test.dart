@@ -50,7 +50,7 @@ void main() {
     ),
     (
       path: 'lib/screens/navigation/bottom_navigation.dart',
-      needle: 'onOpenFlashcards: () => _selectTab(4)',
+      needle: 'onOpenSettings: _openSettings',
     ),
     (path: 'lib/screens/navigation/bottom_navigation.dart', needle: 'case 2:'),
     (path: 'lib/screens/navigation/bottom_navigation.dart', needle: 'case 3:'),
