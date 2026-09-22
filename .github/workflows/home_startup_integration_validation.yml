@@ -1,0 +1,69 @@
+name: Home Startup Integration Validation
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration
+    paths:
+      - 'lib/main.dart'
+      - 'lib/screens/startup/**'
+      - 'lib/screens/auth/**'
+      - 'lib/screens/navigation/bottom_navigation.dart'
+      - 'lib/screens/home/**'
+      - 'pubspec.yaml'
+      - 'test/startup/**'
+      - 'test/integration/home_startup/**'
+      - 'test/screens/home/**'
+      - '.github/workflows/home_startup_integration_validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-bootstrap-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify integration ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 243d9fdf93c55775321468eb17ce85cd3b7c557f HEAD
+          git merge-base --is-ancestor 9c1697b1d01c8db85fe535bc77ea6b6aa6f39565 HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify INT-R3 formatting
+        run: dart format --output=none --set-exit-if-changed lib/main.dart lib/screens/startup lib/screens/auth/learner_authorized_shell.dart lib/screens/navigation/bottom_navigation.dart test/integration/home_startup
+
+      - name: Analyze integrated bootstrap scope
+        run: flutter analyze --no-fatal-infos lib/main.dart lib/screens/startup lib/screens/auth/learner_authorized_shell.dart lib/screens/navigation/bottom_navigation.dart test/integration/home_startup
+
+      - name: Run INT-R3 app-root contracts
+        run: flutter test test/integration/home_startup/int_r3_bootstrap_app_root_integration_test.dart
+
+      - name: Run Startup Motion regressions
+        run: flutter test test/startup
+
+      - name: Preserve HOME-R closure contract
+        run: flutter test test/screens/home/home_r9_closure_contract_test.dart
