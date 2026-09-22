@@ -315,9 +315,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            error.toString().replaceFirst('Bad state: ', ''),
-          ),
+          content: Text(error.toString().replaceFirst('Bad state: ', '')),
         ),
       );
     }
@@ -362,9 +360,9 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
       if (!decision.eligible) {
         if (!silentIfBlocked && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(decision.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(decision.message)));
         }
         return false;
       }
@@ -938,9 +936,9 @@ class _TodayPlanFilterBanner extends StatelessWidget {
         Expanded(
           child: Text(
             'Showing ${_categoryLabel(category)} tasks from today\'s plan',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
           ),
         ),
       ],
@@ -985,10 +983,7 @@ class _TodayPlanFilterBanner extends StatelessWidget {
 }
 
 class _NoCategoryTasks extends StatelessWidget {
-  const _NoCategoryTasks({
-    required this.category,
-    required this.onViewAll,
-  });
+  const _NoCategoryTasks({required this.category, required this.onViewAll});
 
   final TodayPlanTaskCategory category;
   final VoidCallback onViewAll;
@@ -1007,16 +1002,16 @@ class _NoCategoryTasks extends StatelessWidget {
         children: [
           Text(
             'Nothing scheduled under ${_categoryLabel(category)} today.',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w900,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 6),
           Text(
             'The rest of today\'s authoritative plan is unchanged.',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: scheme.onSurfaceVariant,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: 10),
           TextButton.icon(

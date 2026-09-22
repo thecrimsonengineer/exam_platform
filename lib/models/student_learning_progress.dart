@@ -1,11 +1,7 @@
 import 'dart:convert';
 
 /// Learner state for a persisted CSP11 learning item.
-enum StudentLearningState {
-  notStarted,
-  inProgress,
-  completed,
-}
+enum StudentLearningState { notStarted, inProgress, completed }
 
 extension StudentLearningStateX on StudentLearningState {
   String get value {
@@ -244,12 +240,8 @@ class StudentProgressSummary {
 }
 
 /// JSON utility kept here so the persisted contract stays explicit.
-String encodeStudentProgressMap(
-  Map<String, StudentSubtopicProgress> progress,
-) {
+String encodeStudentProgressMap(Map<String, StudentSubtopicProgress> progress) {
   return jsonEncode(
-    progress.map(
-      (key, value) => MapEntry(key, value.toJson()),
-    ),
+    progress.map((key, value) => MapEntry(key, value.toJson())),
   );
 }
