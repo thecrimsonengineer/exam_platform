@@ -168,7 +168,12 @@ quality and engine suites, 2,530 full-repository tests and diff hygiene.
 
 ### FR8D — Network-loss integration
 
-Status: IMPLEMENTATION CANDIDATE.
+Status: COMPLETE on exact SHA
+`5a767d136c7e82946f4949ee9bb29c39f0d4058b`.
+
+Validation run `35683002299` passed dependency/native-registration checks,
+formatting, analysis, FR1-FR8, the frozen Phase L4 suites, full repository
+regression and diff hygiene.
 
 - use `connectivity_plus 7.3.1` only as a cross-platform transport signal;
 - keep connectivity state separate from authorization state;
@@ -185,24 +190,30 @@ Status: IMPLEMENTATION CANDIDATE.
 
 ### FR8E — Closure
 
-- run offline launch tests;
-- run cached-content offline tests;
-- run logout/account-switch isolation tests;
-- run resume revalidation tests;
-- run interrupted cache-migration tests;
-- run existing learner-data preservation tests;
-- run FR1-FR8, frozen L4 and full repository regression;
-- freeze `phase-fr8-closed` only at the exact green SHA.
+Status: CLOSURE CANDIDATE.
+
+The closure matrix is executable in
+`test/architecture/phase_fr8_closure_test.dart` and requires all of the
+following evidence to remain present and green:
+
+- offline launch does not render protected learner UI;
+- cached protected StudyContent cannot be read while authorization is locked;
+- logout/account-switch changes lock the prior UID and keep UID caches isolated;
+- app resume locks protected UI first and requires remote reauthorization;
+- interrupted protected-cache migration restores the previous scoped cache and
+  retains legacy bytes;
+- learner progress and Exam Readiness persistence namespaces remain preserved;
+- Firestore remains the learner content/question source after FR8;
+- FR1-FR8, frozen Phase L4, full repository regression and diff hygiene pass.
+
+No uninstall, Clear Data operation, package-ID change or learner-data rewrite is
+required by FR8.
 
 ## NEXT ACTION
 
-Validate FR8D on the full FR gate. If green, continue to FR8E closure from the
-exact green FR8D SHA.
-
-FR8E must explicitly cover offline launch, cached-content offline blocking,
-logout/account-switch isolation, resume revalidation, interrupted cache
-migration and existing learner-data preservation before `phase-fr8-closed`
-may be frozen.
+Run the full FR validation on this FR8E closure candidate. If green, record the
+exact closure evidence, rerun the final exact-SHA repository gate and create
+`phase-fr8-closed` at that exact green SHA.
 
 Do not begin learner source cutover during FR8. Firestore remains the learner
 content/question source until the later reviewed cutover phases.
