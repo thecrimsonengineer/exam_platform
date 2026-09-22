@@ -1,0 +1,80 @@
+name: HOME-R Canonical Format Repair
+
+on:
+  push:
+    branches:
+      - phase-home-r-format-repair
+
+permissions:
+  contents: write
+
+concurrency:
+  group: home-r-format-repair
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: phase-home-r-format-repair
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Canonically format HOME-R Dart surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format \
+            lib/screens/home/home_screen.dart \
+            lib/screens/home/home_screen_dark.dart \
+            lib/widgets/csp/home/today_plan_home_section.dart \
+            lib/features/exam_readiness/models/today_plan_task_category.dart \
+            lib/features/exam_readiness/models/today_plan_summary.dart \
+            lib/features/exam_readiness/models/study_plan_execution_target.dart \
+            lib/features/exam_readiness/services/today_plan_task_category_policy.dart \
+            lib/features/exam_readiness/services/today_plan_summary_service.dart \
+            lib/features/exam_readiness/services/today_plan_presentation_filter.dart \
+            lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart \
+            lib/features/exam_readiness/services/study_plan_outcome_service.dart \
+            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
+            lib/features/exam_readiness/screens/study_plan_practice_session_screen.dart \
+            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+            lib/screens/courses/csp/quiz/quiz_screen.dart \
+            lib/models/student_learning_progress.dart \
+            lib/services/student_learning_progress_service.dart \
+            lib/screens/courses/csp/study_subtopic_screen.dart \
+            lib/screens/courses/csp/study_subtopic_screen_dark.dart \
+            lib/screens/settings/settings_screen.dart \
+            lib/screens/settings/settings_screen_dark.dart \
+            test/features/exam_readiness/home_r \
+            test/screens/home \
+            test/screens/settings/home_r8_bookmark_relocation_contract_test.dart
+
+      - name: Commit canonical formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- '*.dart'; then
+            echo "Formatting already canonical."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.dart'
+          git commit -m "HOME-R9 canonical Dart formatting"
+          git push origin HEAD:phase-home-r-format-repair
