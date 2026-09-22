@@ -75,7 +75,7 @@ void main() {
   });
 
   test('FR9C validates canonical immutable question package paths', () {
-    expect(source, contains('questions/${competencyId}/v${version}.json.gz'));
+    expect(source, contains(r'questions/${competencyId}/v${version}.json.gz'));
     expect(source, contains('row.question_object_path !== expectedPath'));
     expect(source, contains('catalog_integrity_error'));
   });
@@ -87,7 +87,7 @@ void main() {
     expect(
       source,
       contains(
-        'questions/${descriptor.competencyId}/v${descriptor.questionVersion}.json.gz',
+        r'questions/${descriptor.competencyId}/v${descriptor.questionVersion}.json.gz',
       ),
     );
   });
