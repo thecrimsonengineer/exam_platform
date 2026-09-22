@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/study_content.dart';
+import 'student_content_cache.dart';
 
 /// Local cache for student-facing published CSP11 study content.
 ///
@@ -14,7 +15,7 @@ import '../../models/study_content.dart';
 ///
 /// The cache is not an offline-content repository and must not be used to
 /// bypass the published-content boundary.
-class StudentContentCacheRepository {
+class StudentContentCacheRepository implements StudentContentCache {
   StudentContentCacheRepository({required SharedPreferences preferences})
     : _preferences = preferences;
 
