@@ -120,7 +120,6 @@ void main() {
   );
 }
 
-
 class _AuthorizedValidator implements LearnerOnlineAccessValidator {
   @override
   Future<LearnerOnlineAccessResult> validate({
