@@ -4,6 +4,7 @@ import 'package:exam_platform/models/question.dart';
 import 'package:exam_platform/models/study_content.dart';
 
 import 'questions/learner_question_package_delivery_service.dart';
+import 'questions/published_question_package.dart';
 import 'quiz_service_interface.dart';
 
 /// Learner quiz service backed by FR9 verified competency packages.
@@ -49,6 +50,62 @@ class QuizService implements QuizServiceInterface {
       'Global learner quiz initialization is disabled. '
       'Prepare an explicit FR9 question scope instead.',
     );
+  }
+
+  Future<List<PublishedQuestionPackageDescriptor>>
+  loadCatalogMetadata() {
+    return _deliveryService.loadCatalog();
+  }
+
+  Future<void> prepareCompetencies(
+    Iterable<String> competencyIds, {
+    bool forceRefresh = false,
+  }) async {
+    final normalized = competencyIds
+        .map((id) => id.trim().toLowerCase())
+        .where((id) => id.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort();
+
+    if (normalized.isEmpty) {
+      throw StateError('At least one competency is required for practice.');
+    }
+
+    final scopeKey = normalized.join('|');
+    final scope = _PreparedQuizScope(domain: 0, quizId: scopeKey);
+
+    if (_initialized && !forceRefresh && _preparedScope == scope) {
+      return;
+    }
+
+    final generation = _protectedSessionGeneration;
+    final merged = <int, Question>{};
+
+    for (final competencyId in normalized) {
+      final questions = await _deliveryService.loadCompetency(competencyId);
+
+      if (generation != _protectedSessionGeneration) {
+        return;
+      }
+
+      for (final question in questions) {
+        if (_isPublished(question) && question.id > 0) {
+          merged.putIfAbsent(question.id, () => question);
+        }
+      }
+    }
+
+    final nextQuestions = merged.values.toList()
+      ..sort((left, right) => left.id.compareTo(right.id));
+
+    if (generation != _protectedSessionGeneration) {
+      return;
+    }
+
+    _questions = List<Question>.unmodifiable(nextQuestions);
+    _preparedScope = scope;
+    _initialized = true;
   }
 
   Future<void> prepareScope({
