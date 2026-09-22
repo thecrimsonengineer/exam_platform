@@ -115,7 +115,8 @@ jobs:
             lib/services/questions/uid_scoped_question_package_cache.dart \
             test/services/questions/published_question_package_test.dart \
             test/services/questions/uid_scoped_question_package_cache_test.dart \
-            test/architecture/phase_fr9_question_delivery_test.dart
+            test/architecture/phase_fr9_question_delivery_test.dart \
+            test/architecture/phase_fr9_edge_gateway_test.dart
           git diff --
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -179,7 +180,8 @@ jobs:
             lib/services/questions/uid_scoped_question_package_cache.dart \
             test/services/questions/published_question_package_test.dart \
             test/services/questions/uid_scoped_question_package_cache_test.dart \
-            test/architecture/phase_fr9_question_delivery_test.dart
+            test/architecture/phase_fr9_question_delivery_test.dart \
+            test/architecture/phase_fr9_edge_gateway_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -283,6 +285,9 @@ jobs:
 
       - name: FR9 protected question cache tests
         run: flutter test test/services/questions/uid_scoped_question_package_cache_test.dart
+
+      - name: FR9 Edge gateway security tests
+        run: flutter test test/architecture/phase_fr9_edge_gateway_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
