@@ -1,15 +1,23 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../services/auth/learner_local_identity.dart';
+import 'startup_personalization_service.dart';
 import 'startup_timeline.dart';
 
 class Csp11StartupScreen extends StatefulWidget {
-  const Csp11StartupScreen({super.key, required this.child});
+  const Csp11StartupScreen({
+    super.key,
+    required this.child,
+    this.personalizationService,
+  });
 
   final Widget child;
+  final StartupPersonalizationService? personalizationService;
 
   @override
   State<Csp11StartupScreen> createState() => _Csp11StartupScreenState();
@@ -20,18 +28,54 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
   static const _duration = Duration(milliseconds: 4800);
 
   late final AnimationController _controller;
+  late final StartupPersonalizationService _personalizationService;
+
+  StartupPersonalizationSnapshot _personalization =
+      const StartupPersonalizationSnapshot.empty();
+  bool _personalizationLoadStarted = false;
+  String? _personalizationUserId;
   bool _showOverlay = true;
 
   @override
   void initState() {
     super.initState();
+    _personalizationService =
+        widget.personalizationService ?? StartupPersonalizationService();
     _controller = AnimationController(vsync: this, duration: _duration)
+      ..addListener(_maybeLoadPersonalization)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed && mounted) {
           setState(() => _showOverlay = false);
         }
       })
       ..forward();
+  }
+
+  void _maybeLoadPersonalization() {
+    if (_personalizationLoadStarted) {
+      return;
+    }
+
+    final userId = LearnerLocalIdentity.currentUserId?.trim();
+    if (userId == null || userId.isEmpty) {
+      return;
+    }
+
+    _personalizationLoadStarted = true;
+    _personalizationUserId = userId;
+    unawaited(_loadPersonalization(userId));
+  }
+
+  Future<void> _loadPersonalization(String userId) async {
+    final snapshot = await _personalizationService.loadForUser(userId);
+
+    if (!mounted ||
+        LearnerLocalIdentity.currentUserId != userId ||
+        _personalizationUserId != userId) {
+      return;
+    }
+
+    setState(() => _personalization = snapshot);
   }
 
   @override
@@ -65,6 +109,7 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
                     child: _StartupCanvas(
                       progress: value,
                       animation: _controller,
+                      personalization: _personalization,
                     ),
                   ),
                 );
@@ -77,16 +122,21 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
 }
 
 class _StartupCanvas extends StatelessWidget {
-  const _StartupCanvas({required this.progress, required this.animation});
+  const _StartupCanvas({
+    required this.progress,
+    required this.animation,
+    required this.personalization,
+  });
 
   final double progress;
   final Animation<double> animation;
+  final StartupPersonalizationSnapshot personalization;
 
   @override
   Widget build(BuildContext context) {
     final beat = StartupTimeline.beatForProgress(progress);
     final beatProgress = StartupTimeline.beatProgress(progress, beat);
-    final presentation = _BeatPresentation.forBeat(beat);
+    final presentation = _BeatPresentation.forBeat(beat, personalization);
     final introProgress = (progress / (18 / 144)).clamp(0.0, 1.0).toDouble();
     final brandOpacity = Curves.easeOut.transform(introProgress);
     final brandScale =
@@ -246,7 +296,9 @@ class _BeatGlassCard extends StatelessWidget {
         );
       },
       child: Transform.translate(
-        key: ValueKey(presentation.beat),
+        key: ValueKey(
+          '${presentation.beat.name}|${presentation.message}|${presentation.detail ?? ''}',
+        ),
         offset: Offset(0, 8 * (1 - enter)),
         child: Opacity(
           opacity: enter,
@@ -307,6 +359,19 @@ class _BeatGlassCard extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                 ),
                           ),
+                          if (presentation.detail != null) ...[
+                            const SizedBox(height: 3),
+                            Text(
+                              presentation.detail!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.50),
+                                    height: 1.25,
+                                  ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -386,6 +451,7 @@ class _BeatPresentation {
     required this.message,
     required this.icon,
     required this.accent,
+    this.detail,
   });
 
   final StartupBeat beat;
@@ -393,32 +459,42 @@ class _BeatPresentation {
   final String message;
   final IconData icon;
   final Color accent;
+  final String? detail;
 
-  static _BeatPresentation forBeat(StartupBeat beat) {
+  static _BeatPresentation forBeat(
+    StartupBeat beat,
+    StartupPersonalizationSnapshot personalization,
+  ) {
     switch (beat) {
       case StartupBeat.ignite:
-        return const _BeatPresentation(
+        return _BeatPresentation(
           beat: StartupBeat.ignite,
           title: 'CSP11',
-          message: 'Your learning environment is coming online',
+          message: personalization.hasAnyData
+              ? 'Welcome back. Your learning path is ready'
+              : 'Your learning environment is coming online',
           icon: Icons.hub_outlined,
-          accent: Color(0xFFB6E4FF),
+          accent: const Color(0xFFB6E4FF),
         );
       case StartupBeat.learn:
-        return const _BeatPresentation(
+        return _BeatPresentation(
           beat: StartupBeat.learn,
           title: 'LEARN',
-          message: 'Continue where you stopped',
+          message: personalization.hasResume
+              ? 'Continue ${personalization.resumeCode}'
+              : 'Continue where you stopped',
+          detail: personalization.resumeTitle,
           icon: Icons.menu_book_outlined,
-          accent: Color(0xFF67B7FF),
+          accent: const Color(0xFF67B7FF),
         );
       case StartupBeat.practice:
-        return const _BeatPresentation(
+        return _BeatPresentation(
           beat: StartupBeat.practice,
           title: 'PRACTICE',
           message: 'Turn knowledge into confident answers',
+          detail: personalization.todaySummary,
           icon: Icons.gps_fixed_rounded,
-          accent: Color(0xFF62EEE8),
+          accent: const Color(0xFF62EEE8),
         );
       case StartupBeat.lab:
         return const _BeatPresentation(
@@ -437,12 +513,15 @@ class _BeatPresentation {
           accent: Color(0xFFB39CFF),
         );
       case StartupBeat.converge:
-        return const _BeatPresentation(
+        return _BeatPresentation(
           beat: StartupBeat.converge,
           title: 'READY',
-          message: 'Your learning continues',
+          message: personalization.todaySummary ?? 'Your learning continues',
+          detail: personalization.hasResume
+              ? 'Resume point: ${personalization.resumeCode}'
+              : null,
           icon: Icons.arrow_forward_rounded,
-          accent: Color(0xFFD8F7FF),
+          accent: const Color(0xFFD8F7FF),
         );
     }
   }
