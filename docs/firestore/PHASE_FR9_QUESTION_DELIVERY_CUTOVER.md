@@ -259,7 +259,12 @@ hygiene.
 
 ### FR9B — UID-scoped 512 KiB question package cache
 
-Status: IMPLEMENTATION CANDIDATE.
+Status: COMPLETE on exact SHA
+`e0b8eebb6ef61cc893e0362d08c7ef8592b8632c`.
+
+Validation run `35692832487` passed dependency locking, formatting, analysis,
+FR1-FR9, the dedicated protected question-cache suite, all frozen Phase L4
+suites, full repository regression and diff hygiene.
 
 - add per-UID package entries and metadata;
 - add LRU accounting by verified compressed bytes;
@@ -328,7 +333,8 @@ repositories until their own later migration phase explicitly changes them.
 
 ## NEXT ACTION
 
-Implement and validate FR9B only.
+Implement and validate FR9C only.
 
-Do not deploy the Edge function and do not cut learner QuizService over until
-the UID-scoped bounded question-package cache is green on the full FR gate.
+Do not deploy the Edge function until its repository implementation and
+security guards are green on the exact-SHA FR gate. Do not cut learner
+QuizService over during FR9C.
