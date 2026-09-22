@@ -17,26 +17,21 @@ void main() {
     },
   );
 
-  test(
-    'QuizService exposes shared bounded FR9 question preparation',
-    () async {
-      final service = await File(
-        'lib/services/quiz_service.dart',
-      ).readAsString();
+  test('QuizService exposes shared bounded FR9 question preparation', () async {
+    final service = await File('lib/services/quiz_service.dart').readAsString();
 
-      expect(service, contains('static QuizService? _shared;'));
-      expect(
-        service,
-        contains('static QuizService get shared => _shared ??= QuizService();'),
-      );
-      expect(service, contains('prepareScope'));
-      expect(service, contains('prepareCompetencies'));
-      expect(service, contains('loadCatalogMetadata'));
-      expect(service, contains('getPublishedContent()'));
-      expect(service, isNot(contains('CloudQuestionRepository')));
-      expect(service, isNot(contains('CloudContentRepository')));
-    },
-  );
+    expect(service, contains('static QuizService? _shared;'));
+    expect(
+      service,
+      contains('static QuizService get shared => _shared ??= QuizService();'),
+    );
+    expect(service, contains('prepareScope'));
+    expect(service, contains('prepareCompetencies'));
+    expect(service, contains('loadCatalogMetadata'));
+    expect(service, contains('getPublishedContent()'));
+    expect(service, isNot(contains('CloudQuestionRepository')));
+    expect(service, isNot(contains('CloudContentRepository')));
+  });
 
   test(
     'learner shell keeps Practice and Settings without whole-bank prewarm',
