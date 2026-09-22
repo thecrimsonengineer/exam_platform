@@ -8,6 +8,7 @@ on:
       - phase-fr6-published-catalogue
       - phase-fr7-storage-publishing
       - phase-fr8-online-authorized-cache-security
+      - phase-fr9-question-delivery-cutover
   pull_request:
     branches:
       - phase-fr3-closed
@@ -109,7 +110,10 @@ jobs:
             test/widget_test.dart \
             test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart \
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart \
-            test/architecture/phase_fr8_closure_test.dart
+            test/architecture/phase_fr8_closure_test.dart \
+            lib/services/questions/published_question_package.dart \
+            test/services/questions/published_question_package_test.dart \
+            test/architecture/phase_fr9_question_delivery_test.dart
           git diff --
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -168,7 +172,10 @@ jobs:
             test/widget_test.dart \
             test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart \
             test/architecture/phase_fr8_online_authorized_cache_security_test.dart \
-            test/architecture/phase_fr8_closure_test.dart
+            test/architecture/phase_fr8_closure_test.dart \
+            lib/services/questions/published_question_package.dart \
+            test/services/questions/published_question_package_test.dart \
+            test/architecture/phase_fr9_question_delivery_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -264,6 +271,11 @@ jobs:
 
       - name: FR8 closure evidence gate
         run: flutter test test/architecture/phase_fr8_closure_test.dart
+
+      - name: FR9 question delivery foundation tests
+        run: |
+          flutter test test/services/questions/published_question_package_test.dart
+          flutter test test/architecture/phase_fr9_question_delivery_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
