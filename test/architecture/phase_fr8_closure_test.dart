@@ -119,10 +119,12 @@ void main() {
     );
   });
 
-  test('FR8E does not perform learner source cutover', () {
+  test('FR8E frozen source rule remains documented after FR9 quiz cutover', () {
     expect(loader, contains('CloudPublishedContentRepository'));
-    expect(quiz, contains('CloudQuestionRepository'));
-    expect(quiz, contains('CloudContentRepository'));
+    expect(quiz, contains('LearnerQuestionPackageDeliveryService'));
+    expect(quiz, isNot(contains('CloudQuestionRepository')));
+    expect(quiz, isNot(contains('CloudContentRepository')));
+    expect(quiz, isNot(contains('loadPublished()')));
     expect(phase, contains('Firestore remains the learner'));
     expect(phase, contains('Do not begin learner source cutover during FR8'));
   });
