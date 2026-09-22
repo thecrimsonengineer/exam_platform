@@ -1,0 +1,97 @@
+name: Home Startup Integration R5 Behavioral Contracts
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration
+    paths:
+      - 'lib/main.dart'
+      - 'lib/screens/startup/**'
+      - 'lib/screens/auth/**'
+      - 'lib/screens/navigation/bottom_navigation.dart'
+      - 'lib/screens/home/**'
+      - 'lib/screens/settings/**'
+      - 'lib/features/exam_readiness/**'
+      - 'lib/services/student_learning_position_service.dart'
+      - 'test/integration/home_startup/**'
+      - 'test/startup/**'
+      - 'test/screens/home/**'
+      - 'test/screens/settings/**'
+      - '.github/workflows/home_startup_integration_r5_behavioral.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-integration-r5-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-behavioral-seam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and frozen ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 243d9fdf93c55775321468eb17ce85cd3b7c557f HEAD
+          git merge-base --is-ancestor 9c1697b1d01c8db85fe535bc77ea6b6aa6f39565 HEAD
+          git merge-base --is-ancestor 2cf55605cc526bdbae6ed974702e92826f28b1a5 HEAD
+          git diff --check
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify lockfile stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Verify R5 formatting
+        run: dart format --output=none --set-exit-if-changed test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+
+      - name: Analyze R5 integration scope
+        run: flutter analyze --no-fatal-infos lib/screens/startup lib/screens/auth/learner_authorized_shell.dart lib/screens/navigation/bottom_navigation.dart lib/screens/home lib/screens/settings lib/features/exam_readiness/screens/todays_plan_screen.dart lib/features/exam_readiness/services/today_plan_summary_service.dart lib/features/exam_readiness/repositories/daily_study_plan_repository.dart lib/services/student_learning_position_service.dart test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+
+      - name: Run INT-R5 behavioral seam contracts
+        run: flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+
+      - name: Preserve Startup personalization contracts
+        run: flutter test test/startup/startup_personalization_service_test.dart
+
+      - name: Preserve Startup handoff hardening
+        run: flutter test test/startup/startup_screen_hardening_test.dart
+
+      - name: Preserve INT-R3 app-root contract
+        run: flutter test test/integration/home_startup/int_r3_bootstrap_app_root_integration_test.dart
+
+      - name: Preserve INT-R4 packaging contracts
+        run: flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+
+      - name: Preserve HOME-R live-plan and filter contracts
+        run: |
+          flutter test test/screens/home/home_r4_live_plan_contract_test.dart
+          flutter test test/screens/home/home_r5_filtered_today_plan_contract_test.dart
+
+      - name: Preserve HOME-R bookmark relocation contract
+        run: flutter test test/screens/settings/home_r8_bookmark_relocation_contract_test.dart
+
+      - name: Preserve HOME-R9 closure contract
+        run: flutter test test/screens/home/home_r9_closure_contract_test.dart
+
+      - name: Confirm validation made no repository changes
+        run: git diff --exit-code
