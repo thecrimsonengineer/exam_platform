@@ -54,9 +54,14 @@ void main() {
   test('FR8E proves cached protected content stays locked offline', () {
     expect(
       cacheTests,
-      contains('FR8B blocks protected cache reads while authorization is locked'),
+      contains(
+        'FR8B blocks protected cache reads while authorization is locked',
+      ),
     );
-    expect(cacheTests, contains('expect(repository.loadAll, throwsStateError)'));
+    expect(
+      cacheTests,
+      contains('expect(repository.loadAll, throwsStateError)'),
+    );
   });
 
   test('FR8E proves logout and account-switch isolation', () {
@@ -83,15 +88,21 @@ void main() {
     expect(sessionTests, contains('validator.lastForceRefresh, isTrue'));
   });
 
-  test('FR8E proves interrupted protected-cache migration is non-destructive', () {
-    expect(
-      cacheTests,
-      contains(
-        'FR8B read-back failure restores the previous scoped cache and legacy bytes',
-      ),
-    );
-    expect(cacheTests, contains('ProtectedCacheMigrationStatus.verificationFailed'));
-  });
+  test(
+    'FR8E proves interrupted protected-cache migration is non-destructive',
+    () {
+      expect(
+        cacheTests,
+        contains(
+          'FR8B read-back failure restores the previous scoped cache and legacy bytes',
+        ),
+      );
+      expect(
+        cacheTests,
+        contains('ProtectedCacheMigrationStatus.verificationFailed'),
+      );
+    },
+  );
 
   test('FR8E preserves existing learner-owned local data contracts', () {
     expect(
