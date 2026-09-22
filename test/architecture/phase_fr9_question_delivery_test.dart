@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const phasePath =
-      'docs/firestore/PHASE_FR9_QUESTION_DELIVERY_CUTOVER.md';
-  const packagePath =
-      'lib/services/questions/published_question_package.dart';
+  const phasePath = 'docs/firestore/PHASE_FR9_QUESTION_DELIVERY_CUTOVER.md';
+  const packagePath = 'lib/services/questions/published_question_package.dart';
   const fr7BuilderPath =
       'tool/fr7_package_publish/fr7_package_publish_core.dart';
   const workflowPath =
@@ -26,22 +24,13 @@ void main() {
 
   test('FR9 starts only from the exact frozen FR8 checkpoint', () {
     expect(phase, contains('phase-fr8-closed'));
-    expect(
-      phase,
-      contains('a55dd91c25df2f3e1b9f59298130d2bd72a929f3'),
-    );
+    expect(phase, contains('a55dd91c25df2f3e1b9f59298130d2bd72a929f3'));
   });
 
   test('FR9 keeps direct learner Supabase Data API access forbidden', () {
     expect(phase, contains('direct learner Data API access remains forbidden'));
-    expect(
-      phase,
-      contains('private Storage objects are never made public'),
-    );
-    expect(
-      phase,
-      contains('short-lived signed URL'),
-    );
+    expect(phase, contains('private Storage objects are never made public'));
+    expect(phase, contains('short-lived signed URL'));
   });
 
   test('FR9 decoder is pinned to the frozen FR7 question envelope', () {
@@ -76,29 +65,26 @@ void main() {
     expect(jsonIndex, greaterThan(gzipIndex));
   });
 
-  test('FR9 package validation remains competency-scoped and published-only', () {
-    expect(packageSource, contains('Question package competency mismatch'));
-    expect(
-      packageSource,
-      contains('Question package contains a cross-competency question'),
-    );
-    expect(
-      packageSource,
-      contains('Question package contains a non-published question'),
-    );
-    expect(
-      packageSource,
-      contains('exactly four options'),
-    );
-  });
+  test(
+    'FR9 package validation remains competency-scoped and published-only',
+    () {
+      expect(packageSource, contains('Question package competency mismatch'));
+      expect(
+        packageSource,
+        contains('Question package contains a cross-competency question'),
+      );
+      expect(
+        packageSource,
+        contains('Question package contains a non-published question'),
+      );
+      expect(packageSource, contains('exactly four options'));
+    },
+  );
 
   test('FR9 freezes the protected question cache budget below whole bank', () {
     expect(phase, contains('512 KiB'));
     expect(phase, contains('1,040,943'));
-    expect(
-      phase,
-      contains('below the complete current question bank'),
-    );
+    expect(phase, contains('below the complete current question bank'));
   });
 
   test('FR9 is wired into the main FR validation workflow', () {
