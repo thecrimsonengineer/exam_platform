@@ -5,11 +5,16 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 import '../../app/app_colors.dart';
 import '../../features/exam_readiness/screens/exam_readiness_plan_screen.dart';
 import '../../features/exam_readiness/screens/exam_readiness_route.dart';
+import '../../features/exam_readiness/models/today_plan_summary.dart';
+import '../../features/exam_readiness/repositories/daily_study_plan_repository.dart';
+import '../../features/exam_readiness/screens/todays_plan_screen.dart';
+import '../../features/exam_readiness/services/today_plan_summary_service.dart';
 import '../../models/student_learning_progress.dart';
 import '../../services/student_learning_position_service.dart';
 import '../../services/student_learning_progress_service.dart';
 import '../../services/study_content_search_service.dart';
 import '../../widgets/csp/home/study_content_search_panel.dart';
+import '../../widgets/csp/home/today_plan_home_section.dart';
 import '../courses/csp/domain_screen_dark.dart';
 import '../courses/csp/study_content_screen_dark.dart';
 
@@ -43,13 +48,25 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
       const StudentLearningPositionService();
   final StudentLearningProgressService _progressService =
       const StudentLearningProgressService();
+  final DailyStudyPlanRepository _dailyPlanRepository =
+      DailyStudyPlanRepository();
+  final TodayPlanSummaryService _todayPlanSummaryService =
+      const TodayPlanSummaryService();
 
   late Future<_HomeData> _homeFuture;
+  late Future<TodayPlanSummary?> _todayPlanFuture;
 
   @override
   void initState() {
     super.initState();
     _homeFuture = _loadHomeData();
+    _todayPlanFuture = _loadTodayPlanSummary();
+  }
+
+  Future<TodayPlanSummary?> _loadTodayPlanSummary() async {
+    final plan = await _dailyPlanRepository.loadLatestForDate(DateTime.now());
+    if (plan == null) return null;
+    return _todayPlanSummaryService.summarize(plan);
   }
 
   Future<_HomeData> _loadHomeData() async {
@@ -68,15 +85,48 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
   }
 
   Future<void> _refreshHome() async {
-    final next = _loadHomeData();
+    final nextHome = _loadHomeData();
+    final nextTodayPlan = _loadTodayPlanSummary();
 
     if (mounted) {
       setState(() {
-        _homeFuture = next;
+        _homeFuture = nextHome;
+        _todayPlanFuture = nextTodayPlan;
       });
     }
 
-    await next;
+    try {
+      await nextHome;
+    } catch (_) {
+      // Home sections degrade independently after refresh.
+    }
+    try {
+      await nextTodayPlan;
+    } catch (_) {
+      // Today's Plan failure must not hide Search or Continue CSP.
+    }
+  }
+
+  Future<void> _retryTodayPlan() async {
+    final next = _loadTodayPlanSummary();
+    if (mounted) {
+      setState(() => _todayPlanFuture = next);
+    }
+    try {
+      await next;
+    } catch (_) {
+      // The section owns its visible error state.
+    }
+  }
+
+  Future<void> _openTodaysPlan() async {
+    await Navigator.of(context).push(
+      examReadinessRoute<void>(
+        child: const TodaysPlanScreen(),
+        isDarkMode: true,
+      ),
+    );
+    await _refreshHome();
   }
 
   Future<void> _continueLearning(StudentLearningPosition? position) async {
@@ -177,6 +227,18 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
                                 const SizedBox(height: 24),
                                 _buildContinueLearning(snapshot, data),
                                 const SizedBox(height: 28),
+                                FutureBuilder<TodayPlanSummary?>(
+                                  future: _todayPlanFuture,
+                                  builder: (context, todaySnapshot) {
+                                    return TodayPlanHomeSection(
+                                      snapshot: todaySnapshot,
+                                      onCategoryTap: (_) => _openTodaysPlan(),
+                                      onViewFullPlan: _openTodaysPlan,
+                                      onRetry: _retryTodayPlan,
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 30),
                                 _buildProgressIntelligence(snapshot, data),
                               ],
                             );
