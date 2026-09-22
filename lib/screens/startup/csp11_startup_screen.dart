@@ -51,16 +51,126 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     _personalizationService =
         widget.personalizationService ?? StartupPersonalizationService();
-    _controller = AnimationController(vsync: this, duration: _duration)
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: StartupMotionPolicy.full.duration,
+      animationBehavior: AnimationBehavior.normal,
+    )
       ..addListener(_maybeLoadPersonalization)
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed && mounted) {
-          setState(() => _showOverlay = false);
+        if (status == AnimationStatus.completed) {
+          _dismissOverlay();
         }
-      })
-      ..forward();
+      });
+
+    _watchdog = Timer(_hardTimeout, _dismissOverlay);
+    unawaited(_preflightStartupAsset());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _applyMotionPolicy();
+    _startAnimationIfNeeded();
+  }
+
+  @override
+  void didChangeAccessibilityFeatures() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      final changed = _applyMotionPolicy();
+      if (changed) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_showOverlay || !_animationStarted) {
+      return;
+    }
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (!_controller.isCompleted && !_controller.isAnimating) {
+          _controller.forward();
+        }
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        if (_controller.isAnimating) {
+          _controller.stop(canceled: false);
+        }
+      case AppLifecycleState.detached:
+        _controller.stop(canceled: false);
+    }
+  }
+
+  bool _applyMotionPolicy() {
+    final override = widget.motionPolicyOverride;
+    final nextPolicy =
+        override ??
+        StartupMotionPolicy.resolve(
+          disableAnimations: MediaQuery.disableAnimationsOf(context),
+          reduceMotion: WidgetsBinding
+              .instance
+              .platformDispatcher
+              .accessibilityFeatures
+              .reduceMotion,
+          logicalSize: MediaQuery.sizeOf(context),
+          devicePixelRatio: MediaQuery.devicePixelRatioOf(context),
+        );
+    final nextHighContrast = MediaQuery.highContrastOf(context);
+
+    final changed =
+        nextPolicy != _motionPolicy || nextHighContrast != _highContrast;
+
+    _motionPolicy = nextPolicy;
+    _highContrast = nextHighContrast;
+    _controller.duration = nextPolicy.duration;
+
+    return changed;
+  }
+
+  void _startAnimationIfNeeded() {
+    if (_animationStarted || !_showOverlay) {
+      return;
+    }
+
+    _animationStarted = true;
+    _controller.forward();
+  }
+
+  Future<void> _preflightStartupAsset() async {
+    try {
+      final raw = await rootBundle.loadString(widget.startupAssetPath);
+      final decoded = jsonDecode(raw);
+
+      if (decoded is! Map<String, dynamic> ||
+          decoded['w'] != 512 ||
+          decoded['h'] != 512 ||
+          decoded['fr'] != 30 ||
+          decoded['op'] != 144) {
+        throw const FormatException('Startup Lottie contract mismatch.');
+      }
+
+      if (!mounted || !_showOverlay) {
+        return;
+      }
+
+      setState(() => _lottieReady = true);
+    } catch (_) {
+      _dismissOverlay();
+    }
   }
 
   void _maybeLoadPersonalization() {
@@ -90,8 +200,21 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
     setState(() => _personalization = snapshot);
   }
 
+  void _dismissOverlay() {
+    if (!mounted || !_showOverlay) {
+      return;
+    }
+
+    _watchdog?.cancel();
+    _watchdog = null;
+    _controller.stop(canceled: false);
+    setState(() => _showOverlay = false);
+  }
+
   @override
   void dispose() {
+    _watchdog?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
   }
