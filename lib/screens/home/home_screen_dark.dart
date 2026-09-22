@@ -120,9 +120,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     }
   }
 
-  Future<void> _openTodaysPlan({
-    TodayPlanTaskCategory? category,
-  }) async {
+  Future<void> _openTodaysPlan({TodayPlanTaskCategory? category}) async {
     await Navigator.of(context).push(
       examReadinessRoute<void>(
         child: TodaysPlanScreen(initialCategory: category),
