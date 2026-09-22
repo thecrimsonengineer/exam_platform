@@ -95,7 +95,7 @@ void main() {
     test('fails soft when local personalization sources are unavailable', () async {
       final service = StartupPersonalizationService(
         positionLoader: (_) async => throw StateError('position unavailable'),
-        planLoader: (_, __) async => throw StateError('plan unavailable'),
+        planLoader: (_, _) async => throw StateError('plan unavailable'),
       );
 
       final snapshot = await service.loadForUser('learner-3');
@@ -114,7 +114,7 @@ void main() {
           positionCalls += 1;
           return null;
         },
-        planLoader: (_, __) async {
+        planLoader: (_, _) async {
           planCalls += 1;
           return null;
         },
