@@ -35,31 +35,26 @@ void main() {
 
     test('changed package rejects a missing signed URL', () {
       expect(
-        () => QuestionPackageResolution.fromJson(
-          _resolutionJson(current: false),
-        ),
+        () =>
+            QuestionPackageResolution.fromJson(_resolutionJson(current: false)),
         throwsFormatException,
       );
     });
 
     test('catalog descriptor validates checksum and non-negative counts', () {
       expect(
-        () => PublishedQuestionPackageDescriptor.fromJson(
-          <String, dynamic>{
-            ..._descriptorJson(),
-            'questionChecksumSha256': 'bad-checksum',
-          },
-        ),
+        () => PublishedQuestionPackageDescriptor.fromJson(<String, dynamic>{
+          ..._descriptorJson(),
+          'questionChecksumSha256': 'bad-checksum',
+        }),
         throwsFormatException,
       );
 
       expect(
-        () => PublishedQuestionPackageDescriptor.fromJson(
-          <String, dynamic>{
-            ..._descriptorJson(),
-            'publishedQuestionCount': -1,
-          },
-        ),
+        () => PublishedQuestionPackageDescriptor.fromJson(<String, dynamic>{
+          ..._descriptorJson(),
+          'publishedQuestionCount': -1,
+        }),
         throwsFormatException,
       );
     });
@@ -74,7 +69,10 @@ void main() {
         compressedBytes: package.bytes,
       );
 
-      expect(verified.questions.map((question) => question.id), <int>[101, 102]);
+      expect(verified.questions.map((question) => question.id), <int>[
+        101,
+        102,
+      ]);
       expect(
         verified.questions.every(
           (question) =>
@@ -155,10 +153,7 @@ void main() {
     test('rejects non-published questions', () {
       final package = _package(
         questions: <Map<String, dynamic>>[
-          <String, dynamic>{
-            ..._questionJson(id: 101),
-            'status': 'validated',
-          },
+          <String, dynamic>{..._questionJson(id: 101), 'status': 'validated'},
         ],
       );
 
@@ -193,10 +188,7 @@ void main() {
     test('rejects a correct answer outside 0-3', () {
       final package = _package(
         questions: <Map<String, dynamic>>[
-          <String, dynamic>{
-            ..._questionJson(id: 101),
-            'correctAnswer': 4,
-          },
+          <String, dynamic>{..._questionJson(id: 101), 'correctAnswer': 4},
         ],
       );
 
@@ -250,10 +242,7 @@ Map<String, dynamic> _resolutionJson({
   };
 }
 
-({
-  PublishedQuestionPackageDescriptor descriptor,
-  List<int> bytes,
-}) _package({
+({PublishedQuestionPackageDescriptor descriptor, List<int> bytes}) _package({
   List<Map<String, dynamic>>? questions,
   Map<String, dynamic> envelopeOverrides = const <String, dynamic>{},
 }) {
@@ -313,7 +302,6 @@ Map<String, dynamic> _questionJson({required int id}) {
     tags: const <String>['risk-control'],
   ).toJson();
 }
-
 
 String _hex64(String character) {
   if (character.length != 1) {
