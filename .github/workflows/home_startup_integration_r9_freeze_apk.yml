@@ -1,0 +1,146 @@
+name: Home Startup Integration R9 Freeze APK
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration
+    paths:
+      - 'docs/integration/HOME_STARTUP_INTEGRATION_CLOSURE.md'
+      - '.github/workflows/home_startup_integration_r9_freeze_apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-startup-integration-r9-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  R8_SHA: '774d591ecdbb871831551413fa004b352abb1e57'
+  HOME_R_SHA: '243d9fdf93c55775321468eb17ce85cd3b7c557f'
+  STARTUP_SHA: '9c1697b1d01c8db85fe535bc77ea6b6aa6f39565'
+
+jobs:
+  freeze-and-build-apk:
+    name: Final freeze validation and Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+
+    steps:
+      - name: Checkout exact final freeze candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and frozen ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${HOME_R_SHA}" HEAD
+          git merge-base --is-ancestor "${STARTUP_SHA}" HEAD
+          git merge-base --is-ancestor "${R8_SHA}" HEAD
+          git diff --check
+
+      - name: Prove R8 to R9 is closure-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHANGED="$(git diff --name-only "${R8_SHA}"..HEAD)"
+          printf '%s\n' "${CHANGED}"
+
+          while IFS= read -r path; do
+            [ -z "${path}" ] && continue
+            case "${path}" in
+              docs/integration/HOME_STARTUP_INTEGRATION_CLOSURE.md)
+                ;;
+              .github/workflows/home_startup_integration_r9_freeze_apk.yml)
+                ;;
+              *)
+                echo "Unexpected post-R8 change: ${path}" >&2
+                exit 1
+                ;;
+            esac
+          done <<< "${CHANGED}"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Replay integrated Startup to Home journey
+        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+
+      - name: Replay final behavioral seam
+        run: flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+
+      - name: Ensure CI debug signing key exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${HOME}/.android"
+          if [ ! -f "${HOME}/.android/debug.keystore" ]; then
+            keytool -genkeypair               -keystore "${HOME}/.android/debug.keystore"               -storepass android               -alias androiddebugkey               -keypass android               -keyalg RSA               -keysize 2048               -validity 10000               -dname "CN=Android Debug,O=CSP11 Final Freeze,C=US"
+          fi
+
+      - name: Build final Android release APK
+        run: flutter build apk --release
+
+      - name: Verify final APK package
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          STARTUP_ASSET="assets/flutter_assets/assets/startup/csp11_startup_master.json"
+
+          test -s "${APK}"
+          unzip -Z1 "${APK}" | grep -q "^${STARTUP_ASSET}$"
+          unzip -p "${APK}" "${STARTUP_ASSET}" | grep -q 'CSP11 Startup Master SM-1'
+
+          cp "${APK}" "CSP11-home-startup-final-${GITHUB_SHA}.apk"
+
+          {
+            echo "INT-R9 final freeze APK verified."
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "R8_SHA=${R8_SHA}"
+            echo "SIGNING=debug signing configuration used by current Android release config"
+            sha256sum "CSP11-home-startup-final-${GITHUB_SHA}.apk"
+            ls -lh "CSP11-home-startup-final-${GITHUB_SHA}.apk"
+          } | tee int-r9-final-apk-evidence.txt
+
+      - name: Upload final APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-final-android-apk
+          path: CSP11-home-startup-final-${{ github.sha }}.apk
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Upload final APK evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-final-android-apk-evidence
+          path: int-r9-final-apk-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
