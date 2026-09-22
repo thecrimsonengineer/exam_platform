@@ -197,8 +197,48 @@ Validation:
 - strict startup analysis passes
 - full repository analysis passes with baseline info-only lint debt non-fatal and warnings/errors fatal
 
-### SM-4 — accessibility and performance
-Reduced motion, low-end device behavior, frame timing, memory and startup validation.
+### SM-4 — accessibility and performance ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM4_ACCESSIBILITY_PERFORMANCE.md`
+
+Frozen characteristics:
+- full, balanced and reduced motion policies
+- normal full choreography remains 4.8 seconds
+- balanced profile reduces particles from 34 to 20
+- balanced profile reduces backdrop blur from 15 to 8
+- reduced-motion profile uses a 250 ms static handoff
+- reduced-motion profile renders no Lottie, particles, ambient knowledge network or backdrop blur
+- Android/system disable-animation requests are honored
+- platform reduce-motion requests are honored
+- high-contrast mode strengthens startup text, icon and border contrast
+- startup observes app lifecycle state
+- inactive, hidden and paused states stop animation work
+- resumed state continues from existing progress
+- detached state stops animation work
+- bundled Lottie JSON is preflighted against the frozen 512 × 512 / 30 fps / 144-frame contract
+- invalid or missing startup assets fail open to the real app
+- Lottie runtime errors fail open through `errorBuilder`
+- a seven-second watchdog provides an absolute overlay exit ceiling
+- startup animation remains decorative and cannot become an availability dependency
+- accessibility semantics expose one stable `CSP11 Learning System` container
+- rapid decorative feature changes are excluded from repeated semantic announcements
+- no Firebase read is added
+- no Supabase read is added
+- no remote animation asset is added
+- Home R remains isolated on `phase-home-r`
+
+Validation:
+- green implementation validation Run 40 on `382ec357b2969459ed00513f2b555df81d8cb826`
+- startup formatting passes
+- SM-1 Lottie contract passes
+- all `test/startup/` tests pass
+- reduced-motion behavior test passes
+- missing-asset fail-open test passes
+- seven-second watchdog test passes
+- lifecycle pause/resume test passes
+- strict startup analysis passes
+- full repository analysis passes with baseline info-only lint debt non-fatal and warnings/errors fatal
 
 ### SM-5 — platform validation
 Android, web and Windows. Extend to iOS when the iOS target is active.
