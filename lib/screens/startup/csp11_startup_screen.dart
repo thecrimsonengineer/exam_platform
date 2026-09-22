@@ -52,10 +52,10 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
               animation: _controller,
               builder: (context, _) {
                 final value = _controller.value;
-                final exitProgress =
-                    ((value - (132 / 144)) / (12 / 144)).clamp(0.0, 1.0).toDouble();
-                final opacity =
-                    1 - Curves.easeInCubic.transform(exitProgress);
+                final exitProgress = ((value - (132 / 144)) / (12 / 144))
+                    .clamp(0.0, 1.0)
+                    .toDouble();
+                final opacity = 1 - Curves.easeInCubic.transform(exitProgress);
                 final scale = 1 + (0.018 * exitProgress);
 
                 return Opacity(
@@ -77,10 +77,7 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
 }
 
 class _StartupCanvas extends StatelessWidget {
-  const _StartupCanvas({
-    required this.progress,
-    required this.animation,
-  });
+  const _StartupCanvas({required this.progress, required this.animation});
 
   final double progress;
   final Animation<double> animation;
@@ -92,9 +89,8 @@ class _StartupCanvas extends StatelessWidget {
     final presentation = _BeatPresentation.forBeat(beat);
     final introProgress = (progress / (18 / 144)).clamp(0.0, 1.0).toDouble();
     final brandOpacity = Curves.easeOut.transform(introProgress);
-    final brandScale = 0.92 + (0.08 * Curves.easeOutBack.transform(
-      introProgress,
-    ));
+    final brandScale =
+        0.92 + (0.08 * Curves.easeOutBack.transform(introProgress));
 
     return ColoredBox(
       color: const Color(0xFF080B10),
@@ -114,8 +110,10 @@ class _StartupCanvas extends StatelessWidget {
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final shortest =
-                  math.min(constraints.maxWidth, constraints.maxHeight);
+              final shortest = math.min(
+                constraints.maxWidth,
+                constraints.maxHeight,
+              );
               final lottieSize = math.min(390.0, shortest * 0.64);
 
               return Stack(
@@ -197,19 +195,19 @@ class _BrandLockup extends StatelessWidget {
         Text(
           'CSP11',
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 3.4,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 3.4,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           'LEARNING SYSTEM',
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Colors.white54,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 2.1,
-              ),
+            color: Colors.white54,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 2.1,
+          ),
         ),
       ],
     );
@@ -293,9 +291,7 @@ class _BeatGlassCard extends StatelessWidget {
                         children: [
                           Text(
                             presentation.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
+                            style: Theme.of(context).textTheme.labelMedium
                                 ?.copyWith(
                                   color: presentation.accent,
                                   fontWeight: FontWeight.w800,
@@ -305,13 +301,11 @@ class _BeatGlassCard extends StatelessWidget {
                           const SizedBox(height: 3),
                           Text(
                             presentation.message,
-                            style:
-                                Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.78,
-                                      ),
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.78),
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                         ],
                       ),
@@ -328,10 +322,7 @@ class _BeatGlassCard extends StatelessWidget {
 }
 
 class _SegmentedTimeline extends StatelessWidget {
-  const _SegmentedTimeline({
-    required this.activeBeat,
-    required this.progress,
-  });
+  const _SegmentedTimeline({required this.activeBeat, required this.progress});
 
   final StartupBeat activeBeat;
   final double progress;
@@ -344,12 +335,9 @@ class _SegmentedTimeline extends StatelessWidget {
       children: [
         for (var index = 0; index < StartupBeat.values.length; index++) ...[
           Expanded(
-            child: _TimelineSegment(
-              fill: _segmentFill(index, activeIndex),
-            ),
+            child: _TimelineSegment(fill: _segmentFill(index, activeIndex)),
           ),
-          if (index != StartupBeat.values.length - 1)
-            const SizedBox(width: 6),
+          if (index != StartupBeat.values.length - 1) const SizedBox(width: 6),
         ],
       ],
     );
@@ -363,10 +351,7 @@ class _SegmentedTimeline extends StatelessWidget {
       return 0;
     }
 
-    return StartupTimeline.beatProgress(
-      progress,
-      StartupBeat.values[index],
-    );
+    return StartupTimeline.beatProgress(progress, StartupBeat.values[index]);
   }
 }
 
@@ -386,9 +371,7 @@ class _TimelineSegment extends StatelessWidget {
           child: FractionallySizedBox(
             alignment: Alignment.centerLeft,
             widthFactor: fill.clamp(0.0, 1.0).toDouble(),
-            child: const ColoredBox(
-              color: Colors.white70,
-            ),
+            child: const ColoredBox(color: Colors.white70),
           ),
         ),
       ),
@@ -491,14 +474,8 @@ class _KnowledgeCorePainter extends CustomPainter {
         accent.withValues(alpha: 0.10 + (0.08 * (1 - converge))),
         accent.withValues(alpha: 0),
       ],
-    ).createShader(
-      Rect.fromCircle(center: center, radius: radius * 1.35),
-    );
-    canvas.drawCircle(
-      center,
-      radius * 1.35,
-      Paint()..shader = glowShader,
-    );
+    ).createShader(Rect.fromCircle(center: center, radius: radius * 1.35));
+    canvas.drawCircle(center, radius * 1.35, Paint()..shader = glowShader);
 
     final orbitPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -642,8 +619,9 @@ class _ParticleFieldPainter extends CustomPainter {
         point,
         particleRadius,
         Paint()
-          ..color = (index.isEven ? accent : Colors.white)
-              .withValues(alpha: alpha),
+          ..color = (index.isEven ? accent : Colors.white).withValues(
+            alpha: alpha,
+          ),
       );
     }
   }

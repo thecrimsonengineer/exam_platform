@@ -1,11 +1,4 @@
-enum StartupBeat {
-  ignite,
-  learn,
-  practice,
-  lab,
-  remember,
-  converge,
-}
+enum StartupBeat { ignite, learn, practice, lab, remember, converge }
 
 class StartupTimeline {
   const StartupTimeline._();

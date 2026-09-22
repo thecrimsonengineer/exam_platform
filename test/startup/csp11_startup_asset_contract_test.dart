@@ -9,8 +9,7 @@ void main() {
 
     expect(file.existsSync(), isTrue);
 
-    final decoded =
-        jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+    final decoded = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
 
     expect(decoded['w'], 512);
     expect(decoded['h'], 512);
