@@ -4,6 +4,7 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../models/daily_study_plan.dart';
 import '../models/study_plan_block.dart';
+import '../models/study_plan_execution_target.dart';
 import '../models/today_plan_task_category.dart';
 import '../navigation/study_plan_block_launcher.dart';
 import '../repositories/daily_study_plan_repository.dart';
