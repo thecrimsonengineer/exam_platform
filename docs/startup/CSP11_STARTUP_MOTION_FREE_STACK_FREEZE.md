@@ -240,8 +240,39 @@ Validation:
 - strict startup analysis passes
 - full repository analysis passes with baseline info-only lint debt non-fatal and warnings/errors fatal
 
-### SM-5 — platform validation
-Android, web and Windows. Extend to iOS when the iOS target is active.
+### SM-5 — platform validation ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM5_PLATFORM_CLOSURE.md`
+
+Frozen characteristics:
+- release-render smoke gate runs before platform builds
+- full-mode startup rendering smoke passes
+- balanced-mode startup rendering smoke passes
+- Android release-mode APK compilation passes
+- Android APK packaging contains `assets/startup/csp11_startup_master.json`
+- Android release validation uses the repository's current debug signing configuration and does not claim production-store signing readiness
+- web release compilation passes
+- web release bundle contains the frozen CSP11 startup Lottie asset
+- Windows release compilation passes
+- Windows release bundle contains the frozen CSP11 startup Lottie asset
+- compact SHA/size evidence artifacts are retained for Android, web and Windows
+- platform closure workflow is retained for manual reruns and future startup-code changes
+- documentation-only commits no longer trigger the expensive three-platform closure matrix
+- no Home R commits are merged into Startup Motion
+- iOS remains outside SM-5 until an active iOS target is introduced
+
+Validation:
+- exact implementation SHA: `e7eee657e85739883523a503e1a13ebf60ded105`
+- Startup Motion Validation Run 43 passed on the exact implementation SHA
+- Startup Motion SM-5 Platform Closure Run 2 passed on the exact implementation SHA
+- render smoke: PASS
+- Android release build and packaged-asset verification: PASS
+- web release build and packaged-asset verification: PASS
+- Windows release build and packaged-asset verification: PASS
+- Android evidence artifact: `sm5-android-release-evidence`
+- web evidence artifact: `sm5-web-release-evidence`
+- Windows evidence artifact: `sm5-windows-release-evidence`
 
 ## Acceptance criteria
 

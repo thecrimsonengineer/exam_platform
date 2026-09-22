@@ -13,8 +13,6 @@ on:
       - 'web/**'
       - 'windows/**'
       - 'test/startup/**'
-      - 'docs/startup/**'
-      - '.github/workflows/startup_motion_platform_closure.yml'
   workflow_dispatch:
 
 permissions:
