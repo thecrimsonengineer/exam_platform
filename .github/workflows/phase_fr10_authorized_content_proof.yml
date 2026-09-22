@@ -1,0 +1,169 @@
+name: Phase FR10 Authorized Content Production Proof
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - phase-fr10-studycontent-delivery-cutover
+    paths:
+      - .github/fr10_authorized_content_proof_trigger
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-fr10-authorized-content-production-proof
+  cancel-in-progress: false
+
+jobs:
+  prove-authorized-content-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      FR10_ENDPOINT: https://esfycnmfywxczfillioj.supabase.co/functions/v1/learner-question-packages
+
+    steps:
+      - name: Require ephemeral Firebase learner token
+        env:
+          FR9_FIREBASE_LEARNER_ID_TOKEN: ${{ secrets.FR9_FIREBASE_LEARNER_ID_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${FR9_FIREBASE_LEARNER_ID_TOKEN:-}" ]; then
+            echo "FR9_FIREBASE_LEARNER_ID_TOKEN is not configured."
+            exit 1
+          fi
+          echo "Ephemeral Firebase learner token is available."
+
+      - name: Prove authorized content catalog and package delivery
+        env:
+          FR9_FIREBASE_LEARNER_ID_TOKEN: ${{ secrets.FR9_FIREBASE_LEARNER_ID_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          catalog_json="$RUNNER_TEMP/fr10-content-catalog.json"
+          changed_json="$RUNNER_TEMP/fr10-content-changed.json"
+          current_json="$RUNNER_TEMP/fr10-content-current.json"
+          package_gz="$RUNNER_TEMP/fr10-content-package.json.gz"
+          evidence_json="$GITHUB_WORKSPACE/fr10-authorized-content-production-proof.json"
+
+          catalog_status="$(
+            curl --silent --show-error               --output "$catalog_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data '{"operation":"content_catalog"}'               "$FR10_ENDPOINT"
+          )"
+          test "$catalog_status" = "200"
+
+          jq -e '
+            (.catalog | type == "array" and length > 0) and
+            all(.catalog[];
+              ((keys | sort) ==
+                ([
+                  "competencyId",
+                  "contentVersion",
+                  "contentChecksumSha256",
+                  "contentSizeBytes"
+                ] | sort)) and
+              (.competencyId | test("^d[0-9]{2}_c[0-9]{2}$")) and
+              (.contentVersion | type == "number" and floor == . and . > 0) and
+              (.contentChecksumSha256 | test("^[0-9a-f]{64}$")) and
+              (.contentSizeBytes | type == "number" and floor == . and . >= 0)
+            )
+          ' "$catalog_json" >/dev/null
+
+          catalog_count="$(jq '.catalog | length' "$catalog_json")"
+          competency_id="$(jq -r '.catalog[0].competencyId' "$catalog_json")"
+          content_version="$(jq -r '.catalog[0].contentVersion' "$catalog_json")"
+          expected_checksum="$(jq -r '.catalog[0].contentChecksumSha256' "$catalog_json")"
+          expected_size="$(jq -r '.catalog[0].contentSizeBytes' "$catalog_json")"
+
+          changed_request="$(
+            jq -nc               --arg competencyId "$competency_id"               '{operation:"content_competency", competencyId:$competencyId}'
+          )"
+
+          changed_status="$(
+            curl --silent --show-error               --output "$changed_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$changed_request"               "$FR10_ENDPOINT"
+          )"
+          test "$changed_status" = "200"
+
+          jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$content_version"             --argjson size "$expected_size" '
+              .competencyId == $competencyId and
+              .contentVersion == $version and
+              .contentChecksumSha256 == $checksum and
+              .contentSizeBytes == $size and
+              .current == false and
+              (.signedUrl | type == "string" and startswith("https://")) and
+              .signedUrlTtlSeconds == 60 and
+              (has("contentObjectPath") | not)
+            ' "$changed_json" >/dev/null
+
+          signed_url="$(jq -r '.signedUrl' "$changed_json")"
+
+          curl --silent --show-error --fail --location             --output "$package_gz"             "$signed_url"
+
+          measured_size="$(wc -c < "$package_gz" | tr -d '[:space:]')"
+          measured_checksum="$(sha256sum "$package_gz" | awk '{print $1}')"
+
+          test "$measured_size" = "$expected_size"
+          test "$measured_checksum" = "$expected_checksum"
+          gzip -t "$package_gz"
+
+          current_request="$(
+            jq -nc               --arg competencyId "$competency_id"               --arg checksum "$expected_checksum"               --argjson version "$content_version"               '{
+                operation:"content_competency",
+                competencyId:$competencyId,
+                knownContentVersion:$version,
+                knownContentChecksumSha256:$checksum
+              }'
+          )"
+
+          current_status="$(
+            curl --silent --show-error               --output "$current_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$current_request"               "$FR10_ENDPOINT"
+          )"
+          test "$current_status" = "200"
+
+          jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$content_version"             --argjson size "$expected_size" '
+              .competencyId == $competencyId and
+              .contentVersion == $version and
+              .contentChecksumSha256 == $checksum and
+              .contentSizeBytes == $size and
+              .current == true and
+              (has("signedUrl") | not) and
+              (has("signedUrlTtlSeconds") | not) and
+              (has("contentObjectPath") | not)
+            ' "$current_json" >/dev/null
+
+          jq -n             --arg status "PASS"             --arg repository "$GITHUB_REPOSITORY"             --arg branch "$GITHUB_REF_NAME"             --arg sha "$GITHUB_SHA"             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson catalogCount "$catalog_count"             --argjson contentVersion "$content_version"             --argjson expectedSizeBytes "$expected_size"             --argjson measuredSizeBytes "$measured_size"             '{
+              status:$status,
+              repository:$repository,
+              branch:$branch,
+              sha:$sha,
+              catalog:{
+                authorized:true,
+                compactMetadataOnly:true,
+                competencyCount:$catalogCount
+              },
+              package:{
+                competencyId:$competencyId,
+                contentVersion:$contentVersion,
+                contentChecksumSha256:$checksum,
+                expectedSizeBytes:$expectedSizeBytes,
+                measuredSizeBytes:$measuredSizeBytes,
+                gzipIntegrity:true,
+                changedRequestCurrent:false,
+                signedUrlIssued:true,
+                signedUrlTtlSeconds:60,
+                unchangedRequestCurrent:true,
+                unchangedResponseSignedUrlAbsent:true
+              },
+              sensitiveValuesPersisted:false
+            }' > "$evidence_json"
+
+          echo "FR10 authorized content production proof: PASS"
+
+      - name: Upload sanitized FR10 content evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: fr10-authorized-content-production-proof-${{ github.sha }}
+          path: fr10-authorized-content-production-proof.json
+          if-no-files-found: error
+          retention-days: 30
