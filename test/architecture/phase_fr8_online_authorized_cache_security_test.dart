@@ -124,10 +124,7 @@ void main() {
 
   test('FR8C defaults StudyContent to the protected UID cache', () {
     expect(loader, contains('UidScopedProtectedContentCacheRepository'));
-    expect(
-      loader,
-      contains('LearnerOnlineAccessRuntime.requireBoundaryFor'),
-    );
+    expect(loader, contains('LearnerOnlineAccessRuntime.requireBoundaryFor'));
     expect(loader, contains('migrateLegacyIfAuthorized()'));
     expect(
       loader,
