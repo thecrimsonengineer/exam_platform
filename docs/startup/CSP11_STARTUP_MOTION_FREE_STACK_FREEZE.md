@@ -111,8 +111,28 @@ CustomPainter/shaders own:
 - Lottie integration point
 - architecture freeze
 
-### SM-1 — Glaxnimate master artwork
-Create the production 512 × 512 central sequence and replace the placeholder JSON.
+### SM-1 — Glaxnimate master artwork ✅ IMPLEMENTED
+Production asset: `assets/startup/csp11_startup_master.json`
+
+Frozen characteristics:
+- 512 × 512 vector canvas
+- 30 fps
+- 144 frames / 4.8 seconds
+- 25 vector layers
+- six timeline markers: ignite, learn, practice, lab, remember, converge
+- seven domain nodes
+- Learn/book motif
+- Practice/target motif
+- LAB branching motif
+- Remember/flashcard motif
+- final convergence pulse
+- no embedded text
+- no remote assets
+- obsolete placeholder removed
+
+Validation is enforced by:
+- `test/startup/csp11_startup_asset_contract_test.dart`
+- `.github/workflows/startup_motion_validation.yml`
 
 ### SM-2 — choreography
 Synchronize Lottie, domain nodes, feature text and exit transition.
