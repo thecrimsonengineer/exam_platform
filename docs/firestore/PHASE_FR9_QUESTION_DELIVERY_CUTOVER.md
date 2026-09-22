@@ -329,44 +329,51 @@ regression and diff hygiene.
 
 ### FR9F — production validation and closure
 
-Status: PRODUCTION VALIDATION IN PROGRESS. CLOSURE NOT YET AUTHORIZED.
+Status: CLOSURE EVIDENCE COMPLETE. FINAL EXACT-SHA FREEZE GATE PENDING.
 
-Green repository checkpoint:
-`c1cadb82c9a551604249083f091b2311ea377848`.
+Authorized production proof:
 
-Validation run `35697656070` passed dependency locking, formatting, analysis,
-FR1-FR9, the live missing/invalid-token gateway smoke, all frozen Phase L4
-suites, full repository regression and diff hygiene.
+- exact SHA: `9a01fe716421986513766ac0aab441ce582bf5cc`;
+- proof run: `35704749394`;
+- full FR validation run on proof SHA: `35704749289`;
+- both completed successfully.
 
-Live production evidence recorded in
+Live production evidence is recorded in
 `docs/firestore/PHASE_FR9F_PRODUCTION_VALIDATION_EVIDENCE.md`.
 
 Completed:
 
 - Edge function deployed and ACTIVE;
-- deployed function source matches the reviewed repository source byte-for-byte;
+- deployed function source matches the reviewed repository source;
 - missing Firebase token returns HTTP 401;
 - malformed Firebase token returns HTTP 401;
 - package Storage bucket is private;
-- all 35 active catalogue rows map to 35 stored question objects;
+- all 35 active catalogue rows map to stored question objects;
 - `published_catalog` RLS is enabled;
-- anon/authenticated direct catalogue access is explicitly denied;
-- package Storage has no direct SELECT policy;
-- learner global Firestore question preload remains absent by architecture gate;
-- FR1-FR9, frozen L4, full regression and diff hygiene are green.
+- direct learner catalogue and Storage access remain denied;
+- authorized Firebase learner catalog request succeeds;
+- authorized changed-package request returns `current: false`;
+- changed-package request issues one HTTPS signed URL with 60-second TTL;
+- downloaded compressed bytes match catalogue size;
+- downloaded SHA-256 matches catalogue checksum;
+- gzip integrity succeeds;
+- unchanged package request returns `current: true`;
+- unchanged response contains no signed URL;
+- exact Firebase issuer, audience and RS256 project gate remains pinned;
+- learner global Firestore question preload remains absent;
+- FR1-FR9, frozen L4, full regression and diff hygiene are green on the proof
+  SHA;
+- sanitized proof artifact contains no token or signed URL.
 
-Still required before closure:
+Final closure procedure:
 
-- one live request using a pre-existing valid signed Firebase learner token;
-- verify catalog metadata succeeds for that authorized token;
-- verify a missing/changed competency package returns exactly one 60-second
-  signed URL and the downloaded bytes match catalogue size/checksum;
-- verify the same current version/checksum returns `current: true` with no
-  signed URL/package download;
-- retain issuer/audience rejection for tokens from any other Firebase project.
+1. commit the completed evidence record;
+2. run the full FR workflow on that exact evidence SHA;
+3. require a fully green result;
+4. freeze `phase-fr9-closed` at that exact SHA;
+5. start FR10 only from the frozen FR9 recovery point.
 
-Do not freeze `phase-fr9-closed` until the authorized-token proof above is
-captured on the exact closure SHA.
+Do not move `phase-fr9-closed` after freeze.
 
 ## Permanent FR9 guard
 
@@ -387,14 +394,8 @@ repositories until their own later migration phase explicitly changes them.
 
 ## NEXT ACTION
 
-Complete the remaining FR9F authorized-token production proof only.
+Complete the final exact-SHA evidence gate and freeze `phase-fr9-closed`.
 
-Use a pre-existing valid Firebase ID token issued by
-`csp11-exam-platform`. Do not create a replacement authentication scheme,
-make Storage public, bypass Firebase verification or use a Supabase privileged
-credential in the learner client.
+After FR9 is frozen, begin FR10 StudyContent Delivery Cutover from the frozen
+FR9 recovery point. Do not add FR10 learner behavior to the FR9 working branch.
 
-After the authorized live catalog + changed-package + unchanged-package proof
-is captured, rerun the exact-SHA full FR gate. Freeze `phase-fr9-closed` only
-if that final run is green and the production evidence document has no pending
-closure items.
