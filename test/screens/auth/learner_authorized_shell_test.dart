@@ -146,10 +146,7 @@ void main() {
     await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(
-      find.byKey(const ValueKey('protected-learner-ui')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('protected-learner-ui')), findsOneWidget);
 
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
@@ -164,12 +161,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(
-      find.byKey(const ValueKey('protected-learner-ui')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('protected-learner-ui')), findsOneWidget);
   });
-
 }
 
 class _ControlledValidator implements LearnerOnlineAccessValidator {
