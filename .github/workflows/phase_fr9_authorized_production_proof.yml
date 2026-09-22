@@ -1,0 +1,177 @@
+name: Phase FR9 Authorized Production Proof
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-fr9-authorized-production-proof
+  cancel-in-progress: false
+
+jobs:
+  prove-authorized-delivery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      FR9_ENDPOINT: https://esfycnmfywxczfillioj.supabase.co/functions/v1/learner-question-packages
+
+    steps:
+      - name: Require ephemeral Firebase learner token
+        env:
+          FR9_FIREBASE_LEARNER_ID_TOKEN: ${{ secrets.FR9_FIREBASE_LEARNER_ID_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${FR9_FIREBASE_LEARNER_ID_TOKEN:-}" ]; then
+            echo "FR9_FIREBASE_LEARNER_ID_TOKEN is not configured."
+            exit 1
+          fi
+
+          echo "Ephemeral Firebase learner token is available to the proof step."
+
+      - name: Prove authorized catalog and package delivery
+        env:
+          FR9_FIREBASE_LEARNER_ID_TOKEN: ${{ secrets.FR9_FIREBASE_LEARNER_ID_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          catalog_json="$RUNNER_TEMP/fr9-catalog.json"
+          changed_json="$RUNNER_TEMP/fr9-changed.json"
+          current_json="$RUNNER_TEMP/fr9-current.json"
+          package_gz="$RUNNER_TEMP/fr9-package.json.gz"
+          evidence_json="$GITHUB_WORKSPACE/fr9-authorized-production-proof.json"
+
+          catalog_status="$(
+            curl --silent --show-error               --output "$catalog_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data '{"operation":"catalog"}'               "$FR9_ENDPOINT"
+          )"
+
+          test "$catalog_status" = "200"
+
+          jq -e '
+            (.catalog | type == "array" and length > 0) and
+            all(.catalog[];
+              ((keys | sort) ==
+                ([
+                  "competencyId",
+                  "publishedQuestionCount",
+                  "questionChecksumSha256",
+                  "questionSizeBytes",
+                  "questionVersion",
+                  "ultraHardCount"
+                ] | sort)) and
+              (.competencyId | test("^d[0-9]{2}_c[0-9]{2}$")) and
+              (.questionVersion | type == "number" and floor == . and . > 0) and
+              (.questionChecksumSha256 | test("^[0-9a-f]{64}$")) and
+              (.questionSizeBytes | type == "number" and floor == . and . >= 0) and
+              (.publishedQuestionCount | type == "number" and floor == . and . >= 0) and
+              (.ultraHardCount | type == "number" and floor == . and . >= 0)
+            )
+          ' "$catalog_json" >/dev/null
+
+          catalog_count="$(jq '.catalog | length' "$catalog_json")"
+          competency_id="$(jq -r '.catalog[0].competencyId' "$catalog_json")"
+          question_version="$(jq -r '.catalog[0].questionVersion' "$catalog_json")"
+          expected_checksum="$(jq -r '.catalog[0].questionChecksumSha256' "$catalog_json")"
+          expected_size="$(jq -r '.catalog[0].questionSizeBytes' "$catalog_json")"
+          published_question_count="$(jq -r '.catalog[0].publishedQuestionCount' "$catalog_json")"
+
+          changed_request="$(
+            jq -nc               --arg competencyId "$competency_id"               '{operation:"competency", competencyId:$competencyId}'
+          )"
+
+          changed_status="$(
+            curl --silent --show-error               --output "$changed_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$changed_request"               "$FR9_ENDPOINT"
+          )"
+
+          test "$changed_status" = "200"
+
+          jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$question_version"             --argjson size "$expected_size"             --argjson count "$published_question_count" '
+              .competencyId == $competencyId and
+              .questionVersion == $version and
+              .questionChecksumSha256 == $checksum and
+              .questionSizeBytes == $size and
+              .publishedQuestionCount == $count and
+              .current == false and
+              (.signedUrl | type == "string" and startswith("https://")) and
+              .signedUrlTtlSeconds == 60 and
+              (has("questionObjectPath") | not)
+            ' "$changed_json" >/dev/null
+
+          signed_url="$(jq -r '.signedUrl' "$changed_json")"
+
+          curl --silent --show-error --fail --location             --output "$package_gz"             "$signed_url"
+
+          measured_size="$(wc -c < "$package_gz" | tr -d '[:space:]')"
+          measured_checksum="$(sha256sum "$package_gz" | awk '{print $1}')"
+
+          test "$measured_size" = "$expected_size"
+          test "$measured_checksum" = "$expected_checksum"
+          gzip -t "$package_gz"
+
+          current_request="$(
+            jq -nc               --arg competencyId "$competency_id"               --arg checksum "$expected_checksum"               --argjson version "$question_version"               '{
+                operation:"competency",
+                competencyId:$competencyId,
+                knownQuestionVersion:$version,
+                knownQuestionChecksumSha256:$checksum
+              }'
+          )"
+
+          current_status="$(
+            curl --silent --show-error               --output "$current_json"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer $FR9_FIREBASE_LEARNER_ID_TOKEN"               --data "$current_request"               "$FR9_ENDPOINT"
+          )"
+
+          test "$current_status" = "200"
+
+          jq -e             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson version "$question_version"             --argjson size "$expected_size"             --argjson count "$published_question_count" '
+              .competencyId == $competencyId and
+              .questionVersion == $version and
+              .questionChecksumSha256 == $checksum and
+              .questionSizeBytes == $size and
+              .publishedQuestionCount == $count and
+              .current == true and
+              (has("signedUrl") | not) and
+              (has("signedUrlTtlSeconds") | not) and
+              (has("questionObjectPath") | not)
+            ' "$current_json" >/dev/null
+
+          jq -n             --arg status "PASS"             --arg repository "$GITHUB_REPOSITORY"             --arg branch "$GITHUB_REF_NAME"             --arg sha "$GITHUB_SHA"             --arg competencyId "$competency_id"             --arg checksum "$expected_checksum"             --argjson catalogCount "$catalog_count"             --argjson questionVersion "$question_version"             --argjson expectedSizeBytes "$expected_size"             --argjson measuredSizeBytes "$measured_size"             --argjson publishedQuestionCount "$published_question_count"             --argjson signedUrlTtlSeconds 60             '{
+              status:$status,
+              repository:$repository,
+              branch:$branch,
+              sha:$sha,
+              catalog:{
+                authorized:true,
+                compactMetadataOnly:true,
+                competencyCount:$catalogCount
+              },
+              package:{
+                competencyId:$competencyId,
+                questionVersion:$questionVersion,
+                questionChecksumSha256:$checksum,
+                expectedSizeBytes:$expectedSizeBytes,
+                measuredSizeBytes:$measuredSizeBytes,
+                publishedQuestionCount:$publishedQuestionCount,
+                gzipIntegrity:true,
+                changedRequestCurrent:false,
+                signedUrlIssued:true,
+                signedUrlTtlSeconds:$signedUrlTtlSeconds,
+                unchangedRequestCurrent:true,
+                unchangedResponseSignedUrlAbsent:true
+              },
+              sensitiveValuesPersisted:false
+            }' > "$evidence_json"
+
+          echo "FR9 authorized production proof: PASS"
+
+      - name: Upload sanitized FR9 production evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: fr9-authorized-production-proof-${{ github.sha }}
+          path: fr9-authorized-production-proof.json
+          if-no-files-found: error
+          retention-days: 30
