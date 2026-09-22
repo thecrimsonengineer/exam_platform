@@ -289,7 +289,11 @@ unconditional background content revalidation.
 
 ### FR10F - production validation and closure
 
-Status: IMPLEMENTATION COMPLETE. FINAL SAME-SHA FREEZE GATE PENDING.
+Status: COMPLETE.
+
+The implementation and production closure proof are complete. The final
+documentation commit must itself pass the same exact-SHA repository and live
+production gates before the immutable closure branch is advanced to it.
 
 Verified functional closure candidate:
 `ef51a7960219b58282ff20f6e068b97bd0c57f33`.
@@ -315,9 +319,10 @@ Sanitized production evidence:
 - unchanged re-open required zero additional package downloads;
 - no learner token or signed URL was persisted in evidence.
 
-The final documentation/freeze commit must now pass the same authorized production
-proof plus the full FR1-FR10, frozen L4 and repository regression. Only that
-same exact green SHA may become `phase-fr10-closed`.
+The implementation closure candidate passed the authorized production proof
+and the full FR1-FR10, frozen L4 and repository regression. The final
+documentation-only closure commit is subject to the same two exact-SHA gates
+before `phase-fr10-closed` is advanced to it.
 
 Prove on production:
 
@@ -354,9 +359,9 @@ migration phase explicitly changes it.
 
 ## NEXT ACTION
 
-Complete FR10F and freeze FR10.
+None. Phase FR10 is complete.
 
-Run the strengthened authorized production proof against the final learner
-delivery architecture, record sanitized closure evidence, require a completely
-green exact-SHA FR1-FR10 + frozen L4 + full repository gate, and freeze
-`phase-fr10-closed` only at that exact reviewed evidence SHA.
+Do not add further FR10 implementation work after the final documentation SHA
+passes both exact-SHA closure workflows and `phase-fr10-closed` is advanced
+to that SHA. Any later change belongs to a new phase or an explicitly reopened
+phase with its own review and recovery point.
