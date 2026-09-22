@@ -118,7 +118,6 @@ class StudyContentLoader {
     return latest;
   }
 
-
   // ==========================================================
   // Published Repository + Cache
   // ==========================================================
@@ -313,7 +312,6 @@ class StudyContentLoader {
       );
     }
   }
-
 
   // ==========================================================
   // Published Domains
