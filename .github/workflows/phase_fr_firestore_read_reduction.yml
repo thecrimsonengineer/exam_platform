@@ -118,7 +118,11 @@ jobs:
             test/architecture/phase_fr9_question_delivery_test.dart \
             test/architecture/phase_fr9_edge_gateway_test.dart \
             lib/services/questions/learner_question_package_delivery_service.dart \
-            test/architecture/phase_fr9_quiz_service_cutover_test.dart
+            test/architecture/phase_fr9_quiz_service_cutover_test.dart \
+            lib/services/practice/practice_mode_service.dart \
+            test/services/practice_mode_service_test.dart \
+            test/architecture/phase_fr9_practice_mode_cutover_test.dart \
+            test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart
           git diff --
           git diff --exit-code -- \
             lib/services/performance/firestore_read_audit.dart \
@@ -185,7 +189,11 @@ jobs:
             test/architecture/phase_fr9_question_delivery_test.dart \
             test/architecture/phase_fr9_edge_gateway_test.dart \
             lib/services/questions/learner_question_package_delivery_service.dart \
-            test/architecture/phase_fr9_quiz_service_cutover_test.dart
+            test/architecture/phase_fr9_quiz_service_cutover_test.dart \
+            lib/services/practice/practice_mode_service.dart \
+            test/services/practice_mode_service_test.dart \
+            test/architecture/phase_fr9_practice_mode_cutover_test.dart \
+            test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -297,6 +305,12 @@ jobs:
         run: |
           flutter test test/services/quiz_service_firebase_test.dart
           flutter test test/architecture/phase_fr9_quiz_service_cutover_test.dart
+
+      - name: FR9 Practice mode cutover tests
+        run: |
+          flutter test test/services/practice_mode_service_test.dart
+          flutter test test/architecture/phase_fr9_practice_mode_cutover_test.dart
+          flutter test test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart
 
       - name: Preserve frozen Phase L4 learner regressions
         run: flutter test test/screens/lab
