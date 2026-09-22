@@ -134,8 +134,35 @@ Validation is enforced by:
 - `test/startup/csp11_startup_asset_contract_test.dart`
 - `.github/workflows/startup_motion_validation.yml`
 
-### SM-2 — choreography
-Synchronize Lottie, domain nodes, feature text and exit transition.
+### SM-2 — choreography ✅ IMPLEMENTED
+
+Implementation record:
+`docs/startup/SM2_CHOREOGRAPHY.md`
+
+Frozen characteristics:
+- one 4.8 second master `AnimationController`
+- Lottie playback is driven by the same master progress as Flutter motion
+- exact beat boundaries mirror Lottie marker frames 0, 18, 44, 70, 96 and 132
+- deterministic particle field
+- seven-node ambient knowledge orbit
+- center-to-domain and perimeter network links
+- moving accent arc and core pulse
+- beat-synchronized glass feature card
+- six-segment startup timeline
+- convergence begins at frame 132
+- overlay exit completes at frame 144
+- authentication and learner authorization continue underneath the overlay
+- no independent decorative timer is used by the startup choreography
+- no remote animation asset is introduced
+- no `phase-home-r` work is merged into this branch
+
+Validation:
+- startup formatting gate passes
+- SM-1 Lottie asset contract passes
+- all `test/startup/` tests pass
+- strict analysis of `lib/main.dart`, `lib/screens/startup` and `test/startup` passes
+- full repository analysis passes with only pre-existing info-level lint debt treated as non-fatal
+- warnings and errors remain fatal in the full repository analyzer gate
 
 ### SM-3 — personalization
 Connect learner-safe local state such as resume position and today's plan. Do not introduce extra remote reads merely for startup decoration.
