@@ -289,7 +289,7 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
                   const SizedBox(height: 4),
                   Text(
                     completed
-                        ? 'This learning section is recorded as completed.'
+                        ? 'This section is complete. After reviewing it again, mark the review complete.'
                         : 'Mark this subtopic complete after you have finished studying it.',
                     style: StudyTypography.bodySecondary,
                   ),
@@ -297,6 +297,19 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
                     const SizedBox(height: 4),
                     Text(
                       'Completed ${_formatCompletedDate(progress!.completedAt!)}',
+                      style: StudyTypography.caption.copyWith(
+                        color: const Color(0xFF4E6A59),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                  if (completed &&
+                      progress?.lastCompletedAt != null &&
+                      progress!.completedAt != null &&
+                      progress.lastCompletedAt!.isAfter(progress.completedAt!)) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      'Last reviewed ${_formatCompletedDate(progress.lastCompletedAt!)}',
                       style: StudyTypography.caption.copyWith(
                         color: const Color(0xFF4E6A59),
                         fontWeight: FontWeight.w600,
@@ -314,7 +327,9 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
           child: FilledButton.icon(
             onPressed: _completeSubtopic,
             icon: const Icon(Icons.check_rounded, size: 18),
-            label: const Text('COMPLETE SUBTOPIC'),
+            label: Text(
+              completed ? 'MARK REVIEW COMPLETE' : 'COMPLETE SUBTOPIC',
+            ),
           ),
         );
 
@@ -332,13 +347,15 @@ class _StudySubtopicScreenState extends State<StudySubtopicScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     content,
-                    if (!completed) ...[const SizedBox(height: 16), button],
+                    const SizedBox(height: 16),
+                    button,
                   ],
                 )
               : Row(
                   children: [
                     Expanded(child: content),
-                    if (!completed) ...[const SizedBox(width: 16), button],
+                    const SizedBox(width: 16),
+                    button,
                   ],
                 ),
         );

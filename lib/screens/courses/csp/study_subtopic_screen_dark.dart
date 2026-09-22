@@ -292,7 +292,7 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
                   const SizedBox(height: 4),
                   Text(
                     completed
-                        ? 'This learning section is recorded as completed.'
+                        ? 'This section is complete. After reviewing it again, mark the review complete.'
                         : 'Mark this subtopic complete after you have finished studying it.',
                     style: DarkStudyTypography.bodySecondary,
                   ),
@@ -300,6 +300,19 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
                     const SizedBox(height: 4),
                     Text(
                       'Completed ${_formatCompletedDate(progress!.completedAt!)}',
+                      style: DarkStudyTypography.caption.copyWith(
+                        color: DarkStudyColors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                  if (completed &&
+                      progress?.lastCompletedAt != null &&
+                      progress!.completedAt != null &&
+                      progress.lastCompletedAt!.isAfter(progress.completedAt!)) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      'Last reviewed ${_formatCompletedDate(progress.lastCompletedAt!)}',
                       style: DarkStudyTypography.caption.copyWith(
                         color: DarkStudyColors.textSecondary,
                         fontWeight: FontWeight.w600,
@@ -317,7 +330,9 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
           child: FilledButton.icon(
             onPressed: _completeSubtopic,
             icon: const Icon(Icons.check_rounded, size: 18),
-            label: const Text('COMPLETE SUBTOPIC'),
+            label: Text(
+              completed ? 'MARK REVIEW COMPLETE' : 'COMPLETE SUBTOPIC',
+            ),
           ),
         );
 
@@ -338,13 +353,15 @@ class _DarkStudySubtopicScreenState extends State<DarkStudySubtopicScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     content,
-                    if (!completed) ...[const SizedBox(height: 16), button],
+                    const SizedBox(height: 16),
+                    button,
                   ],
                 )
               : Row(
                   children: [
                     Expanded(child: content),
-                    if (!completed) ...[const SizedBox(width: 16), button],
+                    const SizedBox(width: 16),
+                    button,
                   ],
                 ),
         );
