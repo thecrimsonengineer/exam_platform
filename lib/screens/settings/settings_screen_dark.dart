@@ -12,6 +12,7 @@ import '../../services/settings/settings_external_links.dart';
 import '../../services/settings/theme_mode_service.dart';
 import 'legal_document_screen.dart';
 import 'legal_document_screen_dark.dart';
+import '../bookmarks/bookmarked_questions_screen.dart';
 import '../progress/progress_screen_dark.dart';
 
 typedef DarkSettingsUriLauncher = Future<bool> Function(Uri uri);
@@ -168,6 +169,16 @@ class DarkSettingsScreen extends StatelessWidget {
     );
   }
 
+  void _openBookmarkedQuestions(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const BookmarkedQuestionsScreen(
+          isDarkMode: true,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StudentGlassScaffold(
@@ -292,7 +303,7 @@ class DarkSettingsScreen extends StatelessWidget {
                             eyebrow: 'LEARNING & PROGRESS',
                             title: 'Your learning record',
                             subtitle:
-                                'Open the complete progress workspace with detailed learning analytics.',
+                                'Open your complete progress workspace and return to questions you saved for later.',
                           ),
                           const SizedBox(height: 14),
                           _settingsGroup(
@@ -306,6 +317,19 @@ class DarkSettingsScreen extends StatelessWidget {
                                 subtitle:
                                     'View your complete CSP11 progress and detailed learning analytics.',
                                 onTap: () => _openFullProgress(context),
+                              ),
+                              _SettingsTile(
+                                key: const ValueKey(
+                                  'settings-bookmarked-questions',
+                                ),
+                                icon: Icons.bookmarks_rounded,
+                                iconColor: _violet,
+                                iconBackground: const Color(0xFF1D1934),
+                                title: 'Bookmarked Questions',
+                                subtitle:
+                                    'Review questions you saved from quizzes on this device.',
+                                onTap: () =>
+                                    _openBookmarkedQuestions(context),
                               ),
                             ],
                           ),
