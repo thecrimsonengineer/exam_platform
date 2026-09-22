@@ -243,6 +243,13 @@ It must not pre-download all question packages.
 
 ### FR9A — contracts and verified package decoder
 
+Status: COMPLETE on exact SHA
+`3c68fa3fd503d343e63dd66ae404d2a0f53c4a79`.
+
+Validation run `35691492174` passed dependency locking, formatting, analysis,
+FR1-FR9, all frozen Phase L4 suites, full repository regression and diff
+hygiene.
+
 - freeze this design;
 - add Edge gateway request/response contracts;
 - add strict question package decoder;
@@ -252,11 +259,16 @@ It must not pre-download all question packages.
 
 ### FR9B — UID-scoped 512 KiB question package cache
 
+Status: IMPLEMENTATION CANDIDATE.
+
 - add per-UID package entries and metadata;
-- add LRU accounting by compressed bytes;
+- add LRU accounting by verified compressed bytes;
 - preserve previous verified entry on failed replacement;
-- block reads while FR8 authorization is locked;
-- add eviction/cross-user/offline/interrupted-write tests.
+- require the FR8 authorization boundary for every read and write;
+- reject an individual package larger than the frozen cache budget;
+- evict least-recently-used protected package bytes only;
+- never touch learner progress, attempts, bookmarks, readiness or preferences;
+- add eviction, cross-user, offline and interrupted-write tests.
 
 ### FR9C — Firebase-authorized Edge delivery gateway
 
@@ -316,7 +328,7 @@ repositories until their own later migration phase explicitly changes them.
 
 ## NEXT ACTION
 
-Implement FR9A only.
+Implement and validate FR9B only.
 
 Do not deploy the Edge function and do not cut learner QuizService over until
-the package decoder, delivery contracts and architecture guards are green.
+the UID-scoped bounded question-package cache is green on the full FR gate.
