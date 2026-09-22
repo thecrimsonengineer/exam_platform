@@ -103,21 +103,15 @@ class StartupPersonalizationService {
     return StartupPersonalizationSnapshot(
       resumeCode: _resumeCode(position),
       resumeTitle: _resumeTitle(position),
-      todayRemainingActivities: plan == null
-          ? null
-          : plan.blocks.where(_isOutstanding).length,
-      todayRemainingMinutes: plan == null
-          ? null
-          : plan.blocks
-                .where(_isOutstanding)
-                .fold<int>(0, (sum, block) => sum + block.plannedMinutes),
-      todayCompletedActivities: plan == null
-          ? null
-          : plan.blocks
-                .where(
-                  (block) => block.status == StudyPlanBlockStatus.completed,
-                )
-                .length,
+      todayRemainingActivities: plan?.blocks.where(_isOutstanding).length,
+      todayRemainingMinutes: plan?.blocks
+          .where(_isOutstanding)
+          .fold<int>(0, (sum, block) => sum + block.plannedMinutes),
+      todayCompletedActivities: plan?.blocks
+          .where(
+            (block) => block.status == StudyPlanBlockStatus.completed,
+          )
+          .length,
       todayTotalActivities: plan?.blocks.length,
     );
   }
