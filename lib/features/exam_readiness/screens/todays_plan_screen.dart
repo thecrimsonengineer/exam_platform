@@ -748,31 +748,55 @@ class _TodayPlanFilterBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+
+    final label = Row(
+      children: [
+        Icon(_categoryIcon(category), color: scheme.primary, size: 20),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            'Showing ${_categoryLabel(category)} tasks from today\'s plan',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    final action = TextButton(
+      key: const ValueKey('home-r5-view-all'),
+      onPressed: onViewAll,
+      child: const Text('View all'),
+    );
+
     return StudentGlassSurface(
       key: const ValueKey('home-r5-active-filter'),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       borderRadius: BorderRadius.circular(18),
       tint: scheme.primaryContainer.withValues(alpha: 0.42),
       borderColor: scheme.primary.withValues(alpha: 0.18),
-      child: Row(
-        children: [
-          Icon(_categoryIcon(category), color: scheme.primary, size: 20),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              'Showing ${_categoryLabel(category)} tasks from today\'s plan',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          TextButton(
-            key: const ValueKey('home-r5-view-all'),
-            onPressed: onViewAll,
-            child: const Text('View all'),
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 520) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                label,
+                const SizedBox(height: 4),
+                Align(alignment: Alignment.centerRight, child: action),
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              Expanded(child: label),
+              const SizedBox(width: 8),
+              action,
+            ],
+          );
+        },
       ),
     );
   }
