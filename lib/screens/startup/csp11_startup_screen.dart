@@ -53,7 +53,7 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
               builder: (context, _) {
                 final value = _controller.value;
                 final exitProgress =
-                    ((value - (132 / 144)) / (12 / 144)).clamp(0.0, 1.0);
+                    ((value - (132 / 144)) / (12 / 144)).clamp(0.0, 1.0).toDouble();
                 final opacity =
                     1 - Curves.easeInCubic.transform(exitProgress);
                 final scale = 1 + (0.018 * exitProgress);
@@ -90,7 +90,7 @@ class _StartupCanvas extends StatelessWidget {
     final beat = StartupTimeline.beatForProgress(progress);
     final beatProgress = StartupTimeline.beatProgress(progress, beat);
     final presentation = _BeatPresentation.forBeat(beat);
-    final introProgress = (progress / (18 / 144)).clamp(0.0, 1.0);
+    final introProgress = (progress / (18 / 144)).clamp(0.0, 1.0).toDouble();
     final brandOpacity = Curves.easeOut.transform(introProgress);
     final brandScale = 0.92 + (0.08 * Curves.easeOutBack.transform(
       introProgress,
@@ -228,7 +228,7 @@ class _BeatGlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enter = Curves.easeOutCubic.transform(
-      (beatProgress / 0.28).clamp(0.0, 1.0),
+      (beatProgress / 0.28).clamp(0.0, 1.0).toDouble(),
     );
 
     return AnimatedSwitcher(
@@ -385,7 +385,7 @@ class _TimelineSegment extends StatelessWidget {
           color: Colors.white.withValues(alpha: 0.09),
           child: FractionallySizedBox(
             alignment: Alignment.centerLeft,
-            widthFactor: fill.clamp(0.0, 1.0),
+            widthFactor: fill.clamp(0.0, 1.0).toDouble(),
             child: const ColoredBox(
               color: Colors.white70,
             ),
@@ -480,7 +480,7 @@ class _KnowledgeCorePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
     final radius = math.min(size.width, size.height) * 0.27;
-    final intro = (progress / (18 / 144)).clamp(0.0, 1.0);
+    final intro = (progress / (18 / 144)).clamp(0.0, 1.0).toDouble();
     final introEase = Curves.easeOutCubic.transform(intro);
     final converge = beat == StartupBeat.converge
         ? StartupTimeline.beatProgress(progress, beat)
@@ -625,7 +625,7 @@ class _ParticleFieldPainter extends CustomPainter {
       final direction = (index * 2.399963) + (progress * 0.65);
       final outwardRadius = shortest * (0.08 + (phase * 0.52));
       final inwardRadius =
-          shortest * (0.60 - (phase * 0.48)).clamp(0.08, 0.60);
+          shortest * (0.60 - (phase * 0.48)).clamp(0.08, 0.60).toDouble();
       final radius = outwardRadius * (1 - converge) + inwardRadius * converge;
       final drift = math.sin((progress * math.pi * 2) + index) * 8;
 
@@ -634,7 +634,7 @@ class _ParticleFieldPainter extends CustomPainter {
         center.dy + math.sin(direction) * radius - drift,
       );
 
-      final life = math.sin(phase * math.pi).clamp(0.0, 1.0);
+      final life = math.sin(phase * math.pi).clamp(0.0, 1.0).toDouble();
       final alpha = (0.035 + (0.14 * life)) * (1 - (0.25 * converge));
       final particleRadius = 0.7 + (1.6 * life);
 
