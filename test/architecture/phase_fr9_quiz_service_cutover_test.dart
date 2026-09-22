@@ -46,10 +46,7 @@ void main() {
   });
 
   test('FR9D delivery remains Edge-gateway and protected-cache based', () {
-    expect(
-      delivery,
-      contains("'learner-question-packages'"),
-    );
+    expect(delivery, contains("'learner-question-packages'"));
     expect(delivery, contains('UidScopedQuestionPackageCache'));
     expect(delivery, contains('LearnerOnlineAccessRuntime.requireBoundaryFor'));
     expect(delivery, contains('QuestionPackageDecoder'));
