@@ -29,13 +29,7 @@ class MicroFactSourceGateResult {
 class MicroFactSourceGateValidator {
   static const String requiredRegistryVersion = '1.0.0';
 
-  const MicroFactSourceGateValidator({
-    this.authorityRegistryValidator = const AuthorityRegistryValidator(),
-    this.microFactSchemaValidator = const MicroFactSchemaValidator(),
-  });
-
-  final AuthorityRegistryValidator authorityRegistryValidator;
-  final MicroFactSchemaValidator microFactSchemaValidator;
+  const MicroFactSourceGateValidator();
 
   MicroFactSourceGateResult validateJson({
     required String microFactJson,
@@ -100,7 +94,7 @@ class MicroFactSourceGateValidator {
   }) {
     final issues = <MicroFactSourceGateIssue>[];
 
-    final registryValidation = authorityRegistryValidator.validateJson(
+    final registryValidation = AuthorityRegistryValidator().validateJson(
       jsonEncode(authorityRegistry),
     );
     if (!registryValidation.isValid) {
@@ -114,7 +108,7 @@ class MicroFactSourceGateValidator {
       }
     }
 
-    final factValidation = microFactSchemaValidator.validateMap(microFact);
+    final factValidation = MicroFactSchemaValidator().validateMap(microFact);
     if (!factValidation.isValid) {
       for (final issue in factValidation.issues) {
         _add(
