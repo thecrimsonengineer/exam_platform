@@ -266,7 +266,8 @@ class AuthorityRegistryValidator {
       );
     }
 
-    final unexpected = seenIds.difference(requiredAuthorityIds).toList()\n      ..sort();
+    final unexpected = seenIds.difference(requiredAuthorityIds).toList()
+      ..sort();
     if (unexpected.isNotEmpty) {
       _add(
         issues,
@@ -494,8 +495,7 @@ class AuthorityRegistryValidator {
       value is String && value.trim().isNotEmpty;
 
   static bool _isIsoDate(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return false;
     }
     return DateTime.tryParse(value) != null;
