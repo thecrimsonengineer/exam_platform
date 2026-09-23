@@ -52,6 +52,7 @@ void main() {
     var decisionCount = 0;
     var optionCount = 0;
     var atomicRuleEvidenceCount = 0;
+    final qualityFailures = <String>[];
 
     for (final entry in manifest.entries) {
       final technicalRoot = _readObject(entry.technicalLabPath);
@@ -81,14 +82,32 @@ void main() {
         evidenceBundle: dqg300Evidence,
       );
 
-      expect(
-        quality.isValid,
-        isTrue,
-        reason:
-            'Q4-Q7 combined Decision-quality gate failed for ' +
+      if (!quality.isValid) {
+        for (final item in quality.decisionResults) {
+          if (item.isPass) {
+            continue;
+          }
+          qualityFailures.add(
             entry.identityKey +
-            '.',
-      );
+                ':' +
+                item.nodeId +
+                ' parse=' +
+                item.canonicalParsePass.toString() +
+                ' h03=' +
+                item.strictH03Pass.toString() +
+                ' h03Errors=' +
+                item.h03ErrorCount.toString() +
+                ' h03Warnings=' +
+                item.h03WarningCount.toString() +
+                ' dqg=' +
+                item.dqg300SemanticPass.toString() +
+                ' dqs=' +
+                (item.dqs?.toString() ?? 'null') +
+                ' passedRules=' +
+                item.dqg300PassedRuleCount.toString(),
+          );
+        }
+      }
 
       final decisions = technical.nodes.whereType<LabDecisionNode>().toList();
       decisionCount += decisions.length;
@@ -102,6 +121,12 @@ void main() {
       }
     }
 
+    expect(
+      qualityFailures,
+      isEmpty,
+      reason:
+          'Q4-Q7 population failures: ' + qualityFailures.join(' | '),
+    );
     expect(decisionCount, 50);
     expect(optionCount, 200);
     expect(atomicRuleEvidenceCount, 14950);
