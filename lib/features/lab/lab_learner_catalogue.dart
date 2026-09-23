@@ -33,7 +33,10 @@ class LabLearnerCatalogueEntry {
     required this.presentation,
   }) : focusTags = List<String>.unmodifiable(focusTags),
        supportedModes = Set<LabMode>.unmodifiable(supportedModes) {
-    LabIds.requireCanonical(manifestEntryId, 'learner catalogue manifest entry ID');
+    LabIds.requireCanonical(
+      manifestEntryId,
+      'learner catalogue manifest entry ID',
+    );
     LabIds.requireCanonical(labId, 'learner catalogue LAB ID');
     LabIds.requireCanonical(versionId, 'learner catalogue version ID');
 
