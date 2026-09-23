@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_003",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "OSHA requires machine guarding methods to protect operators and nearby employees from hazards such as points of operation, nip points, rotating parts, chips, and sparks.",
+    "shortVariant": "Machine guarding protects workers from dangerous machine motions and flying material.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c07",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "machine_guarding",
+      "machine_hazards"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "federal_regulation",
+    "sourceTitle": "General requirements for all machines, 29 CFR 1910.212",
+    "officialUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.212",
+    "sourceLocator": "29 CFR 1910.212(a)(1)",
+    "editionOrRevision": "29 CFR 1910.212",
+    "sourceSection": "1910.212(a)(1)",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "binding_requirement",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "machine_guarding",
+    "machine_hazards",
+    "point_of_operation"
+  ]
+}
