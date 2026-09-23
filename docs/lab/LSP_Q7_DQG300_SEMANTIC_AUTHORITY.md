@@ -2,7 +2,7 @@
 
 ## Status
 
-**IMPLEMENTED / VALIDATION CHECKPOINT**
+**IMPLEMENTED / EXACT-SHA CLOSURE CANDIDATE**
 
 Program: LSP-Q
 
@@ -142,3 +142,14 @@ No DQG rule is copied into the combined gate.
 ## Next authorized action
 
 LSP-Q8 — Validate learner presentation records against the authoritative technical LAB package without allowing presentation data to modify technical story mechanics or Decision truth.
+
+
+## Closure candidate
+
+Q7 implementation commit: `5612784f4f67219644cecf6726d368a5baadaf21`
+
+Canonical DQG rule-ID test correction: `3c2f2883806cbbd304eb27e811f031cf83351939`
+
+Canonical formatter output commit: `c52a9c716dac81cb0835536048dbbeb04f4e8759`
+
+The test correction changes only canonical rule identifiers in assertions. The formatter commit changes presentation formatting only. This documentation-only closure commit is the exact-SHA validation target for LSP-Q7. No DQG predicate, H0.3 rule, parser behavior, DQS calculation, LAB1000 logic, learner behavior, or evidence semantics are changed by the closure step.
