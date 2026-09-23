@@ -88,7 +88,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dart analyze --no-fatal-infos \
+          dart analyze \
             lib/services/micro_learning/startup_text_metrics.dart \
             lib/services/micro_learning/startup_pedagogy_policy_validator.dart \
             lib/services/micro_learning/startup_pedagogy_evidence_validator.dart \
