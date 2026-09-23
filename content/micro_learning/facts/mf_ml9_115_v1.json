@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_115",
+  "category": "learning_tip",
+  "display": {
+    "displayText": "NIOSH's systematic review found safety training improves worker knowledge, skills, attitudes, and behavior, while training alone did not demonstrate reduced injuries or symptoms.",
+    "shortVariant": "Training improves learning and behavior, but it is not a complete risk-control system.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d07",
+    "competencyId": "d07_c04",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "training_effectiveness",
+      "training_evaluation"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "A Systematic Review of the Effectiveness of Training and Education for the Protection of Workers",
+    "officialUrl": "https://www.cdc.gov/niosh/docs/2010-127/default.html",
+    "sourceLocator": "Systematic review findings",
+    "editionOrRevision": "DHHS (NIOSH) Publication No. 2010-127",
+    "sourceSection": "Systematic Review",
+    "sourcePage": null,
+    "sourcePublishedAt": "2010-01-01",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "research_finding",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "learning_tip",
+    "training_effectiveness",
+    "training_evaluation"
+  ]
+}
