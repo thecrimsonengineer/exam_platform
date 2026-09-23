@@ -48,21 +48,16 @@ class StartupTextMetrics {
   static bool hasRepeatedWhitespace(String value) =>
       RegExp(r' {2,}').hasMatch(value);
 
-  static bool hasHtml(String value) =>
-      RegExp(r'<[^>]+>').hasMatch(value);
+  static bool hasHtml(String value) => RegExp(r'<[^>]+>').hasMatch(value);
 
   static bool hasMarkdownLink(String value) =>
       RegExp(r'\[[^\]]+\]\([^)]+\)').hasMatch(value);
 
-  static bool hasRawUrl(String value) => RegExp(
-    r'(https?://|www\.)',
-    caseSensitive: false,
-  ).hasMatch(value);
+  static bool hasRawUrl(String value) =>
+      RegExp(r'(https?://|www\.)', caseSensitive: false).hasMatch(value);
 
-  static bool hasBulletPrefix(String value) => RegExp(
-    r'^\s*(?:[-*•]|\d+[.)])\s+',
-    multiLine: true,
-  ).hasMatch(value);
+  static bool hasBulletPrefix(String value) =>
+      RegExp(r'^\s*(?:[-*•]|\d+[.)])\s+', multiLine: true).hasMatch(value);
 
   static bool hasSourceLabelPrefix(String value) => RegExp(
     r'^\s*(?:source|reference|ref|citation)\s*:',
@@ -83,17 +78,14 @@ class StartupTextMetrics {
   }
 
   static Set<String> uppercaseTokens(String value) {
-    return RegExp(r'\b[A-Z][A-Z0-9-]{1,}\b')
-        .allMatches(value)
-        .map((match) => match.group(0)!)
-        .toSet();
+    return RegExp(
+      r'\b[A-Z][A-Z0-9-]{1,}\b',
+    ).allMatches(value).map((match) => match.group(0)!).toSet();
   }
 
   static bool containsAnyPhrase(String value, Iterable<String> phrases) {
     final normalized = value.toLowerCase();
-    return phrases.any(
-      (phrase) => normalized.contains(phrase.toLowerCase()),
-    );
+    return phrases.any((phrase) => normalized.contains(phrase.toLowerCase()));
   }
 
   static bool containsAnswerKeyLanguage(String value) => RegExp(
