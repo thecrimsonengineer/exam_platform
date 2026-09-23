@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_071",
+  "category": "fire_electrical_insight",
+  "display": {
+    "displayText": "FM impairment guidance treats unavailable sprinklers, fire pumps, water supplies, or special protection as an elevated fire risk requiring prompt precautions and restoration.",
+    "shortVariant": "Fire-protection impairments require urgent precautions and prompt restoration.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d04",
+    "competencyId": "d04_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "fire_protection_impairment",
+      "impairment_management"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-14",
+    "sourceClass": "loss_prevention_guidance",
+    "sourceTitle": "FM Data Sheet 10-7 Fire Protection Impairment Management",
+    "officialUrl": "https://www.fm.com/FMAApi/data/ApprovalStandardsDownload?isGated=false&itemId=%7B792844BC-DE97-4252-9571-6F6017956D20%7D",
+    "sourceLocator": "Sections 1.1 and 2.1 - impairment hazard and loss-prevention recommendations",
+    "editionOrRevision": "FM Data Sheet 10-7, October 2025 interim revision",
+    "sourceSection": "1.1 Hazard; 2.1 Introduction",
+    "sourcePage": "2",
+    "sourcePublishedAt": "2025-10-01",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_guideline",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "fire_protection",
+    "impairment_management",
+    "system_restoration"
+  ]
+}
