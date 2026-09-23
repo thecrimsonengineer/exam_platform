@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_044",
+  "category": "ih_insight",
+  "display": {
+    "displayText": "NIOSH notes that fatigue can slow reaction time, reduce attention and short-term memory, and impair judgment, making fatigue a human-factors risk.",
+    "shortVariant": "Fatigue can degrade reaction time, attention, memory, and judgment.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d06",
+    "competencyId": "d06_c04",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "fatigue_effects",
+      "human_performance"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Fatigue and Work",
+    "officialUrl": "https://www.cdc.gov/niosh/fatigue/about/index.html",
+    "sourceLocator": "Overview - effects of fatigue on worker performance",
+    "editionOrRevision": "Updated July 14, 2026",
+    "sourceSection": "Overview",
+    "sourcePage": null,
+    "sourcePublishedAt": "2026-07-14",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "research_finding",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "fatigue",
+    "human_factors",
+    "worker_performance"
+  ]
+}
