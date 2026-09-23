@@ -239,7 +239,7 @@ void _validateSchema(
   String path,
   List<String> issues,
 ) {
-  final result = const MicroFactSchemaValidator().validateMap(fact);
+  final result = MicroFactSchemaValidator().validateMap(fact);
   for (final issue in result.issues) {
     issues.add('ML2_SCHEMA $path: $issue');
   }
