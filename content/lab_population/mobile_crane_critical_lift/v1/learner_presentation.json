@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "mobile_crane_critical_lift",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Plan and execute a critical mobile-crane lift beside operating plant while managing load data, rigging, exclusion zones and worsening wind.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the lifting safety lead supporting a mobile-crane critical lift beside live process equipment.",
+    "situation": "A vessel spool must be lifted through a constrained operating area. The job depends on accurate load information, rigging integrity, exclusion control, weather limits and disciplined stop-work decisions.",
+    "objective": "Complete the lift without exposing people or plant to suspended-load, rigging or loss-of-control hazards.",
+    "peopleInvolved": [
+      "Lift supervisor",
+      "Crane operator",
+      "Rigger",
+      "Banksman",
+      "Area operator",
+      "Contractor crew"
+    ],
+    "knownFacts": [
+      "The lift is close to operating equipment.",
+      "The spool geometry can create load-control challenges.",
+      "The access route is used by other contractors.",
+      "Wind can affect the long load during movement."
+    ],
+    "focusTags": [
+      "Lifting Operations",
+      "Mobile Crane",
+      "Rigging",
+      "Exclusion Zone",
+      "Wind"
+    ]
+  },
+  "evidencePresentation": {
+    "lift_plan": {
+      "title": "Critical-lift plan",
+      "summary": "The plan defines the lift method, roles, equipment, load path, constraints and stop-work criteria.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "load_data": {
+      "title": "Load and centre-of-gravity data",
+      "summary": "The record provides load weight, geometry and other data needed to select the crane and rigging configuration.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "rigging_record": {
+      "title": "Rigging inspection record",
+      "summary": "The record shows lifting accessory identification, inspection status and suitability for the planned load.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "weather_record": {
+      "title": "Weather and wind record",
+      "summary": "The record provides wind and weather information relevant to the safe continuation of outdoor work.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "near_miss_record": {
+      "title": "Near-miss record",
+      "summary": "Near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "lift_plan_decision": {
+      "title": "Verify the critical-lift basis"
+    },
+    "rigging_decision": {
+      "title": "Confirm rigging and lifting points"
+    },
+    "exclusion_decision": {
+      "title": "Protect the lifting route"
+    },
+    "wind_decision": {
+      "title": "Respond to loss of load control"
+    },
+    "closeout_decision": {
+      "title": "Close out the lift safely"
+    }
+  },
+  "consequencePresentation": {
+    "lift_plan_decision_defensible": {
+      "observable": "The action improves control at the verify the critical-lift basis stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "lift_plan_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the verify the critical-lift basis stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "lift_plan_decision_critical": {
+      "observable": "The critical lift proceeds on an unsupported assumption at the verify the critical-lift basis stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "lift_plan_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the verify the critical-lift basis stage before exposure continues. The critical lift moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "rigging_decision_defensible": {
+      "observable": "The action improves control at the confirm rigging and lifting points stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "rigging_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the confirm rigging and lifting points stage before exposure continues. The critical lift moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "rigging_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the confirm rigging and lifting points stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "rigging_decision_critical": {
+      "observable": "The critical lift proceeds on an unsupported assumption at the confirm rigging and lifting points stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "exclusion_decision_defensible": {
+      "observable": "The action improves control at the protect the lifting route stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "exclusion_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the protect the lifting route stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "exclusion_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the protect the lifting route stage before exposure continues. The critical lift moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "exclusion_decision_critical": {
+      "observable": "The critical lift proceeds on an unsupported assumption at the protect the lifting route stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "wind_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the respond to loss of load control stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "wind_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the respond to loss of load control stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "wind_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the respond to loss of load control condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "wind_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the critical lift continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the critical lift before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The critical lift is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    },
+    "closeout_decision_best": {
+      "observable": "The critical lift remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The critical lift was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You kept the lift inside verified engineering, rigging and environmental limits."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The critical lift developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A weakness appeared, but the lift was paused and recovered before it became an incident."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "The load-control event occurred, but exclusion and recovery measures limited harm."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the critical lift to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Multiple lifting safeguards degraded and the suspended-load hazard escalated."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the critical lift. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A critical lifting control was overridden when the load was no longer demonstrably controlled."
+    }
+  }
+}

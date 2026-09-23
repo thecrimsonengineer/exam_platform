@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "flammable_tank_truck_loading",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Manage flammable-liquid truck loading while controlling bonding, ignition sources, overfill protection, SIMOPS and a spill fire.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the loading-area safety lead for transfer of a flammable liquid into a tank truck.",
+    "situation": "A truck is ready for loading in a hazardous area. Bonding, vehicle condition, overfill protection, vapour control and control of nearby activities must remain effective throughout transfer.",
+    "objective": "Prevent ignition and overfill, stop transfer when conditions degrade and manage any spill or fire without exposing personnel.",
+    "peopleInvolved": [
+      "Loading operator",
+      "Tank-truck driver",
+      "Area supervisor",
+      "Contractor driver",
+      "Emergency response team"
+    ],
+    "knownFacts": [
+      "The product is flammable.",
+      "The loading bay can contain hazardous vapour.",
+      "The truck relies on transfer safeguards and overfill protection.",
+      "Other vehicle movements can introduce ignition and collision hazards."
+    ],
+    "focusTags": [
+      "Flammable Liquid",
+      "Tank Truck",
+      "Bonding",
+      "Overfill",
+      "Loading Operations"
+    ]
+  },
+  "evidencePresentation": {
+    "loading_checklist": {
+      "title": "Tank-truck loading checklist",
+      "summary": "Tank-truck loading checklist confirms the pre-transfer checks that must be satisfied before product movement starts.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "product_sds": {
+      "title": "Product Safety Data Sheet",
+      "summary": "The SDS provides hazard, exposure-control, PPE, first-aid, fire and spill-response information for the product.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "bonding_check": {
+      "title": "Bonding / grounding check",
+      "summary": "The check confirms electrical bonding or grounding arrangements used to control static ignition risk.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "overfill_test": {
+      "title": "Overfill protection test record",
+      "summary": "The record confirms the status and test of overfill safeguards before transfer.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "incident_record": {
+      "title": "Incident / near-miss record",
+      "summary": "Incident / near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "loading_authorization_decision": {
+      "title": "Authorize the loading operation"
+    },
+    "overfill_decision": {
+      "title": "Verify overfill protection"
+    },
+    "simops_decision": {
+      "title": "Control conflicting activity"
+    },
+    "spill_fire_decision": {
+      "title": "Respond to spill and ignition"
+    },
+    "closeout_decision": {
+      "title": "Determine safe restart"
+    }
+  },
+  "consequencePresentation": {
+    "loading_authorization_decision_defensible": {
+      "observable": "The action improves control at the authorize the loading operation stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "loading_authorization_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the authorize the loading operation stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "loading_authorization_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the authorize the loading operation stage before exposure continues. The flammable-liquid loading operation moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "loading_authorization_decision_critical": {
+      "observable": "The flammable-liquid loading operation proceeds on an unsupported assumption at the authorize the loading operation stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "overfill_decision_defensible": {
+      "observable": "The action improves control at the verify overfill protection stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "overfill_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the verify overfill protection stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "overfill_decision_critical": {
+      "observable": "The flammable-liquid loading operation proceeds on an unsupported assumption at the verify overfill protection stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "overfill_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the verify overfill protection stage before exposure continues. The flammable-liquid loading operation moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "simops_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the control conflicting activity stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "simops_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the control conflicting activity stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "simops_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the control conflicting activity condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "simops_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the flammable-liquid loading operation continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "spill_fire_decision_best": {
+      "observable": "The team activates the planned emergency response at the respond to spill and ignition stage, keeps people out of the hazard zone and controls the event before re-entry.",
+      "guidedInsight": "The strongest emergency choice protects responders first. Rescue, isolation and source control should follow the planned capability rather than expose another person."
+    },
+    "spill_fire_decision_defensible": {
+      "observable": "The immediate area is secured and help is mobilized, but one element of the respond to spill and ignition response remains less complete than the preferred plan.",
+      "guidedInsight": "This action can reduce harm, but the BEST response integrates personnel protection, alarm, isolation and planned emergency control without leaving a material response gap."
+    },
+    "spill_fire_decision_weak": {
+      "observable": "Some protective action is taken, but personnel remain closer to the hazard than necessary during the respond to spill and ignition response. The margin for a secondary casualty narrows.",
+      "guidedInsight": "A partial emergency action may sound practical, but it is weak when it keeps people exposed or delays full hazard-zone control."
+    },
+    "spill_fire_decision_critical": {
+      "observable": "An unprotected or inadequately controlled intervention is attempted during the respond to spill and ignition stage. The event escalates and a secondary casualty or larger release becomes credible.",
+      "guidedInsight": "Critical emergency decisions often fail by sending people toward an uncontrolled hazard. Protect responders and establish control before attempting intervention."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the flammable-liquid loading operation before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_best": {
+      "observable": "The flammable-liquid loading operation remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    },
+    "closeout_decision_critical": {
+      "observable": "The flammable-liquid loading operation is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The flammable-liquid loading operation was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You verified ignition, bonding and transfer safeguards before loading and stopped when conditions changed."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The flammable-liquid loading operation developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A loading safeguard weakened, but transfer was secured and control was restored."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "A leak and ignition occurred, but shutdown, evacuation and response limited the event."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the flammable-liquid loading operation to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Transfer and ignition-source weaknesses combined into a major loading-area incident."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the flammable-liquid loading operation. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A decisive fire or transfer barrier was bypassed while flammable vapour was present."
+    }
+  }
+}

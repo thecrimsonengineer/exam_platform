@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "csp11.lab.population_manifest.v1",
+  "manifestId": "phase_l_population_v1",
+  "entries": [
+    {
+      "entryId": "hot_work_hydrocarbon_simops_v1",
+      "labId": "hot_work_hydrocarbon_simops",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/hot_work_hydrocarbon_simops/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/hot_work_hydrocarbon_simops/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/hot_work_hydrocarbon_simops/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "mobile_crane_critical_lift_v1",
+      "labId": "mobile_crane_critical_lift",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/mobile_crane_critical_lift/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/mobile_crane_critical_lift/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/mobile_crane_critical_lift/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "excavation_buried_services_v1",
+      "labId": "excavation_buried_services",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/excavation_buried_services/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/excavation_buried_services/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/excavation_buried_services/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "electrical_loto_stored_energy_v1",
+      "labId": "electrical_loto_stored_energy",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/electrical_loto_stored_energy/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/electrical_loto_stored_energy/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/electrical_loto_stored_energy/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "work_at_height_offshore_module_v1",
+      "labId": "work_at_height_offshore_module",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/work_at_height_offshore_module/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/work_at_height_offshore_module/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/work_at_height_offshore_module/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "chemical_transfer_corrosive_solvent_v1",
+      "labId": "chemical_transfer_corrosive_solvent",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/chemical_transfer_corrosive_solvent/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/chemical_transfer_corrosive_solvent/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/chemical_transfer_corrosive_solvent/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "hydrocarbon_line_breaking_v1",
+      "labId": "hydrocarbon_line_breaking",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/hydrocarbon_line_breaking/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/hydrocarbon_line_breaking/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/hydrocarbon_line_breaking/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "flammable_tank_truck_loading_v1",
+      "labId": "flammable_tank_truck_loading",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/flammable_tank_truck_loading/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/flammable_tank_truck_loading/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/flammable_tank_truck_loading/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "pneumatic_pressure_test_v1",
+      "labId": "pneumatic_pressure_test",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/pneumatic_pressure_test/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/pneumatic_pressure_test/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/pneumatic_pressure_test/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "scaffold_erection_overhead_power_v1",
+      "labId": "scaffold_erection_overhead_power",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population/scaffold_erection_overhead_power/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population/scaffold_erection_overhead_power/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population/scaffold_erection_overhead_power/v1/learner_presentation.json"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "hydrocarbon_line_breaking",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Prepare and open a hydrocarbon process line while controlling isolation, trapped pressure, line of fire and an unexpected release.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the safety professional coordinating breaking containment on a hydrocarbon process line.",
+    "situation": "Maintenance must open a flange connected to live process equipment. Isolation, draining, purging, PPE, line-of-fire control and emergency actions determine whether trapped inventory can be managed safely.",
+    "objective": "Prove the line is safe to open, control the opening method and recover correctly if residual pressure or product is released.",
+    "peopleInvolved": [
+      "Operations supervisor",
+      "Maintenance supervisor",
+      "Mechanical technician",
+      "Gas tester",
+      "Emergency response team"
+    ],
+    "knownFacts": [
+      "The line is connected to an operating process.",
+      "Trapped liquid or pressure can remain in pockets.",
+      "The product can create skin and flammable-vapour exposure.",
+      "A line-opening failure can escalate quickly."
+    ],
+    "focusTags": [
+      "Line Breaking",
+      "Process Isolation",
+      "Hydrocarbon",
+      "Line of Fire",
+      "Emergency Response"
+    ]
+  },
+  "evidencePresentation": {
+    "line_break_permit": {
+      "title": "Line-breaking permit",
+      "summary": "Line-breaking permit defines the authorized scope, conditions, hold points and required controls for the work.",
+      "details": "Check that the scope and location match the actual task.\nConfirm required controls and hold points are satisfied.\nTreat changed conditions as a trigger for reassessment."
+    },
+    "pid": {
+      "title": "P&ID / process drawing",
+      "summary": "The process drawing supports understanding of line connectivity, valves, drains, vents and potential trapped sections.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "isolation_certificate": {
+      "title": "Process isolation certificate",
+      "summary": "Process isolation certificate identifies hazardous-energy or process-isolation controls and how their effectiveness is verified.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "drain_record": {
+      "title": "Drain, vent and purge record",
+      "summary": "The record documents draining, venting, purging and checks used to establish a safe line-opening condition.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "incident_record": {
+      "title": "Incident / near-miss record",
+      "summary": "Incident / near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "isolation_decision": {
+      "title": "Establish process isolation"
+    },
+    "depressurization_decision": {
+      "title": "Verify zero energy and inventory"
+    },
+    "opening_decision": {
+      "title": "Open the flange safely"
+    },
+    "release_decision": {
+      "title": "Control the unexpected release"
+    },
+    "closeout_decision": {
+      "title": "Re-establish a safe maintenance basis"
+    }
+  },
+  "consequencePresentation": {
+    "isolation_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the establish process isolation stage before exposure continues. The line-breaking task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "isolation_decision_defensible": {
+      "observable": "The action improves control at the establish process isolation stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "isolation_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the establish process isolation stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "isolation_decision_critical": {
+      "observable": "The line-breaking task proceeds on an unsupported assumption at the establish process isolation stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "depressurization_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the verify zero energy and inventory stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "depressurization_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the verify zero energy and inventory condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "depressurization_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the line-breaking task continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "depressurization_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the verify zero energy and inventory stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "opening_decision_defensible": {
+      "observable": "The action improves control at the open the flange safely stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "opening_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the open the flange safely stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "opening_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the open the flange safely stage before exposure continues. The line-breaking task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "opening_decision_critical": {
+      "observable": "The line-breaking task proceeds on an unsupported assumption at the open the flange safely stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "release_decision_defensible": {
+      "observable": "The immediate area is secured and help is mobilized, but one element of the control the unexpected release response remains less complete than the preferred plan.",
+      "guidedInsight": "This action can reduce harm, but the BEST response integrates personnel protection, alarm, isolation and planned emergency control without leaving a material response gap."
+    },
+    "release_decision_best": {
+      "observable": "The team activates the planned emergency response at the control the unexpected release stage, keeps people out of the hazard zone and controls the event before re-entry.",
+      "guidedInsight": "The strongest emergency choice protects responders first. Rescue, isolation and source control should follow the planned capability rather than expose another person."
+    },
+    "release_decision_weak": {
+      "observable": "Some protective action is taken, but personnel remain closer to the hazard than necessary during the control the unexpected release response. The margin for a secondary casualty narrows.",
+      "guidedInsight": "A partial emergency action may sound practical, but it is weak when it keeps people exposed or delays full hazard-zone control."
+    },
+    "release_decision_critical": {
+      "observable": "An unprotected or inadequately controlled intervention is attempted during the control the unexpected release stage. The event escalates and a secondary casualty or larger release becomes credible.",
+      "guidedInsight": "Critical emergency decisions often fail by sending people toward an uncontrolled hazard. Protect responders and establish control before attempting intervention."
+    },
+    "closeout_decision_best": {
+      "observable": "The line-breaking task remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the line-breaking task before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The line-breaking task is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The line-breaking task was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You proved isolation, removed stored inventory and controlled the opening before exposing the crew."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The line-breaking task developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A process-isolation gap emerged, but the job was stopped and a safer maintenance basis was established."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "Residual hydrocarbon escaped, but withdrawal, alarm and process isolation limited escalation."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the line-breaking task to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Isolation and opening weaknesses combined into a significant hydrocarbon release."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the line-breaking task. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A critical containment or emergency barrier was bypassed while residual pressure remained possible."
+    }
+  }
+}

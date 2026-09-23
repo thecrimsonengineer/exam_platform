@@ -1,0 +1,1067 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "mobile_crane_critical_lift",
+    "versionId": "v1",
+    "title": "Mobile Crane Critical Lift Near Live Plant",
+    "description": "A five-decision LAB covering lift planning, rigging, exclusion controls, wind response, and near-miss recovery.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "lift_plan_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "lift_plan_verified": false,
+      "rigging_verified": false,
+      "exclusion_verified": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "lift_plan_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "rigging_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "exclusion_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "lift_supervisor",
+      "role": "lift_supervisor"
+    },
+    {
+      "id": "crane_operator",
+      "role": "crane_operator"
+    },
+    {
+      "id": "rigger",
+      "role": "rigger"
+    },
+    {
+      "id": "signaller",
+      "role": "designated_signal_person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "lift_plan",
+      "type": "lift_plan",
+      "required": false
+    },
+    {
+      "id": "load_data",
+      "type": "load_data",
+      "required": false
+    },
+    {
+      "id": "rigging_record",
+      "type": "rigging_inspection",
+      "required": false
+    },
+    {
+      "id": "weather_record",
+      "type": "weather",
+      "required": false
+    },
+    {
+      "id": "near_miss_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "lift_plan_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "lift_plan_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "lift_plan"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "lift_plan_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "lift_plan_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "lift_plan_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "lift_plan_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "lift_plan"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "rigging_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "rigging_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "rigging_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "rigging_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "rigging_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "rigging_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "rigging_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "rigging_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "exclusion_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "exclusion_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "load_data"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "exclusion_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "exclusion_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "exclusion_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "load_data"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "exclusion_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "wind_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "weather_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "wind_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "weather_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "wind_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "wind_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "near_miss_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "near_miss_record"
+      ],
+      "simulatedMinutes": 3
+    }
+  ],
+  "nodes": [
+    {
+      "id": "lift_plan_decision",
+      "type": "DECISION",
+      "prompt": "A vessel spool must be lifted beside operating equipment. The drawing weight is old and the crane has been repositioned since the lift plan was issued. What do you do?",
+      "options": [
+        {
+          "id": "lift_plan_decision_o1",
+          "text": "Confirm crane capacity, radius and outrigger support, but accept the drawing weight because the spool dimensions appear unchanged from the issued plan. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "lift_plan_decision_defensible",
+          "mistakeTags": [
+            "lift_plan_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "lifting_operations"
+          ]
+        },
+        {
+          "id": "lift_plan_decision_o2",
+          "text": "Proceed with the planned crane setup while the rigger confirms the weight from markings on the spool before the load is raised above knee height.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "lift_plan_decision_weak",
+          "mistakeTags": [
+            "lift_plan_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "lifting_operations"
+          ]
+        },
+        {
+          "id": "lift_plan_decision_o3",
+          "text": "Start the lift slowly based on the operator's capacity margin and stop if the crane indicators show the load is heavier than expected.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "lift_plan_decision_critical",
+          "mistakeTags": [
+            "lift_plan_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "lifting_operations"
+          ]
+        },
+        {
+          "id": "lift_plan_decision_o4",
+          "text": "Stop the lift setup until load weight and centre of gravity, crane configuration, radius, ground support and the current lift plan are verified together.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "lift_plan_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "lifting_operations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rigging_decision",
+      "type": "DECISION",
+      "prompt": "The load data is confirmed. One lifting point was repaired during fabrication and the sling arrangement creates significant sling angles. What do you do?",
+      "options": [
+        {
+          "id": "rigging_decision_o1",
+          "text": "Inspect all rigging and confirm sling capacities, but accept the repaired lifting point from the fabrication drawing without checking its release documentation. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "rigging_decision_defensible",
+          "mistakeTags": [
+            "rigging_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "mobile_crane"
+          ]
+        },
+        {
+          "id": "rigging_decision_o2",
+          "text": "Verify certified lifting points, inspect slings and shackles, calculate the effect of sling angles and confirm the rigging arrangement before connecting the load.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "rigging_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "mobile_crane"
+          ]
+        },
+        {
+          "id": "rigging_decision_o3",
+          "text": "Use the listed sling capacities because each sling exceeds one quarter of the load, then control any imbalance with tag lines during the trial lift.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "rigging_decision_weak",
+          "mistakeTags": [
+            "rigging_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "mobile_crane"
+          ]
+        },
+        {
+          "id": "rigging_decision_o4",
+          "text": "Add a higher-capacity sling to the arrangement and proceed while the repaired lifting point remains in service without independent acceptance evidence.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "rigging_decision_critical",
+          "mistakeTags": [
+            "rigging_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "mobile_crane"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exclusion_decision",
+      "type": "DECISION",
+      "prompt": "The load is ready to move across a narrow access route used by contractors. Radio coverage is good but people continue approaching the boundary. What do you do?",
+      "options": [
+        {
+          "id": "exclusion_decision_o1",
+          "text": "Use a controlled exclusion zone and one signal person, but allow brief pedestrian crossing behind the crane between load movements under spotter control. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "exclusion_decision_defensible",
+          "mistakeTags": [
+            "exclusion_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "rigging"
+          ]
+        },
+        {
+          "id": "exclusion_decision_o2",
+          "text": "Keep the route open and rely on the banksman to hold pedestrians whenever the suspended load reaches the access crossing.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "exclusion_decision_weak",
+          "mistakeTags": [
+            "exclusion_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "rigging"
+          ]
+        },
+        {
+          "id": "exclusion_decision_o3",
+          "text": "Stop conflicting access, establish a controlled exclusion zone, confirm one designated signal person and test communications before moving the suspended load.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "exclusion_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "rigging"
+          ]
+        },
+        {
+          "id": "exclusion_decision_o4",
+          "text": "Lift across the occupied route at low height while spotters control pedestrians because the move takes less than a minute.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "exclusion_decision_critical",
+          "mistakeTags": [
+            "exclusion_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "rigging"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wind_decision",
+      "type": "DECISION",
+      "prompt": "Halfway through the lift, gusts increase and the long spool begins to yaw despite the tag lines. The wind remains below the crane's published limit. What do you do?",
+      "options": [
+        {
+          "id": "wind_decision_o1",
+          "text": "Land the load in the nearest planned safe position, stop the lift and reassess wind, sail area, rigging and route conditions before any restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "wind_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        },
+        {
+          "id": "wind_decision_o2",
+          "text": "Hold the load low and stable while wind conditions are confirmed, then land it if the gusting trend continues rather than advancing the lift. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "wind_decision_defensible",
+          "mistakeTags": [
+            "wind_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        },
+        {
+          "id": "wind_decision_o3",
+          "text": "Continue slowly with additional tag-line control because measured wind remains below the published operating limit for the crane.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "wind_decision_weak",
+          "mistakeTags": [
+            "wind_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        },
+        {
+          "id": "wind_decision_o4",
+          "text": "Raise the load above the nearby structure quickly to reduce the time exposed to gusts, then complete the move before wind increases further.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "wind_decision_critical",
+          "mistakeTags": [
+            "wind_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The load is landed safely after a sharp yaw and a sling shows fresh abrasion. No contact occurred. What should happen before another lift?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Stop and replace the damaged sling, inspect the remaining rigging and conduct a controlled re-brief before continuing under the existing lift plan. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Replace the sling and resume after the operator and rigger agree that the wind has reduced and the load is stable during a short trial lift.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Resume with the same arrangement once wind drops because the load was landed without contact and the damaged sling has been removed.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Quarantine the affected rigging, inspect the crane, load and lifting points, record the near miss and revise the lift plan before authorizing another lift.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "lift_plan_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "lift_plan_decision",
+      "targetNodeId": "rigging_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "lift_plan_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "lift_plan_decision",
+      "targetNodeId": "rigging_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "rigging_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "rigging_decision",
+      "targetNodeId": "exclusion_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "rigging_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "rigging_decision",
+      "targetNodeId": "exclusion_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "exclusion_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "exclusion_decision",
+      "targetNodeId": "wind_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "exclusion_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "exclusion_decision",
+      "targetNodeId": "wind_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "wind_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "wind_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "wind_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "wind_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1926 Subpart CC Cranes and Derricks in Construction",
+    "ASME B30.5 Mobile and Locomotive Cranes"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "lift_plan_decision",
+        "alternateOptionId": "lift_plan_decision_o4"
+      },
+      {
+        "nodeId": "rigging_decision",
+        "alternateOptionId": "rigging_decision_o2"
+      },
+      {
+        "nodeId": "exclusion_decision",
+        "alternateOptionId": "exclusion_decision_o3"
+      },
+      {
+        "nodeId": "wind_decision",
+        "alternateOptionId": "wind_decision_o1"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o4"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "wind_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

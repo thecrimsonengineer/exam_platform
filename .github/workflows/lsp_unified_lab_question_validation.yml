@@ -52,7 +52,8 @@ jobs:
             test/lab_quality/lsp_q6_combined_decision_quality_gate_test.dart \
             test/lab_quality/lsp_q7_dqg300_semantic_authority_test.dart \
             test/lab_quality/lsp_q8_learner_presentation_validation_test.dart \
-            test/lab_quality/lsp_q9_scenario_population_manifest_test.dart
+            test/lab_quality/lsp_q9_scenario_population_manifest_test.dart \
+            test/lab_quality/lsp_q10_manifest_backed_scenario_population_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -89,6 +90,9 @@ jobs:
 
       - name: Scenario population manifest tests
         run: flutter test test/lab_quality/lsp_q9_scenario_population_manifest_test.dart
+
+      - name: Manifest-backed scenario population tests
+        run: flutter test test/lab_quality/lsp_q10_manifest_backed_scenario_population_test.dart
 
       - name: Studio import regression
         run: flutter test test/services/studio_question_import_service_test.dart
@@ -130,6 +134,7 @@ jobs:
             test/lab_quality/lsp_q6_combined_decision_quality_gate_test.dart \
             test/lab_quality/lsp_q7_dqg300_semantic_authority_test.dart \
             test/lab_quality/lsp_q8_learner_presentation_validation_test.dart \
-            test/lab_quality/lsp_q9_scenario_population_manifest_test.dart
+            test/lab_quality/lsp_q9_scenario_population_manifest_test.dart \
+            test/lab_quality/lsp_q10_manifest_backed_scenario_population_test.dart
           git commit -m "Format LSP unified question quality files"
           git push origin HEAD:phase-l4-scenario-population

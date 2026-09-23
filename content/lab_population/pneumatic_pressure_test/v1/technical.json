@@ -1,0 +1,1067 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "pneumatic_pressure_test",
+    "versionId": "v1",
+    "title": "Pneumatic Pressure Test of Process Piping",
+    "description": "A five-decision LAB covering test planning, exclusion zones, staged pressurization, abnormal-condition response, and safe depressurization.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "test_plan_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "test_plan_verified": false,
+      "exclusion_verified": false,
+      "work_suspended": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "test_plan_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "exclusion_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "work_suspended": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "test_supervisor",
+      "role": "test_supervisor"
+    },
+    {
+      "id": "pressure_technician",
+      "role": "pressure_technician"
+    },
+    {
+      "id": "area_authority",
+      "role": "area_authority"
+    },
+    {
+      "id": "inspector",
+      "role": "authorized_inspector"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "test_pack",
+      "type": "pressure_test_pack",
+      "required": false
+    },
+    {
+      "id": "piping_record",
+      "type": "piping_record",
+      "required": false
+    },
+    {
+      "id": "gauge_certificate",
+      "type": "instrument_certificate",
+      "required": false
+    },
+    {
+      "id": "exclusion_plan",
+      "type": "exclusion_zone_plan",
+      "required": false
+    },
+    {
+      "id": "incident_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "test_plan_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "test_plan_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "test_pack"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "test_plan_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "test_plan_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "test_pack"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "test_plan_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "test_plan_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "exclusion_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "exclusion_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "exclusion_plan"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "exclusion_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "exclusion_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "exclusion_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "exclusion_plan"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "exclusion_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "pressurization_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "gauge_certificate"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "pressurization_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "pressurization_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "pressurization_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "gauge_certificate"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "rupture_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "rupture_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "rupture_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "rupture_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "piping_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "piping_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "test_plan_decision",
+      "type": "DECISION",
+      "prompt": "A modified piping section is scheduled for a pneumatic test. One temporary spool has a different rating and the hydrotest option was rejected for operational reasons. What do you do first?",
+      "options": [
+        {
+          "id": "test_plan_decision_o1",
+          "text": "Verify the lowest component rating and test pressure, but accept the pneumatic method because operations documented that introducing water is undesirable. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "test_plan_decision_defensible",
+          "mistakeTags": [
+            "test_plan_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "pressure_testing"
+          ]
+        },
+        {
+          "id": "test_plan_decision_o2",
+          "text": "Hold the test until the approved test pack confirms component ratings, test pressure, pneumatic justification, boundaries, safeguards and acceptance criteria.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "test_plan_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "pressure_testing"
+          ]
+        },
+        {
+          "id": "test_plan_decision_o3",
+          "text": "Begin setting up the test equipment while engineering confirms the temporary spool rating because no pressure will be applied until the check is complete.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "test_plan_decision_weak",
+          "mistakeTags": [
+            "test_plan_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "pressure_testing"
+          ]
+        },
+        {
+          "id": "test_plan_decision_o4",
+          "text": "Proceed with the approved pressure target and monitor the temporary spool closely because its nominal size and material match the surrounding piping.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "test_plan_decision_critical",
+          "mistakeTags": [
+            "test_plan_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "pressure_testing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exclusion_decision",
+      "type": "DECISION",
+      "prompt": "The test pack is approved. The test boundary runs beside an access route and two calibrated gauges are available. What is the strongest setup?",
+      "options": [
+        {
+          "id": "exclusion_decision_o1",
+          "text": "Barricade the immediate test area and use calibrated gauges, but keep the adjacent access route open with a spotter because the test is scheduled off peak. under supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "exclusion_decision_defensible",
+          "mistakeTags": [
+            "exclusion_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "pneumatic_test"
+          ]
+        },
+        {
+          "id": "exclusion_decision_o2",
+          "text": "Use barriers around flanges and temporary joints while allowing essential staff inside the broader area if they remain out of the direct line of fire.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "exclusion_decision_weak",
+          "mistakeTags": [
+            "exclusion_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "pneumatic_test"
+          ]
+        },
+        {
+          "id": "exclusion_decision_o3",
+          "text": "Establish the calculated exclusion zone, control access, position calibrated instruments where they can be read safely and verify relief and remote pressurization controls.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "exclusion_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "pneumatic_test"
+          ]
+        },
+        {
+          "id": "exclusion_decision_o4",
+          "text": "Keep nonessential staff away from the pipe and rely on warning signs because the test team will pressurize slowly and watch every temporary connection.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "exclusion_decision_critical",
+          "mistakeTags": [
+            "exclusion_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "pneumatic_test"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pressurization_decision",
+      "type": "DECISION",
+      "prompt": "Pressurization starts. A flange makes a faint noise at an intermediate hold point, but pressure remains stable and no visible leak is seen. What do you do?",
+      "options": [
+        {
+          "id": "pressurization_decision_o1",
+          "text": "Hold the current pressure without increasing it while the team checks instruments remotely and prepares to depressurize if the indication persists. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "pressurization_decision_defensible",
+          "mistakeTags": [
+            "pressurization_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        },
+        {
+          "id": "pressurization_decision_o2",
+          "text": "Maintain the hold pressure and use leak-detection solution from outside the direct line of fire because the gauges remain stable.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "pressurization_decision_weak",
+          "mistakeTags": [
+            "pressurization_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        },
+        {
+          "id": "pressurization_decision_o3",
+          "text": "Increase pressure to the next hold point to see whether the noise changes because a stable gauge suggests the joint is not leaking significantly.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "pressurization_decision_critical",
+          "mistakeTags": [
+            "pressurization_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        },
+        {
+          "id": "pressurization_decision_o4",
+          "text": "Stop pressurization, reduce pressure to a safe condition and inspect the suspected location only after stored energy is controlled and the test is reassessed.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "pressurization_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rupture_decision",
+      "type": "DECISION",
+      "prompt": "Pressure suddenly drops and a temporary blind shifts with a loud impact inside the exclusion zone. No one is known to be inside. What do you do?",
+      "options": [
+        {
+          "id": "rupture_decision_o1",
+          "text": "Stop the test, isolate the energy source, keep the exclusion zone closed, account for personnel and do not approach until the system is confirmed depressurized.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "rupture_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        },
+        {
+          "id": "rupture_decision_o2",
+          "text": "Stop pressure input and account for staff, maintaining the barricade while the supervisor verifies pressure remotely before authorizing an inspection. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "rupture_decision_defensible",
+          "mistakeTags": [
+            "rupture_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        },
+        {
+          "id": "rupture_decision_o3",
+          "text": "Keep the zone clear and send one technician to read the nearest local gauge from behind shielding to confirm whether pressure remains.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "rupture_decision_weak",
+          "mistakeTags": [
+            "rupture_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        },
+        {
+          "id": "rupture_decision_o4",
+          "text": "Approach the boundary in protective equipment to secure the shifted blind before it moves further because pressure appears to be falling.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "rupture_decision_critical",
+          "mistakeTags": [
+            "rupture_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "exclusion_zone"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The system is fully depressurized and the blind damage is visible. The project schedule requires the test to be repeated today. What should happen?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Replace the blind, inspect similar temporary components and conduct a controlled test review before repeating the approved pressure sequence. with a written check.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_piping"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Quarantine the failed component, investigate the cause, verify the test boundary and hardware, revise the test pack and only then authorize a new pressure test.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_piping"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Replace the blind and repeat the test from the first hold point after checking gauge calibration because the rest of the boundary remained stable.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_piping"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Install a heavier blind and repeat the test immediately because the system is already prepared and the failure point has been identified.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_piping"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "test_plan_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "test_plan_decision",
+      "targetNodeId": "exclusion_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "test_plan_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "test_plan_decision",
+      "targetNodeId": "exclusion_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "exclusion_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "exclusion_decision",
+      "targetNodeId": "pressurization_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "exclusion_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "exclusion_decision",
+      "targetNodeId": "pressurization_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "pressurization_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "pressurization_decision",
+      "targetNodeId": "rupture_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "pressurization_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "pressurization_decision",
+      "targetNodeId": "rupture_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "rupture_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "rupture_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "rupture_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "rupture_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "ASME B31.3 Process Piping, 2024 edition",
+    "OSHA 29 CFR 1910.119 Mechanical Integrity and Safe Work Practices"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "test_plan_decision",
+        "alternateOptionId": "test_plan_decision_o2"
+      },
+      {
+        "nodeId": "exclusion_decision",
+        "alternateOptionId": "exclusion_decision_o3"
+      },
+      {
+        "nodeId": "pressurization_decision",
+        "alternateOptionId": "pressurization_decision_o4"
+      },
+      {
+        "nodeId": "rupture_decision",
+        "alternateOptionId": "rupture_decision_o1"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "rupture_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

@@ -1,0 +1,1068 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "work_at_height_offshore_module",
+    "versionId": "v1",
+    "title": "Work at Height on an Offshore Module",
+    "description": "A five-decision LAB covering access, fall protection, dropped-object control, worsening weather, and restart after a near miss.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "access_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "access_verified": false,
+      "fall_protection_verified": false,
+      "dropped_object_controls_verified": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "access_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "fall_protection_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "dropped_object_controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "work_supervisor",
+      "role": "work_supervisor"
+    },
+    {
+      "id": "scaffold_inspector",
+      "role": "scaffold_inspector"
+    },
+    {
+      "id": "technician",
+      "role": "maintenance_technician"
+    },
+    {
+      "id": "deck_coordinator",
+      "role": "deck_coordinator"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "work_at_height_permit",
+      "type": "work_at_height_permit",
+      "required": false
+    },
+    {
+      "id": "scaffold_tag",
+      "type": "scaffold_inspection",
+      "required": false
+    },
+    {
+      "id": "anchor_record",
+      "type": "anchor_verification",
+      "required": false
+    },
+    {
+      "id": "weather_record",
+      "type": "weather",
+      "required": false
+    },
+    {
+      "id": "near_miss_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "access_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "access_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "scaffold_tag"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "access_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "access_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "scaffold_tag"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "access_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "access_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "fall_protection_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "fall_protection_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "anchor_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "fall_protection_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "fall_protection_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "anchor_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "fall_protection_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "fall_protection_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "dropped_object_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "dropped_object_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_at_height_permit"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "dropped_object_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "dropped_object_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "dropped_object_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "dropped_object_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_at_height_permit"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "weather_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "near_miss_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "weather_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "weather_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "near_miss_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "weather_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "scaffold_tag"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "scaffold_tag"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "access_decision",
+      "type": "DECISION",
+      "prompt": "Technicians must replace equipment 12 m above deck. The scaffold was altered overnight to clear piping and its inspection tag still shows yesterday's status. What do you do?",
+      "options": [
+        {
+          "id": "access_decision_o1",
+          "text": "Inspect the visible alteration with the supervisor and use the scaffold if no defects are seen, arranging formal reinspection during the shift. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "access_decision_defensible",
+          "mistakeTags": [
+            "access_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "work_at_height"
+          ]
+        },
+        {
+          "id": "access_decision_o2",
+          "text": "Stop access until the altered scaffold is inspected, its configuration and load capacity are verified and the current status is formally released for use.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "access_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "work_at_height"
+          ]
+        },
+        {
+          "id": "access_decision_o3",
+          "text": "Allow one technician to access the scaffold without tools so they can check the work position before the inspection is updated.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "access_decision_weak",
+          "mistakeTags": [
+            "access_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "work_at_height"
+          ]
+        },
+        {
+          "id": "access_decision_o4",
+          "text": "Use the scaffold for the short task because the modification only changed one bay and the original inspection tag remains within its stated period.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "access_decision_critical",
+          "mistakeTags": [
+            "access_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "work_at_height"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fall_protection_decision",
+      "type": "DECISION",
+      "prompt": "The task requires reaching beyond the guardrail for several bolts. A harness is available and two possible anchor points are nearby. What do you do?",
+      "options": [
+        {
+          "id": "fall_protection_decision_o1",
+          "text": "Select a verified suitable anchor and compatible fall-arrest or restraint setup, check clearance and rescue arrangements, then control the reaching task.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "fall_protection_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "fall_protection"
+          ]
+        },
+        {
+          "id": "fall_protection_decision_o2",
+          "text": "Use the certified anchor and harness, but accept the available lanyard without confirming whether the fall-clearance distance is adequate below the worker.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "fall_protection_decision_defensible",
+          "mistakeTags": [
+            "fall_protection_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fall_protection"
+          ]
+        },
+        {
+          "id": "fall_protection_decision_o3",
+          "text": "Clip to the nearest structural member and keep both feet on the platform while another worker steadies the technician during the reach.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "fall_protection_decision_weak",
+          "mistakeTags": [
+            "fall_protection_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fall_protection"
+          ]
+        },
+        {
+          "id": "fall_protection_decision_o4",
+          "text": "Remove a short guardrail section and rely on the harness connection to the handrail because it keeps the worker close to the work position.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "fall_protection_decision_critical",
+          "mistakeTags": [
+            "fall_protection_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fall_protection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dropped_object_decision",
+      "type": "DECISION",
+      "prompt": "Tools and small fittings are needed above an access route that cannot stay closed all day. What is the strongest arrangement?",
+      "options": [
+        {
+          "id": "dropped_object_decision_o1",
+          "text": "Tether the main tools and use a spotter to stop people below, but allow untethered small fittings to remain in a closed tool pouch on the platform.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "dropped_object_decision_defensible",
+          "mistakeTags": [
+            "dropped_object_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "scaffolding"
+          ]
+        },
+        {
+          "id": "dropped_object_decision_o2",
+          "text": "Keep tools in a bag and warn people before lifting them to the platform, reopening the access route while bolting work continues overhead.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "dropped_object_decision_weak",
+          "mistakeTags": [
+            "dropped_object_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "scaffolding"
+          ]
+        },
+        {
+          "id": "dropped_object_decision_o3",
+          "text": "Leave the route open and use a lookout below because all workers wear hard hats and the task uses only small hand tools.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "dropped_object_decision_critical",
+          "mistakeTags": [
+            "dropped_object_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "scaffolding"
+          ]
+        },
+        {
+          "id": "dropped_object_decision_o4",
+          "text": "Secure tools and loose items, provide toe-board or containment controls and establish a controlled drop zone whenever overhead work is active.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "dropped_object_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "scaffolding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weather_decision",
+      "type": "DECISION",
+      "prompt": "Wind increases and a loose fitting falls inside the barricaded area without striking anyone. The platform begins to feel less stable during gusts. What do you do?",
+      "options": [
+        {
+          "id": "weather_decision_o1",
+          "text": "Pause the task and keep workers clipped on while the supervisor confirms wind conditions and secures the remaining loose materials. with a written check.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "weather_decision_defensible",
+          "mistakeTags": [
+            "weather_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "dropped_objects"
+          ]
+        },
+        {
+          "id": "weather_decision_o2",
+          "text": "Continue only fastening work with all tools tethered because the dropped fitting landed inside the exclusion zone and no one was exposed.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "weather_decision_weak",
+          "mistakeTags": [
+            "weather_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "dropped_objects"
+          ]
+        },
+        {
+          "id": "weather_decision_o3",
+          "text": "Stop the work, secure loose material, bring workers to a safe level and reassess scaffold, wind limits and dropped-object controls before any restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "weather_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "dropped_objects"
+          ]
+        },
+        {
+          "id": "weather_decision_o4",
+          "text": "Finish the remaining bolts quickly before wind rises further because the workers are tied off and the area below is already barricaded.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "weather_decision_critical",
+          "mistakeTags": [
+            "weather_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "dropped_objects"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The wind drops later and no scaffold damage is obvious. The equipment remains partly secured. How should the job resume?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Inspect the altered bay and anchor points, re-brief the crew and resume under the existing permit if the weather remains stable. and document the check.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Reinspect the scaffold and anchors, review the dropped-object near miss, restore controls and reauthorize the work before sending technicians back up.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Resume after checking the platform visually and confirming every tool is tethered because the earlier dropped item stayed within the barricade.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Resume immediately once wind falls below the site limit because no person was struck and the scaffold shows no visible damage.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "weather"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "access_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "access_decision",
+      "targetNodeId": "fall_protection_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "access_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "access_decision",
+      "targetNodeId": "fall_protection_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "fall_protection_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "fall_protection_decision",
+      "targetNodeId": "dropped_object_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "fall_protection_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "fall_protection_decision",
+      "targetNodeId": "dropped_object_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "dropped_object_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "dropped_object_decision",
+      "targetNodeId": "weather_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "dropped_object_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "dropped_object_decision",
+      "targetNodeId": "weather_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "weather_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "weather_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "weather_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "weather_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1926.501 Duty to Have Fall Protection",
+    "OSHA 29 CFR 1926.502 Fall Protection Systems Criteria and Practices",
+    "HSE Work at Height Regulations 2005 guidance"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "access_decision",
+        "alternateOptionId": "access_decision_o2"
+      },
+      {
+        "nodeId": "fall_protection_decision",
+        "alternateOptionId": "fall_protection_decision_o1"
+      },
+      {
+        "nodeId": "dropped_object_decision",
+        "alternateOptionId": "dropped_object_decision_o4"
+      },
+      {
+        "nodeId": "weather_decision",
+        "alternateOptionId": "weather_decision_o3"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "weather_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

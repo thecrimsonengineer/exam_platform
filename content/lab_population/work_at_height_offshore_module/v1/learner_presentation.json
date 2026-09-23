@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "work_at_height_offshore_module",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Manage scaffold access, fall protection, dropped objects and worsening weather during work 12 metres above an offshore deck.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the work-at-height safety lead for maintenance on an offshore module.",
+    "situation": "Technicians must work from an altered scaffold high above deck. The task creates fall, dropped-object and weather-related hazards over an access route used by other personnel.",
+    "objective": "Keep access, fall prevention, dropped-object controls and weather limits effective throughout the job.",
+    "peopleInvolved": [
+      "Maintenance supervisor",
+      "Scaffold inspector",
+      "Technicians",
+      "Area authority",
+      "Personnel using the lower access route"
+    ],
+    "knownFacts": [
+      "The scaffold was altered before the job.",
+      "Work requires reaching near the platform edge.",
+      "Tools and fittings are used above occupied areas.",
+      "Wind conditions can change quickly offshore."
+    ],
+    "focusTags": [
+      "Work at Height",
+      "Scaffold",
+      "Fall Protection",
+      "Dropped Objects",
+      "Weather"
+    ]
+  },
+  "evidencePresentation": {
+    "work_at_height_permit": {
+      "title": "Work-at-height permit",
+      "summary": "Work-at-height permit defines the authorized scope, conditions, hold points and required controls for the work.",
+      "details": "Check that the scope and location match the actual task.\nConfirm required controls and hold points are satisfied.\nTreat changed conditions as a trigger for reassessment."
+    },
+    "scaffold_tag": {
+      "title": "Scaffold inspection tag",
+      "summary": "The tag communicates inspection status and whether the scaffold is released for use.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "anchor_record": {
+      "title": "Anchor / fall-protection record",
+      "summary": "The record identifies approved anchorage and fall-protection arrangements for the task.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "weather_record": {
+      "title": "Weather and wind record",
+      "summary": "The record provides wind and weather information relevant to the safe continuation of outdoor work.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "near_miss_record": {
+      "title": "Near-miss record",
+      "summary": "Near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "access_decision": {
+      "title": "Verify safe access"
+    },
+    "fall_protection_decision": {
+      "title": "Control the fall exposure"
+    },
+    "dropped_object_decision": {
+      "title": "Prevent dropped objects"
+    },
+    "weather_decision": {
+      "title": "Respond to worsening wind"
+    },
+    "closeout_decision": {
+      "title": "Authorize safe resumption"
+    }
+  },
+  "consequencePresentation": {
+    "access_decision_defensible": {
+      "observable": "The action improves control at the verify safe access stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "access_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the verify safe access stage before exposure continues. The work-at-height task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "access_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the verify safe access stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "access_decision_critical": {
+      "observable": "The work-at-height task proceeds on an unsupported assumption at the verify safe access stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "fall_protection_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the control the fall exposure stage before exposure continues. The work-at-height task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "fall_protection_decision_defensible": {
+      "observable": "The action improves control at the control the fall exposure stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "fall_protection_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the control the fall exposure stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "fall_protection_decision_critical": {
+      "observable": "The work-at-height task proceeds on an unsupported assumption at the control the fall exposure stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "dropped_object_decision_defensible": {
+      "observable": "The action improves control at the prevent dropped objects stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "dropped_object_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the prevent dropped objects stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "dropped_object_decision_critical": {
+      "observable": "The work-at-height task proceeds on an unsupported assumption at the prevent dropped objects stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "dropped_object_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the prevent dropped objects stage before exposure continues. The work-at-height task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "weather_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the respond to worsening wind stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "weather_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the respond to worsening wind condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "weather_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the respond to worsening wind stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "weather_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the work-at-height task continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_best": {
+      "observable": "The work-at-height task remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the work-at-height task before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The work-at-height task is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The work-at-height task was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You kept the work within verified scaffold, fall-protection and weather controls."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The work-at-height task developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A work-at-height control weakened, but the task was stopped and recovered before harm occurred."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "An object or weather event occurred, but exclusion and stop-work actions limited consequences."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the work-at-height task to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Several height-related barriers degraded and exposed people above and below the worksite."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the work-at-height task. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A critical fall or dropped-object safeguard was bypassed while exposure remained."
+    }
+  }
+}

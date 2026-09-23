@@ -1,0 +1,113 @@
+{
+  "checkpoint": "LSP-Q10",
+  "sourceArchiveSha256": "c759ea4bd7b29c7b098c96a34059a1ad14fc0c3a88cc05c15eae2ad868be5efb",
+  "sourcePresentationSha256": "76b15913c03bc8ef4d7528fabb9dbc38743242a1245864ffbb3db5e174b83dcb",
+  "labCount": 10,
+  "decisionCount": 50,
+  "optionCount": 200,
+  "atomicRuleEvidenceCount": 14950,
+  "signatureMigration": "quality tokens only: OPTIMAL/DEFENSIBLE/WEAK/CRITICAL -> optimal/defensible/weak/critical inside decisionSignature strings",
+  "presentationMigration": "split combined scenarios[] into individual Q8 packages; evidence details[] joined with newline; technical meaning unchanged",
+  "labs": [
+    {
+      "labId": "hot_work_hydrocarbon_simops",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "87f8fcfe236323c13c6f26d03bf0bddb5d5eac43ffeb308719ba04189b4c8120",
+      "dqgSha256": "73c073c48709e026bc72ad8c2d4a5e7ac636ce8e2fba6894279de125544a1a76",
+      "presentationSha256": "6d5c923ed900a52071525cb3f311bc22bab85f99e5064a20b371ac88aa4634c5"
+    },
+    {
+      "labId": "mobile_crane_critical_lift",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "3b005552e447271b0d145edd9c744199da9ea9ee5259598d40272903426d704f",
+      "dqgSha256": "a3f6cc371c1977997f4f570ddab9249f77cec1ef8c35b780e12a3a1cf72dde63",
+      "presentationSha256": "cd71dfa757e7d4b51a7d894b395a36fa004872b130a3c4a37db0578d8704943a"
+    },
+    {
+      "labId": "excavation_buried_services",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "51fc33507bbadf7f61f78e6fce65a271f8468cf6c7fddd25973561ed151d6a02",
+      "dqgSha256": "ae18abdbe9dbdad823d4386bf245d3f1d98acc3030c8e6eab33962357f1a74d6",
+      "presentationSha256": "65677276dad189ef4a217967571e7ac0d96fae815d8d30efdfcc44c68173d7db"
+    },
+    {
+      "labId": "electrical_loto_stored_energy",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "6e255945a0ac20e878aa00f3441d261c83375109803a38f60b0fdb33eb27cf7c",
+      "dqgSha256": "02ece6dd25cc12d1f08c17a18e1f642e256c10fec395b3ebaccf845937ff0e12",
+      "presentationSha256": "e41613a05c414aa8addbd6976f83fe9c752897e44ad8705cb72c0179e605ec67"
+    },
+    {
+      "labId": "work_at_height_offshore_module",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "2139606a132392cf6a2d5f38689ebefa226bd0e48d3f6db1131152a8e2ce3d51",
+      "dqgSha256": "feb46a5f7eda6432533ada267c3ec8150207ce2b128ea3b053b7f866122a4253",
+      "presentationSha256": "e2a303f0f8891d180e7491d8263237ce990a06633fe867a9943a4c3e2ed4b3ac"
+    },
+    {
+      "labId": "chemical_transfer_corrosive_solvent",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "f5fea789000b13b9e6528ced45b8aac368c2b860c4d39e0eaf68605d513314e4",
+      "dqgSha256": "cf2bde4e17daa68960e409fb9e30e435c18caac01a57d4ce1d8c4cf6886780ea",
+      "presentationSha256": "d5c870a9b703c7b0b70709ab312bf47c4b1024e908835c01570f3fdb460c0f0d"
+    },
+    {
+      "labId": "hydrocarbon_line_breaking",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "a30563cfce16fa7fef80fe54e07f5aed21205792aefef10f0d96074edaecde9c",
+      "dqgSha256": "9d8e3e9c0579ab21bc1fd76791ddb1a7c6567b986094f6d0b8943b94f5809768",
+      "presentationSha256": "55cd0e9e8300235cf86a3d7f4e4c31b3c865705d988b6c0ed3a7c90a659d27fc"
+    },
+    {
+      "labId": "flammable_tank_truck_loading",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "1b35a4f4aa2776abaf73a198fcd4ec59aee03f3d78f7951f18e00fc7cd96957c",
+      "dqgSha256": "61fa9ae044b78e2163961715d71887c9dbc59be9c20f2ae214a2e291a515965f",
+      "presentationSha256": "a0e02950de01292a7941565bdf03a0809fb1484106b2c382dbc9e3ec6a7ffc47"
+    },
+    {
+      "labId": "pneumatic_pressure_test",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "d9283b53644e3ffaa5937aced3f51633e667a1e4dfbe9b264c0829a8f07da17f",
+      "dqgSha256": "f845b4c7448eb96eaad76caba0ee38d1abfff44580b5766bd03bc5f7f6d74ef7",
+      "presentationSha256": "068edc125c6ca07790a14932821bcb58921fb0ca50a891458044468eae28cad3"
+    },
+    {
+      "labId": "scaffold_erection_overhead_power",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "cf5e1f2492bc64c05bc92437532561f937259733b6a0619955f19fa9e33164ea",
+      "dqgSha256": "e9fdae7b0df9a55299d96d3d0627b5786729aae44270dca55eb44f0cc001aa3f",
+      "presentationSha256": "3982023cd5f4aeb9147d15f5d6ebfc202c4049782e619d79598b8a71936f5be5"
+    }
+  ]
+}
