@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_08",
+  "checkedAt": "2026-09-23",
+  "candidateContentSha": "c94036d4237444eeb46c92f972fc50712bef0bd2",
+  "scope": {
+    "batchFacts": 10,
+    "cumulativeCandidateFacts": 80,
+    "totalUniquePairCount": 3160,
+    "previouslyValidatedOldOldPairs": 2415,
+    "newlyScannedOldToNewPairs": 700,
+    "newlyScannedBatchInternalPairs": 45
+  },
+  "candidateGatePrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "correctionsApplied": [],
+    "checks": [
+      "approved authority exists and is active",
+      "source class is permitted for authority",
+      "official URL is HTTPS and first-party host",
+      "NIOSH paths remain within the frozen /niosh/ scope",
+      "claim legal status is permitted for source class",
+      "mandatory wording and authority attribution rules checked",
+      "candidate lifecycle remains review with startup disabled",
+      "all human and publication review channels remain pending",
+      "canonical domain and competency ID patterns checked",
+      "at least two tags present"
+    ]
+  },
+  "startupTextPrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "checks": [
+      "display word count within 6-32",
+      "display computed read time at or below 10 seconds",
+      "estimated read time within frozen 2-second tolerance",
+      "short variant word count within 4-18",
+      "short variant computed read time at or below 6 seconds",
+      "short variant word ratio at or below 0.75",
+      "uppercase abbreviations limited to the frozen ML-7 whitelist"
+    ]
+  },
+  "ml8DeterministicPrecheck": {
+    "result": "pass",
+    "candidateFactsScanned": 80,
+    "pairCountScanned": 3160,
+    "exactDuplicateCount": 0,
+    "unresolvedReviewCandidateCount": 0,
+    "flaggedPairCount": 0,
+    "method": "2,415 previously validated pairs plus exact frozen-policy scan of 700 old-to-new pairs and 45 Batch-08 internal pairs"
+  },
+  "authorityConcentration": {
+    "result": "pass",
+    "threshold": 0.4,
+    "blocking": false,
+    "sourceCounts": [
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 25,
+        "share": 0.3125
+      },
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 18,
+        "share": 0.225
+      },
+      {
+        "sourceRegistryId": "SRC-03",
+        "count": 5,
+        "share": 0.0625
+      },
+      {
+        "sourceRegistryId": "SRC-08",
+        "count": 5,
+        "share": 0.0625
+      },
+      {
+        "sourceRegistryId": "SRC-09",
+        "count": 5,
+        "share": 0.0625
+      },
+      {
+        "sourceRegistryId": "SRC-10",
+        "count": 5,
+        "share": 0.0625
+      },
+      {
+        "sourceRegistryId": "SRC-05",
+        "count": 4,
+        "share": 0.05
+      },
+      {
+        "sourceRegistryId": "SRC-04",
+        "count": 3,
+        "share": 0.0375
+      },
+      {
+        "sourceRegistryId": "SRC-06",
+        "count": 3,
+        "share": 0.0375
+      },
+      {
+        "sourceRegistryId": "SRC-07",
+        "count": 3,
+        "share": 0.0375
+      },
+      {
+        "sourceRegistryId": "SRC-11",
+        "count": 2,
+        "share": 0.025
+      },
+      {
+        "sourceRegistryId": "SRC-12",
+        "count": 1,
+        "share": 0.0125
+      },
+      {
+        "sourceRegistryId": "SRC-14",
+        "count": 1,
+        "share": 0.0125
+      }
+    ],
+    "note": "No authority exceeds the frozen 40% concentration-review threshold. Batch 08 introduced ACGIH and NSC."
+  },
+  "rightsSensitiveCandidates": [
+    {
+      "microFactId": "mf_ml9_033",
+      "sourceRegistryId": "SRC-07",
+      "reason": "AIHA source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_035",
+      "sourceRegistryId": "SRC-06",
+      "reason": "ACGIH source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_036",
+      "sourceRegistryId": "SRC-12",
+      "reason": "NSC source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_037",
+      "sourceRegistryId": "SRC-07",
+      "reason": "AIHA source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_038",
+      "sourceRegistryId": "SRC-06",
+      "reason": "ACGIH source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_042",
+      "sourceRegistryId": "SRC-06",
+      "reason": "ACGIH source is rights-sensitive under ML-5"
+    }
+  ],
+  "validatorInfrastructure": {
+    "toolPath": "tool/validate_ml9_candidate_bank.dart",
+    "workflowPath": ".github/workflows/ml9_candidate_bank_validation.yml",
+    "pushTriggeredWorkflowExpected": true,
+    "pushTriggeredWorkflowObservedThroughConnector": false,
+    "observedCiVerdict": null,
+    "note": "The available GitHub wrapper exposes pull-request-triggered runs only and returned no push-run/status for the candidate checkpoint. No CI-green claim is made from missing data."
+  },
+  "humanReview": {
+    "complete": false,
+    "approvalsGeneratedByAutomation": false
+  }
+}
