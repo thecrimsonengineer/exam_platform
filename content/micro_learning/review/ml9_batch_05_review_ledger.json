@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_05",
+  "status": "candidate_review",
+  "createdAt": "2026-09-23",
+  "parentBankVersion": "1.0.0",
+  "factCount": 10,
+  "cumulativeCandidateCount": 50,
+  "humanReviewComplete": false,
+  "publicationAllowed": false,
+  "diversificationConstraint": {
+    "explicit": true,
+    "newOshaFacts": 0,
+    "batchAuthorityCounts": {
+      "SRC-02": 3,
+      "SRC-04": 1,
+      "SRC-05": 1,
+      "SRC-08": 1,
+      "SRC-09": 1,
+      "SRC-10": 1,
+      "SRC-11": 2
+    }
+  },
+  "facts": [
+    {
+      "microFactId": "mf_ml9_006",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-04",
+      "sourceUrl": "https://www.iso.org/standard/45001",
+      "sourceLocator": "What is ISO 45001? and key elements",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_006_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_031",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/docs/2020-106/",
+      "sourceLocator": "Section 5, Dose-Response Assessment",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_031_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_050",
+      "bucket": "process_safety",
+      "sourceRegistryId": "SRC-11",
+      "sourceUrl": "https://ccps.aiche.org/introduction-asset-integrity-and-reliability",
+      "sourceLocator": "Element Overview, What Is It?, and How Is It Done?",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_050_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_065",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-05",
+      "sourceUrl": "https://link.nfpa.org/all-publications/72/2022",
+      "sourceLocator": "NFPA 72 (2022), Chapter 14 - Inspection, Testing, and Maintenance",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_065_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_077",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-11",
+      "sourceUrl": "https://ccps.aiche.org/resources/tools/process-safety-metrics",
+      "sourceLocator": "Leading and Lagging Indicators to Improve Process Safety Performance",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_077_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_089",
+      "bucket": "environmental",
+      "sourceRegistryId": "SRC-08",
+      "sourceUrl": "https://www.epa.gov/climate-change/what-epa-doing-about-climate-change",
+      "sourceLocator": "Climate action and resilient infrastructure overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_089_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_099",
+      "bucket": "emergency_management",
+      "sourceRegistryId": "SRC-10",
+      "sourceUrl": "https://preptoolkit.fema.gov/web/cip-citap/ncig/-/knowledge_base/ncig/e-6-continuity-guidance-circular",
+      "sourceLocator": "Continuity Guidance Circular overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_099_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_107",
+      "bucket": "transportation_fleet",
+      "sourceRegistryId": "SRC-09",
+      "sourceUrl": "https://www.fmcsa.dot.gov/seatbelts",
+      "sourceLocator": "Commercial motor vehicle seat-belt safety overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_107_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_112",
+      "bucket": "csp_reasoning",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/publications/numbered/2019-132.html",
+      "sourceLocator": "About - occupational exposure banding process",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_112_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_118",
+      "bucket": "evidence_based_learning",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/learning/safetyculturehc/module-4/12.html",
+      "sourceLocator": "Safety Culture Training recommendations",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_118_v1.json"
+    }
+  ],
+  "requiredHumanReview": [
+    "technical accuracy",
+    "source-to-claim fidelity",
+    "legal-status wording",
+    "curriculum placement",
+    "copyright and independent wording",
+    "startup readability and accessibility",
+    "ML-8 corpus coexistence if a review candidate is raised"
+  ],
+  "gateState": {
+    "sourceProvenancePopulated": true,
+    "candidateLifecycleFailClosed": true,
+    "startupEligibilityGranted": false,
+    "humanTechnicalApprovalGranted": false,
+    "validatedOrPublishedCount": 0
+  }
+}
