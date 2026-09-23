@@ -1,0 +1,121 @@
+name: ML-8 Duplicate Contradiction Validation
+
+on:
+  push:
+    branches:
+      - phase-ml8-duplicate-contradiction-detection
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml8-duplicate-contradiction-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-8 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record exact SHA and diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "ML-8 exact SHA: ${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify generated CSP11 blueprint registry
+        run: python tools/source_pipeline/test_l23e1b_dart_registry_generation.py
+
+      - name: Verify ML-8 formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format \
+            lib/services/micro_learning/duplicate_contradiction_policy_validator.dart \
+            lib/services/micro_learning/micro_fact_corpus_comparison.dart \
+            lib/services/micro_learning/corpus_comparison_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_corpus_integrity_validator.dart \
+            tool/validate_micro_learning_corpus_integrity_gates.dart \
+            test/micro_learning/duplicate_contradiction_policy_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_comparison_test.dart \
+            test/micro_learning/corpus_comparison_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_integrity_validator_test.dart
+          git diff --check
+          git diff --exit-code -- \
+            lib/services/micro_learning/duplicate_contradiction_policy_validator.dart \
+            lib/services/micro_learning/micro_fact_corpus_comparison.dart \
+            lib/services/micro_learning/corpus_comparison_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_corpus_integrity_validator.dart \
+            tool/validate_micro_learning_corpus_integrity_gates.dart \
+            test/micro_learning/duplicate_contradiction_policy_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_comparison_test.dart \
+            test/micro_learning/corpus_comparison_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_integrity_validator_test.dart
+
+      - name: Analyze ML-8 implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart analyze \
+            lib/services/micro_learning/duplicate_contradiction_policy_validator.dart \
+            lib/services/micro_learning/micro_fact_corpus_comparison.dart \
+            lib/services/micro_learning/corpus_comparison_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_corpus_integrity_validator.dart \
+            tool/validate_micro_learning_corpus_integrity_gates.dart \
+            test/micro_learning/duplicate_contradiction_policy_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_comparison_test.dart \
+            test/micro_learning/corpus_comparison_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_integrity_validator_test.dart
+
+      - name: Validate ML-8 corpus integrity gates
+        run: dart run tool/validate_micro_learning_corpus_integrity_gates.dart
+
+      - name: Run ML-1 through ML-8 focused regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test \
+            test/micro_learning/authority_registry_validator_test.dart \
+            test/micro_learning/micro_fact_schema_validator_test.dart \
+            test/micro_learning/micro_fact_source_gate_validator_test.dart \
+            test/micro_learning/claim_semantics_policy_validator_test.dart \
+            test/micro_learning/micro_fact_claim_gate_validator_test.dart \
+            test/micro_learning/rights_provenance_policy_validator_test.dart \
+            test/micro_learning/rights_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_rights_gate_validator_test.dart \
+            test/micro_learning/canonical_curriculum_policy_validator_test.dart \
+            test/micro_learning/canonical_curriculum_registry_validator_test.dart \
+            test/micro_learning/curriculum_mapping_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_curriculum_gate_validator_test.dart \
+            test/micro_learning/startup_text_metrics_test.dart \
+            test/micro_learning/startup_pedagogy_policy_validator_test.dart \
+            test/micro_learning/startup_pedagogy_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_startup_suitability_gate_validator_test.dart \
+            test/micro_learning/startup_pedagogy_startup_contract_test.dart \
+            test/micro_learning/duplicate_contradiction_policy_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_comparison_test.dart \
+            test/micro_learning/corpus_comparison_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_integrity_validator_test.dart \
+            test/startup/startup_motion_policy_test.dart \
+            test/startup/startup_screen_hardening_test.dart \
+            test/services/study_content/canonical_content_identity_mapper_test.dart \
+            test/services/study_content/study_content_navigation_blueprint_test.dart
