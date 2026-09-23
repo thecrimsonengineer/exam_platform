@@ -128,7 +128,9 @@ void main() {
 
   test('normalizes duplicate-stem punctuation consistently', () {
     expect(
-      parser.normalizedQuestionStem('  Which control BEST fits this scenario? '),
+      parser.normalizedQuestionStem(
+        '  Which control BEST fits this scenario? ',
+      ),
       'which control best fits this scenario',
     );
   });

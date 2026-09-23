@@ -120,9 +120,7 @@ class CanonicalQuestionParser {
     );
   }
 
-  void validateUniqueQuestionStems(
-    Iterable<CanonicalQuestionDraft> questions,
-  ) {
+  void validateUniqueQuestionStems(Iterable<CanonicalQuestionDraft> questions) {
     final seen = <String>{};
 
     for (final question in questions) {
@@ -150,10 +148,7 @@ class CanonicalQuestionParser {
         .trim();
   }
 
-  int _correctAnswerIndex(
-    Map<String, dynamic> raw,
-    List<String> options,
-  ) {
+  int _correctAnswerIndex(Map<String, dynamic> raw, List<String> options) {
     final value =
         raw['correctAnswer'] ?? raw['correct_answer'] ?? raw['bestAnswer'];
 
