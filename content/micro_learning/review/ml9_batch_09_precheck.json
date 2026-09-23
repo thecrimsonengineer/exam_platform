@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_09",
+  "checkedAt": "2026-09-24",
+  "candidateContentSha": "c3c1b314d2f6b1aef94291c3d90ab173ada919bf",
+  "scope": {
+    "batchFacts": 10,
+    "cumulativeCandidateFacts": 90,
+    "totalUniquePairCount": 4005,
+    "previouslyValidatedOldOldPairs": 3160,
+    "newlyScannedOldToNewPairs": 800,
+    "newlyScannedBatchInternalPairs": 45
+  },
+  "candidateGatePrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "correctionsApplied": [],
+    "checks": [
+      "approved authority exists and is active",
+      "source class is permitted for authority",
+      "official URL is HTTPS and first-party host",
+      "NIOSH paths remain within the frozen /niosh/ scope",
+      "claim legal status is permitted for source class",
+      "mandatory wording and authority attribution rules checked",
+      "candidate lifecycle remains review with startup disabled",
+      "all human and publication review channels remain pending",
+      "canonical domain and competency ID patterns checked",
+      "at least two tags present"
+    ]
+  },
+  "startupTextPrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "checks": [
+      "display word count within 6-32",
+      "display computed read time at or below 10 seconds",
+      "estimated read time within frozen 2-second tolerance",
+      "short variant word count within 4-18",
+      "short variant computed read time at or below 6 seconds",
+      "short variant word ratio at or below 0.75",
+      "uppercase abbreviations limited to the frozen ML-7 whitelist"
+    ]
+  },
+  "ml8DeterministicPrecheck": {
+    "result": "pass",
+    "candidateFactsScanned": 90,
+    "pairCountScanned": 4005,
+    "exactDuplicateCount": 0,
+    "unresolvedReviewCandidateCount": 0,
+    "flaggedPairCount": 0,
+    "method": "3,160 previously validated pairs plus exact frozen-policy scan of 800 old-to-new pairs and 45 Batch-09 internal pairs"
+  },
+  "authorityConcentration": {
+    "result": "pass",
+    "threshold": 0.4,
+    "blocking": false,
+    "sourceCounts": [
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 27,
+        "share": 0.3
+      },
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 18,
+        "share": 0.2
+      },
+      {
+        "sourceRegistryId": "SRC-11",
+        "count": 8,
+        "share": 0.0889
+      },
+      {
+        "sourceRegistryId": "SRC-03",
+        "count": 5,
+        "share": 0.0556
+      },
+      {
+        "sourceRegistryId": "SRC-08",
+        "count": 5,
+        "share": 0.0556
+      },
+      {
+        "sourceRegistryId": "SRC-09",
+        "count": 5,
+        "share": 0.0556
+      },
+      {
+        "sourceRegistryId": "SRC-10",
+        "count": 5,
+        "share": 0.0556
+      },
+      {
+        "sourceRegistryId": "SRC-05",
+        "count": 4,
+        "share": 0.0444
+      },
+      {
+        "sourceRegistryId": "SRC-07",
+        "count": 4,
+        "share": 0.0444
+      },
+      {
+        "sourceRegistryId": "SRC-04",
+        "count": 3,
+        "share": 0.0333
+      },
+      {
+        "sourceRegistryId": "SRC-06",
+        "count": 3,
+        "share": 0.0333
+      },
+      {
+        "sourceRegistryId": "SRC-12",
+        "count": 1,
+        "share": 0.0111
+      },
+      {
+        "sourceRegistryId": "SRC-13",
+        "count": 1,
+        "share": 0.0111
+      },
+      {
+        "sourceRegistryId": "SRC-14",
+        "count": 1,
+        "share": 0.0111
+      }
+    ],
+    "note": "No authority exceeds the frozen 40% concentration-review threshold. CCPS rises to 8.89% because it is the best-fit authority for the process-safety transition block."
+  },
+  "rightsSensitiveCandidates": [
+    {
+      "microFactId": "mf_ml9_045",
+      "sourceRegistryId": "SRC-07",
+      "reason": "AIHA source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_051",
+      "sourceRegistryId": "SRC-11",
+      "reason": "CCPS source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_052",
+      "sourceRegistryId": "SRC-11",
+      "reason": "CCPS source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_053",
+      "sourceRegistryId": "SRC-11",
+      "reason": "CCPS source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_054",
+      "sourceRegistryId": "SRC-11",
+      "reason": "CCPS source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_055",
+      "sourceRegistryId": "SRC-11",
+      "reason": "CCPS source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_056",
+      "sourceRegistryId": "SRC-13",
+      "reason": "ASSP professional literature is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_057",
+      "sourceRegistryId": "SRC-11",
+      "reason": "CCPS source is rights-sensitive under ML-5"
+    }
+  ],
+  "validatorInfrastructure": {
+    "toolPath": "tool/validate_ml9_candidate_bank.dart",
+    "workflowPath": ".github/workflows/ml9_candidate_bank_validation.yml",
+    "pushTriggeredWorkflowExpected": true,
+    "pushTriggeredWorkflowObservedThroughConnector": false,
+    "observedCiVerdict": null,
+    "note": "The available GitHub wrapper returned no push-run/status for the candidate checkpoint. No CI-green claim is made from missing data."
+  },
+  "humanReview": {
+    "complete": false,
+    "approvalsGeneratedByAutomation": false
+  }
+}
