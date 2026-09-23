@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_10",
+  "freezeStatus": "closed_candidate_authoring_checkpoint",
+  "closedAt": "2026-09-24",
+  "cumulativeCandidateCount": 100,
+  "candidateContentSha": "c4f757d3e5e2b381b4ca80e45ea6334d7491c7c4",
+  "validationBasis": {
+    "candidatePolicyPrecheck": "pass",
+    "startupTextPrecheck": "pass",
+    "ml8CorpusPrecheck": "pass",
+    "totalUniquePairs": 4950,
+    "exactDuplicates": 0,
+    "unresolvedReviewCandidates": 0,
+    "flaggedPairs": 0,
+    "priorValidatedPairs": 4005,
+    "newlyScannedOldToNewPairs": 900,
+    "newlyScannedInternalPairs": 45
+  },
+  "authorityDiversification": {
+    "explicitConstraintSatisfied": true,
+    "batchAuthorityCounts": {
+      "SRC-11": 3,
+      "SRC-05": 4,
+      "SRC-03": 1,
+      "SRC-14": 1,
+      "SRC-15": 1
+    },
+    "cumulativeTopAuthorities": [
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 27,
+        "share": 0.27
+      },
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 18,
+        "share": 0.18
+      },
+      {
+        "sourceRegistryId": "SRC-11",
+        "count": 11,
+        "share": 0.11
+      },
+      {
+        "sourceRegistryId": "SRC-05",
+        "count": 8,
+        "share": 0.08
+      }
+    ],
+    "anyAuthorityAboveFortyPercent": false
+  },
+  "rightsSensitivePending": [
+    "mf_ml9_058",
+    "mf_ml9_059",
+    "mf_ml9_060",
+    "mf_ml9_066",
+    "mf_ml9_067",
+    "mf_ml9_068",
+    "mf_ml9_069",
+    "mf_ml9_070",
+    "mf_ml9_071",
+    "mf_ml9_072"
+  ],
+  "ciObservation": {
+    "workflowExpectedOnPush": true,
+    "workflowResultObservedThroughAvailableConnector": false,
+    "ciGreenClaimMade": false
+  },
+  "lifecycle": {
+    "humanReviewComplete": false,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "nextAction": "ML-9B Batch 11"
+}
