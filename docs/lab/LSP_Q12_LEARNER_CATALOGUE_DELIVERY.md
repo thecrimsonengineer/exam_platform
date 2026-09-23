@@ -168,3 +168,16 @@ LSP-Q12 does not:
 ## Next authorized action
 
 LSP-Q13 - Persistent Learner Catalogue Repository and Runtime Binding.
+
+
+## Closure candidate
+
+Initial Q12 implementation commit: `ff34cd62428da1d5af28a1beb9feed64e97fa559`
+
+Successful validation run for the implementation commit: `35904550711`
+
+Canonical formatter output commit: `9e24563cfa2864a2e6d0dc80039b65d2f4d197cb`
+
+The formatter commit changes Q12 implementation/test formatting only.
+
+This documentation-only closure commit is the exact-SHA validation target for LSP-Q12. No Q10 source package, Q11 immutable publication record, learner presentation content, catalogue admission semantics, controlled-delivery semantics, existing learner UI, or runtime navigation is changed by the closure step.
