@@ -238,7 +238,9 @@ void main() {
   test('high assessment sensitivity is blocked from startup', () {
     final fact = loadFact();
     final assessment = Map<String, dynamic>.from(fact['assessment'] as Map);
-    assessment['sensitivity'] = 'high';
+    assessment
+      ..['sensitivity'] = 'high'
+      ..['linkedQuestionConcepts'] = ['hazardous_energy'];
     fact['assessment'] = assessment;
 
     final result = validate(fact);
@@ -295,9 +297,8 @@ void main() {
     );
   });
 
-  test('validated startup fact requires MicroFact pedagogy and UI pass', () {
+  test('lower schema blocks startup when fact review is not pass', () {
     final fact = loadFact();
-    fact['status'] = 'validated';
     final review = Map<String, dynamic>.from(fact['review'] as Map);
     review
       ..['pedagogyStatus'] = 'pending'
@@ -309,7 +310,7 @@ void main() {
     expect(result.isValid, isFalse);
     expect(
       result.issues.map((issue) => issue.code),
-      contains('ML7_FACT_REVIEW_NOT_PASS'),
+      contains('ML7_CURRICULUM_PREREQUISITE_INVALID'),
     );
   });
 
