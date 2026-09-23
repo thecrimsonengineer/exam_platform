@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_07",
+  "freezeStatus": "closed_candidate_authoring_checkpoint",
+  "closedAt": "2026-09-23",
+  "cumulativeCandidateCount": 70,
+  "candidateContentSha": "c91891d8fee8c21af4d9282cdf322b53acc65f45",
+  "validationBasis": {
+    "candidatePolicyPrecheck": "pass",
+    "startupTextPrecheck": "pass",
+    "ml8CorpusPrecheck": "pass",
+    "totalUniquePairs": 2415,
+    "exactDuplicates": 0,
+    "unresolvedReviewCandidates": 0,
+    "flaggedPairs": 0,
+    "priorValidatedPairs": 1770,
+    "newlyScannedOldToNewPairs": 600,
+    "newlyScannedInternalPairs": 45
+  },
+  "authorityDiversification": {
+    "explicitConstraintSatisfied": true,
+    "batchAuthorityCounts": {
+      "SRC-02": 3,
+      "SRC-03": 3,
+      "SRC-04": 1,
+      "SRC-05": 1,
+      "SRC-07": 1,
+      "SRC-14": 1
+    },
+    "cumulativeTopAuthorities": [
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 21,
+        "share": 0.3
+      },
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 18,
+        "share": 0.2571
+      }
+    ],
+    "newAuthoritiesIntroduced": [
+      "SRC-07",
+      "SRC-14"
+    ],
+    "anyAuthorityAboveFortyPercent": false
+  },
+  "rightsSensitivePending": [
+    "mf_ml9_017",
+    "mf_ml9_018",
+    "mf_ml9_020",
+    "mf_ml9_021",
+    "mf_ml9_023",
+    "mf_ml9_024",
+    "mf_ml9_032"
+  ],
+  "ciObservation": {
+    "workflowExpectedOnPush": true,
+    "workflowResultObservedThroughAvailableConnector": false,
+    "ciGreenClaimMade": false
+  },
+  "lifecycle": {
+    "humanReviewComplete": false,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "nextAction": "ML-9B Batch 08"
+}
