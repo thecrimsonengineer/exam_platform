@@ -359,6 +359,32 @@ Batch 06 review and validation artifacts:
 - `content/micro_learning/review/ml9_batch_06_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_06_precheck.json`
 
+### Batch 07
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 70.
+- Batch authority mix: 3 NIOSH, 3 ANSI/ASSP, 1 ISO/IEC, 1 NFPA, 1 FM, and 1 AIHA.
+- Batch 07 introduced FM and AIHA into the curated bank.
+- Topics cover machinery risk assessment, risk-assessment technique selection, design safety reviews, hazardous-energy alternatives, occupancy classification, aerial-lift hazards, integrated manufacturing systems, engineering loss prevention, Prevention through Design business cases, and ergonomics job design.
+- All Batch 07 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- Four learner-facing identifiers outside the frozen ML-7 abbreviation whitelist were removed before freeze: B11, IEC, Z244, and a second B11 occurrence.
+- Candidate source-class, legal-status, attribution, lifecycle, curriculum-ID-pattern, and tag checks passed after correction.
+- Frozen startup text precheck passed for all 10 Batch 07 candidates.
+- The cumulative 70-fact corpus contains 2,415 unique pairs.
+- The previously validated 1,770 pairs remain unchanged.
+- Batch 07 added 600 old-to-new comparisons and 45 internal comparisons; all 645 new comparisons produced 0 exact duplicates and 0 unresolved ML-8 review candidates.
+- NIOSH represents 21 of 70 candidates (30.0%); OSHA represents 18 of 70 candidates (25.7%).
+- No authority exceeds the frozen 40% ML-8 concentration-review threshold.
+- Seven Batch 07 candidates use rights-sensitive ANSI/ASSP, ISO, NFPA, FM, or AIHA material and remain pending genuine ML-5 rights review.
+- No automated process has asserted human approval or publication eligibility.
+
+Batch 07 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_07_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_07_precheck.json`
+
 ## Next action
 
-ML-9B Batch 07 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 70 candidates.
+ML-9B Batch 08 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 80 candidates.
