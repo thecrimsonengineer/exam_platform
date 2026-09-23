@@ -27,7 +27,7 @@
   "category": "process_safety_insight",
   "display": {
     "displayText": "OSHA requires a process hazard analysis for covered processes that is appropriate to process complexity and identifies, evaluates, and controls process hazards.",
-    "shortVariant": "A process hazard analysis must match process complexity and address hazards.",
+    "shortVariant": "OSHA requires process hazard analysis appropriate to covered-process complexity.",
     "estimatedReadSeconds": 9
   },
   "curriculum": {
