@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_020",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "ANSI/ASSP Z244.1 addresses hazardous-energy control through lockout, tagout, and risk-assessed alternative methods selected for the servicing task and equipment.",
+    "shortVariant": "ANSI/ASSP Z244.1 includes risk-assessed alternatives for hazardous-energy control.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "hazardous_energy_alternative_methods",
+      "energy_control_strategy"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-03",
+    "sourceClass": "consensus_standard",
+    "sourceTitle": "ANSI/ASSP Z244.1-2024 The Control of Hazardous Energy — Lockout, Tagout and Alternative Methods",
+    "officialUrl": "https://www.assp.org/standards/standards-topics/lockout-tagout-and-alternative-methods-z244-1",
+    "sourceLocator": "Hazardous-energy control methods overview",
+    "editionOrRevision": "ANSI/ASSP Z244.1-2024",
+    "sourceSection": "What Is the Lockout, Tagout and Alternative Methods Standard",
+    "sourcePage": null,
+    "sourcePublishedAt": "2024-11-26",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "consensus_standard",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "hazardous_energy",
+    "alternative_methods",
+    "lockout_tagout"
+  ]
+}
