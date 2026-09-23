@@ -2,7 +2,7 @@
 
 ## Status
 
-**IMPLEMENTED / VALIDATION CHECKPOINT**
+**IMPLEMENTED / EXACT-SHA CLOSURE CANDIDATE**
 
 Program: LSP-Q
 
@@ -195,3 +195,18 @@ Population is now repository-backed and validation-backed. Learner delivery rema
 ## Next authorized action
 
 LSP-Q11 - Population Publication Gate and Repository Admission.
+
+
+## Closure candidate
+
+Initial population commit: `cbbd0e9fe957a7d2278830851654a638156157ec`
+
+Diagnostic regression hardening commit: `dd21518db874d87e863966b4162dc6a23d354934`
+
+Strict H0.3 population repair commit: `cb247a45515715a9ec99d8d9be8a2125a556be6e`
+
+Successful validation run for the repaired population: `35883581626`
+
+Canonical formatter output commit: `ad4231740e1ea955df59b48d3611cf58af64491c`
+
+The formatter commit changes Q10 test formatting only. This documentation-only closure commit is the exact-SHA validation target for LSP-Q10. No technical LAB mechanics, BEST-answer truth, DQG300 semantic evidence, Q8 presentation content, manifest bindings, runtime behavior or publication state is changed by the closure step.
