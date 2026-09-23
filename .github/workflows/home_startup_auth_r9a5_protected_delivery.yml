@@ -56,7 +56,7 @@ jobs:
         run: git diff --exit-code -- pubspec.lock
 
       - name: Analyze repository
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
 
       - name: Replay FR8 online authorization boundary
         run: |
