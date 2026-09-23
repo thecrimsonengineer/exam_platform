@@ -173,20 +173,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "${HOME}/.android"
-          printf '%s' "${ANDROID_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${HOME}/.android/debug.keystore"
-          chmod 600 "${HOME}/.android/debug.keystore"
-          keytool -list             -keystore "${HOME}/.android/debug.keystore"             -storepass android             -alias androiddebugkey >/dev/null
+
+          keystore_path="${RUNNER_TEMP}/csp11-ci-signing.keystore"
+          printf '%s' "${ANDROID_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${keystore_path}"
+          chmod 600 "${keystore_path}"
+
+          keytool -list             -keystore "${keystore_path}"             -storepass android             -alias androiddebugkey >/dev/null
 
           signing_sha256="$(
-            keytool -list -v               -keystore "${HOME}/.android/debug.keystore"               -storepass android               -alias androiddebugkey |
+            keytool -list -v               -keystore "${keystore_path}"               -storepass android               -alias androiddebugkey |
               sed -n 's/^[[:space:]]*SHA256: //p' |
               head -n 1
           )"
 
           test -n "$signing_sha256"
-          echo "ANDROID_SIGNING_CERT_SHA256=$signing_sha256" >> "${GITHUB_ENV}"
-          echo "Stable Android signing identity restored."
+
+          {
+            echo "CSP11_ANDROID_KEYSTORE_PATH=${keystore_path}"
+            echo "CSP11_ANDROID_KEYSTORE_PASSWORD=android"
+            echo "CSP11_ANDROID_KEY_ALIAS=androiddebugkey"
+            echo "CSP11_ANDROID_KEY_PASSWORD=android"
+            echo "ANDROID_SIGNING_CERT_SHA256=$signing_sha256"
+          } >> "${GITHUB_ENV}"
+
+          echo "Explicit CSP11 Android signing identity restored."
 
       - name: Build integrated release-candidate APK
         run: |
