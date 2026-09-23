@@ -1,0 +1,273 @@
+name: INT-R9A7 Physical Device Acceptance Readiness
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration-auth-hotfix-r9a7
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: int-r9a7-device-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  R9A6_CLOSED_SHA: '12e0bc8b58248c908cc7ed3dc1d4c8d6d9e9c5a4'
+  PACKAGE_ID: 'com.example.exam_platform'
+  EXPECTED_SIGNER_SHA256: '97C014CA29254343FE825B8CDB9BFBE1830E8D619FEDAC0F263C4164AA5206BD'
+  SUPABASE_URL: 'https://esfycnmfywxczfillioj.supabase.co'
+  FIREBASE_AUTH_PROBE_URL: 'https://esfycnmfywxczfillioj.supabase.co/functions/v1/firebase-auth-probe'
+  DELIVERY_ENDPOINT: 'https://esfycnmfywxczfillioj.supabase.co/functions/v1/learner-question-packages'
+
+jobs:
+  device-acceptance-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+      ANDROID_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
+
+    steps:
+      - name: Checkout exact R9A7 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify R9A6 frozen ancestry and clean patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${R9A6_CLOSED_SHA}" HEAD
+          git diff --check
+
+      - name: Require public runtime config and signing secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${SUPABASE_PUBLISHABLE_KEY:-}"
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "Invalid Supabase publishable-key format."; exit 1 ;;
+          esac
+          test -n "${ANDROID_DEBUG_KEYSTORE_BASE64:-}"
+          echo "R9A7 configuration preflight: PASS"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph remains stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Analyze device acceptance release scope
+        run: |
+          flutter analyze --no-fatal-infos             lib/main.dart             lib/screens/startup             lib/screens/auth             lib/screens/navigation             lib/screens/home             lib/services/online_access             lib/services/supabase             lib/services/questions             lib/services/study_content             test/integration/home_startup             test/security/android_screen_capture_protection_test.dart
+
+      - name: Syntax-check physical device harness
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "tools/integration/INT_R9A7_DEVICE_ACCEPTANCE.ps1",
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+
+          $source = Get-Content -Raw "tools/integration/INT_R9A7_DEVICE_ACCEPTANCE.ps1"
+          $required = @(
+            "ADB_INSTALL_OR_UPDATE",
+            "COLD_LAUNCH_PROCESS_RUNNING",
+            "COLD_LAUNCH_FATAL_CRASH_SCAN",
+            "FIREBASE_LOGIN",
+            "SUPABASE_AUTHORIZATION",
+            "FR9_PROTECTED_QUESTION_DELIVERY",
+            "FR10_PROTECTED_STUDY_CONTENT",
+            "CONNECTIVITY_LOSS_FAIL_CLOSED",
+            "CONNECTIVITY_RECOVERY",
+            "SCREEN_CAPTURE_BLOCKED",
+            "FINAL_STATUS"
+          )
+          foreach ($needle in $required) {
+            if (-not $source.Contains($needle)) {
+              throw "Device acceptance harness is missing required evidence key: $needle"
+            }
+          }
+
+          Write-Host "R9A7 PowerShell harness syntax/contract: PASS"
+
+      - name: Replay critical release acceptance regressions
+        run: |
+          flutter test             --dart-define=SUPABASE_URL="${SUPABASE_URL}"             --dart-define=SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY}"             test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
+          flutter test test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart
+          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+          flutter test test/startup/startup_release_render_smoke_test.dart
+          flutter test test/security/android_screen_capture_protection_test.dart
+          flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+          flutter test test/architecture/phase_fr9_edge_gateway_test.dart
+          flutter test test/architecture/phase_fr9_quiz_service_cutover_test.dart
+          flutter test test/architecture/phase_fr10_content_gateway_test.dart
+          flutter test test/architecture/phase_fr10_study_content_loader_cutover_test.dart
+          flutter test test/architecture/phase_fr10_closure_test.dart
+
+      - name: Reconfirm deployed endpoints fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          probe="$RUNNER_TEMP/r9a7-probe.json"
+          code="$(
+            curl --silent --show-error               --output "$probe"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               "${FIREBASE_AUTH_PROBE_URL}"
+          )"
+          test "$code" = "401"
+          grep -q '"authorized":false' "$probe"
+
+          for operation in catalog content_catalog; do
+            output="$RUNNER_TEMP/r9a7-${operation}.json"
+            code="$(
+              curl --silent --show-error                 --output "$output"                 --write-out "%{http_code}"                 --request POST                 --header "Content-Type: application/json"                 --data "{\"operation\":\"${operation}\"}"                 "${DELIVERY_ENDPOINT}"
+            )"
+            test "$code" = "401"
+            grep -q '"error":"invalid_firebase_token"' "$output"
+          done
+
+          echo "R9A7 deployed fail-closed probes: PASS"
+
+      - name: Restore explicit stable Android signing identity
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          keystore_path="${RUNNER_TEMP}/csp11-r9a7-signing.keystore"
+          printf '%s' "${ANDROID_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${keystore_path}"
+          chmod 600 "${keystore_path"
+
+          keytool -list             -keystore "${keystore_path}"             -storepass android             -alias androiddebugkey >/dev/null
+
+          signing_sha256="$(
+            keytool -list -v               -keystore "${keystore_path}"               -storepass android               -alias androiddebugkey |
+              sed -n 's/^[[:space:]]*SHA256: //p' |
+              head -n 1 |
+              tr -d ':[:space:]' |
+              tr '[:lower:]' '[:upper:]'
+          )"
+
+          test "${signing_sha256}" = "${EXPECTED_SIGNER_SHA256}"
+
+          {
+            echo "CSP11_ANDROID_KEYSTORE_PATH=${keystore_path}"
+            echo "CSP11_ANDROID_KEYSTORE_PASSWORD=android"
+            echo "CSP11_ANDROID_KEY_ALIAS=androiddebugkey"
+            echo "CSP11_ANDROID_KEY_PASSWORD=android"
+            echo "ANDROID_SIGNING_CERT_SHA256=${signing_sha256}"
+          } >> "${GITHUB_ENV}"
+
+          echo "R9A7 explicit Android signing identity: PASS"
+
+      - name: Build R9A7 physical acceptance APK
+        run: |
+          flutter build apk --release             --dart-define=SUPABASE_URL="${SUPABASE_URL}"             --dart-define=SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY}"
+
+      - name: Verify APK package assets and signer
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          test -s "$APK"
+
+          AAPT="$(
+            find "${ANDROID_HOME}/build-tools" -type f -name aapt 2>/dev/null |
+              sort -V |
+              tail -n 1
+          )"
+          APKSIGNER="$(
+            find "${ANDROID_HOME}/build-tools" -type f -name apksigner 2>/dev/null |
+              sort -V |
+              tail -n 1
+          )"
+
+          test -n "$AAPT"
+          test -n "$APKSIGNER"
+
+          "$AAPT" dump badging "$APK" > "$RUNNER_TEMP/aapt-badging.txt"
+          grep -q "package: name='${PACKAGE_ID}'" "$RUNNER_TEMP/aapt-badging.txt"
+
+          STARTUP_ASSET="assets/flutter_assets/assets/startup/csp11_startup_master.json"
+          unzip -Z1 "$APK" | grep -q "^${STARTUP_ASSET}$"
+          unzip -p "$APK" "$STARTUP_ASSET" | grep -q 'CSP11 Startup Master SM-1'
+
+          "$APKSIGNER" verify --verbose --print-certs "$APK" > "$RUNNER_TEMP/apksigner.txt"
+          grep -Fq 'Verified using v2 scheme' "$RUNNER_TEMP/apksigner.txt"
+
+          actual_cert="$(
+            awk '
+              tolower($0) ~ /certificate sha-256 digest:/ {
+                print $NF
+                exit
+              }
+            ' "$RUNNER_TEMP/apksigner.txt" |
+              tr -d ':[:space:]' |
+              tr '[:lower:]' '[:upper:]'
+          )"
+
+          test "${actual_cert}" = "${EXPECTED_SIGNER_SHA256}"
+
+          apk_sha256="$(sha256sum "$APK" | awk '{print $1}')"
+
+          mkdir -p INT-R9A7-device-acceptance-kit
+          cp "$APK" INT-R9A7-device-acceptance-kit/CSP11-INT-R9A7-device-acceptance.apk
+          cp tools/integration/INT_R9A7_DEVICE_ACCEPTANCE.ps1 INT-R9A7-device-acceptance-kit/
+          cp docs/integration/INT_R9A7_PHYSICAL_DEVICE_ACCEPTANCE.md INT-R9A7-device-acceptance-kit/
+
+          {
+            echo "INT-R9A7 Physical Device Acceptance Readiness: PASS"
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "R9A6_CLOSED_SHA=${R9A6_CLOSED_SHA}"
+            echo "PACKAGE_ID=${PACKAGE_ID}"
+            echo "APK_SIGNER_SHA256=${actual_cert}"
+            echo "APK_SHA256=${apk_sha256}"
+            echo "SUPABASE_PUBLIC_RUNTIME_CONFIGURED=true"
+            echo "SERVER_SECRET_EMBEDDED=false"
+            echo "CRITICAL_RELEASE_REGRESSIONS=true"
+            echo "DEPLOYED_ENDPOINTS_FAIL_CLOSED=true"
+            echo "ANDROID_FLAG_SECURE_REGRESSION=true"
+            echo "PHYSICAL_DEVICE_ACCEPTANCE_REQUIRED=true"
+            echo "PHYSICAL_DEVICE_ACCEPTANCE_STATUS=PENDING"
+          } > INT-R9A7-device-acceptance-kit/INT-R9A7-readiness-evidence.txt
+
+          ls -lh INT-R9A7-device-acceptance-kit/
+
+      - name: Upload R9A7 physical acceptance kit
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-INT-R9A7-device-acceptance-kit
+          path: INT-R9A7-device-acceptance-kit/
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
