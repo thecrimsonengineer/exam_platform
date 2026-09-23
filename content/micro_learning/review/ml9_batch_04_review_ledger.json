@@ -78,16 +78,16 @@
       "microFactId": "mf_ml9_111",
       "bucket": "csp_reasoning",
       "sourceRegistryId": "SRC-02",
-      "sourceUrl": "https://www.cdc.gov/niosh/bulletin/2021/work-and-well-being.html",
-      "sourceLocator": "Systems thinking in occupational safety and health",
+      "sourceUrl": "https://www.cdc.gov/niosh/occupational-risk-assessment/about/",
+      "sourceLocator": "Overview - basic risk assessment questions",
       "candidatePath": "content/micro_learning/facts/mf_ml9_111_v1.json"
     },
     {
       "microFactId": "mf_ml9_117",
       "bucket": "evidence_based_learning",
       "sourceRegistryId": "SRC-02",
-      "sourceUrl": "https://www.cdc.gov/niosh/maritime/about/language-barriers-in-seafood-processing.html",
-      "sourceLocator": "Training recommendations for workers with language or literacy barriers",
+      "sourceUrl": "https://www.cdc.gov/niosh/ergonomics/ergo-programs/involve-train.html",
+      "sourceLocator": "Choose at least one type of ergonomics training",
       "candidatePath": "content/micro_learning/facts/mf_ml9_117_v1.json"
     }
   ],
