@@ -244,7 +244,12 @@
       "editionOrRevision",
       "sourceSection",
       "sourcePage"
-    ]
+    ],
+    "validatedOrPublishedRequiresPass": [
+      "technicalStatus",
+      "sourceStatus"
+    ],
+    "technicalCategoryRequiresHumanPass": true
   },
   "numericSignalPatterns": [
     "\\b\\d+(?:\\.\\d+)?\\s*%",
@@ -292,5 +297,27 @@
       "ul listing is regulatory approval",
       "ul listed means legally approved"
     ]
-  }
+  },
+  "technicalCategories": [
+    "safety_insight",
+    "quick_recall",
+    "think_about_it",
+    "process_safety_insight",
+    "ih_insight",
+    "emergency_insight",
+    "environmental_insight",
+    "fire_electrical_insight",
+    "management_insight",
+    "transport_insight"
+  ],
+  "genericSourceLocators": [
+    "homepage",
+    "website",
+    "general",
+    "about",
+    "source",
+    "n/a",
+    "na",
+    "not applicable"
+  ]
 }
