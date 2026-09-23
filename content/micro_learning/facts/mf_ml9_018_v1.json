@@ -26,8 +26,8 @@
   "microFactId": "mf_ml9_018",
   "category": "safety_insight",
   "display": {
-    "displayText": "IEC 31010 provides multiple risk-assessment techniques and emphasizes selecting methods that fit the decision, uncertainty, available information, and assessment context.",
-    "shortVariant": "IEC 31010 matches risk-assessment techniques to the decision context.",
+    "displayText": "An international risk-assessment standard describes multiple techniques and emphasizes choosing methods that fit the decision, uncertainty, available information, and assessment context.",
+    "shortVariant": "International guidance matches risk-assessment techniques to the decision context.",
     "estimatedReadSeconds": 9
   },
   "curriculum": {
