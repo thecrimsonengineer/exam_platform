@@ -5,8 +5,8 @@
   "status": "published",
   "category": "safety_insight",
   "display": {
-    "displayText": "NIOSH recommends hazardous energy control during servicing and maintenance of machines and equipment.",
-    "shortVariant": "NIOSH recommends hazardous energy control during servicing and maintenance.",
+    "displayText": "OSHA guidance discusses hazardous energy control during servicing and maintenance of machines and equipment.",
+    "shortVariant": "OSHA guidance discusses hazardous energy during servicing and maintenance.",
     "estimatedReadSeconds": 8
   },
   "curriculum": {
@@ -21,12 +21,12 @@
     ]
   },
   "provenance": {
-    "sourceRegistryId": "SRC-02",
-    "sourceClass": "government_recommendation",
-    "sourceTitle": "Hazardous Energy Control",
-    "officialUrl": "https://www.cdc.gov/niosh/",
-    "sourceLocator": "Hazardous energy recommendation",
-    "editionOrRevision": "NIOSH recommendation",
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "enforcement_or_compliance_guidance",
+    "sourceTitle": "OSHA hazardous energy compliance guidance",
+    "officialUrl": "https://www.osha.gov/control-hazardous-energy",
+    "sourceLocator": "OSHA hazardous energy compliance guidance",
+    "editionOrRevision": "OSHA guidance",
     "sourceSection": "1910.147(a)(1)(i)",
     "sourcePage": null,
     "sourcePublishedAt": null,
@@ -34,8 +34,8 @@
     "rightsTreatment": "original_paraphrase"
   },
   "claim": {
-    "legalStatus": "recommendation",
-    "jurisdiction": "US",
+    "legalStatus": "nonbinding_guidance",
+    "jurisdiction": "US Federal OSHA",
     "numericalClaim": false,
     "safetyCritical": true,
     "simplificationRisk": "medium"
