@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_04",
+  "freezeStatus": "closed",
+  "closedAt": "2026-09-23",
+  "cumulativeCandidateCount": 40,
+  "validatedCandidateContentSha": "bf82942e6c95e332cfe1b1d811dfba781569b17f",
+  "validationRun": {
+    "runId": 35875924753,
+    "jobId": 107231670390,
+    "conclusion": "success",
+    "validatedCandidateFacts": 40,
+    "pairComparisons": 780,
+    "ml8ReviewCandidates": 0,
+    "ml8ConcentrationSignals": 1,
+    "publicationApprovalsAssertedByTool": 0
+  },
+  "concentrationSignal": {
+    "code": "ML8_AUTHORITY_CONCENTRATION",
+    "sourceRegistryId": "SRC-01",
+    "candidateCount": 17,
+    "share": 0.425,
+    "threshold": 0.4,
+    "blocking": false,
+    "action": "Diversify Batch 05 authority use where source fitness permits."
+  },
+  "postValidationChanges": [
+    "audit metadata updated with observed GitHub Actions evidence",
+    "phase document updated with Batch 04 validation result",
+    "Batch 04 checkpoint metadata added"
+  ],
+  "postValidationCandidateOrValidatorChanges": false,
+  "lifecycle": {
+    "humanReviewComplete": false,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "nextAction": "ML-9B Batch 05"
+}
