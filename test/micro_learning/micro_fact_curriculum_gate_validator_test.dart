@@ -118,10 +118,7 @@ void main() {
       );
     evidence['mapping'] = mapping;
 
-    final result = validate(
-      fact,
-      curriculumEvidence: evidence,
-    );
+    final result = validate(fact, curriculumEvidence: evidence);
 
     expect(result.issues, isEmpty, reason: result.issues.join('\n'));
   });
