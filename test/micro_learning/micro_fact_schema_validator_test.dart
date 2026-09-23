@@ -6,8 +6,7 @@ import 'package:exam_platform/services/micro_learning/micro_fact_schema_validato
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const fixturePath =
-      'test/fixtures/micro_learning/valid_micro_fact_v1.json';
+  const fixturePath = 'test/fixtures/micro_learning/valid_micro_fact_v1.json';
   const schemaPath = 'content/micro_learning/micro_fact_schema_v1.json';
 
   final validator = MicroFactSchemaValidator();
@@ -251,8 +250,9 @@ void main() {
 
   test('supersession cannot self-reference', () {
     final fixture = cloneFixture();
-    final supersession =
-        Map<String, dynamic>.from(fixture['supersession'] as Map);
+    final supersession = Map<String, dynamic>.from(
+      fixture['supersession'] as Map,
+    );
     supersession['supersedesMicroFactId'] = fixture['microFactId'];
     fixture['supersession'] = supersession;
 
@@ -288,10 +288,7 @@ void main() {
     final result = validator.validateMap(fixture);
 
     expect(result.isValid, isFalse);
-    expect(
-      result.issues.map((issue) => issue.code),
-      contains('ML2_TAGS'),
-    );
+    expect(result.issues.map((issue) => issue.code), contains('ML2_TAGS'));
   });
 
   test('schema version other than v1 is rejected', () {
