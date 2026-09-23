@@ -57,8 +57,9 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  final policyResult =
-      const RightsProvenancePolicyValidator().validateMap(rightsPolicy);
+  final policyResult = const RightsProvenancePolicyValidator().validateMap(
+    rightsPolicy,
+  );
   if (!policyResult.isValid) {
     stderr.writeln(
       'ML-5 rights policy validation failed with '
