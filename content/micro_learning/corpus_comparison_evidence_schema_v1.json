@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://csp11.local/schemas/corpus_comparison_evidence_v1.schema.json",
+  "title": "CSP11 Corpus Comparison Evidence v1",
+  "description": "ML-8 human adjudication record for one duplicate or contradiction candidate pair.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evidenceId",
+    "policyVersion",
+    "pairKey",
+    "left",
+    "right",
+    "detectedSignals",
+    "decision",
+    "review"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^mfce_[a-z0-9][a-z0-9_-]{5,63}$"
+    },
+    "policyVersion": {
+      "const": "1.0.0"
+    },
+    "pairKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "left": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "microFactId",
+        "contentVersion",
+        "comparisonFingerprintSha256"
+      ],
+      "properties": {
+        "microFactId": {
+          "type": "string",
+          "pattern": "^mf_[a-z0-9][a-z0-9_-]{5,63}$"
+        },
+        "contentVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "comparisonFingerprintSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "right": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "microFactId",
+        "contentVersion",
+        "comparisonFingerprintSha256"
+      ],
+      "properties": {
+        "microFactId": {
+          "type": "string",
+          "pattern": "^mf_[a-z0-9][a-z0-9_-]{5,63}$"
+        },
+        "contentVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "comparisonFingerprintSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "detectedSignals": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "near_duplicate",
+          "concept_assisted_duplicate",
+          "same_source_locator_overlap",
+          "polarity_conflict",
+          "legal_status_conflict",
+          "numerical_conflict",
+          "edition_drift"
+        ]
+      }
+    },
+    "decision": {
+      "enum": [
+        "distinct_valid",
+        "scope_difference_valid",
+        "source_context_difference_valid",
+        "duplicate_block",
+        "contradiction_block",
+        "merge_required",
+        "supersession_required"
+      ]
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewerRole",
+        "humanReviewed",
+        "rationale",
+        "reviewedAt",
+        "nextReviewDueAt"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "reviewerRole": {
+          "enum": [
+            "content_governance_reviewer",
+            "subject_matter_reviewer",
+            "technical_reviewer"
+          ]
+        },
+        "humanReviewed": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "nextReviewDueAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    }
+  },
+  "x-csp11": {
+    "phase": "ML-8",
+    "duplicateContradictionPolicyVersion": "1.0.0",
+    "failClosed": true
+  }
+}
