@@ -20,10 +20,7 @@ void main() {
     final draft = adapter.toCanonicalDraft(package: package, node: node);
 
     expect(draft.question, node.prompt);
-    expect(
-      draft.options,
-      node.options.map((option) => option.text).toList(),
-    );
+    expect(draft.options, node.options.map((option) => option.text).toList());
     expect(draft.correctAnswer, 0);
     expect(draft.difficulty, 'Hard');
     expect(draft.cognitiveLevel, 'analysis');
@@ -72,40 +69,28 @@ void main() {
         text: 'Option A',
         isBest: false,
         quality: LabDecisionQuality.defensible,
-        consequence: LabConsequence(
-          id: 'q2_consequence_a',
-          explicitNoOp: true,
-        ),
+        consequence: LabConsequence(id: 'q2_consequence_a', explicitNoOp: true),
       ),
       LabDecisionOption(
         id: 'q2_option_b',
         text: 'Option B',
         isBest: false,
         quality: LabDecisionQuality.weak,
-        consequence: LabConsequence(
-          id: 'q2_consequence_b',
-          explicitNoOp: true,
-        ),
+        consequence: LabConsequence(id: 'q2_consequence_b', explicitNoOp: true),
       ),
       LabDecisionOption(
         id: 'q2_option_c',
         text: 'Option C',
         isBest: true,
         quality: LabDecisionQuality.optimal,
-        consequence: LabConsequence(
-          id: 'q2_consequence_c',
-          explicitNoOp: true,
-        ),
+        consequence: LabConsequence(id: 'q2_consequence_c', explicitNoOp: true),
       ),
       LabDecisionOption(
         id: 'q2_option_d',
         text: 'Option D',
         isBest: false,
         quality: LabDecisionQuality.critical,
-        consequence: LabConsequence(
-          id: 'q2_consequence_d',
-          explicitNoOp: true,
-        ),
+        consequence: LabConsequence(id: 'q2_consequence_d', explicitNoOp: true),
       ),
     ];
     final node = LabDecisionNode(
@@ -164,11 +149,7 @@ void main() {
     final node = package.nodes.whereType<LabDecisionNode>().first;
 
     expect(
-      () => adapter.toQuestion(
-        package: package,
-        node: node,
-        decisionIndex: -1,
-      ),
+      () => adapter.toQuestion(package: package, node: node, decisionIndex: -1),
       throwsArgumentError,
     );
   });

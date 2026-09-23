@@ -160,5 +160,4 @@ class LabDqg300Validator {
       ],
     });
   }
-
 }
