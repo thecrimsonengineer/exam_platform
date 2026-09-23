@@ -37,47 +37,48 @@ void main() {
     expect(result.issues, isEmpty, reason: result.issues.join('\n'));
   });
 
-  test('all 15 frozen authority families pass with their own first-party source',
-      () {
-    final registry = loadRegistry();
-    final authorities = (registry['authorities'] as List)
-        .cast<Map<String, dynamic>>();
+  test(
+    'all 15 frozen authority families pass with their own first-party source',
+    () {
+      final registry = loadRegistry();
+      final authorities = (registry['authorities'] as List)
+          .cast<Map<String, dynamic>>();
 
-    for (final authority in authorities) {
-      final fact = cloneFact();
-      final provenance = Map<String, dynamic>.from(fact['provenance'] as Map);
+      for (final authority in authorities) {
+        final fact = cloneFact();
+        final provenance = Map<String, dynamic>.from(fact['provenance'] as Map);
 
-      provenance
-        ..['sourceRegistryId'] = authority['id']
-        ..['sourceClass'] =
-            (authority['permittedSourceClasses'] as List).first as String
-        ..['officialUrl'] =
-            (authority['officialEntryPoints'] as List).first as String
-        ..['sourceTitle'] = authority['displayName'].toString()
-        ..['sourceLocator'] = 'ML-3 registry-driven source gate fixture'
-        ..['sourceVerifiedAt'] = authority['verifiedAt'].toString()
-        ..['sourcePublishedAt'] = null;
+        provenance
+          ..['sourceRegistryId'] = authority['id']
+          ..['sourceClass'] =
+              (authority['permittedSourceClasses'] as List).first as String
+          ..['officialUrl'] =
+              (authority['officialEntryPoints'] as List).first as String
+          ..['sourceTitle'] = authority['displayName'].toString()
+          ..['sourceLocator'] = 'ML-3 registry-driven source gate fixture'
+          ..['sourceVerifiedAt'] = authority['verifiedAt'].toString()
+          ..['sourcePublishedAt'] = null;
 
-      fact['provenance'] = provenance;
+        fact['provenance'] = provenance;
 
-      final review = Map<String, dynamic>.from(fact['review'] as Map);
-      review['reviewedAt'] = authority['verifiedAt'].toString();
-      review['nextReviewDueAt'] = '2027-09-23';
-      fact['review'] = review;
+        final review = Map<String, dynamic>.from(fact['review'] as Map);
+        review['reviewedAt'] = authority['verifiedAt'].toString();
+        review['nextReviewDueAt'] = '2027-09-23';
+        fact['review'] = review;
 
-      final result = validator.validateMaps(
-        microFact: fact,
-        authorityRegistry: registry,
-      );
+        final result = validator.validateMaps(
+          microFact: fact,
+          authorityRegistry: registry,
+        );
 
-      expect(
-        result.issues,
-        isEmpty,
-        reason:
-            authority['id'].toString() + ': ' + result.issues.join('\n'),
-      );
-    }
-  });
+        expect(
+          result.issues,
+          isEmpty,
+          reason: authority['id'].toString() + ': ' + result.issues.join('\n'),
+        );
+      }
+    },
+  );
 
   test('unknown but well-shaped source registry id is blocked', () {
     final fact = cloneFact();
@@ -212,8 +213,7 @@ void main() {
   test('embedded URL credentials fail before source trust is granted', () {
     final fact = cloneFact();
     final provenance = Map<String, dynamic>.from(fact['provenance'] as Map);
-    provenance['officialUrl'] =
-        'https://osha.gov@evil.example/1910/1910.147';
+    provenance['officialUrl'] = 'https://osha.gov@evil.example/1910/1910.147';
     fact['provenance'] = provenance;
 
     final result = validator.validateMaps(
