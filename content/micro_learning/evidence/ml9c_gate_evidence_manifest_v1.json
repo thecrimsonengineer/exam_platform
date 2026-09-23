@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9C",
+  "status": "machine_prepared_pending_human_review",
+  "generatedAt": "2026-09-24",
+  "sourceCorpusRef": "phase-ml9b-batch-12-closed",
+  "sourceCorpusSha": "5af8248c5863d8f6e74be6d27aad1c9a9a008873",
+  "coverage": {
+    "candidateFacts": 120,
+    "evidenceBundles": 12,
+    "rightsEvidenceRecords": 120,
+    "mappedCurriculumEvidenceRecords": 114,
+    "generalScopeCurriculumExemptions": 6,
+    "pedagogyEvidenceRecords": 120,
+    "accessibilityReviewTracks": 120
+  },
+  "humanReviewBoundary": {
+    "rightsPassCount": 0,
+    "curriculumPassCount": 0,
+    "pedagogyPassCount": 0,
+    "accessibilityPassCount": 0,
+    "humanApprovalsGeneratedByAutomation": false,
+    "factsPromotedToValidated": 0,
+    "factsPromotedToPublished": 0,
+    "factsMadeStartupEligible": 0
+  },
+  "bundles": [
+    "content/micro_learning/evidence/ml9c_batch_01_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_02_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_03_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_04_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_05_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_06_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_07_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_08_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_09_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_10_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_11_gate_evidence.json",
+    "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json"
+  ],
+  "validator": "tool/validate_ml9c_gate_evidence.dart",
+  "workflow": ".github/workflows/ml9c_gate_evidence_validation.yml",
+  "notes": [
+    "Rights transformation fields are machine-seeded pre-review records and do not constitute human rights approval.",
+    "Curriculum concept-alignment confirmation remains false until genuine human review.",
+    "Pedagogy and accessibility attestations remain false until genuine human review.",
+    "All 120 MicroFacts remain review-state and startup-ineligible during ML-9C."
+  ]
+}
