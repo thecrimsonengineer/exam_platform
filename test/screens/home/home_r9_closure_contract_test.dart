@@ -110,6 +110,46 @@ void main() {
   });
 
   test(
+    'HOME-R9 Home Settings preserves reactive theme and auth-root sign-out',
+    () {
+      final navigation = read('lib/screens/navigation/bottom_navigation.dart');
+      final route = read('lib/screens/settings/settings_route.dart');
+
+      expect(
+        navigation,
+        contains("import '../settings/settings_route.dart';"),
+      );
+      expect(navigation, contains('const SettingsRoute()'));
+      expect(
+        navigation,
+        contains('HomeScreen(\n          onOpenSettings: _openSettings,'),
+      );
+      expect(
+        navigation,
+        contains('DarkHomeScreen(\n            onOpenSettings: _openSettings,'),
+      );
+
+      expect(route, contains('ThemeModeService.isDarkMode'));
+      expect(route, contains('ValueListenableBuilder<bool>'));
+      expect(route, contains('DarkSettingsScreen'));
+      expect(route, contains('SettingsScreen'));
+
+      for (final path in <String>[
+        'lib/screens/settings/settings_screen.dart',
+        'lib/screens/settings/settings_screen_dark.dart',
+      ]) {
+        final settings = read(path);
+
+        expect(settings, contains('ThemeModeService.setDarkMode'));
+        expect(settings, contains('ThemeModeService.toggle()'));
+        expect(settings, contains('AuthStateService().signOut()'));
+        expect(settings, contains('rootNavigator: true'));
+        expect(settings, contains('popUntil((route) => route.isFirst)'));
+      }
+    },
+  );
+
+  test(
     'HOME-R9 Bookmarks live under Settings and storage keys stay frozen',
     () {
       for (final path in <String>[

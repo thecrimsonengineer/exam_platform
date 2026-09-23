@@ -326,6 +326,24 @@ Reuse:
 
 No bookmark data migration is part of HOME-R.
 
+### Home-R Settings integration contract
+
+The Home settings entry is part of the learner shell and must preserve the
+existing account and appearance behavior.
+
+Home-R therefore requires:
+
+- Home light and dark variants open the shared reactive `SettingsRoute`
+- Settings reacts immediately to `ThemeModeService.isDarkMode`
+- the dark-mode choice persists through `ThemeModeService`
+- switching theme while Settings is open swaps the visible Settings variant
+  without requiring the learner to leave and reopen Settings
+- Sign Out performs the real authentication sign-out
+- after sign-out, the root navigation stack is cleared back to the auth root
+- light and dark Settings variants retain identical sign-out behavior
+
+Home-R must not fork authentication state or create a second theme preference.
+
 ## 21. Responsive contract
 
 Wide:
@@ -391,9 +409,12 @@ Implement shared `StudyPlanBlockLauncher`.
 
 Connect genuine activity evidence back to the authoritative plan lifecycle.
 
-### HOME-R8 — Bookmark relocation
+### HOME-R8 — Bookmark relocation and Settings shell integration
 
 Move Bookmarked Questions to Settings → Learning & Progress in light and dark mode.
+
+Preserve the shared reactive Settings route, immediate/persistent dark-mode
+switching, and sign-out return to the authentication root.
 
 ### HOME-R9 — Polish and closure
 
@@ -412,6 +433,10 @@ Verify:
 - generic Study/Practice/Flashcards absent from Home
 - Bookmarks absent from Home
 - Bookmarked Questions present in Settings
+- Home opens the shared reactive Settings route
+- dark mode changes the visible Settings variant immediately and persists
+- sign-out returns directly to the authentication root
+- light/dark Settings sign-out behavior remains synchronized
 - Progress Intelligence remains
 - Exam Readiness remains
 - Home does not independently generate a plan
@@ -429,6 +454,7 @@ Final HOME-R closure should include:
 - launcher tests
 - navigation tests
 - Settings/bookmark tests
+- Settings theme/sign-out interaction tests
 - M7D/M7E planner regressions
 - Exam Readiness regressions
 - Study Content navigation regressions
