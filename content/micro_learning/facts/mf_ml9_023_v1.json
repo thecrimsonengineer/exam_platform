@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_023",
   "category": "safety_insight",
   "display": {
-    "displayText": "ANSI B11.20 treats integrated manufacturing systems as coordinated machines, material handling, and controls whose combined interactions require system-level hazard reduction.",
+    "displayText": "ANSI integrated-manufacturing guidance treats coordinated machines, material handling, and controls as one system whose interactions require system-level hazard reduction.",
     "shortVariant": "Integrated manufacturing needs system-level hazard reduction, not machine-by-machine thinking.",
-    "estimatedReadSeconds": 9
+    "estimatedReadSeconds": 8
   },
   "curriculum": {
     "scope": "mapped",
