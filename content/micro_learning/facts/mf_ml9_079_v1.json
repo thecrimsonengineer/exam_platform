@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_079",
+  "category": "management_insight",
+  "display": {
+    "displayText": "ISO 45001 structures occupational health and safety management around policy, objectives, planning, implementation, operation, auditing, review, and continual improvement.",
+    "shortVariant": "ISO 45001 connects policy, planning, operation, audit, review, and improvement.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d02",
+    "competencyId": "d02_c09",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "management_system_components",
+      "continual_improvement"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-04",
+    "sourceClass": "international_standard",
+    "sourceTitle": "ISO 45001:2018 Occupational health and safety management systems",
+    "officialUrl": "https://www.iso.org/standard/45001",
+    "sourceLocator": "What is ISO 45001?",
+    "editionOrRevision": "ISO 45001:2018, Edition 1; confirmed current in 2024",
+    "sourceSection": "Management-system framework",
+    "sourcePage": null,
+    "sourcePublishedAt": "2018-03-01",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "international_standard",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "management_systems",
+    "ohs_management",
+    "continual_improvement"
+  ]
+}
