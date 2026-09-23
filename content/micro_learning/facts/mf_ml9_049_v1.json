@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_049",
+  "category": "process_safety_insight",
+  "display": {
+    "displayText": "OSHA requires a pre-startup safety review before introducing highly hazardous chemicals to covered new facilities and qualifying modified facilities.",
+    "shortVariant": "Pre-startup review confirms key safeguards before hazardous chemicals enter a process.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c02",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "pre_startup_safety_review",
+      "process_startup"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "federal_regulation",
+    "sourceTitle": "Process safety management of highly hazardous chemicals, 29 CFR 1910.119",
+    "officialUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+    "sourceLocator": "29 CFR 1910.119(i)(1)-(2)",
+    "editionOrRevision": "29 CFR 1910.119",
+    "sourceSection": "1910.119(i)(1)-(2)",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "binding_requirement",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "process_safety",
+    "pre_startup_review",
+    "process_startup"
+  ]
+}
