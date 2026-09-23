@@ -294,8 +294,10 @@ Batch 03 review artifacts:
 - Exact duplicate count: 0.
 - Unresolved ML-8 review-candidate count: 0.
 - A reusable candidate-bank validator and dedicated ML-9 GitHub Actions workflow now exist.
-- The available GitHub connector does not expose a push-triggered workflow result for this checkpoint, so no CI-green claim is made from missing status data.
-- Repository CLI validation remains mandatory before ML-9 final closure.
+- GitHub Actions exact-SHA validation passed for the 40-candidate bank: 40 facts, 780 pair comparisons, 0 ML-8 review candidates, and 0 automated publication approvals.
+- ML-8 reported 1 non-blocking concentration signal: SRC-01 / OSHA contributes 17 of 40 candidates (42.5%), above the 40% composition-review threshold.
+- Batch 05 should diversify authority use where source fitness permits; the concentration signal does not weaken or block technically justified OSHA facts.
+- Human technical, curriculum, rights, pedagogy, and accessibility review remains pending.
 
 Batch 04 review and validation artifacts:
 
