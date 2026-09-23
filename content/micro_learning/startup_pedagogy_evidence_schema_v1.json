@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://csp11.local/schemas/startup_pedagogy_evidence_v1.schema.json",
+  "title": "CSP11 Startup Pedagogy Evidence v1",
+  "description": "ML-7 audit record proving that one startup-eligible MicroFact version is readable, pedagogically appropriate and accessibility-safe.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evidenceId",
+    "microFactId",
+    "contentVersion",
+    "pedagogyPolicyVersion",
+    "contentFingerprint",
+    "metrics",
+    "pedagogyReview",
+    "accessibilityReview"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^mfpe_[a-z0-9][a-z0-9_-]{5,63}$"
+    },
+    "microFactId": {
+      "type": "string",
+      "pattern": "^mf_[a-z0-9][a-z0-9_-]{5,63}$"
+    },
+    "contentVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "pedagogyPolicyVersion": {
+      "const": "1.0.0"
+    },
+    "contentFingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "displayTextSha256",
+        "shortVariantSha256",
+        "estimatedReadSeconds"
+      ],
+      "properties": {
+        "displayTextSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shortVariantSha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "estimatedReadSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "displayWordCount",
+        "displaySentenceCount",
+        "computedDisplayReadSeconds",
+        "shortWordCount",
+        "shortSentenceCount",
+        "computedShortReadSeconds"
+      ],
+      "properties": {
+        "displayWordCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "displaySentenceCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "computedDisplayReadSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "shortWordCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "shortSentenceCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "computedShortReadSeconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    "pedagogyReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewerRole",
+        "humanReviewed",
+        "singleConceptConfirmed",
+        "standaloneMeaningConfirmed",
+        "cognitiveLoadAcceptable",
+        "jargonLoadAcceptable",
+        "shortVariantMeaningPreserved",
+        "precisionPreserved",
+        "assessmentLeakageReviewed",
+        "reviewedAt",
+        "nextReviewDueAt"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "reviewerRole": {
+          "enum": [
+            "pedagogy_reviewer",
+            "content_governance_reviewer",
+            "subject_matter_reviewer"
+          ]
+        },
+        "humanReviewed": {
+          "type": "boolean"
+        },
+        "singleConceptConfirmed": {
+          "type": "boolean"
+        },
+        "standaloneMeaningConfirmed": {
+          "type": "boolean"
+        },
+        "cognitiveLoadAcceptable": {
+          "type": "boolean"
+        },
+        "jargonLoadAcceptable": {
+          "type": "boolean"
+        },
+        "shortVariantMeaningPreserved": {
+          "type": "boolean"
+        },
+        "precisionPreserved": {
+          "type": "boolean"
+        },
+        "assessmentLeakageReviewed": {
+          "type": "boolean"
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "nextReviewDueAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    },
+    "accessibilityReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewerRole",
+        "humanReviewed",
+        "screenReaderStandaloneConfirmed",
+        "visualIndependenceConfirmed",
+        "reducedMotionEquivalentConfirmed",
+        "plainLanguageAccessibleConfirmed",
+        "noForcedInteractionConfirmed",
+        "reviewedAt",
+        "nextReviewDueAt"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "reviewerRole": {
+          "enum": [
+            "accessibility_reviewer",
+            "content_governance_reviewer"
+          ]
+        },
+        "humanReviewed": {
+          "type": "boolean"
+        },
+        "screenReaderStandaloneConfirmed": {
+          "type": "boolean"
+        },
+        "visualIndependenceConfirmed": {
+          "type": "boolean"
+        },
+        "reducedMotionEquivalentConfirmed": {
+          "type": "boolean"
+        },
+        "plainLanguageAccessibleConfirmed": {
+          "type": "boolean"
+        },
+        "noForcedInteractionConfirmed": {
+          "type": "boolean"
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "nextReviewDueAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    }
+  },
+  "x-csp11": {
+    "phase": "ML-7",
+    "pedagogyPolicyVersion": "1.0.0",
+    "failClosed": true
+  }
+}
