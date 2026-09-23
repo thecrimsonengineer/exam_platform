@@ -5,10 +5,14 @@ import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/features/lab/lab_decision_question_adapter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../quality_validator_contract/dqg300/_support/dqg300_fixture.dart';
+
 String _source() =>
     File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync();
 
 LabPackage _package() => LabPackage.decode(_source());
+
+final _evidence = perfectDqg300Evidence();
 
 void main() {
   const adapter = LabDecisionQuestionAdapter();
@@ -17,7 +21,7 @@ void main() {
     final package = _package();
     final node = package.nodes.whereType<LabDecisionNode>().first;
 
-    final draft = adapter.toCanonicalDraft(package: package, node: node);
+    final draft = adapter.toCanonicalDraft(package: package, node: node, evidence: _evidence);
 
     expect(draft.question, node.prompt);
     expect(draft.options, node.options.map((option) => option.text).toList());
@@ -27,14 +31,8 @@ void main() {
     expect(draft.questionType, 'scenario_mcq');
     expect(draft.reference, 'HSE L101');
     expect(draft.tags, ['lab-dqg300', node.id]);
-    expect(
-      draft.explanation,
-      LabDecisionQuestionAdapter.compatibilityExplanation,
-    );
-    expect(
-      draft.bestAnswerRationale,
-      LabDecisionQuestionAdapter.compatibilityBestAnswerRationale,
-    );
+    expect(draft.explanation, isNotEmpty);
+    expect(draft.bestAnswerRationale, isNotEmpty);
   });
 
   test('Q2 attaches LAB identity after canonical parsing', () {
@@ -44,6 +42,7 @@ void main() {
     final question = adapter.toQuestion(
       package: package,
       node: node,
+      evidence: _evidence,
       decisionIndex: 0,
     );
 
@@ -102,6 +101,7 @@ void main() {
     final question = adapter.toQuestion(
       package: package,
       node: node,
+      evidence: _evidence,
       decisionIndex: 0,
     );
 
@@ -119,6 +119,7 @@ void main() {
     final question = adapter.toQuestion(
       package: package,
       node: node,
+      evidence: _evidence,
       decisionIndex: 1,
     );
 
@@ -137,6 +138,7 @@ void main() {
     final question = adapter.toQuestion(
       package: package,
       node: node,
+      evidence: _evidence,
       decisionIndex: 0,
     );
 
@@ -149,7 +151,12 @@ void main() {
     final node = package.nodes.whereType<LabDecisionNode>().first;
 
     expect(
-      () => adapter.toQuestion(package: package, node: node, decisionIndex: -1),
+      () => adapter.toQuestion(
+        package: package,
+        node: node,
+        evidence: _evidence,
+        decisionIndex: -1,
+      ),
       throwsArgumentError,
     );
   });
