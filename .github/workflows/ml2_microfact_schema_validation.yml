@@ -46,7 +46,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dart format --output=none --set-exit-if-changed \
+          dart format \
+            lib/models/micro_learning/micro_fact.dart \
+            lib/services/micro_learning/micro_fact_schema_validator.dart \
+            tool/validate_micro_learning_schema.dart \
+            test/micro_learning/micro_fact_schema_validator_test.dart
+          git diff --check
+          git diff -- \
+            lib/models/micro_learning/micro_fact.dart \
+            lib/services/micro_learning/micro_fact_schema_validator.dart \
+            tool/validate_micro_learning_schema.dart \
+            test/micro_learning/micro_fact_schema_validator_test.dart
+          git diff --exit-code -- \
             lib/models/micro_learning/micro_fact.dart \
             lib/services/micro_learning/micro_fact_schema_validator.dart \
             tool/validate_micro_learning_schema.dart \
