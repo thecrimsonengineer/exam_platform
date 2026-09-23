@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'claim_semantics_policy_validator.dart';
-import 'micro_fact_schema_validator.dart';
 import 'micro_fact_source_gate_validator.dart';
 
 class MicroFactClaimGateIssue {
