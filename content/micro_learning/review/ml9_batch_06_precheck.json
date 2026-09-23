@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_06",
+  "checkedAt": "2026-09-23",
+  "candidateContentSha": "903fdfa161967bfba6eb813cd2078a983a36a78e",
+  "scope": {
+    "batchFacts": 10,
+    "cumulativeCandidateFacts": 60,
+    "totalUniquePairCount": 1770,
+    "previouslyValidatedOldOldPairs": 1225,
+    "newlyScannedOldToNewPairs": 500,
+    "newlyScannedBatchInternalPairs": 45
+  },
+  "candidateGatePrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "correctionApplied": "mf_ml9_010 display copy shortened so computed reading time remains within the frozen ML-7 10-second limit",
+    "checks": [
+      "approved authority exists and is active",
+      "source class is permitted for authority",
+      "official URL is HTTPS and first-party host",
+      "NIOSH paths remain within the frozen /niosh/ scope",
+      "claim legal status is permitted for source class",
+      "mandatory wording and authority attribution rules checked",
+      "candidate lifecycle remains review with startup disabled",
+      "all human and publication review channels remain pending",
+      "canonical domain and competency ID patterns checked",
+      "at least two tags present"
+    ]
+  },
+  "startupTextPrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "checks": [
+      "display word count within 6-32",
+      "display computed read time at or below 10 seconds",
+      "estimated read time within frozen 2-second tolerance",
+      "short variant word count within 4-18",
+      "short variant computed read time at or below 6 seconds",
+      "short variant word ratio at or below 0.75",
+      "uppercase abbreviations limited to the frozen ML-7 whitelist"
+    ]
+  },
+  "ml8DeterministicPrecheck": {
+    "result": "pass",
+    "candidateFactsScanned": 60,
+    "pairCountScanned": 1770,
+    "exactDuplicateCount": 0,
+    "unresolvedReviewCandidateCount": 0,
+    "flaggedPairCount": 0,
+    "method": "1,225 previously validated pairs plus exact frozen-policy scan of 500 old-to-new pairs and 45 Batch-06 internal pairs"
+  },
+  "authorityConcentration": {
+    "result": "pass",
+    "threshold": 0.4,
+    "blocking": false,
+    "sourceCounts": [
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 18,
+        "share": 0.3
+      },
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 18,
+        "share": 0.3
+      },
+      {
+        "sourceRegistryId": "SRC-08",
+        "count": 5,
+        "share": 0.0833
+      },
+      {
+        "sourceRegistryId": "SRC-09",
+        "count": 5,
+        "share": 0.0833
+      },
+      {
+        "sourceRegistryId": "SRC-10",
+        "count": 5,
+        "share": 0.0833
+      },
+      {
+        "sourceRegistryId": "SRC-05",
+        "count": 3,
+        "share": 0.05
+      },
+      {
+        "sourceRegistryId": "SRC-03",
+        "count": 2,
+        "share": 0.0333
+      },
+      {
+        "sourceRegistryId": "SRC-04",
+        "count": 2,
+        "share": 0.0333
+      },
+      {
+        "sourceRegistryId": "SRC-11",
+        "count": 2,
+        "share": 0.0333
+      }
+    ],
+    "previousOshaShare": 0.34,
+    "currentOshaShare": 0.3,
+    "currentNioshShare": 0.3,
+    "note": "No authority exceeds the frozen 40% concentration-review threshold."
+  },
+  "rightsSensitiveCandidates": [
+    {
+      "microFactId": "mf_ml9_007",
+      "sourceRegistryId": "SRC-03",
+      "reason": "ANSI/ASSP consensus-standard source remains rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_008",
+      "sourceRegistryId": "SRC-03",
+      "reason": "ANSI/ASSP consensus-standard source remains rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_009",
+      "sourceRegistryId": "SRC-05",
+      "reason": "NFPA consensus-standard source remains rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_012",
+      "sourceRegistryId": "SRC-04",
+      "reason": "ISO international-standard source remains rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_014",
+      "sourceRegistryId": "SRC-05",
+      "reason": "NFPA professional guidance remains rights-sensitive under ML-5"
+    }
+  ],
+  "validatorInfrastructure": {
+    "toolPath": "tool/validate_ml9_candidate_bank.dart",
+    "workflowPath": ".github/workflows/ml9_candidate_bank_validation.yml",
+    "pushTriggeredWorkflowExpected": true,
+    "pushTriggeredWorkflowObservedThroughConnector": false,
+    "observedCiVerdict": null,
+    "note": "The available commit-run wrapper exposes pull-request-triggered runs only and returned no observable push run/status. No CI-green claim is made from missing data."
+  },
+  "humanReview": {
+    "complete": false,
+    "approvalsGeneratedByAutomation": false
+  }
+}
