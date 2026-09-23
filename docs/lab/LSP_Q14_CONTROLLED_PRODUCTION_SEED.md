@@ -127,3 +127,30 @@ LSP-Q14 does not:
 ## Closure condition
 
 LSP-Q14 closes only after the dedicated Q14 tests, all prior LSP-Q tests, analyze, full repository regression, formatter and diff-hygiene gates are green on the exact implementation SHA.
+
+## Closure candidate
+
+Initial Q14 implementation commit: `524bbe40e150dc0a41adfc01e93b1e060e88264f`
+
+Validation workflow staging repair commit: `66fec16959ec3668bde352726486524320629e57`
+
+Exact preflight-artifact persistence commit: `ca2a99694168840025503638ee6431977d5feb37`
+
+Preflight persistence documentation commit: `df921fb05b1d974006df6f46c14f087406a1006c`
+
+Successful full validation run for that implementation SHA: `35916278224`
+
+The run passed the dedicated Q14 controlled-production population seed tests, all prior LSP-Q gates, static analysis, Studio regressions, the full repository regression, diff hygiene and canonical formatting.
+
+Canonical formatter output commit: `3b4b004a2909c78d26b9a815ee57803fa1d53c9f`
+
+The formatter commit changes formatting only in:
+
+- `lib/features/lab/lab_production_population_seed.dart`
+- `test/lab_quality/lsp_q14_production_population_seed_test.dart`
+
+This documentation-only closure commit is the exact-SHA validation target for LSP-Q14. No Firestore schema, Firestore security rule, immutable publication contract, learner catalogue semantics, production seed semantics, learner presentation content, technical LAB package or player behavior is changed by the closure step.
+
+## Next authorized action
+
+LSP-Q15 - Production Seed Execution Evidence and Release Closure.
