@@ -66,22 +66,25 @@ void main() {
     expect(result.issues, isEmpty, reason: result.issues.join('\n'));
   });
 
-  test('general MicroFact curriculum IDs fail at the frozen lower schema gate', () {
-    final fact = loadFact();
-    final curriculum = Map<String, dynamic>.from(fact['curriculum'] as Map);
-    curriculum
-      ..['domainId'] = 'd01'
-      ..['competencyId'] = 'd01_c03';
-    fact['curriculum'] = curriculum;
+  test(
+    'general MicroFact curriculum IDs fail at the frozen lower schema gate',
+    () {
+      final fact = loadFact();
+      final curriculum = Map<String, dynamic>.from(fact['curriculum'] as Map);
+      curriculum
+        ..['domainId'] = 'd01'
+        ..['competencyId'] = 'd01_c03';
+      fact['curriculum'] = curriculum;
 
-    final result = validate(fact);
+      final result = validate(fact);
 
-    expect(result.isValid, isFalse);
-    expect(
-      result.issues.map((issue) => issue.code),
-      contains('ML6_RIGHTS_PREREQUISITE_INVALID'),
-    );
-  });
+      expect(result.isValid, isFalse);
+      expect(
+        result.issues.map((issue) => issue.code),
+        contains('ML6_RIGHTS_PREREQUISITE_INVALID'),
+      );
+    },
+  );
 
   test('general MicroFact cannot carry mapping evidence', () {
     final result = validate(
