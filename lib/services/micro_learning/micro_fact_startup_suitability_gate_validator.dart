@@ -43,8 +43,8 @@ class MicroFactStartupSuitabilityGateValidator {
   }) {
     final issues = <MicroFactStartupSuitabilityIssue>[];
 
-    final curriculumResult =
-        const MicroFactCurriculumGateValidator().validateMaps(
+    final curriculumResult = const MicroFactCurriculumGateValidator()
+        .validateMaps(
           microFact: microFact,
           authorityRegistry: authorityRegistry,
           claimPolicy: claimPolicy,
@@ -63,8 +63,9 @@ class MicroFactStartupSuitabilityGateValidator {
       );
     }
 
-    final policyResult =
-        const StartupPedagogyPolicyValidator().validateMap(pedagogyPolicy);
+    final policyResult = const StartupPedagogyPolicyValidator().validateMap(
+      pedagogyPolicy,
+    );
     for (final issue in policyResult.issues) {
       _add(
         issues,
@@ -129,10 +130,9 @@ class MicroFactStartupSuitabilityGateValidator {
       return MicroFactStartupSuitabilityResult(List.unmodifiable(issues));
     }
 
-    final evidenceResult =
-        const StartupPedagogyEvidenceValidator().validateMap(
-          pedagogyEvidence,
-        );
+    final evidenceResult = const StartupPedagogyEvidenceValidator().validateMap(
+      pedagogyEvidence,
+    );
     for (final issue in evidenceResult.issues) {
       _add(
         issues,
@@ -173,8 +173,7 @@ class MicroFactStartupSuitabilityGateValidator {
     }
 
     if (mustPassStatuses.contains(status) &&
-        (review['pedagogyStatus'] != 'pass' ||
-            review['uiStatus'] != 'pass')) {
+        (review['pedagogyStatus'] != 'pass' || review['uiStatus'] != 'pass')) {
       _add(
         issues,
         'ML7_FACT_REVIEW_NOT_PASS',
@@ -240,8 +239,7 @@ class MicroFactStartupSuitabilityGateValidator {
         fullWords > displayRules['maxWords'] as int ||
         fullText.length > displayRules['maxCharacters'] as int ||
         fullSentences > displayRules['maxSentences'] as int ||
-        estimatedReadSeconds >
-            displayRules['maxEstimatedReadSeconds'] as int) {
+        estimatedReadSeconds > displayRules['maxEstimatedReadSeconds'] as int) {
       _add(
         issues,
         'ML7_DISPLAY_TEXT_LIMIT',
@@ -364,7 +362,8 @@ class MicroFactStartupSuitabilityGateValidator {
     }
 
     if (StartupTextMetrics.parentheticalGroupCount(value) >
-        textRules['maxParentheticalGroups'] as int) {
+            textRules['maxParentheticalGroups']
+        as int) {
       _add(
         issues,
         'ML7_PARENTHETICAL_OVERLOAD',
@@ -406,8 +405,8 @@ class MicroFactStartupSuitabilityGateValidator {
         .where((token) => !approvedUppercase.contains(token.toUpperCase()))
         .toSet();
 
-    if (unknownUppercase.length >
-        abbreviationRules['maxUnknownUppercaseTokens'] as int) {
+    if (unknownUppercase.length > abbreviationRules['maxUnknownUppercaseTokens']
+        as int) {
       _add(
         issues,
         'ML7_UNKNOWN_UPPERCASE_JARGON',
