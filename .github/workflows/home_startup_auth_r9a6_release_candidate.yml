@@ -216,10 +216,8 @@ jobs:
 
           actual_cert="$(
             awk '
-              BEGIN { IGNORECASE = 1 }
-              /certificate SHA-256 digest/ {
-                sub(/^.*digest:[[:space:]]*/, "")
-                print
+              tolower($0) ~ /certificate sha-256 digest:/ {
+                print $NF
                 exit
               }
             ' "$RUNNER_TEMP/apksigner.txt" |
@@ -232,6 +230,8 @@ jobs:
               tr '[:lower:]' '[:upper:]'
           )"
 
+          echo "APK_CERT_SHA256=$actual_cert"
+          echo "EXPECTED_CERT_SHA256=$expected_cert"
           test -n "$actual_cert"
           test "$actual_cert" = "$expected_cert"
           echo "APK_SIGNING_CERT_MATCH=true"
