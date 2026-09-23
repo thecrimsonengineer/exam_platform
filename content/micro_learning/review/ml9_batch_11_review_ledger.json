@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_11",
+  "status": "candidate_review",
+  "createdAt": "2026-09-24",
+  "parentBankVersion": "1.0.0",
+  "factCount": 10,
+  "cumulativeCandidateCount": 110,
+  "humanReviewComplete": false,
+  "publicationAllowed": false,
+  "diversificationConstraint": {
+    "explicit": true,
+    "batchAuthorityCounts": {
+      "SRC-04": 4,
+      "SRC-01": 1,
+      "SRC-02": 1,
+      "SRC-13": 1,
+      "SRC-08": 3
+    },
+    "note": "Batch 11 broadens management-system and environmental coverage while keeping the authority mix well below the frozen 40% concentration threshold."
+  },
+  "facts": [
+    {
+      "microFactId": "mf_ml9_078",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-04",
+      "sourceUrl": "https://www.iso.org/standard/19011",
+      "sourceLocator": "What is ISO 19011? and Benefits",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_078_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_079",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-04",
+      "sourceUrl": "https://www.iso.org/standard/45001",
+      "sourceLocator": "What is ISO 45001?",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_079_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_080",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1020",
+      "sourceLocator": "29 CFR 1910.1020(d)(2)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_080_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_081",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/economics/index.html",
+      "sourceLocator": "Overview - assessing the economic value of prevention",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_081_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_082",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-04",
+      "sourceUrl": "https://www.iso.org/standard/45001",
+      "sourceLocator": "Key elements - leadership commitment and worker participation",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_082_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_083",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-13",
+      "sourceUrl": "https://www.assp.org/docs/default-source/psj-articles/cpjunkin_0923.pdf",
+      "sourceLocator": "Structured meetings, project charter, timelines, objectives, and ownership",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_083_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_084",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-04",
+      "sourceUrl": "https://www.iso.org/standard/65694.html",
+      "sourceLocator": "Why is ISO 31000 important? - Strategic Decision-Making",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_084_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_090",
+      "bucket": "environmental",
+      "sourceRegistryId": "SRC-08",
+      "sourceUrl": "https://www.epa.gov/p2/learn-about-pollution-prevention",
+      "sourceLocator": "What is P2? and EPA Waste Management Hierarchy",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_090_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_091",
+      "bucket": "environmental",
+      "sourceRegistryId": "SRC-08",
+      "sourceUrl": "https://www.epa.gov/hwgenerators/frequent-questions-about-implementing-hazardous-waste-generator-improvements-final",
+      "sourceLocator": "Incompatible wastes in satellite accumulation areas",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_091_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_092",
+      "bucket": "environmental",
+      "sourceRegistryId": "SRC-08",
+      "sourceUrl": "https://www.epa.gov/hw/universal-waste",
+      "sourceLocator": "Universal waste program overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_092_v1.json"
+    }
+  ],
+  "requiredHumanReview": [
+    "technical accuracy",
+    "source-to-claim fidelity",
+    "legal-status wording",
+    "curriculum placement",
+    "copyright and independent wording",
+    "startup readability and accessibility",
+    "ML-8 corpus coexistence if a review candidate is raised"
+  ],
+  "gateState": {
+    "sourceProvenancePopulated": true,
+    "candidateLifecycleFailClosed": true,
+    "startupEligibilityGranted": false,
+    "humanTechnicalApprovalGranted": false,
+    "validatedOrPublishedCount": 0
+  }
+}
