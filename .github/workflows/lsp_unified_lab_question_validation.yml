@@ -67,7 +67,6 @@ jobs:
             test/lab_quality/lsp_q11_population_publication_gate_test.dart \
             test/lab_quality/lsp_q12_learner_catalogue_delivery_test.dart \
             test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart \
-            test/lab_quality/lsp_q14_production_population_seed_test.dart \
             test/lab_quality/lsp_q14_production_population_seed_test.dart
 
       - name: Analyze
@@ -175,6 +174,7 @@ jobs:
             test/lab_quality/lsp_q10_manifest_backed_scenario_population_test.dart \
             test/lab_quality/lsp_q11_population_publication_gate_test.dart \
             test/lab_quality/lsp_q12_learner_catalogue_delivery_test.dart \
-            test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
+            test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart \
+            test/lab_quality/lsp_q14_production_population_seed_test.dart
           git commit -m "Format LSP unified question quality files"
           git push origin HEAD:phase-l4-scenario-population
