@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_080",
   "category": "management_insight",
   "display": {
-    "displayText": "OSHA's exposure-record rule permits records to be preserved in different formats as long as required information remains preserved and retrievable.",
-    "shortVariant": "Exposure records may use different formats if required information stays retrievable.",
-    "estimatedReadSeconds": 9
+    "displayText": "OSHA's exposure-record rule permits records to be preserved in different formats as long as the information remains preserved and retrievable.",
+    "shortVariant": "Exposure records may use different formats if the information stays retrievable.",
+    "estimatedReadSeconds": 8
   },
   "curriculum": {
     "scope": "mapped",
