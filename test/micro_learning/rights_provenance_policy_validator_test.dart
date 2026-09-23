@@ -5,8 +5,7 @@ import 'package:exam_platform/services/micro_learning/rights_provenance_policy_v
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const policyPath =
-      'content/micro_learning/rights_provenance_policy_v1.json';
+  const policyPath = 'content/micro_learning/rights_provenance_policy_v1.json';
   const validator = RightsProvenancePolicyValidator();
 
   Map<String, dynamic> loadPolicy() {
@@ -169,26 +168,29 @@ void main() {
     );
   });
 
-  test('licensed excerpt must retain startup and redistribution permission', () {
-    final policy = clonePolicy();
-    final treatments = Map<String, dynamic>.from(
-      policy['rightsTreatments'] as Map,
-    );
-    final licensed = Map<String, dynamic>.from(
-      treatments['licensed_excerpt'] as Map,
-    );
-    licensed['licenseMustPermitStartupDisplay'] = false;
-    treatments['licensed_excerpt'] = licensed;
-    policy['rightsTreatments'] = treatments;
+  test(
+    'licensed excerpt must retain startup and redistribution permission',
+    () {
+      final policy = clonePolicy();
+      final treatments = Map<String, dynamic>.from(
+        policy['rightsTreatments'] as Map,
+      );
+      final licensed = Map<String, dynamic>.from(
+        treatments['licensed_excerpt'] as Map,
+      );
+      licensed['licenseMustPermitStartupDisplay'] = false;
+      treatments['licensed_excerpt'] = licensed;
+      policy['rightsTreatments'] = treatments;
 
-    final result = validator.validateMap(policy);
+      final result = validator.validateMap(policy);
 
-    expect(result.isValid, isFalse);
-    expect(
-      result.issues.map((issue) => issue.code),
-      contains('ML5_POLICY_LICENSED_EXCERPT_WEAKENED'),
-    );
-  });
+      expect(result.isValid, isFalse);
+      expect(
+        result.issues.map((issue) => issue.code),
+        contains('ML5_POLICY_LICENSED_EXCERPT_WEAKENED'),
+      );
+    },
+  );
 
   test('rights evidence freshness window cannot be silently widened', () {
     final policy = clonePolicy();
