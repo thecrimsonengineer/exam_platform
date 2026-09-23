@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_016",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "NIOSH forklift investigations found serious risk to both operators and nearby workers, including crushing during overturns and incidents around loading areas.",
+    "shortVariant": "Forklift risk includes operators, pedestrians, overturns, and loading-area incidents.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c06",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "forklift_hazards",
+      "pedestrian_interaction"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Preventing Injuries and Deaths of Workers Who Operate or Work Near Forklifts",
+    "officialUrl": "https://www.cdc.gov/niosh/docs/2001-109/default.html",
+    "sourceLocator": "NIOSH Alert overview and fatality findings",
+    "editionOrRevision": "DHHS (NIOSH) Publication No. 2001-109",
+    "sourceSection": "About",
+    "sourcePage": null,
+    "sourcePublishedAt": "2001-06-01",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "research_finding",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "forklift_safety",
+    "pedestrian_safety",
+    "materials_handling"
+  ]
+}
