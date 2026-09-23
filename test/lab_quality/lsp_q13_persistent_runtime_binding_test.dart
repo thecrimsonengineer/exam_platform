@@ -182,7 +182,14 @@ void main() {
     }
 
     expect(find.byKey(const ValueKey('lab-scenario-briefing')), findsOneWidget);
-    expect(find.text(catalogueEntry.title), findsOneWidget);
+    expect(find.byKey(const ValueKey('lab-briefing-title')), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('lab-briefing-title')),
+        matching: find.text(catalogueEntry.title),
+      ),
+      findsOneWidget,
+    );
 
     final next = find.byKey(const ValueKey('lab-briefing-continue'));
     await tester.ensureVisible(next);
