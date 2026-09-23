@@ -1,0 +1,128 @@
+name: INT-R9A4 Authorization Chain Regression
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration-auth-hotfix
+    paths:
+      - '.github/workflows/home_startup_auth_r9a4_authorization_chain.yml'
+      - 'test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart'
+      - 'docs/integration/INT_R9A4_AUTHORIZATION_CHAIN_CLOSURE.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: int-r9a4-authorization-chain-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  BASE_FREEZE_SHA: 'b9a8150adaf21a3f43cb2120b5dbfcc0ce119c8a'
+  R9A3_CLOSED_SHA: '71b79c00a8aad52d9d6cc94a70164dc957c50c5c'
+  SUPABASE_URL: 'https://esfycnmfywxczfillioj.supabase.co'
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+
+    steps:
+      - name: Checkout exact R9A4 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify R9A3 ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${BASE_FREEZE_SHA}" HEAD
+          git merge-base --is-ancestor "${R9A3_CLOSED_SHA}" HEAD
+          git diff --check
+
+      - name: Require configured public authorization client
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${SUPABASE_URL:-}"
+          test -n "${SUPABASE_PUBLISHABLE_KEY:-}"
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "Invalid Supabase publishable-key format."; exit 1 ;;
+          esac
+          echo "R9A4 authorization client preflight: PASS"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph remains stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Check R9A4 test formatting
+        run: |
+          dart format --output=none --set-exit-if-changed             test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart
+
+      - name: Run R9A4 end-to-end authorization state regression
+        run: flutter test test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart
+
+      - name: Replay token and remote authorization gate tests
+        run: flutter test test/services/online_access/learner_online_access_gate_test.dart
+
+      - name: Replay session state-machine regressions
+        run: flutter test test/services/online_access/learner_online_access_session_controller_test.dart
+
+      - name: Replay connectivity authorization regressions
+        run: flutter test test/services/online_access/learner_online_connectivity_coordinator_test.dart
+
+      - name: Replay learner shell fail-closed regressions
+        run: flutter test test/screens/auth/learner_authorized_shell_test.dart
+
+      - name: Replay Supabase remote authorization probe tests
+        run: flutter test test/services/supabase/supabase_learner_remote_authorization_probe_test.dart
+
+      - name: Replay FR8 authorization architecture gate
+        run: flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+
+      - name: Write sanitized R9A4 evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "INT-R9A4 Authorization Chain Regression: PASS"
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "R9A3_CLOSED_SHA=${R9A3_CLOSED_SHA}"
+            echo "VALID_TOKEN_REMOTE_APPROVAL_AUTHORIZES=true"
+            echo "MISSING_TOKEN_FAILS_CLOSED=true"
+            echo "REMOTE_REJECTION_FAILS_CLOSED=true"
+            echo "BACKEND_UNAVAILABLE_FAILS_CLOSED=true"
+            echo "RESUME_LOCKS_THEN_FORCE_REFRESHES=true"
+            echo "NETWORK_LOSS_LOCKS=true"
+            echo "NETWORK_RESTORE_FORCE_REAUTHORIZES=true"
+            echo "USER_SWITCH_INVALIDATES_INFLIGHT_AUTHORIZATION=true"
+            echo "PROTECTED_SHELL_HIDDEN_UNTIL_AUTHORIZED=true"
+            echo "SUPABASE_PUBLISHABLE_KEY_CONFIGURED=true"
+            echo "SERVER_SECRET_EMBEDDED=false"
+          } > int-r9a4-authorization-chain-evidence.txt
+
+      - name: Upload R9A4 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: INT-R9A4-authorization-chain-evidence
+          path: int-r9a4-authorization-chain-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
