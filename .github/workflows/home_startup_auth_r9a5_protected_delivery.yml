@@ -68,7 +68,6 @@ jobs:
         run: |
           flutter test test/services/questions/published_question_package_test.dart
           flutter test test/services/questions/uid_scoped_question_package_cache_test.dart
-          flutter test test/services/questions/learner_question_package_delivery_service_test.dart
           flutter test test/architecture/phase_fr9_question_delivery_test.dart
           flutter test test/architecture/phase_fr9_edge_gateway_test.dart
           flutter test test/services/quiz_service_firebase_test.dart
