@@ -2,7 +2,7 @@
 
 ## Status
 
-**IMPLEMENTED / VALIDATION CHECKPOINT**
+**IMPLEMENTED / EXACT-SHA CLOSURE CANDIDATE**
 
 Program: LSP-Q
 
@@ -173,3 +173,12 @@ Those remain later checkpoints.
 ## Next authorized action
 
 LSP-Q9 — Add the scenario population manifest that binds the planned technical LAB package, DQG300 evidence bundle and learner presentation record for each population entry.
+
+
+## Closure candidate
+
+Q8 implementation commit: `09f1e72468c0bf13fe0fca3a91bdca93dc4899ba`
+
+Canonical formatter output commit: `0fcd5466f472b0652bea2b5e9e7a8e0ca207d734`
+
+The formatter commit changes presentation formatting only. This documentation-only closure commit is the exact-SHA validation target for LSP-Q8. No technical LAB mechanics, Decision truth, DQG evidence, Story Gate behavior, source truth, learner runtime, or publication behavior is changed by the closure step.
