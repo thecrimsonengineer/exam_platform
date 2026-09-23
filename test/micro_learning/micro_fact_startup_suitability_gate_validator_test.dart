@@ -27,9 +27,6 @@ void main() {
   Map<String, dynamic> loadJson(String path) =>
       jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
 
-  Map<String, dynamic> cloneMap(Map<String, dynamic> value) =>
-      jsonDecode(jsonEncode(value)) as Map<String, dynamic>;
-
   Map<String, dynamic> loadFact() => loadJson(factPath);
   Map<String, dynamic> loadPedagogyEvidence() => loadJson(pedagogyEvidencePath);
 
