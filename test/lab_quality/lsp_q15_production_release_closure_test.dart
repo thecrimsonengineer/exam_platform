@@ -48,7 +48,8 @@ LabProductionReleaseEvidence _syntheticEvidence() {
     releaseId: 'synthetic_q15_release_v1',
     manifestId: 'phase_l_population_v1',
     manifestFingerprint:
-        kLabProductionManifestFingerprintSchema + ':' + ('a' * 64),
+        kLabProductionManifestFingerprintSchema + ':' +
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     environmentId: 'production_test',
     executedBy: 'q15_test_admin',
     executedAt: DateTime.utc(2026, 9, 24, 6),
@@ -59,7 +60,8 @@ LabProductionReleaseEvidence _syntheticEvidence() {
         labId: 'synthetic_lab',
         versionId: 'v1',
         snapshotFingerprint:
-            LabSnapshotFingerprint.schema + ':' + ('b' * 64),
+            LabSnapshotFingerprint.schema + ':' +
+            'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
         publishedAtIso: DateTime.utc(2026, 9, 24, 5).toIso8601String(),
         decisionCount: 5,
       ),
