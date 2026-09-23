@@ -65,8 +65,10 @@ void main() {
         expect(result.bindingReport.isValid, isTrue);
         expect(result.decisionQualityReport.isValid, isTrue);
         expect(result.lifecycleResult.gateReport.isPublishable, isTrue);
-        expect(result.publishedVersion.validationAuthority,
-            'LSP-Q11-POPULATION-AUTO');
+        expect(
+          result.publishedVersion.validationAuthority,
+          'LSP-Q11-POPULATION-AUTO',
+        );
         expect(result.publishedVersion.qualityEvidenceJson, isNotNull);
         expect(result.publishedVersion.exhaustiveRouteEvidenceJson, isNotNull);
         expect(result.publishedVersion.publishEvidenceJson, isNotNull);
@@ -76,7 +78,10 @@ void main() {
         expect(stored, isNotNull);
 
         final publishedPackage = LabPackage.decode(stored!.publishedJson);
-        expect(publishedPackage.metadata.lifecycle, LabLifecycleStatus.published);
+        expect(
+          publishedPackage.metadata.lifecycle,
+          LabLifecycleStatus.published,
+        );
         expect(publishedPackage.metadata.id, entry.labId);
         expect(publishedPackage.metadata.versionId, entry.versionId);
 
@@ -87,8 +92,9 @@ void main() {
         expect(explicitlyLoaded.metadata.id, entry.labId);
 
         admittedCount++;
-        admittedDecisionCount +=
-            publishedPackage.nodes.whereType<LabDecisionNode>().length;
+        admittedDecisionCount += publishedPackage.nodes
+            .whereType<LabDecisionNode>()
+            .length;
       }
 
       expect(admittedCount, 10);
@@ -122,34 +128,36 @@ void main() {
     expect(await repository.load(entry.labId, entry.versionId), isNull);
   });
 
-  test('Q11 blocks presentation identity drift before repository admission',
-      () async {
-    final manifest = _manifest();
-    final entry = manifest.entries.first;
-    final repository = InMemoryLabPublishedRepository();
-    final gate = LabScenarioPopulationPublicationGate(
-      studio: Lab1000StudioService(repository: repository),
-    );
-    final presentationRoot = _readObject(entry.learnerPresentationPath);
-    presentationRoot['versionId'] = 'v2';
+  test(
+    'Q11 blocks presentation identity drift before repository admission',
+    () async {
+      final manifest = _manifest();
+      final entry = manifest.entries.first;
+      final repository = InMemoryLabPublishedRepository();
+      final gate = LabScenarioPopulationPublicationGate(
+        studio: Lab1000StudioService(repository: repository),
+      );
+      final presentationRoot = _readObject(entry.learnerPresentationPath);
+      presentationRoot['versionId'] = 'v2';
 
-    await expectLater(
-      gate.admit(
-        manifest: manifest,
-        entryId: entry.entryId,
-        technicalRoot: _readObject(entry.technicalLabPath),
-        dqg300Evidence: const LabDqg300EvidenceCodec().decode(
-          File(entry.dqg300EvidencePath).readAsStringSync(),
+      await expectLater(
+        gate.admit(
+          manifest: manifest,
+          entryId: entry.entryId,
+          technicalRoot: _readObject(entry.technicalLabPath),
+          dqg300Evidence: const LabDqg300EvidenceCodec().decode(
+            File(entry.dqg300EvidencePath).readAsStringSync(),
+          ),
+          presentationPackage: LabLearnerPresentationPackage.fromJson(
+            presentationRoot,
+          ),
         ),
-        presentationPackage: LabLearnerPresentationPackage.fromJson(
-          presentationRoot,
-        ),
-      ),
-      throwsA(isA<LabStudioException>()),
-    );
+        throwsA(isA<LabStudioException>()),
+      );
 
-    expect(await repository.load(entry.labId, entry.versionId), isNull);
-  });
+      expect(await repository.load(entry.labId, entry.versionId), isNull);
+    },
+  );
 
   test('Q11 admits only DRAFT manifest-backed source packages', () async {
     final manifest = _manifest();
@@ -180,47 +188,49 @@ void main() {
     expect(await repository.load(entry.labId, entry.versionId), isNull);
   });
 
-  test('Q11 immutable repository admission cannot overwrite a version',
-      () async {
-    final manifest = _manifest();
-    final entry = manifest.entries.first;
-    final repository = InMemoryLabPublishedRepository();
-    final gate = LabScenarioPopulationPublicationGate(
-      studio: Lab1000StudioService(repository: repository),
-    );
-    final technicalRoot = _readObject(entry.technicalLabPath);
-    final evidence = const LabDqg300EvidenceCodec().decode(
-      File(entry.dqg300EvidencePath).readAsStringSync(),
-    );
-    final presentation = LabLearnerPresentationPackage.fromJson(
-      _readObject(entry.learnerPresentationPath),
-    );
+  test(
+    'Q11 immutable repository admission cannot overwrite a version',
+    () async {
+      final manifest = _manifest();
+      final entry = manifest.entries.first;
+      final repository = InMemoryLabPublishedRepository();
+      final gate = LabScenarioPopulationPublicationGate(
+        studio: Lab1000StudioService(repository: repository),
+      );
+      final technicalRoot = _readObject(entry.technicalLabPath);
+      final evidence = const LabDqg300EvidenceCodec().decode(
+        File(entry.dqg300EvidencePath).readAsStringSync(),
+      );
+      final presentation = LabLearnerPresentationPackage.fromJson(
+        _readObject(entry.learnerPresentationPath),
+      );
 
-    final first = await gate.admit(
-      manifest: manifest,
-      entryId: entry.entryId,
-      technicalRoot: technicalRoot,
-      dqg300Evidence: evidence,
-      presentationPackage: presentation,
-      validatedAt: DateTime.utc(2026, 9, 23, 18),
-      publishedAt: DateTime.utc(2026, 9, 23, 18, 1),
-    );
-    final original = await repository.load(entry.labId, entry.versionId);
-
-    await expectLater(
-      gate.admit(
+      final first = await gate.admit(
         manifest: manifest,
         entryId: entry.entryId,
         technicalRoot: technicalRoot,
         dqg300Evidence: evidence,
         presentationPackage: presentation,
-      ),
-      throwsA(isA<LabStudioException>()),
-    );
+        validatedAt: DateTime.utc(2026, 9, 23, 18),
+        publishedAt: DateTime.utc(2026, 9, 23, 18, 1),
+      );
+      final original = await repository.load(entry.labId, entry.versionId);
 
-    final stored = await repository.load(entry.labId, entry.versionId);
-    expect(first.isAdmitted, isTrue);
-    expect(stored!.publishedJson, original!.publishedJson);
-    expect(stored.snapshotFingerprint, original.snapshotFingerprint);
-  });
+      await expectLater(
+        gate.admit(
+          manifest: manifest,
+          entryId: entry.entryId,
+          technicalRoot: technicalRoot,
+          dqg300Evidence: evidence,
+          presentationPackage: presentation,
+        ),
+        throwsA(isA<LabStudioException>()),
+      );
+
+      final stored = await repository.load(entry.labId, entry.versionId);
+      expect(first.isAdmitted, isTrue);
+      expect(stored!.publishedJson, original!.publishedJson);
+      expect(stored.snapshotFingerprint, original.snapshotFingerprint);
+    },
+  );
 }

@@ -115,15 +115,16 @@ class LabScenarioPopulationPublicationGate {
       );
     }
 
-    final lifecycle = await LabAutomatedLifecycleService(
-      studio: studio,
-      validationAuthority: validationAuthority,
-    ).validateAndPublish(
-      workspace: workspace,
-      dqg300Evidence: dqg300Evidence,
-      validatedAt: validatedAt,
-      publishedAt: publishedAt,
-    );
+    final lifecycle =
+        await LabAutomatedLifecycleService(
+          studio: studio,
+          validationAuthority: validationAuthority,
+        ).validateAndPublish(
+          workspace: workspace,
+          dqg300Evidence: dqg300Evidence,
+          validatedAt: validatedAt,
+          publishedAt: publishedAt,
+        );
 
     final stored = await studio.repository.load(entry.labId, entry.versionId);
     if (stored == null) {
