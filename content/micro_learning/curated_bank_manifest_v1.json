@@ -2492,7 +2492,7 @@
       "plannedDomainId": null,
       "plannedCompetencyId": null,
       "state": "candidate_review",
-      "sourceRegistryId": "SRC-01",
+      "sourceRegistryId": "SRC-02",
       "contentVersion": 1,
       "candidatePath": "content/micro_learning/facts/mf_ml9_111_v1.json",
       "reviewEvidence": {
@@ -2624,7 +2624,7 @@
       "plannedDomainId": "d07",
       "plannedCompetencyId": "d07_c03",
       "state": "candidate_review",
-      "sourceRegistryId": "SRC-01",
+      "sourceRegistryId": "SRC-02",
       "contentVersion": 1,
       "candidatePath": "content/micro_learning/facts/mf_ml9_117_v1.json",
       "reviewEvidence": {
