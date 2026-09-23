@@ -35,31 +35,25 @@ void main() {
       },
     );
 
-    test(
-      'missing Firebase token locks without calling remote probe',
-      () async {
-        final tokenProvider = _RecordingTokenProvider(null);
-        final probe = _RecordingProbe(authorized: true);
-        final controller = LearnerOnlineAccessSessionController(
-          validator: LearnerOnlineAccessGate(
-            tokenProvider: tokenProvider,
-            authorizationProbe: probe,
-          ),
-          currentUserId: () => 'user-a',
-        );
-        addTearDown(controller.dispose);
+    test('missing Firebase token locks without calling remote probe', () async {
+      final tokenProvider = _RecordingTokenProvider(null);
+      final probe = _RecordingProbe(authorized: true);
+      final controller = LearnerOnlineAccessSessionController(
+        validator: LearnerOnlineAccessGate(
+          tokenProvider: tokenProvider,
+          authorizationProbe: probe,
+        ),
+        currentUserId: () => 'user-a',
+      );
+      addTearDown(controller.dispose);
 
-        final result = await controller.authorizeCurrentUser();
+      final result = await controller.authorizeCurrentUser();
 
-        expect(result.status, LearnerOnlineSessionStatus.locked);
-        expect(
-          result.lockReason,
-          LearnerOnlineLockReason.noAuthenticatedUser,
-        );
-        expect(controller.isAuthorizedFor('user-a'), isFalse);
-        expect(probe.calls, 0);
-      },
-    );
+      expect(result.status, LearnerOnlineSessionStatus.locked);
+      expect(result.lockReason, LearnerOnlineLockReason.noAuthenticatedUser);
+      expect(controller.isAuthorizedFor('user-a'), isFalse);
+      expect(probe.calls, 0);
+    });
 
     test('remote rejection locks the learner session', () async {
       final controller = LearnerOnlineAccessSessionController(
@@ -93,10 +87,7 @@ void main() {
       final result = await controller.authorizeCurrentUser();
 
       expect(result.status, LearnerOnlineSessionStatus.locked);
-      expect(
-        result.lockReason,
-        LearnerOnlineLockReason.backendUnavailable,
-      );
+      expect(result.lockReason, LearnerOnlineLockReason.backendUnavailable);
       expect(controller.isAuthorizedFor('user-a'), isFalse);
     });
 
