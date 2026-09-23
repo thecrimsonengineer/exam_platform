@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_008",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "ANSI/ASSP fall-protection standards connect program management, system design, training, equipment, rescue, and hazard abatement as parts of a managed fall-protection program.",
+    "shortVariant": "ANSI/ASSP treats fall protection as a managed system, not only equipment.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "fall_protection_program",
+      "managed_fall_protection"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-03",
+    "sourceClass": "consensus_standard",
+    "sourceTitle": "ANSI/ASSP Z359 Fall Protection and Fall Restraint Standards",
+    "officialUrl": "https://www.assp.org/standards/standards-topics/fall-protection-and-fall-restraint-z359",
+    "sourceLocator": "What Are Fall Protection and Fall Restraint Standards",
+    "editionOrRevision": "ANSI/ASSP Z359.1-2024 Fall Protection Code",
+    "sourceSection": "Fall Protection and Fall Restraint overview",
+    "sourcePage": null,
+    "sourcePublishedAt": "2024-01-01",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "consensus_standard",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "fall_protection",
+    "managed_program",
+    "work_at_height"
+  ]
+}
