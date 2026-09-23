@@ -82,26 +82,31 @@ void main() {
       );
       expect(
         source,
-        contains("'Authorization': 'Bearer \\$normalizedToken'"),
+        contains(r"'Authorization': 'Bearer $normalizedToken'"),
       );
       expect(source, contains("return data['authorized'] == true"));
     });
 
-    test('client bootstrap surface contains no privileged Supabase key contract', () {
-      final files = <String>[
-        'lib/services/supabase/supabase_runtime_config.dart',
-        'lib/services/supabase/supabase_bootstrap_service.dart',
-        'lib/services/supabase/supabase_learner_remote_authorization_probe.dart',
-        'lib/services/online_access/learner_online_access_runtime.dart',
-        'lib/main.dart',
-      ];
+    test(
+      'client bootstrap surface contains no privileged Supabase key contract',
+      () {
+        final files = <String>[
+          'lib/services/supabase/supabase_runtime_config.dart',
+          'lib/services/supabase/supabase_bootstrap_service.dart',
+          'lib/services/supabase/supabase_learner_remote_authorization_probe.dart',
+          'lib/services/online_access/learner_online_access_runtime.dart',
+          'lib/main.dart',
+        ];
 
-      final combined = files.map((path) => File(path).readAsStringSync()).join();
+        final combined = files
+            .map((path) => File(path).readAsStringSync())
+            .join();
 
-      expect(combined, isNot(contains('SUPABASE_SECRET_KEY')));
-      expect(combined, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
-      expect(combined, isNot(contains('sb_secret_')));
-      expect(combined, isNot(contains('service_role')));
-    });
+        expect(combined, isNot(contains('SUPABASE_SECRET_KEY')));
+        expect(combined, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
+        expect(combined, isNot(contains('sb_secret_')));
+        expect(combined, isNot(contains('service_role')));
+      },
+    );
   });
 }
