@@ -235,11 +235,11 @@ class MicroFactStartupSuitabilityGateValidator {
       wordsPerMinute,
     );
 
-    if (fullWords < displayRules['minWords'] as int ||
-        fullWords > displayRules['maxWords'] as int ||
-        fullText.length > displayRules['maxCharacters'] as int ||
-        fullSentences > displayRules['maxSentences'] as int ||
-        estimatedReadSeconds > displayRules['maxEstimatedReadSeconds'] as int) {
+    if (fullWords < (displayRules['minWords'] as int) ||
+        fullWords > (displayRules['maxWords'] as int) ||
+        fullText.length > (displayRules['maxCharacters'] as int) ||
+        fullSentences > (displayRules['maxSentences'] as int) ||
+        estimatedReadSeconds > (displayRules['maxEstimatedReadSeconds'] as int)) {
       _add(
         issues,
         'ML7_DISPLAY_TEXT_LIMIT',
@@ -272,11 +272,11 @@ class MicroFactStartupSuitabilityGateValidator {
         wordsPerMinute,
       );
 
-      if (shortWords < shortRules['minWords'] as int ||
-          shortWords > shortRules['maxWords'] as int ||
-          shortText.length > shortRules['maxCharacters'] as int ||
-          shortSentences > shortRules['maxSentences'] as int ||
-          shortSeconds > shortRules['maxComputedReadSeconds'] as int) {
+      if (shortWords < (shortRules['minWords'] as int) ||
+          shortWords > (shortRules['maxWords'] as int) ||
+          shortText.length > (shortRules['maxCharacters'] as int) ||
+          shortSentences > (shortRules['maxSentences'] as int) ||
+          shortSeconds > (shortRules['maxComputedReadSeconds'] as int)) {
         _add(
           issues,
           'ML7_SHORT_VARIANT_LIMIT',
@@ -362,8 +362,7 @@ class MicroFactStartupSuitabilityGateValidator {
     }
 
     if (StartupTextMetrics.parentheticalGroupCount(value) >
-            textRules['maxParentheticalGroups']
-        as int) {
+        (textRules['maxParentheticalGroups'] as int)) {
       _add(
         issues,
         'ML7_PARENTHETICAL_OVERLOAD',
@@ -405,8 +404,8 @@ class MicroFactStartupSuitabilityGateValidator {
         .where((token) => !approvedUppercase.contains(token.toUpperCase()))
         .toSet();
 
-    if (unknownUppercase.length > abbreviationRules['maxUnknownUppercaseTokens']
-        as int) {
+    if (unknownUppercase.length >
+        (abbreviationRules['maxUnknownUppercaseTokens'] as int)) {
       _add(
         issues,
         'ML7_UNKNOWN_UPPERCASE_JARGON',
