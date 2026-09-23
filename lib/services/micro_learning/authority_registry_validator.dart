@@ -266,7 +266,7 @@ class AuthorityRegistryValidator {
       );
     }
 
-    final unexpected = seenIds.difference(requiredAuthorityIds).toList()..sort();
+    final unexpected = seenIds.difference(requiredAuthorityIds).toList()\n      ..sort();
     if (unexpected.isNotEmpty) {
       _add(
         issues,
