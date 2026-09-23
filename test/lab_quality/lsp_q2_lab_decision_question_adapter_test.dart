@@ -21,7 +21,11 @@ void main() {
     final package = _package();
     final node = package.nodes.whereType<LabDecisionNode>().first;
 
-    final draft = adapter.toCanonicalDraft(package: package, node: node, evidence: _evidence);
+    final draft = adapter.toCanonicalDraft(
+      package: package,
+      node: node,
+      evidence: _evidence,
+    );
 
     expect(draft.question, node.prompt);
     expect(draft.options, node.options.map((option) => option.text).toList());

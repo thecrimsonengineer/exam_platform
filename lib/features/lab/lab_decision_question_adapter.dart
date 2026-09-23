@@ -47,11 +47,7 @@ class LabDecisionQuestionAdapter {
     required QuestionQualityEvidence evidence,
   }) {
     return parser.parseQuestion(
-      toCanonicalPayload(
-        package: package,
-        node: node,
-        evidence: evidence,
-      ),
+      toCanonicalPayload(package: package, node: node, evidence: evidence),
     );
   }
 
@@ -131,10 +127,11 @@ class LabDecisionQuestionAdapter {
     required LabDecisionNode node,
     required QuestionQualityEvidence evidence,
   }) {
-    final proofEntries = evidence.keySuperiorityProof.entries
-        .where((entry) => entry.value.trim().isNotEmpty)
-        .toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
+    final proofEntries =
+        evidence.keySuperiorityProof.entries
+            .where((entry) => entry.value.trim().isNotEmpty)
+            .toList()
+          ..sort((a, b) => a.key.compareTo(b.key));
 
     if (proofEntries.isEmpty) {
       throw LabContractException(
