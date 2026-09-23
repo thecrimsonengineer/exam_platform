@@ -38,10 +38,14 @@ jobs:
             lib/services/questions/canonical_question_parser.dart \
             lib/services/studio/studio_question_import_service.dart \
             lib/features/lab/lab_decision_question_adapter.dart \
+            lib/features/lab/lab_canonical_decision_batch_parser.dart \
+            lib/features/lab/lab_h0_3_strict_gate.dart \
             lib/features/lab/lab_dqg300.dart \
             test/services/questions/canonical_question_parser_test.dart \
             test/lab_quality/lsp_q2_lab_decision_question_adapter_test.dart \
-            test/lab_quality/lsp_q3_evidence_backed_rationale_test.dart
+            test/lab_quality/lsp_q3_evidence_backed_rationale_test.dart \
+            test/lab_quality/lsp_q4_canonical_decision_batch_parse_test.dart \
+            test/lab_quality/lsp_q5_strict_h0_3_gate_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -57,6 +61,12 @@ jobs:
 
       - name: Canonical LAB Decision batch parse tests
         run: flutter test test/lab_quality/lsp_q4_canonical_decision_batch_parse_test.dart
+
+      - name: Strict H0.3 LAB gate tests
+        run: flutter test test/lab_quality/lsp_q5_strict_h0_3_gate_test.dart
+
+      - name: Frozen H0.3 validator regression
+        run: flutter test test/services/question_quality_validator_test.dart
 
       - name: DQG300 LAB adapter regression
         run: flutter test test/lab_quality/l4k_dqg300_lab_gate_test.dart
