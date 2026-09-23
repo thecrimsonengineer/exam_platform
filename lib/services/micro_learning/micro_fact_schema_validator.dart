@@ -750,9 +750,7 @@ class MicroFactSchemaValidator {
           'Assessment sensitivity none requires no linked question concepts.',
         );
       }
-      if (sensitivity is String &&
-          sensitivity != 'none' &&
-          linkedCount == 0) {
+      if (sensitivity is String && sensitivity != 'none' && linkedCount == 0) {
         _add(
           issues,
           'ML2_ASSESSMENT_LINK_REQUIRED',
@@ -887,12 +885,7 @@ class MicroFactSchemaValidator {
       return Map<String, dynamic>.from(value);
     }
 
-    _add(
-      issues,
-      'ML2_OBJECT_REQUIRED',
-      path,
-      'A JSON object is required.',
-    );
+    _add(issues, 'ML2_OBJECT_REQUIRED', path, 'A JSON object is required.');
     return null;
   }
 
@@ -947,14 +940,14 @@ class MicroFactSchemaValidator {
     required String code,
     required int maxLength,
   }) {
-    if (value is! String ||
-        value.trim().isEmpty ||
-        value.length > maxLength) {
+    if (value is! String || value.trim().isEmpty || value.length > maxLength) {
       _add(
         issues,
         code,
         path,
-        'A non-empty string up to ' + maxLength.toString() + ' characters is required.',
+        'A non-empty string up to ' +
+            maxLength.toString() +
+            ' characters is required.',
       );
     }
   }
@@ -969,13 +962,7 @@ class MicroFactSchemaValidator {
     if (value == null) {
       return;
     }
-    _requiredString(
-      value,
-      path,
-      issues,
-      code: code,
-      maxLength: maxLength,
-    );
+    _requiredString(value, path, issues, code: code, maxLength: maxLength);
   }
 
   static void _patternString(
@@ -1082,12 +1069,7 @@ class MicroFactSchemaValidator {
       }
 
       if (!seen.add(item)) {
-        _add(
-          issues,
-          code,
-          itemPath,
-          'Duplicate list item is not allowed.',
-        );
+        _add(issues, code, itemPath, 'Duplicate list item is not allowed.');
       }
     }
   }
@@ -1116,8 +1098,35 @@ class MicroFactSchemaValidator {
   }
 
   static DateTime? _dateOrNull(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}
+      return null;
+    }
+
+    final parsed = DateTime.tryParse(value);
+    if (parsed == null) {
+      return null;
+    }
+
+    final normalized =
+        parsed.year.toString().padLeft(4, '0') +
+        '-' +
+        parsed.month.toString().padLeft(2, '0') +
+        '-' +
+        parsed.day.toString().padLeft(2, '0');
+
+    return normalized == value ? parsed : null;
+  }
+
+  static void _add(
+    List<MicroFactSchemaIssue> issues,
+    String code,
+    String path,
+    String message,
+  ) {
+    issues.add(MicroFactSchemaIssue(code: code, path: path, message: message));
+  }
+}
+).hasMatch(value)) {
       return null;
     }
 
