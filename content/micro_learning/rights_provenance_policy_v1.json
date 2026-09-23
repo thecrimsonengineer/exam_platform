@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0",
+  "status": "frozen",
+  "frozenAt": "2026-09-23",
+  "authorityRegistryVersion": "1.0.0",
+  "microFactSchemaVersion": 1,
+  "claimPolicyVersion": "1.0.0",
+  "failClosed": true,
+  "principles": {
+    "aiIsRightsAuthority": false,
+    "publicDomainAssumptionAllowed": false,
+    "fairUseAutoDeterminationAllowed": false,
+    "sourceAvailabilityImpliesReusePermission": false,
+    "citationAloneCreatesReusePermission": false,
+    "preferOriginalParaphrase": true,
+    "requireHumanCopyrightReviewForValidatedOrPublished": true,
+    "requireRightsEvidenceForValidatedOrPublished": true,
+    "rawProtectedSourceStorageInEvidence": false
+  },
+  "authorityRightsTiers": {
+    "government_first_party": [
+      "SRC-01",
+      "SRC-02",
+      "SRC-08",
+      "SRC-09",
+      "SRC-10"
+    ],
+    "rights_sensitive_professional_or_standards": [
+      "SRC-03",
+      "SRC-04",
+      "SRC-05",
+      "SRC-06",
+      "SRC-07",
+      "SRC-11",
+      "SRC-12",
+      "SRC-13",
+      "SRC-14",
+      "SRC-15"
+    ]
+  },
+  "rightsTreatments": {
+    "original_paraphrase": {
+      "directQuoteAllowed": false,
+      "licenseRequired": false,
+      "sourceComparisonRequired": true,
+      "independentWordingRequired": true,
+      "maxLongestVerbatimRunWords": 5,
+      "protectedStructureCopyAllowed": false
+    },
+    "brief_summary": {
+      "directQuoteAllowed": false,
+      "licenseRequired": false,
+      "sourceComparisonRequired": true,
+      "independentWordingRequired": true,
+      "maxLongestVerbatimRunWords": 5,
+      "protectedStructureCopyAllowed": false
+    },
+    "minimal_quote": {
+      "directQuoteAllowed": true,
+      "licenseRequired": false,
+      "sourceComparisonRequired": true,
+      "independentWordingRequired": false,
+      "maxQuoteWordsPerFact": 12,
+      "maxQuoteSegmentsPerFact": 1,
+      "sourceLocationRequired": true,
+      "quoteNecessityRequired": true,
+      "quoteHashRequired": true,
+      "protectedStructureCopyAllowed": false
+    },
+    "licensed_excerpt": {
+      "directQuoteAllowed": true,
+      "licenseRequired": true,
+      "sourceComparisonRequired": true,
+      "independentWordingRequired": false,
+      "sourceLocationRequired": true,
+      "licenseMustPermitStartupDisplay": true,
+      "licenseMustPermitDigitalRedistribution": true,
+      "protectedStructureCopyAllowedOnlyIfExplicitlyLicensed": true
+    }
+  },
+  "lifecycle": {
+    "evidenceRequiredForStatuses": [
+      "validated",
+      "published",
+      "review_due"
+    ],
+    "evidenceMustPassForStatuses": [
+      "validated",
+      "published"
+    ],
+    "startupEligibleRequiresPassingEvidence": true
+  },
+  "prohibitedReuse": {
+    "withoutExplicitLicense": [
+      "table",
+      "figure",
+      "diagram",
+      "chart",
+      "photograph",
+      "standard_clause_block",
+      "exposure_limit_table",
+      "checklist",
+      "question_bank_item",
+      "answer_key",
+      "worked_example",
+      "book_paragraph",
+      "code_or_standard_excerpt_over_minimal_quote_limit"
+    ],
+    "alwaysBlockedInMicroFactEvidence": [
+      "raw_source_document",
+      "full_standard",
+      "full_book_chapter",
+      "paywalled_source_snapshot",
+      "copyrighted_table_image"
+    ]
+  },
+  "evidenceRules": {
+    "evidenceSchemaVersion": 1,
+    "evidenceIdPattern": "^mfre_[a-z0-9][a-z0-9_-]{5,63}$",
+    "reviewerRoleValues": [
+      "copyright_reviewer",
+      "content_governance_reviewer",
+      "legal_or_rights_reviewer"
+    ],
+    "reviewStatusValues": [
+      "pending",
+      "pass",
+      "fail"
+    ],
+    "sha256Pattern": "^[a-f0-9]{64}$",
+    "maxEvidenceAgeDays": 365,
+    "sourceFingerprintFields": [
+      "sourceRegistryId",
+      "officialUrl",
+      "sourceLocator",
+      "editionOrRevision"
+    ]
+  },
+  "rightsSensitiveRules": {
+    "requireEditionOrRevisionWhenAuthorityPolicyIn": [
+      "revision_tracked",
+      "annual_or_revision_check",
+      "publication_specific"
+    ],
+    "minimalQuoteRequiresHumanReview": true,
+    "licensedExcerptRequiresHumanReview": true,
+    "derivativeSimilarityReviewRequired": true
+  },
+  "governmentSourceRules": {
+    "doNotAssumeEntirePagePublicDomain": true,
+    "thirdPartyMaterialMustBeExcludedUnlessSeparatelyCleared": true,
+    "logosSealsAndTrademarksAreNotClearedByDefault": true
+  }
+}
