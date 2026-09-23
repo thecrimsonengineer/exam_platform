@@ -105,25 +105,66 @@ class LabProductionPopulationSeedService {
     final publishedBase =
         (publishedAt ?? validatedBase.add(const Duration(minutes: 1))).toUtc();
 
-    await _populate(
-      manifest: manifest,
-      candidateByEntry: candidateByEntry,
-      publishedRepository: InMemoryLabPublishedRepository(),
-      catalogueRepository: InMemoryLabLearnerCatalogueRepository(),
-      validatedBase: validatedBase,
-      publishedBase: publishedBase,
-    );
-
     await _requirePristineInitialRelease(manifest);
 
+    final preflightPublishedRepository = InMemoryLabPublishedRepository();
+    final preflightCatalogueRepository =
+        InMemoryLabLearnerCatalogueRepository();
     final entries = await _populate(
       manifest: manifest,
       candidateByEntry: candidateByEntry,
-      publishedRepository: publishedRepository,
-      catalogueRepository: catalogueRepository,
+      publishedRepository: preflightPublishedRepository,
+      catalogueRepository: preflightCatalogueRepository,
       validatedBase: validatedBase,
       publishedBase: publishedBase,
     );
+
+    final productionDelivery = LabLearnerControlledDeliveryService(
+      publishedRepository: publishedRepository,
+      catalogueRepository: catalogueRepository,
+    );
+
+    for (final manifestEntry in manifest.entries) {
+      final preflightVersion = await preflightPublishedRepository.load(
+        manifestEntry.labId,
+        manifestEntry.versionId,
+      );
+      final preflightCatalogue = await preflightCatalogueRepository.load(
+        manifestEntry.labId,
+        manifestEntry.versionId,
+      );
+      if (preflightVersion == null || preflightCatalogue == null) {
+        throw LabProductionPopulationSeedException(
+          'Q14 preflight artifacts are incomplete for ' +
+              manifestEntry.identityKey +
+              '.',
+        );
+      }
+
+      await publishedRepository.saveImmutable(preflightVersion);
+      await catalogueRepository.saveImmutable(preflightCatalogue);
+
+      final controlled = await productionDelivery.load(
+        labId: manifestEntry.labId,
+        versionId: manifestEntry.versionId,
+      );
+      final receipt = entries.firstWhere(
+        (item) => item.identityKey == manifestEntry.identityKey,
+      );
+      final decisionCount = controlled.package.nodes
+          .whereType<LabDecisionNode>()
+          .length;
+      if (controlled.package.metadata.id != manifestEntry.labId ||
+          controlled.package.metadata.versionId != manifestEntry.versionId ||
+          controlled.catalogueEntry.manifestEntryId != manifestEntry.entryId ||
+          decisionCount != receipt.decisionCount) {
+        throw LabProductionPopulationSeedException(
+          'Q14 production persistence verification failed for ' +
+              manifestEntry.identityKey +
+              '.',
+        );
+      }
+    }
 
     final verification = await verifyRelease(manifest: manifest);
     return LabProductionPopulationSeedReceipt(
