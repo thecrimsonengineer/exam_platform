@@ -7,6 +7,12 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val csp11AndroidKeystorePath = System.getenv("CSP11_ANDROID_KEYSTORE_PATH")
+val csp11AndroidKeystorePassword = System.getenv("CSP11_ANDROID_KEYSTORE_PASSWORD")
+val csp11AndroidKeyAlias = System.getenv("CSP11_ANDROID_KEY_ALIAS")
+val csp11AndroidKeyPassword = System.getenv("CSP11_ANDROID_KEY_PASSWORD")
+val useExplicitCsp11Signing = !csp11AndroidKeystorePath.isNullOrBlank()
+
 android {
     namespace = "com.example.exam_platform"
     compileSdk = flutter.compileSdkVersion
@@ -28,11 +34,35 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (useExplicitCsp11Signing) {
+            create("csp11Explicit") {
+                storeFile = file(csp11AndroidKeystorePath!!)
+                storePassword =
+                    requireNotNull(csp11AndroidKeystorePassword) {
+                        "CSP11_ANDROID_KEYSTORE_PASSWORD is required when explicit signing is enabled."
+                    }
+                keyAlias =
+                    requireNotNull(csp11AndroidKeyAlias) {
+                        "CSP11_ANDROID_KEY_ALIAS is required when explicit signing is enabled."
+                    }
+                keyPassword =
+                    requireNotNull(csp11AndroidKeyPassword) {
+                        "CSP11_ANDROID_KEY_PASSWORD is required when explicit signing is enabled."
+                    }
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig =
+                if (useExplicitCsp11Signing) {
+                    signingConfigs.getByName("csp11Explicit")
+                } else {
+                    // Local development fallback retained until production store signing is configured.
+                    signingConfigs.getByName("debug")
+                }
         }
     }
 }
