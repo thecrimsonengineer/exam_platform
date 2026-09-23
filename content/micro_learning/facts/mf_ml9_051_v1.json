@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_051",
+  "category": "process_safety_insight",
+  "display": {
+    "displayText": "CCPS management-of-change guidance calls for proposed process changes to be reviewed and authorized before implementation so new hazards or increased risk are identified first.",
+    "shortVariant": "CCPS reviews and authorizes process changes before implementation.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d02",
+    "competencyId": "d02_c05",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "management_of_change",
+      "pre_change_review"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-11",
+    "sourceClass": "process_safety_framework",
+    "sourceTitle": "Introduction to Management of Change",
+    "officialUrl": "https://ccps.aiche.org/introduction-management-change",
+    "sourceLocator": "What Is It - review and authorization before implementation",
+    "editionOrRevision": "CCPS Risk Based Process Safety framework, current web summary",
+    "sourceSection": "What Is It?",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_framework",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "process_safety",
+    "management_of_change",
+    "change_authorization"
+  ]
+}
