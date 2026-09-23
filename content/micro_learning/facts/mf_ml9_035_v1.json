@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_035",
+  "category": "ih_insight",
+  "display": {
+    "displayText": "Biological monitoring can reveal chemical uptake from inhalation, skin, and gastrointestinal routes, so it can complement air sampling when evaluating worker exposure.",
+    "shortVariant": "Biological monitoring can capture exposure routes that air sampling misses.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d06",
+    "competencyId": "d06_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "biological_monitoring",
+      "multiple_exposure_routes"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-06",
+    "sourceClass": "professional_guideline",
+    "sourceTitle": "Biological Exposure Indices Introduction",
+    "officialUrl": "https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/",
+    "sourceLocator": "Biological monitoring purpose and relationship to air monitoring",
+    "editionOrRevision": "2026 ACGIH TLV/BEI guidance, verified September 23, 2026",
+    "sourceSection": "Introduction to the Biological Exposure Indices",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_guideline",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "biological_monitoring",
+    "toxicology",
+    "exposure_routes"
+  ]
+}
