@@ -202,3 +202,20 @@ LSP-Q13 does not:
 ## Next authorized action
 
 LSP-Q14 - Controlled Production Population Seed and Learner Release Verification.
+
+
+## Closure candidate
+
+Q13 persistence core commit: `c65e37a256e01097c9cbf339eab4bbf2ee690752`
+
+Q13 runtime binding commit: `296a642542c9d6c64dff62768cdd9ad6c07cfae7`
+
+Final test-selector repair commit: `7ce7abf4efecfc8cd04b466f45a63b787ea54ebf`
+
+Successful full validation run for that implementation SHA: `35910070215`
+
+Canonical formatter output commit: `b36ad8268e77456d060d76d0b1a8432d85c0d417`
+
+The formatter commit changes formatting in `lab_learner_catalogue.dart` only.
+
+This documentation-only closure commit is the exact-SHA validation target for LSP-Q13. No Firestore schema, Firestore security rule, immutable publication contract, learner catalogue semantics, runtime delivery semantics, learner presentation content, technical LAB package, or player navigation behavior is changed by the closure step.
