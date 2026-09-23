@@ -49,7 +49,8 @@ LabProductionReleaseEvidence _syntheticEvidence() {
     releaseId: 'synthetic_q15_release_v1',
     manifestId: 'phase_l_population_v1',
     manifestFingerprint:
-        kLabProductionManifestFingerprintSchema + ':' +
+        kLabProductionManifestFingerprintSchema +
+        ':' +
         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     environmentId: 'production_test',
     executedBy: 'q15_test_admin',
@@ -61,7 +62,8 @@ LabProductionReleaseEvidence _syntheticEvidence() {
         labId: 'synthetic_lab',
         versionId: 'v1',
         snapshotFingerprint:
-            LabSnapshotFingerprint.schema + ':' +
+            LabSnapshotFingerprint.schema +
+            ':' +
             'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
         publishedAtIso: DateTime.utc(2026, 9, 24, 5).toIso8601String(),
         decisionCount: 5,
@@ -174,96 +176,100 @@ void main() {
     );
   });
 
-  test('Q15 Firestore evidence repository is create-once and round-trips',
-      () async {
-    final firestore = FakeFirebaseFirestore();
-    final repository = FirestoreLabProductionReleaseEvidenceRepository(
-      firestore: firestore,
-    );
-    final evidence = _syntheticEvidence();
+  test(
+    'Q15 Firestore evidence repository is create-once and round-trips',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      final repository = FirestoreLabProductionReleaseEvidenceRepository(
+        firestore: firestore,
+      );
+      final evidence = _syntheticEvidence();
 
-    await repository.saveImmutable(evidence);
-    final loaded = await repository.load(evidence.releaseId);
+      await repository.saveImmutable(evidence);
+      final loaded = await repository.load(evidence.releaseId);
 
-    expect(loaded, isNotNull);
-    expect(loaded!.evidenceFingerprint, evidence.evidenceFingerprint);
-    expect(loaded.q14ClosureSha, kLspQ14ClosedSha);
-    expect(await repository.isReleased(evidence.releaseId), isTrue);
+      expect(loaded, isNotNull);
+      expect(loaded!.evidenceFingerprint, evidence.evidenceFingerprint);
+      expect(loaded.q14ClosureSha, kLspQ14ClosedSha);
+      expect(await repository.isReleased(evidence.releaseId), isTrue);
 
-    final releaseState = await firestore
-        .collection('labLearnerReleaseState')
-        .doc(evidence.releaseId)
-        .get();
-    expect(releaseState.exists, isTrue);
-    expect(releaseState.data()!['released'], isTrue);
-    expect(
-      releaseState.data()!['evidenceFingerprint'],
-      evidence.evidenceFingerprint,
-    );
+      final releaseState = await firestore
+          .collection('labLearnerReleaseState')
+          .doc(evidence.releaseId)
+          .get();
+      expect(releaseState.exists, isTrue);
+      expect(releaseState.data()!['released'], isTrue);
+      expect(
+        releaseState.data()!['evidenceFingerprint'],
+        evidence.evidenceFingerprint,
+      );
 
-    await expectLater(
-      repository.saveImmutable(evidence),
-      throwsA(isA<LabProductionReleaseClosureException>()),
-    );
-  });
+      await expectLater(
+        repository.saveImmutable(evidence),
+        throwsA(isA<LabProductionReleaseClosureException>()),
+      );
+    },
+  );
 
-  test('Q15 runtime blocks catalogue access until release marker exists',
-      () async {
-    final evidenceRepository =
-        InMemoryLabProductionReleaseEvidenceRepository();
-    final binding = LabLearnerRuntimeBinding(
-      deliveryService: LabLearnerControlledDeliveryService(
-        publishedRepository: InMemoryLabPublishedRepository(),
-        catalogueRepository: InMemoryLabLearnerCatalogueRepository(),
-      ),
-      releaseEvidenceRepository: evidenceRepository,
-      requiredReleaseId: _syntheticEvidence().releaseId,
-    );
+  test(
+    'Q15 runtime blocks catalogue access until release marker exists',
+    () async {
+      final evidenceRepository =
+          InMemoryLabProductionReleaseEvidenceRepository();
+      final binding = LabLearnerRuntimeBinding(
+        deliveryService: LabLearnerControlledDeliveryService(
+          publishedRepository: InMemoryLabPublishedRepository(),
+          catalogueRepository: InMemoryLabLearnerCatalogueRepository(),
+        ),
+        releaseEvidenceRepository: evidenceRepository,
+        requiredReleaseId: _syntheticEvidence().releaseId,
+      );
 
-    await expectLater(
-      binding.listAvailable(),
-      throwsA(isA<LabProductionReleaseClosureException>()),
-    );
+      await expectLater(
+        binding.listAvailable(),
+        throwsA(isA<LabProductionReleaseClosureException>()),
+      );
 
-    final evidence = _syntheticEvidence();
-    await evidenceRepository.saveImmutable(evidence);
+      final evidence = _syntheticEvidence();
+      await evidenceRepository.saveImmutable(evidence);
 
-    expect(await evidenceRepository.isReleased(evidence.releaseId), isTrue);
-    expect(await binding.listAvailable(), isEmpty);
-  });
+      expect(await evidenceRepository.isReleased(evidence.releaseId), isTrue);
+      expect(await binding.listAvailable(), isEmpty);
+    },
+  );
 
-  test('Q15 Firestore rules keep release evidence admin-only and immutable', () {
-    final rules = File('firestore.rules').readAsStringSync();
+  test(
+    'Q15 Firestore rules keep release evidence admin-only and immutable',
+    () {
+      final rules = File('firestore.rules').readAsStringSync();
 
-    expect(
-      rules,
-      contains('match /labProductionReleaseEvidence/{releaseId}'),
-    );
-    expect(rules, contains('allow get, list: if isAdmin();'));
-    expect(
-      rules,
-      contains(
-        'allow create: if isAdmin() && validLabProductionRelease(releaseId);',
-      ),
-    );
-    expect(rules, contains('allow update, delete: if false;'));
-    expect(rules, contains(kLspQ14ClosedSha));
-    expect(rules, contains(kLspQ14ClosureValidationRunId));
-    expect(rules, contains("request.resource.data.labCount == 10"));
-    expect(rules, contains("request.resource.data.totalDecisionCount == 50"));
-    expect(
-      rules,
-      contains('match /labLearnerReleaseState/{releaseId}'),
-    );
-    expect(rules, contains('function initialLabPopulationReleased()'));
-    expect(rules, contains('&& initialLabPopulationReleased()'));
+      expect(
+        rules,
+        contains('match /labProductionReleaseEvidence/{releaseId}'),
+      );
+      expect(rules, contains('allow get, list: if isAdmin();'));
+      expect(
+        rules,
+        contains(
+          'allow create: if isAdmin() && validLabProductionRelease(releaseId);',
+        ),
+      );
+      expect(rules, contains('allow update, delete: if false;'));
+      expect(rules, contains(kLspQ14ClosedSha));
+      expect(rules, contains(kLspQ14ClosureValidationRunId));
+      expect(rules, contains("request.resource.data.labCount == 10"));
+      expect(rules, contains("request.resource.data.totalDecisionCount == 50"));
+      expect(rules, contains('match /labLearnerReleaseState/{releaseId}'));
+      expect(rules, contains('function initialLabPopulationReleased()'));
+      expect(rules, contains('&& initialLabPopulationReleased()'));
 
-    final screen = File(
-      'lib/screens/lab/lab_library_screen.dart',
-    ).readAsStringSync();
-    expect(
-      screen,
-      contains('LabLearnerRuntimeBinding.firestoreProduction()'),
-    );
-  });
+      final screen = File(
+        'lib/screens/lab/lab_library_screen.dart',
+      ).readAsStringSync();
+      expect(
+        screen,
+        contains('LabLearnerRuntimeBinding.firestoreProduction()'),
+      );
+    },
+  );
 }

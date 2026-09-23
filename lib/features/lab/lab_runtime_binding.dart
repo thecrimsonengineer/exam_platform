@@ -40,9 +40,7 @@ class LabLearnerRuntimeBinding {
         ),
       ),
       releaseEvidenceRepository:
-          FirestoreLabProductionReleaseEvidenceRepository(
-            firestore: instance,
-          ),
+          FirestoreLabProductionReleaseEvidenceRepository(firestore: instance),
       requiredReleaseId: releaseId,
     );
   }

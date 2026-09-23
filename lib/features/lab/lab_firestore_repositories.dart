@@ -321,7 +321,6 @@ class FirestoreLabLearnerCatalogueRepository
   }
 }
 
-
 class FirestoreLabProductionReleaseEvidenceRepository
     implements LabProductionReleaseEvidenceRepository {
   FirestoreLabProductionReleaseEvidenceRepository({
@@ -345,9 +344,7 @@ class FirestoreLabProductionReleaseEvidenceRepository
 
     await _firestore.runTransaction((transaction) async {
       final existing = await transaction.get(reference);
-      final existingReleaseState = await transaction.get(
-        releaseStateReference,
-      );
+      final existingReleaseState = await transaction.get(releaseStateReference);
       if (existing.exists || existingReleaseState.exists) {
         throw const LabProductionReleaseClosureException(
           'Q15 production release evidence is immutable and already exists.',
@@ -384,8 +381,7 @@ class FirestoreLabProductionReleaseEvidenceRepository
       );
     }
 
-    final payload = Map<String, Object?>.from(data)
-      ..remove('serverCreatedAt');
+    final payload = Map<String, Object?>.from(data)..remove('serverCreatedAt');
     final evidence = LabProductionReleaseEvidence.fromJson(payload);
     if (evidence.releaseId != releaseId) {
       throw const LabProductionReleaseClosureException(

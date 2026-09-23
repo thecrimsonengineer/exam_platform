@@ -9,8 +9,7 @@ import 'lab_scenario_population_manifest.dart';
 import 'lab_snapshot_fingerprint.dart';
 import 'lab_studio.dart';
 
-const String kLspQ14ClosedSha =
-    '5beee3db89a43267a4cc5b2956b117a344afe648';
+const String kLspQ14ClosedSha = '5beee3db89a43267a4cc5b2956b117a344afe648';
 const String kLspQ14ClosureValidationRunId = '35918656487';
 const String kInitialLabProductionReleaseId =
     'phase_l_population_v1_q15_release_v1';
@@ -118,8 +117,9 @@ class LabProductionReleaseEvidence {
          catalogueIdentityKeys.toList()..sort(),
        ),
        entries = List<LabProductionReleaseEntryEvidence>.unmodifiable(
-         entries.toList()
-           ..sort((left, right) => left.identityKey.compareTo(right.identityKey)),
+         entries.toList()..sort(
+           (left, right) => left.identityKey.compareTo(right.identityKey),
+         ),
        ) {
     LabIds.requireCanonical(releaseId, 'Q15 production release ID');
     LabIds.requireCanonical(manifestId, 'Q15 production manifest ID');
@@ -150,15 +150,13 @@ class LabProductionReleaseEvidence {
               (total, item) => total + item.decisionCount,
             ) !=
             totalDecisionCount ||
-        !this
-            .entries
+        !this.entries
             .map((item) => item.identityKey)
             .toSet()
             .containsAll(this.catalogueIdentityKeys) ||
-        !this
-            .catalogueIdentityKeys
-            .toSet()
-            .containsAll(this.entries.map((item) => item.identityKey))) {
+        !this.catalogueIdentityKeys.toSet().containsAll(
+          this.entries.map((item) => item.identityKey),
+        )) {
       throw const LabProductionReleaseClosureException(
         'Q15 closure evidence does not form a complete release set.',
       );
@@ -410,25 +408,25 @@ class LabProductionReleaseClosureService {
   static String releaseIdFor(LabScenarioPopulationManifest manifest) =>
       manifest.manifestId + '_q15_release_v1';
 
-  static String manifestFingerprintFor(
-    LabScenarioPopulationManifest manifest,
-  ) {
-    final entries = manifest.entries
-        .map(
-          (entry) => <String, Object?>{
-            'entryId': entry.entryId,
-            'labId': entry.labId,
-            'versionId': entry.versionId,
-            'technicalLabPath': entry.technicalLabPath,
-            'dqg300EvidencePath': entry.dqg300EvidencePath,
-            'learnerPresentationPath': entry.learnerPresentationPath,
-          },
-        )
-        .toList()
-      ..sort(
-        (left, right) =>
-            left['entryId'].toString().compareTo(right['entryId'].toString()),
-      );
+  static String manifestFingerprintFor(LabScenarioPopulationManifest manifest) {
+    final entries =
+        manifest.entries
+            .map(
+              (entry) => <String, Object?>{
+                'entryId': entry.entryId,
+                'labId': entry.labId,
+                'versionId': entry.versionId,
+                'technicalLabPath': entry.technicalLabPath,
+                'dqg300EvidencePath': entry.dqg300EvidencePath,
+                'learnerPresentationPath': entry.learnerPresentationPath,
+              },
+            )
+            .toList()
+          ..sort(
+            (left, right) => left['entryId'].toString().compareTo(
+              right['entryId'].toString(),
+            ),
+          );
 
     final payload = <String, Object?>{
       'schemaVersion': manifest.schemaVersion,
@@ -459,10 +457,7 @@ class LabProductionReleaseClosureService {
 
     final entries = await _collectEntryEvidence(manifest);
     if (q14Verification.totalDecisionCount !=
-            entries.fold<int>(
-              0,
-              (total, item) => total + item.decisionCount,
-            ) ||
+            entries.fold<int>(0, (total, item) => total + item.decisionCount) ||
         q14Verification.catalogueIdentityKeys.length != entries.length) {
       throw const LabProductionReleaseClosureException(
         'Q15 live release reconstruction does not match Q14 verification.',
