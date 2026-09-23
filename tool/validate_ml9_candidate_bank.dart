@@ -382,7 +382,7 @@ void _validateStartupText(
   }
 
   final allowedQuestionCategories =
-      (fullRules['allowQuestionMarkForCategories'] as List?)
+      (textRules['allowQuestionMarkForCategories'] as List?)
           ?.whereType<String>()
           .toSet() ??
       const <String>{};
