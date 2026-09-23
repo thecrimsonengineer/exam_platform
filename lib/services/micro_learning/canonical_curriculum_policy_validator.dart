@@ -163,9 +163,7 @@ class CanonicalCurriculumPolicyValidator {
     _validateEvidenceRules(policy['evidenceRules'], issues);
     _validateDriftRules(policy['driftRules'], issues);
 
-    return CanonicalCurriculumPolicyValidationResult(
-      List.unmodifiable(issues),
-    );
+    return CanonicalCurriculumPolicyValidationResult(List.unmodifiable(issues));
   }
 
   void _validateBlueprint(
@@ -423,10 +421,11 @@ class CanonicalCurriculumPolicyValidator {
       issues,
     );
 
-    if (!_sameSet(
-          _stringSet(map['allowedRegistryStatuses']),
-          const {'active', 'deprecated', 'retired'},
-        ) ||
+    if (!_sameSet(_stringSet(map['allowedRegistryStatuses']), const {
+          'active',
+          'deprecated',
+          'retired',
+        }) ||
         !_sameSet(_stringSet(map['selectableStatuses']), const {'active'})) {
       _add(
         issues,
@@ -474,10 +473,10 @@ class CanonicalCurriculumPolicyValidator {
         map['exactBlueprintVersionRequired'] != true ||
         !_sameSet(_stringSet(map['reviewStatusValues']), reviewStatuses) ||
         !_sameSet(_stringSet(map['reviewerRoleValues']), reviewerRoles) ||
-        !_sameSet(
-          _stringSet(map['evidenceMustPassForStatuses']),
-          const {'validated', 'published'},
-        )) {
+        !_sameSet(_stringSet(map['evidenceMustPassForStatuses']), const {
+          'validated',
+          'published',
+        })) {
       _add(
         issues,
         'ML6_POLICY_EVIDENCE_RULE_WEAKENED',
@@ -586,11 +585,7 @@ class CanonicalCurriculumPolicyValidator {
     String message,
   ) {
     issues.add(
-      CanonicalCurriculumPolicyIssue(
-        code: code,
-        path: path,
-        message: message,
-      ),
+      CanonicalCurriculumPolicyIssue(code: code, path: path, message: message),
     );
   }
 }
