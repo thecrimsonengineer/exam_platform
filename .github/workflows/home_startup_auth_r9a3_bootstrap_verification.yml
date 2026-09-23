@@ -1,0 +1,151 @@
+name: INT-R9A3 Supabase Bootstrap Verification
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration-auth-hotfix
+    paths:
+      - '.github/workflows/home_startup_auth_r9a3_bootstrap_verification.yml'
+      - 'test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart'
+      - 'docs/integration/INT_R9A3_SUPABASE_BOOTSTRAP_VERIFICATION.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: int-r9a3-supabase-bootstrap-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  BASE_FREEZE_SHA: 'b9a8150adaf21a3f43cb2120b5dbfcc0ce119c8a'
+  R9A2_CLOSED_SHA: '479fb4c48605c2fdbba18022ab1e3c7a27aba854'
+  SUPABASE_URL: 'https://esfycnmfywxczfillioj.supabase.co'
+  FIREBASE_AUTH_PROBE_URL: 'https://esfycnmfywxczfillioj.supabase.co/functions/v1/firebase-auth-probe'
+
+jobs:
+  verify-bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+
+    steps:
+      - name: Checkout exact R9A3 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify R9A2 ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${BASE_FREEZE_SHA}" HEAD
+          git merge-base --is-ancestor "${R9A2_CLOSED_SHA}" HEAD
+          git diff --check
+
+      - name: Require public runtime configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${SUPABASE_URL:-}"
+          test -n "${SUPABASE_PUBLISHABLE_KEY:-}"
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "Invalid Supabase publishable-key format."; exit 1 ;;
+          esac
+          echo "R9A3 public runtime configuration preflight: PASS"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph remains stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Prove configured bootstrap contract
+        run: |
+          flutter test \
+            --dart-define=SUPABASE_URL="${SUPABASE_URL}" \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY}" \
+            test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
+
+      - name: Prove missing-config bootstrap remains fail-closed
+        run: flutter test test/services/supabase/supabase_bootstrap_service_test.dart
+
+      - name: Prove remote authorization probe contract
+        run: flutter test test/services/supabase/supabase_learner_remote_authorization_probe_test.dart
+
+      - name: Prove deployed Firebase auth probe is reachable and fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          no_token_json="$RUNNER_TEMP/r9a3-no-token.json"
+          malformed_json="$RUNNER_TEMP/r9a3-malformed-token.json"
+
+          no_token_status="$(
+            curl --silent --show-error \
+              --output "$no_token_json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              "${FIREBASE_AUTH_PROBE_URL}"
+          )"
+          test "$no_token_status" = "401"
+          grep -q '"authorized":false' "$no_token_json"
+          grep -q '"error":"missing_bearer_token"' "$no_token_json"
+
+          malformed_status="$(
+            curl --silent --show-error \
+              --output "$malformed_json" \
+              --write-out "%{http_code}" \
+              --request POST \
+              --header "Content-Type: application/json" \
+              --header "Authorization: Bearer not-a-valid-firebase-token" \
+              "${FIREBASE_AUTH_PROBE_URL}"
+          )"
+          test "$malformed_status" = "401"
+          grep -q '"authorized":false' "$malformed_json"
+          grep -q '"error":"invalid_firebase_token"' "$malformed_json"
+
+          echo "R9A3 deployed Firebase auth probe fail-closed smoke: PASS"
+
+      - name: Write sanitized R9A3 evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "INT-R9A3 Supabase Bootstrap Verification: PASS"
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "BASE_FREEZE_SHA=${BASE_FREEZE_SHA}"
+            echo "R9A2_CLOSED_SHA=${R9A2_CLOSED_SHA}"
+            echo "SUPABASE_URL_CONFIGURED=true"
+            echo "SUPABASE_PUBLISHABLE_KEY_CONFIGURED=true"
+            echo "STARTUP_ORDER_FIREBASE_BEFORE_SUPABASE=true"
+            echo "SUPABASE_BOOTSTRAP_USES_FIREBASE_ID_TOKEN=true"
+            echo "LEARNER_RUNTIME_FAILS_CLOSED_WHEN_UNINITIALIZED=true"
+            echo "FIREBASE_AUTH_PROBE_REACHABLE=true"
+            echo "FIREBASE_AUTH_PROBE_REJECTS_MISSING_TOKEN=true"
+            echo "FIREBASE_AUTH_PROBE_REJECTS_MALFORMED_TOKEN=true"
+            echo "SERVER_SECRET_EMBEDDED=false"
+          } > int-r9a3-bootstrap-evidence.txt
+
+      - name: Upload R9A3 bootstrap evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: INT-R9A3-supabase-bootstrap-evidence
+          path: int-r9a3-bootstrap-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
