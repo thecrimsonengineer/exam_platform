@@ -16,10 +16,8 @@ void main() {
       'test/fixtures/micro_learning/polarity_conflict_micro_fact_v1.json';
   const legalPath =
       'test/fixtures/micro_learning/legal_status_conflict_micro_fact_v1.json';
-  const noise90Path =
-      'test/fixtures/micro_learning/numeric_fact_90dba_v1.json';
-  const noise85Path =
-      'test/fixtures/micro_learning/numeric_fact_85dba_v1.json';
+  const noise90Path = 'test/fixtures/micro_learning/numeric_fact_90dba_v1.json';
+  const noise85Path = 'test/fixtures/micro_learning/numeric_fact_85dba_v1.json';
 
   const comparison = MicroFactCorpusComparison();
 
@@ -40,7 +38,10 @@ void main() {
       normalization,
     );
 
-    expect(tokens, containsAll(['control', 'must', 'not', 'removed', 'machine']));
+    expect(
+      tokens,
+      containsAll(['control', 'must', 'not', 'removed', 'machine']),
+    );
     expect(tokens, isNot(contains('the')));
     expect(tokens, isNot(contains('from')));
   });
@@ -102,26 +103,32 @@ void main() {
     expect(result.signals, contains('polarity_conflict'));
   });
 
-  test('legal-status disagreement on same concept creates review candidate', () {
-    final result = comparison.compare(
-      left: load(basePath),
-      right: load(legalPath),
-      policy: load(policyPath),
-    );
+  test(
+    'legal-status disagreement on same concept creates review candidate',
+    () {
+      final result = comparison.compare(
+        left: load(basePath),
+        right: load(legalPath),
+        policy: load(policyPath),
+      );
 
-    expect(result.signals, contains('legal_status_conflict'));
-  });
+      expect(result.signals, contains('legal_status_conflict'));
+    },
+  );
 
-  test('different numeric values in the same unit create conflict candidate', () {
-    final result = comparison.compare(
-      left: load(noise90Path),
-      right: load(noise85Path),
-      policy: load(policyPath),
-    );
+  test(
+    'different numeric values in the same unit create conflict candidate',
+    () {
+      final result = comparison.compare(
+        left: load(noise90Path),
+        right: load(noise85Path),
+        policy: load(policyPath),
+      );
 
-    expect(result.signals, contains('numerical_conflict'));
-    expect(result.signals, contains('same_source_locator_overlap'));
-  });
+      expect(result.signals, contains('numerical_conflict'));
+      expect(result.signals, contains('same_source_locator_overlap'));
+    },
+  );
 
   test('same numeric value does not create numerical conflict', () {
     final left = load(noise90Path);
@@ -162,21 +169,24 @@ void main() {
     expect(result.signals, isNot(contains('numerical_conflict')));
   });
 
-  test('edition change on same source locator creates edition-drift candidate', () {
-    final left = load(basePath);
-    final right = clone(load(nearPath));
-    final provenance = Map<String, dynamic>.from(right['provenance'] as Map);
-    provenance['editionOrRevision'] = '29 CFR 1910.147 revised';
-    right['provenance'] = provenance;
+  test(
+    'edition change on same source locator creates edition-drift candidate',
+    () {
+      final left = load(basePath);
+      final right = clone(load(nearPath));
+      final provenance = Map<String, dynamic>.from(right['provenance'] as Map);
+      provenance['editionOrRevision'] = '29 CFR 1910.147 revised';
+      right['provenance'] = provenance;
 
-    final result = comparison.compare(
-      left: left,
-      right: right,
-      policy: load(policyPath),
-    );
+      final result = comparison.compare(
+        left: left,
+        right: right,
+        policy: load(policyPath),
+      );
 
-    expect(result.signals, contains('edition_drift'));
-  });
+      expect(result.signals, contains('edition_drift'));
+    },
+  );
 
   test('pair key is canonical regardless of input order', () {
     final left = load(basePath);
@@ -188,19 +198,22 @@ void main() {
     );
   });
 
-  test('comparison fingerprint changes when comparison-relevant text changes', () {
-    final left = load(basePath);
-    final changed = clone(left);
-    final display = Map<String, dynamic>.from(changed['display'] as Map);
-    display['displayText'] =
-        'Changed wording about hazardous energy during servicing.';
-    changed['display'] = display;
+  test(
+    'comparison fingerprint changes when comparison-relevant text changes',
+    () {
+      final left = load(basePath);
+      final changed = clone(left);
+      final display = Map<String, dynamic>.from(changed['display'] as Map);
+      display['displayText'] =
+          'Changed wording about hazardous energy during servicing.';
+      changed['display'] = display;
 
-    expect(
-      MicroFactCorpusComparison.comparisonFingerprint(left),
-      isNot(MicroFactCorpusComparison.comparisonFingerprint(changed)),
-    );
-  });
+      expect(
+        MicroFactCorpusComparison.comparisonFingerprint(left),
+        isNot(MicroFactCorpusComparison.comparisonFingerprint(changed)),
+      );
+    },
+  );
 
   test('numeric signatures normalize equivalent unit spellings', () {
     final fact = load(noise90Path);
