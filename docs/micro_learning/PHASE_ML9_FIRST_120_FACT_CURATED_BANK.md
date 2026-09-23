@@ -1,0 +1,235 @@
+# CSP11 Phase ML-9 - First 120-Fact Curated Bank
+
+Status: IN PROGRESS  
+Parent: `docs/micro_learning/PHASE_ML8_DUPLICATE_CONTRADICTION_DETECTION.md`  
+Branch: `phase-ml9-first-120-fact-curated-bank`  
+Parent recovery point: `cad3cd44983ba5385704b552ae476cb01ac9e938`
+
+## Purpose
+
+ML-9 creates the first production MicroFact corpus for CSP11.
+
+The target is 120 authoritative, startup-suitable facts. The number is not a permission to lower quality. A weak fact remains unpublishable even when a bucket is under target.
+
+ML-9 inherits every ML-0 through ML-8 invariant.
+
+## Non-negotiable boundary
+
+AI may draft candidate wording and metadata.
+
+AI is never a source and may not self-certify human review.
+
+A candidate drafted in ML-9 begins fail-closed:
+
+```text
+status = review
+runtime.startupEligible = false
+review channels = pending
+```
+
+Promotion to `validated` or `published` requires the evidence and human-review contracts already frozen in ML-5, ML-6, ML-7 and ML-8.
+
+## Curated distribution
+
+The initial planning distribution is exactly 120 slots:
+
+| Bucket | Count | MicroFact category |
+|---|---:|---|
+| Occupational safety | 25 | safety_insight |
+| Industrial hygiene | 20 | ih_insight |
+| Process safety | 15 | process_safety_insight |
+| Fire / electrical | 12 | fire_electrical_insight |
+| Management systems | 12 | management_insight |
+| Environmental | 10 | environmental_insight |
+| Emergency management | 8 | emergency_insight |
+| Transportation / fleet | 6 | transport_insight |
+| CSP reasoning | 6 | csp_tip |
+| Evidence-based learning | 6 | learning_tip |
+
+These are planning buckets. They do not override source fitness, curriculum truth, ML-8 duplicate detection, or human review.
+
+## Curriculum mapping rule
+
+The frozen ML-6 curriculum registry currently provides authoritative domain and competency identities.
+
+The topic/subtopic navigation registry is not populated for MicroFact use.
+
+Therefore ML-9 may:
+
+- map a fact to an authoritative domain and competency;
+- leave topicId and subtopicId null;
+- use general scope where a fact is genuinely cross-curriculum;
+- never invent a topic or subtopic ID.
+
+Mapped facts still require ML-6 human mapping evidence before validation or publication.
+
+## Production workflow
+
+ML-9 runs in six controlled stages.
+
+### ML-9A - Bank contract and 120-slot manifest
+
+Freeze:
+
+- target count;
+- bucket allocation;
+- stable planned IDs;
+- candidate lifecycle behavior;
+- publication exit criteria;
+- batch size;
+- review boundary.
+
+### ML-9B - Candidate authoring
+
+Author candidates in batches of 10.
+
+Every candidate must have:
+
+- one approved ML-1 authority;
+- first-party HTTPS provenance;
+- source class permitted for that authority;
+- independent wording;
+- a single startup-scale teaching point;
+- CSP curriculum placement or justified general scope;
+- legal-status metadata;
+- assessment-sensitivity metadata;
+- at least two tags.
+
+Candidate facts remain non-startup and non-published.
+
+### ML-9C - Gate evidence
+
+For candidates selected for release, build and validate:
+
+- ML-5 rights evidence;
+- ML-6 curriculum evidence for mapped facts;
+- ML-7 pedagogy and accessibility evidence.
+
+Human-review flags remain false until a real reviewer completes the review.
+
+### ML-9D - Whole-corpus ML-8 pass
+
+After every accepted batch:
+
+- run exact duplicate detection;
+- run near-duplicate detection;
+- run polarity conflict detection;
+- run legal-status conflict detection;
+- run numerical conflict detection;
+- run edition-drift detection;
+- inspect concentration signals.
+
+Any ML-8 review candidate must be human-adjudicated before publication.
+
+### ML-9E - Human review
+
+A real reviewer must complete the applicable technical, source, curriculum, rights, pedagogy and accessibility checks.
+
+ML-9 tooling must never generate a fake human approval.
+
+### ML-9F - Publication freeze
+
+ML-9 closes only when:
+
+- exactly 120 production facts are accepted;
+- all 120 are published;
+- all 120 are startup eligible;
+- all required review channels pass;
+- all evidence bindings match current content;
+- ML-8 whole-corpus validation has no unresolved issue;
+- source verification is current;
+- the exact closing SHA is recorded and frozen.
+
+## Authoring batches
+
+The frozen batch size is 10.
+
+The expected sequence is:
+
+```text
+candidate batch
+  -> ML-1..ML-7 individual gates
+  -> ML-8 whole-corpus comparison
+  -> human review/evidence
+  -> accepted batch freeze
+  -> next batch
+```
+
+The corpus is rechecked as a whole. A fact that was distinct in batch 1 may become a duplicate when batch 7 is added.
+
+## Stable identities
+
+The initial manifest reserves:
+
+```text
+mf_ml9_001
+...
+mf_ml9_120
+```
+
+A reserved slot is not itself a MicroFact and is not publishable content.
+
+If a candidate is rejected, the slot may receive rewritten content under the same planned identity only before publication. Once a MicroFact identity is published, normal contentVersion and supersession rules apply.
+
+## Source use
+
+Only the frozen ML-1 Authority Registry is eligible.
+
+Source selection is claim-driven. No authority receives a quota merely for visual balance.
+
+ML-8 concentration signals remain visible so the bank does not accidentally become a one-source echo chamber.
+
+## Copyright
+
+Original paraphrase remains the preferred treatment.
+
+ML-9 must not populate the bank by copying:
+
+- standards clauses;
+- tables;
+- diagrams;
+- checklists;
+- question-bank material;
+- answer keys;
+- book paragraphs;
+- paywalled source text.
+
+Rights-sensitive professional and standards sources retain the ML-5 human-review requirement.
+
+## Numerical claims
+
+Numerical claims are allowed only when the exact source locator and context support them.
+
+They receive enhanced review under ML-4 and remain subject to ML-8 numeric-conflict detection.
+
+A safer non-numerical fact is preferable to a decontextualized number.
+
+## Current state
+
+ML-9A begins with:
+
+- dedicated branch created from the exact ML-8 closed SHA;
+- frozen curated-bank policy;
+- 120-slot manifest;
+- no production fact marked as human-reviewed;
+- no startup eligibility granted by ML-9A.
+
+## Exit criteria
+
+- [x] ML-9 branch created from exact ML-8 closure.
+- [x] 120-slot distribution frozen.
+- [x] Stable planned MicroFact IDs reserved.
+- [x] Candidate lifecycle boundary frozen.
+- [x] No invented topic/subtopic mapping allowed.
+- [x] Human-review boundary preserved.
+- [x] Release requires whole-corpus ML-8 pass.
+- [ ] 120 candidate facts authored.
+- [ ] Individual ML-1 through ML-7 gates passed as applicable.
+- [ ] ML-8 corpus candidates adjudicated.
+- [ ] Required human reviews completed.
+- [ ] 120 facts published and startup eligible.
+- [ ] Exact closing SHA frozen.
+
+## Next action
+
+ML-9B - author the first 10 production candidates and run them through the individual ML-1 through ML-7 gates plus the whole-corpus ML-8 detector.
