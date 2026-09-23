@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_04",
+  "status": "candidate_review",
+  "createdAt": "2026-09-23",
+  "parentBankVersion": "1.0.0",
+  "factCount": 10,
+  "cumulativeCandidateCount": 40,
+  "humanReviewComplete": false,
+  "publicationAllowed": false,
+  "facts": [
+    {
+      "microFactId": "mf_ml9_005",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.178",
+      "sourceLocator": "29 CFR 1910.178(l)(1)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_005_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_030",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/engcontrols/directory/index.html",
+      "sourceLocator": "Engineering Controls - What to know and About",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_030_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_049",
+      "bucket": "process_safety",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+      "sourceLocator": "29 CFR 1910.119(i)(1)-(2)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_049_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_064",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.303",
+      "sourceLocator": "29 CFR 1910.303(g)(2)(i)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_064_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_076",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/safety-management/program-evaluation",
+      "sourceLocator": "Program Evaluation and Improvement overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_076_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_088",
+      "bucket": "environmental",
+      "sourceRegistryId": "SRC-08",
+      "sourceUrl": "https://www.epa.gov/hwgenerators/frequent-questions-about-hazardous-waste-generation",
+      "sourceLocator": "Satellite accumulation area labeling requirements under 40 CFR 262.15(a)(5)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_088_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_098",
+      "bucket": "emergency_management",
+      "sourceRegistryId": "SRC-10",
+      "sourceUrl": "https://www.usfa.fema.gov/a-z/nims/national-qualification-system.html",
+      "sourceLocator": "National Qualification System overview and key tasks",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_098_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_106",
+      "bucket": "transportation_fleet",
+      "sourceRegistryId": "SRC-09",
+      "sourceUrl": "https://www.fmcsa.dot.gov/ourroads/distracted-driving",
+      "sourceLocator": "Stay focused distracted-driving guidance",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_106_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_111",
+      "bucket": "csp_reasoning",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/incident-investigation",
+      "sourceLocator": "Root causes and systems approach overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_111_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_117",
+      "bucket": "evidence_based_learning",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/safety-management/education-training",
+      "sourceLocator": "Education and Training worker comprehension and feedback guidance",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_117_v1.json"
+    }
+  ],
+  "requiredHumanReview": [
+    "technical accuracy",
+    "source-to-claim fidelity",
+    "legal-status wording",
+    "curriculum placement",
+    "copyright and independent wording",
+    "startup readability and accessibility",
+    "ML-8 corpus coexistence if a review candidate is raised"
+  ],
+  "gateState": {
+    "sourceProvenancePopulated": true,
+    "candidateLifecycleFailClosed": true,
+    "startupEligibilityGranted": false,
+    "humanTechnicalApprovalGranted": false,
+    "validatedOrPublishedCount": 0
+  }
+}
