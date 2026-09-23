@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "mfpe_loto_control_0001",
+  "microFactId": "mf_loto_control_0001",
+  "contentVersion": 1,
+  "pedagogyPolicyVersion": "1.0.0",
+  "contentFingerprint": {
+    "displayTextSha256": "4580288f99f0559ca3f6f2a8bcf70d69873c0fe8b651c09d9fda50c38f9c45e0",
+    "shortVariantSha256": "c03da1794014a471032c3fbd90ea04e8db6621e696a79d422b60dc2f00c6d6c7",
+    "estimatedReadSeconds": 8
+  },
+  "metrics": {
+    "displayWordCount": 17,
+    "displaySentenceCount": 1,
+    "computedDisplayReadSeconds": 7,
+    "shortWordCount": 8,
+    "shortSentenceCount": 1,
+    "computedShortReadSeconds": 4
+  },
+  "pedagogyReview": {
+    "status": "pass",
+    "reviewerRole": "content_governance_reviewer",
+    "humanReviewed": true,
+    "singleConceptConfirmed": true,
+    "standaloneMeaningConfirmed": true,
+    "cognitiveLoadAcceptable": true,
+    "jargonLoadAcceptable": true,
+    "shortVariantMeaningPreserved": true,
+    "precisionPreserved": true,
+    "assessmentLeakageReviewed": true,
+    "reviewedAt": "2026-09-23",
+    "nextReviewDueAt": "2026-12-22"
+  },
+  "accessibilityReview": {
+    "status": "pass",
+    "reviewerRole": "content_governance_reviewer",
+    "humanReviewed": true,
+    "screenReaderStandaloneConfirmed": true,
+    "visualIndependenceConfirmed": true,
+    "reducedMotionEquivalentConfirmed": true,
+    "plainLanguageAccessibleConfirmed": true,
+    "noForcedInteractionConfirmed": true,
+    "reviewedAt": "2026-09-23",
+    "nextReviewDueAt": "2026-12-22"
+  }
+}
