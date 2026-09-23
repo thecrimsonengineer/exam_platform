@@ -271,7 +271,7 @@ void main() {
     final fingerprint = Map<String, dynamic>.from(
       evidence['contentFingerprint'] as Map,
     );
-    fingerprint['displayTextSha256'] = 'a' * 64;
+    fingerprint['displayTextSha256'] = List.filled(64, 'a').join();
     evidence['contentFingerprint'] = fingerprint;
 
     final result = validate(loadFact(), pedagogyEvidence: evidence);
