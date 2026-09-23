@@ -52,9 +52,7 @@ class LabProductionReleaseVerification {
     required this.manifestId,
     required Iterable<String> catalogueIdentityKeys,
     required this.totalDecisionCount,
-  }) : catalogueIdentityKeys = List<String>.unmodifiable(
-         catalogueIdentityKeys,
-       );
+  }) : catalogueIdentityKeys = List<String>.unmodifiable(catalogueIdentityKeys);
 
   final String manifestId;
   final List<String> catalogueIdentityKeys;
@@ -300,8 +298,7 @@ class LabProductionPopulationSeedService {
 
   Future<List<LabProductionSeedEntryReceipt>> _populate({
     required LabScenarioPopulationManifest manifest,
-    required Map<String, LabProductionPopulationSeedCandidate>
-    candidateByEntry,
+    required Map<String, LabProductionPopulationSeedCandidate> candidateByEntry,
     required LabPublishedRepository publishedRepository,
     required LabLearnerCatalogueRepository catalogueRepository,
     required DateTime validatedBase,

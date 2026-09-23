@@ -60,10 +60,14 @@ void main() {
 
       expect(receipt.manifestId, 'phase_l_population_v1');
       expect(receipt.entries, hasLength(10));
-      expect(receipt.entries.map((entry) => entry.identityKey).toSet(),
-          manifest.entries.map((entry) => entry.identityKey).toSet());
-      expect(receipt.entries.every((entry) => entry.snapshotFingerprint.isNotEmpty),
-          isTrue);
+      expect(
+        receipt.entries.map((entry) => entry.identityKey).toSet(),
+        manifest.entries.map((entry) => entry.identityKey).toSet(),
+      );
+      expect(
+        receipt.entries.every((entry) => entry.snapshotFingerprint.isNotEmpty),
+        isTrue,
+      );
       expect(receipt.verification.catalogueIdentityKeys, hasLength(10));
       expect(receipt.verification.totalDecisionCount, 50);
       expect(await catalogue.listAvailable(), hasLength(10));
@@ -109,10 +113,12 @@ void main() {
           validatedAt: DateTime.utc(2026, 9, 24, 2),
           publishedAt: DateTime.utc(2026, 9, 24, 2, 10),
         ),
-        throwsA(anyOf(
-          isA<LabStudioException>(),
-          isA<LabProductionPopulationSeedException>(),
-        )),
+        throwsA(
+          anyOf(
+            isA<LabStudioException>(),
+            isA<LabProductionPopulationSeedException>(),
+          ),
+        ),
       );
 
       expect(await catalogue.listAvailable(), isEmpty);
@@ -129,49 +135,51 @@ void main() {
     },
   );
 
-  test('Q14 initial seed is one-shot and never overwrites released versions',
-      () async {
-    final manifest = _manifest();
-    final published = InMemoryLabPublishedRepository();
-    final catalogue = InMemoryLabLearnerCatalogueRepository();
-    final service = LabProductionPopulationSeedService(
-      publishedRepository: published,
-      catalogueRepository: catalogue,
-    );
-    final candidates = _candidates(manifest);
+  test(
+    'Q14 initial seed is one-shot and never overwrites released versions',
+    () async {
+      final manifest = _manifest();
+      final published = InMemoryLabPublishedRepository();
+      final catalogue = InMemoryLabLearnerCatalogueRepository();
+      final service = LabProductionPopulationSeedService(
+        publishedRepository: published,
+        catalogueRepository: catalogue,
+      );
+      final candidates = _candidates(manifest);
 
-    final first = await service.seedAndVerify(
-      manifest: manifest,
-      candidates: candidates,
-      validatedAt: DateTime.utc(2026, 9, 24, 3),
-      publishedAt: DateTime.utc(2026, 9, 24, 3, 10),
-    );
-    final original = await published.load(
-      manifest.entries.first.labId,
-      manifest.entries.first.versionId,
-    );
-
-    await expectLater(
-      service.seedAndVerify(
+      final first = await service.seedAndVerify(
         manifest: manifest,
         candidates: candidates,
-        validatedAt: DateTime.utc(2026, 9, 24, 4),
-        publishedAt: DateTime.utc(2026, 9, 24, 4, 10),
-      ),
-      throwsA(isA<LabProductionPopulationSeedException>()),
-    );
+        validatedAt: DateTime.utc(2026, 9, 24, 3),
+        publishedAt: DateTime.utc(2026, 9, 24, 3, 10),
+      );
+      final original = await published.load(
+        manifest.entries.first.labId,
+        manifest.entries.first.versionId,
+      );
 
-    final stored = await published.load(
-      manifest.entries.first.labId,
-      manifest.entries.first.versionId,
-    );
-    expect(first.entries, hasLength(10));
-    expect(await catalogue.listAvailable(), hasLength(10));
-    expect(stored!.publishedJson, original!.publishedJson);
-    expect(stored.snapshotFingerprint, original.snapshotFingerprint);
+      await expectLater(
+        service.seedAndVerify(
+          manifest: manifest,
+          candidates: candidates,
+          validatedAt: DateTime.utc(2026, 9, 24, 4),
+          publishedAt: DateTime.utc(2026, 9, 24, 4, 10),
+        ),
+        throwsA(isA<LabProductionPopulationSeedException>()),
+      );
 
-    final verification = await service.verifyRelease(manifest: manifest);
-    expect(verification.catalogueIdentityKeys, hasLength(10));
-    expect(verification.totalDecisionCount, 50);
-  });
+      final stored = await published.load(
+        manifest.entries.first.labId,
+        manifest.entries.first.versionId,
+      );
+      expect(first.entries, hasLength(10));
+      expect(await catalogue.listAvailable(), hasLength(10));
+      expect(stored!.publishedJson, original!.publishedJson);
+      expect(stored.snapshotFingerprint, original.snapshotFingerprint);
+
+      final verification = await service.verifyRelease(manifest: manifest);
+      expect(verification.catalogueIdentityKeys, hasLength(10));
+      expect(verification.totalDecisionCount, 50);
+    },
+  );
 }
