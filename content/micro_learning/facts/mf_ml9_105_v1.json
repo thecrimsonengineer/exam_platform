@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_105",
+  "category": "transport_insight",
+  "display": {
+    "displayText": "FMCSA guidance explains systematic vehicle maintenance as a regular or scheduled program designed to keep commercial vehicles in safe operating condition.",
+    "shortVariant": "Systematic maintenance uses regular schedules to keep vehicles safely operable.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c05",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "vehicle_maintenance",
+      "systematic_inspection"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-09",
+    "sourceClass": "enforcement_or_compliance_guidance",
+    "sourceTitle": "What is meant by systematic inspection, repair, and maintenance?",
+    "officialUrl": "https://www.fmcsa.dot.gov/safety/question-1-what-meant-systematic-inspection-repair-and-maintenance",
+    "sourceLocator": "Section 396.3 Guidance Q&A, Question 1",
+    "editionOrRevision": "Guidance issued April 4, 1997",
+    "sourceSection": "396.3 Guidance Q&A",
+    "sourcePage": null,
+    "sourcePublishedAt": "1997-04-04",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "nonbinding_guidance",
+    "jurisdiction": "US Federal DOT / FMCSA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "fleet_safety",
+    "vehicle_maintenance",
+    "systematic_inspection"
+  ]
+}
