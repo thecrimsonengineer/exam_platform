@@ -269,10 +269,9 @@ class StartupPedagogyPolicyValidator {
         map['estimatedReadSecondsTolerance'] != 2 ||
         map['maxParentheticalGroups'] != 1 ||
         map['maxConsecutivePunctuationMarks'] != 1 ||
-        !_sameSet(
-          _stringSet(map['allowQuestionMarkForCategories']),
-          const {'think_about_it'},
-        )) {
+        !_sameSet(_stringSet(map['allowQuestionMarkForCategories']), const {
+          'think_about_it',
+        })) {
       _add(
         issues,
         'ML7_POLICY_TEXT_METRIC_RULES_WEAKENED',
@@ -431,10 +430,10 @@ class StartupPedagogyPolicyValidator {
       issues,
     );
 
-    if (!_sameSet(
-          _stringSet(map['blockedStartupSensitivities']),
-          const {'high', 'block_during_linked_assessment'},
-        ) ||
+    if (!_sameSet(_stringSet(map['blockedStartupSensitivities']), const {
+          'high',
+          'block_during_linked_assessment',
+        }) ||
         map['answerKeyLanguageAllowed'] != false ||
         map['exactQuestionAnswerDisclosureAllowed'] != false ||
         map['assessmentReviewRequired'] != true) {
@@ -550,14 +549,15 @@ class StartupPedagogyPolicyValidator {
         map['sha256Pattern'] != r'^[a-f0-9]{64}$' ||
         map['maxEvidenceAgeDays'] != 365 ||
         map['exactContentFingerprintRequired'] != true ||
-        !_sameSet(
-          _stringSet(map['requiredForStartupEligibleStatuses']),
-          const {'validated', 'published', 'review_due'},
-        ) ||
-        !_sameSet(
-          _stringSet(map['mustPassForStartupEligibleStatuses']),
-          const {'validated', 'published'},
-        ) ||
+        !_sameSet(_stringSet(map['requiredForStartupEligibleStatuses']), const {
+          'validated',
+          'published',
+          'review_due',
+        }) ||
+        !_sameSet(_stringSet(map['mustPassForStartupEligibleStatuses']), const {
+          'validated',
+          'published',
+        }) ||
         !_sameSet(
           _stringSet(map['pedagogyReviewerRoles']),
           pedagogyReviewerRoles,
@@ -566,10 +566,7 @@ class StartupPedagogyPolicyValidator {
           _stringSet(map['accessibilityReviewerRoles']),
           accessibilityReviewerRoles,
         ) ||
-        !_sameSet(
-          _stringSet(map['reviewStatusValues']),
-          reviewStatuses,
-        )) {
+        !_sameSet(_stringSet(map['reviewStatusValues']), reviewStatuses)) {
       _add(
         issues,
         'ML7_POLICY_EVIDENCE_RULES_WEAKENED',
@@ -683,11 +680,7 @@ class StartupPedagogyPolicyValidator {
     String message,
   ) {
     issues.add(
-      StartupPedagogyPolicyIssue(
-        code: code,
-        path: path,
-        message: message,
-      ),
+      StartupPedagogyPolicyIssue(code: code, path: path, message: message),
     );
   }
 }
