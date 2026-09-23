@@ -58,10 +58,9 @@ class MicroFactCurriculumGateValidator {
       );
     }
 
-    final policyResult =
-        const CanonicalCurriculumPolicyValidator().validateMap(
-          curriculumPolicy,
-        );
+    final policyResult = const CanonicalCurriculumPolicyValidator().validateMap(
+      curriculumPolicy,
+    );
     for (final issue in policyResult.issues) {
       _add(
         issues,
@@ -71,10 +70,8 @@ class MicroFactCurriculumGateValidator {
       );
     }
 
-    final registryResult =
-        const CanonicalCurriculumRegistryValidator().validateMap(
-          curriculumRegistry,
-        );
+    final registryResult = const CanonicalCurriculumRegistryValidator()
+        .validateMap(curriculumRegistry);
     for (final issue in registryResult.issues) {
       _add(
         issues,
@@ -141,10 +138,8 @@ class MicroFactCurriculumGateValidator {
       return MicroFactCurriculumGateResult(List.unmodifiable(issues));
     }
 
-    final evidenceResult =
-        const CurriculumMappingEvidenceValidator().validateMap(
-          curriculumEvidence,
-        );
+    final evidenceResult = const CurriculumMappingEvidenceValidator()
+        .validateMap(curriculumEvidence);
     for (final issue in evidenceResult.issues) {
       _add(
         issues,
@@ -482,10 +477,7 @@ class MicroFactCurriculumGateValidator {
     }
   }
 
-  static bool _competencyBelongsToDomain(
-    String domainId,
-    String competencyId,
-  ) {
+  static bool _competencyBelongsToDomain(String domainId, String competencyId) {
     return competenciesForDomain(
       domainId,
     ).any((competency) => competency.id == competencyId);
@@ -522,8 +514,32 @@ class MicroFactCurriculumGateValidator {
   }
 
   static DateTime? _parseStrictDate(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}
+      return null;
+    }
+    final parsed = DateTime.tryParse(value);
+    if (parsed == null) return null;
+    final normalized =
+        parsed.year.toString().padLeft(4, '0') +
+        '-' +
+        parsed.month.toString().padLeft(2, '0') +
+        '-' +
+        parsed.day.toString().padLeft(2, '0');
+    return normalized == value ? parsed : null;
+  }
+
+  static void _add(
+    List<MicroFactCurriculumGateIssue> issues,
+    String code,
+    String path,
+    String message,
+  ) {
+    issues.add(
+      MicroFactCurriculumGateIssue(code: code, path: path, message: message),
+    );
+  }
+}
+).hasMatch(value)) {
       return null;
     }
     final parsed = DateTime.tryParse(value);
