@@ -133,8 +133,7 @@ class CorpusComparisonEvidenceValidator {
       if (typed.length != signals.length ||
           typed.toSet().length != typed.length ||
           typed.any(
-            (signal) => !DuplicateContradictionPolicyValidator
-                .comparisonSignals
+            (signal) => !DuplicateContradictionPolicyValidator.comparisonSignals
                 .contains(signal),
           )) {
         _add(
@@ -169,9 +168,7 @@ class CorpusComparisonEvidenceValidator {
       _validateReview(review, issues);
     }
 
-    return CorpusComparisonEvidenceValidationResult(
-      List.unmodifiable(issues),
-    );
+    return CorpusComparisonEvidenceValidationResult(List.unmodifiable(issues));
   }
 
   void _validateFactRef(
@@ -181,11 +178,7 @@ class CorpusComparisonEvidenceValidator {
   ) {
     _exactKeys(
       ref,
-      const {
-        'microFactId',
-        'contentVersion',
-        'comparisonFingerprintSha256',
-      },
+      const {'microFactId', 'contentVersion', 'comparisonFingerprintSha256'},
       path,
       issues,
     );
@@ -347,8 +340,7 @@ class CorpusComparisonEvidenceValidator {
   }
 
   static DateTime? _parseStrictDate(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return null;
     }
     final parsed = DateTime.tryParse(value);
@@ -396,11 +388,7 @@ class CorpusComparisonEvidenceValidator {
     String message,
   ) {
     issues.add(
-      CorpusComparisonEvidenceIssue(
-        code: code,
-        path: path,
-        message: message,
-      ),
+      CorpusComparisonEvidenceIssue(code: code, path: path, message: message),
     );
   }
 }
