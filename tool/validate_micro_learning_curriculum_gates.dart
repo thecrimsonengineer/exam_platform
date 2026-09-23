@@ -61,20 +61,17 @@ Future<void> main(List<String> args) async {
 
   if (exitCode != 0) return;
 
-  final policyResult =
-      const CanonicalCurriculumPolicyValidator().validateMap(
-        curriculumPolicy,
-      );
+  final policyResult = const CanonicalCurriculumPolicyValidator().validateMap(
+    curriculumPolicy,
+  );
   if (!policyResult.isValid) {
     _printIssues('ML-6 curriculum policy', policyResult.issues);
     exitCode = 1;
     return;
   }
 
-  final productionRegistryResult =
-      const CanonicalCurriculumRegistryValidator().validateMap(
-        productionRegistry,
-      );
+  final productionRegistryResult = const CanonicalCurriculumRegistryValidator()
+      .validateMap(productionRegistry);
   if (!productionRegistryResult.isValid) {
     _printIssues(
       'ML-6 production navigation registry',
@@ -84,23 +81,17 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  final testRegistryResult =
-      const CanonicalCurriculumRegistryValidator().validateMap(
-        testRegistry,
-      );
+  final testRegistryResult = const CanonicalCurriculumRegistryValidator()
+      .validateMap(testRegistry);
   if (!testRegistryResult.isValid) {
-    _printIssues(
-      'ML-6 test navigation registry',
-      testRegistryResult.issues,
-    );
+    _printIssues('ML-6 test navigation registry', testRegistryResult.issues);
     exitCode = 1;
     return;
   }
 
-  final evidenceResult =
-      const CurriculumMappingEvidenceValidator().validateMap(
-        mappingEvidence,
-      );
+  final evidenceResult = const CurriculumMappingEvidenceValidator().validateMap(
+    mappingEvidence,
+  );
   if (!evidenceResult.isValid) {
     _printIssues('ML-6 mapping evidence', evidenceResult.issues);
     exitCode = 1;
