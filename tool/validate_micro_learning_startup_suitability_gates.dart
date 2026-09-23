@@ -56,26 +56,26 @@ Future<void> main(List<String> args) async {
 
   if (exitCode != 0) return;
 
-  final policyResult =
-      const StartupPedagogyPolicyValidator().validateMap(pedagogyPolicy);
+  final policyResult = const StartupPedagogyPolicyValidator().validateMap(
+    pedagogyPolicy,
+  );
   if (!policyResult.isValid) {
     _printIssues('ML-7 startup pedagogy policy', policyResult.issues);
     exitCode = 1;
     return;
   }
 
-  final evidenceResult =
-      const StartupPedagogyEvidenceValidator().validateMap(
-        pedagogyEvidence,
-      );
+  final evidenceResult = const StartupPedagogyEvidenceValidator().validateMap(
+    pedagogyEvidence,
+  );
   if (!evidenceResult.isValid) {
     _printIssues('ML-7 startup pedagogy evidence', evidenceResult.issues);
     exitCode = 1;
     return;
   }
 
-  final gateResult =
-      const MicroFactStartupSuitabilityGateValidator().validateMaps(
+  final gateResult = const MicroFactStartupSuitabilityGateValidator()
+      .validateMaps(
         microFact: fact,
         authorityRegistry: authority,
         claimPolicy: claimPolicy,
@@ -97,14 +97,17 @@ Future<void> main(List<String> args) async {
   final display = Map<String, dynamic>.from(fact['display'] as Map);
   final shortVariant = display['shortVariant'] as String;
 
-  stdout.writeln('ML-7 STARTUP PEDAGOGY / READABILITY / ACCESSIBILITY GATES VALID');
+  stdout.writeln(
+    'ML-7 STARTUP PEDAGOGY / READABILITY / ACCESSIBILITY GATES VALID',
+  );
   stdout.writeln(
     'Policy version: ' + StartupPedagogyPolicyValidator.requiredPolicyVersion,
   );
   stdout.writeln(
     'Display words: ' +
-        StartupTextMetrics.wordCount(display['displayText'] as String)
-            .toString(),
+        StartupTextMetrics.wordCount(
+          display['displayText'] as String,
+        ).toString(),
   );
   stdout.writeln(
     'Short words: ' + StartupTextMetrics.wordCount(shortVariant).toString(),
