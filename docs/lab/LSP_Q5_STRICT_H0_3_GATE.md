@@ -2,7 +2,7 @@
 
 ## Status
 
-**IMPLEMENTED / VALIDATION CHECKPOINT**
+**IMPLEMENTED / EXACT-SHA CLOSURE CANDIDATE**
 
 Program: LSP-Q
 
@@ -130,3 +130,14 @@ LSP-Q5 does not:
 ## Next authorized action
 
 LSP-Q6 — Combine canonical parse + strict H0.3 + DQG300 into one Decision-quality gate.
+
+
+## Closure candidate
+
+Q5 implementation commit: `9c48fe0bfd8d90270bc0466dcb5f8df7df97b937`
+
+CI formatter-staging hardening commit: `89c3295a471750aa1d37101b8b59654eb926bcf6`
+
+Canonical formatter output commit: `924e570ff114da879260167577d5ffa46afd3d6a`
+
+The formatter commit changes presentation formatting only. This documentation-only closure commit is the exact-SHA validation target for LSP-Q5. No runtime, validator, publication, learner, or evidence behavior is changed by the closure step.
