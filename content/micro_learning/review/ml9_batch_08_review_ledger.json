@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_08",
+  "status": "candidate_review",
+  "createdAt": "2026-09-23",
+  "parentBankVersion": "1.0.0",
+  "factCount": 10,
+  "cumulativeCandidateCount": 80,
+  "humanReviewComplete": false,
+  "publicationAllowed": false,
+  "diversificationConstraint": {
+    "explicit": true,
+    "batchAuthorityCounts": {
+      "SRC-02": 4,
+      "SRC-06": 3,
+      "SRC-07": 2,
+      "SRC-12": 1
+    },
+    "newAuthoritiesIntroduced": [
+      "SRC-06",
+      "SRC-12"
+    ]
+  },
+  "facts": [
+    {
+      "microFactId": "mf_ml9_033",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-07",
+      "sourceUrl": "https://www.aiha.org/public-resources/healthierworkplaces/workplace-hazards/apps-and-tools-resource-center/aiha-risk-assessment-tools/ihstat-multi-language-version",
+      "sourceLocator": "IHSTAT exposure statistics and goodness-of-fit overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_033_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_034",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/publications/numbered/2014-118.html",
+      "sourceLocator": "About - full-shift and task-specific exposure sampling",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_034_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_035",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-06",
+      "sourceUrl": "https://www.acgih.org/science/tlv-bei-guidelines/biological-exposure-indices-bei-introduction/",
+      "sourceLocator": "Biological monitoring purpose and relationship to air monitoring",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_035_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_036",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-12",
+      "sourceUrl": "https://www.nsc.org/workplace/safety-topics/fatigue/fatigue-reports",
+      "sourceLocator": "Managing Fatigue - fatigue risk management system components",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_036_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_037",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-07",
+      "sourceUrl": "https://www.aiha.org/public-resources/healthierworkplaces/workplace-hazards/apps-and-tools-resource-center/aiha-risk-assessment-tools",
+      "sourceLocator": "Sample Strategies Industrial Hygiene Modeler",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_037_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_038",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-06",
+      "sourceUrl": "https://www.acgih.org/industrial-ventilation-learning/",
+      "sourceLocator": "Fundamentals in Industrial Ventilation - evaluation, troubleshooting, and testing",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_038_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_039",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/publications/numbered/2017-100.html",
+      "sourceLocator": "Policy overview - risk-management limits for carcinogens",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_039_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_040",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/ergonomics/ergo-programs/risk-factors.html",
+      "sourceLocator": "Use checklists to screen for risks - observation and worker interviews",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_040_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_041",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/noise/surveillance/",
+      "sourceLocator": "Surveillance - use of hearing and exposure data",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_041_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_042",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-06",
+      "sourceUrl": "https://www.acgih.org/science/tlv-bei-guidelines/tlv-physical-agents-introduction/",
+      "sourceLocator": "Physical agents measurement and evaluation principles",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_042_v1.json"
+    }
+  ],
+  "requiredHumanReview": [
+    "technical accuracy",
+    "source-to-claim fidelity",
+    "legal-status wording",
+    "curriculum placement",
+    "copyright and independent wording",
+    "startup readability and accessibility",
+    "ML-8 corpus coexistence if a review candidate is raised"
+  ],
+  "gateState": {
+    "sourceProvenancePopulated": true,
+    "candidateLifecycleFailClosed": true,
+    "startupEligibilityGranted": false,
+    "humanTechnicalApprovalGranted": false,
+    "validatedOrPublishedCount": 0
+  }
+}
