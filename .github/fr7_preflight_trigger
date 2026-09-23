@@ -1,3 +1,4 @@
 FR7 read-only production preflight trigger
 retry=2
 publish_retry=1
+publish_batch=missing_12_20260923
