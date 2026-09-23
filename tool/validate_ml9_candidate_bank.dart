@@ -8,12 +8,9 @@ import 'package:exam_platform/services/micro_learning/micro_fact_source_gate_val
 import 'package:exam_platform/services/micro_learning/startup_text_metrics.dart';
 
 Future<void> main() async {
-  const manifestPath =
-      'content/micro_learning/curated_bank_manifest_v1.json';
-  const bankPolicyPath =
-      'content/micro_learning/curated_bank_policy_v1.json';
-  const authorityPath =
-      'content/micro_learning/authority_registry_v1.json';
+  const manifestPath = 'content/micro_learning/curated_bank_manifest_v1.json';
+  const bankPolicyPath = 'content/micro_learning/curated_bank_policy_v1.json';
+  const authorityPath = 'content/micro_learning/authority_registry_v1.json';
   const claimPolicyPath =
       'content/micro_learning/claim_semantics_policy_v1.json';
   const duplicatePolicyPath =
@@ -126,12 +123,7 @@ Future<void> main() async {
 
       _validateCandidateLifecycle(fact, issues);
       _validateSchema(fact, candidatePath, issues);
-      _validateSource(
-        fact,
-        candidatePath,
-        authorityRegistry,
-        issues,
-      );
+      _validateSource(fact, candidatePath, authorityRegistry, issues);
       _validateClaim(
         fact,
         candidatePath,
@@ -139,12 +131,7 @@ Future<void> main() async {
         claimPolicy,
         issues,
       );
-      _validateStartupText(
-        fact,
-        candidatePath,
-        startupPolicy,
-        issues,
-      );
+      _validateStartupText(fact, candidatePath, startupPolicy, issues);
 
       facts.add(fact);
     }
@@ -290,16 +277,17 @@ void _validateStartupText(
   final estimated = display['estimatedReadSeconds'] as int;
 
   final textRules = Map<String, dynamic>.from(policy['textRules'] as Map);
-  final fullRules =
-      Map<String, dynamic>.from(textRules['displayText'] as Map);
-  final shortRules =
-      Map<String, dynamic>.from(textRules['shortVariant'] as Map);
-  final plain =
-      Map<String, dynamic>.from(policy['plainTextRules'] as Map);
-  final abbreviation =
-      Map<String, dynamic>.from(policy['abbreviationRules'] as Map);
-  final visual =
-      Map<String, dynamic>.from(policy['visualIndependenceRules'] as Map);
+  final fullRules = Map<String, dynamic>.from(textRules['displayText'] as Map);
+  final shortRules = Map<String, dynamic>.from(
+    textRules['shortVariant'] as Map,
+  );
+  final plain = Map<String, dynamic>.from(policy['plainTextRules'] as Map);
+  final abbreviation = Map<String, dynamic>.from(
+    policy['abbreviationRules'] as Map,
+  );
+  final visual = Map<String, dynamic>.from(
+    policy['visualIndependenceRules'] as Map,
+  );
 
   final wpm = textRules['nominalReadingWordsPerMinute'] as int;
   final tolerance = textRules['estimatedReadSecondsTolerance'] as int;
@@ -347,12 +335,10 @@ void _validateStartupText(
       StartupTextMetrics.hasNewline(combined)) {
     issues.add('ML7_TEXT_NEWLINE $path');
   }
-  if (plain['tabsAllowed'] == false &&
-      StartupTextMetrics.hasTab(combined)) {
+  if (plain['tabsAllowed'] == false && StartupTextMetrics.hasTab(combined)) {
     issues.add('ML7_TEXT_TAB $path');
   }
-  if (plain['htmlAllowed'] == false &&
-      StartupTextMetrics.hasHtml(combined)) {
+  if (plain['htmlAllowed'] == false && StartupTextMetrics.hasHtml(combined)) {
     issues.add('ML7_TEXT_HTML $path');
   }
   if (plain['markdownLinksAllowed'] == false &&
@@ -363,8 +349,7 @@ void _validateStartupText(
       StartupTextMetrics.hasRawUrl(combined)) {
     issues.add('ML7_TEXT_RAW_URL $path');
   }
-  if (plain['emojiAllowed'] == false &&
-      StartupTextMetrics.hasEmoji(combined)) {
+  if (plain['emojiAllowed'] == false && StartupTextMetrics.hasEmoji(combined)) {
     issues.add('ML7_TEXT_EMOJI $path');
   }
   if (plain['bulletPrefixesAllowed'] == false &&
@@ -383,17 +368,15 @@ void _validateStartupText(
   final allowedUpper = (abbreviation['approvedUppercaseTokens'] as List)
       .whereType<String>()
       .toSet();
-  final unknownUpper =
-      StartupTextMetrics.uppercaseTokens(combined).difference(allowedUpper);
+  final unknownUpper = StartupTextMetrics.uppercaseTokens(
+    combined,
+  ).difference(allowedUpper);
   if (unknownUpper.length >
       (abbreviation['maxUnknownUppercaseTokens'] as int)) {
-    issues.add(
-      'ML7_TEXT_ABBREVIATION $path: ${unknownUpper.toList()..sort()}',
-    );
+    issues.add('ML7_TEXT_ABBREVIATION $path: ${unknownUpper.toList()..sort()}');
   }
 
-  final blockedPhrases =
-      (visual['blockedPhrases'] as List).whereType<String>();
+  final blockedPhrases = (visual['blockedPhrases'] as List).whereType<String>();
   if (StartupTextMetrics.containsAnyPhrase(combined, blockedPhrases)) {
     issues.add('ML7_TEXT_VISUAL_DEPENDENCY $path');
   }
@@ -403,8 +386,7 @@ void _validateStartupText(
           ?.whereType<String>()
           .toSet() ??
       const <String>{};
-  if (combined.contains('?') &&
-      !allowedQuestionCategories.contains(category)) {
+  if (combined.contains('?') && !allowedQuestionCategories.contains(category)) {
     issues.add('ML7_TEXT_QUESTION_MARK $path');
   }
 }
