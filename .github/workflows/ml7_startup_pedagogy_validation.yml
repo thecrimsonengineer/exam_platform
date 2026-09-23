@@ -49,7 +49,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dart format --output=none --set-exit-if-changed \
+          dart format \
+            lib/services/micro_learning/startup_text_metrics.dart \
+            lib/services/micro_learning/startup_pedagogy_policy_validator.dart \
+            lib/services/micro_learning/startup_pedagogy_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_startup_suitability_gate_validator.dart \
+            tool/validate_micro_learning_startup_suitability_gates.dart \
+            test/micro_learning/startup_text_metrics_test.dart \
+            test/micro_learning/startup_pedagogy_policy_validator_test.dart \
+            test/micro_learning/startup_pedagogy_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_startup_suitability_gate_validator_test.dart \
+            test/micro_learning/startup_pedagogy_startup_contract_test.dart
+          git diff --check
+          git diff -- \
+            lib/services/micro_learning/startup_text_metrics.dart \
+            lib/services/micro_learning/startup_pedagogy_policy_validator.dart \
+            lib/services/micro_learning/startup_pedagogy_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_startup_suitability_gate_validator.dart \
+            tool/validate_micro_learning_startup_suitability_gates.dart \
+            test/micro_learning/startup_text_metrics_test.dart \
+            test/micro_learning/startup_pedagogy_policy_validator_test.dart \
+            test/micro_learning/startup_pedagogy_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_startup_suitability_gate_validator_test.dart \
+            test/micro_learning/startup_pedagogy_startup_contract_test.dart
+          git diff --exit-code -- \
             lib/services/micro_learning/startup_text_metrics.dart \
             lib/services/micro_learning/startup_pedagogy_policy_validator.dart \
             lib/services/micro_learning/startup_pedagogy_evidence_validator.dart \
