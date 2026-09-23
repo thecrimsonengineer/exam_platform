@@ -62,104 +62,116 @@ void main() {
     ))!;
 
     final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
-    catalogueEntry = await LabLearnerCatalogueAdmissionService(
-      publishedRepository: publishedRepository,
-      catalogueRepository: catalogueRepository,
-    ).admit(
-      manifest: manifest,
-      entryId: manifestEntry.entryId,
-      presentation: LabLearnerPresentationPackage.fromJson(
-        _readObject(manifestEntry.learnerPresentationPath),
-      ),
-    );
+    catalogueEntry =
+        await LabLearnerCatalogueAdmissionService(
+          publishedRepository: publishedRepository,
+          catalogueRepository: catalogueRepository,
+        ).admit(
+          manifest: manifest,
+          entryId: manifestEntry.entryId,
+          presentation: LabLearnerPresentationPackage.fromJson(
+            _readObject(manifestEntry.learnerPresentationPath),
+          ),
+        );
   });
 
-  test('Q13 Firestore published repository round-trips immutable Q11 version',
-      () async {
-    final firestore = FakeFirebaseFirestore();
-    final repository = FirestoreLabPublishedRepository(firestore: firestore);
+  test(
+    'Q13 Firestore published repository round-trips immutable Q11 version',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      final repository = FirestoreLabPublishedRepository(firestore: firestore);
 
-    await repository.saveImmutable(publishedVersion);
-    final loaded = await repository.load(
-      manifestEntry.labId,
-      manifestEntry.versionId,
-    );
+      await repository.saveImmutable(publishedVersion);
+      final loaded = await repository.load(
+        manifestEntry.labId,
+        manifestEntry.versionId,
+      );
 
-    expect(loaded, isNotNull);
-    expect(loaded!.publishedJson, publishedVersion.publishedJson);
-    expect(loaded.snapshotFingerprint, publishedVersion.snapshotFingerprint);
-    expect(loaded.validationAuthority, 'LSP-Q11-POPULATION-AUTO');
+      expect(loaded, isNotNull);
+      expect(loaded!.publishedJson, publishedVersion.publishedJson);
+      expect(loaded.snapshotFingerprint, publishedVersion.snapshotFingerprint);
+      expect(loaded.validationAuthority, 'LSP-Q11-POPULATION-AUTO');
 
-    await expectLater(
-      repository.saveImmutable(publishedVersion),
-      throwsA(isA<LabStudioException>()),
-    );
-  });
+      await expectLater(
+        repository.saveImmutable(publishedVersion),
+        throwsA(isA<LabStudioException>()),
+      );
+    },
+  );
 
-  test('Q13 Firestore learner catalogue round-trips learner-safe entry',
-      () async {
-    final firestore = FakeFirebaseFirestore();
-    final repository =
-        FirestoreLabLearnerCatalogueRepository(firestore: firestore);
+  test(
+    'Q13 Firestore learner catalogue round-trips learner-safe entry',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      final repository = FirestoreLabLearnerCatalogueRepository(
+        firestore: firestore,
+      );
 
-    await repository.saveImmutable(catalogueEntry);
-    final loaded = await repository.load(
-      catalogueEntry.labId,
-      catalogueEntry.versionId,
-    );
-    final available = await repository.listAvailable();
+      await repository.saveImmutable(catalogueEntry);
+      final loaded = await repository.load(
+        catalogueEntry.labId,
+        catalogueEntry.versionId,
+      );
+      final available = await repository.listAvailable();
 
-    expect(loaded, isNotNull);
-    expect(loaded!.identityKey, catalogueEntry.identityKey);
-    expect(loaded.title, catalogueEntry.title);
-    expect(loaded.presentation.labId, catalogueEntry.labId);
-    expect(available, hasLength(1));
+      expect(loaded, isNotNull);
+      expect(loaded!.identityKey, catalogueEntry.identityKey);
+      expect(loaded.title, catalogueEntry.title);
+      expect(loaded.presentation.labId, catalogueEntry.labId);
+      expect(available, hasLength(1));
 
-    await expectLater(
-      repository.saveImmutable(catalogueEntry),
-      throwsA(isA<LabLearnerCatalogueException>()),
-    );
-  });
+      await expectLater(
+        repository.saveImmutable(catalogueEntry),
+        throwsA(isA<LabLearnerCatalogueException>()),
+      );
+    },
+  );
 
-  test('Q13 runtime binding lists and loads exact persistent version', () async {
-    final firestore = FakeFirebaseFirestore();
-    await FirestoreLabPublishedRepository(firestore: firestore)
-        .saveImmutable(publishedVersion);
-    await FirestoreLabLearnerCatalogueRepository(firestore: firestore)
-        .saveImmutable(catalogueEntry);
+  test(
+    'Q13 runtime binding lists and loads exact persistent version',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      await FirestoreLabPublishedRepository(
+        firestore: firestore,
+      ).saveImmutable(publishedVersion);
+      await FirestoreLabLearnerCatalogueRepository(
+        firestore: firestore,
+      ).saveImmutable(catalogueEntry);
 
-    final binding = LabLearnerRuntimeBinding.firestore(firestore: firestore);
-    final available = await binding.listAvailable();
-    final delivery = await binding.load(
-      labId: catalogueEntry.labId,
-      versionId: catalogueEntry.versionId,
-    );
+      final binding = LabLearnerRuntimeBinding.firestore(firestore: firestore);
+      final available = await binding.listAvailable();
+      final delivery = await binding.load(
+        labId: catalogueEntry.labId,
+        versionId: catalogueEntry.versionId,
+      );
 
-    expect(available, hasLength(1));
-    expect(available.single.identityKey, catalogueEntry.identityKey);
-    expect(delivery.package.metadata.id, catalogueEntry.labId);
-    expect(delivery.package.metadata.versionId, catalogueEntry.versionId);
-    expect(delivery.presentation.labId, catalogueEntry.labId);
-  });
+      expect(available, hasLength(1));
+      expect(available.single.identityKey, catalogueEntry.identityKey);
+      expect(delivery.package.metadata.id, catalogueEntry.labId);
+      expect(delivery.package.metadata.versionId, catalogueEntry.versionId);
+      expect(delivery.presentation.labId, catalogueEntry.labId);
+    },
+  );
 
-  testWidgets('Q13 persistent library reaches briefing through exact package',
-      (tester) async {
+  testWidgets('Q13 persistent library reaches briefing through exact package', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(900, 2600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
     final firestore = FakeFirebaseFirestore();
-    await FirestoreLabPublishedRepository(firestore: firestore)
-        .saveImmutable(publishedVersion);
-    await FirestoreLabLearnerCatalogueRepository(firestore: firestore)
-        .saveImmutable(catalogueEntry);
+    await FirestoreLabPublishedRepository(
+      firestore: firestore,
+    ).saveImmutable(publishedVersion);
+    await FirestoreLabLearnerCatalogueRepository(
+      firestore: firestore,
+    ).saveImmutable(catalogueEntry);
 
     final binding = LabLearnerRuntimeBinding.firestore(firestore: firestore);
     await tester.pumpWidget(
-      MaterialApp(
-        home: LabLibraryScreen.withBinding(runtimeBinding: binding),
-      ),
+      MaterialApp(home: LabLibraryScreen.withBinding(runtimeBinding: binding)),
     );
 
     for (var i = 0; i < 80; i++) {
@@ -176,7 +188,10 @@ void main() {
 
     for (var i = 0; i < 80; i++) {
       await tester.pump(const Duration(milliseconds: 100));
-      if (find.byKey(const ValueKey('lab-scenario-briefing')).evaluate().isNotEmpty) {
+      if (find
+          .byKey(const ValueKey('lab-scenario-briefing'))
+          .evaluate()
+          .isNotEmpty) {
         break;
       }
     }
@@ -197,7 +212,10 @@ void main() {
 
     for (var i = 0; i < 80; i++) {
       await tester.pump(const Duration(milliseconds: 100));
-      if (find.byKey(const ValueKey('lab-reference-player')).evaluate().isNotEmpty) {
+      if (find
+          .byKey(const ValueKey('lab-reference-player'))
+          .evaluate()
+          .isNotEmpty) {
         break;
       }
     }
@@ -205,24 +223,26 @@ void main() {
     expect(find.byKey(const ValueKey('lab-reference-player')), findsOneWidget);
   });
 
-  test('Q13 Firestore rules keep LAB writes admin-only and versions immutable',
-      () {
-    final rules = File('firestore.rules').readAsStringSync();
+  test(
+    'Q13 Firestore rules keep LAB writes admin-only and versions immutable',
+    () {
+      final rules = File('firestore.rules').readAsStringSync();
 
-    expect(rules, contains('match /labPublishedVersions/{versionKey}'));
-    expect(rules, contains('match /labLearnerCatalogue/{versionKey}'));
-    expect(rules, contains('allow create: if isAdmin() && validLabPublishedVersion'));
-    expect(rules, contains('allow create: if isAdmin() && validLabCatalogueEntry'));
-    expect(rules, contains('allow update, delete: if false;'));
-    expect(
-      rules,
-      contains("resource.data.lifecycle == 'published'"),
-    );
-    expect(
-      rules,
-      contains("resource.data.available == true"),
-    );
-  });
+      expect(rules, contains('match /labPublishedVersions/{versionKey}'));
+      expect(rules, contains('match /labLearnerCatalogue/{versionKey}'));
+      expect(
+        rules,
+        contains('allow create: if isAdmin() && validLabPublishedVersion'),
+      );
+      expect(
+        rules,
+        contains('allow create: if isAdmin() && validLabCatalogueEntry'),
+      );
+      expect(rules, contains('allow update, delete: if false;'));
+      expect(rules, contains("resource.data.lifecycle == 'published'"));
+      expect(rules, contains("resource.data.available == true"));
+    },
+  );
 
   test('Q13 production LAB tab binds to persistent learner library', () {
     final source = File(

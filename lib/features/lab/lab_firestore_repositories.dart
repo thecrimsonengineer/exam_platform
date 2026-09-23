@@ -148,7 +148,9 @@ class FirestoreLabLearnerCatalogueRepository
 
   @override
   Future<void> saveImmutable(LabLearnerCatalogueEntry entry) async {
-    final reference = _collection.doc(_documentId(entry.labId, entry.versionId));
+    final reference = _collection.doc(
+      _documentId(entry.labId, entry.versionId),
+    );
 
     await _firestore.runTransaction((transaction) async {
       final existing = await transaction.get(reference);
@@ -180,10 +182,7 @@ class FirestoreLabLearnerCatalogueRepository
   }
 
   @override
-  Future<LabLearnerCatalogueEntry?> load(
-    String labId,
-    String versionId,
-  ) async {
+  Future<LabLearnerCatalogueEntry?> load(String labId, String versionId) async {
     final snapshot = await _collection.doc(_documentId(labId, versionId)).get();
     if (!snapshot.exists) return null;
     final data = snapshot.data();
@@ -204,13 +203,16 @@ class FirestoreLabLearnerCatalogueRepository
         .where('available', isEqualTo: true)
         .get();
 
-    final entries = snapshot.docs
-        .map((document) => _decodeCatalogueEntry(document.data()))
-        .toList(growable: false)
-      ..sort((left, right) {
-        final title = left.title.compareTo(right.title);
-        return title != 0 ? title : left.identityKey.compareTo(right.identityKey);
-      });
+    final entries =
+        snapshot.docs
+            .map((document) => _decodeCatalogueEntry(document.data()))
+            .toList(growable: false)
+          ..sort((left, right) {
+            final title = left.title.compareTo(right.title);
+            return title != 0
+                ? title
+                : left.identityKey.compareTo(right.identityKey);
+          });
 
     return List<LabLearnerCatalogueEntry>.unmodifiable(entries);
   }

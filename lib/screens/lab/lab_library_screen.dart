@@ -15,10 +15,8 @@ class LabLibraryScreen extends StatefulWidget {
     : persistent = true,
       runtimeBinding = null;
 
-  const LabLibraryScreen.withBinding({
-    super.key,
-    required this.runtimeBinding,
-  }) : persistent = true;
+  const LabLibraryScreen.withBinding({super.key, required this.runtimeBinding})
+    : persistent = true;
 
   final bool persistent;
   final LabLearnerRuntimeBinding? runtimeBinding;
@@ -110,9 +108,7 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to open this LAB. ' + error.toString()),
-        ),
+        SnackBar(content: Text('Unable to open this LAB. ' + error.toString())),
       );
     } finally {
       if (mounted) {

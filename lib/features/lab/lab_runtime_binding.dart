@@ -4,13 +4,9 @@ import 'lab_firestore_repositories.dart';
 import 'lab_learner_catalogue.dart';
 
 class LabLearnerRuntimeBinding {
-  const LabLearnerRuntimeBinding({
-    required this.deliveryService,
-  });
+  const LabLearnerRuntimeBinding({required this.deliveryService});
 
-  factory LabLearnerRuntimeBinding.firestore({
-    FirebaseFirestore? firestore,
-  }) {
+  factory LabLearnerRuntimeBinding.firestore({FirebaseFirestore? firestore}) {
     final instance = firestore ?? FirebaseFirestore.instance;
     return LabLearnerRuntimeBinding(
       deliveryService: LabLearnerControlledDeliveryService(
@@ -32,6 +28,5 @@ class LabLearnerRuntimeBinding {
   Future<LabLearnerControlledDelivery> load({
     required String labId,
     required String versionId,
-  }) =>
-      deliveryService.load(labId: labId, versionId: versionId);
+  }) => deliveryService.load(labId: labId, versionId: versionId);
 }
