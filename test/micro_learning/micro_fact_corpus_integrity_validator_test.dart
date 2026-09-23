@@ -17,10 +17,8 @@ void main() {
       'test/fixtures/micro_learning/legal_status_conflict_micro_fact_v1.json';
   const polarityPath =
       'test/fixtures/micro_learning/polarity_conflict_micro_fact_v1.json';
-  const noise90Path =
-      'test/fixtures/micro_learning/numeric_fact_90dba_v1.json';
-  const noise85Path =
-      'test/fixtures/micro_learning/numeric_fact_85dba_v1.json';
+  const noise90Path = 'test/fixtures/micro_learning/numeric_fact_90dba_v1.json';
+  const noise85Path = 'test/fixtures/micro_learning/numeric_fact_85dba_v1.json';
 
   const validator = MicroFactCorpusIntegrityValidator();
   const comparison = MicroFactCorpusComparison();
@@ -44,17 +42,17 @@ void main() {
     );
     final ordered = [left, right]
       ..sort(
-        (a, b) => MicroFactCorpusComparison.factVersionKey(a).compareTo(
-          MicroFactCorpusComparison.factVersionKey(b),
-        ),
+        (a, b) => MicroFactCorpusComparison.factVersionKey(
+          a,
+        ).compareTo(MicroFactCorpusComparison.factVersionKey(b)),
       );
 
     Map<String, dynamic> ref(Map<String, dynamic> fact) => {
-          'microFactId': fact['microFactId'],
-          'contentVersion': fact['contentVersion'],
-          'comparisonFingerprintSha256':
-              MicroFactCorpusComparison.comparisonFingerprint(fact),
-        };
+      'microFactId': fact['microFactId'],
+      'contentVersion': fact['contentVersion'],
+      'comparisonFingerprintSha256':
+          MicroFactCorpusComparison.comparisonFingerprint(fact),
+    };
 
     return {
       'schemaVersion': 1,
@@ -117,10 +115,7 @@ void main() {
 
     expect(result.isValid, isFalse);
     expect(result.reviewCandidates, hasLength(1));
-    expect(
-      result.reviewCandidates.single.signals,
-      contains('near_duplicate'),
-    );
+    expect(result.reviewCandidates.single.signals, contains('near_duplicate'));
     expect(
       result.issues.map((issue) => issue.code),
       contains('ML8_ADJUDICATION_REQUIRED'),
@@ -132,10 +127,7 @@ void main() {
     final right = load(nearPath);
     final evidence = adjudication(left, right);
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+    final result = validate([left, right], adjudications: [evidence]);
 
     expect(result.issues, isEmpty, reason: result.issues.join('\n'));
     expect(result.reviewCandidates, hasLength(1));
@@ -144,16 +136,9 @@ void main() {
   test('human duplicate-block decision blocks coexistence', () {
     final left = load(basePath);
     final right = load(nearPath);
-    final evidence = adjudication(
-      left,
-      right,
-      decision: 'duplicate_block',
-    );
+    final evidence = adjudication(left, right, decision: 'duplicate_block');
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+    final result = validate([left, right], adjudications: [evidence]);
 
     expect(result.isValid, isFalse);
     expect(
@@ -167,10 +152,7 @@ void main() {
     final right = load(nearPath);
     final evidence = adjudication(left, right, status: 'pending');
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+    final result = validate([left, right], adjudications: [evidence]);
 
     expect(result.isValid, isFalse);
     expect(
@@ -190,10 +172,7 @@ void main() {
         (display['displayText'] as String) + ' Workers remain protected.';
     changed['display'] = display;
 
-    final result = validate(
-      [left, changed],
-      adjudications: [evidence],
-    );
+    final result = validate([left, changed], adjudications: [evidence]);
 
     expect(result.isValid, isFalse);
     expect(
@@ -208,10 +187,7 @@ void main() {
     final evidence = adjudication(left, right);
     evidence['detectedSignals'] = ['near_duplicate'];
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+    final result = validate([left, right], adjudications: [evidence]);
 
     expect(result.isValid, isFalse);
     expect(
@@ -244,8 +220,7 @@ void main() {
     final display = Map<String, dynamic>.from(second['display'] as Map);
     display['displayText'] =
         'Revised hazardous energy wording for a second active content version.';
-    display['shortVariant'] =
-        'Revised hazardous energy wording for servicing.';
+    display['shortVariant'] = 'Revised hazardous energy wording for servicing.';
     second['display'] = display;
 
     final result = validate([first, second]);
@@ -304,10 +279,7 @@ void main() {
       decision: 'source_context_difference_valid',
     );
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+    final result = validate([left, right], adjudications: [evidence]);
 
     expect(result.issues, isEmpty, reason: result.issues.join('\n'));
     expect(
@@ -316,26 +288,26 @@ void main() {
     );
   });
 
-  test('polarity conflict blocks when human decision confirms contradiction', () {
-    final left = load(basePath);
-    final right = load(polarityPath);
-    final evidence = adjudication(
-      left,
-      right,
-      decision: 'contradiction_block',
-    );
+  test(
+    'polarity conflict blocks when human decision confirms contradiction',
+    () {
+      final left = load(basePath);
+      final right = load(polarityPath);
+      final evidence = adjudication(
+        left,
+        right,
+        decision: 'contradiction_block',
+      );
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+      final result = validate([left, right], adjudications: [evidence]);
 
-    expect(result.isValid, isFalse);
-    expect(
-      result.issues.map((issue) => issue.code),
-      contains('ML8_ADJUDICATED_BLOCK'),
-    );
-  });
+      expect(result.isValid, isFalse);
+      expect(
+        result.issues.map((issue) => issue.code),
+        contains('ML8_ADJUDICATED_BLOCK'),
+      );
+    },
+  );
 
   test('concept concentration is reported but does not block ML-8', () {
     final seed = load(basePath);
@@ -385,8 +357,8 @@ void main() {
       display
         ..['displayText'] =
             'Unique safety topic token' +
-                i.toString() +
-                ' describes a distinct prevention concept for workers.'
+            i.toString() +
+            ' describes a distinct prevention concept for workers.'
         ..['shortVariant'] =
             'Distinct prevention topic token' + i.toString() + ' for workers.';
       fact['display'] = display;
@@ -402,9 +374,7 @@ void main() {
         'unique_topic_' + i.toString(),
       ];
 
-      final provenance = Map<String, dynamic>.from(
-        fact['provenance'] as Map,
-      );
+      final provenance = Map<String, dynamic>.from(fact['provenance'] as Map);
       provenance['sourceLocator'] = 'Unique locator ' + i.toString();
       fact['provenance'] = provenance;
       facts.add(fact);
@@ -427,10 +397,7 @@ void main() {
     review['nextReviewDueAt'] = '2028-09-23';
     evidence['review'] = review;
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+    final result = validate([left, right], adjudications: [evidence]);
 
     expect(result.isValid, isFalse);
     expect(
@@ -449,10 +416,7 @@ void main() {
       ..['nextReviewDueAt'] = '2027-09-22';
     evidence['review'] = review;
 
-    final result = validate(
-      [left, right],
-      adjudications: [evidence],
-    );
+    final result = validate([left, right], adjudications: [evidence]);
 
     expect(result.isValid, isFalse);
     expect(
