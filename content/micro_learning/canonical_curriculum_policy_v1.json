@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0",
+  "status": "frozen",
+  "frozenAt": "2026-09-23",
+  "authorityRegistryVersion": "1.0.0",
+  "microFactSchemaVersion": 1,
+  "claimPolicyVersion": "1.0.0",
+  "rightsPolicyVersion": "1.0.0",
+  "canonicalBlueprint": {
+    "sourcePath": "docs/source_pipeline/CSP11_canonical_blueprint.json",
+    "blueprintVersion": "V.2024.04.24",
+    "effectiveDate": "2025-08-01",
+    "expectedDomainCount": 7,
+    "expectedCompetencyCount": 47,
+    "generatedRegistryPath": "lib/data/csp11_blueprint.dart"
+  },
+  "navigationRegistryVersion": "1.0.0",
+  "failClosed": true,
+  "principles": {
+    "blueprintIsAuthoritativeForDomainAndCompetency": true,
+    "navigationRegistryIsAuthoritativeForTopicAndSubtopic": true,
+    "inferMappingFromTitle": false,
+    "inferMappingFromTags": false,
+    "inferMappingFromConceptIds": false,
+    "inferMappingFromSource": false,
+    "allowLegacyIdsInMicroFact": false,
+    "allowUnknownNodes": false,
+    "allowDeprecatedNodes": false,
+    "allowAutomaticRemap": false,
+    "requireExactParentage": true,
+    "requireHumanMappingReviewForValidatedOrPublished": true,
+    "runtimeNetworkLookupAllowed": false
+  },
+  "scopeRules": {
+    "general": {
+      "requireAllCurriculumIdsNull": true,
+      "mappingEvidenceAllowed": false
+    },
+    "mapped": {
+      "domainIdRequired": true,
+      "competencyIdRequired": true,
+      "topicIdOptional": true,
+      "subtopicIdOptional": true,
+      "subtopicRequiresTopic": true,
+      "mappingEvidenceRequiredForStatuses": [
+        "validated",
+        "published",
+        "review_due"
+      ],
+      "startupEligibleRequiresPassingEvidence": true
+    }
+  },
+  "idPatterns": {
+    "domainId": "^d0[1-7]$",
+    "competencyId": "^d0[1-7]_c[0-9]{2}$",
+    "topicId": "^d0[1-7]_c[0-9]{2}_t[0-9]{2}$",
+    "subtopicId": "^d0[1-7]_c[0-9]{2}_t[0-9]{2}_s[0-9]{2}$"
+  },
+  "nodeStatuses": {
+    "allowedRegistryStatuses": [
+      "active",
+      "deprecated",
+      "retired"
+    ],
+    "selectableStatuses": [
+      "active"
+    ]
+  },
+  "evidenceRules": {
+    "evidenceSchemaVersion": 1,
+    "evidenceIdPattern": "^mfme_[a-z0-9][a-z0-9_-]{5,63}$",
+    "reviewStatusValues": [
+      "pending",
+      "pass",
+      "fail"
+    ],
+    "reviewerRoleValues": [
+      "curriculum_reviewer",
+      "content_governance_reviewer",
+      "subject_matter_reviewer"
+    ],
+    "evidenceMustPassForStatuses": [
+      "validated",
+      "published"
+    ],
+    "maxEvidenceAgeDays": 365,
+    "exactMappingFingerprintRequired": true,
+    "exactRegistryVersionRequired": true,
+    "exactBlueprintVersionRequired": true
+  },
+  "driftRules": {
+    "contentVersionChangeInvalidatesEvidence": true,
+    "curriculumIdChangeInvalidatesEvidence": true,
+    "registryVersionChangeInvalidatesEvidence": true,
+    "blueprintVersionChangeInvalidatesEvidence": true,
+    "nodeDeprecationInvalidatesEvidence": true
+  }
+}
