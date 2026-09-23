@@ -93,7 +93,7 @@ class MicroFactCorpusIntegrityValidator {
 
     final validFacts = <Map<String, dynamic>>[];
     for (var i = 0; i < facts.length; i++) {
-      final result = const MicroFactSchemaValidator().validateMap(facts[i]);
+      final result = MicroFactSchemaValidator().validateMap(facts[i]);
       if (!result.isValid) {
         for (final issue in result.issues) {
           _add(
