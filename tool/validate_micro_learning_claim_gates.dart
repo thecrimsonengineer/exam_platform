@@ -77,13 +77,9 @@ Future<void> main(List<String> args) async {
   );
 }
 
-Future<Map<String, dynamic>> _decodeObject(
-  String raw,
-  String label,
-) async {
+Future<Map<String, dynamic>> _decodeObject(String raw, String label) async {
   try {
-    final dynamic decoded =
-        await Future<dynamic>.value(_jsonDecode(raw));
+    final dynamic decoded = await Future<dynamic>.value(_jsonDecode(raw));
     if (decoded is Map<String, dynamic>) {
       return decoded;
     }
