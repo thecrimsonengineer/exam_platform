@@ -23,9 +23,7 @@ void _requireOnlyManifestKeys(
     ..sort();
   if (unexpected.isNotEmpty) {
     throw LabScenarioPopulationManifestException(
-      label +
-          ' contains forbidden or unknown fields: ' +
-          unexpected.join(', '),
+      label + ' contains forbidden or unknown fields: ' + unexpected.join(', '),
     );
   }
 }
@@ -60,7 +58,9 @@ String _requiredRelativeJsonPath(
       value.contains('://') ||
       value.contains('?') ||
       value.contains('#') ||
-      segments.any((segment) => segment.isEmpty || segment == '.' || segment == '..');
+      segments.any(
+        (segment) => segment.isEmpty || segment == '.' || segment == '..',
+      );
 
   if (unsafe || !lower.endsWith('.json')) {
     throw LabScenarioPopulationManifestException(
@@ -114,7 +114,9 @@ class LabScenarioPopulationManifestEntry {
 
     if (artifactPaths.values.toSet().length != artifactPaths.length) {
       throw LabScenarioPopulationManifestException(
-        'Manifest entry ' + entryId + ' must use three distinct artifact paths.',
+        'Manifest entry ' +
+            entryId +
+            ' must use three distinct artifact paths.',
       );
     }
   }
@@ -162,16 +164,18 @@ class LabScenarioPopulationManifest {
       );
     }
 
-    final entries = rawEntries.map((item) {
-      if (item is! Map) {
-        throw const LabScenarioPopulationManifestException(
-          'Scenario population manifest entry must be an object.',
-        );
-      }
-      return LabScenarioPopulationManifestEntry.fromJson(
-        item.cast<String, Object?>(),
-      );
-    }).toList(growable: false);
+    final entries = rawEntries
+        .map((item) {
+          if (item is! Map) {
+            throw const LabScenarioPopulationManifestException(
+              'Scenario population manifest entry must be an object.',
+            );
+          }
+          return LabScenarioPopulationManifestEntry.fromJson(
+            item.cast<String, Object?>(),
+          );
+        })
+        .toList(growable: false);
 
     if (entries.isEmpty) {
       throw const LabScenarioPopulationManifestException(
@@ -217,7 +221,11 @@ class LabScenarioPopulationManifest {
     return LabScenarioPopulationManifest._(
       schemaVersion: kLabScenarioPopulationManifestSchemaVersion,
       manifestId: LabIds.requireCanonical(
-        _requiredManifestText(json, 'manifestId', 'scenario population manifest'),
+        _requiredManifestText(
+          json,
+          'manifestId',
+          'scenario population manifest',
+        ),
         'scenario population manifest ID',
       ),
       entries: List<LabScenarioPopulationManifestEntry>.unmodifiable(entries),
@@ -320,7 +328,8 @@ class LabScenarioPopulationBindingValidator {
       if (node == null || evidence == null) {
         continue;
       }
-      if (evidence.decisionSignature != LabDqg300Validator.decisionSignature(node)) {
+      if (evidence.decisionSignature !=
+          LabDqg300Validator.decisionSignature(node)) {
         stale.add(id);
       }
     }

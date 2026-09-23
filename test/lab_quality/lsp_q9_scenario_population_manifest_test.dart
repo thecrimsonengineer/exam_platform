@@ -10,8 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../quality_validator_contract/dqg300/_support/dqg300_fixture.dart';
 
 LabPackage _technicalPackage() {
-  final source =
-      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync();
+  final source = File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync();
   return LabPackage.fromJson(
     (jsonDecode(source) as Map).cast<String, Object?>(),
   );
@@ -77,8 +76,7 @@ Map<String, Object?> _presentationJson({
       ])
         id: <String, Object?>{
           'observable': 'The learner observes the result of ' + id + '.',
-          'guidedInsight':
-              'Consider what this outcome means for risk control.',
+          'guidedInsight': 'Consider what this outcome means for risk control.',
         },
     },
     'endingPresentation': <String, Object?>{
@@ -139,10 +137,7 @@ void main() {
 
     final entry = manifest.requireEntry('l2_entry');
     expect(entry.identityKey, 'l2_lab@v1');
-    expect(
-      manifest.entryFor(labId: 'l2_lab', versionId: 'v1'),
-      same(entry),
-    );
+    expect(manifest.entryFor(labId: 'l2_lab', versionId: 'v1'), same(entry));
   });
 
   test('Q9 rejects unknown manifest and entry fields', () {
@@ -299,9 +294,8 @@ void main() {
     final technical = _technicalPackage();
     final manifest = LabScenarioPopulationManifest.fromJson(_manifestJson());
     final presentationJson = _presentationJson();
-    final decisionMap =
-        (presentationJson['decisionPresentation'] as Map)
-            .cast<String, Object?>();
+    final decisionMap = (presentationJson['decisionPresentation'] as Map)
+        .cast<String, Object?>();
     decisionMap.remove('decision_two');
 
     final report = validator.validate(
