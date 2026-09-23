@@ -27,10 +27,7 @@ void main() {
 
   Map<String, dynamic> cloneFact() => cloneMap(loadFact());
 
-  Map<String, dynamic> authorityById(
-    Map<String, dynamic> registry,
-    String id,
-  ) {
+  Map<String, dynamic> authorityById(Map<String, dynamic> registry, String id) {
     return (registry['authorities'] as List)
         .cast<Map<String, dynamic>>()
         .firstWhere((authority) => authority['id'] == id);
@@ -137,8 +134,7 @@ void main() {
       final jurisdiction = rule['jurisdiction'] == 'required'
           ? 'ML-4 test jurisdiction'
           : null;
-      final attribution =
-          (tokens[sourceId] as List).first.toString();
+      final attribution = (tokens[sourceId] as List).first.toString();
 
       final fact = configureSource(
         fact: cloneFact(),
@@ -257,7 +253,8 @@ void main() {
       sourceRegistryId: 'SRC-04',
       sourceClass: 'international_standard',
       legalStatus: 'international_standard',
-      displayText: 'ISO 45001 requires documented information in specified areas.',
+      displayText:
+          'ISO 45001 requires documented information in specified areas.',
       shortVariant: 'ISO 45001 requires specified documented information.',
     );
 
@@ -274,7 +271,8 @@ void main() {
       sourceRegistryId: 'SRC-04',
       sourceClass: 'international_standard',
       legalStatus: 'international_standard',
-      displayText: 'Organizations must maintain specified documented information.',
+      displayText:
+          'Organizations must maintain specified documented information.',
     );
 
     final result = validate(fact);
@@ -359,8 +357,10 @@ void main() {
       sourceClass: 'regulatory_interpretation',
       legalStatus: 'regulatory_interpretation',
       jurisdiction: 'US Federal OSHA',
-      displayText: 'OSHA interprets how this requirement applies in the stated circumstances.',
-      shortVariant: 'OSHA interprets the requirement in the stated circumstances.',
+      displayText:
+          'OSHA interprets how this requirement applies in the stated circumstances.',
+      shortVariant:
+          'OSHA interprets the requirement in the stated circumstances.',
     );
 
     final result = validate(fact);
@@ -397,7 +397,8 @@ void main() {
       sourceClass: 'professional_guideline',
       legalStatus: 'professional_guideline',
       category: 'csp_tip',
-      displayText: 'ASSP professional literature can support structured safety reasoning.',
+      displayText:
+          'ASSP professional literature can support structured safety reasoning.',
     );
 
     final result = validate(fact);
@@ -418,7 +419,8 @@ void main() {
       sourceClass: 'professional_guideline',
       legalStatus: 'not_applicable',
       category: 'csp_tip',
-      displayText: 'ASSP professional literature can support structured safety reasoning.',
+      displayText:
+          'ASSP professional literature can support structured safety reasoning.',
     );
 
     final result = validate(fact);
