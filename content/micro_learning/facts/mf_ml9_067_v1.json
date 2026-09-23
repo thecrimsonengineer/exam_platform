@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_067",
+  "category": "fire_electrical_insight",
+  "display": {
+    "displayText": "NFPA water-based fire-protection guidance uses inspection, testing, and maintenance to preserve system reliability after installation, including sprinklers, pumps, valves, and water supplies.",
+    "shortVariant": "Water-based fire protection needs ongoing inspection, testing, and maintenance.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d04",
+    "competencyId": "d04_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "water_based_fire_protection",
+      "system_reliability"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-05",
+    "sourceClass": "consensus_standard",
+    "sourceTitle": "NFPA 25, Standard for the Inspection, Testing, and Maintenance of Water-Based Fire Protection Systems",
+    "officialUrl": "https://link.nfpa.org/all-publications/25/2026",
+    "sourceLocator": "Inspection, testing, and maintenance program for water-based fire protection systems",
+    "editionOrRevision": "NFPA 25, 2026 edition",
+    "sourceSection": "Inspection, Testing, and Maintenance",
+    "sourcePage": null,
+    "sourcePublishedAt": "2026-01-01",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "consensus_standard",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "fire_protection",
+    "sprinklers",
+    "inspection_testing_maintenance"
+  ]
+}
