@@ -215,8 +215,15 @@ jobs:
           echo "APK_SIGNATURE_V2_PRESENT=true"
 
           actual_cert="$(
-            sed -n 's/^Signer #1 certificate SHA-256 digest: //p' "$RUNNER_TEMP/apksigner.txt" |
-              head -n 1 |
+            awk '
+              BEGIN { IGNORECASE = 1 }
+              /certificate SHA-256 digest/ {
+                sub(/^.*digest:[[:space:]]*/, "")
+                print
+                exit
+              }
+            ' "$RUNNER_TEMP/apksigner.txt" |
+              tr -d ':' |
               tr '[:lower:]' '[:upper:]'
           )"
           expected_cert="$(
