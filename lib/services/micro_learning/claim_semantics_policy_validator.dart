@@ -664,37 +664,7 @@ class ClaimSemanticsPolicyValidator {
       a.length == b.length && a.containsAll(b);
 
   static bool _isStrictDate(dynamic value) {
-    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}
-      return false;
-    }
-
-    final parsed = DateTime.tryParse(value);
-    if (parsed == null) {
-      return false;
-    }
-
-    final normalized =
-        parsed.year.toString().padLeft(4, '0') +
-        '-' +
-        parsed.month.toString().padLeft(2, '0') +
-        '-' +
-        parsed.day.toString().padLeft(2, '0');
-
-    return normalized == value;
-  }
-
-  static void _add(
-    List<ClaimSemanticsPolicyIssue> issues,
-    String code,
-    String path,
-    String message,
-  ) {
-    issues.add(
-      ClaimSemanticsPolicyIssue(code: code, path: path, message: message),
-    );
-  }
-}
-).hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return false;
     }
 
