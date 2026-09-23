@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0",
+  "status": "frozen",
+  "frozenAt": "2026-09-23",
+  "authorityRegistryVersion": "1.0.0",
+  "microFactSchemaVersion": 1,
+  "claimPolicyVersion": "1.0.0",
+  "rightsPolicyVersion": "1.0.0",
+  "curriculumPolicyVersion": "1.0.0",
+  "startupPedagogyPolicyVersion": "1.0.0",
+  "failClosed": true,
+  "corpusScope": {
+    "comparisonStatuses": [
+      "draft",
+      "review",
+      "validated",
+      "published",
+      "review_due"
+    ],
+    "excludedStatuses": [
+      "superseded",
+      "withdrawn",
+      "rejected"
+    ],
+    "requireUniqueActiveMicroFactId": true,
+    "compareDifferentContentVersionsOfSameId": false,
+    "minimumFactsForPairwiseScan": 2
+  },
+  "normalization": {
+    "lowercase": true,
+    "collapseWhitespace": true,
+    "stripPunctuation": true,
+    "preserveNumbers": true,
+    "preserveNegationTokens": true,
+    "stopWords": [
+      "a",
+      "an",
+      "and",
+      "are",
+      "as",
+      "at",
+      "be",
+      "by",
+      "for",
+      "from",
+      "in",
+      "into",
+      "is",
+      "it",
+      "of",
+      "on",
+      "or",
+      "that",
+      "the",
+      "their",
+      "this",
+      "to",
+      "with"
+    ],
+    "protectedTokens": [
+      "no",
+      "not",
+      "never",
+      "without",
+      "cannot",
+      "must",
+      "shall",
+      "required",
+      "prohibited",
+      "may"
+    ]
+  },
+  "duplicateRules": {
+    "exactNormalizedDisplayText": "block",
+    "exactNormalizedShortVariant": "block",
+    "exactDisplayHashAcrossDifferentFacts": "block",
+    "nearDuplicateDisplayJaccardThreshold": 0.8,
+    "nearDuplicateShortJaccardThreshold": 0.85,
+    "conceptAssistedDisplayJaccardThreshold": 0.6,
+    "minimumConceptJaccardForNearDuplicate": 0.5,
+    "exactConceptSetRequiresSameCategoryForAssistedRule": true,
+    "sameSourceLocatorConceptAssistedThreshold": 0.5,
+    "nearDuplicateDisposition": "human_adjudication_required",
+    "exactDuplicateDisposition": "block"
+  },
+  "contradictionRules": {
+    "polarityConflictMinTextJaccard": 0.65,
+    "polarityConflictMinConceptJaccard": 0.5,
+    "legalStatusConflictMinConceptJaccard": 0.75,
+    "legalStatusConflictMinTextJaccard": 0.4,
+    "numericalConflictMinConceptJaccard": 0.5,
+    "numericalConflictMinTextJaccard": 0.4,
+    "numericalConflictRequiresSameJurisdictionWhenBothPresent": true,
+    "legalStatusConflictRequiresSameJurisdictionWhenBothBinding": true,
+    "editionDriftSameSourceLocator": "human_adjudication_required",
+    "unresolvedContradictionDisposition": "block"
+  },
+  "numericNormalization": {
+    "supportedUnits": [
+      "%",
+      "ppm",
+      "ppb",
+      "mg/m3",
+      "mg/m³",
+      "dba",
+      "db",
+      "c",
+      "f",
+      "v",
+      "volt",
+      "volts",
+      "kv",
+      "psi",
+      "ft",
+      "feet",
+      "foot",
+      "m",
+      "meter",
+      "meters",
+      "metre",
+      "metres",
+      "second",
+      "seconds",
+      "minute",
+      "minutes",
+      "hour",
+      "hours",
+      "day",
+      "days"
+    ],
+    "compareValuesOnlyWithinMatchingNormalizedUnit": true,
+    "unitConversionAllowed": false,
+    "automaticNumericReconciliationAllowed": false
+  },
+  "adjudicationRules": {
+    "evidenceSchemaVersion": 1,
+    "evidenceIdPattern": "^mfce_[a-z0-9][a-z0-9_-]{5,63}$",
+    "sha256Pattern": "^[a-f0-9]{64}$",
+    "pairKeySeparator": "||",
+    "canonicalPairOrderingRequired": true,
+    "reviewerRoles": [
+      "content_governance_reviewer",
+      "subject_matter_reviewer",
+      "technical_reviewer"
+    ],
+    "reviewStatusValues": [
+      "pending",
+      "pass",
+      "fail"
+    ],
+    "passDecisions": [
+      "distinct_valid",
+      "scope_difference_valid",
+      "source_context_difference_valid"
+    ],
+    "blockDecisions": [
+      "duplicate_block",
+      "contradiction_block",
+      "merge_required",
+      "supersession_required"
+    ],
+    "maxEvidenceAgeDays": 365,
+    "exactFactFingerprintRequired": true,
+    "exactSignalSetRequired": true,
+    "humanReviewRequired": true
+  },
+  "concentrationAudit": {
+    "enabled": true,
+    "exactConceptSetReviewThreshold": 4,
+    "sameSourceLocatorReviewThreshold": 3,
+    "authorityShareReviewThreshold": 0.4,
+    "authorityShareMinimumCorpusSize": 20,
+    "concentrationSignalsAreBlocking": false
+  },
+  "driftRules": {
+    "contentVersionChangeInvalidatesEvidence": true,
+    "displayTextChangeInvalidatesEvidence": true,
+    "shortVariantChangeInvalidatesEvidence": true,
+    "conceptIdsChangeInvalidatesEvidence": true,
+    "legalStatusChangeInvalidatesEvidence": true,
+    "jurisdictionChangeInvalidatesEvidence": true,
+    "numericalClaimChangeInvalidatesEvidence": true,
+    "sourceLocatorChangeInvalidatesEvidence": true,
+    "editionChangeInvalidatesEvidence": true,
+    "policyVersionChangeInvalidatesEvidence": true
+  }
+}
