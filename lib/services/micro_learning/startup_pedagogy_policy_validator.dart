@@ -242,6 +242,8 @@ class StartupPedagogyPolicyValidator {
           'maxCharacters',
           'maxSentences',
           'maxComputedReadSeconds',
+          'mustBeShorterThanDisplayText',
+          'maxWordRatioToDisplay',
         },
         r'$policy.textRules.shortVariant',
         issues,
@@ -251,7 +253,9 @@ class StartupPedagogyPolicyValidator {
           short['maxWords'] != 18 ||
           short['maxCharacters'] != 140 ||
           short['maxSentences'] != 1 ||
-          short['maxComputedReadSeconds'] != 6) {
+          short['maxComputedReadSeconds'] != 6 ||
+          short['mustBeShorterThanDisplayText'] != true ||
+          short['maxWordRatioToDisplay'] != 0.75) {
         _add(
           issues,
           'ML7_POLICY_SHORT_RULES_WEAKENED',
