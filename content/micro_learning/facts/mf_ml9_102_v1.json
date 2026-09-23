@@ -26,8 +26,8 @@
   "microFactId": "mf_ml9_102",
   "category": "emergency_insight",
   "display": {
-    "displayText": "FEMA's THIRA process identifies priority threats and hazards, estimates their impacts, and sets capability targets that guide preparedness decisions.",
-    "shortVariant": "THIRA links priority hazards, impacts, and preparedness capability targets.",
+    "displayText": "FEMA's threat and hazard assessment process identifies priority hazards, estimates their impacts, and sets capability targets that guide preparedness decisions.",
+    "shortVariant": "FEMA links priority hazards, impacts, and preparedness capability targets.",
     "estimatedReadSeconds": 8
   },
   "curriculum": {
