@@ -46,7 +46,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dart format --output=none --set-exit-if-changed \
+          dart format \
+            lib/services/micro_learning/rights_provenance_policy_validator.dart \
+            lib/services/micro_learning/rights_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_rights_gate_validator.dart \
+            tool/validate_micro_learning_rights_gates.dart \
+            test/micro_learning/rights_provenance_policy_validator_test.dart \
+            test/micro_learning/rights_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_rights_gate_validator_test.dart
+          git diff --check
+          git diff -- \
+            lib/services/micro_learning/rights_provenance_policy_validator.dart \
+            lib/services/micro_learning/rights_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_rights_gate_validator.dart \
+            tool/validate_micro_learning_rights_gates.dart \
+            test/micro_learning/rights_provenance_policy_validator_test.dart \
+            test/micro_learning/rights_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_rights_gate_validator_test.dart
+          git diff --exit-code -- \
             lib/services/micro_learning/rights_provenance_policy_validator.dart \
             lib/services/micro_learning/rights_evidence_validator.dart \
             lib/services/micro_learning/micro_fact_rights_gate_validator.dart \
