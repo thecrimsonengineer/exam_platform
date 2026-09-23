@@ -32,7 +32,7 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Canonical Q1 formatting
+      - name: Canonical LSP formatting
         run: |
           dart format \
             lib/services/questions/canonical_question_parser.dart \
@@ -83,5 +83,5 @@ jobs:
             lib/features/lab/lab_dqg300.dart \
             test/services/questions/canonical_question_parser_test.dart \
             test/lab_quality/lsp_q2_lab_decision_question_adapter_test.dart
-          git commit -m "Format LSP-Q1 canonical question parser"
+          git commit -m "Format LSP unified question quality files"
           git push origin HEAD:phase-l4-scenario-population
