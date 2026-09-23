@@ -1,0 +1,655 @@
+{
+  "schemaVersion": 1,
+  "registryVersion": "1.0.0",
+  "status": "frozen",
+  "frozenAt": "2026-09-23",
+  "policy": {
+    "failClosed": true,
+    "firstPartyOnly": true,
+    "aiIsAuthority": false,
+    "unlistedAuthorityDisposition": "block",
+    "secondarySummaryAsPrimarySource": false,
+    "requireAuthorityType": true,
+    "requireClaimClass": true,
+    "requireJurisdictionWhenMaterial": true,
+    "requireEditionOrRevisionWhenApplicable": true,
+    "requireSourceVerificationDate": true
+  },
+  "allowedSourceClasses": [
+    "federal_regulation",
+    "regulatory_interpretation",
+    "enforcement_or_compliance_guidance",
+    "government_recommendation",
+    "research_or_prevention_guidance",
+    "consensus_standard",
+    "international_standard",
+    "professional_guideline",
+    "professional_framework",
+    "environmental_regulation",
+    "transportation_regulation",
+    "emergency_management_framework",
+    "process_safety_framework",
+    "loss_prevention_guidance",
+    "testing_or_certification_standard"
+  ],
+  "allowedEditionPolicies": [
+    "continuous_regulatory_check",
+    "revision_tracked",
+    "annual_or_revision_check",
+    "publication_specific"
+  ],
+  "authorities": [
+    {
+      "id": "SRC-01",
+      "canonicalName": "Occupational Safety and Health Administration / U.S. Department of Labor",
+      "displayName": "OSHA / U.S. Department of Labor",
+      "authorityKind": "us_federal_occupational_safety_regulator",
+      "regulatoryAuthority": true,
+      "jurisdictionScopes": [
+        "US_FEDERAL",
+        "US_OSHA"
+      ],
+      "officialHosts": [
+        "osha.gov",
+        "dol.gov"
+      ],
+      "officialEntryPoints": [
+        "https://www.osha.gov/laws-regs",
+        "https://www.osha.gov/laws-regs/interpretations",
+        "https://www.osha.gov/enforcement/directives"
+      ],
+      "permittedSourceClasses": [
+        "federal_regulation",
+        "regulatory_interpretation",
+        "enforcement_or_compliance_guidance"
+      ],
+      "permittedSubjects": [
+        "general_industry",
+        "construction",
+        "process_safety_management",
+        "lockout_tagout",
+        "confined_spaces",
+        "electrical_safety",
+        "personal_protective_equipment",
+        "recordkeeping",
+        "hazard_communication",
+        "machine_safety",
+        "fall_protection"
+      ],
+      "editionPolicy": "continuous_regulatory_check",
+      "reviewCadenceDays": 90,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not present an interpretation letter as creating additional employer obligations.",
+        "Do not present OSHA guidance as a regulation unless the cited source is an applicable regulation.",
+        "Do not generalize federal OSHA requirements to every jurisdiction without context."
+      ]
+    },
+    {
+      "id": "SRC-02",
+      "canonicalName": "National Institute for Occupational Safety and Health / Centers for Disease Control and Prevention",
+      "displayName": "NIOSH / CDC",
+      "authorityKind": "us_federal_research_and_prevention_body",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "US_GUIDANCE",
+        "OCCUPATIONAL_HEALTH_RESEARCH"
+      ],
+      "officialHosts": [
+        "cdc.gov"
+      ],
+      "preferredPathPrefixes": [
+        "/niosh/"
+      ],
+      "officialEntryPoints": [
+        "https://www.cdc.gov/niosh/",
+        "https://www.cdc.gov/niosh/about/"
+      ],
+      "permittedSourceClasses": [
+        "government_recommendation",
+        "research_or_prevention_guidance"
+      ],
+      "permittedSubjects": [
+        "industrial_hygiene",
+        "engineering_controls",
+        "respiratory_protection",
+        "ergonomics",
+        "heat_stress",
+        "noise",
+        "occupational_disease",
+        "exposure_assessment",
+        "hazard_evaluation",
+        "prevention_research"
+      ],
+      "editionPolicy": "publication_specific",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not state that NIOSH recommendations are OSHA regulations.",
+        "Do not use the verb 'requires' unless a separate regulatory source supports that legal claim."
+      ]
+    },
+    {
+      "id": "SRC-03",
+      "canonicalName": "American National Standards Institute / American Society of Safety Professionals",
+      "displayName": "ANSI / ASSP Standards",
+      "authorityKind": "consensus_standards_family",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "US_CONSENSUS_STANDARD",
+        "PROFESSIONAL_PRACTICE"
+      ],
+      "officialHosts": [
+        "ansi.org",
+        "assp.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.ansi.org/",
+        "https://www.assp.org/standards",
+        "https://www.assp.org/standards/standards-topics/osh-management-z10"
+      ],
+      "permittedSourceClasses": [
+        "consensus_standard",
+        "professional_guideline"
+      ],
+      "permittedSubjects": [
+        "occupational_safety_management_systems",
+        "risk_assessment",
+        "fall_protection",
+        "confined_spaces",
+        "construction_safety",
+        "machine_safety",
+        "training",
+        "professional_safety_practice"
+      ],
+      "editionPolicy": "revision_tracked",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not label a consensus standard as federal law.",
+        "Do not reproduce protected standard clauses beyond permitted use."
+      ]
+    },
+    {
+      "id": "SRC-04",
+      "canonicalName": "International Organization for Standardization",
+      "displayName": "ISO",
+      "authorityKind": "international_standards_body",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "INTERNATIONAL_STANDARD"
+      ],
+      "officialHosts": [
+        "iso.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.iso.org/standards.html"
+      ],
+      "permittedSourceClasses": [
+        "international_standard"
+      ],
+      "permittedSubjects": [
+        "occupational_health_and_safety_management",
+        "environmental_management",
+        "management_system_auditing",
+        "risk_management"
+      ],
+      "editionPolicy": "revision_tracked",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not present ISO requirements as statutory law unless separately adopted into applicable law.",
+        "Always retain edition or revision context when material."
+      ]
+    },
+    {
+      "id": "SRC-05",
+      "canonicalName": "National Fire Protection Association",
+      "displayName": "NFPA",
+      "authorityKind": "consensus_codes_and_standards_body",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "CONSENSUS_STANDARD",
+        "FIRE_AND_LIFE_SAFETY"
+      ],
+      "officialHosts": [
+        "nfpa.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.nfpa.org/"
+      ],
+      "permittedSourceClasses": [
+        "consensus_standard",
+        "professional_guideline"
+      ],
+      "permittedSubjects": [
+        "fire_protection",
+        "electrical_safety",
+        "life_safety",
+        "portable_fire_extinguishers",
+        "sprinkler_systems",
+        "inspection_testing_maintenance",
+        "flammable_combustible_liquids",
+        "national_electrical_code",
+        "electrical_safe_work_practices",
+        "fire_alarm_systems"
+      ],
+      "editionPolicy": "revision_tracked",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not call NFPA text federal law merely because it may be adopted by a jurisdiction.",
+        "Do not reproduce protected code or standard text beyond permitted use."
+      ]
+    },
+    {
+      "id": "SRC-06",
+      "canonicalName": "American Conference of Governmental Industrial Hygienists",
+      "displayName": "ACGIH",
+      "authorityKind": "professional_industrial_hygiene_body",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "PROFESSIONAL_GUIDANCE",
+        "INDUSTRIAL_HYGIENE"
+      ],
+      "officialHosts": [
+        "acgih.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.acgih.org/"
+      ],
+      "permittedSourceClasses": [
+        "professional_guideline"
+      ],
+      "permittedSubjects": [
+        "industrial_hygiene",
+        "threshold_limit_values",
+        "biological_exposure_indices",
+        "physical_agents",
+        "heat_stress",
+        "ventilation",
+        "exposure_assessment"
+      ],
+      "editionPolicy": "annual_or_revision_check",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not describe TLVs or BEIs as OSHA PELs.",
+        "Do not describe ACGIH guidance as statutory requirements.",
+        "Do not reproduce proprietary exposure-limit tables without rights."
+      ]
+    },
+    {
+      "id": "SRC-07",
+      "canonicalName": "American Industrial Hygiene Association",
+      "displayName": "AIHA",
+      "authorityKind": "professional_industrial_hygiene_association",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "PROFESSIONAL_GUIDANCE",
+        "INDUSTRIAL_HYGIENE"
+      ],
+      "officialHosts": [
+        "aiha.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.aiha.org/"
+      ],
+      "permittedSourceClasses": [
+        "professional_guideline",
+        "professional_framework"
+      ],
+      "permittedSubjects": [
+        "exposure_assessment",
+        "sampling_strategy",
+        "industrial_hygiene",
+        "occupational_health",
+        "control_strategy",
+        "professional_decision_making"
+      ],
+      "editionPolicy": "publication_specific",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not represent professional guidance as a legal requirement without a separate legal source."
+      ]
+    },
+    {
+      "id": "SRC-08",
+      "canonicalName": "United States Environmental Protection Agency",
+      "displayName": "EPA",
+      "authorityKind": "us_federal_environmental_regulator",
+      "regulatoryAuthority": true,
+      "jurisdictionScopes": [
+        "US_FEDERAL",
+        "ENVIRONMENTAL_REGULATION"
+      ],
+      "officialHosts": [
+        "epa.gov"
+      ],
+      "officialEntryPoints": [
+        "https://www.epa.gov/"
+      ],
+      "permittedSourceClasses": [
+        "environmental_regulation",
+        "enforcement_or_compliance_guidance",
+        "government_recommendation"
+      ],
+      "permittedSubjects": [
+        "hazardous_waste",
+        "environmental_releases",
+        "air_pollution",
+        "water_pollution",
+        "rcra",
+        "cercla",
+        "clean_air_act",
+        "clean_water_act",
+        "environmental_compliance"
+      ],
+      "editionPolicy": "continuous_regulatory_check",
+      "reviewCadenceDays": 90,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Distinguish regulations from EPA guidance.",
+        "Retain federal/state jurisdiction context where material."
+      ]
+    },
+    {
+      "id": "SRC-09",
+      "canonicalName": "U.S. Department of Transportation / Pipeline and Hazardous Materials Safety Administration / Federal Motor Carrier Safety Administration",
+      "displayName": "DOT / PHMSA / FMCSA",
+      "authorityKind": "us_federal_transportation_regulatory_family",
+      "regulatoryAuthority": true,
+      "jurisdictionScopes": [
+        "US_FEDERAL",
+        "TRANSPORTATION_REGULATION"
+      ],
+      "officialHosts": [
+        "transportation.gov",
+        "phmsa.dot.gov",
+        "fmcsa.dot.gov"
+      ],
+      "officialEntryPoints": [
+        "https://www.transportation.gov/",
+        "https://www.phmsa.dot.gov/",
+        "https://www.fmcsa.dot.gov/"
+      ],
+      "permittedSourceClasses": [
+        "transportation_regulation",
+        "enforcement_or_compliance_guidance",
+        "government_recommendation"
+      ],
+      "permittedSubjects": [
+        "hazardous_materials_transportation",
+        "shipping",
+        "packaging",
+        "marking_labeling_placarding",
+        "pipeline_safety",
+        "fleet_safety",
+        "driver_safety",
+        "vehicle_maintenance"
+      ],
+      "editionPolicy": "continuous_regulatory_check",
+      "reviewCadenceDays": 90,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Keep PHMSA, FMCSA, and general DOT jurisdiction distinct when the rule depends on agency scope."
+      ]
+    },
+    {
+      "id": "SRC-10",
+      "canonicalName": "Federal Emergency Management Agency / Department of Homeland Security / National Incident Management System / Incident Command System",
+      "displayName": "FEMA / DHS / NIMS / ICS",
+      "authorityKind": "us_federal_emergency_management_framework_family",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "US_EMERGENCY_MANAGEMENT",
+        "INCIDENT_MANAGEMENT_FRAMEWORK"
+      ],
+      "officialHosts": [
+        "fema.gov",
+        "dhs.gov"
+      ],
+      "officialEntryPoints": [
+        "https://www.fema.gov/emergency-managers/nims",
+        "https://www.dhs.gov/"
+      ],
+      "permittedSourceClasses": [
+        "emergency_management_framework",
+        "government_recommendation"
+      ],
+      "permittedSubjects": [
+        "emergency_management",
+        "incident_command_system",
+        "nims",
+        "preparedness",
+        "emergency_planning",
+        "disaster_response",
+        "business_continuity",
+        "command_and_coordination"
+      ],
+      "editionPolicy": "revision_tracked",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not present NIMS or ICS framework content as OSHA regulation unless separately supported."
+      ]
+    },
+    {
+      "id": "SRC-11",
+      "canonicalName": "American Institute of Chemical Engineers / Center for Chemical Process Safety",
+      "displayName": "AIChE / CCPS",
+      "authorityKind": "professional_process_safety_body",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "PROFESSIONAL_FRAMEWORK",
+        "PROCESS_SAFETY"
+      ],
+      "officialHosts": [
+        "aiche.org",
+        "ccps.aiche.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.aiche.org/ccps",
+        "https://ccps.aiche.org/"
+      ],
+      "permittedSourceClasses": [
+        "process_safety_framework",
+        "professional_guideline"
+      ],
+      "permittedSubjects": [
+        "risk_based_process_safety",
+        "process_hazard_analysis",
+        "hazard_identification_and_risk_analysis",
+        "management_of_change",
+        "asset_integrity",
+        "safe_work_practices",
+        "chemical_compatibility",
+        "pressure_relief",
+        "materials_of_construction",
+        "process_flow_diagrams"
+      ],
+      "editionPolicy": "publication_specific",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not conflate CCPS Risk Based Process Safety with OSHA Process Safety Management requirements.",
+        "Do not reproduce protected book text beyond permitted use."
+      ]
+    },
+    {
+      "id": "SRC-12",
+      "canonicalName": "National Safety Council",
+      "displayName": "National Safety Council",
+      "authorityKind": "professional_safety_body",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "PROFESSIONAL_PRACTICE"
+      ],
+      "officialHosts": [
+        "nsc.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.nsc.org/"
+      ],
+      "permittedSourceClasses": [
+        "professional_guideline",
+        "professional_framework"
+      ],
+      "permittedSubjects": [
+        "accident_prevention",
+        "occupational_safety",
+        "industrial_hygiene",
+        "safety_management",
+        "professional_safety_practice"
+      ],
+      "editionPolicy": "publication_specific",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not represent NSC professional guidance as a legal requirement.",
+        "Do not reproduce protected publication content beyond permitted use."
+      ]
+    },
+    {
+      "id": "SRC-13",
+      "canonicalName": "American Society of Safety Professionals Professional Literature",
+      "displayName": "ASSP Professional Literature",
+      "authorityKind": "professional_safety_literature",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "PROFESSIONAL_PRACTICE"
+      ],
+      "officialHosts": [
+        "assp.org"
+      ],
+      "officialEntryPoints": [
+        "https://www.assp.org/"
+      ],
+      "permittedSourceClasses": [
+        "professional_guideline",
+        "professional_framework"
+      ],
+      "permittedSubjects": [
+        "safety_engineering",
+        "risk_assessment",
+        "fall_protection",
+        "management_systems",
+        "professional_practice",
+        "technical_safety_applications"
+      ],
+      "editionPolicy": "publication_specific",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not elevate professional commentary or literature to regulatory status.",
+        "Keep consensus standards under SRC-03 rather than classifying them as general professional literature."
+      ]
+    },
+    {
+      "id": "SRC-14",
+      "canonicalName": "FM",
+      "displayName": "FM / FM Global",
+      "authorityKind": "engineering_loss_prevention_body",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "LOSS_PREVENTION",
+        "PROPERTY_PROTECTION"
+      ],
+      "officialHosts": [
+        "fm.com"
+      ],
+      "officialEntryPoints": [
+        "https://www.fm.com/resources/fm-data-sheets",
+        "https://www.fm.com/resources"
+      ],
+      "permittedSourceClasses": [
+        "loss_prevention_guidance"
+      ],
+      "permittedSubjects": [
+        "property_loss_prevention",
+        "fire_protection",
+        "facility_design",
+        "equipment_protection",
+        "business_continuity",
+        "natural_hazards",
+        "engineering_risk_control"
+      ],
+      "editionPolicy": "revision_tracked",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not represent FM loss-prevention guidance as statutory compliance unless separately adopted by an applicable authority."
+      ]
+    },
+    {
+      "id": "SRC-15",
+      "canonicalName": "UL Standards & Engagement / UL Solutions",
+      "displayName": "UL",
+      "authorityKind": "standards_testing_and_certification_family",
+      "regulatoryAuthority": false,
+      "jurisdictionScopes": [
+        "CONSENSUS_STANDARD",
+        "PRODUCT_SAFETY",
+        "CERTIFICATION"
+      ],
+      "officialHosts": [
+        "ulse.org",
+        "ul.com"
+      ],
+      "officialEntryPoints": [
+        "https://ulse.org/standards/",
+        "https://www.ul.com/"
+      ],
+      "permittedSourceClasses": [
+        "consensus_standard",
+        "testing_or_certification_standard"
+      ],
+      "permittedSubjects": [
+        "product_safety",
+        "electrical_equipment",
+        "fire_safety_equipment",
+        "testing",
+        "certification",
+        "safety_standards"
+      ],
+      "editionPolicy": "revision_tracked",
+      "reviewCadenceDays": 365,
+      "firstPartyRequired": true,
+      "status": "active",
+      "verifiedAt": "2026-09-23",
+      "prohibitedAttributions": [
+        "Do not equate UL certification or listing with regulatory approval.",
+        "Do not reproduce protected standard text beyond permitted use."
+      ]
+    }
+  ]
+}
