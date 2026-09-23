@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_058",
   "category": "process_safety_insight",
   "display": {
-    "displayText": "CCPS pressure-relief guidance treats the relief device, connecting piping, and effluent handling as one engineered system that must be sized for credible overpressure scenarios.",
+    "displayText": "CCPS pressure-relief guidance treats the relief device, connecting piping, and effluent handling as one engineered system sized for credible overpressure scenarios.",
     "shortVariant": "Pressure relief design covers the device, piping, and discharge handling together.",
-    "estimatedReadSeconds": 10
+    "estimatedReadSeconds": 9
   },
   "curriculum": {
     "scope": "mapped",
