@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_020",
   "category": "safety_insight",
   "display": {
-    "displayText": "ANSI/ASSP Z244.1 addresses hazardous-energy control through lockout, tagout, and risk-assessed alternative methods selected for the servicing task and equipment.",
-    "shortVariant": "ANSI/ASSP Z244.1 includes risk-assessed alternatives for hazardous-energy control.",
-    "estimatedReadSeconds": 9
+    "displayText": "ANSI/ASSP hazardous-energy guidance addresses lockout, tagout, and risk-assessed alternative methods selected for the servicing task and equipment.",
+    "shortVariant": "ANSI/ASSP guidance includes risk-assessed alternatives for hazardous-energy control.",
+    "estimatedReadSeconds": 7
   },
   "curriculum": {
     "scope": "mapped",
