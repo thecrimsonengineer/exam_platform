@@ -1,0 +1,79 @@
+name: ML-4 Factual Legal Status Validation
+
+on:
+  push:
+    branches:
+      - phase-ml4-factual-legal-status-gates
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml4-factual-legal-status-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-4 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record exact SHA and diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "ML-4 exact SHA: ${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify ML-4 formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed \
+            lib/services/micro_learning/claim_semantics_policy_validator.dart \
+            lib/services/micro_learning/micro_fact_claim_gate_validator.dart \
+            tool/validate_micro_learning_claim_gates.dart \
+            test/micro_learning/claim_semantics_policy_validator_test.dart \
+            test/micro_learning/micro_fact_claim_gate_validator_test.dart
+
+      - name: Analyze ML-4 implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart analyze \
+            lib/services/micro_learning/claim_semantics_policy_validator.dart \
+            lib/services/micro_learning/micro_fact_claim_gate_validator.dart \
+            tool/validate_micro_learning_claim_gates.dart \
+            test/micro_learning/claim_semantics_policy_validator_test.dart \
+            test/micro_learning/micro_fact_claim_gate_validator_test.dart
+
+      - name: Validate ML-4 claim gates
+        run: dart run tool/validate_micro_learning_claim_gates.dart
+
+      - name: Run ML-1 through ML-4 focused regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test \
+            test/micro_learning/authority_registry_validator_test.dart \
+            test/micro_learning/micro_fact_schema_validator_test.dart \
+            test/micro_learning/micro_fact_source_gate_validator_test.dart \
+            test/micro_learning/claim_semantics_policy_validator_test.dart \
+            test/micro_learning/micro_fact_claim_gate_validator_test.dart
