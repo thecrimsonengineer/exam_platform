@@ -303,7 +303,10 @@ class RightsProvenancePolicyValidator {
     }
 
     final map = Map<String, dynamic>.from(value);
-    if (!_sameSet(map.keys.toSet(), MicroFactSchemaValidator.rightsTreatments)) {
+    if (!_sameSet(
+      map.keys.toSet(),
+      MicroFactSchemaValidator.rightsTreatments,
+    )) {
       _add(
         issues,
         'ML5_POLICY_RIGHTS_TREATMENT_COVERAGE',
@@ -412,12 +415,7 @@ class RightsProvenancePolicyValidator {
     String path,
     List<RightsProvenancePolicyIssue> issues,
   ) {
-    final map = _requiredMap(
-      value,
-      path,
-      'ML5_POLICY_PARAPHRASE_RULE',
-      issues,
-    );
+    final map = _requiredMap(value, path, 'ML5_POLICY_PARAPHRASE_RULE', issues);
     if (map == null) {
       return;
     }
@@ -476,10 +474,11 @@ class RightsProvenancePolicyValidator {
       issues,
     );
 
-    if (!_sameSet(
-      _stringSet(map['evidenceRequiredForStatuses']),
-      const {'validated', 'published', 'review_due'},
-    )) {
+    if (!_sameSet(_stringSet(map['evidenceRequiredForStatuses']), const {
+      'validated',
+      'published',
+      'review_due',
+    })) {
       _add(
         issues,
         'ML5_POLICY_EVIDENCE_STATUS',
@@ -488,10 +487,10 @@ class RightsProvenancePolicyValidator {
       );
     }
 
-    if (!_sameSet(
-      _stringSet(map['evidenceMustPassForStatuses']),
-      const {'validated', 'published'},
-    )) {
+    if (!_sameSet(_stringSet(map['evidenceMustPassForStatuses']), const {
+      'validated',
+      'published',
+    })) {
       _add(
         issues,
         'ML5_POLICY_PASS_STATUS',
@@ -526,10 +525,7 @@ class RightsProvenancePolicyValidator {
 
     _exactKeys(
       map,
-      const {
-        'withoutExplicitLicense',
-        'alwaysBlockedInMicroFactEvidence',
-      },
+      const {'withoutExplicitLicense', 'alwaysBlockedInMicroFactEvidence'},
       r'$policy.prohibitedReuse',
       issues,
     );
@@ -624,15 +620,12 @@ class RightsProvenancePolicyValidator {
       );
     }
 
-    if (!_sameSet(
-      _stringSet(map['sourceFingerprintFields']),
-      const {
-        'sourceRegistryId',
-        'officialUrl',
-        'sourceLocator',
-        'editionOrRevision',
-      },
-    )) {
+    if (!_sameSet(_stringSet(map['sourceFingerprintFields']), const {
+      'sourceRegistryId',
+      'officialUrl',
+      'sourceLocator',
+      'editionOrRevision',
+    })) {
       _add(
         issues,
         'ML5_POLICY_SOURCE_FINGERPRINT',
@@ -669,13 +662,13 @@ class RightsProvenancePolicyValidator {
     );
 
     if (!_sameSet(
-      _stringSet(map['requireEditionOrRevisionWhenAuthorityPolicyIn']),
-      const {
-        'revision_tracked',
-        'annual_or_revision_check',
-        'publication_specific',
-      },
-    ) ||
+          _stringSet(map['requireEditionOrRevisionWhenAuthorityPolicyIn']),
+          const {
+            'revision_tracked',
+            'annual_or_revision_check',
+            'publication_specific',
+          },
+        ) ||
         map['minimalQuoteRequiresHumanReview'] != true ||
         map['licensedExcerptRequiresHumanReview'] != true ||
         map['derivativeSimilarityReviewRequired'] != true) {
