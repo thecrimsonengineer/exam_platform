@@ -134,9 +134,7 @@ class StartupPedagogyEvidenceValidator {
       _validateAccessibilityReview(accessibility, issues);
     }
 
-    return StartupPedagogyEvidenceValidationResult(
-      List.unmodifiable(issues),
-    );
+    return StartupPedagogyEvidenceValidationResult(List.unmodifiable(issues));
   }
 
   void _validateFingerprint(
@@ -145,11 +143,7 @@ class StartupPedagogyEvidenceValidator {
   ) {
     _exactKeys(
       map,
-      const {
-        'displayTextSha256',
-        'shortVariantSha256',
-        'estimatedReadSeconds',
-      },
+      const {'displayTextSha256', 'shortVariantSha256', 'estimatedReadSeconds'},
       r'$evidence.contentFingerprint',
       issues,
     );
@@ -307,18 +301,9 @@ class StartupPedagogyEvidenceValidator {
       'precisionPreserved',
       'assessmentLeakageReviewed',
     };
-    _validateBooleans(
-      map,
-      booleans,
-      r'$evidence.pedagogyReview',
-      issues,
-    );
+    _validateBooleans(map, booleans, r'$evidence.pedagogyReview', issues);
 
-    _validateReviewDates(
-      map,
-      r'$evidence.pedagogyReview',
-      issues,
-    );
+    _validateReviewDates(map, r'$evidence.pedagogyReview', issues);
 
     if (map['status'] == 'pass') {
       for (final key in booleans) {
@@ -395,18 +380,9 @@ class StartupPedagogyEvidenceValidator {
       'plainLanguageAccessibleConfirmed',
       'noForcedInteractionConfirmed',
     };
-    _validateBooleans(
-      map,
-      booleans,
-      r'$evidence.accessibilityReview',
-      issues,
-    );
+    _validateBooleans(map, booleans, r'$evidence.accessibilityReview', issues);
 
-    _validateReviewDates(
-      map,
-      r'$evidence.accessibilityReview',
-      issues,
-    );
+    _validateReviewDates(map, r'$evidence.accessibilityReview', issues);
 
     if (map['status'] == 'pass') {
       for (final key in booleans) {
@@ -552,11 +528,7 @@ class StartupPedagogyEvidenceValidator {
     String message,
   ) {
     issues.add(
-      StartupPedagogyEvidenceIssue(
-        code: code,
-        path: path,
-        message: message,
-      ),
+      StartupPedagogyEvidenceIssue(code: code, path: path, message: message),
     );
   }
 }
