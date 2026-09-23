@@ -170,9 +170,7 @@ class ClaimSemanticsPolicyValidator {
         issues,
         'ML4_POLICY_VERSION',
         r'$policy.policyVersion',
-        'Claim-semantics policy version must be ' +
-            requiredPolicyVersion +
-            '.',
+        'Claim-semantics policy version must be ' + requiredPolicyVersion + '.',
       );
     }
 
@@ -448,11 +446,7 @@ class ClaimSemanticsPolicyValidator {
     ]) {
       _expectExactStringSet(
         review[field],
-        const {
-          'technicalStatus',
-          'sourceStatus',
-          'humanTechnicalStatus',
-        },
+        const {'technicalStatus', 'sourceStatus', 'humanTechnicalStatus'},
         r'$policy.enhancedReview.' + field,
         'ML4_POLICY_ENHANCED_REVIEW_FIELDS',
         issues,
@@ -550,7 +544,9 @@ class ClaimSemanticsPolicyValidator {
 
     final map = Map<String, dynamic>.from(value);
     for (final entry in map.entries) {
-      if (!AuthorityRegistryValidator.requiredAuthorityIds.contains(entry.key)) {
+      if (!AuthorityRegistryValidator.requiredAuthorityIds.contains(
+        entry.key,
+      )) {
         _add(
           issues,
           'ML4_POLICY_FORBIDDEN_UNKNOWN_AUTHORITY',
@@ -567,7 +563,13 @@ class ClaimSemanticsPolicyValidator {
       );
     }
 
-    for (final requiredId in const {'SRC-02', 'SRC-06', 'SRC-11', 'SRC-14', 'SRC-15'}) {
+    for (final requiredId in const {
+      'SRC-02',
+      'SRC-06',
+      'SRC-11',
+      'SRC-14',
+      'SRC-15',
+    }) {
       if (!map.containsKey(requiredId)) {
         _add(
           issues,
@@ -662,8 +664,37 @@ class ClaimSemanticsPolicyValidator {
       a.length == b.length && a.containsAll(b);
 
   static bool _isStrictDate(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}
+      return false;
+    }
+
+    final parsed = DateTime.tryParse(value);
+    if (parsed == null) {
+      return false;
+    }
+
+    final normalized =
+        parsed.year.toString().padLeft(4, '0') +
+        '-' +
+        parsed.month.toString().padLeft(2, '0') +
+        '-' +
+        parsed.day.toString().padLeft(2, '0');
+
+    return normalized == value;
+  }
+
+  static void _add(
+    List<ClaimSemanticsPolicyIssue> issues,
+    String code,
+    String path,
+    String message,
+  ) {
+    issues.add(
+      ClaimSemanticsPolicyIssue(code: code, path: path, message: message),
+    );
+  }
+}
+).hasMatch(value)) {
       return false;
     }
 
