@@ -235,8 +235,7 @@ class MicroFactSourceGateValidator {
       final actualHost = uri.host.toLowerCase();
       final isFirstParty = allowedHosts.any(
         (allowedHost) =>
-            actualHost == allowedHost ||
-            actualHost.endsWith('.' + allowedHost),
+            actualHost == allowedHost || actualHost.endsWith('.' + allowedHost),
       );
 
       if (!isFirstParty) {
