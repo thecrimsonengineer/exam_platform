@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_104",
+  "category": "transport_insight",
+  "display": {
+    "displayText": "FMCSA guidance summarizes hours-of-service rules that limit commercial driving and on-duty periods and provide off-duty time and driving-break provisions.",
+    "shortVariant": "Hours-of-service rules structure driving, duty, break, and rest periods.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c05",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "hours_of_service",
+      "driver_fatigue"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-09",
+    "sourceClass": "enforcement_or_compliance_guidance",
+    "sourceTitle": "Summary of Hours of Service Regulations",
+    "officialUrl": "https://www.fmcsa.dot.gov/regulations/hours-service/summary-hours-service-regulations",
+    "sourceLocator": "Hours-of-Service Regulations summary",
+    "editionOrRevision": "Updated March 28, 2022",
+    "sourceSection": "Hours-of-Service Regulations",
+    "sourcePage": null,
+    "sourcePublishedAt": "2022-03-28",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "nonbinding_guidance",
+    "jurisdiction": "US Federal DOT / FMCSA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "hours_of_service",
+    "driver_fatigue",
+    "fleet_safety"
+  ]
+}
