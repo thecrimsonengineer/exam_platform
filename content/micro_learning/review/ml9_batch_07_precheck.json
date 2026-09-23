@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_07",
+  "checkedAt": "2026-09-23",
+  "candidateContentSha": "c91891d8fee8c21af4d9282cdf322b53acc65f45",
+  "scope": {
+    "batchFacts": 10,
+    "cumulativeCandidateFacts": 70,
+    "totalUniquePairCount": 2415,
+    "previouslyValidatedOldOldPairs": 1770,
+    "newlyScannedOldToNewPairs": 600,
+    "newlyScannedBatchInternalPairs": 45
+  },
+  "candidateGatePrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "correctionsApplied": [
+      "mf_ml9_017 learner copy removed non-whitelisted B11 abbreviation",
+      "mf_ml9_018 learner copy removed non-whitelisted IEC abbreviation",
+      "mf_ml9_020 learner copy removed non-whitelisted Z244 identifier",
+      "mf_ml9_023 learner copy removed non-whitelisted B11 abbreviation"
+    ],
+    "checks": [
+      "approved authority exists and is active",
+      "source class is permitted for authority",
+      "official URL is HTTPS and first-party host",
+      "NIOSH paths remain within the frozen /niosh/ scope",
+      "claim legal status is permitted for source class",
+      "mandatory wording and authority attribution rules checked",
+      "candidate lifecycle remains review with startup disabled",
+      "all human and publication review channels remain pending",
+      "canonical domain and competency ID patterns checked",
+      "at least two tags present"
+    ]
+  },
+  "startupTextPrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "checks": [
+      "display word count within 6-32",
+      "display computed read time at or below 10 seconds",
+      "estimated read time within frozen 2-second tolerance",
+      "short variant word count within 4-18",
+      "short variant computed read time at or below 6 seconds",
+      "short variant word ratio at or below 0.75",
+      "uppercase abbreviations limited to the frozen ML-7 whitelist"
+    ]
+  },
+  "ml8DeterministicPrecheck": {
+    "result": "pass",
+    "candidateFactsScanned": 70,
+    "pairCountScanned": 2415,
+    "exactDuplicateCount": 0,
+    "unresolvedReviewCandidateCount": 0,
+    "flaggedPairCount": 0,
+    "method": "1,770 previously validated pairs plus exact frozen-policy scan of 600 old-to-new pairs and 45 Batch-07 internal pairs"
+  },
+  "authorityConcentration": {
+    "result": "pass",
+    "threshold": 0.4,
+    "blocking": false,
+    "sourceCounts": [
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 21,
+        "share": 0.3
+      },
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 18,
+        "share": 0.2571
+      },
+      {
+        "sourceRegistryId": "SRC-03",
+        "count": 5,
+        "share": 0.0714
+      },
+      {
+        "sourceRegistryId": "SRC-08",
+        "count": 5,
+        "share": 0.0714
+      },
+      {
+        "sourceRegistryId": "SRC-09",
+        "count": 5,
+        "share": 0.0714
+      },
+      {
+        "sourceRegistryId": "SRC-10",
+        "count": 5,
+        "share": 0.0714
+      },
+      {
+        "sourceRegistryId": "SRC-05",
+        "count": 4,
+        "share": 0.0571
+      },
+      {
+        "sourceRegistryId": "SRC-04",
+        "count": 3,
+        "share": 0.0429
+      },
+      {
+        "sourceRegistryId": "SRC-11",
+        "count": 2,
+        "share": 0.0286
+      },
+      {
+        "sourceRegistryId": "SRC-07",
+        "count": 1,
+        "share": 0.0143
+      },
+      {
+        "sourceRegistryId": "SRC-14",
+        "count": 1,
+        "share": 0.0143
+      }
+    ],
+    "note": "No authority exceeds the frozen 40% concentration-review threshold. Batch 07 introduced AIHA and FM without increasing OSHA concentration."
+  },
+  "rightsSensitiveCandidates": [
+    {
+      "microFactId": "mf_ml9_017",
+      "sourceRegistryId": "SRC-03",
+      "reason": "ANSI/ASSP source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_018",
+      "sourceRegistryId": "SRC-04",
+      "reason": "ISO-hosted international standard is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_020",
+      "sourceRegistryId": "SRC-03",
+      "reason": "ANSI/ASSP source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_021",
+      "sourceRegistryId": "SRC-05",
+      "reason": "NFPA source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_023",
+      "sourceRegistryId": "SRC-03",
+      "reason": "ANSI/ASSP source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_024",
+      "sourceRegistryId": "SRC-14",
+      "reason": "FM source is rights-sensitive under ML-5"
+    },
+    {
+      "microFactId": "mf_ml9_032",
+      "sourceRegistryId": "SRC-07",
+      "reason": "AIHA source is rights-sensitive under ML-5"
+    }
+  ],
+  "humanReview": {
+    "complete": false,
+    "approvalsGeneratedByAutomation": false
+  }
+}
