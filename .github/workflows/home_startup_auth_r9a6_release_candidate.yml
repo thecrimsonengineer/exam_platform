@@ -211,7 +211,8 @@ jobs:
           )"
           test -n "$APKSIGNER"
           "$APKSIGNER" verify --verbose --print-certs "$APK" > "$RUNNER_TEMP/apksigner.txt"
-          grep -q 'Verified using v2 scheme' "$RUNNER_TEMP/apksigner.txt"
+          grep -Fq 'Verified using v2 scheme' "$RUNNER_TEMP/apksigner.txt"
+          echo "APK_SIGNATURE_V2_PRESENT=true"
 
           actual_cert="$(
             sed -n 's/^Signer #1 certificate SHA-256 digest: //p' "$RUNNER_TEMP/apksigner.txt" |
@@ -226,6 +227,7 @@ jobs:
 
           test -n "$actual_cert"
           test "$actual_cert" = "$expected_cert"
+          echo "APK_SIGNING_CERT_MATCH=true"
 
           cp "$APK" "CSP11-INT-R9A6-RC-${GITHUB_SHA}.apk"
 
