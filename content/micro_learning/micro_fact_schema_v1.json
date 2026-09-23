@@ -1,0 +1,535 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://csp11.local/schemas/micro_fact_v1.schema.json",
+  "title": "CSP11 MicroFact v1",
+  "description": "Frozen ML-2 structural contract for CSP11 micro-learning facts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "microFactId",
+    "contentVersion",
+    "status",
+    "category",
+    "display",
+    "curriculum",
+    "provenance",
+    "claim",
+    "assessment",
+    "review",
+    "runtime",
+    "supersession",
+    "tags"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "microFactId": {
+      "type": "string",
+      "pattern": "^mf_[a-z0-9][a-z0-9_-]{5,63}$"
+    },
+    "contentVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "review",
+        "validated",
+        "published",
+        "review_due",
+        "superseded",
+        "withdrawn",
+        "rejected"
+      ]
+    },
+    "category": {
+      "enum": [
+        "safety_insight",
+        "csp_tip",
+        "learning_tip",
+        "quick_recall",
+        "think_about_it",
+        "process_safety_insight",
+        "ih_insight",
+        "emergency_insight",
+        "environmental_insight",
+        "fire_electrical_insight",
+        "management_insight",
+        "transport_insight"
+      ]
+    },
+    "display": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "displayText",
+        "shortVariant",
+        "estimatedReadSeconds"
+      ],
+      "properties": {
+        "displayText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "shortVariant": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 180
+        },
+        "estimatedReadSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        }
+      }
+    },
+    "curriculum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "domainId",
+        "competencyId",
+        "topicId",
+        "subtopicId",
+        "conceptIds"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "mapped",
+            "general"
+          ]
+        },
+        "domainId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^d0[1-7]$"
+        },
+        "competencyId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^d0[1-7]_c[0-9]{2}$"
+        },
+        "topicId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^d0[1-7]_c[0-9]{2}_t[0-9]{2}$"
+        },
+        "subtopicId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^d0[1-7]_c[0-9]{2}_t[0-9]{2}_s[0-9]{2}$"
+        },
+        "conceptIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_:-]{1,63}$"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceRegistryId",
+        "sourceClass",
+        "sourceTitle",
+        "officialUrl",
+        "sourceLocator",
+        "editionOrRevision",
+        "sourceSection",
+        "sourcePage",
+        "sourcePublishedAt",
+        "sourceVerifiedAt",
+        "rightsTreatment"
+      ],
+      "properties": {
+        "sourceRegistryId": {
+          "type": "string",
+          "pattern": "^SRC-[0-9]{2}$"
+        },
+        "sourceClass": {
+          "enum": [
+            "federal_regulation",
+            "regulatory_interpretation",
+            "enforcement_or_compliance_guidance",
+            "government_recommendation",
+            "research_or_prevention_guidance",
+            "consensus_standard",
+            "international_standard",
+            "professional_guideline",
+            "professional_framework",
+            "environmental_regulation",
+            "transportation_regulation",
+            "emergency_management_framework",
+            "process_safety_framework",
+            "loss_prevention_guidance",
+            "testing_or_certification_standard"
+          ]
+        },
+        "sourceTitle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 250
+        },
+        "officialUrl": {
+          "type": "string",
+          "pattern": "^https://",
+          "maxLength": 1000
+        },
+        "sourceLocator": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "editionOrRevision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "sourceSection": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "sourcePage": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "sourcePublishedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "sourceVerifiedAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "rightsTreatment": {
+          "enum": [
+            "original_paraphrase",
+            "brief_summary",
+            "minimal_quote",
+            "licensed_excerpt"
+          ]
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legalStatus",
+        "jurisdiction",
+        "numericalClaim",
+        "safetyCritical",
+        "simplificationRisk"
+      ],
+      "properties": {
+        "legalStatus": {
+          "enum": [
+            "binding_requirement",
+            "regulatory_interpretation",
+            "nonbinding_guidance",
+            "recommendation",
+            "consensus_standard",
+            "international_standard",
+            "professional_guideline",
+            "professional_framework",
+            "research_finding",
+            "certification_or_testing",
+            "not_applicable"
+          ]
+        },
+        "jurisdiction": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "numericalClaim": {
+          "type": "boolean"
+        },
+        "safetyCritical": {
+          "type": "boolean"
+        },
+        "simplificationRisk": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sensitivity",
+        "linkedQuestionConcepts"
+      ],
+      "properties": {
+        "sensitivity": {
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "block_during_linked_assessment"
+          ]
+        },
+        "linkedQuestionConcepts": {
+          "type": "array",
+          "maxItems": 30,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_:-]{1,63}$"
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "technicalStatus",
+        "sourceStatus",
+        "pedagogyStatus",
+        "copyrightStatus",
+        "uiStatus",
+        "humanTechnicalStatus",
+        "reviewedAt",
+        "nextReviewDueAt"
+      ],
+      "properties": {
+        "technicalStatus": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "sourceStatus": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "pedagogyStatus": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "copyrightStatus": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "uiStatus": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "humanTechnicalStatus": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "nextReviewDueAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "startupEligible"
+      ],
+      "properties": {
+        "startupEligible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "supersession": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedesMicroFactId",
+        "supersededByMicroFactId"
+      ],
+      "properties": {
+        "supersedesMicroFactId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^mf_[a-z0-9][a-z0-9_-]{5,63}$"
+        },
+        "supersededByMicroFactId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^mf_[a-z0-9][a-z0-9_-]{5,63}$"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9_-]{1,63}$"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "curriculum": {
+            "properties": {
+              "scope": {
+                "const": "mapped"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "curriculum": {
+            "properties": {
+              "domainId": {
+                "type": "string"
+              },
+              "competencyId": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "published"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "runtime": {
+            "properties": {
+              "startupEligible": {
+                "type": "boolean"
+              }
+            }
+          },
+          "review": {
+            "properties": {
+              "technicalStatus": {
+                "const": "pass"
+              },
+              "sourceStatus": {
+                "const": "pass"
+              },
+              "pedagogyStatus": {
+                "const": "pass"
+              },
+              "copyrightStatus": {
+                "const": "pass"
+              },
+              "uiStatus": {
+                "const": "pass"
+              },
+              "humanTechnicalStatus": {
+                "const": "pass"
+              },
+              "reviewedAt": {
+                "type": "string"
+              },
+              "nextReviewDueAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "x-csp11": {
+    "phase": "ML-2",
+    "sourceRegistryVersion": "1.0.0",
+    "failClosed": true,
+    "notes": [
+      "Membership of sourceRegistryId in the ML-1 registry is enforced in ML-3.",
+      "Canonical curriculum existence is enforced in ML-6.",
+      "Pedagogical word/readability quality is enforced in ML-7.",
+      "Duplicate and contradiction detection is enforced in ML-8."
+    ]
+  }
+}
