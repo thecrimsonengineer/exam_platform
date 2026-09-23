@@ -306,6 +306,32 @@ Batch 04 review and validation artifacts:
 - `tool/validate_ml9_candidate_bank.dart`
 - `.github/workflows/ml9_candidate_bank_validation.yml`
 
+### Batch 05
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 50.
+- Authority diversification was an explicit Batch 05 constraint.
+- Batch 05 added zero OSHA facts.
+- New authority mix: 3 NIOSH, 2 CCPS, 1 ISO, 1 NFPA, 1 EPA, 1 FEMA, and 1 FMCSA.
+- Batch topics cover occupational risk management, dose-response analysis, process asset integrity, fire-alarm lifecycle maintenance, process-safety metrics, climate/infrastructure resilience, continuity planning, commercial vehicle occupant protection, occupational exposure banding, and training evaluation.
+- All Batch 05 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- Candidate source-class, legal-status, attribution, lifecycle, curriculum-ID-pattern, and tag prechecks passed.
+- Frozen startup text precheck passed for all 10 Batch 05 candidates.
+- Cumulative ML-8 coverage now represents 1,225 unique pairs across 50 candidates.
+- The previously validated 780 old-old pairs remain unchanged.
+- Batch 05 added 400 old-to-new comparisons and 45 internal comparisons; both scans reported 0 exact duplicates and 0 unresolved ML-8 review candidates.
+- OSHA concentration fell from 17/40 (42.5%) to 17/50 (34.0%).
+- No authority now exceeds the frozen 40% ML-8 concentration-review threshold.
+- ISO, NFPA, and CCPS candidates remain explicitly rights-sensitive and require genuine ML-5 human rights review before validation/publication.
+- The reusable GitHub Actions workflow is expected to run on the candidate-content push, but the available connector does not expose push-triggered runs for this SHA. No unobserved CI result is claimed.
+
+Batch 05 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_05_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_05_precheck.json`
+
 ## Next action
 
-ML-9B Batch 05 - author the next 10 review-state candidates, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 50 candidates.
+ML-9B Batch 06 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 60 candidates.
