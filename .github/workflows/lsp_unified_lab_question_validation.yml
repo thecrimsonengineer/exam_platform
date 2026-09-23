@@ -55,6 +55,9 @@ jobs:
       - name: Evidence-backed LAB rationale tests
         run: flutter test test/lab_quality/lsp_q3_evidence_backed_rationale_test.dart
 
+      - name: Canonical LAB Decision batch parse tests
+        run: flutter test test/lab_quality/lsp_q4_canonical_decision_batch_parse_test.dart
+
       - name: DQG300 LAB adapter regression
         run: flutter test test/lab_quality/l4k_dqg300_lab_gate_test.dart
 
