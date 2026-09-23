@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0",
+  "status": "frozen",
+  "frozenAt": "2026-09-23",
+  "parentPhase": "ML-8",
+  "parentClosedSha": "cad3cd44983ba5385704b552ae476cb01ac9e938",
+  "failClosed": true,
+  "targetFactCount": 120,
+  "microFactSchemaVersion": 1,
+  "authorityRegistryVersion": "1.0.0",
+  "claimPolicyVersion": "1.0.0",
+  "rightsPolicyVersion": "1.0.0",
+  "curriculumPolicyVersion": "1.0.0",
+  "startupPedagogyPolicyVersion": "1.0.0",
+  "duplicateContradictionPolicyVersion": "1.0.0",
+  "authoringRules": {
+    "aiMayDraft": true,
+    "aiIsAuthority": false,
+    "firstPartySourceRequired": true,
+    "originalParaphrasePreferred": true,
+    "candidateLifecycleState": "review",
+    "candidateStartupEligible": false,
+    "candidateReviewStatuses": "pending",
+    "humanTechnicalReviewRequiredBeforeValidatedOrPublished": true,
+    "humanCurriculumReviewRequiredBeforeValidatedOrPublishedMappedFact": true,
+    "humanRightsReviewRequiredBeforeValidatedOrPublished": true,
+    "humanPedagogyAndAccessibilityReviewRequiredBeforeStartupEligibility": true,
+    "noAutomaticPublication": true,
+    "noInventedTopicOrSubtopicIds": true,
+    "competencyLevelMappingAllowed": true,
+    "qualityOutranksQuota": true
+  },
+  "releaseRules": {
+    "requireExactlyTargetFactCount": true,
+    "requireAllFactsPublished": true,
+    "requireAllFactsStartupEligible": true,
+    "requireAllFactReviewChannelsPass": true,
+    "requireAllMappedFactsHavePassingMappingEvidence": true,
+    "requireAllFactsHavePassingRightsEvidence": true,
+    "requireAllFactsHavePassingStartupPedagogyEvidence": true,
+    "requireMl8CorpusIntegrityPass": true,
+    "requireNoUnresolvedMl8Candidates": true,
+    "requireNoExactDuplicates": true,
+    "requireNoActiveVersionCollisions": true,
+    "requireHumanTechnicalStatusPass": true,
+    "requireSourceVerificationCurrentAtClosure": true
+  },
+  "distribution": [
+    {
+      "bucket": "occupational_safety",
+      "count": 25,
+      "microFactCategory": "safety_insight"
+    },
+    {
+      "bucket": "industrial_hygiene",
+      "count": 20,
+      "microFactCategory": "ih_insight"
+    },
+    {
+      "bucket": "process_safety",
+      "count": 15,
+      "microFactCategory": "process_safety_insight"
+    },
+    {
+      "bucket": "fire_electrical",
+      "count": 12,
+      "microFactCategory": "fire_electrical_insight"
+    },
+    {
+      "bucket": "management_systems",
+      "count": 12,
+      "microFactCategory": "management_insight"
+    },
+    {
+      "bucket": "environmental",
+      "count": 10,
+      "microFactCategory": "environmental_insight"
+    },
+    {
+      "bucket": "emergency_management",
+      "count": 8,
+      "microFactCategory": "emergency_insight"
+    },
+    {
+      "bucket": "transportation_fleet",
+      "count": 6,
+      "microFactCategory": "transport_insight"
+    },
+    {
+      "bucket": "csp_reasoning",
+      "count": 6,
+      "microFactCategory": "csp_tip"
+    },
+    {
+      "bucket": "evidence_based_learning",
+      "count": 6,
+      "microFactCategory": "learning_tip"
+    }
+  ],
+  "diversityRules": {
+    "sourceConcentrationSignalsRemainVisible": true,
+    "noAuthorityQuotaOverridesSourceFitness": true,
+    "noBucketQuotaOverridesFactQuality": true,
+    "preserveMl8ConcentrationAudit": true
+  },
+  "batchRules": {
+    "authoringBatchSize": 10,
+    "validateEachBatchAgainstMl1ThroughMl8": true,
+    "runWholeCorpusMl8AfterEveryAcceptedBatch": true,
+    "freezeAcceptedBatchBeforeNextBatch": true
+  }
+}
