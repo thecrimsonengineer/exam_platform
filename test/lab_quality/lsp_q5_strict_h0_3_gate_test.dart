@@ -90,10 +90,7 @@ void main() {
     expect(report.h03WarningCount, 0);
     expect(report.blockedDecisionCount, 0);
     expect(report.decisionResults, hasLength(_decisions(package).length));
-    expect(
-      report.decisionResults.every((item) => item.isStrictPass),
-      isTrue,
-    );
+    expect(report.decisionResults.every((item) => item.isStrictPass), isTrue);
   });
 
   test('Q5 blocks H0.3 warnings even when normal H0.3 says PASSED', () {
@@ -120,10 +117,7 @@ void main() {
   });
 
   test('Q5 blocks normal H0.3 errors', () {
-    final package = _package(
-      strongPrompts: true,
-      includeSources: false,
-    );
+    final package = _package(strongPrompts: true, includeSources: false);
 
     final report = gate.evaluate(
       package: package,
@@ -141,10 +135,7 @@ void main() {
   });
 
   test('Q5 treats answer-length warnings as publication blockers', () {
-    final package = _package(
-      strongPrompts: true,
-      firstBestLengthBias: true,
-    );
+    final package = _package(strongPrompts: true, firstBestLengthBias: true);
 
     final report = gate.evaluate(
       package: package,
@@ -157,10 +148,7 @@ void main() {
     expect(report.parseReport.isValid, isTrue);
     expect(report.isValid, isFalse);
     expect(first.report!.passed, isTrue);
-    expect(
-      codes,
-      contains('best_answer_length_bias'),
-    );
+    expect(codes, contains('best_answer_length_bias'));
     expect(first.isStrictPass, isFalse);
   });
 
@@ -173,10 +161,7 @@ void main() {
       decisions: valid.decisions.values,
     );
 
-    final report = gate.evaluate(
-      package: package,
-      evidenceBundle: mismatched,
-    );
+    final report = gate.evaluate(package: package, evidenceBundle: mismatched);
 
     expect(report.parseReport.isValid, isFalse);
     expect(report.decisionResults, isEmpty);
@@ -185,10 +170,7 @@ void main() {
   });
 
   test('Q5 is deterministic across repeated strict validation', () {
-    final package = _package(
-      strongPrompts: true,
-      firstBestLengthBias: true,
-    );
+    final package = _package(strongPrompts: true, firstBestLengthBias: true);
     final bundle = _bundleFor(package);
 
     final first = gate.evaluate(package: package, evidenceBundle: bundle);
@@ -200,10 +182,14 @@ void main() {
     expect(first.blockedDecisionCount, second.blockedDecisionCount);
     expect(
       first.decisionResults
-          .map((item) => item.report?.issues.map((issue) => issue.code).toList())
+          .map(
+            (item) => item.report?.issues.map((issue) => issue.code).toList(),
+          )
           .toList(),
       second.decisionResults
-          .map((item) => item.report?.issues.map((issue) => issue.code).toList())
+          .map(
+            (item) => item.report?.issues.map((issue) => issue.code).toList(),
+          )
           .toList(),
     );
   });

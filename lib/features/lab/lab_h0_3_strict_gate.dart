@@ -40,14 +40,14 @@ class LabH03StrictReport {
       decisionResults.every((item) => item.isStrictPass);
 
   int get h03ErrorCount => decisionResults.fold(
-        0,
-        (total, item) => total + (item.report?.errorCount ?? 0),
-      );
+    0,
+    (total, item) => total + (item.report?.errorCount ?? 0),
+  );
 
   int get h03WarningCount => decisionResults.fold(
-        0,
-        (total, item) => total + (item.report?.warningCount ?? 0),
-      );
+    0,
+    (total, item) => total + (item.report?.warningCount ?? 0),
+  );
 
   int get blockedDecisionCount {
     if (!parseReport.isValid) {

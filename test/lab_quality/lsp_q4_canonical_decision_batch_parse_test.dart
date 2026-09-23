@@ -118,23 +118,26 @@ void main() {
     expect(report.decisionResults.first.failure, contains('Stale'));
   });
 
-  test('Q4 blocks the complete batch when the evidence version is unpinned', () {
-    final package = _package();
-    final valid = _bundleFor(package);
+  test(
+    'Q4 blocks the complete batch when the evidence version is unpinned',
+    () {
+      final package = _package();
+      final valid = _bundleFor(package);
 
-    final mismatched = LabDqg300EvidenceBundle(
-      labId: package.metadata.id,
-      versionId: 'v2',
-      decisions: valid.decisions.values,
-    );
+      final mismatched = LabDqg300EvidenceBundle(
+        labId: package.metadata.id,
+        versionId: 'v2',
+        decisions: valid.decisions.values,
+      );
 
-    final report = parser.parse(package: package, evidenceBundle: mismatched);
+      final report = parser.parse(package: package, evidenceBundle: mismatched);
 
-    expect(report.isValid, isFalse);
-    expect(report.pinnedVersionMatches, isFalse);
-    expect(report.parsedDecisionCount, 0);
-    expect(report.blockedDecisionCount, report.decisionCount);
-  });
+      expect(report.isValid, isFalse);
+      expect(report.pinnedVersionMatches, isFalse);
+      expect(report.parsedDecisionCount, 0);
+      expect(report.blockedDecisionCount, report.decisionCount);
+    },
+  );
 
   test('Q4 captures canonical conversion failure per Decision', () {
     final package = _package();
@@ -169,27 +172,30 @@ void main() {
     );
   });
 
-  test('Q4 reports unexpected evidence IDs without silently accepting them', () {
-    final package = _package();
-    final valid = _bundleFor(package);
+  test(
+    'Q4 reports unexpected evidence IDs without silently accepting them',
+    () {
+      final package = _package();
+      final valid = _bundleFor(package);
 
-    final bundle = LabDqg300EvidenceBundle(
-      labId: package.metadata.id,
-      versionId: package.metadata.versionId,
-      decisions: [
-        ...valid.decisions.values,
-        LabDqg300DecisionEvidence(
-          nodeId: 'unexpected_decision',
-          decisionSignature: 'unexpected-signature',
-          evidence: perfectDqg300Evidence(),
-        ),
-      ],
-    );
+      final bundle = LabDqg300EvidenceBundle(
+        labId: package.metadata.id,
+        versionId: package.metadata.versionId,
+        decisions: [
+          ...valid.decisions.values,
+          LabDqg300DecisionEvidence(
+            nodeId: 'unexpected_decision',
+            decisionSignature: 'unexpected-signature',
+            evidence: perfectDqg300Evidence(),
+          ),
+        ],
+      );
 
-    final report = parser.parse(package: package, evidenceBundle: bundle);
+      final report = parser.parse(package: package, evidenceBundle: bundle);
 
-    expect(report.isValid, isFalse);
-    expect(report.unexpectedEvidenceNodeIds, contains('unexpected_decision'));
-    expect(report.parsedDecisionCount, report.decisionCount);
-  });
+      expect(report.isValid, isFalse);
+      expect(report.unexpectedEvidenceNodeIds, contains('unexpected_decision'));
+      expect(report.parsedDecisionCount, report.decisionCount);
+    },
+  );
 }
