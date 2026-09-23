@@ -35,9 +35,7 @@ void main() {
 
   test('unknown nested review field fails closed', () {
     final evidence = clone();
-    final review = Map<String, dynamic>.from(
-      evidence['pedagogyReview'] as Map,
-    );
+    final review = Map<String, dynamic>.from(evidence['pedagogyReview'] as Map);
     review['skipMeaningCheck'] = true;
     evidence['pedagogyReview'] = review;
 
