@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_087",
+  "category": "environmental_insight",
+  "display": {
+    "displayText": "EPA guidance says hazardous-waste containers in satellite accumulation areas should be compatible with their contents, kept in good condition, and generally remain closed.",
+    "shortVariant": "Keep satellite hazardous-waste containers compatible, sound, and generally closed.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d05",
+    "competencyId": "d05_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "satellite_accumulation",
+      "hazardous_waste_containers"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-08",
+    "sourceClass": "enforcement_or_compliance_guidance",
+    "sourceTitle": "Frequent Questions About Hazardous Waste Generation",
+    "officialUrl": "https://www.epa.gov/hwgenerators/frequent-questions-about-hazardous-waste-generation",
+    "sourceLocator": "Satellite accumulation area container standards under 40 CFR 262.15",
+    "editionOrRevision": "Current EPA hazardous-waste generator guidance",
+    "sourceSection": "Satellite Accumulation Areas",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "nonbinding_guidance",
+    "jurisdiction": "US Federal EPA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "hazardous_waste",
+    "satellite_accumulation",
+    "container_management"
+  ]
+}
