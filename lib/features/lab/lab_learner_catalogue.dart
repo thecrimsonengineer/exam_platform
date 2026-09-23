@@ -78,8 +78,7 @@ class InMemoryLabLearnerCatalogueRepository
   Future<LabLearnerCatalogueEntry?> load(
     String labId,
     String versionId,
-  ) async =>
-      _entries[_key(labId, versionId)];
+  ) async => _entries[_key(labId, versionId)];
 
   @override
   Future<List<LabLearnerCatalogueEntry>> listAvailable() async =>
@@ -260,8 +259,7 @@ class LabLearnerControlledDelivery {
   final LabLearnerCatalogueEntry catalogueEntry;
   final LabPackage package;
 
-  LabLearnerPresentationPackage get presentation =>
-      catalogueEntry.presentation;
+  LabLearnerPresentationPackage get presentation => catalogueEntry.presentation;
 }
 
 class LabLearnerControlledDeliveryService {
@@ -322,10 +320,7 @@ class LabLearnerControlledDeliveryService {
 }
 
 class _VerifiedPublishedLab {
-  const _VerifiedPublishedLab({
-    required this.version,
-    required this.package,
-  });
+  const _VerifiedPublishedLab({required this.version, required this.package});
 
   final LabPublishedVersion version;
   final LabPackage package;

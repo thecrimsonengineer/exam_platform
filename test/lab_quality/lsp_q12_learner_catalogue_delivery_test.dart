@@ -59,16 +59,17 @@ void main() {
       publishedRepository: publishedRepository,
     );
 
-    final admitted = await LabLearnerCatalogueAdmissionService(
-      publishedRepository: publishedRepository,
-      catalogueRepository: catalogueRepository,
-    ).admit(
-      manifest: manifest,
-      entryId: entry.entryId,
-      presentation: LabLearnerPresentationPackage.fromJson(
-        _readObject(entry.learnerPresentationPath),
-      ),
-    );
+    final admitted =
+        await LabLearnerCatalogueAdmissionService(
+          publishedRepository: publishedRepository,
+          catalogueRepository: catalogueRepository,
+        ).admit(
+          manifest: manifest,
+          entryId: entry.entryId,
+          presentation: LabLearnerPresentationPackage.fromJson(
+            _readObject(entry.learnerPresentationPath),
+          ),
+        );
 
     expect(admitted.manifestEntryId, entry.entryId);
     expect(admitted.labId, entry.labId);
@@ -83,41 +84,43 @@ void main() {
     expect((await catalogueRepository.listAvailable()), hasLength(1));
   });
 
-  test('Q12 controlled delivery loads exact immutable version and presentation',
-      () async {
-    final manifest = _manifest();
-    final entry = manifest.entries.first;
-    final publishedRepository = InMemoryLabPublishedRepository();
-    final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
+  test(
+    'Q12 controlled delivery loads exact immutable version and presentation',
+    () async {
+      final manifest = _manifest();
+      final entry = manifest.entries.first;
+      final publishedRepository = InMemoryLabPublishedRepository();
+      final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
 
-    await _publishEntry(
-      manifest: manifest,
-      entry: entry,
-      publishedRepository: publishedRepository,
-    );
-    await LabLearnerCatalogueAdmissionService(
-      publishedRepository: publishedRepository,
-      catalogueRepository: catalogueRepository,
-    ).admit(
-      manifest: manifest,
-      entryId: entry.entryId,
-      presentation: LabLearnerPresentationPackage.fromJson(
-        _readObject(entry.learnerPresentationPath),
-      ),
-    );
+      await _publishEntry(
+        manifest: manifest,
+        entry: entry,
+        publishedRepository: publishedRepository,
+      );
+      await LabLearnerCatalogueAdmissionService(
+        publishedRepository: publishedRepository,
+        catalogueRepository: catalogueRepository,
+      ).admit(
+        manifest: manifest,
+        entryId: entry.entryId,
+        presentation: LabLearnerPresentationPackage.fromJson(
+          _readObject(entry.learnerPresentationPath),
+        ),
+      );
 
-    final delivery = await LabLearnerControlledDeliveryService(
-      publishedRepository: publishedRepository,
-      catalogueRepository: catalogueRepository,
-    ).load(labId: entry.labId, versionId: entry.versionId);
+      final delivery = await LabLearnerControlledDeliveryService(
+        publishedRepository: publishedRepository,
+        catalogueRepository: catalogueRepository,
+      ).load(labId: entry.labId, versionId: entry.versionId);
 
-    expect(delivery.package.metadata.lifecycle, LabLifecycleStatus.published);
-    expect(delivery.package.metadata.id, entry.labId);
-    expect(delivery.package.metadata.versionId, entry.versionId);
-    expect(delivery.presentation.labId, entry.labId);
-    expect(delivery.presentation.versionId, entry.versionId);
-    expect(delivery.catalogueEntry.decisionCount, 5);
-  });
+      expect(delivery.package.metadata.lifecycle, LabLifecycleStatus.published);
+      expect(delivery.package.metadata.id, entry.labId);
+      expect(delivery.package.metadata.versionId, entry.versionId);
+      expect(delivery.presentation.labId, entry.labId);
+      expect(delivery.presentation.versionId, entry.versionId);
+      expect(delivery.catalogueEntry.decisionCount, 5);
+    },
+  );
 
   test('Q12 refuses unpublished population entries', () async {
     final manifest = _manifest();
@@ -164,9 +167,7 @@ void main() {
       ).admit(
         manifest: manifest,
         entryId: entry.entryId,
-        presentation: LabLearnerPresentationPackage.fromJson(
-          presentationRoot,
-        ),
+        presentation: LabLearnerPresentationPackage.fromJson(presentationRoot),
       ),
       throwsA(isA<LabLearnerCatalogueException>()),
     );
@@ -174,94 +175,100 @@ void main() {
     expect(await catalogueRepository.listAvailable(), isEmpty);
   });
 
-  test('Q12 learner catalogue entries cannot overwrite an admitted version',
-      () async {
-    final manifest = _manifest();
-    final entry = manifest.entries.first;
-    final publishedRepository = InMemoryLabPublishedRepository();
-    final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
-    final presentation = LabLearnerPresentationPackage.fromJson(
-      _readObject(entry.learnerPresentationPath),
-    );
+  test(
+    'Q12 learner catalogue entries cannot overwrite an admitted version',
+    () async {
+      final manifest = _manifest();
+      final entry = manifest.entries.first;
+      final publishedRepository = InMemoryLabPublishedRepository();
+      final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
+      final presentation = LabLearnerPresentationPackage.fromJson(
+        _readObject(entry.learnerPresentationPath),
+      );
 
-    await _publishEntry(
-      manifest: manifest,
-      entry: entry,
-      publishedRepository: publishedRepository,
-    );
+      await _publishEntry(
+        manifest: manifest,
+        entry: entry,
+        publishedRepository: publishedRepository,
+      );
 
-    final admission = LabLearnerCatalogueAdmissionService(
-      publishedRepository: publishedRepository,
-      catalogueRepository: catalogueRepository,
-    );
-    await admission.admit(
-      manifest: manifest,
-      entryId: entry.entryId,
-      presentation: presentation,
-    );
-
-    await expectLater(
-      admission.admit(
+      final admission = LabLearnerCatalogueAdmissionService(
+        publishedRepository: publishedRepository,
+        catalogueRepository: catalogueRepository,
+      );
+      await admission.admit(
         manifest: manifest,
         entryId: entry.entryId,
         presentation: presentation,
-      ),
-      throwsA(isA<LabLearnerCatalogueException>()),
-    );
+      );
 
-    expect(await catalogueRepository.listAvailable(), hasLength(1));
-  });
+      await expectLater(
+        admission.admit(
+          manifest: manifest,
+          entryId: entry.entryId,
+          presentation: presentation,
+        ),
+        throwsA(isA<LabLearnerCatalogueException>()),
+      );
 
-  test('Q12 delivery is fail-closed for a version not in the catalogue',
-      () async {
-    final manifest = _manifest();
-    final entry = manifest.entries.first;
-    final publishedRepository = InMemoryLabPublishedRepository();
-    final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
+      expect(await catalogueRepository.listAvailable(), hasLength(1));
+    },
+  );
 
-    await _publishEntry(
-      manifest: manifest,
-      entry: entry,
-      publishedRepository: publishedRepository,
-    );
+  test(
+    'Q12 delivery is fail-closed for a version not in the catalogue',
+    () async {
+      final manifest = _manifest();
+      final entry = manifest.entries.first;
+      final publishedRepository = InMemoryLabPublishedRepository();
+      final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
 
-    await expectLater(
-      LabLearnerControlledDeliveryService(
+      await _publishEntry(
+        manifest: manifest,
+        entry: entry,
+        publishedRepository: publishedRepository,
+      );
+
+      await expectLater(
+        LabLearnerControlledDeliveryService(
+          publishedRepository: publishedRepository,
+          catalogueRepository: catalogueRepository,
+        ).load(labId: entry.labId, versionId: entry.versionId),
+        throwsA(isA<LabLearnerCatalogueException>()),
+      );
+    },
+  );
+
+  test(
+    'Q12 manifest contains ten candidates but catalogue admits explicitly',
+    () async {
+      final manifest = _manifest();
+      final publishedRepository = InMemoryLabPublishedRepository();
+      final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
+
+      expect(manifest.entries, hasLength(10));
+      expect(await catalogueRepository.listAvailable(), isEmpty);
+
+      final first = manifest.entries.first;
+      await _publishEntry(
+        manifest: manifest,
+        entry: first,
+        publishedRepository: publishedRepository,
+      );
+      await LabLearnerCatalogueAdmissionService(
         publishedRepository: publishedRepository,
         catalogueRepository: catalogueRepository,
-      ).load(labId: entry.labId, versionId: entry.versionId),
-      throwsA(isA<LabLearnerCatalogueException>()),
-    );
-  });
+      ).admit(
+        manifest: manifest,
+        entryId: first.entryId,
+        presentation: LabLearnerPresentationPackage.fromJson(
+          _readObject(first.learnerPresentationPath),
+        ),
+      );
 
-  test('Q12 manifest contains ten candidates but catalogue admits explicitly',
-      () async {
-    final manifest = _manifest();
-    final publishedRepository = InMemoryLabPublishedRepository();
-    final catalogueRepository = InMemoryLabLearnerCatalogueRepository();
-
-    expect(manifest.entries, hasLength(10));
-    expect(await catalogueRepository.listAvailable(), isEmpty);
-
-    final first = manifest.entries.first;
-    await _publishEntry(
-      manifest: manifest,
-      entry: first,
-      publishedRepository: publishedRepository,
-    );
-    await LabLearnerCatalogueAdmissionService(
-      publishedRepository: publishedRepository,
-      catalogueRepository: catalogueRepository,
-    ).admit(
-      manifest: manifest,
-      entryId: first.entryId,
-      presentation: LabLearnerPresentationPackage.fromJson(
-        _readObject(first.learnerPresentationPath),
-      ),
-    );
-
-    final available = await catalogueRepository.listAvailable();
-    expect(available, hasLength(1));
-    expect(available.single.identityKey, first.identityKey);
-  });
+      final available = await catalogueRepository.listAvailable();
+      expect(available, hasLength(1));
+      expect(available.single.identityKey, first.identityKey);
+    },
+  );
 }
