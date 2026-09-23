@@ -2,7 +2,7 @@
 
 ## Status
 
-**IMPLEMENTED / VALIDATION CHECKPOINT**
+**IMPLEMENTED / CLOSURE CANDIDATE**
 
 Program: `LSP-Q`
 
@@ -130,3 +130,12 @@ Those remain later LSP-Q checkpoints.
 ## Next authorized action
 
 **LSP-Q4 — Run every LAB Decision through the canonical parser and add the batch parse report.**
+
+
+## Closure candidate
+
+Canonical formatter output was committed before final exact-SHA closure validation.
+
+Formatted implementation parent: `92849a6b28a00a32a9d8d8d1c01b09c09272d161`
+
+The final closure commit changes documentation only and is used to obtain an exact-SHA CI result with no formatter delta.
