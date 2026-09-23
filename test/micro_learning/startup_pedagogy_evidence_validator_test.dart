@@ -85,9 +85,7 @@ void main() {
 
   test('passing pedagogy review requires every human attestation', () {
     final evidence = clone();
-    final review = Map<String, dynamic>.from(
-      evidence['pedagogyReview'] as Map,
-    );
+    final review = Map<String, dynamic>.from(evidence['pedagogyReview'] as Map);
     review['singleConceptConfirmed'] = false;
     evidence['pedagogyReview'] = review;
 
@@ -119,9 +117,7 @@ void main() {
 
   test('pedagogy reviewer role must be approved', () {
     final evidence = clone();
-    final review = Map<String, dynamic>.from(
-      evidence['pedagogyReview'] as Map,
-    );
+    final review = Map<String, dynamic>.from(evidence['pedagogyReview'] as Map);
     review['reviewerRole'] = 'ai_reviewer';
     evidence['pedagogyReview'] = review;
 
