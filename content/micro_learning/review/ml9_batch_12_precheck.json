@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_12",
+  "checkedAt": "2026-09-24",
+  "candidateContentSha": "204883616649ba50c33f4c5e8cab0860d8c94d6d",
+  "scope": {
+    "batchFacts": 10,
+    "cumulativeCandidateFacts": 120,
+    "totalUniquePairCount": 7140,
+    "previouslyValidatedOldOldPairs": 5995,
+    "newlyScannedOldToNewPairs": 1100,
+    "newlyScannedBatchInternalPairs": 45
+  },
+  "candidateGatePrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "correctionsApplied": [
+      "mf_ml9_102 learner-facing copy was rewritten to remove THIRA because the acronym is not on the frozen ML-7 uppercase whitelist",
+      "mf_ml9_120 sourcePublishedAt was cleared because the source identifies August 2005 without a verified exact day"
+    ],
+    "checks": [
+      "approved authority exists and is active",
+      "source class is permitted for authority",
+      "official URL is HTTPS and first-party host",
+      "claim legal status is permitted for source class",
+      "mandatory wording and authority attribution rules checked",
+      "candidate lifecycle remains review with startup disabled",
+      "all human and publication review channels remain pending",
+      "canonical domain and competency ID patterns checked",
+      "at least two tags present"
+    ]
+  },
+  "startupTextPrecheck": {
+    "result": "pass",
+    "factsChecked": 10,
+    "checks": [
+      "display word count within 6-32",
+      "display computed read time at or below 10 seconds",
+      "estimated read time within frozen 2-second tolerance",
+      "short variant word count within 4-18",
+      "short variant computed read time at or below 6 seconds",
+      "short variant word ratio at or below 0.75",
+      "uppercase abbreviations limited to the frozen ML-7 whitelist"
+    ]
+  },
+  "ml8DeterministicPrecheck": {
+    "result": "pass",
+    "candidateFactsScanned": 120,
+    "pairCountScanned": 7140,
+    "exactDuplicateCount": 0,
+    "unresolvedReviewCandidateCount": 0,
+    "flaggedPairCount": 0,
+    "method": "5,995 previously validated pairs plus exact frozen-policy scan of 1,100 old-to-new pairs and 45 Batch-12 internal pairs"
+  },
+  "authorityConcentration": {
+    "result": "pass",
+    "threshold": 0.4,
+    "blocking": false,
+    "sourceCounts": [
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 32,
+        "share": 0.2667
+      },
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 20,
+        "share": 0.1667
+      },
+      {
+        "sourceRegistryId": "SRC-11",
+        "count": 11,
+        "share": 0.0917
+      },
+      {
+        "sourceRegistryId": "SRC-08",
+        "count": 10,
+        "share": 0.0833
+      },
+      {
+        "sourceRegistryId": "SRC-05",
+        "count": 8,
+        "share": 0.0667
+      },
+      {
+        "sourceRegistryId": "SRC-04",
+        "count": 7,
+        "share": 0.0583
+      },
+      {
+        "sourceRegistryId": "SRC-10",
+        "count": 7,
+        "share": 0.0583
+      },
+      {
+        "sourceRegistryId": "SRC-03",
+        "count": 6,
+        "share": 0.05
+      },
+      {
+        "sourceRegistryId": "SRC-09",
+        "count": 6,
+        "share": 0.05
+      },
+      {
+        "sourceRegistryId": "SRC-07",
+        "count": 4,
+        "share": 0.0333
+      },
+      {
+        "sourceRegistryId": "SRC-06",
+        "count": 3,
+        "share": 0.025
+      },
+      {
+        "sourceRegistryId": "SRC-14",
+        "count": 2,
+        "share": 0.0167
+      },
+      {
+        "sourceRegistryId": "SRC-13",
+        "count": 2,
+        "share": 0.0167
+      },
+      {
+        "sourceRegistryId": "SRC-12",
+        "count": 1,
+        "share": 0.0083
+      },
+      {
+        "sourceRegistryId": "SRC-15",
+        "count": 1,
+        "share": 0.0083
+      }
+    ],
+    "note": "No authority exceeds the frozen 40% concentration-review threshold."
+  },
+  "rightsSensitiveCandidates": [],
+  "rightsNote": "Batch 12 uses only government first-party authorities. Normal ML-5 rights evidence and human copyright review remain required before validated or published status.",
+  "validatorInfrastructure": {
+    "toolPath": "tool/validate_ml9_candidate_bank.dart",
+    "workflowPath": ".github/workflows/ml9_candidate_bank_validation.yml",
+    "workflowConfiguredForThisBranch": false,
+    "pushTriggeredWorkflowObservedThroughConnector": false,
+    "observedCiVerdict": null,
+    "note": "The frozen workflow push trigger targets phase-ml9-first-120-fact-curated-bank, not the Batch-12 branch. The same gate logic was applied against the Batch-12 candidate content; no CI-green claim is made."
+  },
+  "humanReview": {
+    "complete": false,
+    "approvalsGeneratedByAutomation": false
+  }
+}
