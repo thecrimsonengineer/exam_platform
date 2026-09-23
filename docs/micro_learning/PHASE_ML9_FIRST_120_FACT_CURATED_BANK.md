@@ -259,6 +259,25 @@ Batch 02 review artifacts:
 - `content/micro_learning/review/ml9_batch_02_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_02_precheck.json`
 
+### Batch 03
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 30.
+- Batch covers confined-space evaluation, respiratory protection, process mechanical integrity, extinguisher readiness, worker participation, hazardous-waste container management, NIMS command and coordination, fleet maintenance, evidence synthesis, and job-training analysis.
+- All Batch 03 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- Frozen startup text precheck passed.
+- Cumulative ML-8 field-level precheck scanned 435 pairs across 30 candidates.
+- Exact duplicate count: 0.
+- Unresolved ML-8 review-candidate count: 0.
+- Repository CLI validation remains mandatory before ML-9 closure.
+
+Batch 03 review artifacts:
+
+- `content/micro_learning/review/ml9_batch_03_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_03_precheck.json`
+
 ## Next action
 
-ML-9B Batch 03 - author the next 10 review-state candidates, then rerun startup-text and whole-corpus ML-8 prechecks against all 30 candidates.
+ML-9B Batch 04 - author the next 10 review-state candidates, then rerun startup-text and whole-corpus ML-8 prechecks against all 40 candidates.
