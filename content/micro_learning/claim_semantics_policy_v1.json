@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0",
+  "status": "frozen",
+  "frozenAt": "2026-09-23",
+  "authorityRegistryVersion": "1.0.0",
+  "microFactSchemaVersion": 1,
+  "failClosed": true,
+  "sourceClassRules": [
+    {
+      "sourceClass": "federal_regulation",
+      "allowedLegalStatuses": [
+        "binding_requirement"
+      ],
+      "jurisdiction": "required",
+      "mandatoryLanguage": "allowed"
+    },
+    {
+      "sourceClass": "regulatory_interpretation",
+      "allowedLegalStatuses": [
+        "regulatory_interpretation"
+      ],
+      "jurisdiction": "required",
+      "mandatoryLanguage": "attributed_only"
+    },
+    {
+      "sourceClass": "enforcement_or_compliance_guidance",
+      "allowedLegalStatuses": [
+        "nonbinding_guidance"
+      ],
+      "jurisdiction": "required",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "government_recommendation",
+      "allowedLegalStatuses": [
+        "recommendation",
+        "not_applicable"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "research_or_prevention_guidance",
+      "allowedLegalStatuses": [
+        "recommendation",
+        "research_finding",
+        "not_applicable"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "consensus_standard",
+      "allowedLegalStatuses": [
+        "consensus_standard"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "attributed_only"
+    },
+    {
+      "sourceClass": "international_standard",
+      "allowedLegalStatuses": [
+        "international_standard"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "attributed_only"
+    },
+    {
+      "sourceClass": "professional_guideline",
+      "allowedLegalStatuses": [
+        "professional_guideline",
+        "not_applicable"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "professional_framework",
+      "allowedLegalStatuses": [
+        "professional_framework",
+        "not_applicable"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "environmental_regulation",
+      "allowedLegalStatuses": [
+        "binding_requirement"
+      ],
+      "jurisdiction": "required",
+      "mandatoryLanguage": "allowed"
+    },
+    {
+      "sourceClass": "transportation_regulation",
+      "allowedLegalStatuses": [
+        "binding_requirement"
+      ],
+      "jurisdiction": "required",
+      "mandatoryLanguage": "allowed"
+    },
+    {
+      "sourceClass": "emergency_management_framework",
+      "allowedLegalStatuses": [
+        "professional_framework",
+        "not_applicable"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "process_safety_framework",
+      "allowedLegalStatuses": [
+        "professional_framework"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "loss_prevention_guidance",
+      "allowedLegalStatuses": [
+        "professional_guideline"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "blocked"
+    },
+    {
+      "sourceClass": "testing_or_certification_standard",
+      "allowedLegalStatuses": [
+        "certification_or_testing"
+      ],
+      "jurisdiction": "optional",
+      "mandatoryLanguage": "attributed_only"
+    }
+  ],
+  "authorityAttributionTokens": {
+    "SRC-01": [
+      "osha",
+      "u.s. department of labor",
+      "29 cfr"
+    ],
+    "SRC-02": [
+      "niosh",
+      "cdc"
+    ],
+    "SRC-03": [
+      "ansi",
+      "assp"
+    ],
+    "SRC-04": [
+      "iso"
+    ],
+    "SRC-05": [
+      "nfpa"
+    ],
+    "SRC-06": [
+      "acgih"
+    ],
+    "SRC-07": [
+      "aiha"
+    ],
+    "SRC-08": [
+      "epa",
+      "u.s. environmental protection agency",
+      "40 cfr"
+    ],
+    "SRC-09": [
+      "dot",
+      "phmsa",
+      "fmcsa",
+      "u.s. department of transportation",
+      "49 cfr"
+    ],
+    "SRC-10": [
+      "fema",
+      "dhs",
+      "nims",
+      "ics"
+    ],
+    "SRC-11": [
+      "aiche",
+      "ccps"
+    ],
+    "SRC-12": [
+      "national safety council",
+      "nsc"
+    ],
+    "SRC-13": [
+      "assp"
+    ],
+    "SRC-14": [
+      "fm global"
+    ],
+    "SRC-15": [
+      "ul",
+      "ul standards",
+      "ul solutions"
+    ]
+  },
+  "mandatoryTerms": [
+    "must",
+    "shall",
+    "required",
+    "requires",
+    "mandated",
+    "mandates",
+    "prohibited",
+    "prohibits",
+    "may not"
+  ],
+  "legalEquivalencePhrases": [
+    "required by law",
+    "legally required",
+    "federal law requires",
+    "statutory requirement",
+    "has the force of law"
+  ],
+  "nonApplicableCategories": [
+    "csp_tip",
+    "learning_tip"
+  ],
+  "enhancedReview": {
+    "appliesWhenStatusIn": [
+      "validated",
+      "published"
+    ],
+    "numericalClaimRequiresPass": [
+      "technicalStatus",
+      "sourceStatus",
+      "humanTechnicalStatus"
+    ],
+    "safetyCriticalRequiresPass": [
+      "technicalStatus",
+      "sourceStatus",
+      "humanTechnicalStatus"
+    ],
+    "highSimplificationRiskRequiresPass": [
+      "technicalStatus",
+      "sourceStatus",
+      "humanTechnicalStatus"
+    ],
+    "numericalEvidenceRequiresOneOf": [
+      "editionOrRevision",
+      "sourceSection",
+      "sourcePage"
+    ]
+  },
+  "numericSignalPatterns": [
+    "\\b\\d+(?:\\.\\d+)?\\s*%",
+    "\\b\\d+(?:\\.\\d+)?\\s*ppm\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*ppb\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*mg\\s*/\\s*m(?:3|³)\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*dba\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*db\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*(?:°\\s*)?[cf]\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*volts?\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*kv\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*psi\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*(?:feet|foot|ft|meters?|metres?|m)\\b",
+    "\\b\\d+(?:\\.\\d+)?\\s*(?:seconds?|minutes?|hours?|days?)\\b"
+  ],
+  "authoritySpecificForbiddenPhrases": {
+    "SRC-02": [
+      "niosh requires",
+      "required by niosh",
+      "niosh regulation",
+      "niosh mandates"
+    ],
+    "SRC-06": [
+      "acgih requires",
+      "required by acgih",
+      "acgih pel",
+      "acgih permissible exposure limit",
+      "tlv is a legal limit",
+      "tlvs are legal limits",
+      "tlv is an osha pel"
+    ],
+    "SRC-11": [
+      "ccps regulation",
+      "ccps requires",
+      "ccps mandates",
+      "rbps is osha psm",
+      "ccps rbps is osha psm"
+    ],
+    "SRC-14": [
+      "fm global requires",
+      "fm global regulation"
+    ],
+    "SRC-15": [
+      "ul certification is regulatory approval",
+      "ul listing is regulatory approval",
+      "ul listed means legally approved"
+    ]
+  }
+}
