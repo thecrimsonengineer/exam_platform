@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_03",
+  "status": "candidate_review",
+  "createdAt": "2026-09-23",
+  "parentBankVersion": "1.0.0",
+  "factCount": 10,
+  "cumulativeCandidateCount": 30,
+  "humanReviewComplete": false,
+  "publicationAllowed": false,
+  "facts": [
+    {
+      "microFactId": "mf_ml9_004",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "sourceLocator": "29 CFR 1910.146(c)(1)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_004_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_029",
+      "bucket": "industrial_hygiene",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/ppe/respirators/selection.html",
+      "sourceLocator": "Selecting the appropriate respirator",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_029_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_048",
+      "bucket": "process_safety",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+      "sourceLocator": "29 CFR 1910.119(j)(2)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_048_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_063",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.157",
+      "sourceLocator": "29 CFR 1910.157(c)(4)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_063_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_075",
+      "bucket": "management_systems",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/safety-management/worker-participation",
+      "sourceLocator": "Worker Participation overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_075_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_087",
+      "bucket": "environmental",
+      "sourceRegistryId": "SRC-08",
+      "sourceUrl": "https://www.epa.gov/hwgenerators/frequent-questions-about-hazardous-waste-generation",
+      "sourceLocator": "Satellite accumulation area container standards under 40 CFR 262.15",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_087_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_097",
+      "bucket": "emergency_management",
+      "sourceRegistryId": "SRC-10",
+      "sourceUrl": "https://www.usfa.fema.gov/a-z/nims/command-and-coordination.html",
+      "sourceLocator": "Command and Coordination overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_097_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_105",
+      "bucket": "transportation_fleet",
+      "sourceRegistryId": "SRC-09",
+      "sourceUrl": "https://www.fmcsa.dot.gov/safety/question-1-what-meant-systematic-inspection-repair-and-maintenance",
+      "sourceLocator": "Section 396.3 Guidance Q&A, Question 1",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_105_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_110",
+      "bucket": "csp_reasoning",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/bulletin/2017/systematic-review.html",
+      "sourceLocator": "What is systematic review?",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_110_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_116",
+      "bucket": "evidence_based_learning",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/publications/numbered/2006-139.html",
+      "sourceLocator": "Publication overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_116_v1.json"
+    }
+  ],
+  "requiredHumanReview": [
+    "technical accuracy",
+    "source-to-claim fidelity",
+    "legal-status wording",
+    "curriculum placement",
+    "copyright and independent wording",
+    "startup readability and accessibility",
+    "ML-8 corpus coexistence if a review candidate is raised"
+  ],
+  "gateState": {
+    "sourceProvenancePopulated": true,
+    "candidateLifecycleFailClosed": true,
+    "startupEligibilityGranted": false,
+    "humanTechnicalApprovalGranted": false,
+    "validatedOrPublishedCount": 0
+  }
+}
