@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_12",
+  "freezeStatus": "closed_candidate_authoring_checkpoint",
+  "closedAt": "2026-09-24",
+  "cumulativeCandidateCount": 120,
+  "candidateContentSha": "204883616649ba50c33f4c5e8cab0860d8c94d6d",
+  "validationBasis": {
+    "candidatePolicyPrecheck": "pass",
+    "startupTextPrecheck": "pass",
+    "ml8CorpusPrecheck": "pass",
+    "totalUniquePairs": 7140,
+    "exactDuplicates": 0,
+    "unresolvedReviewCandidates": 0,
+    "flaggedPairs": 0,
+    "priorValidatedPairs": 5995,
+    "newlyScannedOldToNewPairs": 1100,
+    "newlyScannedInternalPairs": 45
+  },
+  "authorityDiversification": {
+    "explicitConstraintSatisfied": true,
+    "batchAuthorityCounts": {
+      "SRC-02": 4,
+      "SRC-08": 2,
+      "SRC-10": 2,
+      "SRC-01": 1,
+      "SRC-09": 1
+    },
+    "cumulativeTopAuthorities": [
+      {
+        "sourceRegistryId": "SRC-02",
+        "count": 32,
+        "share": 0.2667
+      },
+      {
+        "sourceRegistryId": "SRC-01",
+        "count": 20,
+        "share": 0.1667
+      },
+      {
+        "sourceRegistryId": "SRC-11",
+        "count": 11,
+        "share": 0.0917
+      },
+      {
+        "sourceRegistryId": "SRC-08",
+        "count": 10,
+        "share": 0.0833
+      },
+      {
+        "sourceRegistryId": "SRC-05",
+        "count": 8,
+        "share": 0.0667
+      }
+    ],
+    "anyAuthorityAboveFortyPercent": false
+  },
+  "rightsSensitivePending": [],
+  "rightsReviewStillRequired": true,
+  "ciObservation": {
+    "workflowConfiguredForThisBranch": false,
+    "workflowResultObservedThroughAvailableConnector": false,
+    "ciGreenClaimMade": false
+  },
+  "lifecycle": {
+    "humanReviewComplete": false,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "ml9bAuthoringStatus": {
+    "reservedSlotCount": 120,
+    "populatedCandidateCount": 120,
+    "remainingPlannedSlots": 0,
+    "authoringComplete": true
+  },
+  "nextAction": "ML-9C Gate Evidence"
+}
