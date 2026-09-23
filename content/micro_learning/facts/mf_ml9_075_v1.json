@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_075",
+  "category": "management_insight",
+  "display": {
+    "displayText": "OSHA guidance says meaningful worker participation helps safety programs identify hazards, improve solutions, and sustain program ownership because workers know their jobs closely.",
+    "shortVariant": "Worker participation strengthens hazard identification and safety-program improvement.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d02",
+    "competencyId": "d02_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "worker_participation",
+      "safety_culture"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "enforcement_or_compliance_guidance",
+    "sourceTitle": "Safety Management - Worker Participation",
+    "officialUrl": "https://www.osha.gov/safety-management/worker-participation",
+    "sourceLocator": "Worker Participation overview",
+    "editionOrRevision": "Current OSHA web guidance",
+    "sourceSection": "Worker Participation",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "nonbinding_guidance",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "worker_participation",
+    "safety_culture",
+    "hazard_reporting"
+  ]
+}
