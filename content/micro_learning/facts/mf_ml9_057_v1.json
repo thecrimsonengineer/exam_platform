@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_057",
+  "category": "process_safety_insight",
+  "display": {
+    "displayText": "CCPS job-safety analysis breaks work into steps, identifies hazards for each step, and develops controls before the task is performed.",
+    "shortVariant": "Job-safety analysis links task steps, hazards, and controls before work.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d03",
+    "competencyId": "d03_c02",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "job_safety_analysis",
+      "task_risk_control"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-11",
+    "sourceClass": "professional_guideline",
+    "sourceTitle": "CCPS Safe Work Practice - Job Safety Analysis",
+    "officialUrl": "https://ccps.aiche.org/sites/default/files/html/ccps/3441481/files/basic-html/page4.html",
+    "sourceLocator": "Fundamental Intent - task steps, hazards, and controls",
+    "editionOrRevision": "CCPS Safe Work Practice, current hosted edition verified September 24, 2026",
+    "sourceSection": "Fundamental Intent",
+    "sourcePage": "4",
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_guideline",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "job_safety_analysis",
+    "risk_management",
+    "task_controls"
+  ]
+}
