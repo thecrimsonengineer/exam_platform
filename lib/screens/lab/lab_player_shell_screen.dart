@@ -7,9 +7,14 @@ import 'lab_reference_player_screen.dart';
 import 'lab_scenario_catalog.dart';
 
 class LabPlayerShellScreen extends StatelessWidget {
-  const LabPlayerShellScreen({super.key, this.scenario});
+  const LabPlayerShellScreen({
+    super.key,
+    this.scenario,
+    this.publishedPackage,
+  });
 
   final LabScenarioDefinition? scenario;
+  final LabPackage? publishedPackage;
 
   LabScenarioDefinition get _scenario =>
       scenario ?? LabScenarioCatalog.confinedSpaceH2s;
@@ -140,7 +145,11 @@ class LabPlayerShellScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) =>
-            LabReferencePlayerScreen(mode: mode, scenario: selectedScenario),
+            LabReferencePlayerScreen(
+              mode: mode,
+              scenario: selectedScenario,
+              publishedPackage: publishedPackage,
+            ),
       ),
     );
   }

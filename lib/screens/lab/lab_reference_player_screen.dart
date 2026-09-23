@@ -18,12 +18,14 @@ class LabReferencePlayerScreen extends StatefulWidget {
     required this.mode,
     this.scenario = LabScenarioCatalog.confinedSpaceH2s,
     this.assetPath,
+    this.publishedPackage,
     this.learningEvidenceSink,
   });
 
   final LabMode mode;
   final LabScenarioDefinition scenario;
   final String? assetPath;
+  final LabPackage? publishedPackage;
   final LabLearningEvidenceSink? learningEvidenceSink;
 
   @override
@@ -60,10 +62,8 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
 
   Future<void> _loadLab() async {
     try {
-      final source = await rootBundle.loadString(
-        widget.assetPath ?? widget.scenario.assetPath,
-      );
-      final package = LabPackage.decode(source);
+      final publishedPackage = widget.publishedPackage;
+      final package = publishedPackage ?? await _loadBundledPackage();
       final session = await _engine.startAttempt(
         package: package,
         sessionId: _newSessionId(),
@@ -84,6 +84,18 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
       if (!mounted) return;
       setState(() => _error = error.toString());
     }
+  }
+
+  Future<LabPackage> _loadBundledPackage() async {
+    final assetPath = widget.assetPath ?? widget.scenario.assetPath;
+    if (assetPath == null || assetPath.trim().isEmpty) {
+      throw StateError(
+        'This learner LAB requires an exact published repository package.',
+      );
+    }
+
+    final source = await rootBundle.loadString(assetPath);
+    return LabPackage.decode(source);
   }
 
   String _newSessionId() =>

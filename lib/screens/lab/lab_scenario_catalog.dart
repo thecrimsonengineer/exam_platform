@@ -1,3 +1,5 @@
+import '../../features/lab/lab_learner_catalogue.dart' as learner;
+
 class LabConsequencePresentation {
   const LabConsequencePresentation({
     required this.observable,
@@ -49,7 +51,9 @@ class LabScenarioDefinition {
     required this.focusTags,
     required this.estimatedTime,
     required this.decisionCountLabel,
-    required this.assetPath,
+    this.versionId,
+    this.assetPath,
+    this.showReferenceStatusFields = false,
     required this.role,
     required this.situation,
     required this.objective,
@@ -61,13 +65,74 @@ class LabScenarioDefinition {
     required this.consequences,
   });
 
+  factory LabScenarioDefinition.fromCatalogueEntry(
+    learner.LabLearnerCatalogueEntry entry,
+  ) {
+    final package = entry.presentation;
+    final overview = package.presentation;
+
+    List<String> details(String value) {
+      final lines = value
+          .split('\n')
+          .map((item) => item.trim())
+          .where((item) => item.isNotEmpty)
+          .toList(growable: false);
+      return lines.isEmpty ? <String>[value] : lines;
+    }
+
+    return LabScenarioDefinition(
+      id: entry.labId,
+      versionId: entry.versionId,
+      title: entry.title,
+      summary: entry.summary,
+      focusTags: entry.focusTags,
+      estimatedTime: entry.estimatedTime,
+      decisionCountLabel: entry.decisionCountLabel,
+      role: overview.role,
+      situation: overview.situation,
+      objective: overview.objective,
+      peopleInvolved: overview.peopleInvolved,
+      knownFacts: overview.knownFacts,
+      evidence: <String, LabEvidencePresentation>{
+        for (final item in package.evidencePresentation.entries)
+          item.key: LabEvidencePresentation(
+            id: item.key,
+            title: item.value.title,
+            summary: item.value.summary,
+            details: details(item.value.details),
+          ),
+      },
+      decisionTitles: <String, String>{
+        for (final item in package.decisionPresentation.entries)
+          item.key: item.value.title,
+      },
+      endings: <String, LabEndingPresentation>{
+        for (final item in package.endingPresentation.entries)
+          item.key: LabEndingPresentation(
+            title: item.value.title,
+            narrative: item.value.narrative,
+            keyTurningPoint: item.value.keyTurningPoint,
+          ),
+      },
+      consequences: <String, LabConsequencePresentation>{
+        for (final item in package.consequencePresentation.entries)
+          item.key: LabConsequencePresentation(
+            observable: item.value.observable,
+            guidedInsight: item.value.guidedInsight,
+          ),
+      },
+    );
+  }
+
   final String id;
   final String title;
   final String summary;
   final List<String> focusTags;
   final String estimatedTime;
   final String decisionCountLabel;
-  final String assetPath;
+  final String? versionId;
+  final String? assetPath;
+  final bool showReferenceStatusFields;
   final String role;
   final String situation;
   final String objective;
@@ -109,6 +174,15 @@ class LabScenarioDefinition {
     Map<String, Object?> stateValues,
     int simulatedMinutes,
   ) {
+    if (!showReferenceStatusFields) {
+      return <LabLearnerStatusItem>[
+        LabLearnerStatusItem(
+          label: 'Scenario time',
+          value: simulatedMinutes.toString() + ' min',
+        ),
+      ];
+    }
+
     String yesNo(Object? value, {required String yes, required String no}) =>
         value == true ? yes : no;
 
@@ -169,6 +243,7 @@ abstract final class LabScenarioCatalog {
     estimatedTime: '8–12 min',
     decisionCountLabel: '3–5 decisions',
     assetPath: 'content/lab_reference_confined_space_h2s_v2.json',
+    showReferenceStatusFields: true,
     role:
         'You are the site safety adviser supporting a contractor confined-space job.',
     situation:

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
+import 'package:exam_platform/features/lab/lab_contracts.dart';
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import 'lab_player_shell_screen.dart';
 import 'lab_scenario_catalog.dart';
 
 class LabScenarioBriefingScreen extends StatelessWidget {
-  const LabScenarioBriefingScreen({super.key, required this.scenario});
+  const LabScenarioBriefingScreen({
+    super.key,
+    required this.scenario,
+    this.publishedPackage,
+  });
 
   final LabScenarioDefinition scenario;
+  final LabPackage? publishedPackage;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +137,10 @@ class LabScenarioBriefingScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (_) => LabPlayerShellScreen(scenario: scenario),
+                    builder: (_) => LabPlayerShellScreen(
+                      scenario: scenario,
+                      publishedPackage: publishedPackage,
+                    ),
                   ),
                 );
               },

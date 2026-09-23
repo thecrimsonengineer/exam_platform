@@ -45,6 +45,13 @@ jobs:
             lib/features/lab/lab_scenario_population_manifest.dart \
             lib/features/lab/lab_scenario_population_publication.dart \
             lib/features/lab/lab_learner_catalogue.dart \
+            lib/features/lab/lab_firestore_repositories.dart \
+            lib/features/lab/lab_runtime_binding.dart \
+            lib/screens/lab/lab_scenario_catalog.dart \
+            lib/screens/lab/lab_library_screen.dart \
+            lib/screens/lab/lab_scenario_briefing_screen.dart \
+            lib/screens/lab/lab_player_shell_screen.dart \
+            lib/screens/lab/lab_reference_player_screen.dart \
             lib/features/lab/lab_dqg300.dart \
             test/services/questions/canonical_question_parser_test.dart \
             test/lab_quality/lsp_q2_lab_decision_question_adapter_test.dart \
@@ -57,7 +64,8 @@ jobs:
             test/lab_quality/lsp_q9_scenario_population_manifest_test.dart \
             test/lab_quality/lsp_q10_manifest_backed_scenario_population_test.dart \
             test/lab_quality/lsp_q11_population_publication_gate_test.dart \
-            test/lab_quality/lsp_q12_learner_catalogue_delivery_test.dart
+            test/lab_quality/lsp_q12_learner_catalogue_delivery_test.dart \
+            test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -103,6 +111,9 @@ jobs:
 
       - name: Learner catalogue controlled delivery tests
         run: flutter test test/lab_quality/lsp_q12_learner_catalogue_delivery_test.dart
+
+      - name: Persistent learner runtime binding tests
+        run: flutter test test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
 
       - name: Studio import regression
         run: flutter test test/services/studio_question_import_service_test.dart

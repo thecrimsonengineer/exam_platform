@@ -99,7 +99,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
         case 2:
           return const PracticeHubScreen();
         case 3:
-          return const LabLibraryScreen();
+          return const LabLibraryScreen.persistent();
         case 4:
           return const DarkFlashcardsScreen();
         default:
@@ -119,7 +119,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
       case 2:
         return const PracticeHubScreen();
       case 3:
-        return const LabLibraryScreen();
+        return const LabLibraryScreen.persistent();
       case 4:
         return const FlashcardsScreen();
       default:
