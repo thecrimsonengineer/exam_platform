@@ -118,17 +118,11 @@ void main() {
 
   test('Q6 blocks a Decision when DQG300 fails despite strict H0.3 pass', () {
     final package = _package();
-    final failedEvidence = failRuleProof(
-      perfectDqg300Evidence(),
-      'DQG-001',
-    );
+    final failedEvidence = failRuleProof(perfectDqg300Evidence(), 'DQG-001');
 
     final report = gate.evaluate(
       package: package,
-      evidenceBundle: _bundleFor(
-        package,
-        firstEvidence: failedEvidence,
-      ),
+      evidenceBundle: _bundleFor(package, firstEvidence: failedEvidence),
     );
 
     final first = report.decisionResults.first;
@@ -158,10 +152,7 @@ void main() {
 
     final report = gate.evaluate(
       package: package,
-      evidenceBundle: _bundleFor(
-        package,
-        firstEvidence: lowDqsEvidence,
-      ),
+      evidenceBundle: _bundleFor(package, firstEvidence: lowDqsEvidence),
     );
 
     final first = report.decisionResults.first;
@@ -178,10 +169,7 @@ void main() {
     final package = _package();
     final bundle = _bundleFor(package, omitLastDecision: true);
 
-    final report = gate.evaluate(
-      package: package,
-      evidenceBundle: bundle,
-    );
+    final report = gate.evaluate(package: package, evidenceBundle: bundle);
 
     expect(report.h03Report.parseReport.isValid, isFalse);
     expect(report.h03Report.decisionResults, isEmpty);
