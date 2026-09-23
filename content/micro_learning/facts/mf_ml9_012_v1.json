@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_012",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "ISO risk-management guidance frames risk work as an ongoing cycle of identifying and analyzing risk, evaluating priorities, selecting treatment, and continuing monitoring and communication.",
+    "shortVariant": "ISO frames risk management as an ongoing evaluate-treat-monitor cycle.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d03",
+    "competencyId": "d03_c02",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "risk_management_process",
+      "risk_treatment"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-04",
+    "sourceClass": "international_standard",
+    "sourceTitle": "ISO 31000:2018 Risk management — Guidelines",
+    "officialUrl": "https://www.iso.org/standard/65694.html",
+    "sourceLocator": "What is ISO 31000?",
+    "editionOrRevision": "ISO 31000:2018, Edition 2; confirmed current in 2023",
+    "sourceSection": "What is ISO 31000?",
+    "sourcePage": null,
+    "sourcePublishedAt": "2018-02-01",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "international_standard",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "risk_management",
+    "risk_treatment",
+    "risk_monitoring"
+  ]
+}
