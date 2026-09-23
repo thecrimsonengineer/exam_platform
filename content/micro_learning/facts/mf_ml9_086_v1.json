@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_086",
   "category": "environmental_insight",
   "display": {
-    "displayText": "EPA's SPCC overview explains that covered non-transportation facilities use spill prevention plans to prevent oil from reaching navigable waters or adjoining shorelines.",
-    "shortVariant": "SPCC plans help covered facilities prevent and contain oil discharges.",
-    "estimatedReadSeconds": 9
+    "displayText": "EPA's oil spill prevention overview explains that covered non-transportation facilities use prevention plans to keep oil from reaching navigable waters or adjoining shorelines.",
+    "shortVariant": "Oil spill prevention plans help covered facilities prevent and contain discharges.",
+    "estimatedReadSeconds": 10
   },
   "curriculum": {
     "scope": "mapped",
