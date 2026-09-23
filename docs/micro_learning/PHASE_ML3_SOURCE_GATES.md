@@ -71,6 +71,8 @@ https://example.com/osha/...     BLOCK
 
 The comparison uses hostname boundaries. A string merely containing the trusted domain is not enough.
 
+When an ML-1 authority entry defines `preferredPathPrefixes`, ML-3 treats those registered paths as a hard source scope. This matters for authorities hosted inside a broader parent domain. For example, SRC-02 is NIOSH / CDC and is constrained to the registered `/niosh/` path, so an unrelated `cdc.gov` page cannot be relabeled as NIOSH evidence.
+
 This is the primary ML-3 protection against substituting a blog, training provider, search result, forum, AI page or other secondary source while retaining an approved `SRC-##` label.
 
 ## Source-class compatibility gate
@@ -145,6 +147,7 @@ ML-3 tests include:
 - trusted-domain suffix spoof;
 - trusted-domain prefix spoof;
 - valid registered subdomain;
+- unrelated CDC path presented as NIOSH;
 - embedded URL credentials;
 - weakened registry policy;
 - wrong registry version;
@@ -201,6 +204,7 @@ ML-3 SOURCE GATES VALID
 - [x] First-party HTTPS host matching is enforced.
 - [x] True subdomains are accepted.
 - [x] Domain-prefix/suffix spoofing is rejected.
+- [x] Registered path scope is enforced where ML-1 defines it.
 - [x] Authority/source-class compatibility is enforced.
 - [x] Weakened registry policy fails closed.
 - [x] Authority active/first-party state is checked defensively.
