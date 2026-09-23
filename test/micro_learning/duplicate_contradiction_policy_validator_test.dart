@@ -5,8 +5,7 @@ import 'package:exam_platform/services/micro_learning/duplicate_contradiction_po
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const path =
-      'content/micro_learning/duplicate_contradiction_policy_v1.json';
+  const path = 'content/micro_learning/duplicate_contradiction_policy_v1.json';
   const validator = DuplicateContradictionPolicyValidator();
 
   Map<String, dynamic> load() =>
@@ -118,9 +117,7 @@ void main() {
 
   test('human adjudication cannot be disabled', () {
     final policy = clone();
-    final rules = Map<String, dynamic>.from(
-      policy['adjudicationRules'] as Map,
-    );
+    final rules = Map<String, dynamic>.from(policy['adjudicationRules'] as Map);
     rules['humanReviewRequired'] = false;
     policy['adjudicationRules'] = rules;
 
@@ -135,9 +132,7 @@ void main() {
 
   test('signal-set binding cannot be disabled', () {
     final policy = clone();
-    final rules = Map<String, dynamic>.from(
-      policy['adjudicationRules'] as Map,
-    );
+    final rules = Map<String, dynamic>.from(policy['adjudicationRules'] as Map);
     rules['exactSignalSetRequired'] = false;
     policy['adjudicationRules'] = rules;
 
