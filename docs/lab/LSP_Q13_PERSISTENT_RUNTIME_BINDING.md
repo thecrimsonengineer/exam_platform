@@ -212,10 +212,18 @@ Q13 runtime binding commit: `296a642542c9d6c64dff62768cdd9ad6c07cfae7`
 
 Final test-selector repair commit: `7ce7abf4efecfc8cd04b466f45a63b787ea54ebf`
 
-Successful full validation run for that implementation SHA: `35910070215`
+Workflow formatter-staging repair commit: `e559c5aa5de7df17e713d0f8574b3fc57364441a`
 
-Canonical formatter output commit: `b36ad8268e77456d060d76d0b1a8432d85c0d417`
+Successful full validation run including Q13 and 2490 repository tests: `35912291943`
 
-The formatter commit changes formatting in `lab_learner_catalogue.dart` only.
+Canonical formatter output commit: `89cba28964a4cc4d2aa8bcda80843d26fe1491c2`
+
+The formatter commit changes formatting only in:
+
+- `lab_firestore_repositories.dart`
+- `lab_runtime_binding.dart`
+- `lab_library_screen.dart`
+- `lab_player_shell_screen.dart`
+- `lsp_q13_persistent_runtime_binding_test.dart`
 
 This documentation-only closure commit is the exact-SHA validation target for LSP-Q13. No Firestore schema, Firestore security rule, immutable publication contract, learner catalogue semantics, runtime delivery semantics, learner presentation content, technical LAB package, or player navigation behavior is changed by the closure step.
