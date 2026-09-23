@@ -27,21 +27,18 @@ void main() {
 
     expect(manifest.manifestId, 'phase_l_population_v1');
     expect(manifest.entries, hasLength(10));
-    expect(
-      manifest.entries.map((entry) => entry.labId).toSet(),
-      <String>{
-        'hot_work_hydrocarbon_simops',
-        'mobile_crane_critical_lift',
-        'excavation_buried_services',
-        'electrical_loto_stored_energy',
-        'work_at_height_offshore_module',
-        'chemical_transfer_corrosive_solvent',
-        'hydrocarbon_line_breaking',
-        'flammable_tank_truck_loading',
-        'pneumatic_pressure_test',
-        'scaffold_erection_overhead_power',
-      },
-    );
+    expect(manifest.entries.map((entry) => entry.labId).toSet(), <String>{
+      'hot_work_hydrocarbon_simops',
+      'mobile_crane_critical_lift',
+      'excavation_buried_services',
+      'electrical_loto_stored_energy',
+      'work_at_height_offshore_module',
+      'chemical_transfer_corrosive_solvent',
+      'hydrocarbon_line_breaking',
+      'flammable_tank_truck_loading',
+      'pneumatic_pressure_test',
+      'scaffold_erection_overhead_power',
+    });
   });
 
   test('Q10 all real population triplets pass Q9 and Q4-Q7 quality gates', () {
@@ -124,8 +121,7 @@ void main() {
     expect(
       qualityFailures,
       isEmpty,
-      reason:
-          'Q4-Q7 population failures: ' + qualityFailures.join(' | '),
+      reason: 'Q4-Q7 population failures: ' + qualityFailures.join(' | '),
     );
     expect(decisionCount, 50);
     expect(optionCount, 200);
