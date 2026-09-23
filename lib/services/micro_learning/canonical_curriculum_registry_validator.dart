@@ -254,12 +254,7 @@ class CanonicalCurriculumRegistryValidator {
         }
 
         final subtopic = Map<String, dynamic>.from(rawSubtopic);
-        _exactKeys(
-          subtopic,
-          const {'id', 'title', 'status'},
-          subPath,
-          issues,
-        );
+        _exactKeys(subtopic, const {'id', 'title', 'status'}, subPath, issues);
 
         final subtopicId = subtopic['id'];
         if (subtopicId is! String ||
@@ -281,8 +276,7 @@ class CanonicalCurriculumRegistryValidator {
               'Subtopic IDs must be globally unique.',
             );
           }
-          if (topicId is String &&
-              !subtopicId.startsWith('${topicId}_s')) {
+          if (topicId is String && !subtopicId.startsWith('${topicId}_s')) {
             _add(
               issues,
               'ML6_REGISTRY_SUBTOPIC_PARENTAGE',
@@ -301,9 +295,7 @@ class CanonicalCurriculumRegistryValidator {
           );
         }
 
-        if (!{'active', 'deprecated', 'retired'}.contains(
-          subtopic['status'],
-        )) {
+        if (!{'active', 'deprecated', 'retired'}.contains(subtopic['status'])) {
           _add(
             issues,
             'ML6_REGISTRY_SUBTOPIC_STATUS',
@@ -333,8 +325,10 @@ class CanonicalCurriculumRegistryValidator {
     }
 
     final populationStatus = registry['populationStatus'];
-    if (!{'domain_competency_only', 'navigation_nodes_registered'}
-        .contains(populationStatus)) {
+    if (!{
+      'domain_competency_only',
+      'navigation_nodes_registered',
+    }.contains(populationStatus)) {
       _add(
         issues,
         'ML6_REGISTRY_POPULATION_STATUS',
@@ -410,10 +404,7 @@ class CanonicalCurriculumRegistryValidator {
     }
   }
 
-  static bool _competencyBelongsToDomain(
-    String domainId,
-    String competencyId,
-  ) {
+  static bool _competencyBelongsToDomain(String domainId, String competencyId) {
     return competenciesForDomain(
       domainId,
     ).any((competency) => competency.id == competencyId);
@@ -423,8 +414,59 @@ class CanonicalCurriculumRegistryValidator {
       value is String && value.trim().isNotEmpty;
 
   static bool _isStrictDate(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}
+      return false;
+    }
+    final parsed = DateTime.tryParse(value);
+    if (parsed == null) return false;
+    final normalized =
+        '${parsed.year.toString().padLeft(4, '0')}-'
+        '${parsed.month.toString().padLeft(2, '0')}-'
+        '${parsed.day.toString().padLeft(2, '0')}';
+    return normalized == value;
+  }
+
+  static void _exactKeys(
+    Map<String, dynamic> map,
+    Set<String> expected,
+    String path,
+    List<CanonicalCurriculumRegistryIssue> issues,
+  ) {
+    final actual = map.keys.toSet();
+    for (final missing in expected.difference(actual)) {
+      _add(
+        issues,
+        'ML6_REGISTRY_REQUIRED_FIELD',
+        '$path.$missing',
+        'Required registry field is missing.',
+      );
+    }
+    for (final extra in actual.difference(expected)) {
+      _add(
+        issues,
+        'ML6_REGISTRY_UNKNOWN_FIELD',
+        '$path.$extra',
+        'Unknown registry field is not allowed.',
+      );
+    }
+  }
+
+  static void _add(
+    List<CanonicalCurriculumRegistryIssue> issues,
+    String code,
+    String path,
+    String message,
+  ) {
+    issues.add(
+      CanonicalCurriculumRegistryIssue(
+        code: code,
+        path: path,
+        message: message,
+      ),
+    );
+  }
+}
+).hasMatch(value)) {
       return false;
     }
     final parsed = DateTime.tryParse(value);
