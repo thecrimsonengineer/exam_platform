@@ -14,5 +14,8 @@
     "deprecatedNodeDisposition": "block",
     "automaticRemap": false
   },
-  "topics": []
+  "topics": [],
+  "populationStatus": "domain_competency_only",
+  "topicCount": 0,
+  "subtopicCount": 0
 }
