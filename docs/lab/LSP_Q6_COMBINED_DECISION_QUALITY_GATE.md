@@ -2,7 +2,7 @@
 
 ## Status
 
-**IMPLEMENTED / VALIDATION CHECKPOINT**
+**IMPLEMENTED / EXACT-SHA CLOSURE CANDIDATE**
 
 Program: LSP-Q
 
@@ -141,3 +141,14 @@ Those remain later LSP-Q checkpoints.
 ## Next authorized action
 
 LSP-Q7 — Preserve DQG300 as the stronger semantic layer and prove that the combined gate cannot bypass or dilute its evidence-backed requirements.
+
+
+## Closure candidate
+
+Q6 implementation commit: `a07b782ba512d82eb702ccdd68799a69a146ce65`
+
+CI formatter-staging hardening commit: `fcc073bb316b2734a70ce0da36e4664f4295d3f9`
+
+Canonical formatter output commit: `07373fa71842e4e4f7237930943cc5a0f139f4df`
+
+The formatter commit changes presentation formatting only. This documentation-only closure commit is the exact-SHA validation target for LSP-Q6. No parser, H0.3, DQG300, DQS, LAB1000, learner, or evidence behavior is changed by the closure step.
