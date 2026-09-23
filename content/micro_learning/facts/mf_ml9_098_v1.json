@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_098",
+  "category": "emergency_insight",
+  "display": {
+    "displayText": "FEMA's National Qualification System separates qualification, certification, and credentialing so emergency organizations can document and request personnel capabilities consistently.",
+    "shortVariant": "Common qualification processes help organizations request capable emergency personnel consistently.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d04",
+    "competencyId": "d04_c02",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "personnel_qualification",
+      "emergency_credentialing"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-10",
+    "sourceClass": "emergency_management_framework",
+    "sourceTitle": "National Incident Management System: National Qualification System",
+    "officialUrl": "https://www.usfa.fema.gov/a-z/nims/national-qualification-system.html",
+    "sourceLocator": "National Qualification System overview and key tasks",
+    "editionOrRevision": "Current FEMA/USFA NIMS web guidance",
+    "sourceSection": "National Qualification System",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_framework",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "emergency_management",
+    "personnel_qualification",
+    "credentialing"
+  ]
+}
