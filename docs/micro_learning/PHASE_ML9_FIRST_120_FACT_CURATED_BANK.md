@@ -385,6 +385,33 @@ Batch 07 review and validation artifacts:
 - `content/micro_learning/review/ml9_batch_07_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_07_precheck.json`
 
+### Batch 08
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 80.
+- Batch 08 is industrial-hygiene focused across data interpretation, exposure measurement, toxicology, and ergonomics/human factors.
+- Authority mix: 4 NIOSH, 3 ACGIH, 2 AIHA, and 1 National Safety Council.
+- Batch 08 introduced ACGIH and National Safety Council into the curated bank.
+- Topics cover exposure statistics, full-shift versus task sampling, biological monitoring, fatigue risk management, sampling-strategy validation, ventilation performance, carcinogen risk control, ergonomic observation, surveillance trend analysis, and physical-agent measurement.
+- All Batch 08 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- Candidate source-class, legal-status, attribution, lifecycle, curriculum-ID-pattern, and tag checks passed without content correction.
+- Frozen startup text precheck passed for all 10 Batch 08 candidates.
+- The cumulative 80-fact corpus contains 3,160 unique pairs.
+- The previously validated 2,415 pairs remain unchanged.
+- Batch 08 added 700 old-to-new comparisons and 45 internal comparisons; all 745 new comparisons produced 0 exact duplicates and 0 unresolved ML-8 review candidates.
+- NIOSH represents 25 of 80 candidates (31.25%); OSHA represents 18 of 80 candidates (22.5%).
+- No authority exceeds the frozen 40% ML-8 concentration-review threshold.
+- Six Batch 08 candidates use rights-sensitive ACGIH, AIHA, or NSC material and remain pending genuine ML-5 rights review.
+- No automated process has asserted human approval or publication eligibility.
+- The GitHub connector did not expose a push-triggered workflow result for the candidate-content SHA, so no unobserved CI-green claim is made.
+
+Batch 08 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_08_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_08_precheck.json`
+
 ## Next action
 
-ML-9B Batch 08 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 80 candidates.
+ML-9B Batch 09 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 90 candidates.
