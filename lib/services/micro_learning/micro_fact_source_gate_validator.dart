@@ -250,6 +250,36 @@ class MicroFactSourceGateValidator {
               sourceRegistryId +
               '.',
         );
+      } else {
+        final preferredPathPrefixes = authority['preferredPathPrefixes'];
+        if (preferredPathPrefixes is List && preferredPathPrefixes.isNotEmpty) {
+          final actualPath = uri.path.toLowerCase();
+          final isWithinRegisteredPath = preferredPathPrefixes
+              .whereType<String>()
+              .map((prefix) => prefix.toLowerCase())
+              .any((prefix) {
+                final normalizedPrefix = prefix.endsWith('/')
+                    ? prefix
+                    : prefix + '/';
+                final prefixWithoutSlash = normalizedPrefix.substring(
+                  0,
+                  normalizedPrefix.length - 1,
+                );
+                return actualPath == prefixWithoutSlash ||
+                    actualPath.startsWith(normalizedPrefix);
+              });
+
+          if (!isWithinRegisteredPath) {
+            _add(
+              issues,
+              'ML3_SOURCE_PATH_OUTSIDE_REGISTERED_SCOPE',
+              r'$.provenance.officialUrl',
+              'URL path is outside the registered source scope for ' +
+                  sourceRegistryId +
+                  '.',
+            );
+          }
+        }
       }
     }
 
