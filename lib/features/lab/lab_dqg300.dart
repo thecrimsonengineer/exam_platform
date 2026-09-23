@@ -128,6 +128,7 @@ class LabDqg300Validator {
           question: questionAdapter.toQuestion(
             package: package,
             node: node,
+            evidence: decisionEvidence.evidence,
             decisionIndex: index,
           ),
           evidence: decisionEvidence.evidence,
