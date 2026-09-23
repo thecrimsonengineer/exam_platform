@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_030",
+  "category": "ih_insight",
+  "display": {
+    "displayText": "NIOSH describes engineering controls as removing hazardous conditions or placing barriers between workers and hazards so protection depends less on individual action.",
+    "shortVariant": "Engineering controls reduce exposure with less reliance on individual action.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d06",
+    "competencyId": "d06_c01",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "engineering_controls",
+      "source_control"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Engineering Controls",
+    "officialUrl": "https://www.cdc.gov/niosh/engcontrols/directory/index.html",
+    "sourceLocator": "Engineering Controls - What to know and About",
+    "editionOrRevision": "Updated May 22, 2025",
+    "sourceSection": "Engineering Controls",
+    "sourcePage": null,
+    "sourcePublishedAt": "2025-05-22",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "recommendation",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "industrial_hygiene",
+    "engineering_controls",
+    "source_control"
+  ]
+}
