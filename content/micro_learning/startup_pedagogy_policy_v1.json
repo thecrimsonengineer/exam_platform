@@ -32,7 +32,9 @@
       "maxWords": 18,
       "maxCharacters": 140,
       "maxSentences": 1,
-      "maxComputedReadSeconds": 6
+      "maxComputedReadSeconds": 6,
+      "mustBeShorterThanDisplayText": true,
+      "maxWordRatioToDisplay": 0.75
     },
     "nominalReadingWordsPerMinute": 150,
     "estimatedReadSecondsTolerance": 2,
