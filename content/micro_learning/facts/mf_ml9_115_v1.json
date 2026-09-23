@@ -55,7 +55,7 @@
     "rightsTreatment": "original_paraphrase"
   },
   "claim": {
-    "legalStatus": "research_finding",
+    "legalStatus": "not_applicable",
     "jurisdiction": null,
     "numericalClaim": false,
     "safetyCritical": false,
