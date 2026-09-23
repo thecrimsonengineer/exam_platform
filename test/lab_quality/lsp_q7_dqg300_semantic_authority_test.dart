@@ -163,7 +163,7 @@ void main() {
       evidenceBundle: _bundleFor(package, firstEvidence: evidence),
     );
 
-    _expectSemanticBlock(report: report, expectedFailedRule: 'DQG-19');
+    _expectSemanticBlock(report: report, expectedFailedRule: 'DQG-019');
   });
 
   test('Q7 unsupported key assumption remains a DQG semantic blocker', () {
@@ -191,7 +191,7 @@ void main() {
       evidenceBundle: _bundleFor(package, firstEvidence: evidence),
     );
 
-    _expectSemanticBlock(report: report, expectedFailedRule: 'DQG-21');
+    _expectSemanticBlock(report: report, expectedFailedRule: 'DQG-021');
   });
 
   test('Q7 DQG semantic authority remains deterministic', () {
