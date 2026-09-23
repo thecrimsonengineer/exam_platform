@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_011",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "NIOSH notes that workplace robots can remove workers from dangerous tasks but may also introduce struck-by, caught-between, crushing, electrical, and interaction hazards.",
+    "shortVariant": "Robots can reduce some hazards while introducing new worker risks.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c07",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "robotics_safety",
+      "human_robot_interaction"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Robotics in the Workplace: An Overview",
+    "officialUrl": "https://www.cdc.gov/niosh/robotics/about/index.html",
+    "sourceLocator": "Impacts and Risks",
+    "editionOrRevision": "Updated February 9, 2024",
+    "sourceSection": "Impacts and Risks",
+    "sourcePage": null,
+    "sourcePublishedAt": "2024-02-09",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "research_finding",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "robotics",
+    "human_robot_interaction",
+    "machine_safety"
+  ]
+}
