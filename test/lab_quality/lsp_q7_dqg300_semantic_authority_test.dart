@@ -154,9 +154,7 @@ void main() {
 
   test('Q7 ambiguity remains blocking after canonical and H0.3 PASS', () {
     final package = _package();
-    final evidence = perfectDqg300Evidence().copyWith(
-      ambiguityDetected: true,
-    );
+    final evidence = perfectDqg300Evidence().copyWith(ambiguityDetected: true);
 
     final report = gate.evaluate(
       package: package,
@@ -180,19 +178,22 @@ void main() {
     _expectSemanticBlock(report: report, expectedFailedRule: 'DQG-180');
   });
 
-  test('Q7 semantic option duplication is not diluted to literal H0.3 checks', () {
-    final package = _package();
-    final evidence = perfectDqg300Evidence().copyWith(
-      semanticDuplicateOptionsDetected: true,
-    );
+  test(
+    'Q7 semantic option duplication is not diluted to literal H0.3 checks',
+    () {
+      final package = _package();
+      final evidence = perfectDqg300Evidence().copyWith(
+        semanticDuplicateOptionsDetected: true,
+      );
 
-    final report = gate.evaluate(
-      package: package,
-      evidenceBundle: _bundleFor(package, firstEvidence: evidence),
-    );
+      final report = gate.evaluate(
+        package: package,
+        evidenceBundle: _bundleFor(package, firstEvidence: evidence),
+      );
 
-    _expectSemanticBlock(report: report, expectedFailedRule: 'DQG-021');
-  });
+      _expectSemanticBlock(report: report, expectedFailedRule: 'DQG-021');
+    },
+  );
 
   test('Q7 DQG semantic authority remains deterministic', () {
     final package = _package();
