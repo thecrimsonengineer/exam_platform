@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_109",
+  "category": "csp_tip",
+  "display": {
+    "displayText": "Prevention through Design asks safety professionals to eliminate hazards and reduce risks early in design rather than waiting to control them after work begins.",
+    "shortVariant": "Design out hazards early before relying on later controls.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "general",
+    "domainId": null,
+    "competencyId": null,
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "prevention_through_design",
+      "hazard_elimination"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Prevention through Design Program",
+    "officialUrl": "https://www.cdc.gov/niosh/research-programs/portfolio/ptd.html",
+    "sourceLocator": "Key points and Overview",
+    "editionOrRevision": "March 8, 2024",
+    "sourceSection": "Prevention through Design Program overview",
+    "sourcePage": null,
+    "sourcePublishedAt": "2024-03-08",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "not_applicable",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "csp_reasoning",
+    "prevention_through_design",
+    "hazard_elimination"
+  ]
+}
