@@ -1098,7 +1098,7 @@ class MicroFactSchemaValidator {
   }
 
   static DateTime? _dateOrNull(dynamic value) {
-    if (value is! String || !RegExp(r'^\\d{4}-\\d{2}-\\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return null;
     }
 
