@@ -1,0 +1,69 @@
+name: ML-2 MicroFact Schema Validation
+
+on:
+  push:
+    branches:
+      - phase-ml2-microfact-schema
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml2-microfact-schema-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-2 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record exact SHA and diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "ML-2 exact SHA: ${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify ML-2 formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed \
+            lib/models/micro_learning/micro_fact.dart \
+            lib/services/micro_learning/micro_fact_schema_validator.dart \
+            tool/validate_micro_learning_schema.dart \
+            test/micro_learning/micro_fact_schema_validator_test.dart
+
+      - name: Analyze ML-2 implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart analyze \
+            lib/models/micro_learning/micro_fact.dart \
+            lib/services/micro_learning/micro_fact_schema_validator.dart \
+            tool/validate_micro_learning_schema.dart \
+            test/micro_learning/micro_fact_schema_validator_test.dart
+
+      - name: Validate MicroFact v1 fixture
+        run: dart run tool/validate_micro_learning_schema.dart
+
+      - name: Run ML-2 focused tests
+        run: flutter test test/micro_learning/micro_fact_schema_validator_test.dart
