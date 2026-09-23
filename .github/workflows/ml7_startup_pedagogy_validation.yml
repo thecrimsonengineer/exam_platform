@@ -1,0 +1,108 @@
+name: ML-7 Startup Pedagogy Readability Accessibility Validation
+
+on:
+  push:
+    branches:
+      - phase-ml7-startup-pedagogy-readability-accessibility-gates
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml7-startup-suitability-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml7:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-7 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record exact SHA and diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "ML-7 exact SHA: ${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify generated CSP11 blueprint registry
+        run: python tools/source_pipeline/test_l23e1b_dart_registry_generation.py
+
+      - name: Verify ML-7 formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed \
+            lib/services/micro_learning/startup_text_metrics.dart \
+            lib/services/micro_learning/startup_pedagogy_policy_validator.dart \
+            lib/services/micro_learning/startup_pedagogy_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_startup_suitability_gate_validator.dart \
+            tool/validate_micro_learning_startup_suitability_gates.dart \
+            test/micro_learning/startup_text_metrics_test.dart \
+            test/micro_learning/startup_pedagogy_policy_validator_test.dart \
+            test/micro_learning/startup_pedagogy_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_startup_suitability_gate_validator_test.dart \
+            test/micro_learning/startup_pedagogy_startup_contract_test.dart
+
+      - name: Analyze ML-7 implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart analyze \
+            lib/services/micro_learning/startup_text_metrics.dart \
+            lib/services/micro_learning/startup_pedagogy_policy_validator.dart \
+            lib/services/micro_learning/startup_pedagogy_evidence_validator.dart \
+            lib/services/micro_learning/micro_fact_startup_suitability_gate_validator.dart \
+            tool/validate_micro_learning_startup_suitability_gates.dart \
+            test/micro_learning/startup_text_metrics_test.dart \
+            test/micro_learning/startup_pedagogy_policy_validator_test.dart \
+            test/micro_learning/startup_pedagogy_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_startup_suitability_gate_validator_test.dart \
+            test/micro_learning/startup_pedagogy_startup_contract_test.dart
+
+      - name: Validate ML-7 startup suitability gates
+        run: dart run tool/validate_micro_learning_startup_suitability_gates.dart
+
+      - name: Run ML-1 through ML-7 focused regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test \
+            test/micro_learning/authority_registry_validator_test.dart \
+            test/micro_learning/micro_fact_schema_validator_test.dart \
+            test/micro_learning/micro_fact_source_gate_validator_test.dart \
+            test/micro_learning/claim_semantics_policy_validator_test.dart \
+            test/micro_learning/micro_fact_claim_gate_validator_test.dart \
+            test/micro_learning/rights_provenance_policy_validator_test.dart \
+            test/micro_learning/rights_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_rights_gate_validator_test.dart \
+            test/micro_learning/canonical_curriculum_policy_validator_test.dart \
+            test/micro_learning/canonical_curriculum_registry_validator_test.dart \
+            test/micro_learning/curriculum_mapping_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_curriculum_gate_validator_test.dart \
+            test/micro_learning/startup_text_metrics_test.dart \
+            test/micro_learning/startup_pedagogy_policy_validator_test.dart \
+            test/micro_learning/startup_pedagogy_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_startup_suitability_gate_validator_test.dart \
+            test/micro_learning/startup_pedagogy_startup_contract_test.dart \
+            test/startup/startup_motion_policy_test.dart \
+            test/startup/startup_screen_hardening_test.dart \
+            test/services/study_content/canonical_content_identity_mapper_test.dart \
+            test/services/study_content/study_content_navigation_blueprint_test.dart
