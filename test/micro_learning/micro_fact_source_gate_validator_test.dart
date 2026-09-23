@@ -170,6 +170,30 @@ void main() {
     );
   });
 
+  test('NIOSH source cannot use an unrelated CDC path', () {
+    final fact = cloneFact();
+    final provenance = Map<String, dynamic>.from(fact['provenance'] as Map);
+    provenance
+      ..['sourceRegistryId'] = 'SRC-02'
+      ..['sourceClass'] = 'research_or_prevention_guidance'
+      ..['sourceTitle'] = 'Unrelated CDC page'
+      ..['officialUrl'] = 'https://www.cdc.gov/flu/'
+      ..['sourceLocator'] = 'Unrelated CDC path'
+      ..['sourceVerifiedAt'] = '2026-09-23';
+    fact['provenance'] = provenance;
+
+    final result = validator.validateMaps(
+      microFact: fact,
+      authorityRegistry: loadRegistry(),
+    );
+
+    expect(result.isValid, isFalse);
+    expect(
+      result.issues.map((issue) => issue.code),
+      contains('ML3_SOURCE_PATH_OUTSIDE_REGISTERED_SCOPE'),
+    );
+  });
+
   test('registered first-party subdomain is accepted', () {
     final fact = cloneFact();
     final provenance = Map<String, dynamic>.from(fact['provenance'] as Map);
