@@ -63,7 +63,7 @@ void main() {
       ..['directQuoteUsed'] = true
       ..['quoteWordCount'] = 3
       ..['quoteSegmentCount'] = 1
-      ..['quoteTextSha256'] = 'a' * 64
+      ..['quoteTextSha256'] = List.filled(64, 'a').join()
       ..['quoteNecessity'] = 'Test quote';
     evidence['transformation'] = transformation;
 
@@ -105,7 +105,7 @@ void main() {
       ..['directQuoteUsed'] = true
       ..['quoteWordCount'] = 13
       ..['quoteSegmentCount'] = 1
-      ..['quoteTextSha256'] = 'b' * 64
+      ..['quoteTextSha256'] = List.filled(64, 'b').join()
       ..['quoteNecessity'] = 'Exact wording is necessary for this test.'
       ..['longestVerbatimRunWords'] = 13;
     evidence['transformation'] = transformation;
@@ -131,7 +131,7 @@ void main() {
       ..['directQuoteUsed'] = true
       ..['quoteWordCount'] = 6
       ..['quoteSegmentCount'] = 2
-      ..['quoteTextSha256'] = 'c' * 64
+      ..['quoteTextSha256'] = List.filled(64, 'c').join()
       ..['quoteNecessity'] = 'Exact wording is necessary for this test.'
       ..['longestVerbatimRunWords'] = 6;
     evidence['transformation'] = transformation;
@@ -186,7 +186,7 @@ void main() {
       ..['directQuoteUsed'] = true
       ..['quoteWordCount'] = 20
       ..['quoteSegmentCount'] = 1
-      ..['quoteTextSha256'] = 'd' * 64
+      ..['quoteTextSha256'] = List.filled(64, 'd').join()
       ..['quoteNecessity'] = 'Licensed source excerpt.'
       ..['longestVerbatimRunWords'] = 20;
     evidence['transformation'] = transformation;
@@ -242,7 +242,7 @@ void main() {
       ..['directQuoteUsed'] = true
       ..['quoteWordCount'] = 20
       ..['quoteSegmentCount'] = 1
-      ..['quoteTextSha256'] = 'e' * 64
+      ..['quoteTextSha256'] = List.filled(64, 'e').join()
       ..['quoteNecessity'] = 'Licensed table excerpt.'
       ..['longestVerbatimRunWords'] = 20
       ..['tableCopied'] = true;
@@ -344,7 +344,7 @@ void main() {
       ..['directQuoteUsed'] = true
       ..['quoteWordCount'] = 10
       ..['quoteSegmentCount'] = 1
-      ..['quoteTextSha256'] = 'f' * 64
+      ..['quoteTextSha256'] = List.filled(64, 'f').join()
       ..['quoteNecessity'] = 'Licensed excerpt.'
       ..['longestVerbatimRunWords'] = 10;
     evidence['transformation'] = transformation;
