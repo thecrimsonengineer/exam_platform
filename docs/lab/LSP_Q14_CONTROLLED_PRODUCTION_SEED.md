@@ -24,7 +24,7 @@ The production seed must receive exactly one candidate for every entry in:
 
 content/lab_population/manifest.json
 
-Before any production write, Q14 runs the complete ten-LAB population through fresh in-memory repositories.
+After confirming the initial production identities are pristine, Q14 runs the complete ten-LAB population through fresh in-memory repositories before any production write.
 
 This preflight proves that all ten candidates still pass:
 
@@ -62,6 +62,8 @@ Published technical versions remain non-listable to learners under the Q13 Fires
 No overwrite, update or delete path is introduced.
 
 ## Learner release verification
+
+The successful preflight produces the exact immutable Q11 published versions and Q12 catalogue entries that are then persisted to production. Q14 does not recompute the publication lifecycle for the live write, so the validated preflight artifact is the persisted artifact.
 
 After the ten writes, Q14 independently verifies that:
 
