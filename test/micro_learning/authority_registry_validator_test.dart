@@ -13,7 +13,7 @@ void main() {
   test('frozen ML-1 authority registry passes validation', () {
     final result = validator.validateJson(loadRegistry());
 
-    expect(result.issues, isEmpty, reason: result.issues.join('\\n'));
+    expect(result.issues, isEmpty, reason: result.issues.join('\n'));
   });
 
   test('registry contains exactly the frozen 15 authority families', () {
