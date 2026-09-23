@@ -22,18 +22,41 @@ class LabDecisionQualityResult {
 
   bool get strictH03Pass => h03Result?.isStrictPass == true;
 
-  bool get dqg300Pass {
+  bool get dqg300AtomicRulesPass {
+    final result = dqg300Result?.result;
+    if (result == null || result.rules.length != 300) {
+      return false;
+    }
+
+    return result.rules
+        .where((rule) => rule.ruleId != 'DQG-300')
+        .every((rule) => rule.passed);
+  }
+
+  bool get dqg300DerivedPass =>
+      dqg300Result?.result.rule('DQG-300').passed == true;
+
+  bool get dqg300DqsPerfect => dqg300Result?.result.dqs == 100;
+
+  bool get dqg300SemanticPass {
     final result = dqg300Result?.result;
     if (result == null) {
       return false;
     }
 
     return result.isPublishable &&
-        result.dqs == 100 &&
-        result.rule('DQG-300').passed;
+        dqg300AtomicRulesPass &&
+        dqg300DerivedPass &&
+        dqg300DqsPerfect;
   }
 
+  bool get dqg300Pass => dqg300SemanticPass;
+
   int? get dqs => dqg300Result?.result.dqs;
+
+  int get dqg300PassedRuleCount => dqg300Result?.result.passedRuleCount ?? 0;
+
+  int get dqg300FailedRuleCount => dqg300Result?.result.failedRuleCount ?? 300;
 
   int get h03ErrorCount => h03Result?.report?.errorCount ?? 0;
 
@@ -78,8 +101,13 @@ class LabDecisionQualityReport {
 /// CanonicalParsePass &&
 /// H0_3Errors == 0 &&
 /// H0_3Warnings == 0 &&
+/// DQG001To299Pass &&
 /// DQG300Pass &&
 /// DQS == 100.
+///
+/// LSP-Q7 keeps DQG300 as the stronger semantic authority. The combined gate
+/// may observe and compose DQG300 output, but it cannot substitute H0.3,
+/// parser success, or local heuristics for any DQG semantic requirement.
 class LabDecisionQualityGate {
   const LabDecisionQualityGate({
     this.h03Gate = const LabH03StrictGate(),
