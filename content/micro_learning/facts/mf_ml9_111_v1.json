@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_111",
   "category": "csp_tip",
   "display": {
-    "displayText": "OSHA incident-investigation guidance emphasizes looking beyond immediate causes and blame to identify underlying system factors that corrective actions can address.",
-    "shortVariant": "Look beyond blame to find system causes that corrective actions can address.",
-    "estimatedReadSeconds": 8
+    "displayText": "NIOSH describes systems thinking in occupational safety and health as taking a holistic view of interacting factors that contribute to worker problems and outcomes.",
+    "shortVariant": "Systems thinking examines interacting factors instead of isolated causes.",
+    "estimatedReadSeconds": 10
   },
   "curriculum": {
     "scope": "general",
@@ -37,33 +37,33 @@
     "topicId": null,
     "subtopicId": null,
     "conceptIds": [
-      "root_cause_analysis",
-      "systems_thinking"
+      "systems_thinking",
+      "multifactorial_risk"
     ]
   },
   "provenance": {
-    "sourceRegistryId": "SRC-01",
-    "sourceClass": "enforcement_or_compliance_guidance",
-    "sourceTitle": "Incident Investigation - Overview",
-    "officialUrl": "https://www.osha.gov/incident-investigation",
-    "sourceLocator": "Root causes and systems approach overview",
-    "editionOrRevision": "Current OSHA incident-investigation guidance",
-    "sourceSection": "Incident Investigation - Overview",
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Work and Well-being: The Changing Face of Occupational Safety and Health",
+    "officialUrl": "https://www.cdc.gov/niosh/bulletin/2021/work-and-well-being.html",
+    "sourceLocator": "Systems thinking in occupational safety and health",
+    "editionOrRevision": "NIOSH Science Bulletin 2021",
+    "sourceSection": "Systems thinking in OSH",
     "sourcePage": null,
     "sourcePublishedAt": null,
     "sourceVerifiedAt": "2026-09-23",
     "rightsTreatment": "original_paraphrase"
   },
   "claim": {
-    "legalStatus": "nonbinding_guidance",
-    "jurisdiction": "US Federal OSHA",
+    "legalStatus": "not_applicable",
+    "jurisdiction": null,
     "numericalClaim": false,
     "safetyCritical": false,
     "simplificationRisk": "low"
   },
   "tags": [
     "csp_reasoning",
-    "root_cause_analysis",
-    "systems_thinking"
+    "systems_thinking",
+    "multifactorial_risk"
   ]
 }
