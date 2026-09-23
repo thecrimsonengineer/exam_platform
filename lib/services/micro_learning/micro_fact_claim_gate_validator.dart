@@ -229,9 +229,10 @@ class MicroFactClaimGateValidator {
       );
     }
 
-    final nonApplicableCategories = (claimPolicy['nonApplicableCategories'] as List)
-        .whereType<String>()
-        .toSet();
+    final nonApplicableCategories =
+        (claimPolicy['nonApplicableCategories'] as List)
+            .whereType<String>()
+            .toSet();
 
     if (legalStatus == 'not_applicable' &&
         !nonApplicableCategories.contains(category)) {
@@ -267,9 +268,7 @@ class MicroFactClaimGateValidator {
     ];
     final shortVariant = display['shortVariant'] as String?;
     if (shortVariant != null) {
-      variants.add(
-        MapEntry(r'$.display.shortVariant', shortVariant),
-      );
+      variants.add(MapEntry(r'$.display.shortVariant', shortVariant));
     }
 
     for (final variant in variants) {
@@ -412,8 +411,8 @@ class MicroFactClaimGateValidator {
     final attributionTokensRaw = Map<String, dynamic>.from(
       claimPolicy['authorityAttributionTokens'] as Map,
     );
-    final attributionTokens =
-        (attributionTokensRaw[sourceRegistryId] as List).whereType<String>();
+    final attributionTokens = (attributionTokensRaw[sourceRegistryId] as List)
+        .whereType<String>();
     final hasAttribution = attributionTokens.any(
       (token) => _containsPhrase(normalizedText, _normalize(token)),
     );
@@ -461,8 +460,8 @@ class MicroFactClaimGateValidator {
       );
     }
 
-    final legalEquivalencePhrases = (claimPolicy['legalEquivalencePhrases'] as List)
-        .whereType<String>();
+    final legalEquivalencePhrases =
+        (claimPolicy['legalEquivalencePhrases'] as List).whereType<String>();
     final containsLegalEquivalence = legalEquivalencePhrases.any(
       (phrase) => _containsPhrase(normalizedText, _normalize(phrase)),
     );
@@ -486,7 +485,9 @@ class MicroFactClaimGateValidator {
             issues,
             'ML4_AUTHORITY_SPECIFIC_MISATTRIBUTION',
             path,
-            'Wording conflicts with frozen authority semantics: ' + phrase + '.',
+            'Wording conflicts with frozen authority semantics: ' +
+                phrase +
+                '.',
           );
         }
       }
@@ -594,10 +595,8 @@ class MicroFactClaimGateValidator {
     String path,
     String message,
   ) {
-    issues.add(MicroFactClaimGateIssue(
-      code: code,
-      path: path,
-      message: message,
-    ));
+    issues.add(
+      MicroFactClaimGateIssue(code: code, path: path, message: message),
+    );
   }
 }
