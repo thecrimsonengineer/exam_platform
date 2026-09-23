@@ -457,6 +457,64 @@ service cloud.firestore {
         && request.resource.data.serverCreatedAt is timestamp;
     }
 
+
+    function labLearnerReleaseStateAllowedKeys() {
+      return [
+        'schemaVersion',
+        'releaseId',
+        'manifestId',
+        'released',
+        'labCount',
+        'totalDecisionCount',
+        'evidenceFingerprint',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLabLearnerReleaseState(releaseId) {
+      return request.resource.data.keys().hasAll(
+          labLearnerReleaseStateAllowedKeys()
+        )
+        && request.resource.data.keys().hasOnly(
+          labLearnerReleaseStateAllowedKeys()
+        )
+        && request.resource.data.schemaVersion
+          == 'csp11.lab.learner_release_state.v1'
+        && request.resource.data.releaseId == releaseId
+        && request.resource.data.manifestId == 'phase_l_population_v1'
+        && request.resource.data.released == true
+        && request.resource.data.labCount == 10
+        && request.resource.data.totalDecisionCount == 50
+        && request.resource.data.evidenceFingerprint is string
+        && request.resource.data.serverCreatedAt is timestamp
+        && existsAfter(
+          /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
+        )
+        && getAfter(
+          /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
+        ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint;
+    }
+
+    function initialLabPopulationReleased() {
+      return exists(
+          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+        )
+        && exists(
+          /databases/$(database)/documents/labProductionReleaseEvidence/phase_l_population_v1_q15_release_v1
+        )
+        && get(
+          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+        ).data.schemaVersion == 'csp11.lab.learner_release_state.v1'
+        && get(
+          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+        ).data.released == true
+        && get(
+          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+        ).data.evidenceFingerprint == get(
+          /databases/$(database)/documents/labProductionReleaseEvidence/phase_l_population_v1_q15_release_v1
+        ).data.evidenceFingerprint;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -546,6 +604,7 @@ service cloud.firestore {
 
     match /labLearnerCatalogue/{versionKey} {
       allow get, list: if signedIn()
+        && initialLabPopulationReleased()
         && resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
         && resource.data.available == true;
 
@@ -558,6 +617,20 @@ service cloud.firestore {
       allow get, list: if isAdmin();
 
       allow create: if isAdmin() && validLabProductionRelease(releaseId);
+
+      allow update, delete: if false;
+    }
+
+
+    match /labLearnerReleaseState/{releaseId} {
+      allow get: if signedIn()
+        && resource.data.schemaVersion == 'csp11.lab.learner_release_state.v1'
+        && resource.data.released == true;
+
+      allow list: if isAdmin();
+
+      allow create: if isAdmin()
+        && validLabLearnerReleaseState(releaseId);
 
       allow update, delete: if false;
     }

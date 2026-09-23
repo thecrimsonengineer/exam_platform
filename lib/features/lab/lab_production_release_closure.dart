@@ -12,6 +12,8 @@ import 'lab_studio.dart';
 const String kLspQ14ClosedSha =
     '5beee3db89a43267a4cc5b2956b117a344afe648';
 const String kLspQ14ClosureValidationRunId = '35918656487';
+const String kInitialLabProductionReleaseId =
+    'phase_l_population_v1_q15_release_v1';
 const String kLabProductionManifestFingerprintSchema =
     'csp11.lab.population_manifest.sha256.v1';
 const String kLabProductionReleaseFingerprintSchema =
@@ -366,6 +368,8 @@ abstract class LabProductionReleaseEvidenceRepository {
   Future<void> saveImmutable(LabProductionReleaseEvidence evidence);
 
   Future<LabProductionReleaseEvidence?> load(String releaseId);
+
+  Future<bool> isReleased(String releaseId);
 }
 
 class InMemoryLabProductionReleaseEvidenceRepository
@@ -386,6 +390,10 @@ class InMemoryLabProductionReleaseEvidenceRepository
   @override
   Future<LabProductionReleaseEvidence?> load(String releaseId) async =>
       _evidence[releaseId];
+
+  @override
+  Future<bool> isReleased(String releaseId) async =>
+      _evidence.containsKey(releaseId);
 }
 
 class LabProductionReleaseClosureService {
@@ -484,6 +492,12 @@ class LabProductionReleaseClosureService {
     if (evidence == null) {
       throw const LabProductionReleaseClosureException(
         'Q15 production release closure evidence does not exist.',
+      );
+    }
+
+    if (!await evidenceRepository.isReleased(releaseId)) {
+      throw const LabProductionReleaseClosureException(
+        'Q15 learner release marker is not active.',
       );
     }
 

@@ -41,7 +41,8 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
       return;
     }
 
-    _binding = widget.runtimeBinding ?? LabLearnerRuntimeBinding.firestore();
+    _binding =
+        widget.runtimeBinding ?? LabLearnerRuntimeBinding.firestoreProduction();
     _loadPersistentCatalogue();
   }
 

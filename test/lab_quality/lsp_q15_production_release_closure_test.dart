@@ -7,6 +7,7 @@ import 'package:exam_platform/features/lab/lab_learner_catalogue.dart';
 import 'package:exam_platform/features/lab/lab_learner_presentation.dart';
 import 'package:exam_platform/features/lab/lab_production_population_seed.dart';
 import 'package:exam_platform/features/lab/lab_production_release_closure.dart';
+import 'package:exam_platform/features/lab/lab_runtime_binding.dart';
 import 'package:exam_platform/features/lab/lab_scenario_population_manifest.dart';
 import 'package:exam_platform/features/lab/lab_snapshot_fingerprint.dart';
 import 'package:exam_platform/features/lab/lab_studio.dart';
@@ -187,11 +188,48 @@ void main() {
     expect(loaded, isNotNull);
     expect(loaded!.evidenceFingerprint, evidence.evidenceFingerprint);
     expect(loaded.q14ClosureSha, kLspQ14ClosedSha);
+    expect(await repository.isReleased(evidence.releaseId), isTrue);
+
+    final releaseState = await firestore
+        .collection('labLearnerReleaseState')
+        .doc(evidence.releaseId)
+        .get();
+    expect(releaseState.exists, isTrue);
+    expect(releaseState.data()!['released'], isTrue);
+    expect(
+      releaseState.data()!['evidenceFingerprint'],
+      evidence.evidenceFingerprint,
+    );
 
     await expectLater(
       repository.saveImmutable(evidence),
       throwsA(isA<LabProductionReleaseClosureException>()),
     );
+  });
+
+  test('Q15 runtime blocks catalogue access until release marker exists',
+      () async {
+    final evidenceRepository =
+        InMemoryLabProductionReleaseEvidenceRepository();
+    final binding = LabLearnerRuntimeBinding(
+      deliveryService: LabLearnerControlledDeliveryService(
+        publishedRepository: InMemoryLabPublishedRepository(),
+        catalogueRepository: InMemoryLabLearnerCatalogueRepository(),
+      ),
+      releaseEvidenceRepository: evidenceRepository,
+      requiredReleaseId: _syntheticEvidence().releaseId,
+    );
+
+    await expectLater(
+      binding.listAvailable(),
+      throwsA(isA<LabProductionReleaseClosureException>()),
+    );
+
+    final evidence = _syntheticEvidence();
+    await evidenceRepository.saveImmutable(evidence);
+
+    expect(await evidenceRepository.isReleased(evidence.releaseId), isTrue);
+    expect(await binding.listAvailable(), isEmpty);
   });
 
   test('Q15 Firestore rules keep release evidence admin-only and immutable', () {
@@ -213,5 +251,19 @@ void main() {
     expect(rules, contains(kLspQ14ClosureValidationRunId));
     expect(rules, contains("request.resource.data.labCount == 10"));
     expect(rules, contains("request.resource.data.totalDecisionCount == 50"));
+    expect(
+      rules,
+      contains('match /labLearnerReleaseState/{releaseId}'),
+    );
+    expect(rules, contains('function initialLabPopulationReleased()'));
+    expect(rules, contains('&& initialLabPopulationReleased()'));
+
+    final screen = File(
+      'lib/screens/lab/lab_library_screen.dart',
+    ).readAsStringSync();
+    expect(
+      screen,
+      contains('LabLearnerRuntimeBinding.firestoreProduction()'),
+    );
   });
 }

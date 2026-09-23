@@ -12,6 +12,8 @@ const String kLabLearnerCatalogueFirestoreSchemaVersion =
     'csp11.lab.learner_catalogue.v1';
 const String kLabProductionReleaseFirestoreSchemaVersion =
     LabProductionReleaseEvidence.schemaVersion;
+const String kLabLearnerReleaseStateFirestoreSchemaVersion =
+    'csp11.lab.learner_release_state.v1';
 
 class FirestoreLabPublishedRepository implements LabPublishedRepository {
   FirestoreLabPublishedRepository({FirebaseFirestore? firestore})
@@ -331,13 +333,22 @@ class FirestoreLabProductionReleaseEvidenceRepository
   CollectionReference<Map<String, dynamic>> get _collection =>
       _firestore.collection('labProductionReleaseEvidence');
 
+  CollectionReference<Map<String, dynamic>> get _releaseStateCollection =>
+      _firestore.collection('labLearnerReleaseState');
+
   @override
   Future<void> saveImmutable(LabProductionReleaseEvidence evidence) async {
     final reference = _collection.doc(evidence.releaseId);
+    final releaseStateReference = _releaseStateCollection.doc(
+      evidence.releaseId,
+    );
 
     await _firestore.runTransaction((transaction) async {
       final existing = await transaction.get(reference);
-      if (existing.exists) {
+      final existingReleaseState = await transaction.get(
+        releaseStateReference,
+      );
+      if (existing.exists || existingReleaseState.exists) {
         throw const LabProductionReleaseClosureException(
           'Q15 production release evidence is immutable and already exists.',
         );
@@ -345,6 +356,16 @@ class FirestoreLabProductionReleaseEvidenceRepository
 
       transaction.set(reference, <String, dynamic>{
         ...evidence.toJson(),
+        'serverCreatedAt': FieldValue.serverTimestamp(),
+      });
+      transaction.set(releaseStateReference, <String, dynamic>{
+        'schemaVersion': kLabLearnerReleaseStateFirestoreSchemaVersion,
+        'releaseId': evidence.releaseId,
+        'manifestId': evidence.manifestId,
+        'released': true,
+        'labCount': evidence.labCount,
+        'totalDecisionCount': evidence.totalDecisionCount,
+        'evidenceFingerprint': evidence.evidenceFingerprint,
         'serverCreatedAt': FieldValue.serverTimestamp(),
       });
     });
@@ -372,5 +393,24 @@ class FirestoreLabProductionReleaseEvidenceRepository
       );
     }
     return evidence;
+  }
+
+  @override
+  Future<bool> isReleased(String releaseId) async {
+    final snapshot = await _releaseStateCollection.doc(releaseId).get();
+    if (!snapshot.exists) return false;
+
+    final data = snapshot.data();
+    return data != null &&
+        data['schemaVersion'] ==
+            kLabLearnerReleaseStateFirestoreSchemaVersion &&
+        data['releaseId'] == releaseId &&
+        data['released'] == true &&
+        data['labCount'] is int &&
+        (data['labCount'] as int) > 0 &&
+        data['totalDecisionCount'] is int &&
+        (data['totalDecisionCount'] as int) > 0 &&
+        data['evidenceFingerprint'] is String &&
+        (data['evidenceFingerprint'] as String).isNotEmpty;
   }
 }

@@ -117,6 +117,22 @@ The collection is internal operational evidence:
 
 Learners never need direct access to this collection.
 
+## Learner release barrier
+
+Q15 also makes closure evidence the learner-visibility switch.
+
+The Firestore evidence repository creates the internal release certificate and a minimal `labLearnerReleaseState` marker in the same transaction.
+
+Before that marker exists:
+
+- Firestore rules deny learner reads from `labLearnerCatalogue`
+- the production LAB runtime refuses catalogue listing
+- the production LAB runtime refuses exact LAB loading
+
+After Q15 closure succeeds, the marker becomes readable to authenticated learners and the existing Q13 controlled delivery path opens.
+
+This prevents an interrupted multi-document Q14 seed from exposing a partial scenario population.
+
 ## Failure and recovery semantics
 
 A failed Q14 seed is not converted into release evidence.
@@ -146,6 +162,8 @@ Added:
 Updated:
 
 - lib/features/lab/lab_firestore_repositories.dart
+- lib/features/lab/lab_runtime_binding.dart
+- lib/screens/lab/lab_library_screen.dart
 - firestore.rules
 - .github/workflows/lsp_unified_lab_question_validation.yml
 
@@ -162,6 +180,8 @@ Dedicated Q15 coverage verifies:
 7. Firestore release evidence is create-once
 8. Firestore release evidence round-trips without fingerprint drift
 9. Firestore rules keep evidence admin-only and immutable
+10. learner catalogue reads remain blocked until Q15 release state exists
+11. production runtime uses the same release barrier
 
 All Q1-Q14 gates and the full repository regression remain mandatory.
 
