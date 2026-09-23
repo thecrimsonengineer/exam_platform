@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9C",
+  "freezeStatus": "closed_gate_evidence_preparation_checkpoint",
+  "closedAt": "2026-09-24",
+  "sourceCorpus": {
+    "ref": "phase-ml9b-batch-12-closed",
+    "sha": "5af8248c5863d8f6e74be6d27aad1c9a9a008873",
+    "candidateCount": 120
+  },
+  "evidenceCoverage": {
+    "bundleCount": 12,
+    "rightsEvidenceRecords": 120,
+    "curriculumEvidenceRecords": 114,
+    "generalScopeCurriculumExemptions": 6,
+    "pedagogyEvidenceRecords": 120,
+    "accessibilityReviewTracks": 120
+  },
+  "machineValidation": {
+    "aggregateConnectorPrecheck": "pass",
+    "repositoryValidator": "pass",
+    "validatedSha": "31d6cea4eecc62ab11ecc926c3c9ee4f879ef0d3",
+    "workflowRunId": 35919548753,
+    "workflowConclusion": "success",
+    "analyzer": "pass",
+    "evidenceValidatorRegression": "pass"
+  },
+  "humanReviewBoundary": {
+    "rightsPassCount": 0,
+    "curriculumPassCount": 0,
+    "pedagogyPassCount": 0,
+    "accessibilityPassCount": 0,
+    "humanApprovalsGeneratedByAutomation": false,
+    "humanReviewComplete": false
+  },
+  "lifecycle": {
+    "validatedFactCount": 0,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "importantBoundary": "ML-9C prepares evidence records and deterministic bindings only. Pending machine-seeded rights transformation fields are not human copyright approval and must be reviewed before any validation/publication promotion.",
+  "nextAction": "ML-9D Whole-Corpus ML-8 Pass"
+}
