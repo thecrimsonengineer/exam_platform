@@ -332,6 +332,33 @@ Batch 05 review and validation artifacts:
 - `content/micro_learning/review/ml9_batch_05_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_05_precheck.json`
 
+### Batch 06
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 60.
+- Batch 06 uses the next ten reserved occupational-safety slots, so authority diversification was applied within one topic bucket rather than by changing the frozen slot plan.
+- Authority mix added in Batch 06: 4 NIOSH, 2 ANSI/ASSP, 2 NFPA, 1 ISO, and 1 OSHA.
+- Batch topics cover prevention through design, managed fall protection, means of egress, manual-lifting risk, robotics hazards, risk management, construction design-out principles, the electrical safety lifecycle, floor loading, and forklift hazards.
+- All Batch 06 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- `mf_ml9_010` was shortened before freeze because its first draft exceeded the frozen ML-7 computed reading-time limit.
+- Candidate source-class, legal-status, attribution, lifecycle, curriculum-ID-pattern, and tag checks passed after correction.
+- Frozen startup text precheck passed for all 10 Batch 06 candidates.
+- The cumulative 60-fact corpus contains 1,770 unique pairs.
+- The previously validated 1,225 pairs remain unchanged.
+- Batch 06 added 500 old-to-new comparisons and 45 internal comparisons; all 545 new comparisons produced 0 exact duplicates and 0 unresolved ML-8 review candidates.
+- OSHA and NIOSH each represent 18 of 60 candidates (30%).
+- No authority exceeds the frozen 40% ML-8 concentration-review threshold.
+- Five Batch 06 candidates use rights-sensitive ANSI/ASSP, NFPA, or ISO material and remain pending genuine ML-5 rights review.
+- No automated process has asserted human approval or publication eligibility.
+- The GitHub connector did not expose the push-triggered workflow result for the candidate-content SHA, so no unobserved CI-green claim is made.
+
+Batch 06 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_06_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_06_precheck.json`
+
 ## Next action
 
-ML-9B Batch 06 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 60 candidates.
+ML-9B Batch 07 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 70 candidates.
