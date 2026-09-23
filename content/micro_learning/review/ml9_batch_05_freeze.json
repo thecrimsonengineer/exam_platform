@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_05",
+  "freezeStatus": "closed_candidate_authoring_checkpoint",
+  "closedAt": "2026-09-23",
+  "cumulativeCandidateCount": 50,
+  "candidateContentSha": "127d22b9412b196df2e202b388b71676d5b7999c",
+  "validationBasis": {
+    "candidatePolicyPrecheck": "pass",
+    "startupTextPrecheck": "pass",
+    "ml8CorpusPrecheck": "pass",
+    "totalUniquePairs": 1225,
+    "exactDuplicates": 0,
+    "unresolvedReviewCandidates": 0,
+    "flaggedPairs": 0,
+    "priorValidatedPairs": 780,
+    "newlyScannedPairs": 445
+  },
+  "authorityDiversification": {
+    "explicitConstraintSatisfied": true,
+    "batch05OshaFacts": 0,
+    "previousOshaShare": 0.425,
+    "currentOshaShare": 0.34,
+    "anyAuthorityAboveFortyPercent": false
+  },
+  "rightsSensitivePending": [
+    "mf_ml9_006",
+    "mf_ml9_050",
+    "mf_ml9_065",
+    "mf_ml9_077"
+  ],
+  "ciObservation": {
+    "workflowExpectedOnPush": true,
+    "workflowResultObservedThroughAvailableConnector": false,
+    "ciGreenClaimMade": false
+  },
+  "lifecycle": {
+    "humanReviewComplete": false,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "nextAction": "ML-9B Batch 06"
+}
