@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_077",
+  "category": "management_insight",
+  "display": {
+    "displayText": "CCPS recommends combining leading and lagging process-safety indicators because leading measures can reveal system deterioration before a major event occurs.",
+    "shortVariant": "Leading process-safety indicators can reveal deterioration before major events.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d02",
+    "competencyId": "d02_c07",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "process_safety_metrics",
+      "leading_indicator_early_warning"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-11",
+    "sourceClass": "professional_guideline",
+    "sourceTitle": "Process Safety Metrics",
+    "officialUrl": "https://ccps.aiche.org/resources/tools/process-safety-metrics",
+    "sourceLocator": "Leading and Lagging Indicators to Improve Process Safety Performance",
+    "editionOrRevision": "Process Safety Metrics Guide Version 4.1, June 2022",
+    "sourceSection": "Leading and Lagging Indicators",
+    "sourcePage": null,
+    "sourcePublishedAt": "2022-06-01",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_guideline",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "leading_indicators",
+    "process_safety_metrics",
+    "performance_monitoring"
+  ]
+}
