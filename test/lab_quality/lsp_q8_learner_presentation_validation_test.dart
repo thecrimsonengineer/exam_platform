@@ -6,8 +6,7 @@ import 'package:exam_platform/features/lab/lab_learner_presentation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Map<String, Object?> _technicalJson() {
-  final source =
-      File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync();
+  final source = File('test/fixtures/lab/l2_valid_lab.json').readAsStringSync();
   return (jsonDecode(source) as Map).cast<String, Object?>();
 }
 
@@ -113,8 +112,8 @@ void main() {
 
   test('Q8 reports missing and unexpected Decision mappings', () {
     final json = _presentationJson();
-    final decisions =
-        (json['decisionPresentation'] as Map).cast<String, Object?>();
+    final decisions = (json['decisionPresentation'] as Map)
+        .cast<String, Object?>();
     decisions.remove('decision_two');
     decisions['decision_unknown'] = <String, Object?>{'title': 'Unknown'};
     json['decisionPresentation'] = decisions;
@@ -131,12 +130,11 @@ void main() {
 
   test('Q8 requires complete consequence, evidence and ending mappings', () {
     final json = _presentationJson();
-    final consequences =
-        (json['consequencePresentation'] as Map).cast<String, Object?>();
-    final evidence =
-        (json['evidencePresentation'] as Map).cast<String, Object?>();
-    final endings =
-        (json['endingPresentation'] as Map).cast<String, Object?>();
+    final consequences = (json['consequencePresentation'] as Map)
+        .cast<String, Object?>();
+    final evidence = (json['evidencePresentation'] as Map)
+        .cast<String, Object?>();
+    final endings = (json['endingPresentation'] as Map).cast<String, Object?>();
 
     consequences.remove('c_critical');
     evidence.remove('permit');
@@ -159,8 +157,8 @@ void main() {
 
   test('Q8 rejects presentation attempts to override Decision truth', () {
     final json = _presentationJson();
-    final decisions =
-        (json['decisionPresentation'] as Map).cast<String, Object?>();
+    final decisions = (json['decisionPresentation'] as Map)
+        .cast<String, Object?>();
     decisions['decision_one'] = <String, Object?>{
       'title': 'Immediate control',
       'prompt': 'Replacement prompt must never be accepted.',
@@ -176,24 +174,27 @@ void main() {
     );
   });
 
-  test('Q8 rejects presentation attempts to override consequence mechanics', () {
-    final json = _presentationJson();
-    final consequences =
-        (json['consequencePresentation'] as Map).cast<String, Object?>();
-    consequences['c_safe'] = <String, Object?>{
-      'observable': 'Visible learner-facing outcome.',
-      'guidedInsight': 'Learner-facing reflection.',
-      'mutations': <Object?>[],
-      'evidenceUnlocks': <String>[],
-      'simulatedMinutes': 999,
-    };
-    json['consequencePresentation'] = consequences;
+  test(
+    'Q8 rejects presentation attempts to override consequence mechanics',
+    () {
+      final json = _presentationJson();
+      final consequences = (json['consequencePresentation'] as Map)
+          .cast<String, Object?>();
+      consequences['c_safe'] = <String, Object?>{
+        'observable': 'Visible learner-facing outcome.',
+        'guidedInsight': 'Learner-facing reflection.',
+        'mutations': <Object?>[],
+        'evidenceUnlocks': <String>[],
+        'simulatedMinutes': 999,
+      };
+      json['consequencePresentation'] = consequences;
 
-    expect(
-      () => LabLearnerPresentationPackage.fromJson(json),
-      throwsA(isA<LabLearnerPresentationContractException>()),
-    );
-  });
+      expect(
+        () => LabLearnerPresentationPackage.fromJson(json),
+        throwsA(isA<LabLearnerPresentationContractException>()),
+      );
+    },
+  );
 
   test('Q8 rejects Story Gate, ending-mechanics and source overrides', () {
     final json = _presentationJson();
@@ -207,8 +208,8 @@ void main() {
     );
 
     final endingJson = _presentationJson();
-    final endings =
-        (endingJson['endingPresentation'] as Map).cast<String, Object?>();
+    final endings = (endingJson['endingPresentation'] as Map)
+        .cast<String, Object?>();
     endings['safe_end'] = <String, Object?>{
       'title': 'Safe completion',
       'narrative': 'Learner-facing ending.',
@@ -226,8 +227,8 @@ void main() {
 
   test('Q8 rejects evidence truth overrides inside display records', () {
     final json = _presentationJson();
-    final evidence =
-        (json['evidencePresentation'] as Map).cast<String, Object?>();
+    final evidence = (json['evidencePresentation'] as Map)
+        .cast<String, Object?>();
     evidence['permit'] = <String, Object?>{
       'title': 'Work permit',
       'summary': 'Learner-facing summary.',
@@ -246,12 +247,14 @@ void main() {
 
   test('Q8 validation is read-only over authoritative technical LAB', () {
     final technical = _technicalPackage();
-    final firstDecision =
-        technical.nodes.whereType<LabDecisionNode>().first;
+    final firstDecision = technical.nodes.whereType<LabDecisionNode>().first;
     final beforePrompt = firstDecision.prompt;
-    final beforeOptions =
-        firstDecision.options.map((option) => option.text).toList();
-    final beforeBest = firstDecision.options.indexWhere((option) => option.isBest);
+    final beforeOptions = firstDecision.options
+        .map((option) => option.text)
+        .toList();
+    final beforeBest = firstDecision.options.indexWhere(
+      (option) => option.isBest,
+    );
     final beforeGate = Map<String, Object?>.from(technical.gates.first);
     final beforeEnding = Map<String, Object?>.from(technical.endings.first);
 

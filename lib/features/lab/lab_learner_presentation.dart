@@ -25,11 +25,7 @@ void _requireOnlyKeys(
   }
 }
 
-String _requiredText(
-  Map<String, Object?> json,
-  String field,
-  String label,
-) {
+String _requiredText(Map<String, Object?> json, String field, String label) {
   final value = json[field]?.toString().trim() ?? '';
   if (value.isEmpty) {
     throw LabLearnerPresentationContractException(
@@ -63,26 +59,23 @@ List<String> _stringList(
 
 class LabPresentationOverview {
   LabPresentationOverview.fromJson(Map<String, Object?> json)
-      : summary = _requiredText(json, 'summary', 'presentation'),
-        estimatedTime = _requiredText(json, 'estimatedTime', 'presentation'),
-        decisionCountLabel =
-            _requiredText(json, 'decisionCountLabel', 'presentation'),
-        role = _requiredText(json, 'role', 'presentation'),
-        situation = _requiredText(json, 'situation', 'presentation'),
-        objective = _requiredText(json, 'objective', 'presentation'),
-        peopleInvolved = _stringList(
-          json['peopleInvolved'],
-          'presentation.peopleInvolved',
-          allowEmpty: true,
-        ),
-        knownFacts = _stringList(
-          json['knownFacts'],
-          'presentation.knownFacts',
-        ),
-        focusTags = _stringList(
-          json['focusTags'],
-          'presentation.focusTags',
-        ) {
+    : summary = _requiredText(json, 'summary', 'presentation'),
+      estimatedTime = _requiredText(json, 'estimatedTime', 'presentation'),
+      decisionCountLabel = _requiredText(
+        json,
+        'decisionCountLabel',
+        'presentation',
+      ),
+      role = _requiredText(json, 'role', 'presentation'),
+      situation = _requiredText(json, 'situation', 'presentation'),
+      objective = _requiredText(json, 'objective', 'presentation'),
+      peopleInvolved = _stringList(
+        json['peopleInvolved'],
+        'presentation.peopleInvolved',
+        allowEmpty: true,
+      ),
+      knownFacts = _stringList(json['knownFacts'], 'presentation.knownFacts'),
+      focusTags = _stringList(json['focusTags'], 'presentation.focusTags') {
     _requireOnlyKeys(json, const <String>{
       'summary',
       'estimatedTime',
@@ -109,14 +102,14 @@ class LabPresentationOverview {
 
 class LabEvidencePresentation {
   LabEvidencePresentation.fromJson(Map<String, Object?> json)
-      : title = _requiredText(json, 'title', 'evidence presentation'),
-        summary = _requiredText(json, 'summary', 'evidence presentation'),
-        details = _requiredText(json, 'details', 'evidence presentation') {
-    _requireOnlyKeys(
-      json,
-      const <String>{'title', 'summary', 'details'},
-      'evidence presentation',
-    );
+    : title = _requiredText(json, 'title', 'evidence presentation'),
+      summary = _requiredText(json, 'summary', 'evidence presentation'),
+      details = _requiredText(json, 'details', 'evidence presentation') {
+    _requireOnlyKeys(json, const <String>{
+      'title',
+      'summary',
+      'details',
+    }, 'evidence presentation');
   }
 
   final String title;
@@ -126,12 +119,8 @@ class LabEvidencePresentation {
 
 class LabDecisionPresentation {
   LabDecisionPresentation.fromJson(Map<String, Object?> json)
-      : title = _requiredText(json, 'title', 'decision presentation') {
-    _requireOnlyKeys(
-      json,
-      const <String>{'title'},
-      'decision presentation',
-    );
+    : title = _requiredText(json, 'title', 'decision presentation') {
+    _requireOnlyKeys(json, const <String>{'title'}, 'decision presentation');
   }
 
   final String title;
@@ -139,21 +128,20 @@ class LabDecisionPresentation {
 
 class LabConsequencePresentation {
   LabConsequencePresentation.fromJson(Map<String, Object?> json)
-      : observable = _requiredText(
-          json,
-          'observable',
-          'consequence presentation',
-        ),
-        guidedInsight = _requiredText(
-          json,
-          'guidedInsight',
-          'consequence presentation',
-        ) {
-    _requireOnlyKeys(
-      json,
-      const <String>{'observable', 'guidedInsight'},
-      'consequence presentation',
-    );
+    : observable = _requiredText(
+        json,
+        'observable',
+        'consequence presentation',
+      ),
+      guidedInsight = _requiredText(
+        json,
+        'guidedInsight',
+        'consequence presentation',
+      ) {
+    _requireOnlyKeys(json, const <String>{
+      'observable',
+      'guidedInsight',
+    }, 'consequence presentation');
   }
 
   final String observable;
@@ -162,18 +150,18 @@ class LabConsequencePresentation {
 
 class LabEndingPresentation {
   LabEndingPresentation.fromJson(Map<String, Object?> json)
-      : title = _requiredText(json, 'title', 'ending presentation'),
-        narrative = _requiredText(json, 'narrative', 'ending presentation'),
-        keyTurningPoint = _requiredText(
-          json,
-          'keyTurningPoint',
-          'ending presentation',
-        ) {
-    _requireOnlyKeys(
-      json,
-      const <String>{'title', 'narrative', 'keyTurningPoint'},
-      'ending presentation',
-    );
+    : title = _requiredText(json, 'title', 'ending presentation'),
+      narrative = _requiredText(json, 'narrative', 'ending presentation'),
+      keyTurningPoint = _requiredText(
+        json,
+        'keyTurningPoint',
+        'ending presentation',
+      ) {
+    _requireOnlyKeys(json, const <String>{
+      'title',
+      'narrative',
+      'keyTurningPoint',
+    }, 'ending presentation');
   }
 
   final String title;
@@ -249,7 +237,9 @@ class LabLearnerPresentationPackage {
 
   static Map<String, Object?> _requiredMap(Object? value, String label) {
     if (value is! Map) {
-      throw LabLearnerPresentationContractException('$label must be an object.');
+      throw LabLearnerPresentationContractException(
+        '$label must be an object.',
+      );
     }
     return value.cast<String, Object?>();
   }
@@ -340,7 +330,8 @@ class LabLearnerPresentationValidator {
     final consequenceIds = <String>{
       for (final consequence in technicalPackage.consequences) consequence.id,
     };
-    for (final decision in technicalPackage.nodes.whereType<LabDecisionNode>()) {
+    for (final decision
+        in technicalPackage.nodes.whereType<LabDecisionNode>()) {
       for (final option in decision.options) {
         final consequenceId = option.consequenceId ?? option.consequence?.id;
         if (consequenceId == null || consequenceId.trim().isEmpty) {
@@ -358,21 +349,21 @@ class LabLearnerPresentationValidator {
       'evidence',
       issues,
     );
-    final endingIds = _technicalIds(
-      technicalPackage.endings,
-      'ending',
-      issues,
-    );
+    final endingIds = _technicalIds(technicalPackage.endings, 'ending', issues);
 
     return LabLearnerPresentationValidationReport(
       identityMatches:
           presentationPackage.labId == technicalPackage.metadata.id &&
           presentationPackage.versionId == technicalPackage.metadata.versionId,
       missingDecisionIds: Set<String>.unmodifiable(
-        decisionIds.difference(presentationPackage.decisionPresentation.keys.toSet()),
+        decisionIds.difference(
+          presentationPackage.decisionPresentation.keys.toSet(),
+        ),
       ),
       unexpectedDecisionIds: Set<String>.unmodifiable(
-        presentationPackage.decisionPresentation.keys.toSet().difference(decisionIds),
+        presentationPackage.decisionPresentation.keys.toSet().difference(
+          decisionIds,
+        ),
       ),
       missingConsequenceIds: Set<String>.unmodifiable(
         consequenceIds.difference(
@@ -380,21 +371,29 @@ class LabLearnerPresentationValidator {
         ),
       ),
       unexpectedConsequenceIds: Set<String>.unmodifiable(
-        presentationPackage.consequencePresentation.keys
-            .toSet()
-            .difference(consequenceIds),
+        presentationPackage.consequencePresentation.keys.toSet().difference(
+          consequenceIds,
+        ),
       ),
       missingEvidenceIds: Set<String>.unmodifiable(
-        evidenceIds.difference(presentationPackage.evidencePresentation.keys.toSet()),
+        evidenceIds.difference(
+          presentationPackage.evidencePresentation.keys.toSet(),
+        ),
       ),
       unexpectedEvidenceIds: Set<String>.unmodifiable(
-        presentationPackage.evidencePresentation.keys.toSet().difference(evidenceIds),
+        presentationPackage.evidencePresentation.keys.toSet().difference(
+          evidenceIds,
+        ),
       ),
       missingEndingIds: Set<String>.unmodifiable(
-        endingIds.difference(presentationPackage.endingPresentation.keys.toSet()),
+        endingIds.difference(
+          presentationPackage.endingPresentation.keys.toSet(),
+        ),
       ),
       unexpectedEndingIds: Set<String>.unmodifiable(
-        presentationPackage.endingPresentation.keys.toSet().difference(endingIds),
+        presentationPackage.endingPresentation.keys.toSet().difference(
+          endingIds,
+        ),
       ),
       technicalMappingIssues: List<String>.unmodifiable(issues),
     );
