@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_010",
   "category": "safety_insight",
   "display": {
-    "displayText": "NIOSH's lifting equation evaluates low-back risk from two-handed manual lifting using task factors such as load, hand position, travel distance, asymmetry, frequency, duration, and grip quality.",
+    "displayText": "NIOSH's lifting equation evaluates low-back risk from two-handed manual lifting using load, hand position, travel distance, asymmetry, frequency, duration, and grip quality.",
     "shortVariant": "NIOSH evaluates manual-lifting risk using multiple task factors.",
-    "estimatedReadSeconds": 10
+    "estimatedReadSeconds": 9
   },
   "curriculum": {
     "scope": "mapped",
