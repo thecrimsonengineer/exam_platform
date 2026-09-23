@@ -379,9 +379,11 @@ class CurriculumMappingEvidenceValidator {
     final parsed = DateTime.tryParse(value);
     if (parsed == null) return null;
     final normalized =
-        '\${parsed.year.toString().padLeft(4, '0')}-'
-        '\${parsed.month.toString().padLeft(2, '0')}-'
-        '\${parsed.day.toString().padLeft(2, '0')}';
+        parsed.year.toString().padLeft(4, '0') +
+        '-' +
+        parsed.month.toString().padLeft(2, '0') +
+        '-' +
+        parsed.day.toString().padLeft(2, '0');
     return normalized == value ? parsed : null;
   }
 
