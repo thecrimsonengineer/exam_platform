@@ -494,6 +494,35 @@ Batch 11 review and validation artifacts:
 - `content/micro_learning/review/ml9_batch_11_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_11_precheck.json`
 
+### Batch 12
+
+- 10 final candidate facts authored.
+- Cumulative candidate count: 120 of 120 reserved slots.
+- Batch 12 completes the environmental, emergency-management, transportation/fleet, CSP-reasoning, and evidence-based-learning allocations.
+- Authority mix: 4 NIOSH, 2 EPA, 2 FEMA, 1 OSHA, and 1 PHMSA.
+- Topics cover sustainable materials management, particulate-matter impacts, disaster recovery, sprinkler-system maintenance, threat-and-hazard assessment, hazardous-material transport security, program evaluation, systems thinking, learner engagement, and adult learning.
+- All Batch 12 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- Two candidate corrections were applied before freeze:
+  - `mf_ml9_102` learner-facing wording removed the unapproved uppercase acronym `THIRA` while retaining the underlying FEMA concept in provenance and concept metadata.
+  - `mf_ml9_120` cleared an unverified exact publication day because the source identifies August 2005 without a confirmed day.
+- Candidate source-class, legal-status, attribution, lifecycle, curriculum-ID-pattern, tag, and first-party-host checks passed.
+- Frozen startup text precheck passed for all 10 Batch 12 candidates.
+- The cumulative 120-fact corpus contains 7,140 unique pairs.
+- The previously validated 5,995 pairs remain unchanged.
+- Batch 12 added 1,100 old-to-new comparisons and 45 internal comparisons; all 1,145 new comparisons produced 0 exact duplicates and 0 unresolved ML-8 review candidates.
+- NIOSH represents 32 of 120 candidates (26.67%); OSHA 20 (16.67%); CCPS 11 (9.17%); EPA 10 (8.33%).
+- No authority exceeds the frozen 40% ML-8 concentration-review threshold.
+- Batch 12 uses only government first-party authorities; normal ML-5 rights evidence and human copyright review remain pending.
+- No automated process has asserted human approval, validation, startup eligibility, or publication eligibility.
+- The frozen ML-9 workflow does not push-trigger on the Batch 12 branch, so no CI-green claim is made.
+
+Batch 12 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_12_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_12_precheck.json`
+
 ## Next action
 
-ML-9B Batch 12 - author the final 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 120 candidates.
+ML-9C - build and validate rights, curriculum, pedagogy, and accessibility evidence for release candidates while preserving all human-review boundaries.
