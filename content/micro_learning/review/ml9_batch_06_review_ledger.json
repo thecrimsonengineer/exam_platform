@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_06",
+  "status": "candidate_review",
+  "createdAt": "2026-09-23",
+  "parentBankVersion": "1.0.0",
+  "factCount": 10,
+  "cumulativeCandidateCount": 60,
+  "humanReviewComplete": false,
+  "publicationAllowed": false,
+  "diversificationConstraint": {
+    "explicit": true,
+    "batchAuthorityCounts": {
+      "SRC-01": 1,
+      "SRC-02": 4,
+      "SRC-03": 2,
+      "SRC-04": 1,
+      "SRC-05": 2
+    }
+  },
+  "facts": [
+    {
+      "microFactId": "mf_ml9_007",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-03",
+      "sourceUrl": "https://www.assp.org/standards/standards-topics/prevention-through-design-z590-3",
+      "sourceLocator": "What Is the Prevention Through Design Standard and Why Use It",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_007_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_008",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-03",
+      "sourceUrl": "https://www.assp.org/standards/standards-topics/fall-protection-and-fall-restraint-z359",
+      "sourceLocator": "What Are Fall Protection and Fall Restraint Standards",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_008_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_009",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-05",
+      "sourceUrl": "https://link.nfpa.org/publications/101/2024/chapters/7",
+      "sourceLocator": "2024 NFPA 101, Chapter 7 - Means of Egress",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_009_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_010",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/ergonomics/about/rnle.html",
+      "sourceLocator": "Guidelines - Key variables",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_010_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_011",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/robotics/about/index.html",
+      "sourceLocator": "Impacts and Risks",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_011_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_012",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-04",
+      "sourceUrl": "https://www.iso.org/standard/65694.html",
+      "sourceLocator": "What is ISO 31000?",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_012_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_013",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/bulletin/2026/safer-construction-through-design.html",
+      "sourceLocator": "Planning and hierarchy-of-controls discussion",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_013_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_014",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-05",
+      "sourceUrl": "https://www.nfpa.org/-/media/project/storefront/catalog/files/code-or-topic-fact-sheets/nfpa-electrical-cycle-of-safety-fact-sheet.pdf",
+      "sourceLocator": "Electrical Cycle of Safety overview",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_014_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_015",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-01",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.22",
+      "sourceLocator": "29 CFR 1910.22(b)",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_015_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_016",
+      "bucket": "occupational_safety",
+      "sourceRegistryId": "SRC-02",
+      "sourceUrl": "https://www.cdc.gov/niosh/docs/2001-109/default.html",
+      "sourceLocator": "NIOSH Alert overview and fatality findings",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_016_v1.json"
+    }
+  ],
+  "requiredHumanReview": [
+    "technical accuracy",
+    "source-to-claim fidelity",
+    "legal-status wording",
+    "curriculum placement",
+    "copyright and independent wording",
+    "startup readability and accessibility",
+    "ML-8 corpus coexistence if a review candidate is raised"
+  ],
+  "gateState": {
+    "sourceProvenancePopulated": true,
+    "candidateLifecycleFailClosed": true,
+    "startupEligibilityGranted": false,
+    "humanTechnicalApprovalGranted": false,
+    "validatedOrPublishedCount": 0
+  }
+}
