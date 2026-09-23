@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "microFactId": "mf_machine_guarding_0002",
+  "contentVersion": 1,
+  "status": "published",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "Machine guarding helps prevent worker contact with moving parts and other hazardous machine areas.",
+    "shortVariant": "Machine guarding helps prevent contact with hazardous moving parts.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "general",
+    "domainId": null,
+    "competencyId": null,
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "machine_guarding",
+      "moving_parts"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "federal_regulation",
+    "sourceTitle": "Machine Guarding",
+    "officialUrl": "https://www.osha.gov/machine-guarding",
+    "sourceLocator": "Machine Guarding overview",
+    "editionOrRevision": "OSHA machine guarding guidance",
+    "sourceSection": "1910.147(a)(1)(i)",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "binding_requirement",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pass",
+    "sourceStatus": "pass",
+    "pedagogyStatus": "pass",
+    "copyrightStatus": "pass",
+    "uiStatus": "pass",
+    "humanTechnicalStatus": "pass",
+    "reviewedAt": "2026-09-23",
+    "nextReviewDueAt": "2026-12-22"
+  },
+  "runtime": {
+    "startupEligible": true
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "tags": [
+    "machine_guarding",
+    "moving_parts"
+  ]
+}
