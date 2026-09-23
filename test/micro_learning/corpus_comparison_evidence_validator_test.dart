@@ -22,17 +22,17 @@ void main() {
     final rightFact = load(nearPath);
     final facts = [leftFact, rightFact]
       ..sort(
-        (a, b) => MicroFactCorpusComparison.factVersionKey(a).compareTo(
-          MicroFactCorpusComparison.factVersionKey(b),
-        ),
+        (a, b) => MicroFactCorpusComparison.factVersionKey(
+          a,
+        ).compareTo(MicroFactCorpusComparison.factVersionKey(b)),
       );
 
     Map<String, dynamic> ref(Map<String, dynamic> fact) => {
-          'microFactId': fact['microFactId'],
-          'contentVersion': fact['contentVersion'],
-          'comparisonFingerprintSha256':
-              MicroFactCorpusComparison.comparisonFingerprint(fact),
-        };
+      'microFactId': fact['microFactId'],
+      'contentVersion': fact['contentVersion'],
+      'comparisonFingerprintSha256':
+          MicroFactCorpusComparison.comparisonFingerprint(fact),
+    };
 
     return {
       'schemaVersion': 1,
