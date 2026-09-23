@@ -46,7 +46,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dart format --output=none --set-exit-if-changed \
+          dart format \
+            lib/services/micro_learning/authority_registry_validator.dart \
+            tool/validate_micro_learning_authority_registry.dart \
+            test/micro_learning/authority_registry_validator_test.dart
+          git diff --check
+          git diff -- \
+            lib/services/micro_learning/authority_registry_validator.dart \
+            tool/validate_micro_learning_authority_registry.dart \
+            test/micro_learning/authority_registry_validator_test.dart
+          git diff --exit-code -- \
             lib/services/micro_learning/authority_registry_validator.dart \
             tool/validate_micro_learning_authority_registry.dart \
             test/micro_learning/authority_registry_validator_test.dart
