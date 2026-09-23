@@ -467,6 +467,33 @@ Batch 10 review and validation artifacts:
 - `content/micro_learning/review/ml9_batch_10_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_10_precheck.json`
 
+### Batch 11
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 110.
+- Batch 11 completes the current management-systems allocation and extends the environmental block.
+- Authority mix: 4 ISO, 1 OSHA, 1 NIOSH, 1 ASSP professional-literature source, and 3 EPA.
+- Topics cover management-system auditing, OH&S management-system architecture, records retrievability, prevention economics, leadership and worker participation, project coordination, integrated risk governance, pollution prevention, incompatible hazardous-waste storage, and universal-waste management.
+- All Batch 11 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- One candidate-gate wording issue was corrected before freeze: `mf_ml9_080` removed the word `required` from learner copy so a descriptive OSHA records statement did not unnecessarily trigger the binding-language attribution rule.
+- Candidate source-class, legal-status, attribution, lifecycle, curriculum-ID-pattern, and tag checks passed after correction.
+- Frozen startup text precheck passed for all 10 Batch 11 candidates.
+- The cumulative 110-fact corpus contains 5,995 unique pairs.
+- The previously validated 4,950 pairs remain unchanged.
+- Batch 11 added 1,000 old-to-new comparisons and 45 internal comparisons; all 1,045 new comparisons produced 0 exact duplicates and 0 unresolved ML-8 review candidates.
+- NIOSH represents 28 of 110 candidates (25.45%); OSHA 19 of 110 (17.27%); CCPS 10%; EPA and NFPA each 7.27%; ISO 6.36%.
+- No authority exceeds the frozen 40% ML-8 concentration-review threshold.
+- Five Batch 11 candidates use rights-sensitive ISO or ASSP material and remain pending genuine ML-5 rights review.
+- No automated process has asserted human approval or publication eligibility.
+- The GitHub connector did not expose a push-triggered workflow result for the candidate-content SHA, so no unobserved CI-green claim is made.
+
+Batch 11 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_11_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_11_precheck.json`
+
 ## Next action
 
-ML-9B Batch 11 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 110 candidates.
+ML-9B Batch 12 - author the final 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 120 candidates.
