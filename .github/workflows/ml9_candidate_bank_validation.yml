@@ -1,0 +1,63 @@
+name: ML-9 Candidate Bank Validation
+
+on:
+  push:
+    branches:
+      - phase-ml9-first-120-fact-curated-bank
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml9-candidate-bank-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml9:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-9 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Format-check ML-9 validator
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format tool/validate_ml9_candidate_bank.dart
+          git diff --exit-code -- tool/validate_ml9_candidate_bank.dart
+
+      - name: Analyze ML-9 validator
+        run: dart analyze tool/validate_ml9_candidate_bank.dart
+
+      - name: Validate ML-9 candidate bank
+        run: dart run tool/validate_ml9_candidate_bank.dart
+
+      - name: Run ML-8 focused regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test \
+            test/micro_learning/micro_fact_corpus_comparison_test.dart \
+            test/micro_learning/micro_fact_corpus_integrity_validator_test.dart
