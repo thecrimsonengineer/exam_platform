@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9D",
+  "status": "whole_corpus_ml8_pass",
+  "checkedAt": "2026-09-24",
+  "sourceEvidenceRef": "phase-ml9c-gate-evidence-closed",
+  "sourceEvidenceSha": "fb4c45d6a39248e49d82cb186a501e4d66dcdbeb",
+  "corpus": {
+    "evidenceBoundFactCount": 120,
+    "pairwiseComparisonCount": 7140,
+    "exactDuplicateCount": 0,
+    "unresolvedReviewCandidateCount": 0,
+    "blockingIssueCount": 0,
+    "adjudicationRequiredCount": 0,
+    "concentrationSignalCount": 0
+  },
+  "detectorCoverage": [
+    "exact normalized display duplicate",
+    "exact normalized short-variant duplicate",
+    "exact display hash duplicate",
+    "near duplicate",
+    "concept-assisted duplicate",
+    "same-source-locator overlap",
+    "polarity conflict",
+    "legal-status conflict",
+    "numerical conflict",
+    "edition drift",
+    "active-version collision",
+    "orphan/stale adjudication"
+  ],
+  "validation": {
+    "validator": "tool/validate_ml9d_whole_corpus_ml8.dart",
+    "workflow": ".github/workflows/ml9d_whole_corpus_ml8_validation.yml",
+    "validatedSha": "28e3822e88a474637c0ea8ced1098661a05aae9c",
+    "workflowRunId": 35920179648,
+    "workflowConclusion": "success",
+    "ml9cEvidenceRevalidation": "pass",
+    "analyzer": "pass",
+    "completeCorpusPass": "pass",
+    "ml8Regression": "pass"
+  },
+  "lifecycleBoundary": {
+    "candidateFactsModified": false,
+    "humanAdjudicationGenerated": false,
+    "validatedFactCount": 0,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  }
+}

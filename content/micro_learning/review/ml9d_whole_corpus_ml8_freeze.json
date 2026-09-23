@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9D",
+  "freezeStatus": "closed_whole_corpus_ml8_checkpoint",
+  "closedAt": "2026-09-24",
+  "sourceEvidence": {
+    "ref": "phase-ml9c-gate-evidence-closed",
+    "sha": "fb4c45d6a39248e49d82cb186a501e4d66dcdbeb",
+    "candidateCount": 120
+  },
+  "corpusResult": {
+    "pairwiseComparisons": 7140,
+    "exactDuplicates": 0,
+    "unresolvedReviewCandidates": 0,
+    "blockingIssues": 0,
+    "adjudicationsRequired": 0,
+    "concentrationSignals": 0
+  },
+  "machineValidation": {
+    "repositoryValidator": "pass",
+    "validatedSha": "28e3822e88a474637c0ea8ced1098661a05aae9c",
+    "workflowRunId": 35920179648,
+    "workflowConclusion": "success",
+    "ml9cEvidenceBinding": "pass",
+    "analyzer": "pass",
+    "ml8Regression": "pass"
+  },
+  "humanReviewBoundary": {
+    "adjudicationsGeneratedByAutomation": false,
+    "humanReviewComplete": false
+  },
+  "lifecycle": {
+    "validatedFactCount": 0,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "nextAction": "ML-9E Human Review"
+}
