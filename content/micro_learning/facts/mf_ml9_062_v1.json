@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_062",
+  "category": "fire_electrical_insight",
+  "display": {
+    "displayText": "OSHA requires employee-use portable fire extinguishers to be selected and distributed according to anticipated fire classes and the size and degree of workplace hazards.",
+    "shortVariant": "Select and distribute extinguishers for the fires and hazards anticipated.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d04",
+    "competencyId": "d04_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "portable_fire_extinguishers",
+      "fire_class_selection"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "federal_regulation",
+    "sourceTitle": "Portable fire extinguishers, 29 CFR 1910.157",
+    "officialUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.157",
+    "sourceLocator": "29 CFR 1910.157(d)(1)",
+    "editionOrRevision": "29 CFR 1910.157",
+    "sourceSection": "1910.157(d)(1)",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "binding_requirement",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "fire_extinguishers",
+    "fire_protection",
+    "fire_class"
+  ]
+}
