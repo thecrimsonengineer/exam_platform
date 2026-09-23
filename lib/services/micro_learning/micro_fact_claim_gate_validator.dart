@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'authority_registry_validator.dart';
+import 'claim_semantics_policy_validator.dart';
 import 'micro_fact_schema_validator.dart';
 import 'micro_fact_source_gate_validator.dart';
 
@@ -28,8 +28,6 @@ class MicroFactClaimGateResult {
 }
 
 class MicroFactClaimGateValidator {
-  static const String requiredPolicyVersion = '1.0.0';
-
   const MicroFactClaimGateValidator();
 
   MicroFactClaimGateResult validateJson({
@@ -513,223 +511,13 @@ class MicroFactClaimGateValidator {
     Map<String, dynamic> policy,
     List<MicroFactClaimGateIssue> issues,
   ) {
-    if (policy['schemaVersion'] != 1) {
+    final result = const ClaimSemanticsPolicyValidator().validateMap(policy);
+    for (final issue in result.issues) {
       _add(
         issues,
-        'ML4_POLICY_SCHEMA_VERSION',
-        r'$policy.schemaVersion',
-        'Claim-semantics policy schemaVersion must be 1.',
-      );
-    }
-
-    if (policy['policyVersion'] != requiredPolicyVersion) {
-      _add(
-        issues,
-        'ML4_POLICY_VERSION',
-        r'$policy.policyVersion',
-        'Claim-semantics policy version must be ' +
-            requiredPolicyVersion +
-            '.',
-      );
-    }
-
-    if (policy['status'] != 'frozen' || policy['failClosed'] != true) {
-      _add(
-        issues,
-        'ML4_POLICY_NOT_FROZEN',
-        r'$policy',
-        'ML-4 policy must remain frozen and fail closed.',
-      );
-    }
-
-    if (policy['authorityRegistryVersion'] !=
-        MicroFactSourceGateValidator.requiredRegistryVersion) {
-      _add(
-        issues,
-        'ML4_POLICY_REGISTRY_VERSION',
-        r'$policy.authorityRegistryVersion',
-        'ML-4 policy must bind to the frozen ML-1 registry version.',
-      );
-    }
-
-    if (policy['microFactSchemaVersion'] !=
-        MicroFactSchemaValidator.schemaVersion) {
-      _add(
-        issues,
-        'ML4_POLICY_FACT_SCHEMA_VERSION',
-        r'$policy.microFactSchemaVersion',
-        'ML-4 policy must bind to MicroFact schema v1.',
-      );
-    }
-
-    final sourceRules = policy['sourceClassRules'];
-    if (sourceRules is! List) {
-      _add(
-        issues,
-        'ML4_POLICY_SOURCE_RULES',
-        r'$policy.sourceClassRules',
-        'sourceClassRules must be a list.',
-      );
-      return;
-    }
-
-    final seenClasses = <String>{};
-    for (var i = 0; i < sourceRules.length; i++) {
-      final item = sourceRules[i];
-      if (item is! Map) {
-        _add(
-          issues,
-          'ML4_POLICY_SOURCE_RULE_OBJECT',
-          r'$policy.sourceClassRules[' + i.toString() + ']',
-          'Source-class policy entry must be an object.',
-        );
-        continue;
-      }
-
-      final rule = Map<String, dynamic>.from(item);
-      final sourceClass = rule['sourceClass'];
-      if (sourceClass is! String ||
-          !MicroFactSchemaValidator.sourceClasses.contains(sourceClass)) {
-        _add(
-          issues,
-          'ML4_POLICY_SOURCE_CLASS',
-          r'$policy.sourceClassRules[' + i.toString() + '].sourceClass',
-          'Unknown source class in ML-4 policy.',
-        );
-        continue;
-      }
-
-      if (!seenClasses.add(sourceClass)) {
-        _add(
-          issues,
-          'ML4_POLICY_DUPLICATE_SOURCE_CLASS',
-          r'$policy.sourceClassRules[' + i.toString() + '].sourceClass',
-          'Duplicate source-class rule.',
-        );
-      }
-
-      final legalStatuses = rule['allowedLegalStatuses'];
-      if (legalStatuses is! List ||
-          legalStatuses.isEmpty ||
-          legalStatuses.any(
-            (value) =>
-                value is! String ||
-                !MicroFactSchemaValidator.legalStatuses.contains(value),
-          )) {
-        _add(
-          issues,
-          'ML4_POLICY_LEGAL_STATUSES',
-          r'$policy.sourceClassRules[' +
-              i.toString() +
-              '].allowedLegalStatuses',
-          'Each source class requires valid allowed legal statuses.',
-        );
-      }
-
-      if (!{'required', 'optional'}.contains(rule['jurisdiction'])) {
-        _add(
-          issues,
-          'ML4_POLICY_JURISDICTION_RULE',
-          r'$policy.sourceClassRules[' + i.toString() + '].jurisdiction',
-          'Jurisdiction rule must be required or optional.',
-        );
-      }
-
-      if (!{'allowed', 'blocked', 'attributed_only'}
-          .contains(rule['mandatoryLanguage'])) {
-        _add(
-          issues,
-          'ML4_POLICY_MANDATORY_RULE',
-          r'$policy.sourceClassRules[' +
-              i.toString() +
-              '].mandatoryLanguage',
-          'Unknown mandatory-language policy.',
-        );
-      }
-    }
-
-    if (seenClasses.length != MicroFactSchemaValidator.sourceClasses.length ||
-        !seenClasses.containsAll(MicroFactSchemaValidator.sourceClasses)) {
-      _add(
-        issues,
-        'ML4_POLICY_SOURCE_CLASS_COVERAGE',
-        r'$policy.sourceClassRules',
-        'ML-4 policy must cover every frozen ML-2 source class exactly once.',
-      );
-    }
-
-    final attribution = policy['authorityAttributionTokens'];
-    if (attribution is! Map) {
-      _add(
-        issues,
-        'ML4_POLICY_ATTRIBUTION_TOKENS',
-        r'$policy.authorityAttributionTokens',
-        'Authority attribution token map is required.',
-      );
-    } else {
-      final keys = attribution.keys.whereType<String>().toSet();
-      if (keys.length != AuthorityRegistryValidator.requiredAuthorityIds.length ||
-          !keys.containsAll(
-            AuthorityRegistryValidator.requiredAuthorityIds,
-          )) {
-        _add(
-          issues,
-          'ML4_POLICY_AUTHORITY_COVERAGE',
-          r'$policy.authorityAttributionTokens',
-          'Attribution policy must cover all 15 frozen authority families.',
-        );
-      }
-      for (final key in keys) {
-        final values = attribution[key];
-        if (values is! List ||
-            values.isEmpty ||
-            values.any((value) => value is! String || value.trim().isEmpty)) {
-          _add(
-            issues,
-            'ML4_POLICY_ATTRIBUTION_VALUES',
-            r'$policy.authorityAttributionTokens.' + key,
-            'Each authority requires at least one attribution token.',
-          );
-        }
-      }
-    }
-
-    for (final field in [
-      'mandatoryTerms',
-      'legalEquivalencePhrases',
-      'nonApplicableCategories',
-      'technicalCategories',
-      'genericSourceLocators',
-      'numericSignalPatterns',
-    ]) {
-      final value = policy[field];
-      if (value is! List ||
-          value.isEmpty ||
-          value.any((item) => item is! String || item.trim().isEmpty)) {
-        _add(
-          issues,
-          'ML4_POLICY_LIST_INVALID',
-          r'$policy.' + field,
-          field + ' must be a non-empty string list.',
-        );
-      }
-    }
-
-    if (policy['enhancedReview'] is! Map) {
-      _add(
-        issues,
-        'ML4_POLICY_ENHANCED_REVIEW',
-        r'$policy.enhancedReview',
-        'Enhanced review policy is required.',
-      );
-    }
-
-    if (policy['authoritySpecificForbiddenPhrases'] is! Map) {
-      _add(
-        issues,
-        'ML4_POLICY_AUTHORITY_FORBIDDEN_PHRASES',
-        r'$policy.authoritySpecificForbiddenPhrases',
-        'Authority-specific forbidden phrase map is required.',
+        'ML4_POLICY_PREREQUISITE_INVALID',
+        issue.path,
+        issue.code + ': ' + issue.message,
       );
     }
   }
