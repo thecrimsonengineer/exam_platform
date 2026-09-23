@@ -336,6 +336,84 @@ service cloud.firestore {
         && request.resource.data.schemaVersion is int;
     }
 
+
+    function labPublishedAllowedKeys() {
+      return [
+        'schemaVersion',
+        'labId',
+        'versionId',
+        'lifecycle',
+        'publishedJson',
+        'publishedAt',
+        'reviewerId',
+        'validationAuthority',
+        'qualityEvidenceJson',
+        'exhaustiveRouteEvidenceJson',
+        'publishEvidenceJson',
+        'snapshotFingerprint',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLabPublishedVersion(versionKey) {
+      return request.resource.data.keys().hasAll(labPublishedAllowedKeys())
+        && request.resource.data.keys().hasOnly(labPublishedAllowedKeys())
+        && versionKey == request.resource.data.labId + '__' + request.resource.data.versionId
+        && request.resource.data.schemaVersion == 'csp11.lab.published_repository.v1'
+        && request.resource.data.lifecycle == 'published'
+        && request.resource.data.labId is string
+        && request.resource.data.versionId is string
+        && request.resource.data.publishedJson is string
+        && request.resource.data.publishedAt is timestamp
+        && request.resource.data.reviewerId == 'LSP-Q11-POPULATION-AUTO'
+        && request.resource.data.validationAuthority == 'LSP-Q11-POPULATION-AUTO'
+        && request.resource.data.qualityEvidenceJson is string
+        && request.resource.data.exhaustiveRouteEvidenceJson is string
+        && request.resource.data.publishEvidenceJson is string
+        && request.resource.data.snapshotFingerprint is string
+        && request.resource.data.serverCreatedAt is timestamp;
+    }
+
+    function labCatalogueAllowedKeys() {
+      return [
+        'schemaVersion',
+        'available',
+        'manifestEntryId',
+        'labId',
+        'versionId',
+        'title',
+        'summary',
+        'focusTags',
+        'estimatedTime',
+        'decisionCountLabel',
+        'decisionCount',
+        'supportedModes',
+        'presentation',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLabCatalogueEntry(versionKey) {
+      return request.resource.data.keys().hasAll(labCatalogueAllowedKeys())
+        && request.resource.data.keys().hasOnly(labCatalogueAllowedKeys())
+        && versionKey == request.resource.data.labId + '__' + request.resource.data.versionId
+        && request.resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
+        && request.resource.data.available == true
+        && request.resource.data.manifestEntryId is string
+        && request.resource.data.labId is string
+        && request.resource.data.versionId is string
+        && request.resource.data.title is string
+        && request.resource.data.summary is string
+        && request.resource.data.focusTags is list
+        && request.resource.data.estimatedTime is string
+        && request.resource.data.decisionCountLabel is string
+        && request.resource.data.decisionCount is int
+        && request.resource.data.decisionCount > 0
+        && request.resource.data.supportedModes is list
+        && request.resource.data.presentation is map
+        && request.resource.data.serverCreatedAt is timestamp;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -405,6 +483,32 @@ service cloud.firestore {
         );
 
       allow create, update, delete: if isAdmin();
+    }
+
+
+    match /labPublishedVersions/{versionKey} {
+      allow get: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.schemaVersion == 'csp11.lab.published_repository.v1'
+          && resource.data.lifecycle == 'published'
+        );
+
+      allow list: if isAdmin();
+
+      allow create: if isAdmin() && validLabPublishedVersion(versionKey);
+
+      allow update, delete: if false;
+    }
+
+    match /labLearnerCatalogue/{versionKey} {
+      allow get, list: if signedIn()
+        && resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
+        && resource.data.available == true;
+
+      allow create: if isAdmin() && validLabCatalogueEntry(versionKey);
+
+      allow update, delete: if false;
     }
 
     // Fail closed for every Firestore path not explicitly declared above.

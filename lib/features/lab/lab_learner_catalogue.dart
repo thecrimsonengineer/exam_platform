@@ -19,19 +19,43 @@ class LabLearnerCatalogueException implements Exception {
 }
 
 class LabLearnerCatalogueEntry {
-  LabLearnerCatalogueEntry._({
+  LabLearnerCatalogueEntry.persistence({
     required this.manifestEntryId,
     required this.labId,
     required this.versionId,
     required this.title,
     required this.summary,
-    required this.focusTags,
+    required Iterable<String> focusTags,
     required this.estimatedTime,
     required this.decisionCountLabel,
     required this.decisionCount,
     required Set<LabMode> supportedModes,
     required this.presentation,
-  }) : supportedModes = Set<LabMode>.unmodifiable(supportedModes);
+  }) : focusTags = List<String>.unmodifiable(focusTags),
+       supportedModes = Set<LabMode>.unmodifiable(supportedModes) {
+    LabIds.requireCanonical(manifestEntryId, 'learner catalogue manifest entry ID');
+    LabIds.requireCanonical(labId, 'learner catalogue LAB ID');
+    LabIds.requireCanonical(versionId, 'learner catalogue version ID');
+
+    if (title.trim().isEmpty ||
+        summary.trim().isEmpty ||
+        estimatedTime.trim().isEmpty ||
+        decisionCountLabel.trim().isEmpty ||
+        this.focusTags.isEmpty ||
+        this.focusTags.any((item) => item.trim().isEmpty) ||
+        decisionCount <= 0 ||
+        this.supportedModes.isEmpty) {
+      throw const LabLearnerCatalogueException(
+        'Learner catalogue entry requires complete learner-safe metadata.',
+      );
+    }
+
+    if (presentation.labId != labId || presentation.versionId != versionId) {
+      throw const LabLearnerCatalogueException(
+        'Learner catalogue presentation identity must match the catalogue entry.',
+      );
+    }
+  }
 
   final String manifestEntryId;
   final String labId;
@@ -121,7 +145,7 @@ class LabLearnerCatalogueAdmissionService {
     }
 
     final overview = presentation.presentation;
-    final catalogueEntry = LabLearnerCatalogueEntry._(
+    final catalogueEntry = LabLearnerCatalogueEntry.persistence(
       manifestEntryId: manifestEntry.entryId,
       labId: manifestEntry.labId,
       versionId: manifestEntry.versionId,
