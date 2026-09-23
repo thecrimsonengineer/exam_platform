@@ -438,6 +438,35 @@ Batch 09 review and validation artifacts:
 - `content/micro_learning/review/ml9_batch_09_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_09_precheck.json`
 
+### Batch 10
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 100.
+- Batch 10 completes the current process-safety block and expands the fire/electrical block.
+- Authority mix: 3 CCPS, 4 NFPA, 1 ANSI/ASSP, 1 UL, and 1 FM.
+- Topics cover pressure-relief system design, process-life-cycle management of change, layer-of-protection analysis, electrically safe work condition, water-based fire-protection reliability, confined-space controls, passive fire doors, normal electrical operating condition, fire-protection impairment management, and flammable-liquid safeguards.
+- All Batch 10 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- Two candidate-gate issues were corrected before freeze:
+  - `mf_ml9_058` was rewritten to remove mandatory wording that is not permitted for a professional-guideline source class.
+  - `mf_ml9_069` legal status was corrected to `certification_or_testing` for the UL testing/certification source class.
+- Candidate source-class, legal-status, attribution, lifecycle, curriculum-ID-pattern, and tag checks passed after correction.
+- Frozen startup text precheck passed for all 10 Batch 10 candidates.
+- The cumulative 100-fact corpus contains 4,950 unique pairs.
+- The previously validated 4,005 pairs remain unchanged.
+- Batch 10 added 900 old-to-new comparisons and 45 internal comparisons; all 945 new comparisons produced 0 exact duplicates and 0 unresolved ML-8 review candidates.
+- NIOSH represents 27 of 100 candidates (27%); OSHA 18%; CCPS 11%; NFPA 8%.
+- No authority exceeds the frozen 40% ML-8 concentration-review threshold.
+- All 10 Batch 10 candidates use rights-sensitive CCPS, NFPA, ANSI/ASSP, UL, or FM material and remain pending genuine ML-5 rights review.
+- No automated process has asserted human approval or publication eligibility.
+- The GitHub connector did not expose a push-triggered workflow result for the candidate-content SHA, so no unobserved CI-green claim is made.
+
+Batch 10 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_10_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_10_precheck.json`
+
 ## Next action
 
-ML-9B Batch 10 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 100 candidates.
+ML-9B Batch 11 - author the next 10 review-state candidates, preserve authority diversity, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 110 candidates.
