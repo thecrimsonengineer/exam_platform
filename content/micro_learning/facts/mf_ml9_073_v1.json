@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_073",
+  "category": "management_insight",
+  "display": {
+    "displayText": "OSHA guidance describes management leadership as providing vision, commitment, and resources for an effective safety and health program.",
+    "shortVariant": "Management leadership supplies commitment and resources for safety programs.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d02",
+    "competencyId": "d02_c12",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "management_leadership",
+      "safety_management"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "enforcement_or_compliance_guidance",
+    "sourceTitle": "Safety Management - Management Leadership",
+    "officialUrl": "https://www.osha.gov/safety-management/management-leadership",
+    "sourceLocator": "Management Leadership opening principles",
+    "editionOrRevision": "Current OSHA web guidance",
+    "sourceSection": "Management Leadership",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "nonbinding_guidance",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "management_leadership",
+    "safety_management",
+    "resources"
+  ]
+}
