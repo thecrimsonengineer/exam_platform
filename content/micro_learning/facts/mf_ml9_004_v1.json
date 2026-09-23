@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_004",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "OSHA requires employers to evaluate the workplace to determine whether any spaces are permit-required confined spaces before controlling entry hazards.",
+    "shortVariant": "Evaluate workplaces to identify permit-required confined spaces before entry.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "permit_required_confined_space",
+      "confined_space_evaluation"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "federal_regulation",
+    "sourceTitle": "Permit-required confined spaces, 29 CFR 1910.146",
+    "officialUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+    "sourceLocator": "29 CFR 1910.146(c)(1)",
+    "editionOrRevision": "29 CFR 1910.146",
+    "sourceSection": "1910.146(c)(1)",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "binding_requirement",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "confined_space",
+    "permit_required_space",
+    "hazard_evaluation"
+  ]
+}
