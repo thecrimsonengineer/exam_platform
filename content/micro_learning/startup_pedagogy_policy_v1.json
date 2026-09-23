@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "policyVersion": "1.0.0",
+  "status": "frozen",
+  "frozenAt": "2026-09-23",
+  "authorityRegistryVersion": "1.0.0",
+  "microFactSchemaVersion": 1,
+  "claimPolicyVersion": "1.0.0",
+  "rightsPolicyVersion": "1.0.0",
+  "curriculumPolicyVersion": "1.0.0",
+  "failClosed": true,
+  "startupContract": {
+    "fullMotionDurationMs": 4800,
+    "reducedMotionDurationMs": 250,
+    "watchdogCeilingMs": 7000,
+    "artificialDelayAllowed": false,
+    "microFactMayBlockStartup": false,
+    "runtimeNetworkReadAllowed": false,
+    "shortVariantIsPrimaryStartupCopy": true
+  },
+  "textRules": {
+    "displayText": {
+      "minWords": 6,
+      "maxWords": 32,
+      "maxCharacters": 260,
+      "maxSentences": 2,
+      "maxEstimatedReadSeconds": 10
+    },
+    "shortVariant": {
+      "requiredWhenStartupEligible": true,
+      "minWords": 4,
+      "maxWords": 18,
+      "maxCharacters": 140,
+      "maxSentences": 1,
+      "maxComputedReadSeconds": 6
+    },
+    "nominalReadingWordsPerMinute": 150,
+    "estimatedReadSecondsTolerance": 2,
+    "maxParentheticalGroups": 1,
+    "maxConsecutivePunctuationMarks": 1,
+    "allowQuestionMarkForCategories": [
+      "think_about_it"
+    ]
+  },
+  "plainTextRules": {
+    "newlinesAllowed": false,
+    "tabsAllowed": false,
+    "htmlAllowed": false,
+    "markdownLinksAllowed": false,
+    "rawUrlsAllowed": false,
+    "emojiAllowed": false,
+    "bulletPrefixesAllowed": false,
+    "sourceLabelPrefixesAllowed": false,
+    "repeatedWhitespaceAllowed": false
+  },
+  "abbreviationRules": {
+    "maxUnknownUppercaseTokens": 0,
+    "approvedUppercaseTokens": [
+      "CSP",
+      "OSHA",
+      "NIOSH",
+      "CDC",
+      "ANSI",
+      "ASSP",
+      "ISO",
+      "NFPA",
+      "ACGIH",
+      "AIHA",
+      "EPA",
+      "DOT",
+      "PHMSA",
+      "FMCSA",
+      "FEMA",
+      "DHS",
+      "NIMS",
+      "ICS",
+      "AICHE",
+      "CCPS",
+      "NSC",
+      "FM",
+      "UL",
+      "PPE",
+      "PSM",
+      "LOTO",
+      "NEC",
+      "BEST"
+    ]
+  },
+  "visualIndependenceRules": {
+    "blockedPhrases": [
+      "shown above",
+      "shown below",
+      "see above",
+      "see below",
+      "as shown",
+      "the icon",
+      "this icon",
+      "the animation",
+      "watch the animation",
+      "tap the",
+      "click the",
+      "swipe",
+      "the green button",
+      "the red button",
+      "the highlighted"
+    ],
+    "meaningMayDependOnColor": false,
+    "meaningMayDependOnMotion": false,
+    "meaningMayDependOnIcon": false,
+    "meaningMayDependOnPosition": false
+  },
+  "assessmentRules": {
+    "blockedStartupSensitivities": [
+      "high",
+      "block_during_linked_assessment"
+    ],
+    "answerKeyLanguageAllowed": false,
+    "exactQuestionAnswerDisclosureAllowed": false,
+    "assessmentReviewRequired": true
+  },
+  "precisionRules": {
+    "safetyCriticalRequiresHumanPrecisionReview": true,
+    "mediumOrHighSimplificationRiskRequiresMeaningPreservationReview": true,
+    "numericalClaimRequiresHumanPresentationReview": true,
+    "legalStatusQualifierMayNotBeRemovedInShortVariant": true,
+    "sourceAttributionMayBeOmittedFromShortVariantOnlyWhenClaimMeaningRemainsCorrect": true
+  },
+  "accessibilityRules": {
+    "semanticMeaningMustStandAlone": true,
+    "reducedMotionMeaningMustBeEquivalent": true,
+    "screenReaderMeaningMustBeEquivalent": true,
+    "decorativeAnimationCannotCarryMeaning": true,
+    "noForcedInteraction": true,
+    "noTimeCriticalResponse": true,
+    "noFlashingInstruction": true
+  },
+  "evidenceRules": {
+    "evidenceSchemaVersion": 1,
+    "evidenceIdPattern": "^mfpe_[a-z0-9][a-z0-9_-]{5,63}$",
+    "sha256Pattern": "^[a-f0-9]{64}$",
+    "requiredForStartupEligibleStatuses": [
+      "validated",
+      "published",
+      "review_due"
+    ],
+    "mustPassForStartupEligibleStatuses": [
+      "validated",
+      "published"
+    ],
+    "maxEvidenceAgeDays": 365,
+    "exactContentFingerprintRequired": true,
+    "pedagogyReviewerRoles": [
+      "pedagogy_reviewer",
+      "content_governance_reviewer",
+      "subject_matter_reviewer"
+    ],
+    "accessibilityReviewerRoles": [
+      "accessibility_reviewer",
+      "content_governance_reviewer"
+    ],
+    "reviewStatusValues": [
+      "pending",
+      "pass",
+      "fail"
+    ]
+  },
+  "driftRules": {
+    "contentVersionChangeInvalidatesEvidence": true,
+    "displayTextChangeInvalidatesEvidence": true,
+    "shortVariantChangeInvalidatesEvidence": true,
+    "estimatedReadSecondsChangeInvalidatesEvidence": true,
+    "startupEligibilityChangeRequiresReevaluation": true,
+    "policyVersionChangeInvalidatesEvidence": true
+  }
+}
