@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_113",
+  "category": "csp_tip",
+  "display": {
+    "displayText": "NIOSH program reviews use documented evidence to assess relevance and impact separately, helping safety professionals distinguish useful activity from demonstrated outcomes.",
+    "shortVariant": "Evaluate safety programs with evidence of both relevance and impact.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "general",
+    "domainId": null,
+    "competencyId": null,
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "program_evaluation",
+      "evidence_based_reasoning"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Evaluation of NIOSH Programs",
+    "officialUrl": "https://www.cdc.gov/niosh/research-programs/evaluation/index.html",
+    "sourceLocator": "Overview - documented evidence used to assess relevance and impact",
+    "editionOrRevision": "April 10, 2024",
+    "sourceSection": "What to know and Overview",
+    "sourcePage": null,
+    "sourcePublishedAt": "2024-04-10",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "not_applicable",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "csp_reasoning",
+    "program_evaluation",
+    "evidence"
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_119",
+  "category": "learning_tip",
+  "display": {
+    "displayText": "NIOSH distinguishes low-engagement presentation from high-engagement hands-on practice, showing that training methods differ in how actively learners participate.",
+    "shortVariant": "Training methods differ in how actively learners participate.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d07",
+    "competencyId": "d07_c05",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "training_engagement",
+      "training_methods"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "The Effectiveness of Workplace Training",
+    "officialUrl": "https://www.cdc.gov/niosh/bulletin/2010/workplace-training.html",
+    "sourceLocator": "Systematic Review - learner engagement and hands-on practice",
+    "editionOrRevision": "Posted January 29, 2010",
+    "sourceSection": "Systematic Review",
+    "sourcePage": null,
+    "sourcePublishedAt": "2010-01-29",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "not_applicable",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "learning_tip",
+    "training_methods",
+    "learner_engagement"
+  ]
+}

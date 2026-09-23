@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_100",
+  "category": "emergency_insight",
+  "display": {
+    "displayText": "FEMA's recovery framework treats recovery as coordinated restoration, redevelopment, and revitalization, with planning beginning before disaster and often overlapping response.",
+    "shortVariant": "Disaster recovery benefits from pre-disaster planning and coordinated restoration.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d04",
+    "competencyId": "d04_c02",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "disaster_recovery",
+      "recovery_planning"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-10",
+    "sourceClass": "emergency_management_framework",
+    "sourceTitle": "National Disaster Recovery Framework (NDRF) Overview",
+    "officialUrl": "https://training.fema.gov/programs/independent-study/courseoverview.aspx?code=IS-2900.a&lang=",
+    "sourceLocator": "Course Overview - national approach to disaster recovery and recovery continuum",
+    "editionOrRevision": "IS-2900.A, course date 2018-07-11",
+    "sourceSection": "Course Overview",
+    "sourcePage": null,
+    "sourcePublishedAt": "2018-07-11",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_framework",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "disaster_recovery",
+    "recovery_planning",
+    "emergency_management"
+  ]
+}

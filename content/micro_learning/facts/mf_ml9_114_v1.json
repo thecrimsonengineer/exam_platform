@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_114",
+  "category": "csp_tip",
+  "display": {
+    "displayText": "NIOSH describes systems thinking as considering interacting work, personal, and socioeconomic factors instead of viewing occupational risk through a single-factor lens.",
+    "shortVariant": "Systems thinking examines interacting factors instead of isolated causes.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "general",
+    "domainId": null,
+    "competencyId": null,
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "systems_thinking",
+      "multifactor_risk"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "An Expanded Focus for Occupational Safety and Health",
+    "officialUrl": "https://www.cdc.gov/niosh/bulletin/2020/osh-focus.html",
+    "sourceLocator": "Summary - expanded systems-thinking approach to occupational safety and health",
+    "editionOrRevision": "Posted August 19, 2020",
+    "sourceSection": "Summary",
+    "sourcePage": null,
+    "sourcePublishedAt": "2020-08-19",
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "not_applicable",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "csp_reasoning",
+    "systems_thinking",
+    "risk_factors"
+  ]
+}
