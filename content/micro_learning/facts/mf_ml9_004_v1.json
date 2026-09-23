@@ -27,7 +27,7 @@
   "category": "safety_insight",
   "display": {
     "displayText": "OSHA requires employers to evaluate the workplace to determine whether any spaces are permit-required confined spaces before controlling entry hazards.",
-    "shortVariant": "Evaluate workplaces to identify permit-required confined spaces before entry.",
+    "shortVariant": "OSHA requires evaluation to identify permit-required confined spaces before entry.",
     "estimatedReadSeconds": 9
   },
   "curriculum": {
