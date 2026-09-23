@@ -26,9 +26,9 @@
   "microFactId": "mf_ml9_111",
   "category": "csp_tip",
   "display": {
-    "displayText": "NIOSH describes systems thinking in occupational safety and health as taking a holistic view of interacting factors that contribute to worker problems and outcomes.",
-    "shortVariant": "Systems thinking examines interacting factors instead of isolated causes.",
-    "estimatedReadSeconds": 10
+    "displayText": "NIOSH occupational risk assessment frames safety decisions around what can happen, how likely it is, and what consequences could follow.",
+    "shortVariant": "Risk assessment considers possible events, likelihood, and consequences.",
+    "estimatedReadSeconds": 9
   },
   "curriculum": {
     "scope": "general",
@@ -37,20 +37,20 @@
     "topicId": null,
     "subtopicId": null,
     "conceptIds": [
-      "systems_thinking",
-      "multifactorial_risk"
+      "occupational_risk_assessment",
+      "risk_decision_making"
     ]
   },
   "provenance": {
     "sourceRegistryId": "SRC-02",
     "sourceClass": "research_or_prevention_guidance",
-    "sourceTitle": "Work and Well-being: The Changing Face of Occupational Safety and Health",
-    "officialUrl": "https://www.cdc.gov/niosh/bulletin/2021/work-and-well-being.html",
-    "sourceLocator": "Systems thinking in occupational safety and health",
-    "editionOrRevision": "NIOSH Science Bulletin 2021",
-    "sourceSection": "Systems thinking in OSH",
+    "sourceTitle": "Occupational Risk Assessment",
+    "officialUrl": "https://www.cdc.gov/niosh/occupational-risk-assessment/about/",
+    "sourceLocator": "Overview - basic risk assessment questions",
+    "editionOrRevision": "Updated March 3, 2026",
+    "sourceSection": "Overview",
     "sourcePage": null,
-    "sourcePublishedAt": null,
+    "sourcePublishedAt": "2026-03-03",
     "sourceVerifiedAt": "2026-09-23",
     "rightsTreatment": "original_paraphrase"
   },
@@ -63,7 +63,7 @@
   },
   "tags": [
     "csp_reasoning",
-    "systems_thinking",
-    "multifactorial_risk"
+    "risk_assessment",
+    "decision_making"
   ]
 }
