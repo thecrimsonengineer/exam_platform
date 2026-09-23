@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ml1-authority-registry-${{ github.ref }}
+  group: ml1-authority-registry-${{ github.sha }}
   cancel-in-progress: true
 
 jobs:
