@@ -44,10 +44,7 @@ void main() {
     final federal = rules.firstWhere(
       (rule) => rule['sourceClass'] == 'federal_regulation',
     );
-    federal['allowedLegalStatuses'] = [
-      'binding_requirement',
-      'recommendation',
-    ];
+    federal['allowedLegalStatuses'] = ['binding_requirement', 'recommendation'];
     policy['sourceClassRules'] = rules;
 
     final result = validator.validateMap(policy);
@@ -83,8 +80,7 @@ void main() {
     final policy = clonePolicy();
     final rules = (policy['sourceClassRules'] as List)
         .where(
-          (item) =>
-              (item as Map)['sourceClass'] != 'transportation_regulation',
+          (item) => (item as Map)['sourceClass'] != 'transportation_regulation',
         )
         .toList();
     policy['sourceClassRules'] = rules;
@@ -145,10 +141,7 @@ void main() {
 
   test('numeric detector must retain broad regex coverage', () {
     final policy = clonePolicy();
-    policy['numericSignalPatterns'] = [
-      r'\b\d+\s*%',
-      r'\b\d+\s*ppm\b',
-    ];
+    policy['numericSignalPatterns'] = [r'\b\d+\s*%', r'\b\d+\s*ppm\b'];
 
     final result = validator.validateMap(policy);
 
@@ -161,9 +154,7 @@ void main() {
 
   test('invalid numeric regex fails closed', () {
     final policy = clonePolicy();
-    final patterns = List<String>.from(
-      policy['numericSignalPatterns'] as List,
-    );
+    final patterns = List<String>.from(policy['numericSignalPatterns'] as List);
     patterns[0] = '[';
     policy['numericSignalPatterns'] = patterns;
 
