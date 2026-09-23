@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_002",
+  "category": "safety_insight",
+  "display": {
+    "displayText": "OSHA requires fall protection for specified walking-working-surface hazards and identifies compliant systems for protecting workers from falls.",
+    "shortVariant": "OSHA requires protection from specified walking-working-surface fall hazards.",
+    "estimatedReadSeconds": 8
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d01",
+    "competencyId": "d01_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "fall_hazards",
+      "walking_working_surfaces"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-01",
+    "sourceClass": "federal_regulation",
+    "sourceTitle": "Duty to have fall protection and falling object protection, 29 CFR 1910.28",
+    "officialUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.28",
+    "sourceLocator": "29 CFR 1910.28(b)",
+    "editionOrRevision": "29 CFR 1910.28",
+    "sourceSection": "1910.28(b)",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "binding_requirement",
+    "jurisdiction": "US Federal OSHA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "fall_protection",
+    "walking_working_surfaces",
+    "fall_hazards"
+  ]
+}
