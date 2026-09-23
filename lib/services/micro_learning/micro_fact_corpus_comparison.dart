@@ -112,7 +112,8 @@ class MicroFactCorpusComparison {
       signals.add('near_duplicate');
     }
 
-    final exactConceptSet = leftConcepts.length == rightConcepts.length &&
+    final exactConceptSet =
+        leftConcepts.length == rightConcepts.length &&
         leftConcepts.containsAll(rightConcepts);
     if (exactConceptSet &&
         left['category'] == right['category'] &&
@@ -203,7 +204,9 @@ class MicroFactCorpusComparison {
     final tokens = RegExp(r'[a-z0-9%³]+(?:/[a-z0-9%³]+)?')
         .allMatches(input)
         .map((match) => match.group(0)!)
-        .where((token) => protected.contains(token) || !stopWords.contains(token))
+        .where(
+          (token) => protected.contains(token) || !stopWords.contains(token),
+        )
         .toList(growable: false);
 
     return tokens;
@@ -218,10 +221,7 @@ class MicroFactCorpusComparison {
     return intersection / union;
   }
 
-  static String pairKey(
-    Map<String, dynamic> left,
-    Map<String, dynamic> right,
-  ) {
+  static String pairKey(Map<String, dynamic> left, Map<String, dynamic> right) {
     final leftKey = factVersionKey(left);
     final rightKey = factVersionKey(right);
     final ordered = [leftKey, rightKey]..sort();
@@ -239,10 +239,8 @@ class MicroFactCorpusComparison {
     final provenance = Map<String, dynamic>.from(fact['provenance'] as Map);
     final claim = Map<String, dynamic>.from(fact['claim'] as Map);
 
-    final concepts = (curriculum['conceptIds'] as List)
-        .whereType<String>()
-        .toList()
-      ..sort();
+    final concepts =
+        (curriculum['conceptIds'] as List).whereType<String>().toList()..sort();
 
     final payload = <String, dynamic>{
       'microFactId': fact['microFactId'],
@@ -266,9 +264,7 @@ class MicroFactCorpusComparison {
   static String sha256Text(String value) =>
       sha256.convert(utf8.encode(value)).toString();
 
-  static Map<String, Set<String>> numericSignatures(
-    Map<String, dynamic> fact,
-  ) {
+  static Map<String, Set<String>> numericSignatures(Map<String, dynamic> fact) {
     final text = [
       _displayText(fact),
       _shortVariant(fact) ?? '',
@@ -300,8 +296,8 @@ class MicroFactCorpusComparison {
     final rightValues = numericSignatures(right);
 
     final commonUnits = leftValues.keys.toSet().intersection(
-          rightValues.keys.toSet(),
-        );
+      rightValues.keys.toSet(),
+    );
     for (final unit in commonUnits) {
       if (!_setEquals(leftValues[unit]!, rightValues[unit]!)) {
         return true;
@@ -341,7 +337,8 @@ class MicroFactCorpusComparison {
   ) {
     final leftJurisdiction = _normalizedNullable(leftClaim['jurisdiction']);
     final rightJurisdiction = _normalizedNullable(rightClaim['jurisdiction']);
-    final bindingPresent = leftClaim['legalStatus'] == 'binding_requirement' ||
+    final bindingPresent =
+        leftClaim['legalStatus'] == 'binding_requirement' ||
         rightClaim['legalStatus'] == 'binding_requirement';
 
     if (!bindingPresent) return true;
