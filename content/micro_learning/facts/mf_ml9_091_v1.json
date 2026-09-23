@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_091",
+  "category": "environmental_insight",
+  "display": {
+    "displayText": "EPA's federal hazardous-waste generator rules restrict incompatible wastes from sharing satellite-accumulation containers unless the applicable compatibility conditions are satisfied.",
+    "shortVariant": "EPA restricts mixing incompatible hazardous wastes in satellite-accumulation containers.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d05",
+    "competencyId": "d05_c02",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "incompatible_hazardous_waste",
+      "hazardous_material_storage"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-08",
+    "sourceClass": "environmental_regulation",
+    "sourceTitle": "Hazardous Waste Generator Improvements Final Rule - Frequent Questions",
+    "officialUrl": "https://www.epa.gov/hwgenerators/frequent-questions-about-implementing-hazardous-waste-generator-improvements-final",
+    "sourceLocator": "Incompatible wastes in satellite accumulation areas",
+    "editionOrRevision": "Federal hazardous-waste generator regulations, current guidance verified September 24, 2026",
+    "sourceSection": "More stringent provisions",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "binding_requirement",
+    "jurisdiction": "US Federal EPA / RCRA",
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "hazardous_waste",
+    "incompatible_wastes",
+    "storage"
+  ]
+}
