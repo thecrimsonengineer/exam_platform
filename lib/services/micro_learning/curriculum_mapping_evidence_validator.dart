@@ -373,15 +373,15 @@ class CurriculumMappingEvidenceValidator {
   }
 
   static DateTime? _parseStrictDate(dynamic value) {
-    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return null;
     }
     final parsed = DateTime.tryParse(value);
     if (parsed == null) return null;
     final normalized =
-        '${parsed.year.toString().padLeft(4, '0')}-'
-        '${parsed.month.toString().padLeft(2, '0')}-'
-        '${parsed.day.toString().padLeft(2, '0')}';
+        '\${parsed.year.toString().padLeft(4, '0')}-'
+        '\${parsed.month.toString().padLeft(2, '0')}-'
+        '\${parsed.day.toString().padLeft(2, '0')}';
     return normalized == value ? parsed : null;
   }
 
@@ -420,60 +420,6 @@ class CurriculumMappingEvidenceValidator {
   ) {
     issues.add(
       CurriculumMappingEvidenceIssue(code: code, path: path, message: message),
-    );
-  }
-}
-).hasMatch(value)) {
-      return null;
-    }
-    final parsed = DateTime.tryParse(value);
-    if (parsed == null) return null;
-    final normalized =
-        '${parsed.year.toString().padLeft(4, '0')}-'
-        '${parsed.month.toString().padLeft(2, '0')}-'
-        '${parsed.day.toString().padLeft(2, '0')}';
-    return normalized == value ? parsed : null;
-  }
-
-  static bool _isStrictDate(dynamic value) => _parseStrictDate(value) != null;
-
-  static void _exactKeys(
-    Map<String, dynamic> map,
-    Set<String> expected,
-    String path,
-    List<CurriculumMappingEvidenceIssue> issues,
-  ) {
-    final actual = map.keys.toSet();
-    for (final missing in expected.difference(actual)) {
-      _add(
-        issues,
-        'ML6_EVIDENCE_REQUIRED_FIELD',
-        '$path.$missing',
-        'Required evidence field is missing.',
-      );
-    }
-    for (final extra in actual.difference(expected)) {
-      _add(
-        issues,
-        'ML6_EVIDENCE_UNKNOWN_FIELD',
-        '$path.$extra',
-        'Unknown evidence field is not allowed.',
-      );
-    }
-  }
-
-  static void _add(
-    List<CurriculumMappingEvidenceIssue> issues,
-    String code,
-    String path,
-    String message,
-  ) {
-    issues.add(
-      CurriculumMappingEvidenceIssue(
-        code: code,
-        path: path,
-        message: message,
-      ),
     );
   }
 }
