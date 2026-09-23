@@ -61,10 +61,10 @@ void main() {
 
   test('visual-dependency and answer-key phrases are detectable', () {
     expect(
-      StartupTextMetrics.containsAnyPhrase(
-        'Tap the highlighted icon.',
-        const ['tap the', 'the highlighted'],
-      ),
+      StartupTextMetrics.containsAnyPhrase('Tap the highlighted icon.', const [
+        'tap the',
+        'the highlighted',
+      ]),
       isTrue,
     );
     expect(
