@@ -1126,31 +1126,3 @@ class MicroFactSchemaValidator {
     issues.add(MicroFactSchemaIssue(code: code, path: path, message: message));
   }
 }
-).hasMatch(value)) {
-      return null;
-    }
-
-    final parsed = DateTime.tryParse(value);
-    if (parsed == null) {
-      return null;
-    }
-
-    final normalized =
-        parsed.year.toString().padLeft(4, '0') +
-        '-' +
-        parsed.month.toString().padLeft(2, '0') +
-        '-' +
-        parsed.day.toString().padLeft(2, '0');
-
-    return normalized == value ? parsed : null;
-  }
-
-  static void _add(
-    List<MicroFactSchemaIssue> issues,
-    String code,
-    String path,
-    String message,
-  ) {
-    issues.add(MicroFactSchemaIssue(code: code, path: path, message: message));
-  }
-}
