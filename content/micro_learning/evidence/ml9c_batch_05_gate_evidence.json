@@ -1,0 +1,1298 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9C",
+  "batchId": "ml9_batch_05",
+  "sourceCorpusRef": "phase-ml9b-batch-12-closed",
+  "sourceCorpusSha": "5af8248c5863d8f6e74be6d27aad1c9a9a008873",
+  "generatedAt": "2026-09-24",
+  "generationMode": "machine_prepared_pending_human_review",
+  "rightsPreReviewNote": "Transformation fields are machine-seeded from source-backed authoring and remain subject to human ML-5 review; longestVerbatimRunWords is a conservative pending-review ceiling, not a human attestation.",
+  "facts": [
+    {
+      "microFactId": "mf_ml9_006",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_006_v1",
+        "microFactId": "mf_ml9_006",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-04",
+          "officialUrl": "https://www.iso.org/standard/45001",
+          "sourceLocator": "What is ISO 45001? and key elements",
+          "editionOrRevision": "ISO 45001:2018, Edition 1; Amendment 1:2024"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_006_v1",
+        "microFactId": "mf_ml9_006",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d03",
+          "competencyId": "d03_c02",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d03|d03_c02|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d03/d03_c02; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_006_v1",
+        "microFactId": "mf_ml9_006",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "93b6100d89c62aaa62921ecd8d57f0d1af97094c0c4ebfc07944450b9450b099",
+          "shortVariantSha256": "6f5f08beaa951ca7aea4885e286d522a68d00200ebcd3004d55e37fd00168900",
+          "estimatedReadSeconds": 9
+        },
+        "metrics": {
+          "displayWordCount": 19,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 8,
+          "shortWordCount": 10,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 4
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_031",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_031_v1",
+        "microFactId": "mf_ml9_031",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-02",
+          "officialUrl": "https://www.cdc.gov/niosh/docs/2020-106/",
+          "sourceLocator": "Section 5, Dose-Response Assessment",
+          "editionOrRevision": "DHHS (NIOSH) Publication No. 2020-106, revised March 2020"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_031_v1",
+        "microFactId": "mf_ml9_031",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d06",
+          "competencyId": "d06_c03",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d06|d06_c03|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c03; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_031_v1",
+        "microFactId": "mf_ml9_031",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "eb4b3e730af80ef5e41e44ab4288967492039889e521222f3b74c2d38c727bd5",
+          "shortVariantSha256": "b7b2be746bc70a31f8419bbdebaa221f8ecb63224a367209ab559965776f1281",
+          "estimatedReadSeconds": 10
+        },
+        "metrics": {
+          "displayWordCount": 23,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 10,
+          "shortWordCount": 9,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 4
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_050",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_050_v1",
+        "microFactId": "mf_ml9_050",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-11",
+          "officialUrl": "https://ccps.aiche.org/introduction-asset-integrity-and-reliability",
+          "sourceLocator": "Element Overview, What Is It?, and How Is It Done?",
+          "editionOrRevision": "CCPS Risk Based Process Safety framework, current web summary"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_050_v1",
+        "microFactId": "mf_ml9_050",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d01",
+          "competencyId": "d01_c02",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d01|d01_c02|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d01/d01_c02; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_050_v1",
+        "microFactId": "mf_ml9_050",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "f0d3aeb67938076b56d44dca4ef0249ba10462508576ab79d1b63ecae207ac7e",
+          "shortVariantSha256": "2dacd4b4db4f72988624cccbf2d476091750bb123bd26bb02e3d535abeb227eb",
+          "estimatedReadSeconds": 10
+        },
+        "metrics": {
+          "displayWordCount": 22,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 9,
+          "shortWordCount": 11,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 5
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_065",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_065_v1",
+        "microFactId": "mf_ml9_065",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-05",
+          "officialUrl": "https://link.nfpa.org/all-publications/72/2022",
+          "sourceLocator": "NFPA 72 (2022), Chapter 14 - Inspection, Testing, and Maintenance",
+          "editionOrRevision": "NFPA 72, 2022 edition"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_065_v1",
+        "microFactId": "mf_ml9_065",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d04",
+          "competencyId": "d04_c03",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d04|d04_c03|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d04/d04_c03; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_065_v1",
+        "microFactId": "mf_ml9_065",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "f7ce2e786d99d3eab88904785bb2c2226774691a360b0061d23252c1523627b4",
+          "shortVariantSha256": "dc0bc67b52402bd4113135dcbb1b9f1301ffdb7705891352973db5b71f8e891e",
+          "estimatedReadSeconds": 10
+        },
+        "metrics": {
+          "displayWordCount": 24,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 10,
+          "shortWordCount": 11,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 5
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_077",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_077_v1",
+        "microFactId": "mf_ml9_077",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-11",
+          "officialUrl": "https://ccps.aiche.org/resources/tools/process-safety-metrics",
+          "sourceLocator": "Leading and Lagging Indicators to Improve Process Safety Performance",
+          "editionOrRevision": "Process Safety Metrics Guide Version 4.1, June 2022"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_077_v1",
+        "microFactId": "mf_ml9_077",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d02",
+          "competencyId": "d02_c07",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d02|d02_c07|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d02/d02_c07; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_077_v1",
+        "microFactId": "mf_ml9_077",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "81f2c06c70ab735a11eafb01fca610f6b245b1aaa8d994d871b42b3fbed1f3e7",
+          "shortVariantSha256": "a871c80a6bd5f53e99424591403697e50f657fbd303550479f89b265edaad08a",
+          "estimatedReadSeconds": 9
+        },
+        "metrics": {
+          "displayWordCount": 20,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 8,
+          "shortWordCount": 9,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 4
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_089",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_089_v1",
+        "microFactId": "mf_ml9_089",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-08",
+          "officialUrl": "https://www.epa.gov/climate-change/what-epa-doing-about-climate-change",
+          "sourceLocator": "Climate action and resilient infrastructure overview",
+          "editionOrRevision": "Current EPA climate-change web guidance"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_089_v1",
+        "microFactId": "mf_ml9_089",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d05",
+          "competencyId": "d05_c05",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d05|d05_c05|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d05/d05_c05; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_089_v1",
+        "microFactId": "mf_ml9_089",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "ac6d4d449255c6417f745245f8c9f1e86a19e7b82e1c00a7b2af26386f1fb8a1",
+          "shortVariantSha256": "da96a771af6b29b6ddda0c57db0a6ce59ee18257e8614e02740ada1691b31a35",
+          "estimatedReadSeconds": 9
+        },
+        "metrics": {
+          "displayWordCount": 21,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 9,
+          "shortWordCount": 10,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 4
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_099",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_099_v1",
+        "microFactId": "mf_ml9_099",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-10",
+          "officialUrl": "https://preptoolkit.fema.gov/web/cip-citap/ncig/-/knowledge_base/ncig/e-6-continuity-guidance-circular",
+          "sourceLocator": "Continuity Guidance Circular overview",
+          "editionOrRevision": "2018 Continuity Guidance Circular, 2024 update"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_099_v1",
+        "microFactId": "mf_ml9_099",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d04",
+          "competencyId": "d04_c01",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d04|d04_c01|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d04/d04_c01; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_099_v1",
+        "microFactId": "mf_ml9_099",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "b86d877ccac15b1812d7640cfbdc8dc772d11b04e129ab878315cf693af9ae7a",
+          "shortVariantSha256": "63d0b02132f1712a4c0e0ca5d12a19327353c0d4e05f3758731dd41729487263",
+          "estimatedReadSeconds": 8
+        },
+        "metrics": {
+          "displayWordCount": 20,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 8,
+          "shortWordCount": 8,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 4
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_107",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_107_v1",
+        "microFactId": "mf_ml9_107",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-09",
+          "officialUrl": "https://www.fmcsa.dot.gov/seatbelts",
+          "sourceLocator": "Commercial motor vehicle seat-belt safety overview",
+          "editionOrRevision": "Current FMCSA Buckle Up guidance"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_107_v1",
+        "microFactId": "mf_ml9_107",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d01",
+          "competencyId": "d01_c05",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d01|d01_c05|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d01/d01_c05; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_107_v1",
+        "microFactId": "mf_ml9_107",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "58fed6e723a52a178c5107aeb71a75407e8bebefda2e2df66868f4cccbd46eab",
+          "shortVariantSha256": "de53aaf266845d98fb0151d55892dfe560db448c85068319a30aa7c5139e52ed",
+          "estimatedReadSeconds": 9
+        },
+        "metrics": {
+          "displayWordCount": 22,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 9,
+          "shortWordCount": 9,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 4
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_112",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_112_v1",
+        "microFactId": "mf_ml9_112",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-02",
+          "officialUrl": "https://www.cdc.gov/niosh/publications/numbered/2019-132.html",
+          "sourceLocator": "About - occupational exposure banding process",
+          "editionOrRevision": "DHHS (NIOSH) Publication No. 2019-132"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": null,
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_112_v1",
+        "microFactId": "mf_ml9_112",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "893b115b95120b1376f8400d359f9f150569751d0c33fab63529a7a7b1392f88",
+          "shortVariantSha256": "d1957d788744942891c889bb7847eb44c588b0a75d51d3a518cc8e16ba478535",
+          "estimatedReadSeconds": 10
+        },
+        "metrics": {
+          "displayWordCount": 23,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 10,
+          "shortWordCount": 11,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 5
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    },
+    {
+      "microFactId": "mf_ml9_118",
+      "contentVersion": 1,
+      "rightsEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfre_ml9_118_v1",
+        "microFactId": "mf_ml9_118",
+        "contentVersion": 1,
+        "rightsTreatment": "original_paraphrase",
+        "sourceFingerprint": {
+          "sourceRegistryId": "SRC-02",
+          "officialUrl": "https://www.cdc.gov/niosh/learning/safetyculturehc/module-4/12.html",
+          "sourceLocator": "Safety Culture Training recommendations",
+          "editionOrRevision": "Last reviewed April 28, 2022"
+        },
+        "transformation": {
+          "sourceComparisonPerformed": true,
+          "independentWordingConfirmed": true,
+          "directQuoteUsed": false,
+          "quoteWordCount": 0,
+          "quoteSegmentCount": 0,
+          "quoteTextSha256": null,
+          "quoteNecessity": null,
+          "longestVerbatimRunWords": 5,
+          "sourceStructureCopied": false,
+          "tableCopied": false,
+          "figureOrDiagramCopied": false,
+          "checklistCopied": false,
+          "questionOrAnswerCopied": false,
+          "workedExampleCopied": false
+        },
+        "license": {
+          "required": false,
+          "licenseId": null,
+          "licensor": null,
+          "scope": null,
+          "effectiveDate": null,
+          "expiresAt": null,
+          "startupDisplayPermitted": null,
+          "digitalRedistributionPermitted": null,
+          "protectedStructureReusePermitted": null
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "restrictedMaterial": {
+          "rawSourceDocumentStored": false,
+          "fullStandardStored": false,
+          "fullBookChapterStored": false,
+          "paywalledSnapshotStored": false,
+          "copyrightedTableImageStored": false,
+          "thirdPartyMaterialPresent": false,
+          "thirdPartyMaterialCleared": false
+        }
+      },
+      "curriculumEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfme_ml9_118_v1",
+        "microFactId": "mf_ml9_118",
+        "contentVersion": 1,
+        "blueprintVersion": "V.2024.04.24",
+        "navigationRegistryVersion": "1.0.0",
+        "mapping": {
+          "scope": "mapped",
+          "domainId": "d07",
+          "competencyId": "d07_c04",
+          "topicId": null,
+          "subtopicId": null,
+          "mappingKey": "d07|d07_c04|-|-"
+        },
+        "review": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "conceptAlignmentConfirmed": false,
+          "placementRationale": "Machine-prepared mapping mirrors d07/d07_c04; human concept-alignment review remains pending.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      },
+      "pedagogyEvidence": {
+        "schemaVersion": 1,
+        "evidenceId": "mfpe_ml9_118_v1",
+        "microFactId": "mf_ml9_118",
+        "contentVersion": 1,
+        "pedagogyPolicyVersion": "1.0.0",
+        "contentFingerprint": {
+          "displayTextSha256": "69fb3a67c31843dcf00363876cc5fa7d81a52636708ab057b5c8b95425930991",
+          "shortVariantSha256": "018f0669bb16f382bea70b7b73b7aa8dfed9db411cd1e65cdb2d73926119ff42",
+          "estimatedReadSeconds": 9
+        },
+        "metrics": {
+          "displayWordCount": 22,
+          "displaySentenceCount": 1,
+          "computedDisplayReadSeconds": 9,
+          "shortWordCount": 10,
+          "shortSentenceCount": 1,
+          "computedShortReadSeconds": 4
+        },
+        "pedagogyReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "singleConceptConfirmed": false,
+          "standaloneMeaningConfirmed": false,
+          "cognitiveLoadAcceptable": false,
+          "jargonLoadAcceptable": false,
+          "shortVariantMeaningPreserved": false,
+          "precisionPreserved": false,
+          "assessmentLeakageReviewed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        },
+        "accessibilityReview": {
+          "status": "pending",
+          "reviewerRole": "content_governance_reviewer",
+          "humanReviewed": false,
+          "screenReaderStandaloneConfirmed": false,
+          "visualIndependenceConfirmed": false,
+          "reducedMotionEquivalentConfirmed": false,
+          "plainLanguageAccessibleConfirmed": false,
+          "noForcedInteractionConfirmed": false,
+          "reviewedAt": null,
+          "nextReviewDueAt": null
+        }
+      }
+    }
+  ]
+}
