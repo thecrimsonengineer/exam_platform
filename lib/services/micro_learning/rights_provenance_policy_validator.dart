@@ -330,6 +330,23 @@ class RightsProvenancePolicyValidator {
       issues,
     );
     if (minimal != null) {
+      _exactKeys(
+        minimal,
+        const {
+          'directQuoteAllowed',
+          'licenseRequired',
+          'sourceComparisonRequired',
+          'independentWordingRequired',
+          'maxQuoteWordsPerFact',
+          'maxQuoteSegmentsPerFact',
+          'sourceLocationRequired',
+          'quoteNecessityRequired',
+          'quoteHashRequired',
+          'protectedStructureCopyAllowed',
+        },
+        r'$policy.rightsTreatments.minimal_quote',
+        issues,
+      );
       if (minimal['directQuoteAllowed'] != true ||
           minimal['licenseRequired'] != false ||
           minimal['sourceComparisonRequired'] != true ||
@@ -356,6 +373,21 @@ class RightsProvenancePolicyValidator {
       issues,
     );
     if (licensed != null) {
+      _exactKeys(
+        licensed,
+        const {
+          'directQuoteAllowed',
+          'licenseRequired',
+          'sourceComparisonRequired',
+          'independentWordingRequired',
+          'sourceLocationRequired',
+          'licenseMustPermitStartupDisplay',
+          'licenseMustPermitDigitalRedistribution',
+          'protectedStructureCopyAllowedOnlyIfExplicitlyLicensed',
+        },
+        r'$policy.rightsTreatments.licensed_excerpt',
+        issues,
+      );
       if (licensed['directQuoteAllowed'] != true ||
           licensed['licenseRequired'] != true ||
           licensed['sourceComparisonRequired'] != true ||
@@ -390,6 +422,20 @@ class RightsProvenancePolicyValidator {
       return;
     }
 
+    _exactKeys(
+      map,
+      const {
+        'directQuoteAllowed',
+        'licenseRequired',
+        'sourceComparisonRequired',
+        'independentWordingRequired',
+        'maxLongestVerbatimRunWords',
+        'protectedStructureCopyAllowed',
+      },
+      path,
+      issues,
+    );
+
     if (map['directQuoteAllowed'] != false ||
         map['licenseRequired'] != false ||
         map['sourceComparisonRequired'] != true ||
@@ -418,6 +464,17 @@ class RightsProvenancePolicyValidator {
     if (map == null) {
       return;
     }
+
+    _exactKeys(
+      map,
+      const {
+        'evidenceRequiredForStatuses',
+        'evidenceMustPassForStatuses',
+        'startupEligibleRequiresPassingEvidence',
+      },
+      r'$policy.lifecycle',
+      issues,
+    );
 
     if (!_sameSet(
       _stringSet(map['evidenceRequiredForStatuses']),
@@ -467,6 +524,16 @@ class RightsProvenancePolicyValidator {
       return;
     }
 
+    _exactKeys(
+      map,
+      const {
+        'withoutExplicitLicense',
+        'alwaysBlockedInMicroFactEvidence',
+      },
+      r'$policy.prohibitedReuse',
+      issues,
+    );
+
     _validateNonEmptyUniqueStringList(
       map['withoutExplicitLicense'],
       r'$policy.prohibitedReuse.withoutExplicitLicense',
@@ -511,6 +578,21 @@ class RightsProvenancePolicyValidator {
     if (map == null) {
       return;
     }
+
+    _exactKeys(
+      map,
+      const {
+        'evidenceSchemaVersion',
+        'evidenceIdPattern',
+        'reviewerRoleValues',
+        'reviewStatusValues',
+        'sha256Pattern',
+        'maxEvidenceAgeDays',
+        'sourceFingerprintFields',
+      },
+      r'$policy.evidenceRules',
+      issues,
+    );
 
     if (map['evidenceSchemaVersion'] != 1 ||
         map['evidenceIdPattern'] != r'^mfre_[a-z0-9][a-z0-9_-]{5,63}$' ||
@@ -574,6 +656,18 @@ class RightsProvenancePolicyValidator {
       return;
     }
 
+    _exactKeys(
+      map,
+      const {
+        'requireEditionOrRevisionWhenAuthorityPolicyIn',
+        'minimalQuoteRequiresHumanReview',
+        'licensedExcerptRequiresHumanReview',
+        'derivativeSimilarityReviewRequired',
+      },
+      r'$policy.rightsSensitiveRules',
+      issues,
+    );
+
     if (!_sameSet(
       _stringSet(map['requireEditionOrRevisionWhenAuthorityPolicyIn']),
       const {
@@ -607,6 +701,17 @@ class RightsProvenancePolicyValidator {
     if (map == null) {
       return;
     }
+
+    _exactKeys(
+      map,
+      const {
+        'doNotAssumeEntirePagePublicDomain',
+        'thirdPartyMaterialMustBeExcludedUnlessSeparatelyCleared',
+        'logosSealsAndTrademarksAreNotClearedByDefault',
+      },
+      r'$policy.governmentSourceRules',
+      issues,
+    );
 
     for (final key in const {
       'doNotAssumeEntirePagePublicDomain',
