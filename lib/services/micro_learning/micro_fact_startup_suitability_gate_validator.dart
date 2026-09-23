@@ -239,7 +239,8 @@ class MicroFactStartupSuitabilityGateValidator {
         fullWords > (displayRules['maxWords'] as int) ||
         fullText.length > (displayRules['maxCharacters'] as int) ||
         fullSentences > (displayRules['maxSentences'] as int) ||
-        estimatedReadSeconds > (displayRules['maxEstimatedReadSeconds'] as int)) {
+        estimatedReadSeconds >
+            (displayRules['maxEstimatedReadSeconds'] as int)) {
       _add(
         issues,
         'ML7_DISPLAY_TEXT_LIMIT',
