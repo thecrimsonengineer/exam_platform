@@ -71,8 +71,12 @@ jobs:
         run: git diff --exit-code -- pubspec.lock
 
       - name: Check R9A4 test formatting
+        shell: bash
         run: |
-          dart format --output=none --set-exit-if-changed             test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart
+          set -euo pipefail
+          file="test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart"
+          dart format --output=show "$file" > "$RUNNER_TEMP/int-r9a4-formatted.dart"
+          diff -u "$file" "$RUNNER_TEMP/int-r9a4-formatted.dart"
 
       - name: Run R9A4 end-to-end authorization state regression
         run: flutter test test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart
