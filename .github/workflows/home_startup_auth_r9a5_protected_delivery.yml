@@ -1,0 +1,160 @@
+name: INT-R9A5 FR9 FR10 Protected Delivery Regression
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration-auth-hotfix-r9a5
+    paths:
+      - '.github/workflows/home_startup_auth_r9a5_protected_delivery.yml'
+      - 'docs/integration/INT_R9A5_FR9_FR10_PROTECTED_DELIVERY_CLOSURE.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: int-r9a5-protected-delivery-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  BASE_FREEZE_SHA: 'b9a8150adaf21a3f43cb2120b5dbfcc0ce119c8a'
+  R9A4_CLOSED_SHA: 'a84132b41bd94cb75531a3efe7d53243970a8329'
+  DELIVERY_ENDPOINT: 'https://esfycnmfywxczfillioj.supabase.co/functions/v1/learner-question-packages'
+
+jobs:
+  protected-delivery-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout exact R9A5 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen ancestry and clean patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${BASE_FREEZE_SHA}" HEAD
+          git merge-base --is-ancestor "${R9A4_CLOSED_SHA}" HEAD
+          git diff --check
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph remains stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Analyze repository
+        run: flutter analyze
+
+      - name: Replay FR8 online authorization boundary
+        run: |
+          flutter test test/services/online_access/learner_online_access_gate_test.dart
+          flutter test test/services/study_content/uid_scoped_protected_content_cache_repository_test.dart
+          flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+
+      - name: Replay FR9 protected question delivery
+        run: |
+          flutter test test/services/questions/published_question_package_test.dart
+          flutter test test/services/questions/uid_scoped_question_package_cache_test.dart
+          flutter test test/services/questions/learner_question_package_delivery_service_test.dart
+          flutter test test/architecture/phase_fr9_question_delivery_test.dart
+          flutter test test/architecture/phase_fr9_edge_gateway_test.dart
+          flutter test test/services/quiz_service_firebase_test.dart
+          flutter test test/architecture/phase_fr9_quiz_service_cutover_test.dart
+          flutter test test/services/practice_mode_service_test.dart
+          flutter test test/architecture/phase_fr9_practice_mode_cutover_test.dart
+          flutter test test/features/learning_twin/integration/m6_0_practice_foundation_architecture_test.dart
+
+      - name: Replay FR10 protected StudyContent delivery
+        run: |
+          flutter test test/services/study_content/published_content_package_test.dart
+          flutter test test/services/study_content/uid_scoped_content_package_cache_test.dart
+          flutter test test/services/study_content/learner_content_package_delivery_service_test.dart
+          flutter test test/services/study_content/study_content_session_refresh_test.dart
+          flutter test test/services/study_content/study_content_navigation_blueprint_test.dart
+          flutter test test/architecture/phase_fr10_study_content_delivery_test.dart
+          flutter test test/architecture/phase_fr10_content_gateway_test.dart
+          flutter test test/architecture/phase_fr10_study_content_loader_cutover_test.dart
+          flutter test test/architecture/phase_fr10_navigation_broad_read_retirement_test.dart
+          flutter test test/architecture/phase_fr10_closure_test.dart
+
+      - name: Prove production gateway fails closed for FR9 and FR10
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          prove_401() {
+            local label="$1"
+            local payload="$2"
+            local auth_header="${3:-}"
+            local output="$RUNNER_TEMP/${label}.json"
+
+            if [ -n "$auth_header" ]; then
+              status="$(
+                curl --silent --show-error                   --output "$output"                   --write-out "%{http_code}"                   --request POST                   --header "Content-Type: application/json"                   --header "$auth_header"                   --data "$payload"                   "${DELIVERY_ENDPOINT}"
+              )"
+            else
+              status="$(
+                curl --silent --show-error                   --output "$output"                   --write-out "%{http_code}"                   --request POST                   --header "Content-Type: application/json"                   --data "$payload"                   "${DELIVERY_ENDPOINT}"
+              )"
+            fi
+
+            test "$status" = "401"
+            grep -q '"error":"invalid_firebase_token"' "$output"
+          }
+
+          prove_401 "fr9-missing-token" '{"operation":"catalog"}'
+          prove_401 "fr9-malformed-token" '{"operation":"catalog"}'             'Authorization: Bearer not-a-valid-firebase-token'
+          prove_401 "fr10-missing-token" '{"operation":"content_catalog"}'
+          prove_401 "fr10-malformed-token" '{"operation":"content_catalog"}'             'Authorization: Bearer not-a-valid-firebase-token'
+
+          echo "FR9/FR10 production gateway fail-closed regression: PASS"
+
+      - name: Write sanitized R9A5 evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "INT-R9A5 FR9 / FR10 Protected Delivery Regression: PASS"
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "R9A4_CLOSED_SHA=${R9A4_CLOSED_SHA}"
+            echo "FR8_AUTHORIZATION_BOUNDARY_REPLAYED=true"
+            echo "FR9_PACKAGE_INTEGRITY_REPLAYED=true"
+            echo "FR9_UID_SCOPED_CACHE_REPLAYED=true"
+            echo "FR9_DELIVERY_SERVICE_REPLAYED=true"
+            echo "FR9_QUIZ_AND_PRACTICE_CUTOVER_REPLAYED=true"
+            echo "FR10_PACKAGE_INTEGRITY_REPLAYED=true"
+            echo "FR10_UID_SCOPED_CACHE_REPLAYED=true"
+            echo "FR10_DELIVERY_SERVICE_REPLAYED=true"
+            echo "FR10_BROAD_READ_RETIREMENT_REPLAYED=true"
+            echo "FR10_CLOSURE_GATE_REPLAYED=true"
+            echo "FR9_MISSING_TOKEN_FAILS_CLOSED=true"
+            echo "FR9_MALFORMED_TOKEN_FAILS_CLOSED=true"
+            echo "FR10_MISSING_TOKEN_FAILS_CLOSED=true"
+            echo "FR10_MALFORMED_TOKEN_FAILS_CLOSED=true"
+            echo "PRODUCTION_RUNTIME_CHANGED=false"
+            echo "SERVER_SECRET_REQUIRED=false"
+          } > int-r9a5-protected-delivery-evidence.txt
+
+      - name: Upload R9A5 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: INT-R9A5-protected-delivery-evidence
+          path: int-r9a5-protected-delivery-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
