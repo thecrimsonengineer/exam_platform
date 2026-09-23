@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_059",
+  "category": "process_safety_insight",
+  "display": {
+    "displayText": "CCPS applies management of change across the process life cycle, including operating facilities and project design or planning activities where genuine changes arise.",
+    "shortVariant": "Management of change can apply during operations, design, and project planning.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d02",
+    "competencyId": "d02_c05",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "management_of_change_scope",
+      "process_lifecycle"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-11",
+    "sourceClass": "process_safety_framework",
+    "sourceTitle": "Introduction to Management of Change",
+    "officialUrl": "https://ccps.aiche.org/introduction-management-change",
+    "sourceLocator": "Where/When Is It Done? - operating plants and process life-cycle design/planning",
+    "editionOrRevision": "CCPS Risk Based Process Safety framework, current web summary",
+    "sourceSection": "Where/When Is It Done?",
+    "sourcePage": null,
+    "sourcePublishedAt": null,
+    "sourceVerifiedAt": "2026-09-24",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "professional_framework",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "management_of_change",
+    "process_lifecycle",
+    "project_design"
+  ]
+}
