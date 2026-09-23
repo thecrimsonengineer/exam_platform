@@ -2,7 +2,7 @@
 
 ## Status
 
-**IMPLEMENTED / VALIDATION CHECKPOINT**
+**IMPLEMENTED / EXACT-SHA CLOSURE CANDIDATE**
 
 Program: LSP-Q
 
@@ -159,3 +159,16 @@ LSP-Q11 does not:
 ## Next authorized action
 
 LSP-Q12 - Learner Catalogue Admission and Controlled Delivery.
+
+
+## Closure candidate
+
+Initial Q11 implementation commit: `a832e9f2d6c4738d0105f6ce1b9835710a5fb3ce`
+
+Successful validation run for the implementation commit: `35892319980`
+
+Canonical formatter output commit: `6ce5e3cf038a158aa8f7d39c43ac2760e4f15949`
+
+The formatter commit changes Q11 implementation/test formatting only.
+
+This documentation-only closure commit is the exact-SHA validation target for LSP-Q11. No technical LAB source content, DQG300 evidence, learner presentation content, population manifest binding, publication gate semantics, immutable repository behavior, learner catalogue or runtime navigation is changed by the closure step.
