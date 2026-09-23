@@ -3,12 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'lab_contracts.dart';
 import 'lab_learner_catalogue.dart';
 import 'lab_learner_presentation.dart';
+import 'lab_production_release_closure.dart';
 import 'lab_studio.dart';
 
 const String kLabPublishedFirestoreSchemaVersion =
     'csp11.lab.published_repository.v1';
 const String kLabLearnerCatalogueFirestoreSchemaVersion =
     'csp11.lab.learner_catalogue.v1';
+const String kLabProductionReleaseFirestoreSchemaVersion =
+    LabProductionReleaseEvidence.schemaVersion;
 
 class FirestoreLabPublishedRepository implements LabPublishedRepository {
   FirestoreLabPublishedRepository({FirebaseFirestore? firestore})
@@ -313,5 +316,61 @@ class FirestoreLabLearnerCatalogueRepository
           },
       },
     };
+  }
+}
+
+
+class FirestoreLabProductionReleaseEvidenceRepository
+    implements LabProductionReleaseEvidenceRepository {
+  FirestoreLabProductionReleaseEvidenceRepository({
+    FirebaseFirestore? firestore,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  final FirebaseFirestore _firestore;
+
+  CollectionReference<Map<String, dynamic>> get _collection =>
+      _firestore.collection('labProductionReleaseEvidence');
+
+  @override
+  Future<void> saveImmutable(LabProductionReleaseEvidence evidence) async {
+    final reference = _collection.doc(evidence.releaseId);
+
+    await _firestore.runTransaction((transaction) async {
+      final existing = await transaction.get(reference);
+      if (existing.exists) {
+        throw const LabProductionReleaseClosureException(
+          'Q15 production release evidence is immutable and already exists.',
+        );
+      }
+
+      transaction.set(reference, <String, dynamic>{
+        ...evidence.toJson(),
+        'serverCreatedAt': FieldValue.serverTimestamp(),
+      });
+    });
+  }
+
+  @override
+  Future<LabProductionReleaseEvidence?> load(String releaseId) async {
+    final snapshot = await _collection.doc(releaseId).get();
+    if (!snapshot.exists) return null;
+
+    final data = snapshot.data();
+    if (data == null ||
+        data['schemaVersion'] != kLabProductionReleaseFirestoreSchemaVersion) {
+      throw const LabProductionReleaseClosureException(
+        'Unsupported or empty Q15 production release evidence document.',
+      );
+    }
+
+    final payload = Map<String, Object?>.from(data)
+      ..remove('serverCreatedAt');
+    final evidence = LabProductionReleaseEvidence.fromJson(payload);
+    if (evidence.releaseId != releaseId) {
+      throw const LabProductionReleaseClosureException(
+        'Q15 Firestore release evidence identity does not match its document key.',
+      );
+    }
+    return evidence;
   }
 }

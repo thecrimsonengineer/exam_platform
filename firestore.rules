@@ -414,6 +414,49 @@ service cloud.firestore {
         && request.resource.data.serverCreatedAt is timestamp;
     }
 
+    function labProductionReleaseAllowedKeys() {
+      return [
+        'schemaVersion',
+        'releaseId',
+        'manifestId',
+        'manifestFingerprint',
+        'q14ClosureSha',
+        'q14ValidationRunId',
+        'environmentId',
+        'executedBy',
+        'executedAtIso',
+        'labCount',
+        'totalDecisionCount',
+        'catalogueIdentityKeys',
+        'entries',
+        'evidenceFingerprint',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLabProductionRelease(releaseId) {
+      return request.resource.data.keys().hasAll(labProductionReleaseAllowedKeys())
+        && request.resource.data.keys().hasOnly(labProductionReleaseAllowedKeys())
+        && releaseId == request.resource.data.releaseId
+        && request.resource.data.schemaVersion == 'csp11.lab.production_release.v1'
+        && request.resource.data.manifestId == 'phase_l_population_v1'
+        && request.resource.data.q14ClosureSha == '5beee3db89a43267a4cc5b2956b117a344afe648'
+        && request.resource.data.q14ValidationRunId == '35918656487'
+        && request.resource.data.releaseId is string
+        && request.resource.data.manifestFingerprint is string
+        && request.resource.data.environmentId is string
+        && request.resource.data.executedBy is string
+        && request.resource.data.executedAtIso is string
+        && request.resource.data.labCount == 10
+        && request.resource.data.totalDecisionCount == 50
+        && request.resource.data.catalogueIdentityKeys is list
+        && request.resource.data.catalogueIdentityKeys.size() == 10
+        && request.resource.data.entries is list
+        && request.resource.data.entries.size() == 10
+        && request.resource.data.evidenceFingerprint is string
+        && request.resource.data.serverCreatedAt is timestamp;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -507,6 +550,14 @@ service cloud.firestore {
         && resource.data.available == true;
 
       allow create: if isAdmin() && validLabCatalogueEntry(versionKey);
+
+      allow update, delete: if false;
+    }
+
+    match /labProductionReleaseEvidence/{releaseId} {
+      allow get, list: if isAdmin();
+
+      allow create: if isAdmin() && validLabProductionRelease(releaseId);
 
       allow update, delete: if false;
     }
