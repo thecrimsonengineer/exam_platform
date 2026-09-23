@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_040",
+  "category": "ih_insight",
+  "display": {
+    "displayText": "NIOSH ergonomics guidance recommends observing multiple workers and speaking with workers and supervisors because the same task may be performed with different postures and techniques.",
+    "shortVariant": "Observe several workers because one task can be performed in different ways.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d06",
+    "competencyId": "d06_c04",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "ergonomic_observation",
+      "worker_variability"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Step 1: Identify Risk Factors",
+    "officialUrl": "https://www.cdc.gov/niosh/ergonomics/ergo-programs/risk-factors.html",
+    "sourceLocator": "Use checklists to screen for risks - observation and worker interviews",
+    "editionOrRevision": "Updated March 5, 2024",
+    "sourceSection": "Use checklists to screen for risks",
+    "sourcePage": null,
+    "sourcePublishedAt": "2024-03-05",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "recommendation",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "ergonomics",
+    "worker_variability",
+    "task_observation"
+  ]
+}
