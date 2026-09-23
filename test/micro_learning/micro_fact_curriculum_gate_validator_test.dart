@@ -66,7 +66,7 @@ void main() {
     expect(result.issues, isEmpty, reason: result.issues.join('\n'));
   });
 
-  test('general MicroFact cannot carry curriculum IDs', () {
+  test('general MicroFact curriculum IDs fail at the frozen lower schema gate', () {
     final fact = loadFact();
     final curriculum = Map<String, dynamic>.from(fact['curriculum'] as Map);
     curriculum
@@ -79,7 +79,7 @@ void main() {
     expect(result.isValid, isFalse);
     expect(
       result.issues.map((issue) => issue.code),
-      contains('ML6_GENERAL_SCOPE_HAS_MAPPING'),
+      contains('ML6_RIGHTS_PREREQUISITE_INVALID'),
     );
   });
 
@@ -148,7 +148,7 @@ void main() {
     );
   });
 
-  test('competency must belong to declared domain', () {
+  test('competency parent mismatch fails at the frozen lower schema gate', () {
     final fact = loadMappedFact();
     final curriculum = Map<String, dynamic>.from(fact['curriculum'] as Map);
     curriculum
@@ -162,7 +162,7 @@ void main() {
     expect(result.isValid, isFalse);
     expect(
       result.issues.map((issue) => issue.code),
-      contains('ML6_COMPETENCY_WRONG_PARENT'),
+      contains('ML6_RIGHTS_PREREQUISITE_INVALID'),
     );
   });
 
