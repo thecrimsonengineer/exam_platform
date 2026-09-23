@@ -99,6 +99,15 @@ class SettingsScreen extends StatelessWidget {
     } else {
       await AuthStateService().signOut();
     }
+
+    if (!context.mounted) {
+      return;
+    }
+
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).popUntil((route) => route.isFirst);
   }
 
   Future<void> _resetLearningData(BuildContext context) async {

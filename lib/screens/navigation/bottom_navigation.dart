@@ -15,8 +15,7 @@ import '../home/home_screen.dart';
 import '../home/home_screen_dark.dart';
 import '../lab/lab_library_screen.dart';
 import '../practice/practice_hub_screen.dart';
-import '../settings/settings_screen.dart';
-import '../settings/settings_screen_dark.dart';
+import '../settings/settings_route.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
   const BottomNavigationScreen({super.key});
@@ -42,14 +41,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
   }
 
   Future<void> _openSettings() async {
-    final isDarkMode = ThemeModeService.isDarkMode.value;
-
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) =>
-            isDarkMode ? const DarkSettingsScreen() : const SettingsScreen(),
-      ),
-    );
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const SettingsRoute()));
   }
 
   @override
