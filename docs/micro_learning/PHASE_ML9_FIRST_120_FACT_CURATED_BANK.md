@@ -278,6 +278,32 @@ Batch 03 review artifacts:
 - `content/micro_learning/review/ml9_batch_03_review_ledger.json`
 - `content/micro_learning/review/ml9_batch_03_precheck.json`
 
+### Batch 04
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 40.
+- Batch covers powered industrial truck competence, engineering controls, pre-startup safety review, electrical guarding, program evaluation, hazardous-waste labeling, emergency personnel qualification, distracted driving, occupational risk assessment, and audience-adapted training.
+- All Batch 04 candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+- Two ML-4 category/source conflicts were caught and corrected before freeze:
+  - `mf_ml9_111` now uses NIOSH occupational risk-assessment material with `legalStatus: not_applicable`.
+  - `mf_ml9_117` now uses NIOSH ergonomics-training material with `legalStatus: not_applicable`.
+- Batch 04 startup text precheck passed.
+- Cumulative ML-8 field-level precheck scanned 780 unique pairs across 40 candidates.
+- Exact duplicate count: 0.
+- Unresolved ML-8 review-candidate count: 0.
+- A reusable candidate-bank validator and dedicated ML-9 GitHub Actions workflow now exist.
+- The available GitHub connector does not expose a push-triggered workflow result for this checkpoint, so no CI-green claim is made from missing status data.
+- Repository CLI validation remains mandatory before ML-9 final closure.
+
+Batch 04 review and validation artifacts:
+
+- `content/micro_learning/review/ml9_batch_04_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_04_precheck.json`
+- `tool/validate_ml9_candidate_bank.dart`
+- `.github/workflows/ml9_candidate_bank_validation.yml`
+
 ## Next action
 
-ML-9B Batch 04 - author the next 10 review-state candidates, then rerun startup-text and whole-corpus ML-8 prechecks against all 40 candidates.
+ML-9B Batch 05 - author the next 10 review-state candidates, then rerun candidate-gate, startup-text and whole-corpus ML-8 validation against all 50 candidates.
