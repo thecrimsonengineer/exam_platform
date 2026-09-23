@@ -230,6 +230,35 @@ ML-9A begins with:
 - [ ] 120 facts published and startup eligible.
 - [ ] Exact closing SHA frozen.
 
+## ML-9B batch progress
+
+### Batch 01
+
+- 10 candidate facts authored.
+- Cumulative candidate count: 10.
+- Candidates remain in `review`.
+- Startup eligibility remains false.
+- Human technical approval remains pending.
+
+### Batch 02
+
+- 10 additional candidate facts authored.
+- Cumulative candidate count: 20.
+- Batch spans occupational safety, industrial hygiene, process safety, fire/electrical, management systems, environmental management, emergency management, transportation/fleet, CSP reasoning, and evidence-based learning.
+- First-party source provenance was populated from the frozen authority registry.
+- ML-7 startup text precheck passed for all Batch 02 candidates.
+- Current 20-candidate ML-8 deterministic precheck reports zero exact duplicates and zero unresolved review candidates.
+- One false edition-drift signal was prevented by making the Prevention through Design source locator page-specific rather than weakening ML-8.
+- The environmental startup copy was rewritten to avoid an abbreviation outside the frozen ML-7 whitelist.
+- The learning-tip candidate was rebound to the NIOSH page that directly states the systematic-review findings.
+- No candidate is validated, published, or startup eligible.
+- No automated process has asserted human review.
+
+Batch 02 review artifacts:
+
+- `content/micro_learning/review/ml9_batch_02_review_ledger.json`
+- `content/micro_learning/review/ml9_batch_02_precheck.json`
+
 ## Next action
 
-ML-9B - author the first 10 production candidates and run them through the individual ML-1 through ML-7 gates plus the whole-corpus ML-8 detector.
+ML-9B Batch 03 - author the next 10 review-state candidates, then rerun startup-text and whole-corpus ML-8 prechecks against all 30 candidates.
