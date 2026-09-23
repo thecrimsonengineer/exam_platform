@@ -29,8 +29,8 @@ Future<void> main(List<String> args) async {
 
   if (exitCode != 0) return;
 
-  final policyResult =
-      const DuplicateContradictionPolicyValidator().validateMap(policy);
+  final policyResult = const DuplicateContradictionPolicyValidator()
+      .validateMap(policy);
   if (!policyResult.isValid) {
     _printIssues('ML-8 duplicate/contradiction policy', policyResult.issues);
     exitCode = 1;
@@ -50,11 +50,7 @@ Future<void> main(List<String> args) async {
   }
 
   final comparison = const MicroFactCorpusComparison();
-  final pair = comparison.compare(
-    left: base,
-    right: near,
-    policy: policy,
-  );
+  final pair = comparison.compare(left: base, right: near, policy: policy);
 
   if (!pair.requiresAdjudication || pair.hasExactDuplicate) {
     stderr.writeln(
@@ -66,17 +62,17 @@ Future<void> main(List<String> args) async {
 
   final ordered = [base, near]
     ..sort(
-      (a, b) => MicroFactCorpusComparison.factVersionKey(a).compareTo(
-        MicroFactCorpusComparison.factVersionKey(b),
-      ),
+      (a, b) => MicroFactCorpusComparison.factVersionKey(
+        a,
+      ).compareTo(MicroFactCorpusComparison.factVersionKey(b)),
     );
 
   Map<String, dynamic> ref(Map<String, dynamic> fact) => {
-        'microFactId': fact['microFactId'],
-        'contentVersion': fact['contentVersion'],
-        'comparisonFingerprintSha256':
-            MicroFactCorpusComparison.comparisonFingerprint(fact),
-      };
+    'microFactId': fact['microFactId'],
+    'contentVersion': fact['contentVersion'],
+    'comparisonFingerprintSha256':
+        MicroFactCorpusComparison.comparisonFingerprint(fact),
+  };
 
   final evidence = <String, dynamic>{
     'schemaVersion': 1,
@@ -105,10 +101,7 @@ Future<void> main(List<String> args) async {
   );
 
   if (!adjudicatedResult.isValid) {
-    _printIssues(
-      'ML-8 adjudicated candidate corpus',
-      adjudicatedResult.issues,
-    );
+    _printIssues('ML-8 adjudicated candidate corpus', adjudicatedResult.issues);
     exitCode = 1;
     return;
   }
