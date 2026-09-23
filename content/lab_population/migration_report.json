@@ -65,8 +65,8 @@
       "decisions": 5,
       "options": 20,
       "dqgRules": 1495,
-      "technicalSha256": "f5fea789000b13b9e6528ced45b8aac368c2b860c4d39e0eaf68605d513314e4",
-      "dqgSha256": "cf2bde4e17daa68960e409fb9e30e435c18caac01a57d4ce1d8c4cf6886780ea",
+      "technicalSha256": "191604a607c5aec0994c1677b66671075840b7291035ab41640ddd0f639e6b82",
+      "dqgSha256": "3ad9c1314fdaf3ceecf6abed8205d68a54923529535284b1ddc5442c394f2ec5",
       "presentationSha256": "d5c870a9b703c7b0b70709ab312bf47c4b1024e908835c01570f3fdb460c0f0d"
     },
     {
@@ -75,8 +75,8 @@
       "decisions": 5,
       "options": 20,
       "dqgRules": 1495,
-      "technicalSha256": "a30563cfce16fa7fef80fe54e07f5aed21205792aefef10f0d96074edaecde9c",
-      "dqgSha256": "9d8e3e9c0579ab21bc1fd76791ddb1a7c6567b986094f6d0b8943b94f5809768",
+      "technicalSha256": "d8fcd3afbce1d73e9a270e9c16c21582b9d4e20fd1ebf540cdbda162eeb753a0",
+      "dqgSha256": "ee5f1b760f76965b4ff2a0ced439fa0666354dac85af4093c6040831dea0b683",
       "presentationSha256": "55cd0e9e8300235cf86a3d7f4e4c31b3c865705d988b6c0ed3a7c90a659d27fc"
     },
     {
@@ -95,8 +95,8 @@
       "decisions": 5,
       "options": 20,
       "dqgRules": 1495,
-      "technicalSha256": "d9283b53644e3ffaa5937aced3f51633e667a1e4dfbe9b264c0829a8f07da17f",
-      "dqgSha256": "f845b4c7448eb96eaad76caba0ee38d1abfff44580b5766bd03bc5f7f6d74ef7",
+      "technicalSha256": "d95d245e1c050aa768f45fcfbf0907bddf2ef071d7b823ed5421b9596349ca2d",
+      "dqgSha256": "28f3f60f05071d0c68198b3a0da3ab1067d2767015a04821732bf94a11fd7d3b",
       "presentationSha256": "068edc125c6ca07790a14932821bcb58921fb0ca50a891458044468eae28cad3"
     },
     {
@@ -105,9 +105,61 @@
       "decisions": 5,
       "options": 20,
       "dqgRules": 1495,
-      "technicalSha256": "cf5e1f2492bc64c05bc92437532561f937259733b6a0619955f19fa9e33164ea",
-      "dqgSha256": "e9fdae7b0df9a55299d96d3d0627b5786729aae44270dca55eb44f0cc001aa3f",
+      "technicalSha256": "966edb62bce355aa4b0a5707ed4e5e0468556d369eed5a1c0992fcd688bd7e30",
+      "dqgSha256": "f13e98091e188bb967be3cb383897252a5fc9b21568e9fe8fb8f0da8c02cc10e",
       "presentationSha256": "3982023cd5f4aeb9147d15f5d6ebfc202c4049782e619d79598b8a71936f5be5"
     }
-  ]
+  ],
+  "technicalOptionSurfaceRepairs": {
+    "reason": "Frozen strict H0.3 blocks a BEST option that is uniquely longest.",
+    "count": 5,
+    "repairs": [
+      {
+        "labId": "chemical_transfer_corrosive_solvent",
+        "nodeId": "exposure_control_decision",
+        "optionIndex": 1,
+        "oldWords": 24,
+        "newWords": 25,
+        "old": "Use the specified gloves, eye and face protection and increase natural ventilation, but continue without confirming whether respiratory protection is required. and record it.",
+        "new": "Use the specified gloves, eye and face protection and increase natural ventilation, but continue without confirming whether respiratory protection is required by the exposure assessment."
+      },
+      {
+        "labId": "hydrocarbon_line_breaking",
+        "nodeId": "release_decision",
+        "optionIndex": 0,
+        "oldWords": 24,
+        "newWords": 25,
+        "old": "Withdraw the crew and raise the alarm while operations attempts remote isolation, keeping the maintenance supervisor nearby to provide line information. and record it.",
+        "new": "Withdraw the crew and raise the alarm while operations attempts remote isolation, keeping the maintenance supervisor nearby to provide line information directly at the scene."
+      },
+      {
+        "labId": "pneumatic_pressure_test",
+        "nodeId": "rupture_decision",
+        "optionIndex": 1,
+        "oldWords": 23,
+        "newWords": 25,
+        "old": "Stop pressure input and account for staff, maintaining the barricade while the supervisor verifies pressure remotely before authorizing an inspection. and record it.",
+        "new": "Stop pressure input and account for staff, maintaining the barricade while the supervisor verifies pressure remotely before authorizing a closer inspection of the failed blind."
+      },
+      {
+        "labId": "pneumatic_pressure_test",
+        "nodeId": "closeout_decision",
+        "optionIndex": 2,
+        "oldWords": 24,
+        "newWords": 27,
+        "old": "Replace the blind and repeat the test from the first hold point after checking gauge calibration because the rest of the boundary remained stable.",
+        "new": "Replace the blind and repeat the test from the first hold point after checking gauge calibration because the rest of the boundary remained stable during the event."
+      },
+      {
+        "labId": "scaffold_erection_overhead_power",
+        "nodeId": "material_handling_decision",
+        "optionIndex": 0,
+        "oldWords": 23,
+        "newWords": 27,
+        "old": "Pause long-tube handling but continue installing short components on the opposite side of the scaffold while waiting for the spotter. under documented supervision.",
+        "new": "Pause long-tube handling but continue installing short components on the opposite side of the scaffold while waiting for the dedicated spotter to return to the work area."
+      }
+    ]
+  },
+  "technicalPreservation": "Technical story mechanics remain unchanged. Five distractor option strings received surface-balance wording repairs only; BEST-answer flags, quality classes, consequences, state, gates, endings, sources and mappings are unchanged."
 }

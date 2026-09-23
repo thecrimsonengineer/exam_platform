@@ -684,7 +684,7 @@
         },
         {
           "id": "exposure_control_decision_o2",
-          "text": "Use the specified gloves, eye and face protection and increase natural ventilation, but continue without confirming whether respiratory protection is required. and record it.",
+          "text": "Use the specified gloves, eye and face protection and increase natural ventilation, but continue without confirming whether respiratory protection is required by the exposure assessment.",
           "isBest": false,
           "quality": "DEFENSIBLE",
           "consequenceId": "exposure_control_decision_defensible",

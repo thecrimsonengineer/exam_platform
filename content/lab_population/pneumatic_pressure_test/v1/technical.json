@@ -745,7 +745,7 @@
         },
         {
           "id": "rupture_decision_o2",
-          "text": "Stop pressure input and account for staff, maintaining the barricade while the supervisor verifies pressure remotely before authorizing an inspection. and record it.",
+          "text": "Stop pressure input and account for staff, maintaining the barricade while the supervisor verifies pressure remotely before authorizing a closer inspection of the failed blind.",
           "isBest": false,
           "quality": "DEFENSIBLE",
           "consequenceId": "rupture_decision_defensible",
@@ -820,7 +820,7 @@
         },
         {
           "id": "closeout_decision_o3",
-          "text": "Replace the blind and repeat the test from the first hold point after checking gauge calibration because the rest of the boundary remained stable.",
+          "text": "Replace the blind and repeat the test from the first hold point after checking gauge calibration because the rest of the boundary remained stable during the event.",
           "isBest": false,
           "quality": "WEAK",
           "consequenceId": "closeout_decision_weak",

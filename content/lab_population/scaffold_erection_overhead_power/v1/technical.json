@@ -672,7 +672,7 @@
       "options": [
         {
           "id": "material_handling_decision_o1",
-          "text": "Pause long-tube handling but continue installing short components on the opposite side of the scaffold while waiting for the spotter. under documented supervision.",
+          "text": "Pause long-tube handling but continue installing short components on the opposite side of the scaffold while waiting for the dedicated spotter to return to the work area.",
           "isBest": false,
           "quality": "DEFENSIBLE",
           "consequenceId": "material_handling_decision_defensible",

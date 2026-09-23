@@ -95,12 +95,27 @@ Q10 joins each existing details array with newline separators and splits the com
 
 No learner-facing statement is invented or deleted.
 
+### Strict H0.3 option-surface repair
+
+The first exact population regression identified five Decisions where the BEST option was uniquely the longest. Q5 correctly blocked those Decisions even though their DQG300 semantic results remained DQS 100 with all 300 rules passing.
+
+Q10 repairs only the affected distractor wording so the BEST answer is no longer uniquely longest:
+
+- chemical_transfer_corrosive_solvent / exposure_control_decision
+- hydrocarbon_line_breaking / release_decision
+- pneumatic_pressure_test / rupture_decision
+- pneumatic_pressure_test / closeout_decision
+- scaffold_erection_overhead_power / material_handling_decision
+
+For each repair Q10 updates the repeated distractor scenarioEvidence text, character/word surface metrics and the pinned Decision signature.
+
+The distractor's original technical flaw is preserved. BEST-answer flags, Decision quality classes and technical mechanics are unchanged.
+
 ## Technical package preservation
 
-Technical LAB JSON is copied from the frozen source population without changing:
+Technical LAB story mechanics remain frozen. Q10 does not change:
 
 - Decision prompts
-- options
 - BEST-answer flags
 - Decision quality
 - consequences
@@ -111,6 +126,8 @@ Technical LAB JSON is copied from the frozen source population without changing:
 - source truth
 - competency mappings
 - lifecycle
+
+Five distractor option strings receive only the strict-H0.3 surface-balance repairs listed above.
 
 The manifest remains a reference layer only.
 

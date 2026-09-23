@@ -733,7 +733,7 @@
       "options": [
         {
           "id": "release_decision_o1",
-          "text": "Withdraw the crew and raise the alarm while operations attempts remote isolation, keeping the maintenance supervisor nearby to provide line information. and record it.",
+          "text": "Withdraw the crew and raise the alarm while operations attempts remote isolation, keeping the maintenance supervisor nearby to provide line information directly at the scene.",
           "isBest": false,
           "quality": "DEFENSIBLE",
           "consequenceId": "release_decision_defensible",
