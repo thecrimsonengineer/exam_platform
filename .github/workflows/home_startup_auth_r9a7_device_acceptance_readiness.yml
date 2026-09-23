@@ -162,7 +162,7 @@ jobs:
 
           keystore_path="${RUNNER_TEMP}/csp11-r9a7-signing.keystore"
           printf '%s' "${ANDROID_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${keystore_path}"
-          chmod 600 "${keystore_path"
+          chmod 600 "${keystore_path}"
 
           keytool -list             -keystore "${keystore_path}"             -storepass android             -alias androiddebugkey >/dev/null
 
