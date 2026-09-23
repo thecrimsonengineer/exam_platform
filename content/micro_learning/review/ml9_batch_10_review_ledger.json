@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9B",
+  "batchId": "ml9_batch_10",
+  "status": "candidate_review",
+  "createdAt": "2026-09-24",
+  "parentBankVersion": "1.0.0",
+  "factCount": 10,
+  "cumulativeCandidateCount": 100,
+  "humanReviewComplete": false,
+  "publicationAllowed": false,
+  "diversificationConstraint": {
+    "explicit": true,
+    "batchAuthorityCounts": {
+      "SRC-11": 3,
+      "SRC-05": 4,
+      "SRC-03": 1,
+      "SRC-14": 1,
+      "SRC-15": 1
+    },
+    "note": "Batch 10 deepens process safety and fire/electrical coverage without allowing any authority to approach the frozen 40% concentration threshold."
+  },
+  "facts": [
+    {
+      "microFactId": "mf_ml9_058",
+      "bucket": "process_safety",
+      "sourceRegistryId": "SRC-11",
+      "sourceUrl": "https://ccps.aiche.org/publications/books/guidelines-pressure-relief-and-effluent-handling-systems-2nd-edition",
+      "sourceLocator": "Design and sizing methodology for emergency pressure-relief system components",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_058_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_059",
+      "bucket": "process_safety",
+      "sourceRegistryId": "SRC-11",
+      "sourceUrl": "https://ccps.aiche.org/introduction-management-change",
+      "sourceLocator": "Where/When Is It Done? - operating plants and process life-cycle design/planning",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_059_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_060",
+      "bucket": "process_safety",
+      "sourceRegistryId": "SRC-11",
+      "sourceUrl": "https://ccps.aiche.org/resources/tools/lopa",
+      "sourceLocator": "What is LOPA and Basic LOPA Steps",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_060_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_066",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-05",
+      "sourceUrl": "https://link.nfpa.org/all-publications/70E/2024",
+      "sourceLocator": "Definition of Electrically Safe Work Condition and Chapter 1 safety-related work practices",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_066_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_067",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-05",
+      "sourceUrl": "https://link.nfpa.org/all-publications/25/2026",
+      "sourceLocator": "Inspection, testing, and maintenance program for water-based fire protection systems",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_067_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_068",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-03",
+      "sourceUrl": "https://www.assp.org/standards/standards-topics/confined-spaces-z117-1",
+      "sourceLocator": "Confined-space standard coverage and safety topics",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_068_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_069",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-15",
+      "sourceUrl": "https://www.ul.com/resources/ul-fire-door-inspection-and-field-evaluation-programs-what-are-differences",
+      "sourceLocator": "Certified fire door assemblies as opening protective systems and field inspection",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_069_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_070",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-05",
+      "sourceUrl": "https://link.nfpa.org/all-publications/70E/2024",
+      "sourceLocator": "Normal operating condition criteria for electrical equipment",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_070_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_071",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-14",
+      "sourceUrl": "https://www.fm.com/FMAApi/data/ApprovalStandardsDownload?isGated=false&itemId=%7B792844BC-DE97-4252-9571-6F6017956D20%7D",
+      "sourceLocator": "Sections 1.1 and 2.1 - impairment hazard and loss-prevention recommendations",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_071_v1.json"
+    },
+    {
+      "microFactId": "mf_ml9_072",
+      "bucket": "fire_electrical",
+      "sourceRegistryId": "SRC-05",
+      "sourceUrl": "https://link.nfpa.org/all-publications/30/2024",
+      "sourceLocator": "Scope - safeguards for storage, handling, and use of flammable and combustible liquids",
+      "candidatePath": "content/micro_learning/facts/mf_ml9_072_v1.json"
+    }
+  ],
+  "requiredHumanReview": [
+    "technical accuracy",
+    "source-to-claim fidelity",
+    "legal-status wording",
+    "curriculum placement",
+    "copyright and independent wording",
+    "startup readability and accessibility",
+    "ML-8 corpus coexistence if a review candidate is raised"
+  ],
+  "gateState": {
+    "sourceProvenancePopulated": true,
+    "candidateLifecycleFailClosed": true,
+    "startupEligibilityGranted": false,
+    "humanTechnicalApprovalGranted": false,
+    "validatedOrPublishedCount": 0
+  }
+}
