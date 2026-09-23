@@ -26,8 +26,8 @@
   "microFactId": "mf_ml9_017",
   "category": "safety_insight",
   "display": {
-    "displayText": "ANSI B11 machinery standards use task-based risk assessment to identify hazards and select safeguarding measures for people who operate, maintain, or service machines.",
-    "shortVariant": "ANSI B11 links machine risk assessment with safeguard selection.",
+    "displayText": "ANSI machinery-safety standards use task-based risk assessment to identify hazards and select safeguarding measures for people who operate, maintain, or service machines.",
+    "shortVariant": "ANSI machinery guidance links risk assessment with safeguard selection.",
     "estimatedReadSeconds": 9
   },
   "curriculum": {
