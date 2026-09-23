@@ -38,7 +38,7 @@
     "exactDuplicateCount": 0,
     "unresolvedReviewCandidateCount": 0,
     "flaggedPairCount": 0,
-    "note": "Cumulative field-level precheck preserves the frozen ML-8 duplicate, concept-overlap, same-source-locator, polarity, legal-status, numeric-conflict and edition-drift rules. Repository CLI validation remains mandatory before ML-9 closure."
+    "note": "GitHub Actions exact-SHA validation passed the reusable ML-9 candidate-bank validator and ML-8 focused regression for the 40-candidate corpus."
   },
   "correctionsApplied": [
     "mf_ml9_111 moved from OSHA compliance guidance to NIOSH occupational risk assessment so csp_tip can correctly use legalStatus not_applicable",
@@ -49,12 +49,36 @@
   "validatorInfrastructure": {
     "toolPath": "tool/validate_ml9_candidate_bank.dart",
     "workflowPath": ".github/workflows/ml9_candidate_bank_validation.yml",
-    "pushTriggeredWorkflowObservedThroughConnector": false,
-    "observedCiVerdict": null,
-    "note": "No CI-green claim is made because the available connector did not expose a push-triggered workflow run/status for the validator commit."
+    "pushTriggeredWorkflowObservedThroughConnector": true,
+    "observedCiVerdict": "success",
+    "observedRunId": 35875924753,
+    "validatedSha": "bf82942e6c95e332cfe1b1d811dfba781569b17f",
+    "validatedCandidateFacts": 40,
+    "validatedPairComparisons": 780,
+    "ml8ReviewCandidates": 0,
+    "ml8ConcentrationSignals": 1,
+    "publicationApprovalsAssertedByTool": 0,
+    "formatCheck": "pass",
+    "analyzer": "pass",
+    "ml8FocusedRegression": "pass",
+    "note": "GitHub Actions directly confirmed the cumulative 40-fact candidate bank is valid at the recorded exact SHA."
   },
   "humanReview": {
     "complete": false,
     "approvalsGeneratedByAutomation": false
+  },
+  "concentrationAudit": {
+    "blocking": false,
+    "signalCount": 1,
+    "signals": [
+      {
+        "code": "ML8_AUTHORITY_CONCENTRATION",
+        "key": "SRC-01",
+        "count": 17,
+        "share": 0.425,
+        "reviewThreshold": 0.4,
+        "interpretation": "Non-blocking ML-8 composition signal. Batch 05 should diversify authority use where source fitness permits."
+      }
+    ]
   }
 }
