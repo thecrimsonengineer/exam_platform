@@ -1,0 +1,67 @@
+name: ML-1 Authority Registry Validation
+
+on:
+  push:
+    branches:
+      - phase-ml1-authority-registry
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml1-authority-registry-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-1 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record exact SHA and diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "ML-1 exact SHA: ${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify ML-1 formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed \
+            lib/services/micro_learning/authority_registry_validator.dart \
+            tool/validate_micro_learning_authority_registry.dart \
+            test/micro_learning/authority_registry_validator_test.dart
+
+      - name: Analyze ML-1 implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart analyze \
+            lib/services/micro_learning/authority_registry_validator.dart \
+            tool/validate_micro_learning_authority_registry.dart \
+            test/micro_learning/authority_registry_validator_test.dart
+
+      - name: Validate frozen authority registry
+        run: dart run tool/validate_micro_learning_authority_registry.dart
+
+      - name: Run ML-1 focused tests
+        run: flutter test test/micro_learning/authority_registry_validator_test.dart
