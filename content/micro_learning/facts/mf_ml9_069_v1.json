@@ -55,7 +55,7 @@
     "rightsTreatment": "original_paraphrase"
   },
   "claim": {
-    "legalStatus": "certification_standard",
+    "legalStatus": "certification_or_testing",
     "jurisdiction": null,
     "numericalClaim": false,
     "safetyCritical": true,
