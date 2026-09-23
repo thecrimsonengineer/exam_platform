@@ -6,54 +6,60 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('INT-R9A4 authorization chain regression', () {
-    test('valid Firebase token and remote approval authorize bound learner', () async {
-      final tokenProvider = _RecordingTokenProvider('firebase-token-a');
-      final probe = _RecordingProbe(authorized: true);
-      final gate = LearnerOnlineAccessGate(
-        tokenProvider: tokenProvider,
-        authorizationProbe: probe,
-        clock: () => DateTime.utc(2026, 9, 23, 2),
-      );
-      final controller = LearnerOnlineAccessSessionController(
-        validator: gate,
-        currentUserId: () => 'user-a',
-      );
-      addTearDown(controller.dispose);
-
-      final result = await controller.authorizeCurrentUser();
-
-      expect(result.status, LearnerOnlineSessionStatus.authorized);
-      expect(result.isAuthorizedFor('user-a'), isTrue);
-      expect(controller.isAuthorizedFor('user-a'), isTrue);
-      expect(controller.isAuthorizedFor('user-b'), isFalse);
-      expect(tokenProvider.calls, 1);
-      expect(tokenProvider.lastForceRefresh, isFalse);
-      expect(probe.calls, 1);
-      expect(probe.lastToken, 'firebase-token-a');
-    });
-
-    test('missing Firebase token locks without calling remote probe', () async {
-      final tokenProvider = _RecordingTokenProvider(null);
-      final probe = _RecordingProbe(authorized: true);
-      final controller = LearnerOnlineAccessSessionController(
-        validator: LearnerOnlineAccessGate(
+    test(
+      'valid Firebase token and remote approval authorize bound learner',
+      () async {
+        final tokenProvider = _RecordingTokenProvider('firebase-token-a');
+        final probe = _RecordingProbe(authorized: true);
+        final gate = LearnerOnlineAccessGate(
           tokenProvider: tokenProvider,
           authorizationProbe: probe,
-        ),
-        currentUserId: () => 'user-a',
-      );
-      addTearDown(controller.dispose);
+          clock: () => DateTime.utc(2026, 9, 23, 2),
+        );
+        final controller = LearnerOnlineAccessSessionController(
+          validator: gate,
+          currentUserId: () => 'user-a',
+        );
+        addTearDown(controller.dispose);
 
-      final result = await controller.authorizeCurrentUser();
+        final result = await controller.authorizeCurrentUser();
 
-      expect(result.status, LearnerOnlineSessionStatus.locked);
-      expect(
-        result.lockReason,
-        LearnerOnlineLockReason.noAuthenticatedUser,
-      );
-      expect(controller.isAuthorizedFor('user-a'), isFalse);
-      expect(probe.calls, 0);
-    });
+        expect(result.status, LearnerOnlineSessionStatus.authorized);
+        expect(result.isAuthorizedFor('user-a'), isTrue);
+        expect(controller.isAuthorizedFor('user-a'), isTrue);
+        expect(controller.isAuthorizedFor('user-b'), isFalse);
+        expect(tokenProvider.calls, 1);
+        expect(tokenProvider.lastForceRefresh, isFalse);
+        expect(probe.calls, 1);
+        expect(probe.lastToken, 'firebase-token-a');
+      },
+    );
+
+    test(
+      'missing Firebase token locks without calling remote probe',
+      () async {
+        final tokenProvider = _RecordingTokenProvider(null);
+        final probe = _RecordingProbe(authorized: true);
+        final controller = LearnerOnlineAccessSessionController(
+          validator: LearnerOnlineAccessGate(
+            tokenProvider: tokenProvider,
+            authorizationProbe: probe,
+          ),
+          currentUserId: () => 'user-a',
+        );
+        addTearDown(controller.dispose);
+
+        final result = await controller.authorizeCurrentUser();
+
+        expect(result.status, LearnerOnlineSessionStatus.locked);
+        expect(
+          result.lockReason,
+          LearnerOnlineLockReason.noAuthenticatedUser,
+        );
+        expect(controller.isAuthorizedFor('user-a'), isFalse);
+        expect(probe.calls, 0);
+      },
+    );
 
     test('remote rejection locks the learner session', () async {
       final controller = LearnerOnlineAccessSessionController(
@@ -94,95 +100,104 @@ void main() {
       expect(controller.isAuthorizedFor('user-a'), isFalse);
     });
 
-    test('app resume locks first then reauthorizes with refreshed token', () async {
-      final tokenProvider = _RecordingTokenProvider('firebase-token-a');
-      final controller = LearnerOnlineAccessSessionController(
-        validator: LearnerOnlineAccessGate(
-          tokenProvider: tokenProvider,
-          authorizationProbe: _RecordingProbe(authorized: true),
-        ),
-        currentUserId: () => 'user-a',
-      );
-      addTearDown(controller.dispose);
+    test(
+      'app resume locks first then reauthorizes with refreshed token',
+      () async {
+        final tokenProvider = _RecordingTokenProvider('firebase-token-a');
+        final controller = LearnerOnlineAccessSessionController(
+          validator: LearnerOnlineAccessGate(
+            tokenProvider: tokenProvider,
+            authorizationProbe: _RecordingProbe(authorized: true),
+          ),
+          currentUserId: () => 'user-a',
+        );
+        addTearDown(controller.dispose);
 
-      await controller.authorizeCurrentUser();
-      final snapshots = <LearnerOnlineAccessSessionSnapshot>[];
-      final subscription = controller.changes.listen(snapshots.add);
-      addTearDown(subscription.cancel);
+        await controller.authorizeCurrentUser();
+        final snapshots = <LearnerOnlineAccessSessionSnapshot>[];
+        final subscription = controller.changes.listen(snapshots.add);
+        addTearDown(subscription.cancel);
 
-      final result = await controller.revalidateOnResume();
+        final result = await controller.revalidateOnResume();
 
-      expect(result.status, LearnerOnlineSessionStatus.authorized);
-      expect(tokenProvider.calls, 2);
-      expect(tokenProvider.lastForceRefresh, isTrue);
-      expect(
-        snapshots.any(
-          (snapshot) =>
-              snapshot.status == LearnerOnlineSessionStatus.locked &&
-              snapshot.lockReason == LearnerOnlineLockReason.appResumed,
-        ),
-        isTrue,
-      );
-    });
+        expect(result.status, LearnerOnlineSessionStatus.authorized);
+        expect(tokenProvider.calls, 2);
+        expect(tokenProvider.lastForceRefresh, isTrue);
+        expect(
+          snapshots.any(
+            (snapshot) =>
+                snapshot.status == LearnerOnlineSessionStatus.locked &&
+                snapshot.lockReason == LearnerOnlineLockReason.appResumed,
+          ),
+          isTrue,
+        );
+      },
+    );
 
-    test('confirmed network loss locks and restoration forces reauthorization', () async {
-      final tokenProvider = _RecordingTokenProvider('firebase-token-a');
-      final controller = LearnerOnlineAccessSessionController(
-        validator: LearnerOnlineAccessGate(
-          tokenProvider: tokenProvider,
-          authorizationProbe: _RecordingProbe(authorized: true),
-        ),
-        currentUserId: () => 'user-a',
-      );
-      addTearDown(controller.dispose);
+    test(
+      'confirmed network loss locks and restoration forces reauthorization',
+      () async {
+        final tokenProvider = _RecordingTokenProvider('firebase-token-a');
+        final controller = LearnerOnlineAccessSessionController(
+          validator: LearnerOnlineAccessGate(
+            tokenProvider: tokenProvider,
+            authorizationProbe: _RecordingProbe(authorized: true),
+          ),
+          currentUserId: () => 'user-a',
+        );
+        addTearDown(controller.dispose);
 
-      await controller.authorizeCurrentUser();
-      expect(controller.isAuthorizedFor('user-a'), isTrue);
+        await controller.authorizeCurrentUser();
+        expect(controller.isAuthorizedFor('user-a'), isTrue);
 
-      controller.handleConfirmedNetworkLoss();
+        controller.handleConfirmedNetworkLoss();
 
-      expect(controller.isAuthorizedFor('user-a'), isFalse);
-      expect(
-        controller.snapshot.lockReason,
-        LearnerOnlineLockReason.connectivityLost,
-      );
+        expect(controller.isAuthorizedFor('user-a'), isFalse);
+        expect(
+          controller.snapshot.lockReason,
+          LearnerOnlineLockReason.connectivityLost,
+        );
 
-      final restored = await controller.handleConnectivityRestored();
+        final restored = await controller.handleConnectivityRestored();
 
-      expect(restored.status, LearnerOnlineSessionStatus.authorized);
-      expect(controller.isAuthorizedFor('user-a'), isTrue);
-      expect(tokenProvider.lastForceRefresh, isTrue);
-    });
+        expect(restored.status, LearnerOnlineSessionStatus.authorized);
+        expect(controller.isAuthorizedFor('user-a'), isTrue);
+        expect(tokenProvider.lastForceRefresh, isTrue);
+      },
+    );
 
-    test('user switch during in-flight authorization cannot authorize old user', () async {
-      var currentUserId = 'user-a';
-      final probe = _ControlledProbe();
-      final controller = LearnerOnlineAccessSessionController(
-        validator: LearnerOnlineAccessGate(
-          tokenProvider: _RecordingTokenProvider('firebase-token-a'),
-          authorizationProbe: probe,
-        ),
-        currentUserId: () => currentUserId,
-      );
-      addTearDown(controller.dispose);
+    test(
+      'user switch during in-flight authorization cannot authorize old user',
+      () async {
+        var currentUserId = 'user-a';
+        final probe = _ControlledProbe();
+        final controller = LearnerOnlineAccessSessionController(
+          validator: LearnerOnlineAccessGate(
+            tokenProvider: _RecordingTokenProvider('firebase-token-a'),
+            authorizationProbe: probe,
+          ),
+          currentUserId: () => currentUserId,
+        );
+        addTearDown(controller.dispose);
 
-      final pending = controller.authorizeCurrentUser();
-      await Future<void>.delayed(Duration.zero);
-      expect(
-        controller.snapshot.status,
-        LearnerOnlineSessionStatus.validating,
-      );
+        final pending = controller.authorizeCurrentUser();
+        await Future<void>.delayed(Duration.zero);
+        expect(
+          controller.snapshot.status,
+          LearnerOnlineSessionStatus.validating,
+        );
 
-      currentUserId = 'user-b';
-      probe.complete(true);
+        currentUserId = 'user-b';
+        probe.complete(true);
 
-      final result = await pending;
+        final result = await pending;
 
-      expect(result.status, LearnerOnlineSessionStatus.locked);
-      expect(result.lockReason, LearnerOnlineLockReason.userChanged);
-      expect(controller.isAuthorizedFor('user-a'), isFalse);
-      expect(controller.isAuthorizedFor('user-b'), isFalse);
-    });
+        expect(result.status, LearnerOnlineSessionStatus.locked);
+        expect(result.lockReason, LearnerOnlineLockReason.userChanged);
+        expect(controller.isAuthorizedFor('user-a'), isFalse);
+        expect(controller.isAuthorizedFor('user-b'), isFalse);
+      },
+    );
   });
 }
 
