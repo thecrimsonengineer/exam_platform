@@ -73,8 +73,8 @@ class MicroFactCorpusIntegrityValidator {
     final issues = <MicroFactCorpusIntegrityIssue>[];
     final candidates = <MicroFactCorpusReviewCandidate>[];
 
-    final policyResult =
-        const DuplicateContradictionPolicyValidator().validateMap(policy);
+    final policyResult = const DuplicateContradictionPolicyValidator()
+        .validateMap(policy);
     for (final issue in policyResult.issues) {
       _add(
         issues,
@@ -129,8 +129,8 @@ class MicroFactCorpusIntegrityValidator {
     final adjudicationIndex = <String, Map<String, dynamic>>{};
     for (var i = 0; i < adjudications.length; i++) {
       final evidence = adjudications[i];
-      final evidenceResult =
-          const CorpusComparisonEvidenceValidator().validateMap(evidence);
+      final evidenceResult = const CorpusComparisonEvidenceValidator()
+          .validateMap(evidence);
       for (final issue in evidenceResult.issues) {
         _add(
           issues,
@@ -282,9 +282,9 @@ class MicroFactCorpusIntegrityValidator {
   }) {
     final orderedFacts = [left, right]
       ..sort(
-        (a, b) => MicroFactCorpusComparison.factVersionKey(a).compareTo(
-          MicroFactCorpusComparison.factVersionKey(b),
-        ),
+        (a, b) => MicroFactCorpusComparison.factVersionKey(
+          a,
+        ).compareTo(MicroFactCorpusComparison.factVersionKey(b)),
       );
 
     final leftRef = Map<String, dynamic>.from(evidence['left'] as Map);
@@ -303,8 +303,9 @@ class MicroFactCorpusIntegrityValidator {
       issues: issues,
     );
 
-    final evidenceSignals =
-        (evidence['detectedSignals'] as List).whereType<String>().toSet();
+    final evidenceSignals = (evidence['detectedSignals'] as List)
+        .whereType<String>()
+        .toSet();
     if (!_setEquals(evidenceSignals, comparison.signals)) {
       _add(
         issues,
@@ -329,10 +330,12 @@ class MicroFactCorpusIntegrityValidator {
     }
 
     final decision = evidence['decision'];
-    final blockDecisions =
-        (adjudicationRules['blockDecisions'] as List).whereType<String>().toSet();
-    final passDecisions =
-        (adjudicationRules['passDecisions'] as List).whereType<String>().toSet();
+    final blockDecisions = (adjudicationRules['blockDecisions'] as List)
+        .whereType<String>()
+        .toSet();
+    final passDecisions = (adjudicationRules['passDecisions'] as List)
+        .whereType<String>()
+        .toSet();
 
     if (blockDecisions.contains(decision)) {
       _add(
@@ -383,8 +386,9 @@ class MicroFactCorpusIntegrityValidator {
       );
     }
 
-    final expectedFingerprint =
-        MicroFactCorpusComparison.comparisonFingerprint(fact);
+    final expectedFingerprint = MicroFactCorpusComparison.comparisonFingerprint(
+      fact,
+    );
     if (ref['comparisonFingerprintSha256'] != expectedFingerprint) {
       _add(
         issues,
@@ -505,8 +509,8 @@ class MicroFactCorpusIntegrityValidator {
     }
 
     final minCorpus = audit['authorityShareMinimumCorpusSize'] as int;
-    final shareThreshold =
-        (audit['authorityShareReviewThreshold'] as num).toDouble();
+    final shareThreshold = (audit['authorityShareReviewThreshold'] as num)
+        .toDouble();
     if (facts.length >= minCorpus) {
       for (final entry in authorityCounts.entries) {
         final share = entry.value / facts.length;
@@ -527,8 +531,7 @@ class MicroFactCorpusIntegrityValidator {
   }
 
   static DateTime? _parseStrictDate(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return null;
     }
     final parsed = DateTime.tryParse(value);
@@ -552,11 +555,7 @@ class MicroFactCorpusIntegrityValidator {
     String message,
   ) {
     issues.add(
-      MicroFactCorpusIntegrityIssue(
-        code: code,
-        path: path,
-        message: message,
-      ),
+      MicroFactCorpusIntegrityIssue(code: code, path: path, message: message),
     );
   }
 }
