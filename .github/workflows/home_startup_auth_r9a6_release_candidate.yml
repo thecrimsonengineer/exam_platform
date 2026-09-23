@@ -1,0 +1,266 @@
+name: INT-R9A6 Integrated Release Candidate Regression
+
+on:
+  push:
+    branches:
+      - phase-home-startup-integration-auth-hotfix-r9a6
+    paths:
+      - '.github/workflows/home_startup_auth_r9a6_release_candidate.yml'
+      - 'docs/integration/INT_R9A6_INTEGRATED_RELEASE_CANDIDATE_CLOSURE.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: int-r9a6-integrated-release-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  BASE_FREEZE_SHA: 'b9a8150adaf21a3f43cb2120b5dbfcc0ce119c8a'
+  R9A5_CLOSED_SHA: '616226a9df64eb0395b49f1046143541b3ad78a2'
+  SUPABASE_URL: 'https://esfycnmfywxczfillioj.supabase.co'
+  FIREBASE_AUTH_PROBE_URL: 'https://esfycnmfywxczfillioj.supabase.co/functions/v1/firebase-auth-probe'
+  DELIVERY_ENDPOINT: 'https://esfycnmfywxczfillioj.supabase.co/functions/v1/learner-question-packages'
+
+jobs:
+  release-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+      ANDROID_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
+
+    steps:
+      - name: Checkout exact R9A6 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor "${BASE_FREEZE_SHA}" HEAD
+          git merge-base --is-ancestor "${R9A5_CLOSED_SHA}" HEAD
+          git diff --check
+
+      - name: Require release-candidate public configuration and stable signing secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${SUPABASE_URL:-}"
+          test -n "${SUPABASE_PUBLISHABLE_KEY:-}"
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "Invalid Supabase publishable-key format."; exit 1 ;;
+          esac
+          test -n "${ANDROID_DEBUG_KEYSTORE_BASE64:-}"
+          echo "R9A6 release-candidate configuration preflight: PASS"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph remains stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Analyze integrated release scope
+        run: |
+          flutter analyze --no-fatal-infos             lib/main.dart             lib/screens/startup             lib/screens/auth             lib/screens/navigation             lib/screens/home             lib/services/online_access             lib/services/supabase             lib/services/questions             lib/services/study_content             test/integration/home_startup             test/startup             test/screens/auth
+
+      - name: Prove configured Supabase bootstrap
+        run: |
+          flutter test             --dart-define=SUPABASE_URL="${SUPABASE_URL}"             --dart-define=SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY}"             test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
+          flutter test test/services/supabase/supabase_bootstrap_service_test.dart
+          flutter test test/services/supabase/supabase_learner_remote_authorization_probe_test.dart
+
+      - name: Replay R9A4 authorization chain
+        run: |
+          flutter test test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart
+          flutter test test/services/online_access/learner_online_access_gate_test.dart
+          flutter test test/services/online_access/learner_online_access_session_controller_test.dart
+          flutter test test/services/online_access/learner_online_connectivity_coordinator_test.dart
+          flutter test test/screens/auth/learner_authorized_shell_test.dart
+
+      - name: Replay integrated Startup Auth Home release journey
+        run: |
+          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+          flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+          flutter test test/startup/startup_release_render_smoke_test.dart
+          flutter test test/startup/startup_screen_hardening_test.dart
+          flutter test test/startup/startup_motion_policy_test.dart
+
+      - name: Replay critical FR8 FR9 FR10 protected-delivery gates
+        run: |
+          flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+          flutter test test/services/questions/published_question_package_test.dart
+          flutter test test/services/questions/uid_scoped_question_package_cache_test.dart
+          flutter test test/architecture/phase_fr9_edge_gateway_test.dart
+          flutter test test/architecture/phase_fr9_quiz_service_cutover_test.dart
+          flutter test test/architecture/phase_fr9_practice_mode_cutover_test.dart
+          flutter test test/services/study_content/published_content_package_test.dart
+          flutter test test/services/study_content/uid_scoped_content_package_cache_test.dart
+          flutter test test/services/study_content/learner_content_package_delivery_service_test.dart
+          flutter test test/architecture/phase_fr10_content_gateway_test.dart
+          flutter test test/architecture/phase_fr10_study_content_loader_cutover_test.dart
+          flutter test test/architecture/phase_fr10_navigation_broad_read_retirement_test.dart
+          flutter test test/architecture/phase_fr10_closure_test.dart
+
+      - name: Prove deployed authorization and delivery endpoints fail closed
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          no_probe="$RUNNER_TEMP/r9a6-probe-no-token.json"
+          malformed_probe="$RUNNER_TEMP/r9a6-probe-malformed.json"
+
+          status="$(
+            curl --silent --show-error               --output "$no_probe"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               "${FIREBASE_AUTH_PROBE_URL}"
+          )"
+          test "$status" = "401"
+          grep -q '"authorized":false' "$no_probe"
+
+          status="$(
+            curl --silent --show-error               --output "$malformed_probe"               --write-out "%{http_code}"               --request POST               --header "Content-Type: application/json"               --header "Authorization: Bearer not-a-valid-firebase-token"               "${FIREBASE_AUTH_PROBE_URL}"
+          )"
+          test "$status" = "401"
+          grep -q '"authorized":false' "$malformed_probe"
+
+          prove_delivery_401() {
+            local label="$1"
+            local payload="$2"
+            local auth_header="${3:-}"
+            local output="$RUNNER_TEMP/${label}.json"
+
+            if [ -n "$auth_header" ]; then
+              code="$(
+                curl --silent --show-error                   --output "$output"                   --write-out "%{http_code}"                   --request POST                   --header "Content-Type: application/json"                   --header "$auth_header"                   --data "$payload"                   "${DELIVERY_ENDPOINT}"
+              )"
+            else
+              code="$(
+                curl --silent --show-error                   --output "$output"                   --write-out "%{http_code}"                   --request POST                   --header "Content-Type: application/json"                   --data "$payload"                   "${DELIVERY_ENDPOINT}"
+              )"
+            fi
+
+            test "$code" = "401"
+            grep -q '"error":"invalid_firebase_token"' "$output"
+          }
+
+          prove_delivery_401 "fr9-missing" '{"operation":"catalog"}'
+          prove_delivery_401 "fr9-malformed" '{"operation":"catalog"}'             'Authorization: Bearer not-a-valid-firebase-token'
+          prove_delivery_401 "fr10-missing" '{"operation":"content_catalog"}'
+          prove_delivery_401 "fr10-malformed" '{"operation":"content_catalog"}'             'Authorization: Bearer not-a-valid-firebase-token'
+
+          echo "R9A6 deployed endpoint fail-closed regression: PASS"
+
+      - name: Restore stable Android signing identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${HOME}/.android"
+          printf '%s' "${ANDROID_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${HOME}/.android/debug.keystore"
+          chmod 600 "${HOME}/.android/debug.keystore"
+          keytool -list             -keystore "${HOME}/.android/debug.keystore"             -storepass android             -alias androiddebugkey >/dev/null
+
+          signing_sha256="$(
+            keytool -list -v               -keystore "${HOME}/.android/debug.keystore"               -storepass android               -alias androiddebugkey |
+              sed -n 's/^[[:space:]]*SHA256: //p' |
+              head -n 1
+          )"
+
+          test -n "$signing_sha256"
+          echo "ANDROID_SIGNING_CERT_SHA256=$signing_sha256" >> "${GITHUB_ENV}"
+          echo "Stable Android signing identity restored."
+
+      - name: Build integrated release-candidate APK
+        run: |
+          flutter build apk --release             --dart-define=SUPABASE_URL="${SUPABASE_URL}"             --dart-define=SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY}"
+
+      - name: Verify release-candidate APK
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          STARTUP_ASSET="assets/flutter_assets/assets/startup/csp11_startup_master.json"
+
+          test -s "$APK"
+          unzip -Z1 "$APK" | grep -q "^${STARTUP_ASSET}$"
+          unzip -p "$APK" "$STARTUP_ASSET" | grep -q 'CSP11 Startup Master SM-1'
+
+          APKSIGNER="$(
+            find "${ANDROID_HOME}/build-tools" -type f -name apksigner 2>/dev/null |
+              sort -V |
+              tail -n 1
+          )"
+          test -n "$APKSIGNER"
+          "$APKSIGNER" verify --verbose --print-certs "$APK" > "$RUNNER_TEMP/apksigner.txt"
+          grep -q 'Verified using v2 scheme' "$RUNNER_TEMP/apksigner.txt"
+
+          actual_cert="$(
+            sed -n 's/^Signer #1 certificate SHA-256 digest: //p' "$RUNNER_TEMP/apksigner.txt" |
+              head -n 1 |
+              tr '[:lower:]' '[:upper:]'
+          )"
+          expected_cert="$(
+            printf '%s' "${ANDROID_SIGNING_CERT_SHA256}" |
+              tr -d ':' |
+              tr '[:lower:]' '[:upper:]'
+          )"
+
+          test -n "$actual_cert"
+          test "$actual_cert" = "$expected_cert"
+
+          cp "$APK" "CSP11-INT-R9A6-RC-${GITHUB_SHA}.apk"
+
+          {
+            echo "INT-R9A6 Integrated Release Candidate Regression: PASS"
+            echo "GITHUB_SHA=${GITHUB_SHA}"
+            echo "R9A5_CLOSED_SHA=${R9A5_CLOSED_SHA}"
+            echo "SUPABASE_URL_CONFIGURED=true"
+            echo "SUPABASE_PUBLISHABLE_KEY_CONFIGURED=true"
+            echo "SERVER_SECRET_EMBEDDED=false"
+            echo "STABLE_ANDROID_SIGNING_IDENTITY=true"
+            echo "APK_SIGNATURE_V2_VERIFIED=true"
+            echo "STARTUP_ASSET_PACKAGED=true"
+            echo "FR8_FR9_FR10_CRITICAL_REGRESSION=true"
+            echo "DEPLOYED_ENDPOINTS_FAIL_CLOSED=true"
+            sha256sum "CSP11-INT-R9A6-RC-${GITHUB_SHA}.apk"
+            ls -lh "CSP11-INT-R9A6-RC-${GITHUB_SHA}.apk"
+          } > int-r9a6-release-candidate-evidence.txt
+
+      - name: Upload R9A6 release-candidate APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-INT-R9A6-release-candidate-apk
+          path: CSP11-INT-R9A6-RC-${{ github.sha }}.apk
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Upload R9A6 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: INT-R9A6-release-candidate-evidence
+          path: int-r9a6-release-candidate-evidence.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
