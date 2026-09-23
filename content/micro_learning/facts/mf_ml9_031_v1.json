@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_031",
+  "category": "ih_insight",
+  "display": {
+    "displayText": "NIOSH occupational risk assessment uses dose-response analysis to relate the amount of exposure to the expected probability or severity of an adverse effect.",
+    "shortVariant": "Dose-response analysis links exposure magnitude with expected adverse effects.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d06",
+    "competencyId": "d06_c03",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "dose_response",
+      "occupational_toxicology"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Current Intelligence Bulletin 69: NIOSH Practices in Occupational Risk Assessment",
+    "officialUrl": "https://www.cdc.gov/niosh/docs/2020-106/",
+    "sourceLocator": "Section 5, Dose-Response Assessment",
+    "editionOrRevision": "DHHS (NIOSH) Publication No. 2020-106, revised March 2020",
+    "sourceSection": "Section 5 - Dose-Response Assessment",
+    "sourcePage": null,
+    "sourcePublishedAt": "2020-03-01",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "research_finding",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": true,
+    "simplificationRisk": "medium"
+  },
+  "tags": [
+    "toxicology",
+    "dose_response",
+    "risk_assessment"
+  ]
+}
