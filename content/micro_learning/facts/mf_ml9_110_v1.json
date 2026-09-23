@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_110",
+  "category": "csp_tip",
+  "display": {
+    "displayText": "NIOSH describes systematic review as an explicit, transparent evidence-synthesis process using a defined question, prespecified methods, evidence appraisal, and documented decision criteria.",
+    "shortVariant": "Systematic review makes evidence selection and appraisal explicit and transparent.",
+    "estimatedReadSeconds": 10
+  },
+  "curriculum": {
+    "scope": "general",
+    "domainId": null,
+    "competencyId": null,
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "systematic_review",
+      "evidence_appraisal"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Systematic Review for Occupational Safety and Health Questions",
+    "officialUrl": "https://www.cdc.gov/niosh/bulletin/2017/systematic-review.html",
+    "sourceLocator": "What is systematic review?",
+    "editionOrRevision": "Posted November 28, 2017",
+    "sourceSection": "What is systematic review?",
+    "sourcePage": null,
+    "sourcePublishedAt": "2017-11-28",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "not_applicable",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "csp_reasoning",
+    "systematic_review",
+    "evidence_appraisal"
+  ]
+}
