@@ -182,10 +182,7 @@ class DuplicateContradictionPolicyValidator {
       issues,
     );
 
-    if (!_sameSet(
-          _stringSet(map['comparisonStatuses']),
-          comparisonStatuses,
-        ) ||
+    if (!_sameSet(_stringSet(map['comparisonStatuses']), comparisonStatuses) ||
         !_sameSet(_stringSet(map['excludedStatuses']), excludedStatuses) ||
         map['requireUniqueActiveMicroFactId'] != true ||
         map['compareDifferentContentVersionsOfSameId'] != false ||
@@ -242,20 +239,18 @@ class DuplicateContradictionPolicyValidator {
     final stopWords = _stringSet(map['stopWords']);
     final protected = _stringSet(map['protectedTokens']);
     if (stopWords.isEmpty ||
-        !protected.containsAll(
-          const {
-            'no',
-            'not',
-            'never',
-            'without',
-            'cannot',
-            'must',
-            'shall',
-            'required',
-            'prohibited',
-            'may',
-          },
-        ) ||
+        !protected.containsAll(const {
+          'no',
+          'not',
+          'never',
+          'without',
+          'cannot',
+          'must',
+          'shall',
+          'required',
+          'prohibited',
+          'may',
+        }) ||
         stopWords.intersection(protected).isNotEmpty) {
       _add(
         issues,
@@ -357,8 +352,7 @@ class DuplicateContradictionPolicyValidator {
             true ||
         map['legalStatusConflictRequiresSameJurisdictionWhenBothBinding'] !=
             true ||
-        map['editionDriftSameSourceLocator'] !=
-            'human_adjudication_required' ||
+        map['editionDriftSameSourceLocator'] != 'human_adjudication_required' ||
         map['unresolvedContradictionDisposition'] != 'block') {
       _add(
         issues,
@@ -394,9 +388,17 @@ class DuplicateContradictionPolicyValidator {
     );
 
     final units = _stringSet(map['supportedUnits']);
-    if (!units.containsAll(
-          const {'%', 'ppm', 'ppb', 'dba', 'db', 'kv', 'psi', 'ft', 'm'},
-        ) ||
+    if (!units.containsAll(const {
+          '%',
+          'ppm',
+          'ppb',
+          'dba',
+          'db',
+          'kv',
+          'psi',
+          'ft',
+          'm',
+        }) ||
         map['compareValuesOnlyWithinMatchingNormalizedUnit'] != true ||
         map['unitConversionAllowed'] != false ||
         map['automaticNumericReconciliationAllowed'] != false) {
@@ -593,8 +595,7 @@ class DuplicateContradictionPolicyValidator {
       value is num && (value.toDouble() - expected).abs() < 0.0000001;
 
   static bool _isStrictDate(dynamic value) {
-    if (value is! String ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return false;
     }
     final parsed = DateTime.tryParse(value);
