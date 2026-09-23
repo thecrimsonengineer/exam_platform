@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "status": "review",
+  "assessment": {
+    "sensitivity": "none",
+    "linkedQuestionConcepts": []
+  },
+  "review": {
+    "technicalStatus": "pending",
+    "sourceStatus": "pending",
+    "pedagogyStatus": "pending",
+    "copyrightStatus": "pending",
+    "uiStatus": "pending",
+    "humanTechnicalStatus": "pending",
+    "reviewedAt": null,
+    "nextReviewDueAt": null
+  },
+  "runtime": {
+    "startupEligible": false
+  },
+  "supersession": {
+    "supersedesMicroFactId": null,
+    "supersededByMicroFactId": null
+  },
+  "microFactId": "mf_ml9_041",
+  "category": "ih_insight",
+  "display": {
+    "displayText": "NIOSH hearing-loss surveillance uses worker hearing and exposure data to identify high-risk groups, track trends, and judge whether prevention efforts are improving outcomes.",
+    "shortVariant": "Surveillance data can reveal high-risk groups, trends, and prevention performance.",
+    "estimatedReadSeconds": 9
+  },
+  "curriculum": {
+    "scope": "mapped",
+    "domainId": "d02",
+    "competencyId": "d02_c14",
+    "topicId": null,
+    "subtopicId": null,
+    "conceptIds": [
+      "occupational_surveillance",
+      "trend_analysis"
+    ]
+  },
+  "provenance": {
+    "sourceRegistryId": "SRC-02",
+    "sourceClass": "research_or_prevention_guidance",
+    "sourceTitle": "Occupational Hearing Loss Surveillance",
+    "officialUrl": "https://www.cdc.gov/niosh/noise/surveillance/",
+    "sourceLocator": "Surveillance - use of hearing and exposure data",
+    "editionOrRevision": "Updated February 16, 2024",
+    "sourceSection": "Surveillance",
+    "sourcePage": null,
+    "sourcePublishedAt": "2024-02-16",
+    "sourceVerifiedAt": "2026-09-23",
+    "rightsTreatment": "original_paraphrase"
+  },
+  "claim": {
+    "legalStatus": "research_finding",
+    "jurisdiction": null,
+    "numericalClaim": false,
+    "safetyCritical": false,
+    "simplificationRisk": "low"
+  },
+  "tags": [
+    "surveillance",
+    "trend_analysis",
+    "hearing_loss"
+  ]
+}
