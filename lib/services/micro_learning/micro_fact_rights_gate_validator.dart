@@ -51,8 +51,9 @@ class MicroFactRightsGateValidator {
       );
     }
 
-    final policyResult =
-        const RightsProvenancePolicyValidator().validateMap(rightsPolicy);
+    final policyResult = const RightsProvenancePolicyValidator().validateMap(
+      rightsPolicy,
+    );
     for (final issue in policyResult.issues) {
       _add(
         issues,
@@ -102,8 +103,9 @@ class MicroFactRightsGateValidator {
       return MicroFactRightsGateResult(List.unmodifiable(issues));
     }
 
-    final evidenceResult =
-        const RightsEvidenceValidator().validateMap(rightsEvidence);
+    final evidenceResult = const RightsEvidenceValidator().validateMap(
+      rightsEvidence,
+    );
     for (final issue in evidenceResult.issues) {
       _add(
         issues,
@@ -367,8 +369,7 @@ class MicroFactRightsGateValidator {
       final evidenceReview = Map<String, dynamic>.from(
         evidence['review'] as Map,
       );
-      if ((treatment == 'minimal_quote' ||
-              treatment == 'licensed_excerpt') &&
+      if ((treatment == 'minimal_quote' || treatment == 'licensed_excerpt') &&
           evidenceReview['humanReviewed'] != true) {
         _add(
           issues,
@@ -379,8 +380,9 @@ class MicroFactRightsGateValidator {
       }
     }
 
-    final governmentIds =
-        (tiers['government_first_party'] as List).whereType<String>().toSet();
+    final governmentIds = (tiers['government_first_party'] as List)
+        .whereType<String>()
+        .toSet();
     if (governmentIds.contains(sourceId)) {
       final restricted = Map<String, dynamic>.from(
         evidence['restrictedMaterial'] as Map,
@@ -494,9 +496,7 @@ class MicroFactRightsGateValidator {
   }
 
   static bool _containsQuoteMarkers(String value) =>
-      value.contains('"') ||
-      value.contains('“') ||
-      value.contains('”');
+      value.contains('"') || value.contains('“') || value.contains('”');
 
   static bool _nonEmptyString(dynamic value) =>
       value is String && value.trim().isNotEmpty;
