@@ -1,0 +1,61 @@
+name: ML-9D Whole-Corpus ML-8 Validation
+
+on:
+  push:
+    branches:
+      - phase-ml9d-whole-corpus-ml8
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml9d-whole-corpus-ml8-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml9d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-9D SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Revalidate ML-9C evidence binding
+        run: dart run tool/validate_ml9c_gate_evidence.dart
+
+      - name: Analyze ML-9D validator
+        run: dart analyze tool/validate_ml9d_whole_corpus_ml8.dart
+
+      - name: Run complete 120-fact ML-8 corpus pass
+        run: dart run tool/validate_ml9d_whole_corpus_ml8.dart
+
+      - name: Run ML-8 regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test \
+            test/micro_learning/duplicate_contradiction_policy_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_comparison_test.dart \
+            test/micro_learning/corpus_comparison_evidence_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_integrity_validator_test.dart
