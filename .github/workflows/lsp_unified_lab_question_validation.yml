@@ -1,0 +1,58 @@
+name: LSP Unified LAB Question Validation
+
+on:
+  push:
+    branches:
+      - phase-l4-scenario-population
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lsp-question-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check Q1 formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/services/questions/canonical_question_parser.dart \
+            lib/services/studio/studio_question_import_service.dart \
+            test/services/questions/canonical_question_parser_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Canonical question parser tests
+        run: flutter test test/services/questions/canonical_question_parser_test.dart
+
+      - name: Studio import regression
+        run: flutter test test/services/studio_question_import_service_test.dart
+
+      - name: Studio service regression
+        run: flutter test test/services/studio_question_service_test.dart
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
