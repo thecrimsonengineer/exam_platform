@@ -374,6 +374,36 @@ service cloud.firestore {
       ];
     }
 
+    function isInitialLabId(labId) {
+      return labId in [
+        'hot_work_hydrocarbon_simops',
+        'mobile_crane_critical_lift',
+        'excavation_buried_services',
+        'electrical_loto_stored_energy',
+        'work_at_height_offshore_module',
+        'chemical_transfer_corrosive_solvent',
+        'hydrocarbon_line_breaking',
+        'flammable_tank_truck_loading',
+        'pneumatic_pressure_test',
+        'scaffold_erection_overhead_power'
+      ];
+    }
+
+    function isBatch2LabId(labId) {
+      return labId in [
+        'contractor_permit_coordination',
+        'warehouse_traffic_management',
+        'machine_guarding_jam_clearance',
+        'heat_stress_outdoor_work',
+        'noise_control_selection',
+        'manual_handling_team_lift',
+        'night_shift_fatigue_management',
+        'incident_investigation_scene_control',
+        'slip_trip_housekeeping_control',
+        'emergency_evacuation_muster'
+      ];
+    }
+
     function validLabPublishedVersion(versionKey) {
       return request.resource.data.keys().hasAll(labPublishedRequiredKeys())
         && request.resource.data.keys().hasOnly(labPublishedAllowedKeys())
@@ -392,9 +422,13 @@ service cloud.firestore {
         && request.resource.data.snapshotFingerprint is string
         && request.resource.data.serverCreatedAt is timestamp
         && (
-          !('releaseId' in request.resource.data)
+          (
+            isInitialLabId(request.resource.data.labId)
+            && !('releaseId' in request.resource.data)
+          )
           || (
-            request.resource.data.releaseId
+            isBatch2LabId(request.resource.data.labId)
+            && request.resource.data.releaseId
               == 'phase_l_population_batch2_v1_q15_release_v1'
             && existsAfter(
               /databases/$(database)/documents/labLearnerReleaseState/$(request.resource.data.releaseId)
@@ -465,9 +499,13 @@ service cloud.firestore {
         && request.resource.data.presentation is map
         && request.resource.data.serverCreatedAt is timestamp
         && (
-          !('releaseId' in request.resource.data)
+          (
+            isInitialLabId(request.resource.data.labId)
+            && !('releaseId' in request.resource.data)
+          )
           || (
-            request.resource.data.releaseId
+            isBatch2LabId(request.resource.data.labId)
+            && request.resource.data.releaseId
               == 'phase_l_population_batch2_v1_q15_release_v1'
             && existsAfter(
               /databases/$(database)/documents/labLearnerReleaseState/$(request.resource.data.releaseId)
@@ -675,18 +713,6 @@ service cloud.firestore {
       return labReleaseActive('phase_l_population_v1_q15_release_v1');
     }
 
-    function labResourceReleased(data) {
-      return (
-          !('releaseId' in data)
-          && initialLabPopulationReleased()
-        )
-        || (
-          'releaseId' in data
-          && data.releaseId == 'phase_l_population_batch2_v1_q15_release_v1'
-          && labReleaseActive(data.releaseId)
-        );
-    }
-
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -763,7 +789,7 @@ service cloud.firestore {
       allow get: if isAdmin()
         || (
           signedIn()
-          && labResourceReleased(resource.data)
+          && initialLabPopulationReleased()
           && resource.data.schemaVersion == 'csp11.lab.published_repository.v1'
           && resource.data.lifecycle == 'published'
         );
@@ -779,7 +805,7 @@ service cloud.firestore {
       allow get, list: if isAdmin()
         || (
           signedIn()
-          && labResourceReleased(resource.data)
+          && initialLabPopulationReleased()
           && resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
           && resource.data.available == true
         );
