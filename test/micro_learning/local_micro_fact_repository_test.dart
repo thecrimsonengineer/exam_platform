@@ -117,6 +117,7 @@ void main() {
             facts.first['review'] as Map,
           );
           review['reviewedAt'] = '2026-09-22';
+          review['reviewedAt'] = '2026-09-01';
           review['nextReviewDueAt'] = '2026-09-23';
           facts.first['review'] = review;
           final provenance = Map<String, dynamic>.from(
