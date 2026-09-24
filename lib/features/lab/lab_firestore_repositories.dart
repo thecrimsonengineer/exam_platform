@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'lab_batch2_release.dart';
 import 'lab_contracts.dart';
 import 'lab_learner_catalogue.dart';
 import 'lab_learner_presentation.dart';
@@ -408,5 +409,209 @@ class FirestoreLabProductionReleaseEvidenceRepository
         (data['totalDecisionCount'] as int) > 0 &&
         data['evidenceFingerprint'] is String &&
         (data['evidenceFingerprint'] as String).isNotEmpty;
+  }
+}
+
+
+class FirestoreLabBatch2AtomicReleaseRepository {
+  FirestoreLabBatch2AtomicReleaseRepository({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  final FirebaseFirestore _firestore;
+
+  Future<void> commit(LabBatch2ReleaseBundle bundle) async {
+    final evidence = bundle.evidence;
+    if (bundle.manifest.manifestId != kBatch2LabProductionManifestId ||
+        evidence.manifestId != kBatch2LabProductionManifestId ||
+        evidence.labCount != 10 ||
+        evidence.totalDecisionCount != 50 ||
+        bundle.publishedVersions.length != 10 ||
+        bundle.catalogueEntries.length != 10) {
+      throw const LabBatch2ReleaseException(
+        'Batch 2 atomic release bundle is outside the frozen 10-LAB boundary.',
+      );
+    }
+
+    final publishedRepository = FirestoreLabPublishedRepository(
+      firestore: _firestore,
+    );
+    for (final version in bundle.publishedVersions) {
+      await publishedRepository._validatePublishedVersion(version);
+    }
+
+    final versionKeys = bundle.publishedVersions
+        .map((item) => item.labId + '@' + item.versionId)
+        .toSet();
+    final catalogueKeys = bundle.catalogueEntries
+        .map((item) => item.identityKey)
+        .toSet();
+    if (versionKeys.length != 10 ||
+        catalogueKeys.length != 10 ||
+        !versionKeys.containsAll(catalogueKeys) ||
+        !catalogueKeys.containsAll(versionKeys) ||
+        !evidence.catalogueIdentityKeys.toSet().containsAll(catalogueKeys) ||
+        !catalogueKeys.containsAll(evidence.catalogueIdentityKeys)) {
+      throw const LabBatch2ReleaseException(
+        'Batch 2 atomic release identities do not form one complete set.',
+      );
+    }
+
+    final published = _firestore.collection('labPublishedVersions');
+    final catalogue = _firestore.collection('labLearnerCatalogue');
+    final releaseEvidence = _firestore.collection('labProductionReleaseEvidence');
+    final releaseState = _firestore.collection('labLearnerReleaseState');
+
+    await _firestore.runTransaction((transaction) async {
+      final initialReleaseId = kInitialLabProductionReleaseId;
+      final initialEvidenceRef = releaseEvidence.doc(initialReleaseId);
+      final initialStateRef = releaseState.doc(initialReleaseId);
+      final batchEvidenceRef = releaseEvidence.doc(evidence.releaseId);
+      final batchStateRef = releaseState.doc(evidence.releaseId);
+
+      final initialEvidence = await transaction.get(initialEvidenceRef);
+      final initialState = await transaction.get(initialStateRef);
+      if (!initialEvidence.exists ||
+          !initialState.exists ||
+          initialState.data()?['released'] != true) {
+        throw const LabBatch2ReleaseException(
+          'Batch 2 requires the original production release to be closed first.',
+        );
+      }
+
+      if ((await transaction.get(batchEvidenceRef)).exists ||
+          (await transaction.get(batchStateRef)).exists) {
+        throw const LabBatch2ReleaseException(
+          'Batch 2 production release is immutable and already exists.',
+        );
+      }
+
+      final publishedRefs = <DocumentReference<Map<String, dynamic>>>[];
+      final catalogueRefs = <DocumentReference<Map<String, dynamic>>>[];
+      for (var index = 0; index < bundle.publishedVersions.length; index++) {
+        final version = bundle.publishedVersions[index];
+        final entry = bundle.catalogueEntries.firstWhere(
+          (item) => item.identityKey == version.labId + '@' + version.versionId,
+        );
+        final publishedRef = published.doc(version.labId + '__' + version.versionId);
+        final catalogueRef = catalogue.doc(entry.labId + '__' + entry.versionId);
+
+        if ((await transaction.get(publishedRef)).exists ||
+            (await transaction.get(catalogueRef)).exists) {
+          throw LabBatch2ReleaseException(
+            'Batch 2 refuses to overwrite production identity ' +
+                entry.identityKey +
+                '.',
+          );
+        }
+        publishedRefs.add(publishedRef);
+        catalogueRefs.add(catalogueRef);
+      }
+
+      for (var index = 0; index < bundle.publishedVersions.length; index++) {
+        final version = bundle.publishedVersions[index];
+        final entry = bundle.catalogueEntries.firstWhere(
+          (item) => item.identityKey == version.labId + '@' + version.versionId,
+        );
+
+        transaction.set(publishedRefs[index], <String, dynamic>{
+          'schemaVersion': kLabPublishedFirestoreSchemaVersion,
+          'releaseId': evidence.releaseId,
+          'labId': version.labId,
+          'versionId': version.versionId,
+          'lifecycle': 'published',
+          'publishedJson': version.publishedJson,
+          'publishedAt': Timestamp.fromDate(version.publishedAt.toUtc()),
+          'reviewerId': version.reviewerId,
+          'validationAuthority': version.validationAuthority,
+          'qualityEvidenceJson': version.qualityEvidenceJson,
+          'exhaustiveRouteEvidenceJson': version.exhaustiveRouteEvidenceJson,
+          'publishEvidenceJson': version.publishEvidenceJson,
+          'snapshotFingerprint': version.snapshotFingerprint,
+          'serverCreatedAt': FieldValue.serverTimestamp(),
+        });
+
+        final catalogueRepository = FirestoreLabLearnerCatalogueRepository(
+          firestore: _firestore,
+        );
+        transaction.set(catalogueRefs[index], <String, dynamic>{
+          'schemaVersion': kLabLearnerCatalogueFirestoreSchemaVersion,
+          'releaseId': evidence.releaseId,
+          'available': true,
+          'manifestEntryId': entry.manifestEntryId,
+          'labId': entry.labId,
+          'versionId': entry.versionId,
+          'title': entry.title,
+          'summary': entry.summary,
+          'focusTags': entry.focusTags,
+          'estimatedTime': entry.estimatedTime,
+          'decisionCountLabel': entry.decisionCountLabel,
+          'decisionCount': entry.decisionCount,
+          'supportedModes': entry.supportedModes
+              .map((mode) => mode.name.toUpperCase())
+              .toList(growable: false),
+          'presentation': catalogueRepository._encodePresentation(
+            entry.presentation,
+          ),
+          'serverCreatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      transaction.set(batchEvidenceRef, <String, dynamic>{
+        ...evidence.toJson(),
+        'serverCreatedAt': FieldValue.serverTimestamp(),
+      });
+      transaction.set(batchStateRef, <String, dynamic>{
+        'schemaVersion': kLabLearnerReleaseStateFirestoreSchemaVersion,
+        'releaseId': evidence.releaseId,
+        'manifestId': evidence.manifestId,
+        'released': true,
+        'labCount': evidence.labCount,
+        'totalDecisionCount': evidence.totalDecisionCount,
+        'evidenceFingerprint': evidence.evidenceFingerprint,
+        'serverCreatedAt': FieldValue.serverTimestamp(),
+      });
+    });
+  }
+
+  Future<void> verify(LabBatch2ReleaseBundle bundle) async {
+    final evidenceRepository = FirestoreLabProductionReleaseEvidenceRepository(
+      firestore: _firestore,
+    );
+    final storedEvidence = await evidenceRepository.load(
+      bundle.evidence.releaseId,
+    );
+    if (storedEvidence == null ||
+        !await evidenceRepository.isReleased(bundle.evidence.releaseId) ||
+        storedEvidence.evidenceFingerprint !=
+            bundle.evidence.evidenceFingerprint) {
+      throw const LabBatch2ReleaseException(
+        'Batch 2 release evidence verification failed.',
+      );
+    }
+
+    final publishedRepository = FirestoreLabPublishedRepository(
+      firestore: _firestore,
+    );
+    final catalogueRepository = FirestoreLabLearnerCatalogueRepository(
+      firestore: _firestore,
+    );
+    for (final expected in bundle.catalogueEntries) {
+      final version = await publishedRepository.load(
+        expected.labId,
+        expected.versionId,
+      );
+      final entry = await catalogueRepository.load(
+        expected.labId,
+        expected.versionId,
+      );
+      if (version == null ||
+          entry == null ||
+          entry.identityKey != expected.identityKey ||
+          version.labId + '@' + version.versionId != expected.identityKey) {
+        throw LabBatch2ReleaseException(
+          'Batch 2 live verification failed for ' + expected.identityKey + '.',
+        );
+      }
+    }
   }
 }
