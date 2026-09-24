@@ -11,6 +11,7 @@ import '../../models/micro_learning/micro_fact.dart';
 import '../../services/auth/learner_local_identity.dart';
 import '../../services/micro_learning/startup_micro_fact_service.dart';
 import 'startup_micro_fact_card.dart';
+import 'startup_micro_fact_motion.dart';
 import 'startup_motion_policy.dart';
 import 'startup_personalization_service.dart';
 import 'startup_timeline.dart';
@@ -426,6 +427,10 @@ class _StartupCanvas extends StatelessWidget {
     final brandOpacity = Curves.easeOut.transform(introProgress);
     final brandScale =
         0.92 + (0.08 * Curves.easeOutBack.transform(introProgress));
+    final microFactMotion = StartupMicroFactMotion.sample(
+      progress: progress,
+      mode: motionPolicy.mode,
+    );
 
     return ColoredBox(
       color: const Color(0xFF080B10),
@@ -490,10 +495,20 @@ class _StartupCanvas extends StatelessWidget {
                       alignment: const Alignment(0, -0.50),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: StartupMicroFactCard(
-                          key: const ValueKey('startup-microfact-card'),
-                          fact: microFact!,
-                          highContrast: highContrast,
+                        child: Opacity(
+                          key: const ValueKey('startup-microfact-motion'),
+                          opacity: microFactMotion.opacity,
+                          child: Transform.translate(
+                            offset: Offset(0, microFactMotion.translateY),
+                            child: Transform.scale(
+                              scale: microFactMotion.scale,
+                              child: StartupMicroFactCard(
+                                key: const ValueKey('startup-microfact-card'),
+                                fact: microFact!,
+                                highContrast: highContrast,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
