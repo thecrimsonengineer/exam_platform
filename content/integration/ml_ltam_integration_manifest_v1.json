@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-LTAM-INTEGRATION",
+  "status": "in_progress",
+  "createdAt": "2026-09-24",
+  "sources": {
+    "microLearning": {
+      "ref": "phase-ml13-animation-choreography-closed",
+      "sha": "d49950184ae38803f4a55e0e033e7c048e3f9c27",
+      "status": "closed"
+    },
+    "ltamPlanning": {
+      "ref": "phase-learning-twin-motion-avatar",
+      "sha": "992adf804133f31a4e56325adfdb4e8ae90ba1e2",
+      "status": "frozen_plan_only"
+    },
+    "commonBaseSha": "acf87f6a67a923f2dcc9b70485cfac2f56962050"
+  },
+  "runtimeIntegration": {
+    "mode": "static_learning_twin_avatar_with_future_motion_event_key",
+    "learningPayloadOwner": "micro_learning",
+    "visualIdentityOwner": "learning_twin",
+    "motionEnabled": false,
+    "networkReadsAdded": 0,
+    "persistenceWritesAdded": 0,
+    "sharedAnimationControllers": 0,
+    "productionMicroFactsModified": 0
+  },
+  "importedLtamContracts": [
+    "docs/learning_twin/LEARNING_TWIN_GLAXNIMATE_LOTTIE_AVATAR_FREEZE.md",
+    "docs/learning_twin/LTAM_1C_ANIMATION_LAYER_PREPARATION_AND_RIG_ARCHITECTURE.md",
+    "docs/learning_twin/LTAM_2_GLAXNIMATE_IDLE_MOTION_PROOF.md",
+    "docs/learning_twin/LTAM_3_LEARNING_TWIN_MOTION_STATE_LIBRARY.md",
+    "docs/learning_twin/LTAM_4_MOTION_MANIFEST_STATE_MAPPER_FLUTTER_RENDERER_FOUNDATION.md",
+    "docs/learning_twin/LTAM_5_BACKWARD_COMPATIBLE_AVATAR_UPGRADE_AND_CONTROLLED_RUNTIME_PILOT.md"
+  ],
+  "nextGate": "INT-4 cross-stream regression and freeze"
+}
