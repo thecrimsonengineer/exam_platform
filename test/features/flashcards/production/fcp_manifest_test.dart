@@ -70,16 +70,15 @@ void main() {
     );
     final d02 = Map<String, dynamic>.from(competencyRuns['d02'] as Map);
     expect(d02.length, 14);
+    expect(Map<String, dynamic>.from(d02['fcp2a'] as Map)['status'], 'closed');
     expect(
-      Map<String, dynamic>.from(d02['fcp2a'] as Map)['status'],
-      'closed',
-    );
-    expect(
-      d02.entries.skip(1).every(
-        (entry) =>
-            Map<String, dynamic>.from(entry.value as Map)['status'] ==
-            'not_started',
-      ),
+      d02.entries
+          .skip(1)
+          .every(
+            (entry) =>
+                Map<String, dynamic>.from(entry.value as Map)['status'] ==
+                'not_started',
+          ),
       isTrue,
     );
   });
