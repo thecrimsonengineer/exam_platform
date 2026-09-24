@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'lab_contracts.dart';
 import 'lab_dqg300_evidence_store.dart';
+import 'lab_firestore_repositories.dart';
 import 'lab_learner_catalogue.dart';
 import 'lab_learner_presentation.dart';
 import 'lab_production_deployment_acceptance.dart';
