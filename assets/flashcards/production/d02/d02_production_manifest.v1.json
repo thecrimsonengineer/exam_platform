@@ -51,11 +51,18 @@
       "competencyId": "d02_c03",
       "number": 3,
       "statement": "Determine how to measure, analyze, and improve EHS culture",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c03/d02_c03_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c03/d02_c03_flashcards_v1.json",
       "cardCount": 10,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c03",
+      "checkpoint": {
+        "gate": "FCP2C_D02_C03_GREEN",
+        "branch": "phase-fcp2c-d02-c03-closed",
+        "packageValidationSha": "c9defd864d2d6227d9a88b1983b32bf9bc215d28",
+        "packageValidationRun": 35965581406
+      }
     },
     {
       "competencyId": "d02_c04",
