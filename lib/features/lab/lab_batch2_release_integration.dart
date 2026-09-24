@@ -12,6 +12,7 @@ import 'lab_learner_presentation.dart';
 import 'lab_production_deployment_acceptance.dart';
 import 'lab_production_population_seed.dart';
 import 'lab_production_release_closure.dart';
+import 'lab_production_release_operator.dart';
 import 'lab_scenario_population_manifest.dart';
 import 'lab_scenario_population_publication.dart';
 import 'lab_studio.dart';
