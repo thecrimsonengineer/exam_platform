@@ -1,6 +1,7 @@
-# FCP-2G — d02_c07 Validation Candidate
+# FCP-2G — d02_c07 Validation Record
 
-Status: VALIDATING
+Status: VALIDATION COMPLETE  
+Gate: `FCP2G_D02_C07_GREEN`
 
 Recovery base:
 
@@ -9,18 +10,27 @@ phase-fcp2f-d02-c06-closed
 c946f2b72af03cc86e4f3da607fa2f639d00ff4e
 ```
 
-Candidate scope:
+Successful package validation:
 
-- Competency: `d02_c07`
-- Statement: Evaluate leading and lagging indicators
+```text
+SHA: 2bcabaf9a0f299910010ee8a920bc0082016fe97
+Run: 35992273111
+Result: SUCCESS
+```
+
+Validated scope:
+
 - 12 resolved concepts
 - 12 learner-ready flashcards
 - 6 cross-competency canonical references
+- canonical `csp11.concept.leading_indicator` admitted in D02 C07
 - 0 HOLD
-- Canonical `csp11.concept.leading_indicator` identity admitted here after prior deferral from D02 C03
-- Generic performance measures and targets remain canonical in D02 C01
-- Generic performance analysis remains canonical in D02 C02
-- Worker participation and safety climate remain canonical in D02 C03
-- Close Call remains canonical in D02 C04
+- FCQ100 100/100
+- deterministic JSON round trip PASS
+- provenance PASS
+- frozen Flashcard Core regression PASS
+- full repository regression PASS
 
-Closure requires the dedicated Phase FCP workflow, frozen Flashcard Core regression, and full repository regression to pass.
+The package passed its first authoritative validation candidate without a content or provenance correction.
+
+The closure metadata state must pass the dedicated FCP workflow before `phase-fcp2g-d02-c07-closed` is created.
