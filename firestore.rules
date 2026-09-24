@@ -515,6 +515,115 @@ service cloud.firestore {
         ).data.evidenceFingerprint;
     }
 
+    function labDeploymentPreflightAllowedKeys() {
+      return [
+        'schemaVersion',
+        'preflightId',
+        'projectId',
+        'manifestId',
+        'manifestFingerprint',
+        'q16ClosureSha',
+        'q16ValidationRunId',
+        'operatorState',
+        'verifiedBy',
+        'verifiedAtIso',
+        'labCount',
+        'totalDecisionCount',
+        'preflightFingerprint',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLabDeploymentPreflight(preflightId) {
+      return request.resource.data.keys().hasAll(
+          labDeploymentPreflightAllowedKeys()
+        )
+        && request.resource.data.keys().hasOnly(
+          labDeploymentPreflightAllowedKeys()
+        )
+        && request.resource.data.schemaVersion
+          == 'csp11.lab.production_deployment_preflight.v1'
+        && request.resource.data.preflightId == preflightId
+        && request.resource.data.preflightId
+          == 'phase_l_population_v1_q17_preflight_v1'
+        && request.resource.data.projectId == 'csp11-exam-platform'
+        && request.resource.data.manifestId == 'phase_l_population_v1'
+        && request.resource.data.q16ClosureSha
+          == '04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a'
+        && request.resource.data.q16ValidationRunId == '35950731991'
+        && request.resource.data.operatorState is string
+        && request.resource.data.verifiedBy is string
+        && request.resource.data.verifiedAtIso is string
+        && request.resource.data.labCount == 10
+        && request.resource.data.totalDecisionCount == 50
+        && request.resource.data.manifestFingerprint is string
+        && request.resource.data.preflightFingerprint is string
+        && request.resource.data.serverCreatedAt is timestamp;
+    }
+
+    function labReleaseAcceptanceAllowedKeys() {
+      return [
+        'schemaVersion',
+        'acceptanceId',
+        'preflightId',
+        'preflightFingerprint',
+        'projectId',
+        'releaseId',
+        'releaseEvidenceFingerprint',
+        'acceptedBy',
+        'acceptedAtIso',
+        'labCount',
+        'totalDecisionCount',
+        'learnerCatalogueIdentityKeys',
+        'acceptanceFingerprint',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLabReleaseAcceptance(acceptanceId) {
+      return request.resource.data.keys().hasAll(
+          labReleaseAcceptanceAllowedKeys()
+        )
+        && request.resource.data.keys().hasOnly(
+          labReleaseAcceptanceAllowedKeys()
+        )
+        && request.resource.data.schemaVersion
+          == 'csp11.lab.production_release_acceptance.v1'
+        && request.resource.data.acceptanceId == acceptanceId
+        && request.resource.data.acceptanceId
+          == 'phase_l_population_v1_q17_acceptance_v1'
+        && request.resource.data.preflightId
+          == 'phase_l_population_v1_q17_preflight_v1'
+        && request.resource.data.projectId == 'csp11-exam-platform'
+        && request.resource.data.releaseId
+          == 'phase_l_population_v1_q15_release_v1'
+        && request.resource.data.acceptedBy is string
+        && request.resource.data.acceptedAtIso is string
+        && request.resource.data.labCount == 10
+        && request.resource.data.totalDecisionCount == 50
+        && request.resource.data.learnerCatalogueIdentityKeys is list
+        && request.resource.data.learnerCatalogueIdentityKeys.size() == 10
+        && request.resource.data.preflightFingerprint is string
+        && request.resource.data.releaseEvidenceFingerprint is string
+        && request.resource.data.acceptanceFingerprint is string
+        && request.resource.data.serverCreatedAt is timestamp
+        && exists(
+          /databases/$(database)/documents/labProductionDeploymentPreflight/phase_l_population_v1_q17_preflight_v1
+        )
+        && exists(
+          /databases/$(database)/documents/labProductionReleaseEvidence/phase_l_population_v1_q15_release_v1
+        )
+        && exists(
+          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+        )
+        && get(
+          /databases/$(database)/documents/labProductionDeploymentPreflight/phase_l_population_v1_q17_preflight_v1
+        ).data.preflightFingerprint == request.resource.data.preflightFingerprint
+        && get(
+          /databases/$(database)/documents/labProductionReleaseEvidence/phase_l_population_v1_q15_release_v1
+        ).data.evidenceFingerprint == request.resource.data.releaseEvidenceFingerprint;
+    }
+
     match /users/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
@@ -634,6 +743,24 @@ service cloud.firestore {
 
       allow create: if isAdmin()
         && validLabLearnerReleaseState(releaseId);
+
+      allow update, delete: if false;
+    }
+
+    match /labProductionDeploymentPreflight/{preflightId} {
+      allow get, list: if isAdmin();
+
+      allow create: if isAdmin()
+        && validLabDeploymentPreflight(preflightId);
+
+      allow update, delete: if false;
+    }
+
+    match /labProductionReleaseAcceptance/{acceptanceId} {
+      allow get, list: if isAdmin();
+
+      allow create: if isAdmin()
+        && validLabReleaseAcceptance(acceptanceId);
 
       allow update, delete: if false;
     }
