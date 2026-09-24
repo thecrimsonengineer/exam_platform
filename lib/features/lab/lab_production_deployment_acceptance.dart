@@ -9,7 +9,6 @@ import 'lab_production_population_seed.dart';
 import 'lab_production_release_closure.dart';
 import 'lab_production_release_operator.dart';
 import 'lab_runtime_binding.dart';
-import 'lab_scenario_population_manifest.dart';
 
 const String kLspQ16ClosedSha =
     '04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a';
