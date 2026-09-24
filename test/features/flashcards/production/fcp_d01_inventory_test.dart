@@ -45,7 +45,7 @@ void main() {
       expect(observed['statement'], expected.statement);
     }
 
-    expect(competencies.first['status'], 'in_progress');
+    expect(competencies.first['status'], 'validating');
     expect(
       competencies.skip(1).every((item) => item['status'] == 'not_started'),
       isTrue,
@@ -58,34 +58,40 @@ void main() {
 
     expect(inventory['domainId'], 'd01');
     expect(inventory['competencyId'], 'd01_c01');
-    expect(inventory['status'], 'candidate_inventory');
+    expect(inventory['status'], 'resolved_inventory');
     expect(placement['domainId'], 'd01');
     expect(placement['competencyId'], 'd01_c01');
     expect(placement['topicId'], isNull);
     expect(placement['subtopicId'], isNull);
   });
 
-  test('D01 C01 candidate semantic slugs and labels are unique', () {
+  test('D01 C01 inventory resolves to eight cards with no holds', () {
     final inventory = readObject(inventoryPath);
-    final candidates = (inventory['candidateConcepts'] as List)
+    final accepted = (inventory['acceptedConcepts'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
+    final merged = (inventory['mergedConcepts'] as List)
+        .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList();
+    final holds = inventory['holds'] as List;
 
-    expect(candidates, isNotEmpty);
+    expect(accepted.length, 8);
+    expect(merged.length, 1);
+    expect(holds, isEmpty);
 
-    final slugs = candidates
+    final slugs = accepted
         .map((item) => item['semanticSlug'] as String)
         .toList();
-    final labels = candidates
+    final labels = accepted
         .map((item) => item['canonicalLabel'] as String)
         .toList();
 
     expect(slugs.toSet().length, slugs.length);
     expect(labels.toSet().length, labels.length);
-    expect(candidates.every((item) => item['decision'] == 'CANDIDATE'), isTrue);
+    expect(accepted.every((item) => item['decision'] == 'CARD'), isTrue);
   });
 
-  test('FCP D01 source registry is valid and resolves inventory sources', () {
+  test('FCP D01 source registry is valid and resolves accepted sources', () {
     final sourceJson = readObject(sourcePath);
     final entries = (sourceJson['sources'] as List)
         .map(
@@ -107,12 +113,12 @@ void main() {
     );
 
     final inventory = readObject(inventoryPath);
-    final candidates = (inventory['candidateConcepts'] as List).map(
+    final accepted = (inventory['acceptedConcepts'] as List).map(
       (item) => Map<String, dynamic>.from(item as Map),
     );
 
-    for (final candidate in candidates) {
-      final sourceIds = (candidate['sourceIds'] as List).cast<String>();
+    for (final concept in accepted) {
+      final sourceIds = (concept['sourceIds'] as List).cast<String>();
       expect(sourceIds, isNotEmpty);
       expect(sourceIds.every(registry.contains), isTrue);
     }

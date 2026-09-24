@@ -23,7 +23,7 @@ Effective 2025-08-01
 ## Competency sequence
 
 ```text
-FCP-1A  d01_c01  IN PROGRESS
+FCP-1A  d01_c01  VALIDATING
 FCP-1B  d01_c02  NOT STARTED
 FCP-1C  d01_c03  NOT STARTED
 FCP-1D  d01_c04  NOT STARTED
@@ -34,14 +34,14 @@ FCP-1G  d01_c07  NOT STARTED
 
 ## FCP-1A current task
 
-Build and resolve the canonical concept inventory for:
+Validate the resolved concept inventory and learner-ready package for:
 
 ```text
 d01_c01
 Describe the principles of minimizing hazards using Prevention-Through-Design
 ```
 
-No learner-ready d01_c01 Flashcard package is admitted until the concept inventory is resolved and frozen.
+The concept inventory is resolved at 8 cards plus 1 merged candidate. The learner-ready package is now at FCQ100 and repository validation.
 
 Topic/subtopic IDs remain unset because the FCP-0 frozen repository contains no authoritative D01 StudyContent topic/subtopic tree. FCP will not invent these identifiers.
 

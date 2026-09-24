@@ -1,0 +1,388 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d01_c01_flashcards_v1",
+    "domainId": "d01",
+    "competencyId": "d01_c01",
+    "title": "Prevention through Design Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.prevention_through_design",
+      "csp11.flashcard.hazard_elimination_by_design",
+      "csp11.flashcard.hazard_substitution_by_design",
+      "csp11.flashcard.engineering_controls_by_design",
+      "csp11.flashcard.life_cycle_safety_by_design",
+      "csp11.flashcard.facility_safety_design_criteria",
+      "csp11.flashcard.machine_safety_design_criteria",
+      "csp11.flashcard.work_practice_safety_design"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.prevention_through_design",
+      "canonicalLabel": "Prevention through Design",
+      "flashcardId": "csp11.flashcard.prevention_through_design",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "ptd"
+      ]
+    },
+    {
+      "id": "csp11.concept.hazard_elimination_by_design",
+      "canonicalLabel": "Design-Stage Hazard Elimination",
+      "flashcardId": "csp11.flashcard.hazard_elimination_by_design",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "design-stage elimination"
+      ]
+    },
+    {
+      "id": "csp11.concept.hazard_substitution_by_design",
+      "canonicalLabel": "Design-Stage Substitution",
+      "flashcardId": "csp11.flashcard.hazard_substitution_by_design",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "design-stage substitution"
+      ]
+    },
+    {
+      "id": "csp11.concept.engineering_controls_by_design",
+      "canonicalLabel": "Engineering Controls by Design",
+      "flashcardId": "csp11.flashcard.engineering_controls_by_design",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "design-in engineering controls"
+      ]
+    },
+    {
+      "id": "csp11.concept.life_cycle_safety_by_design",
+      "canonicalLabel": "Life-Cycle Safety by Design",
+      "flashcardId": "csp11.flashcard.life_cycle_safety_by_design",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "lifecycle safety"
+      ]
+    },
+    {
+      "id": "csp11.concept.facility_safety_design_criteria",
+      "canonicalLabel": "Facility Safety Design Criteria",
+      "flashcardId": "csp11.flashcard.facility_safety_design_criteria",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "safe facility design"
+      ]
+    },
+    {
+      "id": "csp11.concept.machine_safety_design_criteria",
+      "canonicalLabel": "Machine Safety Design Criteria",
+      "flashcardId": "csp11.flashcard.machine_safety_design_criteria",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "safe machine design"
+      ]
+    },
+    {
+      "id": "csp11.concept.work_practice_safety_design",
+      "canonicalLabel": "Work Practice Safety Design",
+      "flashcardId": "csp11.flashcard.work_practice_safety_design",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "aliases": [
+        "safe work method design"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.prevention_through_design",
+      "conceptId": "csp11.concept.prevention_through_design",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Prevention through Design",
+      "backDefinition": "An approach that anticipates occupational hazards and designs them out or minimizes risk before workers are exposed.",
+      "whyItMatters": "Applying prevention during design can remove hazards before they become embedded in facilities, equipment, processes, or work methods.",
+      "keyPoint": "Address hazards as early as practical in design or redesign.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.prevention_through_design",
+          "locator": "Prevention through Design > Defining",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "design-safety",
+        "hazard-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.hazard_elimination_by_design",
+      "conceptId": "csp11.concept.hazard_elimination_by_design",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Design-Stage Hazard Elimination",
+      "backDefinition": "Removing a hazard from a facility, process, machine, or task during design so the source of exposure is no longer present.",
+      "whyItMatters": "Elimination during design can prevent exposure without relying on later procedures, training, or personal protective equipment.",
+      "keyPoint": "Design the hazard out before operation begins.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.hierarchy_of_controls",
+          "locator": "Hierarchy of Controls > Elimination",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.niosh.prevention_through_design",
+          "locator": "Prevention through Design > Defining",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "elimination",
+        "design-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.hazard_substitution_by_design",
+      "conceptId": "csp11.concept.hazard_substitution_by_design",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Design-Stage Substitution",
+      "backDefinition": "Replacing a hazardous material, process, operation, or equipment choice with a safer alternative during design or redesign.",
+      "whyItMatters": "Early substitution can reduce risk before hazardous choices become fixed in equipment, facilities, or operating methods.",
+      "keyPoint": "Compare substitute risks before selecting the alternative.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.hierarchy_of_controls",
+          "locator": "Hierarchy of Controls > Substitution",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "substitution",
+        "design-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.engineering_controls_by_design",
+      "conceptId": "csp11.concept.engineering_controls_by_design",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Engineering Controls by Design",
+      "backDefinition": "Physical or engineered features built into equipment or workplaces to isolate people from hazards or control exposure at the source.",
+      "whyItMatters": "Controls designed into the system can function with less dependence on repeated worker action than administrative controls or PPE.",
+      "keyPoint": "Prefer engineering controls that work as part of the original design.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.hierarchy_of_controls",
+          "locator": "Hierarchy of Controls > Engineering controls",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "engineering-controls",
+        "design-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.life_cycle_safety_by_design",
+      "conceptId": "csp11.concept.life_cycle_safety_by_design",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Life-Cycle Safety by Design",
+      "backDefinition": "Considering worker safety across construction, manufacture, use, maintenance, redesign, disposal, and reuse when making design decisions.",
+      "whyItMatters": "Lifecycle thinking helps prevent a design choice from transferring risk to workers who install, operate, maintain, modify, or dispose of it.",
+      "keyPoint": "Evaluate hazards beyond normal operation.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.prevention_through_design",
+          "locator": "Prevention through Design > Defining",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "life-cycle",
+        "design-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.facility_safety_design_criteria",
+      "conceptId": "csp11.concept.facility_safety_design_criteria",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Facility Safety Design Criteria",
+      "backDefinition": "Safety requirements applied when planning or redesigning workplaces so hazards are removed or controlled through the physical facility.",
+      "whyItMatters": "Facility design decisions can determine access, separation, layout, maintainability, and exposure conditions long before work begins.",
+      "keyPoint": "Build safety requirements into facility design specifications.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.prevention_through_design",
+          "locator": "Prevention through Design > Defining",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "facility-design",
+        "design-criteria"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.machine_safety_design_criteria",
+      "conceptId": "csp11.concept.machine_safety_design_criteria",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Machine Safety Design Criteria",
+      "backDefinition": "Safety requirements applied to machines and equipment so hazards are eliminated, isolated, guarded, or otherwise controlled by design.",
+      "whyItMatters": "Safe machine design can reduce contact with hazardous motion, energy, and processes before administrative controls are needed.",
+      "keyPoint": "Design protective features into the equipment rather than adding them later.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.prevention_through_design",
+          "locator": "Prevention through Design > Defining",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "machine-design",
+        "design-criteria"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.work_practice_safety_design",
+      "conceptId": "csp11.concept.work_practice_safety_design",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Work Practice Safety Design",
+      "backDefinition": "Designing work methods and the organization of work so tasks can be performed with hazards removed or risks minimized.",
+      "whyItMatters": "Work-practice design can reduce foreseeable exposure by changing how work is arranged, sequenced, accessed, or performed.",
+      "keyPoint": "Treat work methods and work organization as design decisions.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.prevention_through_design",
+          "locator": "Prevention through Design > Defining",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "prevention-through-design",
+        "work-design",
+        "design-criteria"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.niosh.prevention_through_design",
+      "organization": "NIOSH",
+      "title": "Prevention through Design",
+      "canonicalUrl": "https://www.cdc.gov/niosh/ptd/about/index.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase. Source supports design-out, hazard minimization, facilities, operations, processes, equipment, tools, technologies, and organization-of-work concepts."
+    },
+    {
+      "id": "csp11.source.niosh.hierarchy_of_controls",
+      "organization": "NIOSH",
+      "title": "Hierarchy of Controls",
+      "canonicalUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/index.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase. Exact section locators are required on learner-ready cards."
+    }
+  ]
+}

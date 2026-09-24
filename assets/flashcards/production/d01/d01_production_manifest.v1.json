@@ -17,8 +17,11 @@
       "competencyId": "d01_c01",
       "number": 1,
       "statement": "Describe the principles of minimizing hazards using Prevention-Through-Design (e.g., avoidance, elimination, substitution, safety design criteria for workplace facilities, machines, and practices)",
-      "status": "in_progress",
-      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c01/d01_c01_concept_inventory.v1.json"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c01/d01_c01_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c01/d01_c01_flashcards_v1.json",
+      "cardCount": 8,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d01_c02",
