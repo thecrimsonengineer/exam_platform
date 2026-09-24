@@ -84,9 +84,6 @@ void main() {
   });
 
   test('supports value equality', () {
-    expect(
-      ReleaseVersion.parse('1.2.3+45'),
-      ReleaseVersion.parse('1.2.3+45'),
-    );
+    expect(ReleaseVersion.parse('1.2.3+45'), ReleaseVersion.parse('1.2.3+45'));
   });
 }
