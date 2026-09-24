@@ -37,15 +37,15 @@ abstract final class LearningTwinIdleAssetContract {
     try {
       decoded = jsonDecode(source);
     } on FormatException {
-      return LearningTwinIdleAssetValidation.invalid(
-        const <String>['invalid_json'],
-      );
+      return LearningTwinIdleAssetValidation.invalid(const <String>[
+        'invalid_json',
+      ]);
     }
 
     if (decoded is! Map<String, dynamic>) {
-      return LearningTwinIdleAssetValidation.invalid(
-        const <String>['root_not_object'],
-      );
+      return LearningTwinIdleAssetValidation.invalid(const <String>[
+        'root_not_object',
+      ]);
     }
 
     return validateMap(decoded);
