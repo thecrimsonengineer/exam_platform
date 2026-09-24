@@ -36,6 +36,8 @@ const String kBatch2AcceptanceSchemaVersion =
     'csp11.lab.production_extension_acceptance.v1';
 const String kBatch2AcceptanceFingerprintSchema =
     'csp11.lab.production_extension_acceptance.sha256.v1';
+const String kBatch2LearnerVisibilitySchemaVersion =
+    'csp11.lab.learner_extension_visibility.v1';
 
 class LabBatch2ReleaseException implements Exception {
   const LabBatch2ReleaseException(this.message);
@@ -615,7 +617,7 @@ class FirestoreLabBatch2ReleaseEvidenceRepository
       _firestore.collection('labProductionReleaseExtensionEvidence');
 
   CollectionReference<Map<String, dynamic>> get _state =>
-      _firestore.collection('labLearnerReleaseExtensionState');
+      _firestore.collection('labProductionReleaseExtensionState');
 
   @override
   Future<LabBatch2ReleaseEvidence?> load(String releaseId) async {
@@ -1306,6 +1308,8 @@ class FirestoreLabBatch2ReleaseAcceptanceRepository
       _firestore.collection('labProductionCatalogueStaging');
   CollectionReference<Map<String, dynamic>> get _catalogue =>
       _firestore.collection('labLearnerCatalogue');
+  CollectionReference<Map<String, dynamic>> get _visibility =>
+      _firestore.collection('labLearnerReleaseExtensionState');
 
   String _stageId(String releaseId, String labId, String versionId) =>
       releaseId + '__' + labId + '__' + versionId;
@@ -1334,9 +1338,11 @@ class FirestoreLabBatch2ReleaseAcceptanceRepository
     required LabScenarioPopulationManifest manifest,
   }) async {
     final acceptanceRef = _acceptance.doc(acceptance.releaseId);
+    final visibilityRef = _visibility.doc(acceptance.releaseId);
     await _firestore.runTransaction((transaction) async {
       final existingAcceptance = await transaction.get(acceptanceRef);
-      if (existingAcceptance.exists) {
+      final existingVisibility = await transaction.get(visibilityRef);
+      if (existingAcceptance.exists || existingVisibility.exists) {
         throw const LabBatch2ReleaseException(
           'Batch 2 Q17 acceptance is immutable and already exists.',
         );
@@ -1366,6 +1372,14 @@ class FirestoreLabBatch2ReleaseAcceptanceRepository
 
       transaction.set(acceptanceRef, <String, dynamic>{
         ...acceptance.toJson(),
+        'serverCreatedAt': FieldValue.serverTimestamp(),
+      });
+      transaction.set(visibilityRef, <String, dynamic>{
+        'schemaVersion': kBatch2LearnerVisibilitySchemaVersion,
+        'releaseId': acceptance.releaseId,
+        'accepted': true,
+        'evidenceFingerprint': acceptance.evidenceFingerprint,
+        'acceptanceFingerprint': acceptance.acceptanceFingerprint,
         'serverCreatedAt': FieldValue.serverTimestamp(),
       });
 
@@ -1407,6 +1421,47 @@ class FirestoreLabBatch2ReleaseAcceptanceRepository
       }
     }
     return count;
+  }
+}
+
+
+abstract class LabBatch2LearnerVisibilityRepository {
+  Future<bool> isAccepted(String releaseId);
+}
+
+class InMemoryLabBatch2LearnerVisibilityRepository
+    implements LabBatch2LearnerVisibilityRepository {
+  final Set<String> _accepted = <String>{};
+
+  void accept(String releaseId) => _accepted.add(releaseId);
+
+  @override
+  Future<bool> isAccepted(String releaseId) async =>
+      _accepted.contains(releaseId);
+}
+
+class FirestoreLabBatch2LearnerVisibilityRepository
+    implements LabBatch2LearnerVisibilityRepository {
+  FirestoreLabBatch2LearnerVisibilityRepository({
+    FirebaseFirestore? firestore,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  final FirebaseFirestore _firestore;
+
+  @override
+  Future<bool> isAccepted(String releaseId) async {
+    final snapshot = await _firestore
+        .collection('labLearnerReleaseExtensionState')
+        .doc(releaseId)
+        .get();
+    final data = snapshot.data();
+    return snapshot.exists &&
+        data != null &&
+        data['schemaVersion'] == kBatch2LearnerVisibilitySchemaVersion &&
+        data['releaseId'] == releaseId &&
+        data['accepted'] == true &&
+        data['acceptanceFingerprint'] is String &&
+        (data['acceptanceFingerprint'] as String).isNotEmpty;
   }
 }
 
