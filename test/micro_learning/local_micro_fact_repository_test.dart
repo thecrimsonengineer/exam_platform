@@ -45,10 +45,7 @@ void main() {
       'safetyCritical': false,
       'simplificationRisk': 'low',
     },
-    'assessment': {
-      'sensitivity': 'none',
-      'linkedQuestionConcepts': <String>[],
-    },
+    'assessment': {'sensitivity': 'none', 'linkedQuestionConcepts': <String>[]},
     'review': {
       'technicalStatus': 'pass',
       'sourceStatus': 'pass',
@@ -97,9 +94,7 @@ void main() {
       },
     );
 
-    final snapshot = await repository.load(
-      now: DateTime(2026, 9, 24),
-    );
+    final snapshot = await repository.load(now: DateTime(2026, 9, 24));
 
     expect(calls, 1);
     expect(snapshot.bundleValid, isTrue);
@@ -128,9 +123,7 @@ void main() {
       ),
     );
 
-    final snapshot = await repository.load(
-      now: DateTime(2026, 9, 24),
-    );
+    final snapshot = await repository.load(now: DateTime(2026, 9, 24));
 
     expect(
       snapshot.bundleValid,
@@ -155,9 +148,7 @@ void main() {
       ),
     );
 
-    final snapshot = await repository.load(
-      now: DateTime(2026, 9, 24),
-    );
+    final snapshot = await repository.load(now: DateTime(2026, 9, 24));
 
     expect(snapshot.bundleValid, isFalse);
     expect(snapshot.eligibleFacts, isEmpty);
@@ -174,9 +165,7 @@ void main() {
       assetLoader: (_) async => throw StateError('asset unavailable'),
     );
 
-    final snapshot = await repository.load(
-      now: DateTime(2026, 9, 24),
-    );
+    final snapshot = await repository.load(now: DateTime(2026, 9, 24));
 
     expect(snapshot.bundleValid, isFalse);
     expect(snapshot.eligibleFacts, isEmpty);

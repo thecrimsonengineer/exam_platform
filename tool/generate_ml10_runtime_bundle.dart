@@ -13,7 +13,9 @@ Future<void> main(List<String> args) async {
       manifest['publicationStatus'] != 'published' ||
       manifest['factCount'] != 120 ||
       manifest['startupEligibleCount'] != 120) {
-    stderr.writeln('ML-10 requires the frozen 120-fact ML-9F production manifest.');
+    stderr.writeln(
+      'ML-10 requires the frozen 120-fact ML-9F production manifest.',
+    );
     exitCode = 1;
     return;
   }
@@ -23,7 +25,9 @@ Future<void> main(List<String> args) async {
       .map(Map<String, dynamic>.from)
       .toList(growable: false);
   if (entries.length != 120) {
-    stderr.writeln('ML-10 production manifest must contain exactly 120 entries.');
+    stderr.writeln(
+      'ML-10 production manifest must contain exactly 120 entries.',
+    );
     exitCode = 1;
     return;
   }
@@ -77,7 +81,9 @@ Future<void> main(List<String> args) async {
     }
     final existing = await output.readAsString();
     if (existing != encoded) {
-      stderr.writeln('ML-10 runtime bundle is not byte-stable with production facts.');
+      stderr.writeln(
+        'ML-10 runtime bundle is not byte-stable with production facts.',
+      );
       exitCode = 1;
       return;
     }

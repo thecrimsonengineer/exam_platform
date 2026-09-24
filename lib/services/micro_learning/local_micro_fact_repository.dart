@@ -40,8 +40,7 @@ class LocalMicroFactRepositorySnapshot {
 
 class LocalMicroFactRepository {
   LocalMicroFactRepository({MicroFactAssetTextLoader? assetLoader})
-    : _assetLoader =
-          assetLoader ?? ((path) => rootBundle.loadString(path));
+    : _assetLoader = assetLoader ?? ((path) => rootBundle.loadString(path));
 
   static const String bundleAssetPath =
       'content/micro_learning/ml10_runtime_bundle_v1.json';
@@ -162,9 +161,7 @@ class LocalMicroFactRepository {
         diagnostics: List<String>.unmodifiable(diagnostics),
       );
     } catch (_) {
-      return LocalMicroFactRepositorySnapshot.failed(
-        'ML10_BUNDLE_LOAD_FAILED',
-      );
+      return LocalMicroFactRepositorySnapshot.failed('ML10_BUNDLE_LOAD_FAILED');
     }
   }
 
@@ -208,9 +205,7 @@ class LocalMicroFactRepository {
   bool _isCurrent(MicroFact fact, DateTime today) {
     final reviewedAt = _parseStrictDate(fact.review.reviewedAt);
     final nextReviewDueAt = _parseStrictDate(fact.review.nextReviewDueAt);
-    final sourceVerifiedAt = _parseStrictDate(
-      fact.provenance.sourceVerifiedAt,
-    );
+    final sourceVerifiedAt = _parseStrictDate(fact.provenance.sourceVerifiedAt);
 
     if (reviewedAt == null ||
         nextReviewDueAt == null ||
@@ -235,8 +230,7 @@ class LocalMicroFactRepository {
   }
 
   DateTime? _parseStrictDate(String? value) {
-    if (value == null ||
-        !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+    if (value == null || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
       return null;
     }
 
