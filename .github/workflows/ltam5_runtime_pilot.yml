@@ -134,3 +134,46 @@ jobs:
           git add test/features/learning_twin/ui
           git commit -m "LTAM-5 normalize Hero pilot slice"
           git push origin HEAD:${GITHUB_REF_NAME}
+
+
+  windows_fallback_validation:
+    name: Windows fallback validation
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout exact LTAM-5 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify LTAM-5 ancestry
+        shell: pwsh
+        run: |
+          if ((git rev-parse HEAD) -ne "${env:GITHUB_SHA}") {
+            throw "Checkout SHA does not match GITHUB_SHA."
+          }
+          git merge-base --is-ancestor d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD
+          if ($LASTEXITCODE -ne 0) {
+            throw "LTAM-5 branch is not descended from the frozen LTAM-4 closure."
+          }
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Validate Hero admission and fallback
+        run: |
+          flutter test test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart
+          flutter test test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart
+          flutter test test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart
+          flutter test test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart
+
+      - name: Build Windows
+        run: flutter build windows
