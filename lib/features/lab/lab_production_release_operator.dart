@@ -12,8 +12,7 @@ import 'lab_production_release_closure.dart';
 import 'lab_scenario_population_manifest.dart';
 import 'lab_studio.dart';
 
-const String kLspQ15ClosedSha =
-    'ff4aa9c2a04b668549bb7af8a5f03806c31d6644';
+const String kLspQ15ClosedSha = 'ff4aa9c2a04b668549bb7af8a5f03806c31d6644';
 const String kLspQ15ClosureValidationRunId = '35946294148';
 const String kLabPopulationManifestAsset =
     'content/lab_population/manifest.json';
@@ -171,9 +170,7 @@ class LabProductionReleaseOperatorService
       populationSource: BundledLabProductionPopulationSource(
         bundle: bundle ?? rootBundle,
       ),
-      publishedRepository: FirestoreLabPublishedRepository(
-        firestore: instance,
-      ),
+      publishedRepository: FirestoreLabPublishedRepository(firestore: instance),
       catalogueRepository: FirestoreLabLearnerCatalogueRepository(
         firestore: instance,
       ),
@@ -202,8 +199,10 @@ class LabProductionReleaseOperatorService
 
     try {
       final available = await catalogueRepository.listAvailable();
-      catalogueIdentityCount =
-          available.map((entry) => entry.identityKey).toSet().length;
+      catalogueIdentityCount = available
+          .map((entry) => entry.identityKey)
+          .toSet()
+          .length;
 
       for (final entry in manifest.entries) {
         if (await publishedRepository.load(entry.labId, entry.versionId) !=
@@ -216,11 +215,13 @@ class LabProductionReleaseOperatorService
         }
       }
 
-      final releaseId =
-          LabProductionReleaseClosureService.releaseIdFor(manifest);
+      final releaseId = LabProductionReleaseClosureService.releaseIdFor(
+        manifest,
+      );
       final evidence = await evidenceRepository.load(releaseId);
-      final releaseMarkerPresent =
-          await evidenceRepository.isReleased(releaseId);
+      final releaseMarkerPresent = await evidenceRepository.isReleased(
+        releaseId,
+      );
 
       if (evidence != null) {
         final verified = await _closureService().verifyClosedRelease(
@@ -246,8 +247,7 @@ class LabProductionReleaseOperatorService
           publishedCount: publishedCount,
           catalogueCount: catalogueCount,
           catalogueIdentityCount: catalogueIdentityCount,
-          reason:
-              'Release-state marker exists without immutable Q15 evidence.',
+          reason: 'Release-state marker exists without immutable Q15 evidence.',
         );
       }
 
@@ -329,19 +329,20 @@ class LabProductionReleaseOperatorService
 
     final manifest = await populationSource.loadManifest();
     final candidates = await populationSource.loadCandidates(manifest);
-    final evidence = await LabProductionReleaseExecutionService(
-      seedService: LabProductionPopulationSeedService(
-        publishedRepository: publishedRepository,
-        catalogueRepository: catalogueRepository,
-      ),
-      closureService: _closureService(),
-    ).executeInitialRelease(
-      manifest: manifest,
-      candidates: candidates,
-      environmentId: environmentId,
-      executedBy: executedBy.trim(),
-      executedAt: executedAt,
-    );
+    final evidence =
+        await LabProductionReleaseExecutionService(
+          seedService: LabProductionPopulationSeedService(
+            publishedRepository: publishedRepository,
+            catalogueRepository: catalogueRepository,
+          ),
+          closureService: _closureService(),
+        ).executeInitialRelease(
+          manifest: manifest,
+          candidates: candidates,
+          environmentId: environmentId,
+          executedBy: executedBy.trim(),
+          executedAt: executedAt,
+        );
 
     return _requireClosedAfterAction(evidence);
   }

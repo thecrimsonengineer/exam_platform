@@ -134,10 +134,7 @@ void main() {
       );
 
       final unclosed = await operator.inspect();
-      expect(
-        unclosed.state,
-        LabProductionOperatorState.completeUnclosed,
-      );
+      expect(unclosed.state, LabProductionOperatorState.completeUnclosed);
       expect(unclosed.publishedCount, 10);
       expect(unclosed.catalogueCount, 10);
 
@@ -159,34 +156,30 @@ void main() {
     },
   );
 
-  test('Q16 blocks partial production population from automatic repair',
-      () async {
-    final source = _FilePopulationSource();
-    final manifest = await source.loadManifest();
-    final operator = LabProductionReleaseOperatorService(
-      populationSource: source,
-      publishedRepository: _PartialPublishedRepository(
-        manifest.entries.first,
-      ),
-      catalogueRepository: InMemoryLabLearnerCatalogueRepository(),
-      evidenceRepository: InMemoryLabProductionReleaseEvidenceRepository(),
-      environmentId: 'production_test',
-    );
+  test(
+    'Q16 blocks partial production population from automatic repair',
+    () async {
+      final source = _FilePopulationSource();
+      final manifest = await source.loadManifest();
+      final operator = LabProductionReleaseOperatorService(
+        populationSource: source,
+        publishedRepository: _PartialPublishedRepository(
+          manifest.entries.first,
+        ),
+        catalogueRepository: InMemoryLabLearnerCatalogueRepository(),
+        evidenceRepository: InMemoryLabProductionReleaseEvidenceRepository(),
+        environmentId: 'production_test',
+      );
 
-    final inspection = await operator.inspect();
+      final inspection = await operator.inspect();
 
-    expect(
-      inspection.state,
-      LabProductionOperatorState.blockedPartial,
-    );
-    expect(inspection.publishedCount, 1);
-    expect(inspection.canExecuteSeed, isFalse);
-    expect(inspection.canCloseExisting, isFalse);
-    expect(
-      inspection.blockingReason,
-      contains('partial population'),
-    );
-  });
+      expect(inspection.state, LabProductionOperatorState.blockedPartial);
+      expect(inspection.publishedCount, 1);
+      expect(inspection.canExecuteSeed, isFalse);
+      expect(inspection.canCloseExisting, isFalse);
+      expect(inspection.blockingReason, contains('partial population'));
+    },
+  );
 
   test('Q16 requires exact typed confirmation before initial seed', () async {
     final source = _FilePopulationSource();
@@ -223,18 +216,13 @@ void main() {
     expect(rules, contains('match /labLearnerCatalogue/{versionKey}'));
     expect(rules, contains('allow get, list: if isAdmin()'));
     expect(rules, contains('initialLabPopulationReleased()'));
-    expect(
-      rules,
-      contains('match /labProductionReleaseEvidence/{releaseId}'),
-    );
-    expect(
-      rules,
-      contains('match /labLearnerReleaseState/{releaseId}'),
-    );
+    expect(rules, contains('match /labProductionReleaseEvidence/{releaseId}'));
+    expect(rules, contains('match /labLearnerReleaseState/{releaseId}'));
   });
 
-  testWidgets('Q16 production screen requires exact confirmation phrase',
-      (tester) async {
+  testWidgets('Q16 production screen requires exact confirmation phrase', (
+    tester,
+  ) async {
     final inspection = LabProductionOperatorInspection(
       state: LabProductionOperatorState.pristine,
       manifestId: 'phase_l_population_v1',
@@ -272,18 +260,16 @@ void main() {
     expect(action, findsOneWidget);
     expect(tester.widget<FilledButton>(action).onPressed, isNull);
 
-    await tester.enterText(
-      confirmation,
-      kQ16SeedConfirmationPhrase,
-    );
+    await tester.enterText(confirmation, kQ16SeedConfirmationPhrase);
     await tester.pump();
 
     expect(tester.widget<FilledButton>(action).onPressed, isNotNull);
   });
 
   test('Q16 admin Publishing navigation opens the release surface', () {
-    final source =
-        File('lib/screens/admin/admin_home_screen.dart').readAsStringSync();
+    final source = File(
+      'lib/screens/admin/admin_home_screen.dart',
+    ).readAsStringSync();
 
     expect(source, contains("else if (index == 5)"));
     expect(source, contains('_openProductionRelease()'));

@@ -20,8 +20,7 @@ class LabProductionReleaseScreen extends StatefulWidget {
 class _LabProductionReleaseScreenState
     extends State<LabProductionReleaseScreen> {
   late final LabProductionReleaseOperator _operator;
-  final TextEditingController _confirmationController =
-      TextEditingController();
+  final TextEditingController _confirmationController = TextEditingController();
 
   LabProductionOperatorInspection? _inspection;
   String? _error;
@@ -245,8 +244,8 @@ class _LabProductionReleaseScreenState
                             ? 'Initial production seed'
                             : 'Closure-only recovery',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -273,7 +272,8 @@ class _LabProductionReleaseScreenState
                       const SizedBox(height: 12),
                       FilledButton.icon(
                         key: const ValueKey('q16-release-action'),
-                        onPressed: !_executing &&
+                        onPressed:
+                            !_executing &&
                                 _confirmationController.text ==
                                     inspection.requiredConfirmationPhrase
                             ? _runAction
