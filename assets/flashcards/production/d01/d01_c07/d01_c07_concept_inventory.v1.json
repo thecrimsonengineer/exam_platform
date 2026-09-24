@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1G",
+  "status": "candidate_inventory",
+  "domainId": "d01",
+  "competencyId": "d01_c07",
+  "competencyStatement": "Evaluate the use of tools, machines, and equipment (e.g., hand tools, power tools, ladders, grinders, hydraulics, robotics)",
+  "placement": {
+    "domainId": "d01",
+    "competencyId": "d01_c07",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D01 topic/subtopic StudyContent tree exists at the frozen FCP base. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.1910_242",
+      "locators": [
+        "1910.242(a) General requirements"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_243",
+      "locators": [
+        "1910.243(a) Portable powered tool guarding and controls"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_212",
+      "locators": [
+        "1910.212(a)(1) Types of guarding",
+        "1910.212(a)(3) Point of operation guarding",
+        "1910.212(b) Anchoring fixed machinery"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_215",
+      "locators": [
+        "1910.215(a)(1) Machine guarding",
+        "1910.215(a)(4) Work rests"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_23",
+      "locators": [
+        "1910.23 General requirements for ladders"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1926_302",
+      "locators": [
+        "1926.302(d) Hydraulic power tools"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.robotics_overview",
+      "locators": [
+        "Robotics > Overview"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.niosh.robotics_overview",
+      "locators": [
+        "Robotics in the Workplace > Why it's important"
+      ]
+    }
+  ],
+  "candidateConcepts": [
+    {
+      "semanticSlug": "tool_equipment_condition",
+      "canonicalLabel": "Tool and Equipment Condition",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_242"
+      ],
+      "rationale": "Employers are responsible for maintaining tools and equipment in safe condition."
+    },
+    {
+      "semanticSlug": "portable_power_tool_guarding",
+      "canonicalLabel": "Portable Power Tool Guarding",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_243"
+      ],
+      "rationale": "Portable powered tools require guards that prevent contact with exposed cutting or moving parts."
+    },
+    {
+      "semanticSlug": "power_tool_operating_control",
+      "canonicalLabel": "Power Tool Operating Control",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_243"
+      ],
+      "rationale": "Switch and control design can reduce unintended operation and provide prompt power shutoff."
+    },
+    {
+      "semanticSlug": "machine_guarding",
+      "canonicalLabel": "Machine Guarding",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_212"
+      ],
+      "rationale": "Machine guards protect operators and nearby employees from points of operation, nip points, rotating parts, chips, and sparks."
+    },
+    {
+      "semanticSlug": "point_of_operation",
+      "canonicalLabel": "Point of Operation",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_212"
+      ],
+      "rationale": "The area where work is performed on material is a key machine hazard zone requiring guarding when exposure can injure workers."
+    },
+    {
+      "semanticSlug": "fixed_machine_anchoring",
+      "canonicalLabel": "Fixed Machine Anchoring",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_212"
+      ],
+      "rationale": "Fixed machinery must be securely anchored so it does not walk or move during operation."
+    },
+    {
+      "semanticSlug": "abrasive_wheel_guarding",
+      "canonicalLabel": "Abrasive Wheel Guarding",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_215"
+      ],
+      "rationale": "Abrasive-wheel machinery generally requires safety guards controlling exposure to wheel hazards."
+    },
+    {
+      "semanticSlug": "grinder_work_rest",
+      "canonicalLabel": "Grinder Work Rest",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_215"
+      ],
+      "rationale": "Offhand grinders use properly adjusted work rests to support work and reduce jamming between the rest and wheel."
+    },
+    {
+      "semanticSlug": "ladder_safety",
+      "canonicalLabel": "Ladder Safety",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_23"
+      ],
+      "rationale": "Ladder selection, condition, setup, and use require controls to prevent falls and structural failure."
+    },
+    {
+      "semanticSlug": "hydraulic_tool_pressure",
+      "canonicalLabel": "Hydraulic Tool Operating Pressure",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1926_302"
+      ],
+      "rationale": "Hydraulic tool hoses, valves, pipes, filters, and fittings must stay within manufacturer safe operating pressure."
+    },
+    {
+      "semanticSlug": "robot_work_envelope",
+      "canonicalLabel": "Robot Work Envelope",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.robotics_overview"
+      ],
+      "rationale": "Robot motion occurs within a work envelope where unintended motion can expose workers to impact, crushing, or trapping hazards."
+    },
+    {
+      "semanticSlug": "robot_safeguarding",
+      "canonicalLabel": "Robot Safeguarding",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_212",
+        "csp11.source.niosh.robotics_overview"
+      ],
+      "rationale": "Robot systems require safeguarding based on machine hazards and human-robot interaction."
+    },
+    {
+      "semanticSlug": "nonroutine_robot_task_hazard",
+      "canonicalLabel": "Nonroutine Robot Task Hazard",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.robotics_overview"
+      ],
+      "rationale": "Programming, maintenance, testing, setup, and adjustment can place workers inside the robot work envelope where unintended operation becomes especially hazardous."
+    }
+  ],
+  "acceptedConcepts": [],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Resolve D01 C07 concept boundaries before learner-ready package authoring."
+}

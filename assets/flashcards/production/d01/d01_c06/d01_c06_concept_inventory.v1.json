@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-1F",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d01",
   "competencyId": "d01_c06",
   "competencyStatement": "Evaluate materials handling methods and controls (e.g., forklifts, aerial lifts, and other powered industrial trucks; cranes, hand trucks, hoists, rigging, manual handling, drones)",
@@ -69,138 +69,131 @@
       ]
     }
   ],
-  "candidateConcepts": [
+  "acceptedConcepts": [
     {
       "semanticSlug": "materials_handling_safety",
       "canonicalLabel": "Materials Handling Safety",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_176"
       ],
-      "rationale": "Umbrella concept for moving, storing, and controlling materials without creating struck-by, caught-between, collapse, or access hazards."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "mechanical_handling_clearance",
       "canonicalLabel": "Mechanical Handling Clearance",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_176"
       ],
-      "rationale": "Mechanical handling equipment requires safe clearance through aisles, docks, doorways, turns, and passages."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "secure_material_storage",
       "canonicalLabel": "Secure Material Storage",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_176"
       ],
-      "rationale": "Stored materials must remain stable and secure against sliding or collapse."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "powered_industrial_truck",
       "canonicalLabel": "Powered Industrial Truck",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_178"
       ],
-      "rationale": "Canonical equipment class including fork trucks and related powered industrial vehicles used for material handling."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "pit_operator_training",
       "canonicalLabel": "Powered Industrial Truck Operator Training",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_178"
       ],
-      "rationale": "PIT safe use requires formal instruction, practical training, and workplace performance evaluation."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "forklift_load_capacity",
       "canonicalLabel": "Forklift Load Capacity",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_178"
       ],
-      "rationale": "Forklift safety depends on operating within the truck's rated capacity and configuration limits."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "aerial_lift",
       "canonicalLabel": "Aerial Lift",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_67"
       ],
-      "rationale": "Vehicle-mounted elevating devices position personnel at elevated work locations and require specific operating controls."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "aerial_lift_fall_protection",
       "canonicalLabel": "Aerial Lift Fall Protection",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_67"
       ],
-      "rationale": "Boom or basket work requires applicable personal fall arrest or travel restraint attached to the aerial lift."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "crane_and_hoist_safety",
       "canonicalLabel": "Crane and Hoist Safety",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_179"
       ],
-      "rationale": "Cranes use hoisting mechanisms to lift/lower and move loads and require controlled load handling."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "crane_inspection",
       "canonicalLabel": "Crane Inspection",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1926_1412"
       ],
-      "rationale": "Construction cranes require structured inspections at specified stages and frequencies to identify safety deficiencies."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "sling_rated_capacity",
       "canonicalLabel": "Sling Rated Capacity",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_184"
       ],
-      "rationale": "Slings must not be loaded beyond their rated or recommended safe working capacity."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "sling_inspection",
       "canonicalLabel": "Sling Inspection",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_184"
       ],
-      "rationale": "Slings and attachments require inspection before use, with defective equipment removed from service."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "manual_lifting_risk_assessment",
       "canonicalLabel": "Manual Lifting Risk Assessment",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.niosh.rnle"
       ],
-      "rationale": "NIOSH RNLE evaluates physical stress and musculoskeletal risk from two-handed lifting tasks."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "small_uas_operational_safety",
       "canonicalLabel": "Small UAS Operational Safety",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.faa.part107"
       ],
-      "rationale": "Drone material-handling or inspection uses require safe small-UAS operation under applicable Part 107 requirements."
+      "decision": "CARD"
     }
   ],
-  "acceptedConcepts": [],
   "mergedConcepts": [],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve D01 C06 concept boundaries before learner-ready package authoring."
+  "nextGate": "Validate d01_c06_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and repository regression.",
+  "resolutionSummary": {
+    "candidateCount": 14,
+    "acceptedCardCount": 14,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
 }

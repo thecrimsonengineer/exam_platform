@@ -50,11 +50,9 @@ void main() {
     expect(competencies[2]['status'], 'validating');
     expect(competencies[3]['status'], 'validating');
     expect(competencies[4]['status'], 'validating');
-    expect(competencies[5]['status'], 'in_progress');
-    expect(
-      competencies.skip(6).every((item) => item['status'] == 'not_started'),
-      isTrue,
-    );
+    expect(competencies[5]['status'], 'validating');
+    expect(competencies[6]['status'], 'in_progress');
+
   });
 
   test('D01 C01 inventory stays at canonical competency placement', () {

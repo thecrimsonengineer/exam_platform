@@ -528,6 +528,142 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Current FAA summary of small UAS operating requirements under Part 107. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_242",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.242 - Hand and portable powered tools and equipment, general",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.242",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "General safe-condition requirement for hand and portable tools. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_243",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.243 - Guarding of portable powered tools",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.243",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Portable powered-tool guards, switches, controls, and related requirements."
+    },
+    {
+      "id": "csp11.source.osha.1910_212",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.212 - General requirements for all machines",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.212",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "General machine guarding, point-of-operation guarding, and fixed-machine anchoring requirements."
+    },
+    {
+      "id": "csp11.source.osha.1910_215",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.215 - Abrasive wheel machinery",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.215",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Abrasive-wheel guards, work rests, exposure angles, and wheel mounting requirements."
+    },
+    {
+      "id": "csp11.source.osha.1910_23",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.23 - Ladders",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.23",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "General-industry ladder requirements. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1926_302",
+      "organization": "OSHA",
+      "title": "29 CFR 1926.302 - Power-operated hand tools",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.302",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Construction power-tool requirements including hydraulic and pneumatic operating-pressure controls."
+    },
+    {
+      "id": "csp11.source.niosh.robotics_overview",
+      "organization": "NIOSH",
+      "title": "Robotics in the Workplace: An Overview",
+      "canonicalUrl": "https://www.cdc.gov/niosh/robotics/about/index.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current NIOSH workplace-robotics overview supporting robot hazard and human-robot interaction concepts."
+    },
+    {
+      "id": "csp11.source.osha.robotics_overview",
+      "organization": "OSHA",
+      "title": "Robotics - Overview",
+      "canonicalUrl": "https://www.osha.gov/robotics",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OSHA overview of industrial robot uses and hazards, especially during non-routine tasks."
     }
   ]
 }

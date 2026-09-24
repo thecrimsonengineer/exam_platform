@@ -1,0 +1,732 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d01_c06_flashcards_v1",
+    "domainId": "d01",
+    "competencyId": "d01_c06",
+    "title": "Materials Handling Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.materials_handling_safety",
+      "csp11.flashcard.mechanical_handling_clearance",
+      "csp11.flashcard.secure_material_storage",
+      "csp11.flashcard.powered_industrial_truck",
+      "csp11.flashcard.pit_operator_training",
+      "csp11.flashcard.forklift_load_capacity",
+      "csp11.flashcard.aerial_lift",
+      "csp11.flashcard.aerial_lift_fall_protection",
+      "csp11.flashcard.crane_and_hoist_safety",
+      "csp11.flashcard.crane_inspection",
+      "csp11.flashcard.sling_rated_capacity",
+      "csp11.flashcard.sling_inspection",
+      "csp11.flashcard.manual_lifting_risk_assessment",
+      "csp11.flashcard.small_uas_operational_safety"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.materials_handling_safety",
+      "canonicalLabel": "Materials Handling Safety",
+      "flashcardId": "csp11.flashcard.materials_handling_safety",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "safe materials handling"
+      ]
+    },
+    {
+      "id": "csp11.concept.mechanical_handling_clearance",
+      "canonicalLabel": "Mechanical Handling Clearance",
+      "flashcardId": "csp11.flashcard.mechanical_handling_clearance",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "handling equipment clearance"
+      ]
+    },
+    {
+      "id": "csp11.concept.secure_material_storage",
+      "canonicalLabel": "Secure Material Storage",
+      "flashcardId": "csp11.flashcard.secure_material_storage",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "stable material storage"
+      ]
+    },
+    {
+      "id": "csp11.concept.powered_industrial_truck",
+      "canonicalLabel": "Powered Industrial Truck",
+      "flashcardId": "csp11.flashcard.powered_industrial_truck",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "pit",
+        "forklift class"
+      ]
+    },
+    {
+      "id": "csp11.concept.pit_operator_training",
+      "canonicalLabel": "Powered Industrial Truck Operator Training",
+      "flashcardId": "csp11.flashcard.pit_operator_training",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "forklift operator training"
+      ]
+    },
+    {
+      "id": "csp11.concept.forklift_load_capacity",
+      "canonicalLabel": "Forklift Load Capacity",
+      "flashcardId": "csp11.flashcard.forklift_load_capacity",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "pit load capacity"
+      ]
+    },
+    {
+      "id": "csp11.concept.aerial_lift",
+      "canonicalLabel": "Aerial Lift",
+      "flashcardId": "csp11.flashcard.aerial_lift",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "aerial device",
+        "boom lift"
+      ]
+    },
+    {
+      "id": "csp11.concept.aerial_lift_fall_protection",
+      "canonicalLabel": "Aerial Lift Fall Protection",
+      "flashcardId": "csp11.flashcard.aerial_lift_fall_protection",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "boom lift fall protection"
+      ]
+    },
+    {
+      "id": "csp11.concept.crane_and_hoist_safety",
+      "canonicalLabel": "Crane and Hoist Safety",
+      "flashcardId": "csp11.flashcard.crane_and_hoist_safety",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "crane load handling"
+      ]
+    },
+    {
+      "id": "csp11.concept.crane_inspection",
+      "canonicalLabel": "Crane Inspection",
+      "flashcardId": "csp11.flashcard.crane_inspection",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "crane safety inspection"
+      ]
+    },
+    {
+      "id": "csp11.concept.sling_rated_capacity",
+      "canonicalLabel": "Sling Rated Capacity",
+      "flashcardId": "csp11.flashcard.sling_rated_capacity",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "sling working load limit"
+      ]
+    },
+    {
+      "id": "csp11.concept.sling_inspection",
+      "canonicalLabel": "Sling Inspection",
+      "flashcardId": "csp11.flashcard.sling_inspection",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "rigging inspection"
+      ]
+    },
+    {
+      "id": "csp11.concept.manual_lifting_risk_assessment",
+      "canonicalLabel": "Manual Lifting Risk Assessment",
+      "flashcardId": "csp11.flashcard.manual_lifting_risk_assessment",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "rnle lifting assessment"
+      ]
+    },
+    {
+      "id": "csp11.concept.small_uas_operational_safety",
+      "canonicalLabel": "Small UAS Operational Safety",
+      "flashcardId": "csp11.flashcard.small_uas_operational_safety",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "aliases": [
+        "drone operational safety"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.materials_handling_safety",
+      "conceptId": "csp11.concept.materials_handling_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Materials Handling Safety",
+      "backDefinition": "The coordinated control of moving, storing, lifting, and positioning materials so handling equipment, loads, aisles, and work practices do not create unacceptable risk.",
+      "whyItMatters": "Materials handling can expose workers to struck-by, caught-between, collapse, ergonomic, and equipment hazards during routine movement and storage.",
+      "keyPoint": "Evaluate the load, handling method, route, equipment, and people exposed.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_176",
+          "locator": "1910.176 Handling materials - general",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "hazard-control",
+        "storage"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.mechanical_handling_clearance",
+      "conceptId": "csp11.concept.mechanical_handling_clearance",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Mechanical Handling Clearance",
+      "backDefinition": "Sufficient clear space for mechanical handling equipment to travel safely through aisles, loading docks, doorways, turns, and passageways.",
+      "whyItMatters": "Restricted clearance increases collision, crushing, and property-damage risk and can obstruct safe movement of people and equipment.",
+      "keyPoint": "Keep aisles clear, marked, and wide enough for the equipment and load.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_176",
+          "locator": "1910.176(a) Use of mechanical equipment",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "clearance",
+        "traffic-route"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.secure_material_storage",
+      "conceptId": "csp11.concept.secure_material_storage",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Secure Material Storage",
+      "backDefinition": "Storing materials so stacked, blocked, interlocked, or otherwise controlled loads remain stable and secure against sliding, collapse, or displacement.",
+      "whyItMatters": "Poor storage stability can release heavy materials without warning and create struck-by or crush hazards in work and access areas.",
+      "keyPoint": "Storage must remain stable under foreseeable loading and handling conditions.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_176",
+          "locator": "1910.176(b) Secure storage",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "storage",
+        "load-stability"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.powered_industrial_truck",
+      "conceptId": "csp11.concept.powered_industrial_truck",
+      "version": 1,
+      "type": "classification",
+      "frontLabel": "Powered Industrial Truck",
+      "backDefinition": "A powered industrial vehicle used to carry, push, pull, lift, stack, or tier materials, including fork trucks and related specialized industrial trucks.",
+      "whyItMatters": "PITs combine vehicle movement, load handling, stability, visibility, and pedestrian hazards that require equipment-specific controls.",
+      "keyPoint": "A PIT is not simply an automobile; its operating characteristics and load behavior differ.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_178",
+          "locator": "1910.178(a) General requirements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "powered-industrial-truck",
+        "forklift"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.pit_operator_training",
+      "conceptId": "csp11.concept.pit_operator_training",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Powered Industrial Truck Operator Training",
+      "backDefinition": "A competency process combining formal instruction, practical training, and evaluation of an operator's workplace performance for the truck and conditions involved.",
+      "whyItMatters": "PIT safety depends on operators understanding both truck characteristics and workplace hazards before independent operation.",
+      "keyPoint": "Training includes instruction, practical exercises, and workplace evaluation.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_178",
+          "locator": "1910.178(l)(2) Training program implementation",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "forklift-training",
+        "operator-competence"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.forklift_load_capacity",
+      "conceptId": "csp11.concept.forklift_load_capacity",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Forklift Load Capacity",
+      "backDefinition": "The rated load the powered industrial truck can safely handle in its approved configuration while maintaining required stability and operating limits.",
+      "whyItMatters": "Excessive or improperly positioned loads can reduce stability, overload components, and contribute to tip-over or dropped-load events.",
+      "keyPoint": "Stay within the truck's marked capacity for the actual attachment and load configuration.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_178",
+          "locator": "1910.178(o) Loading",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "forklift",
+        "load-capacity"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.aerial_lift",
+      "conceptId": "csp11.concept.aerial_lift",
+      "version": 1,
+      "type": "classification",
+      "frontLabel": "Aerial Lift",
+      "backDefinition": "A vehicle-mounted elevating device, such as an extensible or articulating boom platform, used to position personnel at elevated work locations.",
+      "whyItMatters": "Aerial lifts introduce elevation, vehicle stability, electrical, movement, and load-limit hazards that require equipment-specific controls.",
+      "keyPoint": "Treat the platform and supporting vehicle as one operating system.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_67",
+          "locator": "1910.67(a) Definitions applicable to this section",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "aerial-lift",
+        "elevated-work"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.aerial_lift_fall_protection",
+      "conceptId": "csp11.concept.aerial_lift_fall_protection",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Aerial Lift Fall Protection",
+      "backDefinition": "Personal fall arrest or travel restraint protection worn and attached as required when working from an aerial lift boom or basket.",
+      "whyItMatters": "Platform elevation and movement can expose occupants to falls or ejection, so attachment to the approved lift structure is a critical control.",
+      "keyPoint": "Use the required fall-protection system and approved attachment point.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_67",
+          "locator": "1910.67(c)(2)(v) Personal fall arrest or travel restraint",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "aerial-lift",
+        "fall-protection"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.crane_and_hoist_safety",
+      "conceptId": "csp11.concept.crane_and_hoist_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Crane and Hoist Safety",
+      "backDefinition": "Safe control of equipment that lifts and lowers loads and may move them horizontally, including attention to the hoisting mechanism, load, path, operating limits, and people exposed.",
+      "whyItMatters": "Crane and hoist operations concentrate large loads and energy, so poor control can create dropped-load, struck-by, crush, and structural hazards.",
+      "keyPoint": "Plan the lift and keep people clear of the load path.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_179",
+          "locator": "1910.179(a)(1) Crane definition and 1910.179(n) Handling the load",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "crane",
+        "hoist"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.crane_inspection",
+      "conceptId": "csp11.concept.crane_inspection",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Crane Inspection",
+      "backDefinition": "A structured examination of crane equipment at required stages and intervals to identify deficiencies that could affect safe operation before or during use.",
+      "whyItMatters": "Inspection can identify defects in controls, structure, wire rope, safety devices, hydraulics, and other critical systems before a lifting failure occurs.",
+      "keyPoint": "Inspection frequency and competence depend on the inspection type and equipment condition.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1926_1412",
+          "locator": "1926.1412 Inspections",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "crane",
+        "inspection"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.sling_rated_capacity",
+      "conceptId": "csp11.concept.sling_rated_capacity",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Sling Rated Capacity",
+      "backDefinition": "The maximum load a sling is permitted to carry under the applicable sling type, configuration, angle, and manufacturer or regulatory rating.",
+      "whyItMatters": "Overloading a sling or ignoring hitch geometry can cause sling failure and sudden release of a suspended load.",
+      "keyPoint": "Never load a sling beyond its applicable rated capacity.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_184",
+          "locator": "1910.184(c)(4) and (c)(13) Sling rated capacity",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "rigging",
+        "sling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.sling_inspection",
+      "conceptId": "csp11.concept.sling_inspection",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Sling Inspection",
+      "backDefinition": "Inspection of a sling, fastenings, and attachments for damage or defects before use and additionally when service conditions require it.",
+      "whyItMatters": "Wear, deformation, broken wires, cuts, heat damage, or damaged fittings can reduce sling strength and lead to dropped loads.",
+      "keyPoint": "Remove damaged or defective slings from service immediately.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_184",
+          "locator": "1910.184(d) Inspections",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "rigging",
+        "inspection"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.manual_lifting_risk_assessment",
+      "conceptId": "csp11.concept.manual_lifting_risk_assessment",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Manual Lifting Risk Assessment",
+      "backDefinition": "Evaluation of a two-handed lifting task using factors such as load weight, hand location, travel distance, asymmetry, frequency, duration, and coupling quality.",
+      "whyItMatters": "Quantitative lifting assessment helps identify tasks with elevated musculoskeletal stress and supports redesign or other ergonomic controls.",
+      "keyPoint": "NIOSH RNLE uses the Recommended Weight Limit and Lifting Index to characterize lifting demands.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.rnle",
+          "locator": "Revised NIOSH Lifting Equation > Key variables and interpreting results",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "manual-lifting",
+        "ergonomics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.small_uas_operational_safety",
+      "conceptId": "csp11.concept.small_uas_operational_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Small UAS Operational Safety",
+      "backDefinition": "Safe operation of a small unmanned aircraft system within applicable flight rules, including aircraft avoidance, visual-line-of-sight, operating limitations, and protection of people.",
+      "whyItMatters": "Workplace drone use adds aviation and ground-person exposure risks that must be controlled in addition to the task being performed.",
+      "keyPoint": "Apply the applicable FAA operating rules before using a drone for work.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.faa.part107",
+          "locator": "Part 107 > Operating Requirements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "materials-handling",
+        "drone",
+        "uas-safety"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.1910_176",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.176 - Handling materials - general",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.176",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Material handling clearances, secure storage, housekeeping, and guarding. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_178",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.178 - Powered industrial trucks",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.178",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Powered industrial truck design, use, maintenance, and operator training. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_67",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.67 - Vehicle-mounted elevating and rotating work platforms",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.67",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Aerial-lift definitions and safe operating requirements. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_179",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.179 - Overhead and gantry cranes",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.179",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Overhead/gantry crane definitions and requirements. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1926_1412",
+      "organization": "OSHA",
+      "title": "29 CFR 1926.1412 - Cranes and derricks inspections",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1412",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Construction crane inspection requirements including shift, monthly, and annual/comprehensive inspection."
+    },
+    {
+      "id": "csp11.source.osha.1910_184",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.184 - Slings",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.184",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Sling safe operating practices, rated capacity, inspection, and removal from service."
+    },
+    {
+      "id": "csp11.source.niosh.rnle",
+      "organization": "NIOSH",
+      "title": "Revised NIOSH Lifting Equation",
+      "canonicalUrl": "https://www.cdc.gov/niosh/ergonomics/about/rnle.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current NIOSH guidance for evaluating two-handed manual lifting risk. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.faa.part107",
+      "organization": "FAA",
+      "title": "Small Unmanned Aircraft Systems Regulations (Part 107)",
+      "canonicalUrl": "https://www.faa.gov/newsroom/small-unmanned-aircraft-systems-uas-regulations-part-107",
+      "allowedDomains": [
+        "faa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current FAA summary of small UAS operating requirements under Part 107. Educational paraphrase only."
+    }
+  ]
+}
