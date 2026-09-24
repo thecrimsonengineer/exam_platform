@@ -1,0 +1,664 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c06_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c06",
+    "title": "System Safety Analysis Techniques Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.system_safety_analysis",
+      "csp11.flashcard.fault_tree_analysis",
+      "csp11.flashcard.top_event",
+      "csp11.flashcard.minimal_cut_set",
+      "csp11.flashcard.failure_modes_and_effects_analysis",
+      "csp11.flashcard.failure_mode",
+      "csp11.flashcard.failure_effect",
+      "csp11.flashcard.event_tree",
+      "csp11.flashcard.initiating_event",
+      "csp11.flashcard.accident_sequence",
+      "csp11.flashcard.safety_case_approach",
+      "csp11.flashcard.risk_summation"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.system_safety_analysis",
+      "canonicalLabel": "System Safety Analysis",
+      "flashcardId": "csp11.flashcard.system_safety_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "system safety assessment"
+      ]
+    },
+    {
+      "id": "csp11.concept.fault_tree_analysis",
+      "canonicalLabel": "Fault Tree Analysis",
+      "flashcardId": "csp11.flashcard.fault_tree_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "FTA"
+      ]
+    },
+    {
+      "id": "csp11.concept.top_event",
+      "canonicalLabel": "Top Event",
+      "flashcardId": "csp11.flashcard.top_event",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "fault tree top event"
+      ]
+    },
+    {
+      "id": "csp11.concept.minimal_cut_set",
+      "canonicalLabel": "Minimal Cut Set",
+      "flashcardId": "csp11.flashcard.minimal_cut_set",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "MCS",
+        "fault tree minimal cut set"
+      ]
+    },
+    {
+      "id": "csp11.concept.failure_modes_and_effects_analysis",
+      "canonicalLabel": "Failure Modes and Effects Analysis",
+      "flashcardId": "csp11.flashcard.failure_modes_and_effects_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "FMEA"
+      ]
+    },
+    {
+      "id": "csp11.concept.failure_mode",
+      "canonicalLabel": "Failure Mode",
+      "flashcardId": "csp11.flashcard.failure_mode",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "mode of failure"
+      ]
+    },
+    {
+      "id": "csp11.concept.failure_effect",
+      "canonicalLabel": "Failure Effect",
+      "flashcardId": "csp11.flashcard.failure_effect",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "effect of failure"
+      ]
+    },
+    {
+      "id": "csp11.concept.event_tree",
+      "canonicalLabel": "Event Tree Analysis",
+      "flashcardId": "csp11.flashcard.event_tree",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "ETA",
+        "event tree"
+      ]
+    },
+    {
+      "id": "csp11.concept.initiating_event",
+      "canonicalLabel": "Initiating Event",
+      "flashcardId": "csp11.flashcard.initiating_event",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "initiator"
+      ]
+    },
+    {
+      "id": "csp11.concept.accident_sequence",
+      "canonicalLabel": "Accident Sequence",
+      "flashcardId": "csp11.flashcard.accident_sequence",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "event tree sequence"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_case_approach",
+      "canonicalLabel": "Safety Case Approach",
+      "flashcardId": "csp11.flashcard.safety_case_approach",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "safety case"
+      ]
+    },
+    {
+      "id": "csp11.concept.risk_summation",
+      "canonicalLabel": "Risk Summation",
+      "flashcardId": "csp11.flashcard.risk_summation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "aliases": [
+        "risk aggregation",
+        "sequence risk summation"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.system_safety_analysis",
+      "conceptId": "csp11.concept.system_safety_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "System Safety Analysis",
+      "backDefinition": "A structured examination of a system's hazards, failure paths, controls, and risk contributors using qualitative or quantitative techniques to understand how unsafe outcomes can arise and how risk can be reduced.",
+      "whyItMatters": "System-level analysis helps reveal interactions and failure combinations that may be missed when hazards are considered only one component or task at a time.",
+      "keyPoint": "Choose analysis techniques that match the system, decision, complexity, and available information.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nasa.system_safety",
+          "locator": "System Safety > hazard analysis, reliability calculations, and risk-management techniques",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(e)(1)-(2) - appropriate process hazard analysis methodology",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "hazard-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.fault_tree_analysis",
+      "conceptId": "csp11.concept.fault_tree_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Fault Tree Analysis",
+      "backDefinition": "A top-down, deductive logic technique that starts with a defined undesired top event and works backward through combinations of lower-level failures or conditions that can produce that event.",
+      "whyItMatters": "FTA makes combinations and dependencies visible, helping analysts identify critical failure paths and evaluate how multiple causes can combine to produce a hazardous outcome.",
+      "keyPoint": "FTA reasons from the unwanted outcome toward its possible causes.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nrc.fault_tree_handbook",
+          "locator": "NUREG-0492 - fault tree construction and evaluation",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(e)(2)(vi) - Fault Tree Analysis",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "fault-tree"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.top_event",
+      "conceptId": "csp11.concept.top_event",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Top Event",
+      "backDefinition": "The defined system failure or undesirable outcome placed at the top of a fault tree and explained by tracing the combinations of lower-level events that can lead to it.",
+      "whyItMatters": "A precise top event establishes the scope and boundary of the analysis. An ambiguous top event can produce an unfocused or incomplete fault tree.",
+      "keyPoint": "Define the top event clearly before decomposing its causes.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nrc.top_event_glossary",
+          "locator": "NRC Glossary > Top event",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.nrc.fault_tree_handbook",
+          "locator": "NUREG-0492 - fault tree construction and evaluation",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "fault-tree"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.minimal_cut_set",
+      "conceptId": "csp11.concept.minimal_cut_set",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Minimal Cut Set",
+      "backDefinition": "A smallest combination of basic events that is sufficient, under the modeled fault-tree logic, to cause the top event; removing any event from that combination means the combination is no longer sufficient.",
+      "whyItMatters": "Minimal cut sets expose the combinations that can defeat the system and provide a compact basis for identifying important contributors and quantifying top-event probability.",
+      "keyPoint": "A minimal cut set contains no unnecessary event for producing the modeled top event.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nrc.fault_tree_handbook",
+          "locator": "NUREG-0492 - fault tree evaluation and cut-set analysis",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "fault-tree"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.failure_modes_and_effects_analysis",
+      "conceptId": "csp11.concept.failure_modes_and_effects_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Failure Modes and Effects Analysis",
+      "backDefinition": "A bottom-up, inductive technique that examines how individual items or functions can fail and traces the effects of each failure through higher levels of the system.",
+      "whyItMatters": "FMEA systematically exposes vulnerable components, failure propagation, detection needs, and opportunities for design or operational controls before failures occur in service.",
+      "keyPoint": "FMEA reasons from individual failure modes toward their consequences.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nasa.software_fmea",
+          "locator": "Software FMEA > bottom-up analysis and basic procedure",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(e)(2)(v) - Failure Mode and Effects Analysis",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "fmea"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.failure_mode",
+      "conceptId": "csp11.concept.failure_mode",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Failure Mode",
+      "backDefinition": "A specific manner in which an item, function, component, or interface can fail to perform its intended function or can perform it incorrectly.",
+      "whyItMatters": "Identifying distinct failure modes prevents an FMEA from treating all failures as equivalent and supports more specific consequence, detection, and control analysis.",
+      "keyPoint": "Describe how the item fails, not only that it fails.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nasa.software_fmea",
+          "locator": "Software FMEA > identify potential item and interface failure modes",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "fmea"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.failure_effect",
+      "conceptId": "csp11.concept.failure_effect",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Failure Effect",
+      "backDefinition": "The consequence produced by a failure mode at the local, next-higher, or overall system level within the defined scope of an FMEA.",
+      "whyItMatters": "Tracing effects shows whether a local failure remains contained, degrades a function, propagates to other parts of the system, or contributes to a hazardous state.",
+      "keyPoint": "Follow the failure far enough to understand its system-level consequence.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nasa.software_fmea",
+          "locator": "Software FMEA > evaluate each failure mode and its potential consequences",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "fmea"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.event_tree",
+      "conceptId": "csp11.concept.event_tree",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Event Tree Analysis",
+      "backDefinition": "A forward, branching analysis that begins with an initiating event and follows the success or failure of responding functions, systems, or actions to identify possible sequences and end states.",
+      "whyItMatters": "Event trees show how different responses after the same initiating event can lead to recovery or progressively more severe outcomes, making sequence-dependent risk visible.",
+      "keyPoint": "ETA moves forward from the initiating event through alternative response paths.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nrc.pra_backgrounder",
+          "locator": "Probabilistic Risk Assessment > event trees model plant response to initiating events",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.nasa.system_safety",
+          "locator": "System Safety > Event Tree Analysis",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "event-tree"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.initiating_event",
+      "conceptId": "csp11.concept.initiating_event",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Initiating Event",
+      "backDefinition": "An event that challenges normal operation and starts the sequence analysis used to evaluate how systems and people respond and what outcomes can follow.",
+      "whyItMatters": "Defining the initiator establishes the starting condition for an event tree and helps ensure that subsequent branch probabilities and system responses are interpreted consistently.",
+      "keyPoint": "The initiating event starts the sequence; it is not the final consequence.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nrc.pra_backgrounder",
+          "locator": "Probabilistic Risk Assessment > initiating event and accident sequences",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "event-tree"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.accident_sequence",
+      "conceptId": "csp11.concept.accident_sequence",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Accident Sequence",
+      "backDefinition": "A path through an event tree representing a particular combination of system responses and operator actions following an initiating event, leading to a defined outcome or end state.",
+      "whyItMatters": "Sequence analysis separates different pathways to an outcome, allowing analysts to identify which combinations of failures or successes contribute most to overall risk.",
+      "keyPoint": "Each sequence is one modeled path from initiator to outcome.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nrc.pra_backgrounder",
+          "locator": "Probabilistic Risk Assessment > accident sequences and event-tree paths",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "event-tree"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_case_approach",
+      "conceptId": "csp11.concept.safety_case_approach",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Safety Case Approach",
+      "backDefinition": "A structured, documented demonstration that major accident hazards have been identified and that effective arrangements and controls are in place to manage the associated risks within the applicable regulatory regime.",
+      "whyItMatters": "The approach requires the dutyholder to assemble a coherent demonstration of risk control rather than relying on isolated studies or an unsupported statement that the system is safe.",
+      "keyPoint": "A safety case is a demonstration of how major-accident risk is controlled, not merely a list of hazards.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.hse.offshore_law",
+          "locator": "Offshore health and safety law > safety case demonstrates ability and means to control major accident risks",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "safety-case"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.risk_summation",
+      "conceptId": "csp11.concept.risk_summation",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Risk Summation",
+      "backDefinition": "Aggregation of risk contributions from defined accident sequences or scenarios to obtain a total risk measure for a common endpoint using consistent units, boundaries, and model assumptions.",
+      "whyItMatters": "A system can have many individually small contributors. Summation shows their combined importance and prevents decisions from focusing only on the single largest scenario.",
+      "keyPoint": "Only combine contributions that represent the same risk endpoint and compatible basis.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c06"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nrc.pra_backgrounder",
+          "locator": "Probabilistic Risk Assessment > sequence frequencies summed to calculate total core damage frequency",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "system-safety",
+        "risk-analysis"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.nasa.system_safety",
+      "organization": "NASA",
+      "title": "System Safety",
+      "canonicalUrl": "https://sma.nasa.gov/sma-disciplines/system-safety",
+      "allowedDomains": [
+        "nasa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NASA system-safety overview supporting integrated hazard analysis, reliability analysis, FMEA, FTA, event-tree and related risk-analysis techniques. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nasa.software_fmea",
+      "organization": "NASA",
+      "title": "Software Failure Modes and Effects Analysis",
+      "canonicalUrl": "https://swehb.nasa.gov/pages/viewpage.action?pageId=72024565",
+      "allowedDomains": [
+        "nasa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NASA guidance describing FMEA as a bottom-up analysis of component failure modes, propagation, effects, detection, and corrective actions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nrc.fault_tree_handbook",
+      "organization": "U.S. Nuclear Regulatory Commission",
+      "title": "Fault Tree Handbook (NUREG-0492)",
+      "canonicalUrl": "https://www.nrc.gov/regulations-legislation/nureg-series-publications/publications-prepared-by-nrc-staff/sr0492",
+      "allowedDomains": [
+        "nrc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NRC technical handbook supporting fault-tree construction, evaluation, Boolean logic, top-event reasoning, and cut-set analysis. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nrc.pra_backgrounder",
+      "organization": "U.S. Nuclear Regulatory Commission",
+      "title": "Backgrounder on Probabilistic Risk Assessment",
+      "canonicalUrl": "https://www.nrc.gov/regulations-legislation/fact-sheets-brochures/backgrounder-on-probabilistic-risk-assessment",
+      "allowedDomains": [
+        "nrc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NRC overview supporting event-tree sequences, fault-tree system modeling, initiating events, sequence probabilities, and aggregation of sequence frequencies. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nrc.top_event_glossary",
+      "organization": "U.S. Nuclear Regulatory Commission",
+      "title": "Top event",
+      "canonicalUrl": "https://www.nrc.gov/education-regulatory-research/glossary/top-event",
+      "allowedDomains": [
+        "nrc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "officialGlossary",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NRC glossary entry supporting the role of a top event in fault-tree and event-tree analysis. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.hse.offshore_law",
+      "organization": "Health and Safety Executive",
+      "title": "Offshore health and safety law",
+      "canonicalUrl": "https://www.hse.gov.uk/offshore/law.htm",
+      "allowedDomains": [
+        "hse.gov.uk"
+      ],
+      "authorityTier": "otherSupporting",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official UK HSE guidance supporting the offshore Safety Case approach and the demonstration that major-accident risks are effectively controlled. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_119",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 - Process safety management of highly hazardous chemicals",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for FCP process-safety cards. FCP uses educational paraphrase and paragraph-level locators."
+    }
+  ]
+}
