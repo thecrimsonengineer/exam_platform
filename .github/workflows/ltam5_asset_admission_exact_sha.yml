@@ -5,6 +5,7 @@ on:
     branches:
       - phase-ml-ltam5-hero-asset-admission
       - phase-ml-ltam5-hero-asset-admission-blocked
+      - phase-ml-ltam5-hero-asset-intake
   workflow_dispatch:
 
 permissions:
@@ -42,11 +43,14 @@ jobs:
 
       - name: Verify formatting
         run: |
-          dart format --output=none --set-exit-if-changed             lib/features/learning_twin/ui/learning_twin_motion_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart
+          dart format --output=none --set-exit-if-changed             lib/features/learning_twin/ui/learning_twin_motion_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             tool/learning_twin/ltam5_idle_asset_admission.dart
 
       - name: Analyze admission slice
         run: |
-          dart analyze             lib/features/learning_twin/ui/learning_twin_motion_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart
+          dart analyze             lib/features/learning_twin/ui/learning_twin_motion_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             tool/learning_twin/ltam5_idle_asset_admission.dart
+
+      - name: Verify idle asset intake CLI guard
+        run: dart run tool/learning_twin/ltam5_idle_asset_admission.dart --help
 
       - name: Run admission and Hero pilot tests
         run: |
