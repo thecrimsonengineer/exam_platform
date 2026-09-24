@@ -75,16 +75,13 @@ void main() {
         expectedTag: 'missing-tag',
       );
 
-      expect(
-        policy.evaluate(cleanEvidence).blockingFailures,
-        <String>[
-          'RGP001_REPOSITORY_MISMATCH',
-          'RGP003_BRANCH_MISMATCH',
-          'RGP004_COMMIT_MISMATCH',
-          'RGP005_TREE_MISMATCH',
-          'RGP006_EXPECTED_TAG_MISSING',
-        ],
-      );
+      expect(policy.evaluate(cleanEvidence).blockingFailures, <String>[
+        'RGP001_REPOSITORY_MISMATCH',
+        'RGP003_BRANCH_MISMATCH',
+        'RGP004_COMMIT_MISMATCH',
+        'RGP005_TREE_MISMATCH',
+        'RGP006_EXPECTED_TAG_MISSING',
+      ]);
     });
 
     test('blocks dirty evidence', () {
@@ -96,11 +93,7 @@ void main() {
         treeSha: '89abcdef0123456789abcdef0123456789abcdef',
         tagsAtHead: <String>[],
         changes: <RepositoryChange>[
-          RepositoryChange(
-            status: ' M',
-            path: 'pubspec.yaml',
-            tracked: true,
-          ),
+          RepositoryChange(status: ' M', path: 'pubspec.yaml', tracked: true),
         ],
       );
 
@@ -210,19 +203,17 @@ void main() {
 
       await _git(repository, <String>['init']);
       await _git(repository, <String>['config', 'user.name', 'REL-GOV Test']);
-      await _git(
-        repository,
-        <String>['config', 'user.email', 'rel-gov-test@example.invalid'],
-      );
-      await _git(
-        repository,
-        <String>[
-          'remote',
-          'add',
-          'origin',
-          'https://github.com/thecrimsonengineer/exam_platform.git',
-        ],
-      );
+      await _git(repository, <String>[
+        'config',
+        'user.email',
+        'rel-gov-test@example.invalid',
+      ]);
+      await _git(repository, <String>[
+        'remote',
+        'add',
+        'origin',
+        'https://github.com/thecrimsonengineer/exam_platform.git',
+      ]);
 
       await File(
         '${repository.path}/tracked.txt',
