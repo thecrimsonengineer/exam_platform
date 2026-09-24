@@ -60,6 +60,7 @@ jobs:
           test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
           test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
           test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
+          test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
 
       - name: Format integration seam
         run: >
