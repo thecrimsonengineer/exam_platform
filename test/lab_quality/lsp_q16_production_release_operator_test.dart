@@ -260,11 +260,20 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('PRISTINE'), findsOneWidget);
+    final confirmation = find.byKey(const ValueKey('q16-confirmation'));
     final action = find.byKey(const ValueKey('q16-release-action'));
+
+    await tester.scrollUntilVisible(
+      confirmation,
+      320,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(confirmation, findsOneWidget);
+    expect(action, findsOneWidget);
     expect(tester.widget<FilledButton>(action).onPressed, isNull);
 
     await tester.enterText(
-      find.byKey(const ValueKey('q16-confirmation')),
+      confirmation,
       kQ16SeedConfirmationPhrase,
     );
     await tester.pump();
