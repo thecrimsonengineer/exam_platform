@@ -20,7 +20,7 @@ void main() {
     final inventory = readObject(inventoryPath);
     final placement = Map<String, dynamic>.from(inventory['placement'] as Map);
     expect(inventory['phase'], 'FCP-2B');
-    expect(inventory['status'], 'candidate_inventory');
+    expect(inventory['status'], 'resolved_inventory');
     expect(inventory['competencyId'], 'd02_c02');
     expect(placement['domainId'], 'd02');
     expect(placement['competencyId'], 'd02_c02');
@@ -30,11 +30,13 @@ void main() {
 
   test('D02 C02 candidates are unique and source-backed', () {
     final inventory = readObject(inventoryPath);
-    final candidates = (inventory['candidateConcepts'] as List)
+    final candidates = (inventory['acceptedConcepts'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
 
-    expect(candidates.length, 7);
+    expect(candidates.length, 5);
+    expect((inventory['mergedConcepts'] as List).length, 1);
+    expect(inventory['holds'], isEmpty);
     final slugs = candidates
         .map((item) => item['semanticSlug'] as String)
         .toList();
@@ -64,7 +66,7 @@ void main() {
     final crossRefs = (inventory['crossCompetencyReferences'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
-    expect(crossRefs.length, 2);
+    expect(crossRefs.length, 3);
     expect(
       crossRefs.every((item) => item['targetCompetencyId'] == 'd02_c01'),
       isTrue,
