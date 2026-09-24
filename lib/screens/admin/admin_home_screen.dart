@@ -258,6 +258,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       _openProductionRelease();
     } else if (index == 6) {
       _openProductionAcceptance();
+    } else if (index == 7) {
+      _openStudio();
     }
   }
 
