@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:exam_platform/models/micro_learning/micro_fact.dart';
 import 'package:exam_platform/screens/startup/csp11_startup_screen.dart';
 import 'package:exam_platform/screens/startup/startup_motion_policy.dart';
+import 'package:exam_platform/services/micro_learning/local_micro_fact_repository.dart';
 import 'package:exam_platform/services/micro_learning/startup_micro_fact_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -76,6 +79,42 @@ void main() {
     expect(find.byKey(destinationKey), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('unfinished MicroFact load cannot extend startup duration', (
+    tester,
+  ) async {
+    final pendingAsset = Completer<String>();
+    final service = StartupMicroFactService(
+      repository: LocalMicroFactRepository(
+        assetLoader: (_) => pendingAsset.future,
+      ),
+      clock: () => DateTime(2026, 9, 24),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Csp11StartupScreen(
+          motionPolicyOverride: StartupMotionPolicy.full,
+          microFactService: service,
+          child: const SizedBox(
+            key: destinationKey,
+            child: Text('Destination'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 5));
+
+    expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
+    expect(find.byKey(destinationKey), findsOneWidget);
+    expect(find.byKey(const ValueKey('startup-microfact-card')), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
 }
 
 class _FakeStartupMicroFactService extends StartupMicroFactService {
