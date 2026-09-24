@@ -1,0 +1,61 @@
+name: ML-9E Human Review Package Validation
+
+on:
+  push:
+    branches:
+      - phase-ml9e-human-review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml9e-human-review-${{ github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate-ml9e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-9E SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Revalidate ML-9D corpus checkpoint
+        run: dart run tool/validate_ml9d_whole_corpus_ml8.dart
+
+      - name: Analyze ML-9E validator
+        run: dart analyze tool/validate_ml9e_human_review.dart
+
+      - name: Validate human-review package readiness
+        run: dart run tool/validate_ml9e_human_review.dart
+
+      - name: Prove completion gate remains fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if dart run tool/validate_ml9e_human_review.dart --require-complete; then
+            echo "ML-9E completion unexpectedly passed before human review." >&2
+            exit 1
+          fi
+          echo "ML-9E completion is correctly blocked pending human review."
