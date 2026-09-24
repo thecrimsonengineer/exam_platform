@@ -92,8 +92,7 @@ class LabBatch2ReleaseService {
       expectedValidationAuthority: kBatch2ValidationAuthority,
     );
 
-    final validationBase =
-        (validatedAt ?? DateTime.now().toUtc()).toUtc();
+    final validationBase = (validatedAt ?? DateTime.now().toUtc()).toUtc();
     final publicationBase =
         (publishedAt ?? validationBase.add(const Duration(minutes: 1))).toUtc();
 

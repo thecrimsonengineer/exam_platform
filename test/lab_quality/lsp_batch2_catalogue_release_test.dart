@@ -27,24 +27,25 @@ LabScenarioPopulationManifest _manifest() =>
 List<LabProductionPopulationSeedCandidate> _candidates(
   LabScenarioPopulationManifest manifest,
 ) {
-  return manifest.entries.map((entry) {
-    return LabProductionPopulationSeedCandidate(
-      entryId: entry.entryId,
-      technicalRoot: _readObject(entry.technicalLabPath),
-      dqg300Evidence: const LabDqg300EvidenceCodec().decode(
-        File(entry.dqg300EvidencePath).readAsStringSync(),
-      ),
-      presentationPackage: LabLearnerPresentationPackage.fromJson(
-        _readObject(entry.learnerPresentationPath),
-      ),
-    );
-  }).toList(growable: false);
+  return manifest.entries
+      .map((entry) {
+        return LabProductionPopulationSeedCandidate(
+          entryId: entry.entryId,
+          technicalRoot: _readObject(entry.technicalLabPath),
+          dqg300Evidence: const LabDqg300EvidenceCodec().decode(
+            File(entry.dqg300EvidencePath).readAsStringSync(),
+          ),
+          presentationPackage: LabLearnerPresentationPackage.fromJson(
+            _readObject(entry.learnerPresentationPath),
+          ),
+        );
+      })
+      .toList(growable: false);
 }
 
 Future<LabBatch2ReleaseBundle>? _cachedBundle;
 
-Future<LabBatch2ReleaseBundle> _bundle() =>
-    _cachedBundle ??= _buildBundle();
+Future<LabBatch2ReleaseBundle> _bundle() => _cachedBundle ??= _buildBundle();
 
 Future<LabBatch2ReleaseBundle> _buildBundle() {
   final manifest = _manifest();
@@ -98,8 +99,9 @@ void main() {
       kLspBatch2PrecatalogueValidationRunId,
     );
     expect(
-      bundle.publishedVersions
-          .every((item) => item.validationAuthority == kBatch2ValidationAuthority),
+      bundle.publishedVersions.every(
+        (item) => item.validationAuthority == kBatch2ValidationAuthority,
+      ),
       isTrue,
     );
     expect(
@@ -108,70 +110,76 @@ void main() {
     );
   });
 
-  test('Batch 2 refuses atomic release before original release exists', () async {
-    final firestore = FakeFirebaseFirestore();
-    final repository = FirestoreLabBatch2AtomicReleaseRepository(
-      firestore: firestore,
-    );
+  test(
+    'Batch 2 refuses atomic release before original release exists',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      final repository = FirestoreLabBatch2AtomicReleaseRepository(
+        firestore: firestore,
+      );
 
-    await expectLater(
-      repository.commit(await _bundle()),
-      throwsA(isA<LabBatch2ReleaseException>()),
-    );
+      await expectLater(
+        repository.commit(await _bundle()),
+        throwsA(isA<LabBatch2ReleaseException>()),
+      );
 
-    expect(
-      (await firestore.collection('labPublishedVersions').get()).docs,
-      isEmpty,
-    );
-    expect(
-      (await firestore.collection('labLearnerCatalogue').get()).docs,
-      isEmpty,
-    );
-  });
+      expect(
+        (await firestore.collection('labPublishedVersions').get()).docs,
+        isEmpty,
+      );
+      expect(
+        (await firestore.collection('labLearnerCatalogue').get()).docs,
+        isEmpty,
+      );
+    },
+  );
 
-  test('Batch 2 commits all ten catalogue identities and release marker', () async {
-    final firestore = FakeFirebaseFirestore();
-    await _seedInitialReleaseMarker(firestore);
-    final bundle = await _bundle();
-    final repository = FirestoreLabBatch2AtomicReleaseRepository(
-      firestore: firestore,
-    );
+  test(
+    'Batch 2 commits all ten catalogue identities and release marker',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      await _seedInitialReleaseMarker(firestore);
+      final bundle = await _bundle();
+      final repository = FirestoreLabBatch2AtomicReleaseRepository(
+        firestore: firestore,
+      );
 
-    await repository.commit(bundle);
-    await repository.verify(bundle);
+      await repository.commit(bundle);
+      await repository.verify(bundle);
 
-    final published =
-        (await firestore.collection('labPublishedVersions').get()).docs;
-    final catalogue =
-        (await firestore.collection('labLearnerCatalogue').get()).docs;
-    final releaseEvidence = await firestore
-        .collection('labProductionReleaseEvidence')
-        .doc(bundle.evidence.releaseId)
-        .get();
-    final releaseState = await firestore
-        .collection('labLearnerReleaseState')
-        .doc(bundle.evidence.releaseId)
-        .get();
+      final published =
+          (await firestore.collection('labPublishedVersions').get()).docs;
+      final catalogue =
+          (await firestore.collection('labLearnerCatalogue').get()).docs;
+      final releaseEvidence = await firestore
+          .collection('labProductionReleaseEvidence')
+          .doc(bundle.evidence.releaseId)
+          .get();
+      final releaseState = await firestore
+          .collection('labLearnerReleaseState')
+          .doc(bundle.evidence.releaseId)
+          .get();
 
-    expect(published, hasLength(10));
-    expect(catalogue, hasLength(10));
-    expect(
-      published.every(
-        (doc) => doc.data()['releaseId'] == bundle.evidence.releaseId,
-      ),
-      isTrue,
-    );
-    expect(
-      catalogue.every(
-        (doc) => doc.data()['releaseId'] == bundle.evidence.releaseId,
-      ),
-      isTrue,
-    );
-    expect(releaseEvidence.exists, isTrue);
-    expect(releaseState.data()?['released'], isTrue);
-    expect(releaseState.data()?['labCount'], 10);
-    expect(releaseState.data()?['totalDecisionCount'], 50);
-  });
+      expect(published, hasLength(10));
+      expect(catalogue, hasLength(10));
+      expect(
+        published.every(
+          (doc) => doc.data()['releaseId'] == bundle.evidence.releaseId,
+        ),
+        isTrue,
+      );
+      expect(
+        catalogue.every(
+          (doc) => doc.data()['releaseId'] == bundle.evidence.releaseId,
+        ),
+        isTrue,
+      );
+      expect(releaseEvidence.exists, isTrue);
+      expect(releaseState.data()?['released'], isTrue);
+      expect(releaseState.data()?['labCount'], 10);
+      expect(releaseState.data()?['totalDecisionCount'], 50);
+    },
+  );
 
   test('Batch 2 production release is immutable on retry', () async {
     final firestore = FakeFirebaseFirestore();
@@ -201,22 +209,13 @@ void main() {
   test('Batch 2 Firestore rules gate new LABs on their release marker', () {
     final rules = File('firestore.rules').readAsStringSync();
 
-    expect(
-      rules,
-      contains("'phase_l_population_batch2_v1_q15_release_v1'"),
-    );
-    expect(
-      rules,
-      contains("'4aa151a749b2324e9edd69a40781d7f8169a72c0'"),
-    );
+    expect(rules, contains("'phase_l_population_batch2_v1_q15_release_v1'"));
+    expect(rules, contains("'4aa151a749b2324e9edd69a40781d7f8169a72c0'"));
     expect(rules, contains("'36015831093'"));
     expect(rules, contains('initialLabPopulationReleased()'));
     expect(rules, contains('function isInitialLabId(labId)'));
     expect(rules, contains('function isBatch2LabId(labId)'));
-    expect(
-      rules,
-      contains('isBatch2LabId(request.resource.data.labId)'),
-    );
+    expect(rules, contains('isBatch2LabId(request.resource.data.labId)'));
     expect(rules, contains("!('releaseId' in request.resource.data)"));
     expect(rules, isNot(contains('labResourceReleased(resource.data)')));
     expect(rules, contains('existsAfter('));

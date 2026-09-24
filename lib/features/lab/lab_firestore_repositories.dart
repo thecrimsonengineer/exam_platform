@@ -412,7 +412,6 @@ class FirestoreLabProductionReleaseEvidenceRepository
   }
 }
 
-
 class FirestoreLabBatch2AtomicReleaseRepository {
   FirestoreLabBatch2AtomicReleaseRepository({FirebaseFirestore? firestore})
     : _firestore = firestore ?? FirebaseFirestore.instance;
@@ -458,7 +457,9 @@ class FirestoreLabBatch2AtomicReleaseRepository {
 
     final published = _firestore.collection('labPublishedVersions');
     final catalogue = _firestore.collection('labLearnerCatalogue');
-    final releaseEvidence = _firestore.collection('labProductionReleaseEvidence');
+    final releaseEvidence = _firestore.collection(
+      'labProductionReleaseEvidence',
+    );
     final releaseState = _firestore.collection('labLearnerReleaseState');
 
     await _firestore.runTransaction((transaction) async {
@@ -492,8 +493,12 @@ class FirestoreLabBatch2AtomicReleaseRepository {
         final entry = bundle.catalogueEntries.firstWhere(
           (item) => item.identityKey == version.labId + '@' + version.versionId,
         );
-        final publishedRef = published.doc(version.labId + '__' + version.versionId);
-        final catalogueRef = catalogue.doc(entry.labId + '__' + entry.versionId);
+        final publishedRef = published.doc(
+          version.labId + '__' + version.versionId,
+        );
+        final catalogueRef = catalogue.doc(
+          entry.labId + '__' + entry.versionId,
+        );
 
         if ((await transaction.get(publishedRef)).exists ||
             (await transaction.get(catalogueRef)).exists) {
