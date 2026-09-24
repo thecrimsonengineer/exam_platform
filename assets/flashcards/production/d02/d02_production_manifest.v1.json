@@ -136,11 +136,18 @@
       "competencyId": "d02_c08",
       "number": 8,
       "statement": "Recognize safety, health, and environmental management and audit systems (e.g., ISO 14000 series, 45001, 19011, ANSI Z10)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c08/d02_c08_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c08/d02_c08_flashcards_v1.json",
       "cardCount": 12,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c08",
+      "checkpoint": {
+        "gate": "FCP2H_D02_C08_GREEN",
+        "branch": "phase-fcp2h-d02-c08-closed",
+        "packageValidationSha": "b1590fd7f5cb6d0a261c9af5b2d7fb93829a8cec",
+        "packageValidationRun": 36000014475
+      }
     },
     {
       "competencyId": "d02_c09",
