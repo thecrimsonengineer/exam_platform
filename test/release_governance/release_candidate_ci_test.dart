@@ -79,8 +79,10 @@ void main() {
       expect(
         gates.every((value) {
           final gate = value! as Map<String, Object?>;
-          final evidence = gate['evidence']! as List<String>;
-          return evidence.every((ref) => ref.startsWith('build/'));
+          final evidence = gate['evidence']! as List<Object?>;
+          return evidence.every(
+            (ref) => ref is String && ref.startsWith('build/'),
+          );
         }),
         isTrue,
       );
