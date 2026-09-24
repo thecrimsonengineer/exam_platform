@@ -14,7 +14,7 @@ Competencies: 14
 ## Competency sequence
 
 ```text
-FCP-2A  d02_c01  IN PROGRESS
+FCP-2A  d02_c01  VALIDATING
 FCP-2B  d02_c02  NOT STARTED
 FCP-2C  d02_c03  NOT STARTED
 FCP-2D  d02_c04  NOT STARTED
@@ -30,4 +30,13 @@ FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2A begins with the canonical D02 C01 concept inventory. No learner-ready card is admitted until concept boundaries and source authority are resolved.
+### FCP-2A package
+
+```text
+d02_c01
+8 cards
+Benchmarking / performance comparison / gap analysis
+status: VALIDATING
+```
+
+C01 remains fail-closed until the package passes FCQ100, deterministic JSON round-trip, provenance, duplicate checks, frozen Flashcard Core regression, and repository regression.

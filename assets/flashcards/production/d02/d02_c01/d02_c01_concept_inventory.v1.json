@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-2A",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d02",
   "competencyId": "d02_c01",
   "competencyStatement": "Compare performance against established benchmarks (e.g., gap analysis)",
@@ -44,88 +44,88 @@
       ]
     }
   ],
-  "candidateConcepts": [
+  "acceptedConcepts": [
     {
       "semanticSlug": "benchmark",
       "canonicalLabel": "Benchmark",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.nist.baldrige_framework",
         "csp11.source.osha.program_evaluation"
       ],
-      "rationale": "A reference level or comparison point used to judge current performance."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "benchmarking",
       "canonicalLabel": "Benchmarking",
-      "decision": "CANDIDATE",
       "sourceIds": [
-        "csp11.source.nist.baldrige_framework"
+        "csp11.source.nist.baldrige_framework",
+        "csp11.source.nist.baldrige_commentary"
       ],
-      "rationale": "The process of comparing performance with relevant internal, external, industry, competitor, or best-practice references."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "performance_measure",
       "canonicalLabel": "Performance Measure",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.nist.performance_measurement",
         "csp11.source.osha.program_evaluation"
       ],
-      "rationale": "A defined measure used to track and evaluate performance, progress, or results."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "performance_baseline",
       "canonicalLabel": "Performance Baseline",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.nist.baldrige_framework"
       ],
-      "rationale": "The established current or starting performance level against which later change can be assessed."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "performance_target",
       "canonicalLabel": "Performance Target",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.program_evaluation"
       ],
-      "rationale": "A desired measurable performance level used to judge progress toward a goal."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "performance_gap",
       "canonicalLabel": "Performance Gap",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.nist.baldrige_framework"
       ],
-      "rationale": "The difference between current performance and a desired, benchmark, or required performance level."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "gap_analysis",
       "canonicalLabel": "Gap Analysis",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.program_tools",
         "csp11.source.nist.baldrige_framework"
       ],
-      "rationale": "A structured comparison of current performance or practices with a desired benchmark or requirement to identify shortcomings and improvement needs."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "comparative_performance_data",
       "canonicalLabel": "Comparative Performance Data",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.nist.baldrige_framework",
         "csp11.source.nist.performance_measurement"
       ],
-      "rationale": "Performance information used to compare an organization with relevant internal units, competitors, industry averages, benchmarks, or leading performers."
+      "decision": "CARD"
     }
   ],
-  "acceptedConcepts": [],
   "mergedConcepts": [],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve D02 C01 concept boundaries before learner-ready package authoring."
+  "nextGate": "Validate d02_c01_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and frozen-core regression.",
+  "resolutionSummary": {
+    "candidateCount": 8,
+    "acceptedCardCount": 8,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
 }

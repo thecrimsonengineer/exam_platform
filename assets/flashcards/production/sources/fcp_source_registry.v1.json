@@ -732,6 +732,23 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Supports trends, comparisons, benchmark performance, accurate and timely measures, and decision-useful performance information. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.baldrige_commentary",
+      "organization": "NIST",
+      "title": "Baldrige Criteria Commentary",
+      "canonicalUrl": "https://www.nist.gov/baldrige/baldrige-criteria-commentary",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports comparative data, benchmarking, performance comparisons, stretch goals, and performance analysis. Educational paraphrase only."
     }
   ]
 }

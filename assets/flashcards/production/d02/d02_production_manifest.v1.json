@@ -17,8 +17,11 @@
       "competencyId": "d02_c01",
       "number": 1,
       "statement": "Compare performance against established benchmarks (e.g., gap analysis)",
-      "status": "in_progress",
-      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c01/d02_c01_concept_inventory.v1.json"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c01/d02_c01_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d02/d02_c01/d02_c01_flashcards_v1.json",
+      "cardCount": 8,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d02_c02",

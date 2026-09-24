@@ -42,7 +42,7 @@ void main() {
       expect(observed['statement'], expected.statement);
     }
 
-    expect(competencies.first['status'], 'in_progress');
+    expect(competencies.first['status'], 'validating');
     expect(
       competencies.skip(1).every((item) => item['status'] == 'not_started'),
       isTrue,
@@ -52,14 +52,15 @@ void main() {
   test('D02 C01 candidate inventory is unique and source-backed', () {
     final inventory = readObject(inventoryPath);
     expect(inventory['phase'], 'FCP-2A');
-    expect(inventory['status'], 'candidate_inventory');
+    expect(inventory['status'], 'resolved_inventory');
     expect(inventory['domainId'], 'd02');
     expect(inventory['competencyId'], 'd02_c01');
 
-    final candidates = (inventory['candidateConcepts'] as List)
+    final candidates = (inventory['acceptedConcepts'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
     expect(candidates.length, 8);
+    expect(inventory['holds'], isEmpty);
 
     final slugs = candidates
         .map((item) => item['semanticSlug'] as String)
