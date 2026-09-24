@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2H",
+  "competencyId": "d02_c08",
+  "cardCount": 12,
+  "cardsWithProvenance": 12,
+  "cardsWithExactlyOnePrimarySource": 12,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.assp.z10_2019",
+    "csp11.source.iso.14000_family",
+    "csp11.source.iso.14001_2026",
+    "csp11.source.iso.19011_2026",
+    "csp11.source.iso.45001_2018",
+    "csp11.source.iso.management_system_standards"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.iso.management_system_standards": 2,
+    "csp11.source.iso.14000_family": 1,
+    "csp11.source.iso.14001_2026": 2,
+    "csp11.source.iso.45001_2018": 3,
+    "csp11.source.iso.19011_2026": 3,
+    "csp11.source.assp.z10_2019": 1
+  },
+  "status": "PASS"
+}
