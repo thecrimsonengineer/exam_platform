@@ -10,13 +10,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: lsp-batch2-release-integration-${{ github.sha }}
+  group: lsp-batch2-release-integration-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 90
 
     steps:
       - uses: actions/checkout@v4
@@ -34,10 +34,28 @@ jobs:
 
       - name: Canonical formatting
         run: |
-          dart format             lib/features/lab/lab_batch2_release_integration.dart             lib/features/lab/lab_learner_catalogue.dart             lib/features/lab/lab_firestore_repositories.dart             lib/screens/admin/lab/lab_batch2_release_screen.dart             lib/screens/admin/admin_home_screen.dart             test/lab_quality/lsp_batch2_release_integration_test.dart
+          dart format \
+            lib/features/lab/lab_batch2_release_integration.dart \
+            lib/features/lab/lab_learner_catalogue.dart \
+            lib/features/lab/lab_firestore_repositories.dart \
+            lib/features/lab/lab_runtime_binding.dart \
+            lib/screens/admin/lab/lab_batch2_release_screen.dart \
+            lib/screens/admin/admin_home_screen.dart \
+            test/lab_quality/lsp_batch2_release_integration_test.dart \
+            test/lab_quality/lsp_q15_production_release_closure_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
+
+      - name: Compile Firestore rules
+        run: |
+          npx --yes firebase-tools@14.17.0 emulators:exec \
+            --only firestore \
+            --project csp11-exam-platform \
+            "echo Firestore rules compiled"
+
+      - name: Batch 2 pre-catalogue regression
+        run: flutter test test/lab_quality/lsp_batch2_population_gate_test.dart
 
       - name: Batch 2 release integration
         run: flutter test test/lab_quality/lsp_batch2_release_integration_test.dart
@@ -48,9 +66,11 @@ jobs:
       - name: Original Q17 regression
         run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
 
-      - name: Firestore rule contract regression
-        run: |
-          flutter test test/services/auth/firestore_rules_contract_test.dart ||           flutter test test/firestore_rules_test.dart ||           echo "No dedicated Firestore rules unit test found; Batch 2 rule assertions already ran."
+      - name: Q13 persistent runtime regression
+        run: flutter test test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
+
+      - name: Q15 legacy release regression
+        run: flutter test test/lab_quality/lsp_q15_production_release_closure_test.dart
 
       - name: Full repository regression
         run: flutter test
@@ -62,7 +82,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add             lib/features/lab/lab_batch2_release_integration.dart             lib/features/lab/lab_learner_catalogue.dart             lib/features/lab/lab_firestore_repositories.dart             lib/screens/admin/lab/lab_batch2_release_screen.dart             lib/screens/admin/admin_home_screen.dart             test/lab_quality/lsp_batch2_release_integration_test.dart
+          git add \
+            lib/features/lab/lab_batch2_release_integration.dart \
+            lib/features/lab/lab_learner_catalogue.dart \
+            lib/features/lab/lab_firestore_repositories.dart \
+            lib/features/lab/lab_runtime_binding.dart \
+            lib/screens/admin/lab/lab_batch2_release_screen.dart \
+            lib/screens/admin/admin_home_screen.dart \
+            test/lab_quality/lsp_batch2_release_integration_test.dart \
+            test/lab_quality/lsp_q15_production_release_closure_test.dart
           if git diff --cached --quiet; then
             echo "Formatting already committed."
             exit 0
