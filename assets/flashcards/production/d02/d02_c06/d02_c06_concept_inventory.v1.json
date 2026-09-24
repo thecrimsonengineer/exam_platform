@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2F",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c06",
+  "competencyStatement": "Describe system safety analysis techniques (e.g., fault tree analysis, failure modes and effects analysis [FMEA], Safety Case approach, risk summation)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c06",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.nasa.system_safety",
+      "locators": [
+        "System Safety",
+        "Failure Modes and Effects Analysis",
+        "Fault Tree Analysis",
+        "Event Tree Analysis",
+        "risk-management concepts"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nasa.software_fmea",
+      "locators": [
+        "Software Failure Modes and Effects Analysis",
+        "bottom-up analysis",
+        "identify failure modes",
+        "evaluate consequences"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nrc.fault_tree_handbook",
+      "locators": [
+        "Fault Tree Handbook (NUREG-0492)",
+        "fault tree construction",
+        "fault tree evaluation",
+        "cut-set analysis"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nrc.pra_backgrounder",
+      "locators": [
+        "Probabilistic Risk Assessment",
+        "initiating events",
+        "event trees",
+        "fault trees",
+        "accident sequences",
+        "sequence-frequency summation"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nrc.top_event_glossary",
+      "locators": [
+        "Top event"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.hse.offshore_law",
+      "locators": [
+        "Offshore health and safety law",
+        "Safety Case",
+        "control major accident risks effectively"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_119",
+      "locators": [
+        "29 CFR 1910.119(e)(1) - process hazard analysis",
+        "29 CFR 1910.119(e)(2)(v) - FMEA",
+        "29 CFR 1910.119(e)(2)(vi) - Fault Tree Analysis"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "process_safety_management",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02",
+      "intendedConceptId": "csp11.concept.process_safety_management",
+      "reason": "System-safety techniques may be used within process safety management, but the generic Process Safety Management concept is canonical in D01 C02."
+    },
+    {
+      "semanticSlug": "process_safety_information",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02",
+      "intendedConceptId": "csp11.concept.process_safety_information",
+      "reason": "Process hazard analyses rely on process safety information, but the generic Process Safety Information concept is canonical in D01 C02."
+    },
+    {
+      "semanticSlug": "root_cause_analysis",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c04",
+      "intendedConceptId": "csp11.concept.root_cause_analysis",
+      "reason": "Fault-tree reasoning can support causal investigation, but the generic Root Cause Analysis concept is canonical in D02 C04."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "system_safety_analysis",
+      "canonicalLabel": "System Safety Analysis",
+      "sourceIds": [
+        "csp11.source.nasa.system_safety",
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "fault_tree_analysis",
+      "canonicalLabel": "Fault Tree Analysis",
+      "sourceIds": [
+        "csp11.source.nrc.fault_tree_handbook",
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "top_event",
+      "canonicalLabel": "Top Event",
+      "sourceIds": [
+        "csp11.source.nrc.top_event_glossary",
+        "csp11.source.nrc.fault_tree_handbook"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "minimal_cut_set",
+      "canonicalLabel": "Minimal Cut Set",
+      "sourceIds": [
+        "csp11.source.nrc.fault_tree_handbook"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "failure_modes_and_effects_analysis",
+      "canonicalLabel": "Failure Modes and Effects Analysis",
+      "sourceIds": [
+        "csp11.source.nasa.software_fmea",
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "failure_mode",
+      "canonicalLabel": "Failure Mode",
+      "sourceIds": [
+        "csp11.source.nasa.software_fmea"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "failure_effect",
+      "canonicalLabel": "Failure Effect",
+      "sourceIds": [
+        "csp11.source.nasa.software_fmea"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "event_tree",
+      "canonicalLabel": "Event Tree Analysis",
+      "sourceIds": [
+        "csp11.source.nrc.pra_backgrounder",
+        "csp11.source.nasa.system_safety"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "initiating_event",
+      "canonicalLabel": "Initiating Event",
+      "sourceIds": [
+        "csp11.source.nrc.pra_backgrounder"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "accident_sequence",
+      "canonicalLabel": "Accident Sequence",
+      "sourceIds": [
+        "csp11.source.nrc.pra_backgrounder"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_case_approach",
+      "canonicalLabel": "Safety Case Approach",
+      "sourceIds": [
+        "csp11.source.hse.offshore_law"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "risk_summation",
+      "canonicalLabel": "Risk Summation",
+      "sourceIds": [
+        "csp11.source.nrc.pra_backgrounder"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c06_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 12,
+    "acceptedCardCount": 12,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
