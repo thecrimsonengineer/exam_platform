@@ -22,10 +22,7 @@ void main() {
 
     final base = Map<String, dynamic>.from(manifest['base'] as Map);
     expect(base['branch'], 'phase-fc-closed');
-    expect(
-      base['sha'],
-      'eeaad1d2d02c3aaf3c09f39ed277185624542c93',
-    );
+    expect(base['sha'], 'eeaad1d2d02c3aaf3c09f39ed277185624542c93');
   });
 
   test('FCP declares exactly twelve ordered runs', () {
