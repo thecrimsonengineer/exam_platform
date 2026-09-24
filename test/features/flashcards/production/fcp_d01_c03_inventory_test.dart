@@ -20,7 +20,7 @@ void main() {
     final inventory = readObject(inventoryPath);
     final placement = Map<String, dynamic>.from(inventory['placement'] as Map);
     expect(inventory['phase'], 'FCP-1C');
-    expect(inventory['status'], 'candidate_inventory');
+    expect(inventory['status'], 'resolved_inventory');
     expect(inventory['domainId'], 'd01');
     expect(inventory['competencyId'], 'd01_c03');
     expect(placement['topicId'], isNull);
@@ -29,14 +29,15 @@ void main() {
 
   test('D01 C03 candidate concepts are unique and source-backed', () {
     final inventory = readObject(inventoryPath);
-    final candidates = (inventory['candidateConcepts'] as List)
+    final accepted = (inventory['acceptedConcepts'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
-    expect(candidates.length, 14);
-    final slugs = candidates
+    expect(accepted.length, 14);
+    expect(inventory['holds'], isEmpty);
+    final slugs = accepted
         .map((item) => item['semanticSlug'] as String)
         .toList();
-    final labels = candidates
+    final labels = accepted
         .map((item) => item['canonicalLabel'] as String)
         .toList();
     expect(slugs.toSet().length, slugs.length);
@@ -52,7 +53,7 @@ void main() {
           )
           .toList(),
     );
-    for (final concept in candidates) {
+    for (final concept in accepted) {
       final sourceIds = (concept['sourceIds'] as List).cast<String>();
       expect(sourceIds, isNotEmpty);
       expect(sourceIds.every(registry.contains), isTrue);

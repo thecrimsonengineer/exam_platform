@@ -8,7 +8,7 @@ Recovery base: `phase-fcp0-production-spec-closed@42dd596449a6a1265a5fc505d4f32b
 ```text
 FCP-1A  d01_c01  CLOSED
 FCP-1B  d01_c02  CLOSED
-FCP-1C  d01_c03  IN PROGRESS
+FCP-1C  d01_c03  VALIDATING
 FCP-1D  d01_c04  NOT STARTED
 FCP-1E  d01_c05  NOT STARTED
 FCP-1F  d01_c06  NOT STARTED
@@ -29,4 +29,4 @@ Run 35956562360
 
 ### Current task
 
-Build and resolve the `d01_c03` common-workplace-hazards concept inventory from OSHA electrical, fall, confined-space, hazardous-energy, water, Focus Four, and excavation authorities.
+Validate the resolved `d01_c03` 14-card common-workplace-hazards package through FCQ100, provenance, deterministic JSON round-trip, duplicate checks, and full repository regression.

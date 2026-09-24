@@ -1,0 +1,737 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d01_c03_flashcards_v1",
+    "domainId": "d01",
+    "competencyId": "d01_c03",
+    "title": "Common Workplace Hazard Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.electrical_hazard",
+      "csp11.flashcard.electrical_deenergization",
+      "csp11.flashcard.verification_of_deenergized_condition",
+      "csp11.flashcard.fall_hazard",
+      "csp11.flashcard.fall_protection_system",
+      "csp11.flashcard.permit_required_confined_space",
+      "csp11.flashcard.acceptable_entry_conditions",
+      "csp11.flashcard.hazardous_energy_control",
+      "csp11.flashcard.lockout_tagout",
+      "csp11.flashcard.working_over_or_near_water",
+      "csp11.flashcard.struck_by_hazard",
+      "csp11.flashcard.caught_in_between_hazard",
+      "csp11.flashcard.excavation_hazard",
+      "csp11.flashcard.excavation_protective_system"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.electrical_hazard",
+      "canonicalLabel": "Electrical Hazard",
+      "flashcardId": "csp11.flashcard.electrical_hazard",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "electrical energy hazard"
+      ]
+    },
+    {
+      "id": "csp11.concept.electrical_deenergization",
+      "canonicalLabel": "Electrical Deenergization",
+      "flashcardId": "csp11.flashcard.electrical_deenergization",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "deenergizing electrical parts"
+      ]
+    },
+    {
+      "id": "csp11.concept.verification_of_deenergized_condition",
+      "canonicalLabel": "Verification of Deenergized Condition",
+      "flashcardId": "csp11.flashcard.verification_of_deenergized_condition",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "absence-of-voltage verification"
+      ]
+    },
+    {
+      "id": "csp11.concept.fall_hazard",
+      "canonicalLabel": "Fall Hazard",
+      "flashcardId": "csp11.flashcard.fall_hazard",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "fall-from-elevation hazard"
+      ]
+    },
+    {
+      "id": "csp11.concept.fall_protection_system",
+      "canonicalLabel": "Fall Protection System",
+      "flashcardId": "csp11.flashcard.fall_protection_system",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "fall protection"
+      ]
+    },
+    {
+      "id": "csp11.concept.permit_required_confined_space",
+      "canonicalLabel": "Permit-Required Confined Space",
+      "flashcardId": "csp11.flashcard.permit_required_confined_space",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "permit space",
+        "prcs"
+      ]
+    },
+    {
+      "id": "csp11.concept.acceptable_entry_conditions",
+      "canonicalLabel": "Acceptable Entry Conditions",
+      "flashcardId": "csp11.flashcard.acceptable_entry_conditions",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "safe entry conditions"
+      ]
+    },
+    {
+      "id": "csp11.concept.hazardous_energy_control",
+      "canonicalLabel": "Hazardous Energy Control",
+      "flashcardId": "csp11.flashcard.hazardous_energy_control",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "control of hazardous energy"
+      ]
+    },
+    {
+      "id": "csp11.concept.lockout_tagout",
+      "canonicalLabel": "Lockout/Tagout",
+      "flashcardId": "csp11.flashcard.lockout_tagout",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "loto"
+      ]
+    },
+    {
+      "id": "csp11.concept.working_over_or_near_water",
+      "canonicalLabel": "Working Over or Near Water",
+      "flashcardId": "csp11.flashcard.working_over_or_near_water",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "drowning exposure"
+      ]
+    },
+    {
+      "id": "csp11.concept.struck_by_hazard",
+      "canonicalLabel": "Struck-By Hazard",
+      "flashcardId": "csp11.flashcard.struck_by_hazard",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "struck-by"
+      ]
+    },
+    {
+      "id": "csp11.concept.caught_in_between_hazard",
+      "canonicalLabel": "Caught-In or -Between Hazard",
+      "flashcardId": "csp11.flashcard.caught_in_between_hazard",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "caught-in-between"
+      ]
+    },
+    {
+      "id": "csp11.concept.excavation_hazard",
+      "canonicalLabel": "Excavation Hazard",
+      "flashcardId": "csp11.flashcard.excavation_hazard",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "trench and excavation hazard"
+      ]
+    },
+    {
+      "id": "csp11.concept.excavation_protective_system",
+      "canonicalLabel": "Excavation Protective System",
+      "flashcardId": "csp11.flashcard.excavation_protective_system",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "aliases": [
+        "trench protective system"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.electrical_hazard",
+      "conceptId": "csp11.concept.electrical_hazard",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Electrical Hazard",
+      "backDefinition": "A hazard created when workers may contact or be exposed to electrical energy capable of causing shock, burns, arc effects, or other injury.",
+      "whyItMatters": "Recognizing electrical exposure is the first step in selecting deenergization, guarding, safe work practices, and other controls.",
+      "keyPoint": "Treat exposed energized parts as hazardous unless an applicable safe-work condition is established.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_333",
+          "locator": "1910.333(a) General",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "electrical-safety",
+        "hazard-recognition",
+        "workplace-hazards"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.electrical_deenergization",
+      "conceptId": "csp11.concept.electrical_deenergization",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Electrical Deenergization",
+      "backDefinition": "Removing electrical energy from exposed parts before work so employees are not required to perform the task on energized conductors or circuit parts.",
+      "whyItMatters": "Deenergization reduces direct electrical exposure and is the normal OSHA expectation unless a specified exception justifies energized work.",
+      "keyPoint": "Deenergize before work unless an applicable exception permits energized work.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_333",
+          "locator": "1910.333(a)(1) Deenergized parts",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "electrical-safety",
+        "deenergization",
+        "energy-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.verification_of_deenergized_condition",
+      "conceptId": "csp11.concept.verification_of_deenergized_condition",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Verification of Deenergized Condition",
+      "backDefinition": "A check performed after electrical isolation to confirm that the circuit parts and equipment are actually deenergized before they are treated as safe.",
+      "whyItMatters": "Opening a disconnect or applying a lock does not by itself prove that hazardous voltage is absent from the work area.",
+      "keyPoint": "Verify the deenergized condition before beginning work.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_333",
+          "locator": "1910.333(b)(2)(iv) Verification of deenergized condition",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "electrical-safety",
+        "verification",
+        "energy-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.fall_hazard",
+      "conceptId": "csp11.concept.fall_hazard",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Fall Hazard",
+      "backDefinition": "A workplace condition in which a worker can fall from a walking-working surface, opening, edge, or other location to a lower level.",
+      "whyItMatters": "Fall hazards can produce severe or fatal injuries and must be evaluated so the required protection can be selected for the exposure.",
+      "keyPoint": "Identify the fall exposure before selecting the protective system.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_28",
+          "locator": "1910.28(b) Protection from fall hazards",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fall-protection",
+        "hazard-recognition",
+        "walking-working-surfaces"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.fall_protection_system",
+      "conceptId": "csp11.concept.fall_protection_system",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Fall Protection System",
+      "backDefinition": "A system used to prevent a worker from falling or to limit the consequences of a fall, selected for the applicable walking-working surface and exposure.",
+      "whyItMatters": "Different fall exposures call for different controls, including guardrail, safety net, travel restraint, or personal fall arrest systems where applicable.",
+      "keyPoint": "Match the system to the specific fall exposure and governing requirement.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_28",
+          "locator": "1910.28(b) Protection from fall hazards",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fall-protection",
+        "protective-system",
+        "workplace-controls"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.permit_required_confined_space",
+      "conceptId": "csp11.concept.permit_required_confined_space",
+      "version": 1,
+      "type": "classification",
+      "frontLabel": "Permit-Required Confined Space",
+      "backDefinition": "A confined space with one or more specified serious hazards, such as a hazardous atmosphere, engulfment, trapping configuration, or another recognized serious safety or health hazard.",
+      "whyItMatters": "Classifying a space as permit-required triggers formal entry controls, hazard evaluation, communication, and rescue-related requirements.",
+      "keyPoint": "A confined space becomes permit-required when specified serious hazards are present.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_146",
+          "locator": "1910.146(b) Definitions > Permit-required confined space",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "confined-space",
+        "permit-space",
+        "hazard-classification"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.acceptable_entry_conditions",
+      "conceptId": "csp11.concept.acceptable_entry_conditions",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Acceptable Entry Conditions",
+      "backDefinition": "The conditions that must exist in a permit space to allow an employee to enter and perform the assigned work safely.",
+      "whyItMatters": "Entry criteria turn hazard evaluation into measurable conditions that must be maintained for safe permit-space work.",
+      "keyPoint": "Entry is allowed only while the required acceptable conditions are maintained.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_146",
+          "locator": "1910.146(b) Definitions > Acceptable entry conditions",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "confined-space",
+        "entry-conditions",
+        "permit-space"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.hazardous_energy_control",
+      "conceptId": "csp11.concept.hazardous_energy_control",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Hazardous Energy Control",
+      "backDefinition": "The control of electrical, mechanical, hydraulic, pneumatic, chemical, thermal, or other energy that could unexpectedly energize equipment or release stored energy during servicing.",
+      "whyItMatters": "Unexpected startup or stored-energy release can seriously injure workers even when normal operating controls appear to be off.",
+      "keyPoint": "Control every hazardous energy source before servicing begins.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_147",
+          "locator": "1910.147(a) Scope, application, and purpose",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "hazardous-energy",
+        "lockout-tagout",
+        "maintenance-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.lockout_tagout",
+      "conceptId": "csp11.concept.lockout_tagout",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Lockout/Tagout",
+      "backDefinition": "An energy-control method that uses established procedures and lockout or tagout devices to prevent unexpected energization, startup, or release of hazardous energy.",
+      "whyItMatters": "LOTO provides a controlled sequence for isolating equipment and protecting employees during servicing and maintenance.",
+      "keyPoint": "Operating controls alone are not a substitute for the required energy-isolation process.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_147",
+          "locator": "1910.147(c)-(d) General and application of control",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "lockout-tagout",
+        "hazardous-energy",
+        "energy-isolation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.working_over_or_near_water",
+      "conceptId": "csp11.concept.working_over_or_near_water",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Working Over or Near Water",
+      "backDefinition": "Work performed where employees are exposed to a drowning hazard because of proximity to water and the possibility of falling into it.",
+      "whyItMatters": "Water exposure can turn a fall into a drowning emergency, so lifesaving equipment and prompt rescue capability may be required.",
+      "keyPoint": "Evaluate both fall exposure and drowning consequences.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1926_106",
+          "locator": "1926.106(a)-(d) Working over or near water",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "water-safety",
+        "drowning-hazard",
+        "construction-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.struck_by_hazard",
+      "conceptId": "csp11.concept.struck_by_hazard",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Struck-By Hazard",
+      "backDefinition": "A hazard in which a worker can be injured by forceful contact or impact from a moving, flying, falling, or swinging object, vehicle, or material.",
+      "whyItMatters": "Recognizing the direction and source of impact helps identify exclusion zones, traffic controls, securing methods, and protective measures.",
+      "keyPoint": "The defining event is impact between the worker and an object or equipment.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.focus_four",
+          "locator": "Construction Focus Four > Struck-By",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "struck-by",
+        "focus-four",
+        "construction-hazards"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.caught_in_between_hazard",
+      "conceptId": "csp11.concept.caught_in_between_hazard",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Caught-In or -Between Hazard",
+      "backDefinition": "A hazard in which a worker can be caught, compressed, pinched, crushed, or trapped between objects, equipment, structures, or materials.",
+      "whyItMatters": "These events can develop rapidly around moving equipment, collapsing materials, excavations, and pinch points, often with severe consequences.",
+      "keyPoint": "The defining mechanism is trapping or compression rather than simple impact.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.focus_four",
+          "locator": "Construction Focus Four > Caught-In or -Between",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "caught-in-between",
+        "focus-four",
+        "construction-hazards"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.excavation_hazard",
+      "conceptId": "csp11.concept.excavation_hazard",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Excavation Hazard",
+      "backDefinition": "A hazard associated with excavation work, including cave-ins, underground installations, water accumulation, falling material, hazardous atmospheres, access, and mobile equipment.",
+      "whyItMatters": "Excavations can combine multiple high-energy hazards, so conditions must be assessed before and during the work rather than treated as a single cave-in issue.",
+      "keyPoint": "Cave-in risk is critical, but it is not the only excavation hazard.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1926_651",
+          "locator": "1926.651 Specific excavation requirements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1926_652",
+          "locator": "1926.652(a) Protection of employees in excavations",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "excavation",
+        "trenching",
+        "construction-hazards"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.excavation_protective_system",
+      "conceptId": "csp11.concept.excavation_protective_system",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Excavation Protective System",
+      "backDefinition": "A system such as sloping, benching, shoring, or shielding used as applicable to protect employees from cave-ins in excavations.",
+      "whyItMatters": "Proper protective-system selection directly addresses the principal collapse hazard that can bury or crush workers in an excavation.",
+      "keyPoint": "Use a protective system unless a specific regulatory exception applies.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1926_652",
+          "locator": "1926.652(a) Protection of employees in excavations",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "excavation",
+        "protective-system",
+        "cave-in"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.1910_333",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.333 - Selection and use of work practices",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.333",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.1910_28",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.28 - Duty to have fall protection and falling object protection",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.28",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.1910_146",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.146 - Permit-required confined spaces",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.1910_147",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.147 - The control of hazardous energy (lockout/tagout)",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.147",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.1926_106",
+      "organization": "OSHA",
+      "title": "29 CFR 1926.106 - Working over or near water",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.106",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.focus_four",
+      "organization": "OSHA",
+      "title": "Construction Focus Four Training",
+      "canonicalUrl": "https://www.osha.gov/training/outreach/construction/focus-four",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.1926_651",
+      "organization": "OSHA",
+      "title": "29 CFR 1926.651 - Specific Excavation Requirements",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.651",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.1926_652",
+      "organization": "OSHA",
+      "title": "29 CFR 1926.652 - Requirements for protective systems",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.652",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    }
+  ]
+}

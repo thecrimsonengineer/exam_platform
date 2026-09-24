@@ -49,8 +49,11 @@
       "competencyId": "d01_c03",
       "number": 3,
       "statement": "Evaluate common workplace hazards (e.g., electrical, falls, confined spaces, lockout/tagout, working around water, caught in, struck by, excavation)",
-      "status": "in_progress",
-      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c03/d01_c03_concept_inventory.v1.json"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c03/d01_c03_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c03/d01_c03_flashcards_v1.json",
+      "cardCount": 14,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d01_c04",
