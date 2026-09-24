@@ -189,7 +189,7 @@ class _LabProductionReleaseScreenState
                     _ReleasePanel(
                       key: const ValueKey('q16-state-panel'),
                       icon: _stateIcon(inspection.state),
-                      title: inspection.stateLabel,
+                      title: inspection.displayStateLabel,
                       body:
                           'Environment: ' +
                           inspection.environmentId +
@@ -212,6 +212,15 @@ class _LabProductionReleaseScreenState
                       title: 'Manifest fingerprint',
                       body: inspection.manifestFingerprint,
                     ),
+                    if (inspection.isPermissionBlocked) ...[
+                      const SizedBox(height: 14),
+                      const _ReleasePanel(
+                        icon: Icons.security_rounded,
+                        title: 'Fail-closed protection active',
+                        body:
+                            'LAB scenarios remain unavailable to learners. No seed, closure, or release action is permitted until administrator Firestore access is verified.',
+                      ),
+                    ],
                     if (inspection.blockingReason != null) ...[
                       const SizedBox(height: 14),
                       _ReleasePanel(

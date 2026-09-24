@@ -58,6 +58,16 @@ class LabProductionOperatorInspection {
 
   bool get isClosed => state == LabProductionOperatorState.closed;
 
+  bool get isPermissionBlocked {
+    final reason = blockingReason?.toLowerCase() ?? '';
+    return reason.contains('permission-denied') ||
+        reason.contains('missing or insufficient permissions') ||
+        reason.contains('missing or insufficient permission');
+  }
+
+  String get displayStateLabel =>
+      isPermissionBlocked ? 'ACCESS_BLOCKED' : stateLabel;
+
   String get stateLabel {
     switch (state) {
       case LabProductionOperatorState.pristine:

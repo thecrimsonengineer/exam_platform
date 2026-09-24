@@ -73,6 +73,26 @@ class _PartialPublishedRepository implements LabPublishedRepository {
   }
 }
 
+class _PermissionDeniedCatalogueRepository
+    implements LabLearnerCatalogueRepository {
+  @override
+  Future<List<LabLearnerCatalogueEntry>> listAvailable() {
+    throw StateError(
+      '[cloud_firestore/permission-denied] Missing or insufficient permissions.',
+    );
+  }
+
+  @override
+  Future<LabLearnerCatalogueEntry?> load(String labId, String versionId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveImmutable(LabLearnerCatalogueEntry entry) {
+    throw UnimplementedError();
+  }
+}
+
 class _FakeOperator implements LabProductionReleaseOperator {
   _FakeOperator(this.inspection);
 
@@ -178,6 +198,32 @@ void main() {
       expect(inspection.canExecuteSeed, isFalse);
       expect(inspection.canCloseExisting, isFalse);
       expect(inspection.blockingReason, contains('partial population'));
+    },
+  );
+
+  test(
+    'Q16 permission denial remains fail-closed and exposes no release action',
+    () async {
+      final source = _FilePopulationSource();
+      final operator = LabProductionReleaseOperatorService(
+        populationSource: source,
+        publishedRepository: InMemoryLabPublishedRepository(),
+        catalogueRepository: _PermissionDeniedCatalogueRepository(),
+        evidenceRepository: InMemoryLabProductionReleaseEvidenceRepository(),
+        environmentId: 'production_test',
+      );
+
+      final inspection = await operator.inspect();
+
+      expect(inspection.state, LabProductionOperatorState.blockedPartial);
+      expect(inspection.displayStateLabel, 'ACCESS_BLOCKED');
+      expect(inspection.isPermissionBlocked, isTrue);
+      expect(inspection.publishedCount, 0);
+      expect(inspection.catalogueCount, 0);
+      expect(inspection.catalogueIdentityCount, 0);
+      expect(inspection.canExecuteSeed, isFalse);
+      expect(inspection.canCloseExisting, isFalse);
+      expect(inspection.requiredConfirmationPhrase, isNull);
     },
   );
 

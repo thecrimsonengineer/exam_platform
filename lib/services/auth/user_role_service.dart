@@ -18,7 +18,7 @@ class UserRoleService {
       exists: snapshot.exists,
     );
 
-    final role = snapshot.data()?['role']?.toString().trim().toLowerCase();
+    final role = snapshot.data()?['role']?.toString().trim();
 
     if (role == AppUserRole.admin.name) {
       return AppUserRole.admin;
