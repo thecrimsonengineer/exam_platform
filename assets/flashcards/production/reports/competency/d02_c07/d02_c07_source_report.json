@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2G",
+  "competencyId": "d02_c07",
+  "cardCount": 12,
+  "cardsWithProvenance": 12,
+  "cardsWithExactlyOnePrimarySource": 12,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.osha.leading_indicators",
+    "csp11.source.osha.program_evaluation"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.osha.leading_indicators": 5,
+    "csp11.source.osha.program_evaluation": 7
+  },
+  "status": "PASS"
+}
