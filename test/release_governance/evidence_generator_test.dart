@@ -64,10 +64,7 @@ void main() {
         outputDirectory: '${root.path}/two',
       );
 
-      expect(
-        second.evidenceIdentitySha256,
-        first.evidenceIdentitySha256,
-      );
+      expect(second.evidenceIdentitySha256, first.evidenceIdentitySha256);
 
       for (final fileName in ReleaseEvidenceGenerator.packageFileNames) {
         expect(
@@ -102,11 +99,13 @@ void main() {
         outputDirectory: '${root.path}/sorted',
       );
 
-      final tests = jsonDecode(
-        await File(
-          '${root.path}/sorted/test_evidence.json',
-        ).readAsString(),
-      ) as Map<String, dynamic>;
+      final tests =
+          jsonDecode(
+                await File(
+                  '${root.path}/sorted/test_evidence.json',
+                ).readAsString(),
+              )
+              as Map<String, dynamic>;
       final testSuites = tests['suites']! as List<dynamic>;
       expect(
         testSuites
@@ -115,44 +114,46 @@ void main() {
         <String>['unit', 'widget'],
       );
 
-      final components = jsonDecode(
-        await File(
-          '${root.path}/sorted/component_evidence.json',
-        ).readAsString(),
-      ) as Map<String, dynamic>;
+      final components =
+          jsonDecode(
+                await File(
+                  '${root.path}/sorted/component_evidence.json',
+                ).readAsString(),
+              )
+              as Map<String, dynamic>;
       final componentList = components['components']! as List<dynamic>;
       expect(
         componentList
-            .map(
-              (value) =>
-                  (value as Map<String, dynamic>)['componentId'],
-            )
+            .map((value) => (value as Map<String, dynamic>)['componentId'])
             .toList(),
         <String>['flashcards', 'learningTwin'],
       );
     });
 
-    test('recomputes admission instead of accepting a declared decision', () async {
-      final gates = _passingGates();
-      gates[8] = gates[8].copyWith(
-        status: ReleaseAdmissionGateStatus.fail,
-        message: 'Unit tests failed.',
-      );
-
-      const generator = ReleaseEvidenceGenerator();
-      final result = await generator.generate(
-        request: _request(admissionGates: gates),
-        outputDirectory: '${root.path}/blocked',
-      );
-
-      expect(result.admission.admissible, isFalse);
-      final admission = jsonDecode(
-        await File(
-          '${root.path}/blocked/admission_result.json',
-        ).readAsString(),
-      ) as Map<String, dynamic>;
-      expect(admission['decision'], 'BLOCKED');
-    });
+    test(
+      'recomputes admission instead of accepting a declared decision',
+      () async {
+        final gates = _passingGates();
+        gates[8] = gates[8].copyWith(
+          status: ReleaseAdmissionGateStatus.fail,
+          message: 'Unit tests failed.',
+        );
+  
+        const generator = ReleaseEvidenceGenerator();
+        final result = await generator.generate(
+          request: _request(admissionGates: gates),
+          outputDirectory: '${root.path}/blocked',
+        );
+  
+        expect(result.admission.admissible, isFalse);
+        final admission = jsonDecode(
+          await File(
+            '${root.path}/blocked/admission_result.json',
+          ).readAsString(),
+        ) as Map<String, dynamic>;
+        expect(admission['decision'], 'BLOCKED');
+      },
+    );
 
     test('rejects passed test evidence without an evidence reference', () {
       const generator = ReleaseEvidenceGenerator();
@@ -182,9 +183,7 @@ void main() {
         outputDirectory: '${root.path}/tamper-json',
       );
 
-      final file = File(
-        '${root.path}/tamper-json/version_evidence.json',
-      );
+      final file = File('${root.path}/tamper-json/version_evidence.json');
       await file.writeAsString(
         (await file.readAsString()).replaceFirst('1.0.0', '9.9.9'),
       );
@@ -194,10 +193,7 @@ void main() {
       );
 
       expect(result.pass, isFalse);
-      expect(
-        result.issues,
-        contains('EVD009_SUMMARY_IDENTITY_MISMATCH'),
-      );
+      expect(result.issues, contains('EVD009_SUMMARY_IDENTITY_MISMATCH'));
     });
 
     test('verifier detects checksum manifest tampering', () async {
@@ -220,14 +216,8 @@ void main() {
       );
 
       expect(result.pass, isFalse);
-      expect(
-        result.issues,
-        contains('EVD007_ARTIFACT_CHECKSUM_FILE_MISMATCH'),
-      );
-      expect(
-        result.issues,
-        contains('EVD009_SUMMARY_IDENTITY_MISMATCH'),
-      );
+      expect(result.issues, contains('EVD007_ARTIFACT_CHECKSUM_FILE_MISMATCH'));
+      expect(result.issues, contains('EVD009_SUMMARY_IDENTITY_MISMATCH'));
     });
 
     test('verifier detects missing and unexpected files', () async {
@@ -237,25 +227,16 @@ void main() {
         outputDirectory: '${root.path}/shape',
       );
 
-      await File(
-        '${root.path}/shape/test_evidence.json',
-      ).delete();
-      await File(
-        '${root.path}/shape/rogue.txt',
-      ).writeAsString('rogue');
+      await File('${root.path}/shape/test_evidence.json').delete();
+      await File('${root.path}/shape/rogue.txt').writeAsString('rogue');
 
-      final result = await generator.verify(
-        directory: '${root.path}/shape',
-      );
+      final result = await generator.verify(directory: '${root.path}/shape');
 
       expect(
         result.issues,
         contains('EVD002_REQUIRED_FILE_MISSING:test_evidence.json'),
       );
-      expect(
-        result.issues,
-        contains('EVD003_UNEXPECTED_FILE:rogue.txt'),
-      );
+      expect(result.issues, contains('EVD003_UNEXPECTED_FILE:rogue.txt'));
     });
   });
 
@@ -267,7 +248,10 @@ void main() {
       expect(request.version.fullVersion, '1.0.0+1');
       expect(request.repository.repository, 'thecrimsonengineer/exam_platform');
       expect(request.environment.flutterVersion, '3.44.9');
-      expect(request.artifactInventory.records.single.artifactId, 'android-apk');
+      expect(
+        request.artifactInventory.records.single.artifactId,
+        'android-apk',
+      );
       expect(request.admissionGates, hasLength(17));
     });
 
@@ -337,11 +321,7 @@ void main() {
       final output = <String>[];
       final errors = <String>[];
       final code = await runReleaseGovernanceCli(
-        <String>[
-          'verify',
-          '--directory',
-          '${root.path}/evidence',
-        ],
+        <String>['verify', '--directory', '${root.path}/evidence'],
         out: output.add,
         err: errors.add,
       );
@@ -378,17 +358,21 @@ ReleaseEvidenceRequest _request({
     createdAt: DateTime.utc(2026, 9, 24, 5),
     repository: _repository,
     environment: _environment,
-    tests: tests ?? <ReleaseTestEvidence>[
-      _testEvidence('unit', 'evidence/unit.txt'),
-      _testEvidence('widget', 'evidence/widget.txt'),
-    ],
-    components: components ?? const <ReleaseComponentCheckpoint>[
-      ReleaseComponentCheckpoint(
-        componentId: 'flashcards',
-        status: 'closed',
-        checkpoint: 'phase-fc-closed',
-      ),
-    ],
+    tests:
+        tests ??
+        <ReleaseTestEvidence>[
+          _testEvidence('unit', 'evidence/unit.txt'),
+          _testEvidence('widget', 'evidence/widget.txt'),
+        ],
+    components:
+        components ??
+        const <ReleaseComponentCheckpoint>[
+          ReleaseComponentCheckpoint(
+            componentId: 'flashcards',
+            status: 'closed',
+            checkpoint: 'phase-fc-closed',
+          ),
+        ],
     artifactInventory: const ArtifactInventoryResult(
       records: <ArtifactRecord>[
         ArtifactRecord(
@@ -423,9 +407,7 @@ List<ReleaseAdmissionGate> _passingGates() {
       status: ReleaseAdmissionGateStatus.pass,
       severity: definition.severity,
       blocking: definition.blocking,
-      evidence: <String>[
-        'evidence/${definition.gateId.toLowerCase()}.json',
-      ],
+      evidence: <String>['evidence/${definition.gateId.toLowerCase()}.json'],
       message: 'Verified ${definition.name}.',
     );
   }).toList();
@@ -439,9 +421,7 @@ Map<String, Object?> _requestJson() {
     'createdAt': '2026-09-24T05:00:00.000Z',
     'repository': _repository.toJson(),
     'environment': _environment.toJson(),
-    'tests': <Object?>[
-      _testEvidence('unit', 'evidence/unit.txt').toJson(),
-    ],
+    'tests': <Object?>[_testEvidence('unit', 'evidence/unit.txt').toJson()],
     'components': <Object?>[
       const ReleaseComponentCheckpoint(
         componentId: 'flashcards',
@@ -462,9 +442,7 @@ Map<String, Object?> _requestJson() {
       ],
       issues: <ArtifactIntegrityIssue>[],
     ).toJson(),
-    'admissionGates': _passingGates()
-        .map((gate) => gate.toJson())
-        .toList(),
+    'admissionGates': _passingGates().map((gate) => gate.toJson()).toList(),
     'recovery': <String, Object?>{
       'previousStableRelease': null,
       'rollbackEligible': false,
@@ -472,16 +450,15 @@ Map<String, Object?> _requestJson() {
   };
 }
 
-const RepositoryProvenanceEvidence _repository =
-    RepositoryProvenanceEvidence(
-      repository: 'thecrimsonengineer/exam_platform',
-      remoteUrl: 'https://github.com/thecrimsonengineer/exam_platform.git',
-      branch: 'release/candidate',
-      headSha: '0123456789abcdef0123456789abcdef01234567',
-      treeSha: '89abcdef0123456789abcdef0123456789abcdef',
-      tagsAtHead: <String>[],
-      changes: <RepositoryChange>[],
-    );
+const RepositoryProvenanceEvidence _repository = RepositoryProvenanceEvidence(
+  repository: 'thecrimsonengineer/exam_platform',
+  remoteUrl: 'https://github.com/thecrimsonengineer/exam_platform.git',
+  branch: 'release/candidate',
+  headSha: '0123456789abcdef0123456789abcdef01234567',
+  treeSha: '89abcdef0123456789abcdef0123456789abcdef',
+  tagsAtHead: <String>[],
+  changes: <RepositoryChange>[],
+);
 
 const BuildEnvironmentSnapshot _environment = BuildEnvironmentSnapshot(
   flutterVersion: '3.44.9',

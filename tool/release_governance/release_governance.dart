@@ -58,9 +58,7 @@ Future<int> runReleaseGovernanceCli(
 
         writeOut('releaseEvidence=PASS');
         writeOut('decision=${result.admission.decision.wireValue}');
-        writeOut(
-          'evidenceIdentitySha256=${result.evidenceIdentitySha256}',
-        );
+        writeOut('evidenceIdentitySha256=${result.evidenceIdentitySha256}');
         writeOut('outputDirectory=${result.outputDirectory}');
         return 0;
 
@@ -77,9 +75,7 @@ Future<int> runReleaseGovernanceCli(
         }
 
         writeOut('releaseEvidence=PASS');
-        writeOut(
-          'evidenceIdentitySha256=${result.evidenceIdentitySha256}',
-        );
+        writeOut('evidenceIdentitySha256=${result.evidenceIdentitySha256}');
         return 0;
 
       default:

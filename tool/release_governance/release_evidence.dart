@@ -279,12 +279,13 @@ class ReleaseEvidenceGenerator {
     _validateRequest(request);
 
     final admission = admissionPolicy.evaluate(request.admissionGates);
-    final evidenceRefs = admission.gates
-        .where((gate) => gate.status == ReleaseAdmissionGateStatus.pass)
-        .expand((gate) => gate.evidence)
-        .toSet()
-        .toList()
-      ..sort();
+    final evidenceRefs =
+        admission.gates
+            .where((gate) => gate.status == ReleaseAdmissionGateStatus.pass)
+            .expand((gate) => gate.evidence)
+            .toSet()
+            .toList()
+          ..sort();
 
     final source = ReleaseSourceIdentity(
       repository: request.repository.repository,
@@ -339,10 +340,9 @@ class ReleaseEvidenceGenerator {
     final identityParts = <String, String>{};
     for (final fileName in structuredFileNames) {
       final content = _canonicalJson(structured[fileName]!, pretty: true);
-      await File(_join(output.path, fileName)).writeAsString(
-        content,
-        flush: true,
-      );
+      await File(
+        _join(output.path, fileName),
+      ).writeAsString(content, flush: true);
       identityParts[fileName] = content;
     }
 
@@ -469,10 +469,7 @@ class ReleaseEvidenceGenerator {
     final summary = await File(
       _join(root.path, 'release_summary.txt'),
     ).readAsString();
-    final summaryIdentity = _summaryValue(
-      summary,
-      'evidenceIdentitySha256',
-    );
+    final summaryIdentity = _summaryValue(summary, 'evidenceIdentitySha256');
     if (summaryIdentity != identity) {
       issues.add('EVD009_SUMMARY_IDENTITY_MISMATCH');
     }
@@ -515,8 +512,7 @@ class ReleaseEvidenceGenerator {
       if (test.message.trim().isEmpty) {
         throw ArgumentError('Test evidence message must not be empty.');
       }
-      if (test.status == ReleaseTestStatus.pass &&
-          test.evidenceRefs.isEmpty) {
+      if (test.status == ReleaseTestStatus.pass && test.evidenceRefs.isEmpty) {
         throw ArgumentError(
           'A passed test suite requires at least one evidence reference.',
         );
@@ -560,9 +556,7 @@ class ReleaseEvidenceGenerator {
     List<ReleaseComponentCheckpoint> components,
   ) {
     final sorted = components.toList()
-      ..sort(
-        (left, right) => left.componentId.compareTo(right.componentId),
-      );
+      ..sort((left, right) => left.componentId.compareTo(right.componentId));
     return <String, Object?>{
       'componentCount': sorted.length,
       'components': sorted.map((component) => component.toJson()).toList(),
@@ -621,9 +615,7 @@ class ReleaseEvidenceGenerator {
     return '${encoder.convert(canonical)}\n';
   }
 
-  static Map<String, Object?> _canonicalizeMap(
-    Map<String, Object?> source,
-  ) {
+  static Map<String, Object?> _canonicalizeMap(Map<String, Object?> source) {
     final result = SplayTreeMap<String, Object?>();
     for (final entry in source.entries) {
       result[entry.key] = _canonicalizeValue(entry.value);
