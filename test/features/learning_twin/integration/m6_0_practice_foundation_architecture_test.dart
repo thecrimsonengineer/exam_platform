@@ -4,14 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
-    'learner quiz builder no longer loads the admin package repository',
+    'learner quiz builder uses FR9 metadata and bounded preparation only',
     () async {
       final builder = await File(
         'lib/widgets/csp/student_quiz_builder.dart',
       ).readAsString();
 
       expect(builder, contains('QuizService.shared'));
-      expect(builder, contains('getPublishedContent()'));
+      expect(builder, contains('loadCatalogMetadata()'));
+      expect(builder, contains('prepareCompetencies('));
+      expect(builder, contains('_maxRuntimeScopePackages = 4'));
+      expect(builder, isNot(contains('getPublishedContent()')));
       expect(builder, isNot(contains('ContentRepositoryService')));
       expect(builder, isNot(contains('loadPackages()')));
     },
