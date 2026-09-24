@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
-import 'package:exam_platform/features/learning_twin/ui/learning_twin_idle_asset_contract.dart';
+import 'package:exam_platform/features/learning_twin/ui/learning_twin_motion_idle_asset_contract.dart';
 import 'package:exam_platform/features/learning_twin/ui/learning_twin_motion_rollout.dart';
 import 'package:flutter_test/flutter_test.dart';
 
