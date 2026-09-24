@@ -145,8 +145,7 @@ void main() {
 
     final service = LabProductionDeploymentAcceptanceService(
       releaseOperator: _FakeReleaseOperator(wrongEnvironment),
-      acceptanceRepository:
-          InMemoryLabProductionReleaseAcceptanceRepository(),
+      acceptanceRepository: InMemoryLabProductionReleaseAcceptanceRepository(),
     );
 
     final inspection = await service.inspect();
@@ -194,8 +193,7 @@ void main() {
     final closed = await _closedQ16Inspection();
     final service = LabProductionDeploymentAcceptanceService(
       releaseOperator: _FakeReleaseOperator(closed),
-      acceptanceRepository:
-          InMemoryLabProductionReleaseAcceptanceRepository(),
+      acceptanceRepository: InMemoryLabProductionReleaseAcceptanceRepository(),
     );
 
     await expectLater(
@@ -214,15 +212,9 @@ void main() {
       rules,
       contains('match /labProductionReleaseAcceptance/{releaseId}'),
     );
-    expect(
-      rules,
-      contains("'04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a'"),
-    );
+    expect(rules, contains("'04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a'"));
     expect(rules, contains("'35950731991'"));
-    expect(
-      rules,
-      contains("'firebase_project:csp11-exam-platform'"),
-    );
+    expect(rules, contains("'firebase_project:csp11-exam-platform'"));
     expect(rules, contains('allow update, delete: if false;'));
   });
 
@@ -278,9 +270,6 @@ void main() {
 
     expect(source, contains("'Release Acceptance'"));
     expect(source, contains('_openProductionAcceptance()'));
-    expect(
-      source,
-      contains('LabProductionDeploymentAcceptanceScreen('),
-    );
+    expect(source, contains('LabProductionDeploymentAcceptanceScreen('));
   });
 }
