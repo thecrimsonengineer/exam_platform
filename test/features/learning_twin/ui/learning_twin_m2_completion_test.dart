@@ -146,26 +146,42 @@ void main() {
         .whereType<File>()
         .where((file) => file.path.endsWith('.dart'));
 
-    const forbidden = <String>[
+    const globallyForbidden = <String>[
       'avatar_maker',
       'cloud_firestore',
       'firebase_',
+      'supabase',
       'Navigator.',
       'showDialog(',
       'showModalBottomSheet(',
+    ];
+    const motionOnlyTokens = <String>[
       'AnimationController',
       'AnimatedBuilder',
       'TickerProvider',
+      'package:lottie',
+      'assets/learning_twin/motion/',
     ];
 
     for (final file in dartFiles) {
       final text = await file.readAsString();
-      for (final token in forbidden) {
+
+      for (final token in globallyForbidden) {
         expect(
           text,
           isNot(contains(token)),
           reason: '$token leaked into ${file.path}',
         );
+      }
+
+      if (!file.path.contains('learning_twin_motion_')) {
+        for (final token in motionOnlyTokens) {
+          expect(
+            text,
+            isNot(contains(token)),
+            reason: '$token escaped motion infrastructure into ${file.path}',
+          );
+        }
       }
     }
   });

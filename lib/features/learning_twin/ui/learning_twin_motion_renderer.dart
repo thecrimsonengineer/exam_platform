@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import 'learning_twin_motion_controller.dart';
-import 'learning_twin_motion_descriptor.dart';
 import 'learning_twin_motion_fallback.dart';
 import 'learning_twin_motion_manifest.dart';
 import 'learning_twin_motion_policy.dart';
@@ -65,6 +64,7 @@ class _LearningTwinMotionRendererState
   bool _platformAnimationsDisabled = false;
   final Set<String> _failedAssetPaths = <String>{};
   String? _playbackToken;
+  bool _rebuildScheduled = false;
 
   @override
   void initState() {
@@ -139,6 +139,7 @@ class _LearningTwinMotionRendererState
     if (_appActive == active) {
       return;
     }
+
     _appActive = active;
     if (active) {
       _motionController.setAppActive(true);
@@ -146,9 +147,8 @@ class _LearningTwinMotionRendererState
       _animationController.stop(canceled: false);
       _motionController.setAppActive(false);
     }
-    if (mounted) {
-      setState(() {});
-    }
+
+    _scheduleRebuild();
     _synchronizeMotion();
   }
 
@@ -157,7 +157,21 @@ class _LearningTwinMotionRendererState
       return;
     }
     _configurePlaybackForCurrent();
-    setState(() {});
+    _scheduleRebuild();
+  }
+
+  void _scheduleRebuild() {
+    if (!mounted || _rebuildScheduled) {
+      return;
+    }
+
+    _rebuildScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _rebuildScheduled = false;
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   void _synchronizeMotion() {
@@ -215,13 +229,17 @@ class _LearningTwinMotionRendererState
     }
 
     final token =
-        '${descriptor.state.manifestKey}:${_motionController.currentEventKey ?? ''}:${descriptor.assetPath}';
+        '${descriptor.state.manifestKey}:'
+        '${_motionController.currentEventKey ?? ''}:'
+        '${descriptor.assetPath}';
+
     if (_playbackToken == token && _animationController.isAnimating) {
       return;
     }
 
     _playbackToken = token;
     _animationController.duration = descriptor.duration;
+
     if (descriptor.loop) {
       _animationController.repeat();
     } else {
@@ -255,9 +273,11 @@ class _LearningTwinMotionRendererState
       if (!mounted || _failedAssetPaths.contains(assetPath)) {
         return;
       }
+
       setState(() {
         _failedAssetPaths.add(assetPath);
       });
+
       final manifest = _manifestResult?.manifest;
       _animationController.stop(canceled: false);
       _motionController.stopToIdle(
@@ -314,10 +334,9 @@ class _LearningTwinMotionRendererState
       repeat: false,
       fit: BoxFit.contain,
       onLoaded: (_) {
-        if (!mounted) {
-          return;
+        if (mounted) {
+          _configurePlaybackForCurrent();
         }
-        _configurePlaybackForCurrent();
       },
       errorBuilder: (context, error, stackTrace) {
         _scheduleAssetFailure(activeDescriptor.assetPath);

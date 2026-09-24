@@ -1,0 +1,98 @@
+name: LTAM-4 Motion Foundation
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam4-motion-foundation
+      - phase-ml-ltam4-motion-foundation-closed
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ltam4-motion-foundation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout exact LTAM-4 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify source baseline and frozen boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD
+          git diff --check 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD
+          git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- content/micro_learning/facts
+          git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- lib/features/learning_twin/domain
+          git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- lib/features/learning_twin/coaching
+          git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- lib/features/learning_twin/integration
+          git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- lib/screens/startup/startup_micro_fact_card.dart
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Normalize LTAM-4 Dart files
+        shell: bash
+        run: |
+          dart format             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_motion_*.dart             lib/features/learning_twin/ui/learning_twin_ui.dart             test/features/learning_twin/ui/learning_twin_m2_completion_test.dart             test/features/learning_twin/ui/learning_twin_motion_*.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart
+
+      - name: Analyze LTAM-4
+        run: |
+          dart analyze             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_motion_state.dart             lib/features/learning_twin/ui/learning_twin_motion_descriptor.dart             lib/features/learning_twin/ui/learning_twin_motion_error.dart             lib/features/learning_twin/ui/learning_twin_motion_fallback.dart             lib/features/learning_twin/ui/learning_twin_motion_mapper.dart             lib/features/learning_twin/ui/learning_twin_motion_manifest.dart             lib/features/learning_twin/ui/learning_twin_motion_policy.dart             lib/features/learning_twin/ui/learning_twin_motion_controller.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_preview.dart             test/features/learning_twin/ui/learning_twin_motion_mapper_test.dart             test/features/learning_twin/ui/learning_twin_motion_manifest_test.dart             test/features/learning_twin/ui/learning_twin_motion_policy_test.dart             test/features/learning_twin/ui/learning_twin_motion_controller_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_architecture_guard_test.dart
+
+      - name: Run LTAM-4 focused tests
+        run: |
+          flutter test             test/features/learning_twin/ui/learning_twin_motion_mapper_test.dart             test/features/learning_twin/ui/learning_twin_motion_manifest_test.dart             test/features/learning_twin/ui/learning_twin_motion_policy_test.dart             test/features/learning_twin/ui/learning_twin_motion_controller_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_architecture_guard_test.dart
+
+      - name: Revalidate complete Learning Twin
+        run: flutter test test/features/learning_twin
+
+      - name: Revalidate ML LTAM integration seam
+        run: |
+          flutter test             test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart             test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart             test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
+
+      - name: Revalidate startup MicroFact static rollout boundary
+        run: |
+          flutter test             test/startup/startup_micro_fact_card_test.dart             test/startup/startup_micro_fact_integration_test.dart             test/startup/startup_micro_fact_motion_unit_test.dart             test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Build Web release
+        run: flutter build web --release
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+
+      - name: Final diff hygiene
+        run: git diff --check
+
+      - name: Commit formatter normalization
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet --             lib/features/learning_twin/ui             test/features/learning_twin/ui; then
+            echo "LTAM-4 files are already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/features/learning_twin/ui
+          git add test/features/learning_twin/ui
+          git commit -m "LTAM-4 normalize motion foundation"
+          git push origin HEAD:${GITHUB_REF_NAME}
