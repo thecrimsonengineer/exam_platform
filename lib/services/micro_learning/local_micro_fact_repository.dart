@@ -18,14 +18,14 @@ class LocalMicroFactRepositorySnapshot {
     required this.diagnostics,
   });
 
-  const LocalMicroFactRepositorySnapshot.failed(String diagnostic)
+  LocalMicroFactRepositorySnapshot.failed(String diagnostic)
     : bundleValid = false,
       bundleId = null,
       bundleVersion = null,
       bundleFactCount = 0,
       eligibleFacts = const <MicroFact>[],
       staleFactCount = 0,
-      diagnostics = const <String>[];
+      diagnostics = List<String>.unmodifiable([diagnostic]);
 
   final bool bundleValid;
   final String? bundleId;
@@ -61,7 +61,7 @@ class LocalMicroFactRepository {
       final raw = await _assetLoader(bundleAssetPath);
       final decoded = jsonDecode(raw);
       if (decoded is! Map) {
-        return const LocalMicroFactRepositorySnapshot.failed(
+        return LocalMicroFactRepositorySnapshot.failed(
           'ML10_BUNDLE_ROOT_INVALID',
         );
       }
@@ -162,7 +162,7 @@ class LocalMicroFactRepository {
         diagnostics: List<String>.unmodifiable(diagnostics),
       );
     } catch (_) {
-      return const LocalMicroFactRepositorySnapshot.failed(
+      return LocalMicroFactRepositorySnapshot.failed(
         'ML10_BUNDLE_LOAD_FAILED',
       );
     }
