@@ -10,7 +10,7 @@ class LabLearnerRuntimeBinding {
     required this.deliveryService,
     this.releaseEvidenceRepository,
     this.requiredReleaseId,
-    this.batch2AcceptanceRepository,
+    this.batch2VisibilityRepository,
   });
 
   factory LabLearnerRuntimeBinding.firestore({FirebaseFirestore? firestore}) {
@@ -41,8 +41,8 @@ class LabLearnerRuntimeBinding {
           visibleReleaseId: kLearnerVisibleLabReleaseId,
         ),
       ),
-      batch2AcceptanceRepository:
-          FirestoreLabBatch2ReleaseAcceptanceRepository(
+      batch2VisibilityRepository:
+          FirestoreLabBatch2LearnerVisibilityRepository(
             firestore: instance,
           ),
     );
@@ -51,7 +51,7 @@ class LabLearnerRuntimeBinding {
   final LabLearnerControlledDeliveryService deliveryService;
   final LabProductionReleaseEvidenceRepository? releaseEvidenceRepository;
   final String? requiredReleaseId;
-  final LabBatch2ReleaseAcceptanceRepository? batch2AcceptanceRepository;
+  final LabBatch2LearnerVisibilityRepository? batch2VisibilityRepository;
 
   Future<List<LabLearnerCatalogueEntry>> listAvailable() async {
     await _requireProductionRelease();
@@ -67,12 +67,9 @@ class LabLearnerRuntimeBinding {
   }
 
   Future<void> _requireProductionRelease() async {
-    final batch2Repository = batch2AcceptanceRepository;
+    final batch2Repository = batch2VisibilityRepository;
     if (batch2Repository != null) {
-      final acceptance = await batch2Repository.load(
-        kLearnerVisibleLabReleaseId,
-      );
-      if (acceptance == null) {
+      if (!await batch2Repository.isAccepted(kLearnerVisibleLabReleaseId)) {
         throw const LabProductionReleaseClosureException(
           'Learner-visible LAB population has not passed Batch 2 Q17 acceptance.',
         );
