@@ -279,17 +279,16 @@ final class LearningTwinMotionManifestResult {
 }
 
 final class LearningTwinMotionManifestLoader {
-  const LearningTwinMotionManifestLoader({AssetBundle? bundle})
-    : _bundle = bundle;
+  const LearningTwinMotionManifestLoader({this.bundle});
 
-  final AssetBundle? _bundle;
+  final AssetBundle? bundle;
 
   static Future<LearningTwinMotionManifestResult>? _rootBundleCache;
 
   Future<LearningTwinMotionManifestResult> load() {
-    final bundle = _bundle;
-    if (bundle != null) {
-      return _loadFrom(bundle);
+    final configuredBundle = bundle;
+    if (configuredBundle != null) {
+      return _loadFrom(configuredBundle);
     }
 
     return _rootBundleCache ??= _loadFrom(rootBundle);

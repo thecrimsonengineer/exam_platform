@@ -4,6 +4,7 @@ import '../domain/learning_twin_state.dart';
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
 import 'learning_twin_motion_mapper.dart';
+import 'learning_twin_motion_state.dart';
 
 class LearningTwinMotionPreview extends StatefulWidget {
   const LearningTwinMotionPreview({super.key});
