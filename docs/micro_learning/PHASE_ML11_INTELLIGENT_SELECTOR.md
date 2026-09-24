@@ -1,6 +1,6 @@
 # CSP11 Phase ML-11 — Intelligent MicroFact Selector
 
-Status: IN PROGRESS
+Status: CLOSED
 
 Base recovery point: `phase-ml10-local-runtime-repository-closed`
 
@@ -153,20 +153,33 @@ Runtime-corpus validation loads the real ML-10 bundle and requires:
 
 ## ML-11 exit criteria
 
-- [ ] selector is pure and deterministic;
-- [ ] zero network or persistence dependencies are introduced;
-- [ ] 120-fact real-corpus cycle covers all 120 exactly once;
-- [ ] assessment overlap fails closed;
-- [ ] recent IDs are suppressed when alternatives exist;
-- [ ] category/source/concept diversity is deterministic;
-- [ ] empty or invalid runtime pools return no fact;
-- [ ] ML-10 repository regression remains green;
-- [ ] startup independence regression remains green;
-- [ ] exact closing SHA is validated;
-- [ ] immutable ML-11 recovery branch is created.
+- [x] selector is pure and deterministic;
+- [x] zero network or persistence dependencies are introduced;
+- [x] 120-fact real-corpus cycle covers all 120 exactly once;
+- [x] assessment overlap fails closed;
+- [x] recent IDs are suppressed when alternatives exist;
+- [x] category/source/concept diversity is deterministic;
+- [x] empty or invalid runtime pools return no fact;
+- [x] ML-10 repository regression remains green;
+- [x] startup independence regression remains green;
+- [x] exact closing SHA is validated;
+- [x] immutable ML-11 recovery branch is created.
 
 ## Next phase
 
 ML-12 — Startup MicroFactCard.
 
 ML-12 may consume the ML-11 selection result and render it on startup. It must never hold navigation for reading completion and must preserve the existing startup watchdog and fail-open behavior.
+
+## Closure evidence
+
+- Normalized implementation commit: `3222e6f9f664dc529069773671e6c40ec8761606`.
+- Implementation validation run: `35953419107` — PASS.
+- Real ML-10 corpus: 120 eligible facts.
+- Ordinals 0 through 119: 120 unique selections.
+- Production categories represented: 10 / 10.
+- ML-10 repository regression: PASS.
+- Existing startup hardening/render regression: PASS.
+- Network reads introduced by ML-11: 0.
+- Persistence writes introduced by ML-11: 0.
+- Learner-state weighting and persistent impression history remain deferred to their frozen phases.

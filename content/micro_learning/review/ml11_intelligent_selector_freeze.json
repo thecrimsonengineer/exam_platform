@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-11",
+  "freezeStatus": "closed_intelligent_selector_checkpoint",
+  "closedAt": "2026-09-24",
+  "sourceRuntimeRepository": {
+    "ref": "phase-ml10-local-runtime-repository-closed",
+    "sha": "80e96a8e456f38a6a9909cc8006ec96c8675fda1",
+    "runtimeBundleId": "csp11_micro_learning_runtime_v1",
+    "eligibleFactCount": 120
+  },
+  "selector": {
+    "path": "lib/services/micro_learning/micro_fact_selector.dart",
+    "implementationCommit": "3222e6f9f664dc529069773671e6c40ec8761606",
+    "deterministic": true,
+    "randomNumberGeneratorUsed": false,
+    "backendReads": 0,
+    "persistenceWrites": 0,
+    "recentWindowSize": 12,
+    "assessmentOverlapPolicy": "exclude_any_non_none_sensitive_fact_with_linked_active_concept",
+    "recencyPolicy": "suppress_recent_ids_when_alternatives_exist_then_bounded_fallback",
+    "diversitySignals": [
+      "category",
+      "source_registry",
+      "curriculum_concepts"
+    ]
+  },
+  "validation": {
+    "implementationWorkflowRunId": 35953419107,
+    "implementationWorkflowConclusion": "success",
+    "analyzer": "pass",
+    "selectorUnitTests": "pass",
+    "real120FactCycleTest": "pass",
+    "uniqueFactsAcrossOrdinals0To119": 120,
+    "productionCategoriesRepresented": 10,
+    "ml10RepositoryRegression": "pass",
+    "startupIndependenceRegression": "pass"
+  },
+  "deferred": {
+    "learnerStateWeighting": "ML-14",
+    "impressionHistoryPersistence": "ML-15",
+    "startupRendering": "ML-12"
+  },
+  "nextAction": "ML-12 Startup MicroFactCard"
+}
