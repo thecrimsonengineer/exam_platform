@@ -24,7 +24,7 @@ void main() {
       const recovery = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
         previousStableCommit: '0123456789abcdef0123456789abcdef01234567',
-        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
+        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef',
         rollbackEligible: true,
       );
 
@@ -32,7 +32,7 @@ void main() {
       expect(recovery.toJson(), <String, Object?>{
         'previousStableRelease': 'csp11-1.0.0',
         'previousStableCommit': '0123456789abcdef0123456789abcdef01234567',
-        'previousStableTree': '89abcdef0123456789abcdef0123456789abcdef'
+        'previousStableTree': '89abcdef0123456789abcdef0123456789abcdef',
         'rollbackEligible': true,
       });
     });
@@ -53,7 +53,7 @@ void main() {
       const recovery = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
         previousStableCommit: null,
-        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
+        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef',
         rollbackEligible: false,
       );
 
@@ -75,7 +75,7 @@ void main() {
       const badCommit = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
         previousStableCommit: 'bad',
-        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
+        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef',
         rollbackEligible: true,
       );
       const badTree = ReleaseRecoveryMetadata(
@@ -202,7 +202,7 @@ void main() {
 const ReleaseRecoveryMetadata _eligibleRecovery = ReleaseRecoveryMetadata(
   previousStableRelease: 'csp11-1.0.0',
   previousStableCommit: '0123456789abcdef0123456789abcdef01234567',
-  previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
+  previousStableTree: '89abcdef0123456789abcdef0123456789abcdef',
   rollbackEligible: true,
 );
 
