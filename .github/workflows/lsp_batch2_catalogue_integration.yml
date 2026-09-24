@@ -1,0 +1,73 @@
+name: LSP Batch 2 Catalogue Integration
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-catalogue-integration
+  workflow_dispatch:
+
+concurrency:
+  group: lsp-batch2-catalogue-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Format new Batch 2 release code
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/lab/lab_batch2_release.dart \
+            lib/features/lab/lab_firestore_repositories.dart \
+            lib/features/lab/lab_production_release_closure.dart \
+            test/lab_quality/lsp_batch2_catalogue_release_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Batch 2 pre-catalogue regression
+        run: flutter test test/lab_quality/lsp_batch2_population_gate_test.dart
+
+      - name: Batch 2 catalogue and atomic release
+        run: flutter test test/lab_quality/lsp_batch2_catalogue_release_test.dart
+
+      - name: Existing Q12 learner catalogue regression
+        run: flutter test test/lab_quality/lsp_q12_learner_catalogue_delivery_test.dart
+
+      - name: Existing Q13 persistent runtime regression
+        run: flutter test test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
+
+      - name: Existing Q14 production seed regression
+        run: flutter test test/lab_quality/lsp_q14_production_population_seed_test.dart
+
+      - name: Existing Q15 release closure regression
+        run: flutter test test/lab_quality/lsp_q15_production_release_closure_test.dart
+
+      - name: Existing Q16 release operator regression
+        run: |
+          flutter test test/lab_quality/lsp_q16_production_asset_bundle_contract_test.dart
+          flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
+
+      - name: Existing Q17 acceptance regression
+        run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
