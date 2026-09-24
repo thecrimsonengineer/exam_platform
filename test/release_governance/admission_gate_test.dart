@@ -264,9 +264,7 @@ List<ReleaseAdmissionGate> _passingGates() {
       status: ReleaseAdmissionGateStatus.pass,
       severity: definition.severity,
       blocking: definition.blocking,
-      evidence: <String>[
-        'evidence/${definition.gateId.toLowerCase()}.json',
-      ],
+      evidence: <String>['evidence/${definition.gateId.toLowerCase()}.json'],
       message: 'Verified ${definition.name}.',
     );
   }).toList();
