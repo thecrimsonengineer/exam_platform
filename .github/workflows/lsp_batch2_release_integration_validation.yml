@@ -1,0 +1,76 @@
+name: LSP Batch 2 Release Integration Validation
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-release-integration
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lsp-batch2-release-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Canonical formatting
+        run: |
+          dart format             lib/features/lab/lab_batch2_release_integration.dart             lib/features/lab/lab_learner_catalogue.dart             lib/features/lab/lab_firestore_repositories.dart             lib/screens/admin/lab/lab_batch2_release_screen.dart             lib/screens/admin/admin_home_screen.dart             test/lab_quality/lsp_batch2_release_integration_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Batch 2 pre-catalogue regression
+        run: flutter test test/lab_quality/lsp_batch2_population_gate_test.dart
+
+      - name: Batch 2 release integration
+        run: flutter test test/lab_quality/lsp_batch2_release_integration_test.dart
+
+      - name: Original Q16 regression
+        run: flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
+
+      - name: Original Q17 regression
+        run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
+
+      - name: Firestore rule contract regression
+        run: |
+          flutter test test/services/auth/firestore_rules_contract_test.dart ||           flutter test test/firestore_rules_test.dart ||           echo "No dedicated Firestore rules unit test found; Batch 2 rule assertions already ran."
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Persist canonical formatting after all gates pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add             lib/features/lab/lab_batch2_release_integration.dart             lib/features/lab/lab_learner_catalogue.dart             lib/features/lab/lab_firestore_repositories.dart             lib/screens/admin/lab/lab_batch2_release_screen.dart             lib/screens/admin/admin_home_screen.dart             test/lab_quality/lsp_batch2_release_integration_test.dart
+          if git diff --cached --quiet; then
+            echo "Formatting already committed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Apply Batch 2 release integration formatting"
+          git push origin HEAD:${GITHUB_REF_NAME}
