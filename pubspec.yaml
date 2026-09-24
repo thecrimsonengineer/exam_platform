@@ -47,6 +47,17 @@ flutter:
     - content/
     - content/micro_learning/
     - content/domain_07/competencies/
+    - content/lab_population/
+    - content/lab_population/hot_work_hydrocarbon_simops/v1/
+    - content/lab_population/mobile_crane_critical_lift/v1/
+    - content/lab_population/excavation_buried_services/v1/
+    - content/lab_population/electrical_loto_stored_energy/v1/
+    - content/lab_population/work_at_height_offshore_module/v1/
+    - content/lab_population/chemical_transfer_corrosive_solvent/v1/
+    - content/lab_population/hydrocarbon_line_breaking/v1/
+    - content/lab_population/flammable_tank_truck_loading/v1/
+    - content/lab_population/pneumatic_pressure_test/v1/
+    - content/lab_population/scaffold_erection_overhead_power/v1/
     - assets/learning_twin/
     - assets/learning_twin/candidates/
     - assets/startup/

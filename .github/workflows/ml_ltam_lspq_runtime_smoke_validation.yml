@@ -1,0 +1,57 @@
+name: ML LTAM LSPQ Runtime Smoke Validation
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam-lspq-runtime-smoke-fixes
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml-ltam-lspq-runtime-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout exact SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Windows-hardening ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor c3b901cb4477484014998706a4776493f0693799 HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Verify LAB production asset bundle contract
+        run: flutter test test/lab_quality/lsp_q16_production_asset_bundle_contract_test.dart
+
+      - name: Verify LAB production operator regression
+        run: flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        shell: bash
+        run: git diff --check
