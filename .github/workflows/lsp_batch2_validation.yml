@@ -1,0 +1,108 @@
+name: LSP Batch 2 LAB Admission Validation
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-10-labs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lsp-batch2-admission-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Generate deterministic Batch 2 DQG300 evidence
+        run: |
+          python -m py_compile tools/lab/generate_batch2_dqg.py
+          python tools/lab/generate_batch2_dqg.py
+
+      - name: Batch 2 formatting gate
+        run: |
+          dart format --output=none --set-exit-if-changed             test/lab_quality/lsp_batch2_population_gate_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Canonical question parser
+        run: flutter test test/services/questions/canonical_question_parser_test.dart
+
+      - name: LAB Decision adapter
+        run: flutter test test/lab_quality/lsp_q2_lab_decision_question_adapter_test.dart
+
+      - name: Evidence-backed rationale
+        run: flutter test test/lab_quality/lsp_q3_evidence_backed_rationale_test.dart
+
+      - name: Canonical Decision parsing
+        run: flutter test test/lab_quality/lsp_q4_canonical_decision_batch_parse_test.dart
+
+      - name: Strict H0.3 gate
+        run: flutter test test/lab_quality/lsp_q5_strict_h0_3_gate_test.dart
+
+      - name: Frozen H0.3 regression
+        run: flutter test test/services/question_quality_validator_test.dart
+
+      - name: DQG300 LAB regression
+        run: flutter test test/lab_quality/l4k_dqg300_lab_gate_test.dart
+
+      - name: Combined Decision quality
+        run: flutter test test/lab_quality/lsp_q6_combined_decision_quality_gate_test.dart
+
+      - name: DQG300 semantic authority
+        run: flutter test test/lab_quality/lsp_q7_dqg300_semantic_authority_test.dart
+
+      - name: Learner presentation validation
+        run: flutter test test/lab_quality/lsp_q8_learner_presentation_validation_test.dart
+
+      - name: Scenario manifest contract
+        run: flutter test test/lab_quality/lsp_q9_scenario_population_manifest_test.dart
+
+      - name: Original population regression
+        run: |
+          flutter test test/lab_quality/lsp_q10_manifest_backed_scenario_population_test.dart
+          flutter test test/lab_quality/lsp_q11_population_publication_gate_test.dart
+
+      - name: Batch 2 complete pre-catalogue gate
+        run: flutter test test/lab_quality/lsp_batch2_population_gate_test.dart
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Persist generated Batch 2 evidence after all gates pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add content/lab_population_batch2/manifest.json
+          find content/lab_population_batch2 -name dqg300_evidence.json -print0 |
+            xargs -0 git add
+          if git diff --cached --quiet; then
+            echo "Generated Batch 2 evidence already committed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Generate validated Batch 2 DQG300 evidence"
+          git push origin HEAD:${GITHUB_REF_NAME}
