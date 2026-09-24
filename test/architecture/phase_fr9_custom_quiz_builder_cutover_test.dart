@@ -27,6 +27,7 @@ void main() {
     expect(source, contains('.take(_maxRuntimeScopePackages)'));
     expect(source, contains('_availablePreparedQuestionCount()'));
     expect(source, contains('published questions in scope'));
+    expect(source, contains("_scheduleSubtopicPreparation();"));
   });
 
   test('Custom Quiz does not preload the complete question bank for All CSP11', () {

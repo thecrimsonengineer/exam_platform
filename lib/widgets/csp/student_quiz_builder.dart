@@ -320,7 +320,13 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       }
     });
 
-    _refreshCatalogueCount();
+    if (value == 'subtopic' &&
+        _competencyId != null &&
+        _competencyId!.trim().isNotEmpty) {
+      _scheduleSubtopicPreparation();
+    } else {
+      _refreshCatalogueCount();
+    }
   }
 
   void _changeDomain(int? value) {
