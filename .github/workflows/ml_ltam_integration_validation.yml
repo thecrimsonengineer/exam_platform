@@ -1,0 +1,119 @@
+name: ML LTAM Integration Validation
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam-integration
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ml-ltam-integration
+  cancel-in-progress: true
+
+jobs:
+  validate-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and frozen boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+          git diff --quiet d49950184ae38803f4a55e0e033e7c048e3f9c27 HEAD -- content/micro_learning/facts
+          git diff --quiet d49950184ae38803f4a55e0e033e7c048e3f9c27 HEAD -- lib/features/learning_twin/domain
+          test -f docs/learning_twin/LEARNING_TWIN_GLAXNIMATE_LOTTIE_AVATAR_FREEZE.md
+          test -f docs/learning_twin/LTAM_1C_ANIMATION_LAYER_PREPARATION_AND_RIG_ARCHITECTURE.md
+          test -f docs/learning_twin/LTAM_2_GLAXNIMATE_IDLE_MOTION_PROOF.md
+          test -f docs/learning_twin/LTAM_3_LEARNING_TWIN_MOTION_STATE_LIBRARY.md
+          test -f docs/learning_twin/LTAM_4_MOTION_MANIFEST_STATE_MAPPER_FLUTTER_RENDERER_FOUNDATION.md
+          test -f docs/learning_twin/LTAM_5_BACKWARD_COMPATIBLE_AVATAR_UPGRADE_AND_CONTROLLED_RUNTIME_PILOT.md
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify frozen ML runtime bundle
+        run: dart run tool/generate_ml10_runtime_bundle.dart --check
+
+      - name: Analyze integration seam
+        run: >
+          dart analyze
+          lib/features/learning_twin/integration/micro_learning_twin_presentation.dart
+          lib/screens/startup/startup_micro_fact_card.dart
+          test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
+          test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+
+      - name: Format integration seam
+        run: >
+          dart format
+          lib/features/learning_twin/integration/micro_learning_twin_presentation.dart
+          lib/screens/startup/startup_micro_fact_card.dart
+          test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
+          test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+
+      - name: Run integration seam tests
+        run: |
+          flutter test \
+            test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart \
+            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+
+      - name: Revalidate Learning Twin
+        run: flutter test test/features/learning_twin
+
+      - name: Revalidate ML startup stack
+        run: |
+          flutter test \
+            test/micro_learning/local_micro_fact_repository_asset_test.dart \
+            test/micro_learning/micro_fact_selector_runtime_corpus_test.dart \
+            test/micro_learning/startup_micro_fact_service_test.dart \
+            test/startup/startup_micro_fact_card_test.dart \
+            test/startup/startup_micro_fact_integration_test.dart \
+            test/startup/startup_micro_fact_motion_unit_test.dart \
+            test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Revalidate startup motion and handoff
+        run: |
+          flutter test \
+            test/startup/startup_motion_policy_test.dart \
+            test/startup/startup_timeline_test.dart \
+            test/startup/startup_screen_hardening_test.dart \
+            test/startup/startup_release_render_smoke_test.dart
+
+      - name: Commit normalized integration files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          if git diff --quiet -- \
+            lib/features/learning_twin/integration/micro_learning_twin_presentation.dart \
+            lib/screens/startup/startup_micro_fact_card.dart \
+            test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart \
+            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart; then
+            echo "Integration files are already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/features/learning_twin/integration/micro_learning_twin_presentation.dart
+          git add lib/screens/startup/startup_micro_fact_card.dart
+          git add test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
+          git add test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+          git commit -m "INT-ML-LTAM normalize presentation integration"
+          git push origin HEAD:phase-ml-ltam-integration
