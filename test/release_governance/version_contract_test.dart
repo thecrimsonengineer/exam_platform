@@ -68,9 +68,18 @@ void main() {
     test('requires a strictly increasing build number', () {
       final previous = ReleaseVersion.parse('1.1.9+36');
 
-      expect(ReleaseVersion.parse('1.2.0+37').isValidSuccessorOf(previous), isTrue);
-      expect(ReleaseVersion.parse('1.2.0+36').isValidSuccessorOf(previous), isFalse);
-      expect(ReleaseVersion.parse('2.0.0+35').isValidSuccessorOf(previous), isFalse);
+      expect(
+        ReleaseVersion.parse('1.2.0+37').isValidSuccessorOf(previous),
+        isTrue,
+      );
+      expect(
+        ReleaseVersion.parse('1.2.0+36').isValidSuccessorOf(previous),
+        isFalse,
+      );
+      expect(
+        ReleaseVersion.parse('2.0.0+35').isValidSuccessorOf(previous),
+        isFalse,
+      );
     });
   });
 
