@@ -15,34 +15,35 @@ import '../../tool/release_governance/repository_provenance.dart';
 
 void main() {
   group('REL-GOV-11 validation harness', () {
-    test('CI provides format, analyze and complete REL-GOV regression', () async {
-      final workflow = await File(
-        '.github/workflows/rel_gov_validation.yml',
-      ).readAsString();
+    test(
+      'CI supplies format, analyze and complete REL-GOV regression',
+      () async {
+        final workflow = await File(
+          '.github/workflows/rel_gov_validation.yml',
+        ).readAsString();
 
-      expect(
-        workflow,
-        contains(
-          'dart format tool/release_governance test/release_governance',
-        ),
-      );
-      expect(
-        workflow,
-        contains(
-          'dart analyze tool/release_governance test/release_governance',
-        ),
-      );
-      expect(workflow, contains('flutter test test/release_governance'));
-    });
+        expect(
+          workflow,
+          contains(
+            'dart format tool/release_governance test/release_governance',
+          ),
+        );
+        expect(
+          workflow,
+          contains(
+            'dart analyze tool/release_governance test/release_governance',
+          ),
+        );
+        expect(workflow, contains('flutter test test/release_governance'));
+      },
+    );
   });
 
   group('REL-GOV-11 synthetic internal candidate', () {
     late Directory root;
 
     setUp(() async {
-      root = await Directory.systemTemp.createTemp(
-        'rel_gov_whole_phase_',
-      );
+      root = await Directory.systemTemp.createTemp('rel_gov_whole_phase_');
     });
 
     tearDown(() async {
@@ -51,95 +52,22 @@ void main() {
       }
     });
 
-    test('passes the complete governance chain and re-verifies evidence', () async {
-      final artifactFile = File(
-        '${root.path}/build/release-candidate/csp11-synthetic.apk',
-      );
-      await artifactFile.parent.create(recursive: true);
-      await artifactFile.writeAsBytes(
-        utf8.encode('REL-GOV-11 synthetic internal artifact\n'),
-      );
+    test('passes complete governance and evidence re-verification', () async {
+      final run = await _generateSyntheticCandidate(root);
+      const generator = ReleaseEvidenceGenerator();
 
-      const artifactService = ArtifactInventoryService();
-      final inventory = await artifactService.capture(
-        rootDirectory: root.path,
-        declarations: const <ArtifactDeclaration>[
-          ArtifactDeclaration(
-            artifactId: 'synthetic-android-apk',
-            fileName:
-                'build/release-candidate/csp11-synthetic.apk',
-          ),
-        ],
-      );
-
-      expect(inventory.pass, isTrue);
-      expect(inventory.records, hasLength(1));
+      expect(run.inventory.pass, isTrue);
+      expect(run.inventory.records, hasLength(1));
       expect(
-        inventory.records.single.sha256,
+        run.inventory.records.single.sha256,
         matches(RegExp(r'^[0-9a-f]{64}$')),
       );
-
-      final version = ReleaseVersion.parse('1.0.1+2');
+      expect(run.admission.admissible, isTrue);
+      expect(run.admission.requiredGateCount, 17);
+      expect(run.admission.passedGateCount, 17);
+      expect(run.admission.blockingFailureCount, 0);
       expect(
-        version.isValidSuccessorOf(ReleaseVersion.parse('1.0.0+1')),
-        isTrue,
-      );
-
-      const repository = RepositoryProvenanceEvidence(
-        repository: 'thecrimsonengineer/exam_platform',
-        remoteUrl:
-            'https://github.com/thecrimsonengineer/exam_platform.git',
-        branch: 'synthetic/internal-candidate',
-        headSha: _commitSha,
-        treeSha: _treeSha,
-        tagsAtHead: <String>[],
-        changes: <RepositoryChange>[],
-      );
-      const provenancePolicy = RepositoryProvenancePolicy(
-        expectedRepository: 'thecrimsonengineer/exam_platform',
-        expectedBranch: 'synthetic/internal-candidate',
-        expectedCommitSha: _commitSha,
-        expectedTreeSha: _treeSha,
-      );
-
-      expect(provenancePolicy.evaluate(repository).pass, isTrue);
-
-      final environmentResult = const BuildEnvironmentValidator().evaluate(
-        expected: BuildEnvironmentExpectation.exact(_environment),
-        actual: _environment,
-      );
-
-      expect(environmentResult.pass, isTrue);
-      expect(environmentResult.issues, isEmpty);
-
-      const recovery = ReleaseRecoveryMetadata.none();
-      expect(recovery.toJson()['rollbackEligible'], isFalse);
-
-      const components = <ReleaseComponentCheckpoint>[
-        ReleaseComponentCheckpoint(
-          componentId: 'application',
-          status: 'synthetic_internal_candidate',
-          checkpoint: 'rel-gov-11-synthetic',
-          commitSha: _commitSha,
-          version: '1.0.1+2',
-          evidence: <Object?>[
-            <String, Object?>{
-              'kind': 'whole_phase_validation',
-              'internalOnly': true,
-            },
-          ],
-        ),
-      ];
-
-      final gates = _passingGates();
-      final admission = const ReleaseAdmissionPolicy().evaluate(gates);
-
-      expect(admission.admissible, isTrue);
-      expect(admission.requiredGateCount, 17);
-      expect(admission.passedGateCount, 17);
-      expect(admission.blockingFailureCount, 0);
-      expect(
-        admission.gates.any(
+        run.admission.gates.any(
           (gate) =>
               gate.gateId == 'RG016' &&
               gate.name == 'release_state' &&
@@ -148,105 +76,34 @@ void main() {
         isTrue,
       );
 
-      final manifest = ReleaseManifestBuilder.candidate(
-        version: version,
-        candidateOrdinal: 11,
-        createdAt: DateTime.utc(2026, 9, 24, 6),
-        source: const ReleaseSourceIdentity(
-          repository: 'thecrimsonengineer/exam_platform',
-          branch: 'synthetic/internal-candidate',
-          commitSha: _commitSha,
-          treeSha: _treeSha,
-          clean: true,
-        ),
-        environment: _environment.toJson(),
-        dependencies: <String, Object?>{
-          'pubspecYamlSha256': _environment.pubspecYamlSha256,
-          'pubspecLockSha256': _environment.pubspecLockSha256,
-        },
-        components: components,
-        validation: ReleaseValidationSummary(
-          requiredGateCount: admission.requiredGateCount,
-          passedGateCount: admission.passedGateCount,
-          blockingFailureCount: admission.blockingFailureCount,
-          evidenceRefs: admission.gates
-              .expand((gate) => gate.evidence)
-              .toSet()
-              .toList(),
-        ),
-        artifacts: inventory.records
-            .map((record) => record.toJson())
-            .toList(),
-        recovery: recovery.toJson(),
-      ).build();
+      final verified = await generator.verify(directory: run.directory);
+      expect(verified.pass, isTrue);
+      expect(
+        verified.evidenceIdentitySha256,
+        run.generated.evidenceIdentitySha256,
+      );
 
-      final release = manifest['release']! as Map<String, Object?>;
-      final source = manifest['source']! as Map<String, Object?>;
-      final componentMap = manifest['components']! as Map<String, Object?>;
+      final manifest =
+          jsonDecode(
+                await File(
+                  '${run.directory}/release_manifest.json',
+                ).readAsString(),
+              )
+              as Map<String, dynamic>;
+      final release = manifest['release']! as Map<String, dynamic>;
+      final source = manifest['source']! as Map<String, dynamic>;
+      final components = manifest['components']! as Map<String, dynamic>;
+      final artifacts = manifest['artifacts']! as List<dynamic>;
+      final artifact = artifacts.single as Map<String, dynamic>;
 
       expect(release['releaseId'], 'csp11-1.0.1-rc.11');
       expect(release['status'], 'candidate');
       expect(source['commitSha'], _commitSha);
       expect(source['treeSha'], _treeSha);
-      expect(componentMap.keys, contains('application'));
-
-      const generator = ReleaseEvidenceGenerator();
-      final packageDirectory = '${root.path}/release-evidence';
-      final generated = await generator.generate(
-        request: ReleaseEvidenceRequest(
-          sourceRef: 'synthetic/internal-candidate',
-          version: version,
-          candidateOrdinal: 11,
-          createdAt: DateTime.utc(2026, 9, 24, 6),
-          repository: repository,
-          environment: _environment,
-          tests: const <ReleaseTestEvidence>[
-            ReleaseTestEvidence(
-              suiteId: 'rel-gov-whole-phase',
-              status: ReleaseTestStatus.pass,
-              evidenceRefs: <String>[
-                'test/release_governance/rel_gov_whole_phase_test.dart',
-              ],
-              message: 'Synthetic internal whole-phase validation passed.',
-            ),
-          ],
-          components: components,
-          artifactInventory: inventory,
-          admissionGates: gates,
-          recovery: recovery.toJson(),
-        ),
-        outputDirectory: packageDirectory,
-      );
-
-      expect(generated.admission.admissible, isTrue);
-      expect(generated.files, hasLength(11));
-
-      final verified = await generator.verify(
-        directory: packageDirectory,
-      );
-
-      expect(verified.pass, isTrue);
+      expect(components.keys, contains('application'));
+      expect(artifact['sha256'], run.inventory.records.single.sha256);
       expect(
-        verified.evidenceIdentitySha256,
-        generated.evidenceIdentitySha256,
-      );
-
-      final evidenceManifest = jsonDecode(
-        await File(
-          '$packageDirectory/release_manifest.json',
-        ).readAsString(),
-      ) as Map<String, dynamic>;
-      final evidenceArtifacts =
-          evidenceManifest['artifacts']! as List<dynamic>;
-      final evidenceArtifact =
-          evidenceArtifacts.single as Map<String, dynamic>;
-
-      expect(
-        evidenceArtifact['sha256'],
-        inventory.records.single.sha256,
-      );
-      expect(
-        Directory(packageDirectory)
+        Directory(run.directory)
             .listSync()
             .whereType<File>()
             .map((file) => file.uri.pathSegments.last)
@@ -256,81 +113,31 @@ void main() {
 
       final review = const ReleaseCandidateReviewPolicy().evaluate(
         intent: ReleaseCandidateReviewIntent.approve,
-        admission: generated.admission,
-        recovery: recovery,
-        rationale:
-            'Synthetic internal candidate completed whole-phase validation.',
+        admission: run.generated.admission,
+        recovery: const ReleaseRecoveryMetadata.none(),
+        rationale: 'Synthetic candidate completed whole-phase validation.',
       );
 
       expect(review.allowed, isTrue);
       expect(review.issues, isEmpty);
     });
 
-    test('blocks a tampered synthetic candidate after identity refresh', () async {
-      final artifactFile = File(
-        '${root.path}/build/release-candidate/csp11-synthetic.apk',
-      );
-      await artifactFile.parent.create(recursive: true);
-      await artifactFile.writeAsString('synthetic artifact\n');
-
-      final inventory = await const ArtifactInventoryService().capture(
-        rootDirectory: root.path,
-        declarations: const <ArtifactDeclaration>[
-          ArtifactDeclaration(
-            artifactId: 'synthetic-android-apk',
-            fileName:
-                'build/release-candidate/csp11-synthetic.apk',
-          ),
-        ],
-      );
-
-      const generator = ReleaseEvidenceGenerator();
-      final packageDirectory = '${root.path}/tampered-evidence';
-      await generator.generate(
-        request: ReleaseEvidenceRequest(
-          sourceRef: 'synthetic/internal-candidate',
-          version: ReleaseVersion.parse('1.0.1+2'),
-          candidateOrdinal: 11,
-          createdAt: DateTime.utc(2026, 9, 24, 6),
-          repository: _repository,
-          environment: _environment,
-          tests: const <ReleaseTestEvidence>[
-            ReleaseTestEvidence(
-              suiteId: 'rel-gov-whole-phase',
-              status: ReleaseTestStatus.pass,
-              evidenceRefs: <String>['synthetic/test-evidence'],
-              message: 'Synthetic whole-phase regression passed.',
-            ),
-          ],
-          components: const <ReleaseComponentCheckpoint>[
-            ReleaseComponentCheckpoint(
-              componentId: 'application',
-              status: 'synthetic_internal_candidate',
-              checkpoint: 'rel-gov-11-synthetic',
-              commitSha: _commitSha,
-              version: '1.0.1+2',
-            ),
-          ],
-          artifactInventory: inventory,
-          admissionGates: _passingGates(),
-          recovery: const ReleaseRecoveryMetadata.none().toJson(),
-        ),
-        outputDirectory: packageDirectory,
-      );
-
+    test('blocks tampered evidence after package identity refresh', () async {
+      final run = await _generateSyntheticCandidate(root);
       final repositoryFile = File(
-        '$packageDirectory/repository_evidence.json',
+        '${run.directory}/repository_evidence.json',
       );
       final repositoryJson =
           jsonDecode(await repositoryFile.readAsString())
               as Map<String, dynamic>;
+
       repositoryJson['headSha'] =
           'ffffffffffffffffffffffffffffffffffffffff';
       await _writeCanonicalJson(repositoryFile, repositoryJson);
-      await _refreshSummaryIdentity(packageDirectory);
+      await _refreshSummaryIdentity(run.directory);
 
-      final verified = await generator.verify(
-        directory: packageDirectory,
+      final verified = await const ReleaseEvidenceGenerator().verify(
+        directory: run.directory,
       );
 
       expect(verified.pass, isFalse);
@@ -344,7 +151,7 @@ void main() {
       );
     });
 
-    test('blocks the synthetic candidate when a required gate fails', () {
+    test('blocks approval when a required release gate fails', () {
       final gates = _passingGates();
       gates[8] = gates[8].copyWith(
         status: ReleaseAdmissionGateStatus.fail,
@@ -352,7 +159,6 @@ void main() {
       );
 
       final admission = const ReleaseAdmissionPolicy().evaluate(gates);
-
       expect(admission.admissible, isFalse);
       expect(admission.blockingFailureCount, greaterThan(0));
 
@@ -375,13 +181,116 @@ void main() {
     test('does not track generated build artifacts', () async {
       final result = await Process.run(
         'git',
-        const <String>['ls-files', 'build', 'build/**'],
+        const <String>['ls-files', 'build'],
       );
 
       expect(result.exitCode, 0);
       expect((result.stdout as String).trim(), isEmpty);
     });
   });
+}
+
+Future<_SyntheticRun> _generateSyntheticCandidate(Directory root) async {
+  final artifactFile = File(
+    '${root.path}/build/release-candidate/csp11-synthetic.apk',
+  );
+  await artifactFile.parent.create(recursive: true);
+  await artifactFile.writeAsBytes(
+    utf8.encode('REL-GOV-11 synthetic internal artifact\n'),
+  );
+
+  final inventory = await const ArtifactInventoryService().capture(
+    rootDirectory: root.path,
+    declarations: const <ArtifactDeclaration>[
+      ArtifactDeclaration(
+        artifactId: 'synthetic-android-apk',
+        fileName: 'build/release-candidate/csp11-synthetic.apk',
+      ),
+    ],
+  );
+
+  final version = ReleaseVersion.parse('1.0.1+2');
+  if (!version.isValidSuccessorOf(ReleaseVersion.parse('1.0.0+1'))) {
+    throw StateError('Synthetic version is not a valid governed successor.');
+  }
+
+  const provenancePolicy = RepositoryProvenancePolicy(
+    expectedRepository: 'thecrimsonengineer/exam_platform',
+    expectedBranch: 'synthetic/internal-candidate',
+    expectedCommitSha: _commitSha,
+    expectedTreeSha: _treeSha,
+  );
+  if (!provenancePolicy.evaluate(_repository).pass) {
+    throw StateError('Synthetic repository provenance did not pass.');
+  }
+
+  final environmentResult = const BuildEnvironmentValidator().evaluate(
+    expected: BuildEnvironmentExpectation.exact(_environment),
+    actual: _environment,
+  );
+  if (!environmentResult.pass) {
+    throw StateError('Synthetic build environment did not pass.');
+  }
+
+  const recovery = ReleaseRecoveryMetadata.none();
+  recovery.validate();
+
+  final gates = _passingGates();
+  final admission = const ReleaseAdmissionPolicy().evaluate(gates);
+  if (!admission.admissible) {
+    throw StateError('Synthetic admission unexpectedly blocked.');
+  }
+
+  const components = <ReleaseComponentCheckpoint>[
+    ReleaseComponentCheckpoint(
+      componentId: 'application',
+      status: 'synthetic_internal_candidate',
+      checkpoint: 'rel-gov-11-synthetic',
+      commitSha: _commitSha,
+      version: '1.0.1+2',
+      evidence: <Object?>[
+        <String, Object?>{
+          'kind': 'whole_phase_validation',
+          'internalOnly': true,
+        },
+      ],
+    ),
+  ];
+
+  final directory = '${root.path}/release-evidence';
+  const generator = ReleaseEvidenceGenerator();
+  final generated = await generator.generate(
+    request: ReleaseEvidenceRequest(
+      sourceRef: 'synthetic/internal-candidate',
+      version: version,
+      candidateOrdinal: 11,
+      createdAt: DateTime.utc(2026, 9, 24, 6),
+      repository: _repository,
+      environment: _environment,
+      tests: const <ReleaseTestEvidence>[
+        ReleaseTestEvidence(
+          suiteId: 'rel-gov-whole-phase',
+          status: ReleaseTestStatus.pass,
+          evidenceRefs: <String>[
+            'test/release_governance/rel_gov_whole_phase_test.dart',
+          ],
+          message: 'Synthetic internal whole-phase validation passed.',
+        ),
+      ],
+      components: components,
+      artifactInventory: inventory,
+      admissionGates: gates,
+      recovery: recovery.toJson(),
+    ),
+    outputDirectory: directory,
+  );
+
+  return _SyntheticRun(
+    directory: directory,
+    inventory: inventory,
+    admission: admission,
+    generated: generated,
+  );
 }
 
 List<ReleaseAdmissionGate> _passingGates() {
@@ -434,7 +343,6 @@ Future<void> _refreshSummaryIdentity(String directory) async {
   final identity = checksumService.sha256Bytes(
     utf8.encode(buffer.toString()),
   );
-
   final summary = File('$directory/release_summary.txt');
   final lines = const LineSplitter().convert(await summary.readAsString());
   final updated = lines
@@ -446,6 +354,20 @@ Future<void> _refreshSummaryIdentity(String directory) async {
       .join('\n');
 
   await summary.writeAsString('$updated\n', flush: true);
+}
+
+class _SyntheticRun {
+  const _SyntheticRun({
+    required this.directory,
+    required this.inventory,
+    required this.admission,
+    required this.generated,
+  });
+
+  final String directory;
+  final ArtifactInventoryResult inventory;
+  final ReleaseAdmissionResult admission;
+  final ReleaseEvidencePackageResult generated;
 }
 
 const String _commitSha = '0123456789abcdef0123456789abcdef01234567';
