@@ -52,6 +52,13 @@ jobs:
       - name: Verify FR9 Custom Quiz cutover
         run: flutter test test/architecture/phase_fr9_custom_quiz_builder_cutover_test.dart
 
+      - name: Verify per-launch Quick Insight rotation
+        run: |
+          flutter test test/micro_learning/startup_micro_fact_launch_rotation_test.dart
+          flutter test test/micro_learning/startup_micro_fact_service_test.dart
+          flutter test test/micro_learning/micro_fact_selector_test.dart
+          flutter test test/startup/startup_micro_fact_integration_test.dart
+
       - name: Full repository regression
         run: flutter test
 

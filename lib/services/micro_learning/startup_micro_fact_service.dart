@@ -1,6 +1,7 @@
 import '../../models/micro_learning/micro_fact.dart';
 import 'local_micro_fact_repository.dart';
 import 'micro_fact_selector.dart';
+import 'startup_micro_fact_history_store.dart';
 
 typedef StartupMicroFactClock = DateTime Function();
 
@@ -8,13 +9,17 @@ class StartupMicroFactService {
   StartupMicroFactService({
     LocalMicroFactRepository? repository,
     MicroFactSelector selector = const MicroFactSelector(),
+    StartupMicroFactHistoryStore? historyStore,
     StartupMicroFactClock? clock,
   }) : _repository = repository ?? LocalMicroFactRepository(),
        _selector = selector,
+       _historyStore =
+           historyStore ?? SharedPreferencesStartupMicroFactHistoryStore(),
        _clock = clock ?? DateTime.now;
 
   final LocalMicroFactRepository _repository;
   final MicroFactSelector _selector;
+  final StartupMicroFactHistoryStore _historyStore;
   final StartupMicroFactClock _clock;
 
   Future<MicroFact?> load({
@@ -29,16 +34,48 @@ class StartupMicroFactService {
         return null;
       }
 
+      final usesExplicitSelectionContext =
+          rotationOrdinal != null || recentMicroFactIds.isNotEmpty;
+
+      StartupMicroFactHistorySnapshot? history;
+      if (!usesExplicitSelectionContext) {
+        try {
+          history = await _historyStore.load();
+        } catch (_) {
+          history = null;
+        }
+      }
+
+      final effectiveOrdinal =
+          rotationOrdinal ??
+          history?.launchOrdinal ??
+          dailyRotationOrdinal(now);
+      final effectiveRecentIds = recentMicroFactIds.isNotEmpty
+          ? recentMicroFactIds
+          : history?.recentMicroFactIds ?? const <String>[];
+
       final result = _selector.select(
         snapshot.eligibleFacts,
         context: MicroFactSelectionContext(
-          rotationOrdinal: rotationOrdinal ?? dailyRotationOrdinal(now),
-          recentMicroFactIds: recentMicroFactIds,
+          rotationOrdinal: effectiveOrdinal,
+          recentMicroFactIds: effectiveRecentIds,
           activeAssessmentConceptIds: activeAssessmentConceptIds,
         ),
       );
 
-      return result.fact;
+      final fact = result.fact;
+      if (fact != null && !usesExplicitSelectionContext && history != null) {
+        try {
+          await _historyStore.recordSelection(
+            launchOrdinal: effectiveOrdinal,
+            microFactId: fact.microFactId,
+          );
+        } catch (_) {
+          // Impression persistence must never block or fail startup.
+        }
+      }
+
+      return fact;
     } catch (_) {
       return null;
     }
