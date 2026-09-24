@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "csp11.lab.population_manifest.v1",
+  "manifestId": "phase_l_population_batch2_v1",
+  "entries": [
+    {
+      "entryId": "contractor_permit_coordination_v1",
+      "labId": "contractor_permit_coordination",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/contractor_permit_coordination/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/contractor_permit_coordination/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/contractor_permit_coordination/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "warehouse_traffic_management_v1",
+      "labId": "warehouse_traffic_management",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/warehouse_traffic_management/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/warehouse_traffic_management/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/warehouse_traffic_management/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "machine_guarding_jam_clearance_v1",
+      "labId": "machine_guarding_jam_clearance",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/machine_guarding_jam_clearance/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/machine_guarding_jam_clearance/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/machine_guarding_jam_clearance/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "heat_stress_outdoor_work_v1",
+      "labId": "heat_stress_outdoor_work",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/heat_stress_outdoor_work/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/heat_stress_outdoor_work/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/heat_stress_outdoor_work/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "noise_control_selection_v1",
+      "labId": "noise_control_selection",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/noise_control_selection/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/noise_control_selection/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/noise_control_selection/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "manual_handling_team_lift_v1",
+      "labId": "manual_handling_team_lift",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/manual_handling_team_lift/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/manual_handling_team_lift/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/manual_handling_team_lift/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "night_shift_fatigue_management_v1",
+      "labId": "night_shift_fatigue_management",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/night_shift_fatigue_management/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/night_shift_fatigue_management/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/night_shift_fatigue_management/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "incident_investigation_scene_control_v1",
+      "labId": "incident_investigation_scene_control",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/incident_investigation_scene_control/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/incident_investigation_scene_control/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/incident_investigation_scene_control/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "slip_trip_housekeeping_control_v1",
+      "labId": "slip_trip_housekeeping_control",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/slip_trip_housekeeping_control/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/slip_trip_housekeeping_control/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/slip_trip_housekeeping_control/v1/learner_presentation.json"
+    },
+    {
+      "entryId": "emergency_evacuation_muster_v1",
+      "labId": "emergency_evacuation_muster",
+      "versionId": "v1",
+      "technicalLabPath": "content/lab_population_batch2/emergency_evacuation_muster/v1/technical.json",
+      "dqg300EvidencePath": "content/lab_population_batch2/emergency_evacuation_muster/v1/dqg300_evidence.json",
+      "learnerPresentationPath": "content/lab_population_batch2/emergency_evacuation_muster/v1/learner_presentation.json"
+    }
+  ]
+}
