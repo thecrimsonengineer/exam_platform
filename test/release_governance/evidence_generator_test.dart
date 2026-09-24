@@ -138,19 +138,21 @@ void main() {
           status: ReleaseAdmissionGateStatus.fail,
           message: 'Unit tests failed.',
         );
-  
+
         const generator = ReleaseEvidenceGenerator();
         final result = await generator.generate(
           request: _request(admissionGates: gates),
           outputDirectory: '${root.path}/blocked',
         );
-  
+
         expect(result.admission.admissible, isFalse);
-        final admission = jsonDecode(
-          await File(
-            '${root.path}/blocked/admission_result.json',
-          ).readAsString(),
-        ) as Map<String, dynamic>;
+        final admission =
+            jsonDecode(
+                  await File(
+                    '${root.path}/blocked/admission_result.json',
+                  ).readAsString(),
+                )
+                as Map<String, dynamic>;
         expect(admission['decision'], 'BLOCKED');
       },
     );
