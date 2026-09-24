@@ -1,13 +1,13 @@
 # CSP11 LTAM-5 Hero Pilot Gated Checkpoint
 
-**Status:** GATED CHECKPOINT — CODE READY, MOTION ASSET NOT YET ADMITTED  
-**Date:** 2026-09-24  
-**Repository:** thecrimsonengineer/exam_platform  
-**Source baseline:** phase-ml-ltam4-motion-foundation-closed  
-**Baseline SHA:** d3b4529501bd1a1e9c5059e133b98bafda885da0  
-**Implementation branch:** phase-ml-ltam5-runtime-pilot  
-**Validated implementation SHA before this evidence commit:** 39ed4a124f59a700e06cf7e1d96b6353e934f451  
-**Validation run:** 35960561293  
+**Status:** GATED CHECKPOINT — CODE READY, MOTION ASSET NOT YET ADMITTED
+**Date:** 2026-09-24
+**Repository:** thecrimsonengineer/exam_platform
+**Source baseline:** phase-ml-ltam4-motion-foundation-closed
+**Baseline SHA:** d3b4529501bd1a1e9c5059e133b98bafda885da0
+**Implementation branch:** phase-ml-ltam5-runtime-pilot
+**Validated implementation SHA before this evidence commit:** 39ed4a124f59a700e06cf7e1d96b6353e934f451
+**Validation run:** 35960561293
 
 ## Checkpoint purpose
 
@@ -37,8 +37,8 @@ At this checkpoint it is intentionally absent.
 
 The rollout contract is:
 
-`heroPilotRequested = true`  
-`canonicalIdleClipAdmitted = false`  
+`heroPilotRequested = true`
+`canonicalIdleClipAdmitted = false`
 `heroMotionEnabled = heroPilotRequested && canonicalIdleClipAdmitted`
 
 A regression test requires actual idle-clip presence to match the admission switch. This prevents a motion asset from silently entering production without the explicit review decision.
