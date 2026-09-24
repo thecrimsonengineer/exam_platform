@@ -11,6 +11,10 @@ import 'lab_studio.dart';
 
 const String kLspQ14ClosedSha = '5beee3db89a43267a4cc5b2956b117a344afe648';
 const String kLspQ14ClosureValidationRunId = '35918656487';
+const String kLspBatch2PrecatalogueClosedSha =
+    '4aa151a749b2324e9edd69a40781d7f8169a72c0';
+const String kLspBatch2PrecatalogueValidationRunId = '36015831093';
+const String kBatch2LabProductionManifestId = 'phase_l_population_batch2_v1';
 const String kInitialLabProductionReleaseId =
     'phase_l_population_v1_q15_release_v1';
 const String kLabProductionManifestFingerprintSchema =
@@ -32,6 +36,22 @@ bool _isSha256Fingerprint(String value, String schema) {
   if (!value.startsWith(prefix)) return false;
   final digest = value.substring(prefix.length);
   return RegExp(r'^[0-9a-f]{64}$').hasMatch(digest);
+}
+
+bool _validReleaseProvenance({
+  required String manifestId,
+  required String closureSha,
+  required String validationRunId,
+}) {
+  if (manifestId == 'phase_l_population_v1') {
+    return closureSha == kLspQ14ClosedSha &&
+        validationRunId == kLspQ14ClosureValidationRunId;
+  }
+  if (manifestId == kBatch2LabProductionManifestId) {
+    return closureSha == kLspBatch2PrecatalogueClosedSha &&
+        validationRunId == kLspBatch2PrecatalogueValidationRunId;
+  }
+  return false;
 }
 
 class LabProductionReleaseEntryEvidence {
@@ -124,10 +144,13 @@ class LabProductionReleaseEvidence {
     LabIds.requireCanonical(releaseId, 'Q15 production release ID');
     LabIds.requireCanonical(manifestId, 'Q15 production manifest ID');
 
-    if (q14ClosureSha != kLspQ14ClosedSha ||
-        q14ValidationRunId != kLspQ14ClosureValidationRunId) {
+    if (!_validReleaseProvenance(
+      manifestId: manifestId,
+      closureSha: q14ClosureSha,
+      validationRunId: q14ValidationRunId,
+    )) {
       throw const LabProductionReleaseClosureException(
-        'Q15 closure evidence must be pinned to the frozen Q14 closure.',
+        'Production release evidence is not pinned to an approved closure.',
       );
     }
 
@@ -193,6 +216,32 @@ class LabProductionReleaseEvidence {
     required Iterable<String> catalogueIdentityKeys,
     required Iterable<LabProductionReleaseEntryEvidence> entries,
   }) {
+    return LabProductionReleaseEvidence.issueForProvenance(
+      releaseId: releaseId,
+      manifestId: manifestId,
+      manifestFingerprint: manifestFingerprint,
+      closureSha: kLspQ14ClosedSha,
+      validationRunId: kLspQ14ClosureValidationRunId,
+      environmentId: environmentId,
+      executedBy: executedBy,
+      executedAt: executedAt,
+      catalogueIdentityKeys: catalogueIdentityKeys,
+      entries: entries,
+    );
+  }
+
+  factory LabProductionReleaseEvidence.issueForProvenance({
+    required String releaseId,
+    required String manifestId,
+    required String manifestFingerprint,
+    required String closureSha,
+    required String validationRunId,
+    required String environmentId,
+    required String executedBy,
+    required DateTime executedAt,
+    required Iterable<String> catalogueIdentityKeys,
+    required Iterable<LabProductionReleaseEntryEvidence> entries,
+  }) {
     final normalizedEntries = entries.toList()
       ..sort((left, right) => left.identityKey.compareTo(right.identityKey));
     final normalizedKeys = catalogueIdentityKeys.toList()..sort();
@@ -206,8 +255,8 @@ class LabProductionReleaseEvidence {
       releaseId: releaseId,
       manifestId: manifestId,
       manifestFingerprint: manifestFingerprint,
-      q14ClosureSha: kLspQ14ClosedSha,
-      q14ValidationRunId: kLspQ14ClosureValidationRunId,
+      q14ClosureSha: closureSha,
+      q14ValidationRunId: validationRunId,
       environmentId: environmentId.trim(),
       executedBy: executedBy.trim(),
       executedAtIso: executedAtIso,
@@ -221,8 +270,8 @@ class LabProductionReleaseEvidence {
       releaseId: releaseId,
       manifestId: manifestId,
       manifestFingerprint: manifestFingerprint,
-      q14ClosureSha: kLspQ14ClosedSha,
-      q14ValidationRunId: kLspQ14ClosureValidationRunId,
+      q14ClosureSha: closureSha,
+      q14ValidationRunId: validationRunId,
       environmentId: environmentId.trim(),
       executedBy: executedBy.trim(),
       executedAtIso: executedAtIso,
