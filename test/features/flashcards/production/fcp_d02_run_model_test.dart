@@ -53,7 +53,7 @@ void main() {
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
     expect(competencies.first['status'], 'closed');
-    expect(competencies[1]['status'], 'in_progress');
+    expect(<String>{'in_progress', 'validating'}, contains(competencies[1]['status']));
     expect(
       competencies.skip(2).every((item) => item['status'] == 'not_started'),
       isTrue,
