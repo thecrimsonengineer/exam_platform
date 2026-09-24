@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2H",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c08",
+  "competencyStatement": "Recognize safety, health, and environmental management and audit systems (e.g., ISO 14000 series, 45001, 19011, ANSI Z10)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c08",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.iso.management_system_standards",
+      "locators": [
+        "What is a management system?",
+        "Audits",
+        "Certification",
+        "harmonized structure"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.14000_family",
+      "locators": [
+        "ISO 14000 family — Environmental management",
+        "ISO 14001 role within the family"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.14001_2026",
+      "locators": [
+        "ISO 14001:2026",
+        "Environmental management systems — Requirements with guidance for use"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.45001_2018",
+      "locators": [
+        "ISO 45001:2018",
+        "OH&S management system",
+        "Plan-Do-Check-Act methodology"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.19011_2026",
+      "locators": [
+        "ISO 19011:2026",
+        "principles of auditing",
+        "managing an audit programme",
+        "conducting audits",
+        "auditor competence"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.assp.z10_2019",
+      "locators": [
+        "ANSI/ASSP Z10.0-2019",
+        "OSH management system framework"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "performance_measure",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_measure",
+      "reason": "Management systems monitor performance, but the generic Performance Measure concept is canonical in D02 C01."
+    },
+    {
+      "semanticSlug": "performance_analysis",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.performance_analysis",
+      "reason": "Audit and management-review findings are analyzed, but the generic Performance Analysis concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "worker_safety_participation",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.worker_safety_participation",
+      "reason": "Worker participation is an important OHSMS element, but the generic participation concept is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "corrective_action_completion_timeliness",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c07",
+      "intendedConceptId": "csp11.concept.corrective_action_completion_timeliness",
+      "reason": "Audit findings may generate corrective actions, but the existing corrective-action timeliness indicator is canonical in D02 C07."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "management_system",
+      "canonicalLabel": "Management System",
+      "sourceIds": [
+        "csp11.source.iso.management_system_standards"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "iso_14000_family",
+      "canonicalLabel": "ISO 14000 Family",
+      "sourceIds": [
+        "csp11.source.iso.14000_family"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "iso_14001_2026",
+      "canonicalLabel": "ISO 14001:2026",
+      "sourceIds": [
+        "csp11.source.iso.14001_2026",
+        "csp11.source.iso.14000_family"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "environmental_management_system",
+      "canonicalLabel": "Environmental Management System",
+      "sourceIds": [
+        "csp11.source.iso.14001_2026",
+        "csp11.source.iso.14000_family"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "iso_45001_2018",
+      "canonicalLabel": "ISO 45001:2018",
+      "sourceIds": [
+        "csp11.source.iso.45001_2018"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "occupational_health_safety_management_system",
+      "canonicalLabel": "Occupational Health and Safety Management System",
+      "sourceIds": [
+        "csp11.source.iso.45001_2018",
+        "csp11.source.assp.z10_2019"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "iso_19011_2026",
+      "canonicalLabel": "ISO 19011:2026",
+      "sourceIds": [
+        "csp11.source.iso.19011_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "management_system_audit",
+      "canonicalLabel": "Management System Audit",
+      "sourceIds": [
+        "csp11.source.iso.19011_2026",
+        "csp11.source.iso.management_system_standards"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "audit_programme",
+      "canonicalLabel": "Audit Programme",
+      "sourceIds": [
+        "csp11.source.iso.19011_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "ansi_assp_z10_2019",
+      "canonicalLabel": "ANSI/ASSP Z10.0-2019",
+      "sourceIds": [
+        "csp11.source.assp.z10_2019"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "plan_do_check_act_cycle",
+      "canonicalLabel": "Plan-Do-Check-Act Cycle",
+      "sourceIds": [
+        "csp11.source.iso.45001_2018",
+        "csp11.source.iso.14001_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "management_system_certification",
+      "canonicalLabel": "Management System Certification",
+      "sourceIds": [
+        "csp11.source.iso.management_system_standards"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c08_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 12,
+    "acceptedCardCount": 12,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
