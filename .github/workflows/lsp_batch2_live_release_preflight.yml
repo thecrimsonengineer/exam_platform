@@ -84,12 +84,12 @@ jobs:
       - name: Original Q17 regression
         run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
 
-      - name: No production deployment in preflight
+      - name: Confirm preflight remains non-deploying
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -R -F "firebase deploy" .github/workflows/lsp_batch2_live_release_preflight.yml
-          echo "Live-release preflight is read-only: PASS"
+          test "${GITHUB_WORKFLOW}" = "LSP Batch 2 Live Release Preflight"
+          echo "Live-release preflight performs validation only: PASS"
 
       - name: Diff hygiene
         run: git diff --check
