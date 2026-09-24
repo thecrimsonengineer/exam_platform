@@ -49,6 +49,8 @@ flutter:
     - content/domain_07/competencies/
     - assets/learning_twin/
     - assets/learning_twin/candidates/
+    - assets/learning_twin/manifest/
+    - assets/learning_twin/motion/
     - assets/startup/
 
 flutter_launcher_icons:

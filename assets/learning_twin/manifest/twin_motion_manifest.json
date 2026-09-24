@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "twin_id": "naveed_learning_guide",
+  "default_state": "idle",
+  "states": {
+    "idle": {
+      "asset": "assets/learning_twin/motion/twin_idle.json",
+      "fallback": "assets/learning_twin/naveed_twin.svg",
+      "loop": true,
+      "duration_ms": 6000,
+      "priority": 0,
+      "motion_intensity": 1
+    },
+    "welcome": {
+      "asset": "assets/learning_twin/motion/twin_welcome.json",
+      "fallback": "assets/learning_twin/naveed_twin.svg",
+      "loop": false,
+      "duration_ms": 1800,
+      "priority": 20,
+      "motion_intensity": 2
+    },
+    "thinking": {
+      "asset": "assets/learning_twin/motion/twin_thinking.json",
+      "fallback": "assets/learning_twin/naveed_twin.svg",
+      "loop": true,
+      "duration_ms": 2400,
+      "priority": 10,
+      "motion_intensity": 1
+    },
+    "explain": {
+      "asset": "assets/learning_twin/motion/twin_explain.json",
+      "fallback": "assets/learning_twin/naveed_twin_explain.svg",
+      "loop": false,
+      "duration_ms": 2200,
+      "priority": 40,
+      "motion_intensity": 2
+    },
+    "insight_ready": {
+      "asset": "assets/learning_twin/motion/twin_insight_ready.json",
+      "fallback": "assets/learning_twin/naveed_twin_explain.svg",
+      "loop": false,
+      "duration_ms": 1800,
+      "priority": 50,
+      "motion_intensity": 2
+    },
+    "focus": {
+      "asset": "assets/learning_twin/motion/twin_focus.json",
+      "fallback": "assets/learning_twin/naveed_twin.svg",
+      "loop": false,
+      "duration_ms": 2000,
+      "priority": 60,
+      "motion_intensity": 2
+    },
+    "encourage": {
+      "asset": "assets/learning_twin/motion/twin_encourage.json",
+      "fallback": "assets/learning_twin/naveed_twin.svg",
+      "loop": false,
+      "duration_ms": 1800,
+      "priority": 30,
+      "motion_intensity": 2
+    },
+    "celebrate": {
+      "asset": "assets/learning_twin/motion/twin_celebrate.json",
+      "fallback": "assets/learning_twin/naveed_twin_success.svg",
+      "loop": false,
+      "duration_ms": 2400,
+      "priority": 100,
+      "motion_intensity": 3
+    },
+    "checkpoint": {
+      "asset": "assets/learning_twin/motion/twin_checkpoint.json",
+      "fallback": "assets/learning_twin/naveed_twin_success.svg",
+      "loop": false,
+      "duration_ms": 2000,
+      "priority": 90,
+      "motion_intensity": 2
+    },
+    "exam_ready": {
+      "asset": "assets/learning_twin/motion/twin_exam_ready.json",
+      "fallback": "assets/learning_twin/naveed_twin.svg",
+      "loop": false,
+      "duration_ms": 2200,
+      "priority": 80,
+      "motion_intensity": 2
+    },
+    "result_review": {
+      "asset": "assets/learning_twin/motion/twin_result_review.json",
+      "fallback": "assets/learning_twin/naveed_twin_explain.svg",
+      "loop": false,
+      "duration_ms": 2200,
+      "priority": 70,
+      "motion_intensity": 2
+    }
+  }
+}
