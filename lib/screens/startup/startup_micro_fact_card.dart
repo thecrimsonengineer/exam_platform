@@ -26,9 +26,7 @@ class StartupMicroFactCard extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 430),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(
-                alpha: highContrast ? 0.15 : 0.07,
-              ),
+              color: Colors.white.withValues(alpha: highContrast ? 0.15 : 0.07),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: Colors.white.withValues(

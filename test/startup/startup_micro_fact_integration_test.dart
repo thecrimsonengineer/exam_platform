@@ -67,10 +67,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 20));
 
-    expect(
-      find.byKey(const ValueKey('startup-microfact-card')),
-      findsNothing,
-    );
+    expect(find.byKey(const ValueKey('startup-microfact-card')), findsNothing);
     expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsOneWidget);
 
     await tester.pump(const Duration(seconds: 5));
@@ -114,7 +111,6 @@ void main() {
     expect(find.byKey(const ValueKey('startup-microfact-card')), findsNothing);
     expect(tester.takeException(), isNull);
   });
-
 }
 
 class _FakeStartupMicroFactService extends StartupMicroFactService {
