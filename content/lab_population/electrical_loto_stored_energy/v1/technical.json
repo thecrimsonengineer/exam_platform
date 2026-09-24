@@ -1,0 +1,1063 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "electrical_loto_stored_energy",
+    "versionId": "v1",
+    "title": "Electrical Maintenance With LOTO and Stored Energy",
+    "description": "A five-decision LAB covering energy identification, lockout verification, group control, unexpected stored energy, and safe restoration.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "energy_identification_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "energy_sources_verified": false,
+      "isolation_verified": false,
+      "group_control_verified": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "energy_sources_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "isolation_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "group_control_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "authorized_employee",
+      "role": "authorized_maintenance_employee"
+    },
+    {
+      "id": "contractor_electrician",
+      "role": "contractor_electrician"
+    },
+    {
+      "id": "operations_supervisor",
+      "role": "operations_supervisor"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "energy_control_procedure",
+      "type": "loto_procedure",
+      "required": false
+    },
+    {
+      "id": "single_line",
+      "type": "single_line_diagram",
+      "required": false
+    },
+    {
+      "id": "isolation_record",
+      "type": "isolation_record",
+      "required": false
+    },
+    {
+      "id": "group_lock_record",
+      "type": "group_loto",
+      "required": false
+    },
+    {
+      "id": "incident_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "energy_identification_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "energy_sources_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "single_line"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "energy_identification_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "energy_identification_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "energy_sources_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "single_line"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "energy_identification_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "isolation_verification_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "isolation_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "isolation_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "isolation_verification_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "isolation_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "isolation_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "isolation_verification_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "isolation_verification_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "group_loto_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "group_control_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "group_lock_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "group_loto_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "group_control_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "group_lock_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "group_loto_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "group_loto_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "unexpected_energy_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "unexpected_energy_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "unexpected_energy_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "unexpected_energy_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "restoration_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "energy_control_procedure"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "restoration_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "restoration_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "energy_control_procedure"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "restoration_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "energy_identification_decision",
+      "type": "DECISION",
+      "prompt": "A motor-driven pump is scheduled for internal maintenance. It has a local disconnect, remote controls, a pressurized line and a capacitor bank. What do you do first?",
+      "options": [
+        {
+          "id": "energy_identification_decision_o1",
+          "text": "Identify the main electrical and process isolations, but rely on maintenance history to confirm the auxiliary control supply and capacitor discharge arrangement. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "energy_identification_decision_defensible",
+          "mistakeTags": [
+            "energy_identification_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "LOTO"
+          ]
+        },
+        {
+          "id": "energy_identification_decision_o2",
+          "text": "Stop the pump from the control system and open the local disconnect while the crew identifies any remaining stored-energy sources at the machine.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "energy_identification_decision_weak",
+          "mistakeTags": [
+            "energy_identification_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "LOTO"
+          ]
+        },
+        {
+          "id": "energy_identification_decision_o3",
+          "text": "Review the equipment and procedure, identify electrical, control, stored mechanical and process energy, then notify affected people before shutdown and isolation.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "energy_identification_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "LOTO"
+          ]
+        },
+        {
+          "id": "energy_identification_decision_o4",
+          "text": "Use the emergency stop, open the local disconnect and bleed visible pressure because the maintenance window is too short for a full energy-source review.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "energy_identification_decision_critical",
+          "mistakeTags": [
+            "energy_identification_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "LOTO"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "isolation_verification_decision",
+      "type": "DECISION",
+      "prompt": "The pump is stopped and isolation points are available. What is the strongest verification before hands-on work begins?",
+      "options": [
+        {
+          "id": "isolation_verification_decision_o1",
+          "text": "Lock the main disconnect and process isolation, test the motor terminals and confirm zero pressure, but omit a functional start attempt after testing. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "isolation_verification_decision_defensible",
+          "mistakeTags": [
+            "isolation_verification_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "electrical_safety"
+          ]
+        },
+        {
+          "id": "isolation_verification_decision_o2",
+          "text": "Apply personal locks to every required isolating device, dissipate stored energy, verify absence with an appropriate test method and attempt normal start controls.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "isolation_verification_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "electrical_safety"
+          ]
+        },
+        {
+          "id": "isolation_verification_decision_o3",
+          "text": "Tag the local disconnect, bleed the line and test one electrical phase to earth before beginning work because the motor cannot start from the local station.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "isolation_verification_decision_weak",
+          "mistakeTags": [
+            "isolation_verification_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "electrical_safety"
+          ]
+        },
+        {
+          "id": "isolation_verification_decision_o4",
+          "text": "Remove the control fuses and place a warning tag on the disconnect without locking it because only the maintenance team has access to the area.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "isolation_verification_decision_critical",
+          "mistakeTags": [
+            "isolation_verification_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "electrical_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "group_loto_decision",
+      "type": "DECISION",
+      "prompt": "A contractor joins the job and the shift will change before completion. Several workers need protection under the same isolation. What do you do?",
+      "options": [
+        {
+          "id": "group_loto_decision_o1",
+          "text": "Use the approved group lockout arrangement, give each protected worker personal control, document the handover and verify isolation before the new crew starts.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "group_loto_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        },
+        {
+          "id": "group_loto_decision_o2",
+          "text": "Use a supervisor-controlled group lock with a signed worker roster, but do not require every worker to apply a personal lock to the group device. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "group_loto_decision_defensible",
+          "mistakeTags": [
+            "group_loto_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        },
+        {
+          "id": "group_loto_decision_o3",
+          "text": "Transfer the lockbox keys to the incoming supervisor and have the new crew sign the permit without repeating isolation verification.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "group_loto_decision_weak",
+          "mistakeTags": [
+            "group_loto_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        },
+        {
+          "id": "group_loto_decision_o4",
+          "text": "Remove departing workers' locks under supervisor authority so the incoming crew can continue without interrupting the maintenance sequence.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "group_loto_decision_critical",
+          "mistakeTags": [
+            "group_loto_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_energy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "unexpected_energy_decision",
+      "type": "DECISION",
+      "prompt": "During dismantling, the pump shaft moves and trapped pressure is indicated on a small auxiliary line that was not on the isolation drawing. What do you do?",
+      "options": [
+        {
+          "id": "unexpected_energy_decision_o1",
+          "text": "Stop the job and mechanically restrain the shaft while tracing the auxiliary pressure source, keeping the existing lockout in place. under documented supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "unexpected_energy_decision_defensible",
+          "mistakeTags": [
+            "unexpected_energy_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "group_lockout"
+          ]
+        },
+        {
+          "id": "unexpected_energy_decision_o2",
+          "text": "Keep hands clear of the shaft and continue electrical diagnostics while operations identifies the auxiliary line and prepares an additional isolation.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "unexpected_energy_decision_weak",
+          "mistakeTags": [
+            "unexpected_energy_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "group_lockout"
+          ]
+        },
+        {
+          "id": "unexpected_energy_decision_o3",
+          "text": "Secure the shaft with a hand tool and continue dismantling while the operator bleeds the auxiliary line because the main equipment is already locked out.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "unexpected_energy_decision_critical",
+          "mistakeTags": [
+            "unexpected_energy_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "group_lockout"
+          ]
+        },
+        {
+          "id": "unexpected_energy_decision_o4",
+          "text": "Stop work, withdraw from the danger zone, identify and isolate the additional energy source, dissipate it and reverify the complete isolation before restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "unexpected_energy_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "group_lockout"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "restoration_decision",
+      "type": "DECISION",
+      "prompt": "Maintenance is complete. One contractor has left site and their personal lock remains on the group arrangement. How should restoration be managed?",
+      "options": [
+        {
+          "id": "restoration_decision_o1",
+          "text": "Confirm the contractor is off site, use the documented management removal procedure and recheck the work area before energizing the equipment. under documented supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "restoration_decision_defensible",
+          "mistakeTags": [
+            "restoration_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_control"
+          ]
+        },
+        {
+          "id": "restoration_decision_o2",
+          "text": "Obtain phone confirmation from the contractor, remove the remaining lock with supervisor approval and energize after the crew stands clear.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "restoration_decision_weak",
+          "mistakeTags": [
+            "restoration_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_control"
+          ]
+        },
+        {
+          "id": "restoration_decision_o3",
+          "text": "Inspect the equipment, restore guards, account for people, follow the formal absent-worker lock-removal procedure and notify affected staff before controlled energization.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "restoration_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_control"
+          ]
+        },
+        {
+          "id": "restoration_decision_o4",
+          "text": "Energize briefly with the guard open to verify rotation, then remove the remaining lock and complete reassembly if the test is satisfactory.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "restoration_decision_critical",
+          "mistakeTags": [
+            "restoration_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_control"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "energy_identification_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "energy_identification_decision",
+      "targetNodeId": "isolation_verification_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "energy_identification_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "energy_identification_decision",
+      "targetNodeId": "isolation_verification_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "isolation_verification_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "isolation_verification_decision",
+      "targetNodeId": "group_loto_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "isolation_verification_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "isolation_verification_decision",
+      "targetNodeId": "group_loto_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "group_loto_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "group_loto_decision",
+      "targetNodeId": "unexpected_energy_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "group_loto_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "group_loto_decision",
+      "targetNodeId": "unexpected_energy_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "unexpected_energy_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "unexpected_energy_decision",
+      "targetNodeId": "restoration_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "unexpected_energy_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "unexpected_energy_decision",
+      "targetNodeId": "restoration_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "restoration_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "restoration_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "restoration_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "restoration_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "restoration_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "restoration_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "restoration_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "restoration_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "restoration_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "restoration_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1910.147 Control of Hazardous Energy",
+    "OSHA 29 CFR 1910 Subpart S Electrical"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "energy_identification_decision",
+        "alternateOptionId": "energy_identification_decision_o3"
+      },
+      {
+        "nodeId": "isolation_verification_decision",
+        "alternateOptionId": "isolation_verification_decision_o2"
+      },
+      {
+        "nodeId": "group_loto_decision",
+        "alternateOptionId": "group_loto_decision_o1"
+      },
+      {
+        "nodeId": "unexpected_energy_decision",
+        "alternateOptionId": "unexpected_energy_decision_o4"
+      },
+      {
+        "nodeId": "restoration_decision",
+        "alternateOptionId": "restoration_decision_o3"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "unexpected_energy_decision",
+      "restoration_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import '../../models/question.dart';
 import '../../models/question_quality_evidence.dart';
 import '../../models/question_quality_validation_result.dart';
 import '../../services/dqg300_question_quality_validator.dart';
 import 'lab_contracts.dart';
+import 'lab_decision_question_adapter.dart';
 
 class LabDqg300DecisionEvidence {
   const LabDqg300DecisionEvidence({
@@ -91,9 +91,11 @@ class LabDqg300Report {
 class LabDqg300Validator {
   const LabDqg300Validator({
     this.questionValidator = const Dqg300QuestionQualityValidator(),
+    this.questionAdapter = const LabDecisionQuestionAdapter(),
   });
 
   final Dqg300QuestionQualityValidator questionValidator;
+  final LabDecisionQuestionAdapter questionAdapter;
 
   LabDqg300Report validate({
     required LabPackage package,
@@ -123,7 +125,12 @@ class LabDqg300Validator {
         }
 
         final result = questionValidator.validate(
-          question: _asQuestion(package, node, index),
+          question: questionAdapter.toQuestion(
+            package: package,
+            node: node,
+            evidence: decisionEvidence.evidence,
+            decisionIndex: index,
+          ),
           evidence: decisionEvidence.evidence,
         );
         results.add(LabDqg300DecisionResult(nodeId: node.id, result: result));
@@ -153,42 +160,5 @@ class LabDqg300Validator {
           },
       ],
     });
-  }
-
-  Question _asQuestion(
-    LabPackage package,
-    LabDecisionNode node,
-    int decisionIndex,
-  ) {
-    final competency = package.metadata.competencyMappings.isEmpty
-        ? ''
-        : package.metadata.competencyMappings.first;
-    final domainMatch = RegExp(r'^d(\d{2})_c\d{2}$').firstMatch(competency);
-    final domain = int.tryParse(domainMatch?.group(1) ?? '') ?? 0;
-    final correctAnswer = node.options.indexWhere((option) => option.isBest);
-
-    return Question(
-      id: decisionIndex + 1,
-      domain: domain,
-      competencyId: competency,
-      subtopicId: '',
-      topicId: '',
-      quizId: package.metadata.id + '_' + node.id,
-      contentPackageId: package.metadata.id + '-' + package.metadata.versionId,
-      question: node.prompt,
-      options: node.options.map((option) => option.text).toList(),
-      correctAnswer: correctAnswer,
-      explanation:
-          'Internal DQG300-LAB evidence supports the uniquely defensible BEST action.',
-      bestAnswerRationale:
-          'Internal DQG300-LAB evidence proves BEST-answer superiority for this authored decision.',
-      reference: package.metadata.sources.join('; '),
-      difficulty: 'Hard',
-      cognitiveLevel: 'analysis',
-      questionType: 'scenario_mcq',
-      status: 'validated',
-      version: 1,
-      tags: <String>['lab-dqg300', node.id],
-    );
   }
 }

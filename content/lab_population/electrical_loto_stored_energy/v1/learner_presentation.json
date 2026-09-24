@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "electrical_loto_stored_energy",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Control electrical, mechanical and stored process energy during pump maintenance, contractor participation, shift change and restoration.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the authorized safety lead for maintenance on a motor-driven process pump.",
+    "situation": "The pump has multiple energy sources, stored pressure and rotating parts. Contractor involvement and a shift change increase the importance of disciplined LOTO and group-control arrangements.",
+    "objective": "Establish zero energy, maintain personal control through the job and restore equipment only after every isolation and personnel condition is verified.",
+    "peopleInvolved": [
+      "Authorized employee",
+      "Maintenance supervisor",
+      "Electrical technician",
+      "Contractor mechanic",
+      "Operations representative"
+    ],
+    "knownFacts": [
+      "The pump has electrical and process energy sources.",
+      "Stored pressure can remain after electrical isolation.",
+      "More than one worker will require personal protection.",
+      "The job may span a shift change."
+    ],
+    "focusTags": [
+      "LOTO",
+      "Electrical Safety",
+      "Stored Energy",
+      "Group Isolation",
+      "Maintenance"
+    ]
+  },
+  "evidencePresentation": {
+    "energy_control_procedure": {
+      "title": "Energy-control procedure",
+      "summary": "Energy-control procedure identifies hazardous-energy or process-isolation controls and how their effectiveness is verified.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "single_line": {
+      "title": "Electrical single-line diagram",
+      "summary": "The drawing identifies electrical feeds and isolation points relevant to the equipment.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "isolation_record": {
+      "title": "Isolation record",
+      "summary": "Isolation record identifies hazardous-energy or process-isolation controls and how their effectiveness is verified.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "group_lock_record": {
+      "title": "Group LOTO record",
+      "summary": "The record shows personal and group lock control for workers participating in the maintenance.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "incident_record": {
+      "title": "Incident / near-miss record",
+      "summary": "Incident / near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "energy_identification_decision": {
+      "title": "Identify every energy source"
+    },
+    "isolation_verification_decision": {
+      "title": "Verify zero-energy condition"
+    },
+    "group_loto_decision": {
+      "title": "Maintain group LOTO control"
+    },
+    "unexpected_energy_decision": {
+      "title": "Respond to unexpected energy"
+    },
+    "restoration_decision": {
+      "title": "Restore equipment safely"
+    }
+  },
+  "consequencePresentation": {
+    "energy_identification_decision_defensible": {
+      "observable": "The action improves control at the identify every energy source stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "energy_identification_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the identify every energy source stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "energy_identification_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the identify every energy source stage before exposure continues. The LOTO maintenance task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "energy_identification_decision_critical": {
+      "observable": "The LOTO maintenance task proceeds on an unsupported assumption at the identify every energy source stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "isolation_verification_decision_defensible": {
+      "observable": "The action improves control at the verify zero-energy condition stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "isolation_verification_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the verify zero-energy condition stage before exposure continues. The LOTO maintenance task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "isolation_verification_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the verify zero-energy condition stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "isolation_verification_decision_critical": {
+      "observable": "The LOTO maintenance task proceeds on an unsupported assumption at the verify zero-energy condition stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "group_loto_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the maintain group loto control stage before exposure continues. The LOTO maintenance task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "group_loto_decision_defensible": {
+      "observable": "The action improves control at the maintain group loto control stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "group_loto_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the maintain group loto control stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "group_loto_decision_critical": {
+      "observable": "The LOTO maintenance task proceeds on an unsupported assumption at the maintain group loto control stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "unexpected_energy_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the respond to unexpected energy stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "unexpected_energy_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the respond to unexpected energy condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "unexpected_energy_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the LOTO maintenance task continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "unexpected_energy_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the respond to unexpected energy stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "restoration_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "restoration_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the LOTO maintenance task before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "restoration_decision_best": {
+      "observable": "The LOTO maintenance task remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    },
+    "restoration_decision_critical": {
+      "observable": "The LOTO maintenance task is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The LOTO maintenance task was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You maintained verified personal control of all hazardous energy from isolation through restoration."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The LOTO maintenance task developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "An energy-control gap appeared, but work stopped and the isolation system was re-established."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "Unexpected energy was encountered, but withdrawal and corrective isolation prevented serious harm."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the LOTO maintenance task to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Energy-control weaknesses accumulated and created a major exposure during maintenance."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the LOTO maintenance task. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A personal or zero-energy safeguard was bypassed at the point where stored energy could act."
+    }
+  }
+}

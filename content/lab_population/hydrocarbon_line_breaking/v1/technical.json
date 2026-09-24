@@ -1,0 +1,1067 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "hydrocarbon_line_breaking",
+    "versionId": "v1",
+    "title": "Breaking Containment on a Hydrocarbon Process Line",
+    "description": "A five-decision LAB covering positive isolation, depressurization, opening technique, unexpected release response, and safe return to service.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "isolation_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "isolation_verified": false,
+      "zero_energy_verified": false,
+      "opening_controls_verified": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "isolation_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "zero_energy_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "opening_controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "area_operator",
+      "role": "area_operator"
+    },
+    {
+      "id": "maintenance_supervisor",
+      "role": "maintenance_supervisor"
+    },
+    {
+      "id": "fitter",
+      "role": "mechanical_fitter"
+    },
+    {
+      "id": "permit_issuer",
+      "role": "permit_issuer"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "line_break_permit",
+      "type": "line_break_permit",
+      "required": false
+    },
+    {
+      "id": "pid",
+      "type": "piping_instrument_diagram",
+      "required": false
+    },
+    {
+      "id": "isolation_certificate",
+      "type": "isolation_certificate",
+      "required": false
+    },
+    {
+      "id": "drain_record",
+      "type": "depressurization_record",
+      "required": false
+    },
+    {
+      "id": "incident_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "isolation_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "isolation_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "isolation_certificate"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "isolation_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "isolation_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "isolation_certificate"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "isolation_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "isolation_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "depressurization_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "zero_energy_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "drain_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "depressurization_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "depressurization_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "depressurization_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "zero_energy_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "drain_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "opening_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "opening_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "line_break_permit"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "opening_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "opening_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "opening_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "line_break_permit"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "opening_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "release_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "release_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "release_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "release_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "pid"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "pid"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "isolation_decision",
+      "type": "DECISION",
+      "prompt": "A flange must be opened on a hydrocarbon line connected to a live process. Operations says upstream and downstream valves are closed. What do you do first?",
+      "options": [
+        {
+          "id": "isolation_decision_o1",
+          "text": "Verify the line-break permit, current P&ID and a suitable positive isolation strategy, then independently confirm the isolation boundary before opening containment.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "isolation_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "line_breaking"
+          ]
+        },
+        {
+          "id": "isolation_decision_o2",
+          "text": "Verify the permit and both closed valves, but accept valve tightness from process indications without establishing an additional positive isolation where required. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "isolation_decision_defensible",
+          "mistakeTags": [
+            "isolation_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "line_breaking"
+          ]
+        },
+        {
+          "id": "isolation_decision_o3",
+          "text": "Proceed to drain and depressurize the line while the permit issuer checks whether the existing valve isolation meets the line-break standard.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "isolation_decision_weak",
+          "mistakeTags": [
+            "isolation_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "line_breaking"
+          ]
+        },
+        {
+          "id": "isolation_decision_o4",
+          "text": "Treat the two closed process valves as sufficient isolation because pressure indicators show zero and the line will be opened only one flange turn at a time.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "isolation_decision_critical",
+          "mistakeTags": [
+            "isolation_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "line_breaking"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "depressurization_decision",
+      "type": "DECISION",
+      "prompt": "The isolation is installed. A low-point drain gives no flow, but the line has pockets and can retain liquid or pressure. What do you do?",
+      "options": [
+        {
+          "id": "depressurization_decision_o1",
+          "text": "Open the designated drain and vent until flow stops and gauges read zero, but do not verify whether isolated pockets remain beyond closed valves. under supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "depressurization_decision_defensible",
+          "mistakeTags": [
+            "depressurization_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_safety"
+          ]
+        },
+        {
+          "id": "depressurization_decision_o2",
+          "text": "Rely on zero gauge pressure and crack the flange cautiously to confirm whether residual liquid remains in the line.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "depressurization_decision_weak",
+          "mistakeTags": [
+            "depressurization_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_safety"
+          ]
+        },
+        {
+          "id": "depressurization_decision_o3",
+          "text": "Loosen the upper bolts first while standing aside because the gauge reads zero and any trapped liquid can be caught in the drip tray.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "depressurization_decision_critical",
+          "mistakeTags": [
+            "depressurization_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_safety"
+          ]
+        },
+        {
+          "id": "depressurization_decision_o4",
+          "text": "Drain, vent and purge through suitable points, verify zero pressure and residual inventory, then confirm conditions at the worksite before loosening the flange.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "depressurization_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "process_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "opening_decision",
+      "type": "DECISION",
+      "prompt": "The line is believed empty. The product can cause skin exposure and flammable vapour if trapped liquid is released. How should the flange be opened?",
+      "options": [
+        {
+          "id": "opening_decision_o1",
+          "text": "Wear the specified PPE and use a drip tray, but keep the nearest lower bolt tight only as a hinge without confirming the safest opening orientation. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "opening_decision_defensible",
+          "mistakeTags": [
+            "opening_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "positive_isolation"
+          ]
+        },
+        {
+          "id": "opening_decision_o2",
+          "text": "Wear splash PPE and loosen the flange slowly while a gas tester monitors the area, relying on the test to identify any unexpected release.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "opening_decision_weak",
+          "mistakeTags": [
+            "opening_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "positive_isolation"
+          ]
+        },
+        {
+          "id": "opening_decision_o3",
+          "text": "Use the specified chemical and flame-resistant PPE, control the line of fire and containment, and open the flange gradually from a protected position.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "opening_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "positive_isolation"
+          ]
+        },
+        {
+          "id": "opening_decision_o4",
+          "text": "Stand to one side with face and hand protection and open the flange enough to vent any residue because the line has already been depressurized.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "opening_decision_critical",
+          "mistakeTags": [
+            "opening_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "positive_isolation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "release_decision",
+      "type": "DECISION",
+      "prompt": "As the flange separates, hydrocarbon liquid and vapour escape under unexpected pressure and the fixed gas detector alarms. What do you do?",
+      "options": [
+        {
+          "id": "release_decision_o1",
+          "text": "Withdraw the crew and raise the alarm while operations attempts remote isolation, keeping the maintenance supervisor nearby to provide line information directly at the scene.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "release_decision_defensible",
+          "mistakeTags": [
+            "release_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_pressure"
+          ]
+        },
+        {
+          "id": "release_decision_o2",
+          "text": "Stop the task, withdraw and raise the alarm, isolate ignition and process sources as planned, then let the emergency response control the release before re-entry.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "release_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_pressure"
+          ]
+        },
+        {
+          "id": "release_decision_o3",
+          "text": "Move workers upwind and try to retighten the flange from the side if the release appears small while another worker calls operations.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "release_decision_weak",
+          "mistakeTags": [
+            "release_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_pressure"
+          ]
+        },
+        {
+          "id": "release_decision_o4",
+          "text": "Approach in respiratory and splash PPE to close the flange quickly because stopping the leak at source will reduce the vapour cloud.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "release_decision_critical",
+          "mistakeTags": [
+            "release_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "stored_pressure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The release is stopped and the line is made safe. Maintenance still needs access to complete the repair. What should happen next?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Investigate the isolation failure, establish a verified new isolation and zero-energy condition, revise the permit and only then reopen the line for maintenance.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Install an additional isolation, repeat drain and gas checks and conduct a controlled restart review before the maintenance team returns. under documented supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Repeat depressurization and gas testing, then resume opening under the original permit after the crew reviews the unexpected-release lesson.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Resume once another valve is closed and the gas detector returns to normal because the flange is already partly open and the repair is urgent.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "isolation_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "isolation_decision",
+      "targetNodeId": "depressurization_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "isolation_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "isolation_decision",
+      "targetNodeId": "depressurization_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "depressurization_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "depressurization_decision",
+      "targetNodeId": "opening_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "depressurization_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "depressurization_decision",
+      "targetNodeId": "opening_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "opening_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "opening_decision",
+      "targetNodeId": "release_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "opening_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "opening_decision",
+      "targetNodeId": "release_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "release_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "release_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "release_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "release_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1910.119 Process Safety Management",
+    "OSHA 29 CFR 1910.147 Control of Hazardous Energy"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "isolation_decision",
+        "alternateOptionId": "isolation_decision_o1"
+      },
+      {
+        "nodeId": "depressurization_decision",
+        "alternateOptionId": "depressurization_decision_o4"
+      },
+      {
+        "nodeId": "opening_decision",
+        "alternateOptionId": "opening_decision_o3"
+      },
+      {
+        "nodeId": "release_decision",
+        "alternateOptionId": "release_decision_o2"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o1"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "release_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

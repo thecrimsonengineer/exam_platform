@@ -1,0 +1,1067 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "flammable_tank_truck_loading",
+    "versionId": "v1",
+    "title": "Flammable-Liquid Tank Truck Loading",
+    "description": "A five-decision LAB covering loading authorization, static control, overfill prevention, spill/fire response, and safe closeout.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "loading_authorization_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "loading_authorized": false,
+      "overfill_verified": false,
+      "work_suspended": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "loading_authorized": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "overfill_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "work_suspended": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "loading_operator",
+      "role": "loading_operator"
+    },
+    {
+      "id": "driver",
+      "role": "tank_truck_driver"
+    },
+    {
+      "id": "shift_supervisor",
+      "role": "shift_supervisor"
+    },
+    {
+      "id": "emergency_team",
+      "role": "emergency_team"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "loading_checklist",
+      "type": "loading_checklist",
+      "required": false
+    },
+    {
+      "id": "product_sds",
+      "type": "safety_data_sheet",
+      "required": false
+    },
+    {
+      "id": "bonding_check",
+      "type": "bonding_record",
+      "required": false
+    },
+    {
+      "id": "overfill_test",
+      "type": "overfill_protection",
+      "required": false
+    },
+    {
+      "id": "incident_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "loading_authorization_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "loading_authorized",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "loading_checklist"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "loading_authorization_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "loading_authorization_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "loading_authorized",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "loading_checklist"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "loading_authorization_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "overfill_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "overfill_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "overfill_test"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "overfill_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "overfill_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "overfill_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "overfill_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "overfill_test"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "simops_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "bonding_check"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "simops_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "bonding_check"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "simops_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "simops_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "spill_fire_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "spill_fire_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "spill_fire_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "spill_fire_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "loading_authorization_decision",
+      "type": "DECISION",
+      "prompt": "A tank truck arrives for a flammable product. The previous cargo is compatible, but the vehicle earth point is dirty and a nearby contractor is using portable equipment. What do you do?",
+      "options": [
+        {
+          "id": "loading_authorization_decision_o1",
+          "text": "Clean and connect the bonding lead, verify product and capacity, but allow the contractor's portable equipment to continue outside the marked loading bay. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "loading_authorization_decision_defensible",
+          "mistakeTags": [
+            "loading_authorization_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "flammable_liquids"
+          ]
+        },
+        {
+          "id": "loading_authorization_decision_o2",
+          "text": "Connect the bonding lead and begin hose setup while the supervisor confirms whether the nearby portable equipment is suitable for the hazardous area.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "loading_authorization_decision_weak",
+          "mistakeTags": [
+            "loading_authorization_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "flammable_liquids"
+          ]
+        },
+        {
+          "id": "loading_authorization_decision_o3",
+          "text": "Hold loading until vehicle condition, bonding or grounding, ignition-source control, product compatibility and the loading checklist are verified for this transfer.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "loading_authorization_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "flammable_liquids"
+          ]
+        },
+        {
+          "id": "loading_authorization_decision_o4",
+          "text": "Start loading at minimum flow after bonding because the contractor is outside the immediate bay and the vehicle carries a compatible previous cargo.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "loading_authorization_decision_critical",
+          "mistakeTags": [
+            "loading_authorization_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "flammable_liquids"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "overfill_decision",
+      "type": "DECISION",
+      "prompt": "The truck is connected. The high-level shutdown test was recorded last week, but today's functional status has not been checked. What do you do?",
+      "options": [
+        {
+          "id": "overfill_decision_o1",
+          "text": "Confirm the preset quantity and manual stop valve, but rely on last week's overfill-test record because no faults have been reported since. and document the check.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "overfill_decision_defensible",
+          "mistakeTags": [
+            "overfill_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "tank_truck_loading"
+          ]
+        },
+        {
+          "id": "overfill_decision_o2",
+          "text": "Start at low flow while the operator watches the level indication and test the high-level shutdown before increasing to normal rate.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "overfill_decision_weak",
+          "mistakeTags": [
+            "overfill_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "tank_truck_loading"
+          ]
+        },
+        {
+          "id": "overfill_decision_o3",
+          "text": "Load under continuous operator observation without testing the shutdown because the preset volume is below the truck's nominal capacity.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "overfill_decision_critical",
+          "mistakeTags": [
+            "overfill_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "tank_truck_loading"
+          ]
+        },
+        {
+          "id": "overfill_decision_o4",
+          "text": "Verify the loading connection, valve lineup, preset quantity and overfill protection before opening flow, with the operator positioned to stop transfer promptly.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "overfill_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "tank_truck_loading"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "simops_decision",
+      "type": "DECISION",
+      "prompt": "During loading, a contractor vehicle enters the area and the vapour-return indication becomes unstable. No alarm has activated. What do you do?",
+      "options": [
+        {
+          "id": "simops_decision_o1",
+          "text": "Pause flow and have the driver remain connected while the supervisor clears the vehicle and checks the vapour-return indication.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "simops_decision_defensible",
+          "mistakeTags": [
+            "simops_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "bonding"
+          ]
+        },
+        {
+          "id": "simops_decision_o2",
+          "text": "Stop loading, secure the transfer, remove the conflicting vehicle and verify vapour-control and bonding conditions before restarting.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "simops_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "bonding"
+          ]
+        },
+        {
+          "id": "simops_decision_o3",
+          "text": "Continue at reduced flow while a spotter keeps the vehicle away from the hose and the operator watches the vapour indication closely.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "simops_decision_weak",
+          "mistakeTags": [
+            "simops_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "bonding"
+          ]
+        },
+        {
+          "id": "simops_decision_o4",
+          "text": "Continue because no alarm has activated, asking the contractor vehicle to pass slowly so the loading sequence is not interrupted.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "simops_decision_critical",
+          "mistakeTags": [
+            "simops_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "bonding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spill_fire_decision",
+      "type": "DECISION",
+      "prompt": "The hose connection leaks and a vapour cloud forms near the truck. A small ignition occurs at ground level. What do you do?",
+      "options": [
+        {
+          "id": "spill_fire_decision_o1",
+          "text": "Activate emergency shutdown and alarm, evacuate the loading area, isolate fuel sources if safe and allow the emergency response to control the fire and spill.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "spill_fire_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "overfill_prevention"
+          ]
+        },
+        {
+          "id": "spill_fire_decision_o2",
+          "text": "Stop transfer and raise the alarm, using available extinguishing equipment only if the fire is incipient and a clear escape route is maintained. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "spill_fire_decision_defensible",
+          "mistakeTags": [
+            "spill_fire_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "overfill_prevention"
+          ]
+        },
+        {
+          "id": "spill_fire_decision_o3",
+          "text": "Stop the pump and have the driver disconnect electrical power while the operator uses an extinguisher before ordering a wider evacuation.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "spill_fire_decision_weak",
+          "mistakeTags": [
+            "spill_fire_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "overfill_prevention"
+          ]
+        },
+        {
+          "id": "spill_fire_decision_o4",
+          "text": "Try to close the leaking connection and extinguish the small fire first because rapid source control may avoid a full terminal shutdown.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "spill_fire_decision_critical",
+          "mistakeTags": [
+            "spill_fire_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "overfill_prevention"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The fire is extinguished and the spill is contained. The customer asks whether the remaining load can be completed. What should happen?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Replace the failed hose or seal, retest bonding and overfill protection and conduct a controlled restart review before completing the load. under documented supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Clean the bay, replace the leaking connection and resume after a successful low-flow leak test because the truck and product remain compatible.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Keep loading suspended until the leak and ignition cause are investigated, damaged equipment is replaced, safeguards are tested and a fresh authorization is issued.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Resume once the fire area is cleaned and the hose stops leaking because the emergency shutdown and extinguisher worked as intended.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "loading_authorization_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "loading_authorization_decision",
+      "targetNodeId": "overfill_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "loading_authorization_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "loading_authorization_decision",
+      "targetNodeId": "overfill_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "overfill_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "overfill_decision",
+      "targetNodeId": "simops_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "overfill_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "overfill_decision",
+      "targetNodeId": "simops_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "simops_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "simops_decision",
+      "targetNodeId": "spill_fire_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "simops_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "simops_decision",
+      "targetNodeId": "spill_fire_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "spill_fire_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "spill_fire_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "spill_fire_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "spill_fire_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1910.106 Flammable Liquids",
+    "OSHA 29 CFR 1910.1200 Hazard Communication"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "loading_authorization_decision",
+        "alternateOptionId": "loading_authorization_decision_o3"
+      },
+      {
+        "nodeId": "overfill_decision",
+        "alternateOptionId": "overfill_decision_o4"
+      },
+      {
+        "nodeId": "simops_decision",
+        "alternateOptionId": "simops_decision_o2"
+      },
+      {
+        "nodeId": "spill_fire_decision",
+        "alternateOptionId": "spill_fire_decision_o1"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o3"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "spill_fire_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "pneumatic_pressure_test",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Plan and conduct a pneumatic pressure test while controlling stored energy, component ratings, exclusion zones and a temporary-component failure.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the safety lead responsible for a pneumatic pressure test on modified process piping.",
+    "situation": "A piping section will be tested with compressed gas. The test includes temporary components, stored-energy hazards and an adjacent access route, so engineering verification and exclusion control are essential.",
+    "objective": "Keep the test inside approved design and pressure limits, maintain personnel separation and stop safely at any abnormal indication.",
+    "peopleInvolved": [
+      "Test engineer",
+      "Pressure-test supervisor",
+      "Instrument technician",
+      "Area operator",
+      "Project team"
+    ],
+    "knownFacts": [
+      "Pneumatic testing stores substantial energy.",
+      "One temporary spool has a different rating.",
+      "Temporary blinds and joints can become projectile hazards.",
+      "The test boundary is close to an access route."
+    ],
+    "focusTags": [
+      "Pressure Testing",
+      "Pneumatic Test",
+      "Stored Energy",
+      "Exclusion Zone",
+      "Process Piping"
+    ]
+  },
+  "evidencePresentation": {
+    "test_pack": {
+      "title": "Pressure-test pack",
+      "summary": "The test pack defines the approved pressure-test method, boundary, pressure, hold points, safeguards and acceptance criteria.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "piping_record": {
+      "title": "Piping and component rating record",
+      "summary": "The record provides component materials and pressure ratings used to verify the test boundary.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "gauge_certificate": {
+      "title": "Pressure-gauge calibration certificate",
+      "summary": "The certificate confirms instrument identification and calibration status for pressure measurement.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "exclusion_plan": {
+      "title": "Pressure-test exclusion-zone plan",
+      "summary": "The plan defines the stored-energy hazard zone, access control and safe observation arrangements.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "incident_record": {
+      "title": "Incident / near-miss record",
+      "summary": "Incident / near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "test_plan_decision": {
+      "title": "Verify the pressure-test basis"
+    },
+    "exclusion_decision": {
+      "title": "Establish the exclusion zone"
+    },
+    "pressurization_decision": {
+      "title": "Respond to an abnormal indication"
+    },
+    "rupture_decision": {
+      "title": "Control the loss-of-containment event"
+    },
+    "closeout_decision": {
+      "title": "Authorize any retest"
+    }
+  },
+  "consequencePresentation": {
+    "test_plan_decision_defensible": {
+      "observable": "The action improves control at the verify the pressure-test basis stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "test_plan_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the verify the pressure-test basis stage before exposure continues. The pneumatic pressure test moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "test_plan_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the verify the pressure-test basis stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "test_plan_decision_critical": {
+      "observable": "The pneumatic pressure test proceeds on an unsupported assumption at the verify the pressure-test basis stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "exclusion_decision_defensible": {
+      "observable": "The action improves control at the establish the exclusion zone stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "exclusion_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the establish the exclusion zone stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "exclusion_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the establish the exclusion zone stage before exposure continues. The pneumatic pressure test moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "exclusion_decision_critical": {
+      "observable": "The pneumatic pressure test proceeds on an unsupported assumption at the establish the exclusion zone stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "pressurization_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the respond to an abnormal indication stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "pressurization_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the respond to an abnormal indication condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "pressurization_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the pneumatic pressure test continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "pressurization_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the respond to an abnormal indication stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "rupture_decision_best": {
+      "observable": "The team activates the planned emergency response at the control the loss-of-containment event stage, keeps people out of the hazard zone and controls the event before re-entry.",
+      "guidedInsight": "The strongest emergency choice protects responders first. Rescue, isolation and source control should follow the planned capability rather than expose another person."
+    },
+    "rupture_decision_defensible": {
+      "observable": "The immediate area is secured and help is mobilized, but one element of the control the loss-of-containment event response remains less complete than the preferred plan.",
+      "guidedInsight": "This action can reduce harm, but the BEST response integrates personnel protection, alarm, isolation and planned emergency control without leaving a material response gap."
+    },
+    "rupture_decision_weak": {
+      "observable": "Some protective action is taken, but personnel remain closer to the hazard than necessary during the control the loss-of-containment event response. The margin for a secondary casualty narrows.",
+      "guidedInsight": "A partial emergency action may sound practical, but it is weak when it keeps people exposed or delays full hazard-zone control."
+    },
+    "rupture_decision_critical": {
+      "observable": "An unprotected or inadequately controlled intervention is attempted during the control the loss-of-containment event stage. The event escalates and a secondary casualty or larger release becomes credible.",
+      "guidedInsight": "Critical emergency decisions often fail by sending people toward an uncontrolled hazard. Protect responders and establish control before attempting intervention."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_best": {
+      "observable": "The pneumatic pressure test remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the pneumatic pressure test before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The pneumatic pressure test is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The pneumatic pressure test was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You kept stored energy within the approved test basis and protected people through controlled pressurization and exclusion."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The pneumatic pressure test developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "An abnormal indication appeared, but the test was stopped and reassessed before escalation."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "A temporary component failed, but exclusion and depressurization controls prevented further harm."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the pneumatic pressure test to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Test-boundary weaknesses allowed stored energy to produce a major mechanical event."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the pneumatic pressure test. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A critical pressure-test or exclusion safeguard was bypassed while significant stored energy remained."
+    }
+  }
+}

@@ -1,0 +1,1068 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "chemical_transfer_corrosive_solvent",
+    "versionId": "v1",
+    "title": "Transfer of a Corrosive Solvent From Tanker to Storage",
+    "description": "A five-decision LAB covering chemical information, transfer setup, PPE and exposure controls, spill response, and restart.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "chemical_review_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "chemical_info_verified": false,
+      "connection_verified": false,
+      "exposure_controls_verified": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "chemical_info_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "connection_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "exposure_controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "transfer_supervisor",
+      "role": "transfer_supervisor"
+    },
+    {
+      "id": "tanker_driver",
+      "role": "tanker_driver"
+    },
+    {
+      "id": "operator",
+      "role": "receiving_operator"
+    },
+    {
+      "id": "emergency_responder",
+      "role": "emergency_responder"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sds",
+      "type": "safety_data_sheet",
+      "required": false
+    },
+    {
+      "id": "transfer_checklist",
+      "type": "transfer_plan",
+      "required": false
+    },
+    {
+      "id": "hose_certificate",
+      "type": "hose_inspection",
+      "required": false
+    },
+    {
+      "id": "ppe_matrix",
+      "type": "ppe_selection",
+      "required": false
+    },
+    {
+      "id": "spill_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "chemical_review_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "chemical_info_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "sds"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "chemical_review_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "chemical_review_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "chemical_review_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "chemical_info_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "sds"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "connection_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "connection_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "hose_certificate"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "connection_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "connection_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "connection_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "hose_certificate"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "connection_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "exposure_control_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "exposure_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "ppe_matrix"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "exposure_control_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "exposure_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "ppe_matrix"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "exposure_control_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "exposure_control_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "spill_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "spill_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "spill_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "spill_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "spill_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "spill_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "transfer_checklist"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "transfer_checklist"
+      ],
+      "simulatedMinutes": 3
+    }
+  ],
+  "nodes": [
+    {
+      "id": "chemical_review_decision",
+      "type": "DECISION",
+      "prompt": "A tanker arrives with a corrosive solvent blend. The product code matches the order, but the driver's SDS revision differs from the site's copy. What do you do first?",
+      "options": [
+        {
+          "id": "chemical_review_decision_o1",
+          "text": "Confirm product identity and tank capacity, then proceed using the site's older SDS while procurement obtains the latest revision from the supplier. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "chemical_review_decision_defensible",
+          "mistakeTags": [
+            "chemical_review_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "chemical_transfer"
+          ]
+        },
+        {
+          "id": "chemical_review_decision_o2",
+          "text": "Begin staging hoses and PPE while the operator compares the two SDS revisions because no transfer will start until the connection is opened.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "chemical_review_decision_weak",
+          "mistakeTags": [
+            "chemical_review_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "chemical_transfer"
+          ]
+        },
+        {
+          "id": "chemical_review_decision_o3",
+          "text": "Use the driver's current SDS for PPE selection and proceed without checking the site copy because the product code and delivery paperwork match.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "chemical_review_decision_critical",
+          "mistakeTags": [
+            "chemical_review_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "chemical_transfer"
+          ]
+        },
+        {
+          "id": "chemical_review_decision_o4",
+          "text": "Hold connection until the current product identity, SDS hazards, incompatibilities, receiving-tank suitability and transfer plan are reconciled and verified.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "chemical_review_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "chemical_transfer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection_decision",
+      "type": "DECISION",
+      "prompt": "The product is verified. The unloading hose certificate is valid, but one coupling differs from the site standard and the containment drain is open. What do you do?",
+      "options": [
+        {
+          "id": "connection_decision_o1",
+          "text": "Use the certified hose and adapted coupling after a leak check, but leave the drain open so rainwater does not accumulate in the containment area. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "connection_decision_defensible",
+          "mistakeTags": [
+            "connection_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "hazard_communication"
+          ]
+        },
+        {
+          "id": "connection_decision_o2",
+          "text": "Connect the hose and place absorbent barriers around the coupling, then close the drain only after flow begins and the connection proves tight.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "connection_decision_weak",
+          "mistakeTags": [
+            "connection_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "hazard_communication"
+          ]
+        },
+        {
+          "id": "connection_decision_o3",
+          "text": "Verify hose and coupling compatibility, close and secure the containment path, inspect connections and confirm emergency isolation before starting transfer.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "connection_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "hazard_communication"
+          ]
+        },
+        {
+          "id": "connection_decision_o4",
+          "text": "Start at low flow with the available coupling because the hose is certified, using absorbents and an operator at the valve to manage any seepage.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "connection_decision_critical",
+          "mistakeTags": [
+            "connection_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "hazard_communication"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exposure_control_decision",
+      "type": "DECISION",
+      "prompt": "Transfer begins. Vapour is noticeable near the connection and splash risk remains during sampling. What control approach should be used?",
+      "options": [
+        {
+          "id": "exposure_control_decision_o1",
+          "text": "Use the SDS-based compatible PPE, control splash and vapour at source, restrict the area and monitor conditions so the transfer remains within the assessed controls.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "exposure_control_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        },
+        {
+          "id": "exposure_control_decision_o2",
+          "text": "Use the specified gloves, eye and face protection and increase natural ventilation, but continue without confirming whether respiratory protection is required by the exposure assessment.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "exposure_control_decision_defensible",
+          "mistakeTags": [
+            "exposure_control_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        },
+        {
+          "id": "exposure_control_decision_o3",
+          "text": "Keep the operator upwind with splash PPE and shorten sampling time because the transfer is outdoors and the vapour dissipates quickly.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "exposure_control_decision_weak",
+          "mistakeTags": [
+            "exposure_control_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        },
+        {
+          "id": "exposure_control_decision_o4",
+          "text": "Rely on chemical gloves and a face shield while keeping the connection under observation because visible leakage is absent.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "exposure_control_decision_critical",
+          "mistakeTags": [
+            "exposure_control_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "PPE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spill_decision",
+      "type": "DECISION",
+      "prompt": "The hose coupling begins spraying product and a worker receives a splash to the sleeve and glove. The tanker pump is still running. What do you do?",
+      "options": [
+        {
+          "id": "spill_decision_o1",
+          "text": "Stop the pump and send the worker to the emergency shower while trained staff isolate the remaining valves and establish the spill-control area. with a written check.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "spill_decision_defensible",
+          "mistakeTags": [
+            "spill_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        },
+        {
+          "id": "spill_decision_o2",
+          "text": "Stop the transfer using safe emergency isolation, raise the response, move the exposed worker to decontamination and control the spill without unprotected approach.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "spill_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        },
+        {
+          "id": "spill_decision_o3",
+          "text": "Have the operator close the nearby valve while the splashed worker removes the outer glove, then call the response team if leakage continues.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "spill_decision_weak",
+          "mistakeTags": [
+            "spill_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        },
+        {
+          "id": "spill_decision_o4",
+          "text": "Tighten the leaking coupling with splash PPE while the pump runs at low speed so the transfer can be stopped without losing the entire hose contents.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "spill_decision_critical",
+          "mistakeTags": [
+            "spill_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "spill_response"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The spill is contained and the worker has been assessed. The tanker still contains product and the storage tank has capacity. How should transfer resume?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Replace the coupling and hose section, recheck PPE and containment and use a controlled restart review before resuming the remaining transfer. under documented supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_coordination"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Resume after cleaning the area, replacing the coupling and completing another leak check because the product and receiving tank were already verified.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_coordination"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Resume once the coupling is tightened and the spill is removed because the emergency isolation functioned and the tanker cannot remain onsite overnight.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_coordination"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Keep the job stopped until the failed connection is investigated, contaminated equipment is replaced, controls are verified and a new transfer authorization is issued.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_coordination"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "chemical_review_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "chemical_review_decision",
+      "targetNodeId": "connection_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "chemical_review_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "chemical_review_decision",
+      "targetNodeId": "connection_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "connection_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "connection_decision",
+      "targetNodeId": "exposure_control_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "connection_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "connection_decision",
+      "targetNodeId": "exposure_control_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "exposure_control_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "exposure_control_decision",
+      "targetNodeId": "spill_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "exposure_control_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "exposure_control_decision",
+      "targetNodeId": "spill_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "spill_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "spill_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "spill_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "spill_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1910.1200 Hazard Communication",
+    "OSHA 29 CFR 1910.132 General Requirements for PPE",
+    "OSHA 29 CFR 1910.151 Medical Services and First Aid"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "chemical_review_decision",
+        "alternateOptionId": "chemical_review_decision_o4"
+      },
+      {
+        "nodeId": "connection_decision",
+        "alternateOptionId": "connection_decision_o3"
+      },
+      {
+        "nodeId": "exposure_control_decision",
+        "alternateOptionId": "exposure_control_decision_o1"
+      },
+      {
+        "nodeId": "spill_decision",
+        "alternateOptionId": "spill_decision_o2"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o4"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "spill_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

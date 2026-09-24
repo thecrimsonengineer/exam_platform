@@ -1,0 +1,1067 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "excavation_buried_services",
+    "versionId": "v1",
+    "title": "Excavation Near Buried Electrical and Gas Services",
+    "description": "A five-decision LAB covering underground-service locating, trench protection, changing conditions, emergency response, and safe restart.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "utility_location_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "services_verified": false,
+      "protective_system_verified": false,
+      "work_suspended": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "services_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "protective_system_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "work_suspended": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "site_supervisor",
+      "role": "site_supervisor"
+    },
+    {
+      "id": "competent_person",
+      "role": "excavation_competent_person"
+    },
+    {
+      "id": "excavator_operator",
+      "role": "excavator_operator"
+    },
+    {
+      "id": "utility_representative",
+      "role": "utility_representative"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "excavation_permit",
+      "type": "excavation_permit",
+      "required": false
+    },
+    {
+      "id": "utility_plan",
+      "type": "utility_drawing",
+      "required": false
+    },
+    {
+      "id": "scan_record",
+      "type": "service_scan",
+      "required": false
+    },
+    {
+      "id": "protective_system_plan",
+      "type": "trench_protection",
+      "required": false
+    },
+    {
+      "id": "incident_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "utility_location_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "services_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "utility_plan"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "utility_location_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "services_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "utility_plan"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "utility_location_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "utility_location_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "trench_protection_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "protective_system_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "protective_system_plan"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "trench_protection_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "trench_protection_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "protective_system_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "protective_system_plan"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "trench_protection_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "service_change_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "scan_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "service_change_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "scan_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "service_change_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "service_change_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "collapse_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "collapse_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "collapse_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "collapse_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "excavation_permit"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "excavation_permit"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "utility_location_decision",
+      "type": "DECISION",
+      "prompt": "A 2.4 m trench is planned across an old utility corridor. Drawings show power and gas services, but recent modifications are not fully marked. What do you do first?",
+      "options": [
+        {
+          "id": "utility_location_decision_o1",
+          "text": "Verify the permit and utility information, contact owners, scan the route and safely expose exact service locations before mechanical excavation approaches them.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "utility_location_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "excavation"
+          ]
+        },
+        {
+          "id": "utility_location_decision_o2",
+          "text": "Scan and mark the services, but rely on the latest drawing for their depth because the route was surveyed during the previous project. under documented supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "utility_location_decision_defensible",
+          "mistakeTags": [
+            "utility_location_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "excavation"
+          ]
+        },
+        {
+          "id": "utility_location_decision_o3",
+          "text": "Begin controlled hand excavation around the marked services while mechanical excavation starts in the apparently clear section of the corridor.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "utility_location_decision_weak",
+          "mistakeTags": [
+            "utility_location_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "excavation"
+          ]
+        },
+        {
+          "id": "utility_location_decision_o4",
+          "text": "Use the locator markings as the excavation limit and proceed mechanically because the scan shows no additional services between the marked lines.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "utility_location_decision_critical",
+          "mistakeTags": [
+            "utility_location_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "excavation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trench_protection_decision",
+      "type": "DECISION",
+      "prompt": "The excavation reaches 2.2 m in mixed soil. Space is tight, groundwater is seeping in and spoil has accumulated near one edge. What do you do?",
+      "options": [
+        {
+          "id": "trench_protection_decision_o1",
+          "text": "Install the trench box and safe access, but leave some spoil near the edge while a spotter watches for movement because relocation space is limited. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "trench_protection_decision_defensible",
+          "mistakeTags": [
+            "trench_protection_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "buried_services"
+          ]
+        },
+        {
+          "id": "trench_protection_decision_o2",
+          "text": "Pump the water, bench the more unstable side and allow short-duration entry while the competent person remains at the trench.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "trench_protection_decision_weak",
+          "mistakeTags": [
+            "trench_protection_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "buried_services"
+          ]
+        },
+        {
+          "id": "trench_protection_decision_o3",
+          "text": "Have the competent person reassess soil and water conditions, install an adequate protective system, control spoil loading and provide safe access before entry.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "trench_protection_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "buried_services"
+          ]
+        },
+        {
+          "id": "trench_protection_decision_o4",
+          "text": "Allow entry after pumping because the sides have stood unsupported during excavation and the job inside the trench will take only a few minutes.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "trench_protection_decision_critical",
+          "mistakeTags": [
+            "trench_protection_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "buried_services"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "service_change_decision",
+      "type": "DECISION",
+      "prompt": "A cable is exposed 600 mm away from the mapped position and its identification does not match the drawing. The gas line remains nearby. What do you do?",
+      "options": [
+        {
+          "id": "service_change_decision_o1",
+          "text": "Pause mechanical excavation and expose more of the cable by hand while the supervisor contacts the utility owner to confirm its identity. with a written check.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "service_change_decision_defensible",
+          "mistakeTags": [
+            "service_change_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "trench_safety"
+          ]
+        },
+        {
+          "id": "service_change_decision_o2",
+          "text": "Stop excavation, protect and support the exposed service, confirm its identity and exact route with the owner, then revise the permit and excavation controls.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "service_change_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "trench_safety"
+          ]
+        },
+        {
+          "id": "service_change_decision_o3",
+          "text": "Continue mechanical excavation on the opposite side of the trench while maintaining a larger clearance from the unexpected cable.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "service_change_decision_weak",
+          "mistakeTags": [
+            "service_change_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "trench_safety"
+          ]
+        },
+        {
+          "id": "service_change_decision_o4",
+          "text": "Treat the cable as redundant based on the drawing and continue under a dedicated spotter because it appears undamaged and inactive.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "service_change_decision_critical",
+          "mistakeTags": [
+            "service_change_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "trench_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collapse_decision",
+      "type": "DECISION",
+      "prompt": "Cracking appears at the trench edge and a worker reports a gas odour after the excavator disturbed soil beside the exposed service. What do you do?",
+      "options": [
+        {
+          "id": "collapse_decision_o1",
+          "text": "Evacuate workers and stop equipment while the competent person assesses from outside, contacting the utility owner after confirming whether gas is present.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "collapse_decision_defensible",
+          "mistakeTags": [
+            "collapse_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "competent_person"
+          ]
+        },
+        {
+          "id": "collapse_decision_o2",
+          "text": "Keep workers out of the trench but use the excavator from outside to pull loose material away from the suspected service before calling the utility owner.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "collapse_decision_weak",
+          "mistakeTags": [
+            "collapse_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "competent_person"
+          ]
+        },
+        {
+          "id": "collapse_decision_o3",
+          "text": "Send one worker down the protected end of the trench to close the visible service valve while others remain clear and emergency support is called.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "collapse_decision_critical",
+          "mistakeTags": [
+            "collapse_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "competent_person"
+          ]
+        },
+        {
+          "id": "collapse_decision_o4",
+          "text": "Evacuate the trench, stop plant, isolate the area, raise the emergency response and contact the utility owner before any approach or re-entry.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "collapse_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "competent_person"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The gas service is made safe and the excavation is stable. The contractor wants to continue before the road closure expires. What should happen?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Revise the excavation plan, verify service protection and trench support, complete a competent-person inspection and reauthorize the permit before restarting.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Repair the protective system, confirm the service is safe and conduct a controlled restart review, but keep the original excavation sequence. under supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Resume after water is removed, the trench box is repositioned and the crew is re-briefed on the newly identified service location.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Resume once the gas leak is isolated and the trench walls appear stable because delaying the work will extend the road closure.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "emergency_response"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "utility_location_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "utility_location_decision",
+      "targetNodeId": "trench_protection_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "utility_location_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "utility_location_decision",
+      "targetNodeId": "trench_protection_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "trench_protection_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "trench_protection_decision",
+      "targetNodeId": "service_change_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "trench_protection_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "trench_protection_decision",
+      "targetNodeId": "service_change_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "service_change_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "service_change_decision",
+      "targetNodeId": "collapse_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "service_change_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "service_change_decision",
+      "targetNodeId": "collapse_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "collapse_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "collapse_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "collapse_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "collapse_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1926.651 Specific Excavation Requirements",
+    "OSHA 29 CFR 1926.652 Requirements for Protective Systems"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "utility_location_decision",
+        "alternateOptionId": "utility_location_decision_o1"
+      },
+      {
+        "nodeId": "trench_protection_decision",
+        "alternateOptionId": "trench_protection_decision_o3"
+      },
+      {
+        "nodeId": "service_change_decision",
+        "alternateOptionId": "service_change_decision_o2"
+      },
+      {
+        "nodeId": "collapse_decision",
+        "alternateOptionId": "collapse_decision_o4"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o1"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "collapse_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

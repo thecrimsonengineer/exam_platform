@@ -1,0 +1,165 @@
+{
+  "checkpoint": "LSP-Q10",
+  "sourceArchiveSha256": "c759ea4bd7b29c7b098c96a34059a1ad14fc0c3a88cc05c15eae2ad868be5efb",
+  "sourcePresentationSha256": "76b15913c03bc8ef4d7528fabb9dbc38743242a1245864ffbb3db5e174b83dcb",
+  "labCount": 10,
+  "decisionCount": 50,
+  "optionCount": 200,
+  "atomicRuleEvidenceCount": 14950,
+  "signatureMigration": "quality tokens only: OPTIMAL/DEFENSIBLE/WEAK/CRITICAL -> optimal/defensible/weak/critical inside decisionSignature strings",
+  "presentationMigration": "split combined scenarios[] into individual Q8 packages; evidence details[] joined with newline; technical meaning unchanged",
+  "labs": [
+    {
+      "labId": "hot_work_hydrocarbon_simops",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "87f8fcfe236323c13c6f26d03bf0bddb5d5eac43ffeb308719ba04189b4c8120",
+      "dqgSha256": "73c073c48709e026bc72ad8c2d4a5e7ac636ce8e2fba6894279de125544a1a76",
+      "presentationSha256": "6d5c923ed900a52071525cb3f311bc22bab85f99e5064a20b371ac88aa4634c5"
+    },
+    {
+      "labId": "mobile_crane_critical_lift",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "3b005552e447271b0d145edd9c744199da9ea9ee5259598d40272903426d704f",
+      "dqgSha256": "a3f6cc371c1977997f4f570ddab9249f77cec1ef8c35b780e12a3a1cf72dde63",
+      "presentationSha256": "cd71dfa757e7d4b51a7d894b395a36fa004872b130a3c4a37db0578d8704943a"
+    },
+    {
+      "labId": "excavation_buried_services",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "51fc33507bbadf7f61f78e6fce65a271f8468cf6c7fddd25973561ed151d6a02",
+      "dqgSha256": "ae18abdbe9dbdad823d4386bf245d3f1d98acc3030c8e6eab33962357f1a74d6",
+      "presentationSha256": "65677276dad189ef4a217967571e7ac0d96fae815d8d30efdfcc44c68173d7db"
+    },
+    {
+      "labId": "electrical_loto_stored_energy",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "6e255945a0ac20e878aa00f3441d261c83375109803a38f60b0fdb33eb27cf7c",
+      "dqgSha256": "02ece6dd25cc12d1f08c17a18e1f642e256c10fec395b3ebaccf845937ff0e12",
+      "presentationSha256": "e41613a05c414aa8addbd6976f83fe9c752897e44ad8705cb72c0179e605ec67"
+    },
+    {
+      "labId": "work_at_height_offshore_module",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "2139606a132392cf6a2d5f38689ebefa226bd0e48d3f6db1131152a8e2ce3d51",
+      "dqgSha256": "feb46a5f7eda6432533ada267c3ec8150207ce2b128ea3b053b7f866122a4253",
+      "presentationSha256": "e2a303f0f8891d180e7491d8263237ce990a06633fe867a9943a4c3e2ed4b3ac"
+    },
+    {
+      "labId": "chemical_transfer_corrosive_solvent",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "191604a607c5aec0994c1677b66671075840b7291035ab41640ddd0f639e6b82",
+      "dqgSha256": "3ad9c1314fdaf3ceecf6abed8205d68a54923529535284b1ddc5442c394f2ec5",
+      "presentationSha256": "d5c870a9b703c7b0b70709ab312bf47c4b1024e908835c01570f3fdb460c0f0d"
+    },
+    {
+      "labId": "hydrocarbon_line_breaking",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "d8fcd3afbce1d73e9a270e9c16c21582b9d4e20fd1ebf540cdbda162eeb753a0",
+      "dqgSha256": "ee5f1b760f76965b4ff2a0ced439fa0666354dac85af4093c6040831dea0b683",
+      "presentationSha256": "55cd0e9e8300235cf86a3d7f4e4c31b3c865705d988b6c0ed3a7c90a659d27fc"
+    },
+    {
+      "labId": "flammable_tank_truck_loading",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "1b35a4f4aa2776abaf73a198fcd4ec59aee03f3d78f7951f18e00fc7cd96957c",
+      "dqgSha256": "61fa9ae044b78e2163961715d71887c9dbc59be9c20f2ae214a2e291a515965f",
+      "presentationSha256": "a0e02950de01292a7941565bdf03a0809fb1484106b2c382dbc9e3ec6a7ffc47"
+    },
+    {
+      "labId": "pneumatic_pressure_test",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "d95d245e1c050aa768f45fcfbf0907bddf2ef071d7b823ed5421b9596349ca2d",
+      "dqgSha256": "28f3f60f05071d0c68198b3a0da3ab1067d2767015a04821732bf94a11fd7d3b",
+      "presentationSha256": "068edc125c6ca07790a14932821bcb58921fb0ca50a891458044468eae28cad3"
+    },
+    {
+      "labId": "scaffold_erection_overhead_power",
+      "versionId": "v1",
+      "decisions": 5,
+      "options": 20,
+      "dqgRules": 1495,
+      "technicalSha256": "966edb62bce355aa4b0a5707ed4e5e0468556d369eed5a1c0992fcd688bd7e30",
+      "dqgSha256": "f13e98091e188bb967be3cb383897252a5fc9b21568e9fe8fb8f0da8c02cc10e",
+      "presentationSha256": "3982023cd5f4aeb9147d15f5d6ebfc202c4049782e619d79598b8a71936f5be5"
+    }
+  ],
+  "technicalOptionSurfaceRepairs": {
+    "reason": "Frozen strict H0.3 blocks a BEST option that is uniquely longest.",
+    "count": 5,
+    "repairs": [
+      {
+        "labId": "chemical_transfer_corrosive_solvent",
+        "nodeId": "exposure_control_decision",
+        "optionIndex": 1,
+        "oldWords": 24,
+        "newWords": 25,
+        "old": "Use the specified gloves, eye and face protection and increase natural ventilation, but continue without confirming whether respiratory protection is required. and record it.",
+        "new": "Use the specified gloves, eye and face protection and increase natural ventilation, but continue without confirming whether respiratory protection is required by the exposure assessment."
+      },
+      {
+        "labId": "hydrocarbon_line_breaking",
+        "nodeId": "release_decision",
+        "optionIndex": 0,
+        "oldWords": 24,
+        "newWords": 25,
+        "old": "Withdraw the crew and raise the alarm while operations attempts remote isolation, keeping the maintenance supervisor nearby to provide line information. and record it.",
+        "new": "Withdraw the crew and raise the alarm while operations attempts remote isolation, keeping the maintenance supervisor nearby to provide line information directly at the scene."
+      },
+      {
+        "labId": "pneumatic_pressure_test",
+        "nodeId": "rupture_decision",
+        "optionIndex": 1,
+        "oldWords": 23,
+        "newWords": 25,
+        "old": "Stop pressure input and account for staff, maintaining the barricade while the supervisor verifies pressure remotely before authorizing an inspection. and record it.",
+        "new": "Stop pressure input and account for staff, maintaining the barricade while the supervisor verifies pressure remotely before authorizing a closer inspection of the failed blind."
+      },
+      {
+        "labId": "pneumatic_pressure_test",
+        "nodeId": "closeout_decision",
+        "optionIndex": 2,
+        "oldWords": 24,
+        "newWords": 27,
+        "old": "Replace the blind and repeat the test from the first hold point after checking gauge calibration because the rest of the boundary remained stable.",
+        "new": "Replace the blind and repeat the test from the first hold point after checking gauge calibration because the rest of the boundary remained stable during the event."
+      },
+      {
+        "labId": "scaffold_erection_overhead_power",
+        "nodeId": "material_handling_decision",
+        "optionIndex": 0,
+        "oldWords": 23,
+        "newWords": 27,
+        "old": "Pause long-tube handling but continue installing short components on the opposite side of the scaffold while waiting for the spotter. under documented supervision.",
+        "new": "Pause long-tube handling but continue installing short components on the opposite side of the scaffold while waiting for the dedicated spotter to return to the work area."
+      }
+    ]
+  },
+  "technicalPreservation": "Technical story mechanics remain unchanged. Five distractor option strings received surface-balance wording repairs only; BEST-answer flags, quality classes, consequences, state, gates, endings, sources and mappings are unchanged."
+}

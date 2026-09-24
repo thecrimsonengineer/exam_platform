@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "chemical_transfer_corrosive_solvent",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Control receipt and transfer of a corrosive solvent while managing chemical verification, connection integrity, exposure protection and a pressurized leak.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the safety professional supervising tanker unloading of a corrosive solvent blend.",
+    "situation": "A tanker has arrived for transfer to storage. Product identification, hose and coupling integrity, PPE, vapour exposure and emergency decontamination all matter before and during unloading.",
+    "objective": "Verify the chemical and transfer system, prevent worker exposure, and control any leak before restarting the operation.",
+    "peopleInvolved": [
+      "Unloading operator",
+      "Tanker driver",
+      "Area supervisor",
+      "Emergency responder",
+      "Exposed worker"
+    ],
+    "knownFacts": [
+      "The material is corrosive and can also create vapour exposure.",
+      "Transfer equipment includes flexible hose and couplings.",
+      "Splash exposure is credible at the connection point.",
+      "A transfer failure can affect both workers and the environment."
+    ],
+    "focusTags": [
+      "Chemical Transfer",
+      "Corrosive",
+      "SDS",
+      "PPE",
+      "Spill Response"
+    ]
+  },
+  "evidencePresentation": {
+    "sds": {
+      "title": "Safety Data Sheet",
+      "summary": "The SDS provides hazard, exposure-control, PPE, first-aid, fire and spill-response information for the product.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "transfer_checklist": {
+      "title": "Chemical transfer checklist",
+      "summary": "Chemical transfer checklist confirms the pre-transfer checks that must be satisfied before product movement starts.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "hose_certificate": {
+      "title": "Hose and coupling certificate",
+      "summary": "The certificate supports hose and coupling condition, identification and service suitability.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "ppe_matrix": {
+      "title": "PPE and exposure-control matrix",
+      "summary": "The matrix defines PPE and exposure controls for routine transfer and credible abnormal conditions.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "spill_record": {
+      "title": "Spill / exposure record",
+      "summary": "Spill / exposure record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "chemical_review_decision": {
+      "title": "Verify the chemical and controls"
+    },
+    "connection_decision": {
+      "title": "Confirm transfer connection integrity"
+    },
+    "exposure_control_decision": {
+      "title": "Control splash and vapour exposure"
+    },
+    "spill_decision": {
+      "title": "Respond to the pressurized release"
+    },
+    "closeout_decision": {
+      "title": "Decide whether transfer can restart"
+    }
+  },
+  "consequencePresentation": {
+    "chemical_review_decision_defensible": {
+      "observable": "The action improves control at the verify the chemical and controls stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "chemical_review_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the verify the chemical and controls stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "chemical_review_decision_critical": {
+      "observable": "The chemical-transfer operation proceeds on an unsupported assumption at the verify the chemical and controls stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "chemical_review_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the verify the chemical and controls stage before exposure continues. The chemical-transfer operation moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "connection_decision_defensible": {
+      "observable": "The action improves control at the confirm transfer connection integrity stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "connection_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the confirm transfer connection integrity stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "connection_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the confirm transfer connection integrity stage before exposure continues. The chemical-transfer operation moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "connection_decision_critical": {
+      "observable": "The chemical-transfer operation proceeds on an unsupported assumption at the confirm transfer connection integrity stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "exposure_control_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the control splash and vapour exposure stage before exposure continues. The chemical-transfer operation moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "exposure_control_decision_defensible": {
+      "observable": "The action improves control at the control splash and vapour exposure stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "exposure_control_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the control splash and vapour exposure stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "exposure_control_decision_critical": {
+      "observable": "The chemical-transfer operation proceeds on an unsupported assumption at the control splash and vapour exposure stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "spill_decision_defensible": {
+      "observable": "The immediate area is secured and help is mobilized, but one element of the respond to the pressurized release response remains less complete than the preferred plan.",
+      "guidedInsight": "This action can reduce harm, but the BEST response integrates personnel protection, alarm, isolation and planned emergency control without leaving a material response gap."
+    },
+    "spill_decision_best": {
+      "observable": "The team activates the planned emergency response at the respond to the pressurized release stage, keeps people out of the hazard zone and controls the event before re-entry.",
+      "guidedInsight": "The strongest emergency choice protects responders first. Rescue, isolation and source control should follow the planned capability rather than expose another person."
+    },
+    "spill_decision_weak": {
+      "observable": "Some protective action is taken, but personnel remain closer to the hazard than necessary during the respond to the pressurized release response. The margin for a secondary casualty narrows.",
+      "guidedInsight": "A partial emergency action may sound practical, but it is weak when it keeps people exposed or delays full hazard-zone control."
+    },
+    "spill_decision_critical": {
+      "observable": "An unprotected or inadequately controlled intervention is attempted during the respond to the pressurized release stage. The event escalates and a secondary casualty or larger release becomes credible.",
+      "guidedInsight": "Critical emergency decisions often fail by sending people toward an uncontrolled hazard. Protect responders and establish control before attempting intervention."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the chemical-transfer operation before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The chemical-transfer operation is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    },
+    "closeout_decision_best": {
+      "observable": "The chemical-transfer operation remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The chemical-transfer operation was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You verified the product, equipment and exposure controls before transfer and responded early to abnormal conditions."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The chemical-transfer operation developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A transfer weakness appeared, but the operation was stopped and controls were restored."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "A chemical release occurred, but decontamination, isolation and spill response limited harm."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the chemical-transfer operation to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Equipment and exposure-control weaknesses combined into a significant chemical incident."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the chemical-transfer operation. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A decisive chemical-transfer or emergency safeguard was bypassed during active exposure."
+    }
+  }
+}

@@ -1,0 +1,1063 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "hot_work_hydrocarbon_simops",
+    "versionId": "v1",
+    "title": "Hot Work Near Hydrocarbon Operations",
+    "description": "A five-decision LAB covering hot-work authorization, fire prevention, changing gas conditions, fire response, and safe restart.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "authorization_decision",
+    "startingState": {
+      "route": "start",
+      "emergency_outcome": "none",
+      "final_outcome": "none",
+      "risk": 0,
+      "observations": [],
+      "hot_work_authorized": false,
+      "fire_controls_verified": false,
+      "work_suspended": false,
+      "emergency_controlled": false,
+      "restart_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "emergency_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "recover",
+        "contain",
+        "major",
+        "fatal"
+      ]
+    },
+    "final_outcome": {
+      "type": "ENUM",
+      "allowedValues": [
+        "none",
+        "safe",
+        "recovery",
+        "contained",
+        "major"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "hot_work_authorized": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "fire_controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "work_suspended": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "emergency_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "restart_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "area_authority",
+      "role": "area_authority"
+    },
+    {
+      "id": "welder",
+      "role": "contract_welder"
+    },
+    {
+      "id": "fire_watch",
+      "role": "fire_watch"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "hot_work_permit",
+      "type": "hot_work_permit",
+      "required": false
+    },
+    {
+      "id": "gas_test_record",
+      "type": "gas_test",
+      "required": false
+    },
+    {
+      "id": "isolation_record",
+      "type": "isolation",
+      "required": false
+    },
+    {
+      "id": "fire_watch_plan",
+      "type": "fire_watch",
+      "required": false
+    },
+    {
+      "id": "incident_record",
+      "type": "incident_record",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "authorization_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "hot_work_authorized",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "hot_work_permit"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "authorization_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "hot_work_authorized",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "hot_work_permit"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "authorization_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "authorization_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "fire_prevention_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "fire_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "fire_watch_plan"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "fire_prevention_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "fire_prevention_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "fire_prevention_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "fire_controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "fire_watch_plan"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "changing_conditions_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "gas_test_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "changing_conditions_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "work_suspended",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "gas_test_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "changing_conditions_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "changing_conditions_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "emergency_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "contain"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "emergency_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "emergency_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "recover"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "emergency_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 4
+    },
+    {
+      "id": "emergency_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "emergency_outcome",
+          "value": "fatal"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 10
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 2
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 0
+        },
+        {
+          "op": "SET",
+          "stateId": "restart_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "incident_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "contained"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 5
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "final_outcome",
+          "value": "major"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 8
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "authorization_decision",
+      "type": "DECISION",
+      "prompt": "The welding crew is ready beside hydrocarbon equipment, but the isolation boundary and SIMOPS status were changed during the shift. What do you do first?",
+      "options": [
+        {
+          "id": "authorization_decision_o1",
+          "text": "Verify the permit and gas test, but rely on the operating team's radio confirmation that the revised isolation boundary is correct.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "authorization_decision_defensible",
+          "mistakeTags": [
+            "authorization_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "hot_work"
+          ]
+        },
+        {
+          "id": "authorization_decision_o2",
+          "text": "Stop the start, jointly verify the hot-work permit, process isolation, gas-test scope and SIMOPS conflicts before releasing the job.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "authorization_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "hot_work"
+          ]
+        },
+        {
+          "id": "authorization_decision_o3",
+          "text": "Stage the welding set and fire watch while the permit issuer finishes checking the changed isolation and nearby operating activities.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "authorization_decision_weak",
+          "mistakeTags": [
+            "authorization_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "hot_work"
+          ]
+        },
+        {
+          "id": "authorization_decision_o4",
+          "text": "Begin only a short tack weld under a fire watch after one acceptable gas test while the revised isolation paperwork is completed.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "authorization_decision_critical",
+          "mistakeTags": [
+            "authorization_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "hot_work"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fire_prevention_decision",
+      "type": "DECISION",
+      "prompt": "The permit is available. Combustible lagging, cable penetrations and a drain opening are within the possible spark path. What is the best preparation?",
+      "options": [
+        {
+          "id": "fire_prevention_decision_o1",
+          "text": "Shield the visible combustibles and position extinguishers, but leave hidden penetrations for the fire watch to monitor during the work.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "fire_prevention_decision_defensible",
+          "mistakeTags": [
+            "fire_prevention_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "permit_to_work"
+          ]
+        },
+        {
+          "id": "fire_prevention_decision_o2",
+          "text": "Wet the immediate floor, keep an extinguisher beside the welder and rely on the fire watch to detect sparks entering nearby openings.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "fire_prevention_decision_weak",
+          "mistakeTags": [
+            "fire_prevention_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "permit_to_work"
+          ]
+        },
+        {
+          "id": "fire_prevention_decision_o3",
+          "text": "Proceed with the fire watch and extinguishers because the hot-work point itself is clear even though nearby residue cannot be removed.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "fire_prevention_decision_critical",
+          "mistakeTags": [
+            "fire_prevention_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "permit_to_work"
+          ]
+        },
+        {
+          "id": "fire_prevention_decision_o4",
+          "text": "Remove or shield combustibles, protect openings, position suitable extinguishers and confirm a dedicated fire watch before ignition.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "fire_prevention_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "permit_to_work"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "changing_conditions_decision",
+      "type": "DECISION",
+      "prompt": "During welding, nearby draining starts and the gas monitor shows a rising flammable-vapour trend that remains below the alarm set point. What do you do?",
+      "options": [
+        {
+          "id": "changing_conditions_decision_o1",
+          "text": "Stop hot work, extinguish ignition sources, withdraw to a safe position, suspend the permit and reassess the atmosphere and SIMOPS before restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "changing_conditions_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "gas_testing"
+          ]
+        },
+        {
+          "id": "changing_conditions_decision_o2",
+          "text": "Pause the arc and repeat gas testing while keeping the crew at the worksite until operations confirms whether the nearby draining will continue. and record it.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "changing_conditions_decision_defensible",
+          "mistakeTags": [
+            "changing_conditions_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "gas_testing"
+          ]
+        },
+        {
+          "id": "changing_conditions_decision_o3",
+          "text": "Continue at reduced pace with continuous gas monitoring because the reading remains below the alarm set point and the fire watch is present.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "changing_conditions_decision_weak",
+          "mistakeTags": [
+            "changing_conditions_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "gas_testing"
+          ]
+        },
+        {
+          "id": "changing_conditions_decision_o4",
+          "text": "Finish the current weld pass because the original gas test was acceptable, then stop for another test before starting the next pass.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "changing_conditions_decision_critical",
+          "mistakeTags": [
+            "changing_conditions_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "gas_testing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "emergency_decision",
+      "type": "DECISION",
+      "prompt": "A flash fire starts behind lagging and smoke spreads toward the work party. The fire watch has an extinguisher and the process area alarm is available. What do you do?",
+      "options": [
+        {
+          "id": "emergency_decision_o1",
+          "text": "Raise the alarm and evacuate others, allowing the trained fire watch to use an extinguisher only if the fire is incipient and escape remains assured.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "emergency_decision_defensible",
+          "mistakeTags": [
+            "emergency_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fire_prevention"
+          ]
+        },
+        {
+          "id": "emergency_decision_o2",
+          "text": "Keep the crew clear while the fire watch attacks the fire and the operator isolates the nearby process before escalating to the emergency team.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "emergency_decision_weak",
+          "mistakeTags": [
+            "emergency_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fire_prevention"
+          ]
+        },
+        {
+          "id": "emergency_decision_o3",
+          "text": "Raise the alarm, stop work, evacuate the exposed area and let the emergency response control the fire while process energy is isolated if safe.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "emergency_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "fire_prevention"
+          ]
+        },
+        {
+          "id": "emergency_decision_o4",
+          "text": "Use the available extinguisher to control the growing fire first, then raise the alarm if it cannot be contained without leaving the work area.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "emergency_decision_critical",
+          "mistakeTags": [
+            "emergency_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fire_prevention"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The fire is controlled and no one is injured. Production wants the weld completed before the end of the shift. How should the job be recovered?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Keep the task stopped, correct the immediate deficiencies, repeat gas testing and complete a controlled permit review before resuming the weld. under supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "SIMOPS"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Keep the permit suspended, investigate the ignition path, inspect concealed fire spread, restore controls and issue a new authorization only after verification.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "SIMOPS"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Resume after the atmosphere is acceptable, damaged lagging is removed and the crew receives a focused re-brief on the fire-watch arrangements.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "SIMOPS"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Resume once ventilation clears the smoke and a replacement extinguisher is in position because the remaining weld time is short.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "SIMOPS"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "authorization_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "authorization_decision",
+      "targetNodeId": "fire_prevention_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "authorization_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "authorization_decision",
+      "targetNodeId": "fire_prevention_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "fire_prevention_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "fire_prevention_decision",
+      "targetNodeId": "changing_conditions_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "fire_prevention_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "fire_prevention_decision",
+      "targetNodeId": "changing_conditions_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "changing_conditions_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "changing_conditions_decision",
+      "targetNodeId": "emergency_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "changing_conditions_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "changing_conditions_decision",
+      "targetNodeId": "emergency_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "emergency_decision_fatal_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "emergency_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "emergency_decision_convergence",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "emergency_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_decision_critical_failure",
+      "type": "COMPLETION",
+      "priority": 100,
+      "fromNodeId": "closeout_decision",
+      "endingId": "critical_failure",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "emergency_outcome",
+        "equals": "fatal"
+      }
+    },
+    {
+      "id": "closeout_decision_safe",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "safe"
+      }
+    },
+    {
+      "id": "closeout_decision_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "recovery"
+      }
+    },
+    {
+      "id": "closeout_decision_contained",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "incident_contained",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "contained"
+      }
+    },
+    {
+      "id": "closeout_decision_major",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "final_outcome",
+        "equals": "major"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "incident_contained",
+      "family": "INCIDENT_CONTAINED",
+      "title": "Incident contained"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    },
+    {
+      "id": "critical_failure",
+      "family": "CRITICAL_FAILURE",
+      "title": "Critical failure"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1910.252 Welding, Cutting and Brazing",
+    "NFPA 51B Standard for Fire Prevention During Welding, Cutting, and Other Hot Work"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "authorization_decision",
+        "alternateOptionId": "authorization_decision_o2"
+      },
+      {
+        "nodeId": "fire_prevention_decision",
+        "alternateOptionId": "fire_prevention_decision_o4"
+      },
+      {
+        "nodeId": "changing_conditions_decision",
+        "alternateOptionId": "changing_conditions_decision_o1"
+      },
+      {
+        "nodeId": "emergency_decision",
+        "alternateOptionId": "emergency_decision_o3"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "emergency_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

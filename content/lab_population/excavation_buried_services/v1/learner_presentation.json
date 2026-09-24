@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "excavation_buried_services",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Manage a deep excavation through an old utility corridor where buried electrical and gas services are uncertain and ground conditions deteriorate.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the safety professional responsible for an excavation beside buried electrical and gas services.",
+    "situation": "A deep trench is planned through an old utility corridor. Drawings are incomplete, soil conditions are variable and the work can expose workers to service strikes, collapse and hazardous releases.",
+    "objective": "Verify underground services, protect the excavation, stop when conditions differ from the plan and manage any release without creating secondary casualties.",
+    "peopleInvolved": [
+      "Excavation supervisor",
+      "Excavator operator",
+      "Competent person",
+      "Utility representative",
+      "Workers in the excavation"
+    ],
+    "knownFacts": [
+      "The trench will exceed normal standing depth.",
+      "Utility drawings may not reflect actual service positions.",
+      "Groundwater is present.",
+      "Gas and electrical services cross the work area."
+    ],
+    "focusTags": [
+      "Excavation",
+      "Buried Services",
+      "Trench Safety",
+      "Gas Release",
+      "Electrical"
+    ]
+  },
+  "evidencePresentation": {
+    "excavation_permit": {
+      "title": "Excavation permit",
+      "summary": "Excavation permit defines the authorized scope, conditions, hold points and required controls for the work.",
+      "details": "Check that the scope and location match the actual task.\nConfirm required controls and hold points are satisfied.\nTreat changed conditions as a trigger for reassessment."
+    },
+    "utility_plan": {
+      "title": "Underground utility plan",
+      "summary": "Underground utility plan supports identification and verification of buried services before and during excavation.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "scan_record": {
+      "title": "Utility scanning record",
+      "summary": "Utility scanning record supports identification and verification of buried services before and during excavation.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "protective_system_plan": {
+      "title": "Trench protective-system plan",
+      "summary": "The plan defines the trench protective system, access and ground-control arrangements.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "incident_record": {
+      "title": "Incident / near-miss record",
+      "summary": "Incident / near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "utility_location_decision": {
+      "title": "Locate buried services"
+    },
+    "trench_protection_decision": {
+      "title": "Select trench protection"
+    },
+    "service_change_decision": {
+      "title": "Respond to an unexpected service"
+    },
+    "collapse_decision": {
+      "title": "Control collapse and release signs"
+    },
+    "closeout_decision": {
+      "title": "Reauthorize excavation work"
+    }
+  },
+  "consequencePresentation": {
+    "utility_location_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the locate buried services stage before exposure continues. The excavation moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "utility_location_decision_defensible": {
+      "observable": "The action improves control at the locate buried services stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "utility_location_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the locate buried services stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "utility_location_decision_critical": {
+      "observable": "The excavation proceeds on an unsupported assumption at the locate buried services stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "trench_protection_decision_defensible": {
+      "observable": "The action improves control at the select trench protection stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "trench_protection_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the select trench protection stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "trench_protection_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the select trench protection stage before exposure continues. The excavation moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "trench_protection_decision_critical": {
+      "observable": "The excavation proceeds on an unsupported assumption at the select trench protection stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "service_change_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the respond to an unexpected service stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "service_change_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the respond to an unexpected service stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "service_change_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the respond to an unexpected service condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "service_change_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the excavation continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "collapse_decision_defensible": {
+      "observable": "The immediate area is secured and help is mobilized, but one element of the control collapse and release signs response remains less complete than the preferred plan.",
+      "guidedInsight": "This action can reduce harm, but the BEST response integrates personnel protection, alarm, isolation and planned emergency control without leaving a material response gap."
+    },
+    "collapse_decision_weak": {
+      "observable": "Some protective action is taken, but personnel remain closer to the hazard than necessary during the control collapse and release signs response. The margin for a secondary casualty narrows.",
+      "guidedInsight": "A partial emergency action may sound practical, but it is weak when it keeps people exposed or delays full hazard-zone control."
+    },
+    "collapse_decision_critical": {
+      "observable": "An unprotected or inadequately controlled intervention is attempted during the control collapse and release signs stage. The event escalates and a secondary casualty or larger release becomes credible.",
+      "guidedInsight": "Critical emergency decisions often fail by sending people toward an uncontrolled hazard. Protect responders and establish control before attempting intervention."
+    },
+    "collapse_decision_best": {
+      "observable": "The team activates the planned emergency response at the control collapse and release signs stage, keeps people out of the hazard zone and controls the event before re-entry.",
+      "guidedInsight": "The strongest emergency choice protects responders first. Rescue, isolation and source control should follow the planned capability rather than expose another person."
+    },
+    "closeout_decision_best": {
+      "observable": "The excavation remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the excavation before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The excavation is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The excavation was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You verified the utilities and ground controls before exposing workers to the trench."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The excavation developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A discrepancy was found, but the work was stopped and brought back under controlled conditions."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "Ground or utility conditions deteriorated, but evacuation and emergency controls limited the event."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the excavation to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Unresolved service and ground risks combined into a major excavation incident."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the excavation. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A decisive excavation or utility safeguard was bypassed while workers remained exposed."
+    }
+  }
+}

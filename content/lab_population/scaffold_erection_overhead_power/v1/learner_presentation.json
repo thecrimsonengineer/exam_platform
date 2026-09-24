@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "scaffold_erection_overhead_power",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Erect a scaffold beside an overhead power line while controlling electrical clearance, foundation stability, long materials and an arcing event.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the safety professional coordinating scaffold erection near an overhead electrical line.",
+    "situation": "A scaffold must be erected close to an overhead line. Voltage uncertainty, long conductive components, ground conditions and wind create interacting electrical and scaffold risks.",
+    "objective": "Maintain verified electrical separation and scaffold integrity, and prevent approach after any electrical contact until the supply is made safe.",
+    "peopleInvolved": [
+      "Scaffold supervisor",
+      "Scaffold erectors",
+      "Electrical authority",
+      "Dedicated spotter",
+      "Area supervisor"
+    ],
+    "knownFacts": [
+      "The line voltage is initially unconfirmed.",
+      "Long metal standards and tubes will be handled.",
+      "The scaffold base includes compacted fill.",
+      "Wind can move long conductive components toward the line."
+    ],
+    "focusTags": [
+      "Scaffold",
+      "Overhead Power Line",
+      "Electrical Clearance",
+      "Material Handling",
+      "Emergency Response"
+    ]
+  },
+  "evidencePresentation": {
+    "scaffold_plan": {
+      "title": "Scaffold erection plan",
+      "summary": "The plan defines scaffold configuration, loading, ties, bracing, foundation and erection sequence.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "power_line_record": {
+      "title": "Overhead-line voltage / clearance record",
+      "summary": "The record confirms line voltage, required approach distance and the agreed electrical-control status.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "permit": {
+      "title": "Work permit",
+      "summary": "Work permit defines the authorized scope, conditions, hold points and required controls for the work.",
+      "details": "Check that the scope and location match the actual task.\nConfirm required controls and hold points are satisfied.\nTreat changed conditions as a trigger for reassessment."
+    },
+    "weather_record": {
+      "title": "Weather and wind record",
+      "summary": "The record provides wind and weather information relevant to the safe continuation of outdoor work.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "incident_record": {
+      "title": "Incident / near-miss record",
+      "summary": "Incident / near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "clearance_decision": {
+      "title": "Establish electrical clearance"
+    },
+    "scaffold_setup_decision": {
+      "title": "Verify scaffold foundation and design"
+    },
+    "material_handling_decision": {
+      "title": "Control long-component handling"
+    },
+    "contact_decision": {
+      "title": "Respond to electrical contact"
+    },
+    "closeout_decision": {
+      "title": "Reauthorize scaffold erection"
+    }
+  },
+  "consequencePresentation": {
+    "clearance_decision_defensible": {
+      "observable": "The action improves control at the establish electrical clearance stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "clearance_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the establish electrical clearance stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "clearance_decision_critical": {
+      "observable": "The scaffold-erection task proceeds on an unsupported assumption at the establish electrical clearance stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "clearance_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the establish electrical clearance stage before exposure continues. The scaffold-erection task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "scaffold_setup_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the verify scaffold foundation and design stage before exposure continues. The scaffold-erection task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "scaffold_setup_decision_defensible": {
+      "observable": "The action improves control at the verify scaffold foundation and design stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "scaffold_setup_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the verify scaffold foundation and design stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "scaffold_setup_decision_critical": {
+      "observable": "The scaffold-erection task proceeds on an unsupported assumption at the verify scaffold foundation and design stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "material_handling_decision_defensible": {
+      "observable": "The action improves control at the control long-component handling stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "material_handling_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the control long-component handling stage before exposure continues. The scaffold-erection task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "material_handling_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the control long-component handling stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "material_handling_decision_critical": {
+      "observable": "The scaffold-erection task proceeds on an unsupported assumption at the control long-component handling stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "contact_decision_defensible": {
+      "observable": "The immediate area is secured and help is mobilized, but one element of the respond to electrical contact response remains less complete than the preferred plan.",
+      "guidedInsight": "This action can reduce harm, but the BEST response integrates personnel protection, alarm, isolation and planned emergency control without leaving a material response gap."
+    },
+    "contact_decision_weak": {
+      "observable": "Some protective action is taken, but personnel remain closer to the hazard than necessary during the respond to electrical contact response. The margin for a secondary casualty narrows.",
+      "guidedInsight": "A partial emergency action may sound practical, but it is weak when it keeps people exposed or delays full hazard-zone control."
+    },
+    "contact_decision_best": {
+      "observable": "The team activates the planned emergency response at the respond to electrical contact stage, keeps people out of the hazard zone and controls the event before re-entry.",
+      "guidedInsight": "The strongest emergency choice protects responders first. Rescue, isolation and source control should follow the planned capability rather than expose another person."
+    },
+    "contact_decision_critical": {
+      "observable": "An unprotected or inadequately controlled intervention is attempted during the respond to electrical contact stage. The event escalates and a secondary casualty or larger release becomes credible.",
+      "guidedInsight": "Critical emergency decisions often fail by sending people toward an uncontrolled hazard. Protect responders and establish control before attempting intervention."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the scaffold-erection task before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The scaffold-erection task is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    },
+    "closeout_decision_best": {
+      "observable": "The scaffold-erection task remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The scaffold-erection task was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You maintained verified electrical clearance and scaffold stability before handling conductive components."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The scaffold-erection task developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A clearance or erection control weakened, but work was stopped and the safe method was restored."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "An electrical-contact event occurred, but separation and supply isolation prevented further exposure."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the scaffold-erection task to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Electrical and scaffold-control weaknesses combined into a major worksite incident."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the scaffold-erection task. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A critical electrical-separation rule was bypassed when conductive material approached the energized line."
+    }
+  }
+}

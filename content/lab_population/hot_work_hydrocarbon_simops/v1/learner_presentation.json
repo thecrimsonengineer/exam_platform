@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "hot_work_hydrocarbon_simops",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Manage a hot-work job beside operating hydrocarbon equipment while conditions change and a fire emergency develops.",
+    "estimatedTime": "8–12 min",
+    "decisionCountLabel": "5 decisions",
+    "role": "You are the site safety professional coordinating a hot-work task in an operating hydrocarbon area.",
+    "situation": "A welding crew is ready to work beside live process equipment. The job depends on permit integrity, isolation, gas testing, fire prevention, SIMOPS control and disciplined emergency response.",
+    "objective": "Keep ignition and fuel hazards controlled from authorization through closeout, and intervene early when conditions change.",
+    "peopleInvolved": [
+      "Area operator",
+      "Hot-work supervisor",
+      "Welder",
+      "Fire watch",
+      "Maintenance crew"
+    ],
+    "knownFacts": [
+      "The surrounding process remains operational.",
+      "A hot-work permit has been prepared.",
+      "Flammable atmosphere and hidden combustible materials remain credible hazards.",
+      "Nearby operations can change conditions during the job."
+    ],
+    "focusTags": [
+      "Hot Work",
+      "SIMOPS",
+      "Flammable Atmosphere",
+      "Permit to Work",
+      "Emergency Response"
+    ]
+  },
+  "evidencePresentation": {
+    "hot_work_permit": {
+      "title": "Hot-work permit",
+      "summary": "Hot-work permit defines the authorized scope, conditions, hold points and required controls for the work.",
+      "details": "Check that the scope and location match the actual task.\nConfirm required controls and hold points are satisfied.\nTreat changed conditions as a trigger for reassessment."
+    },
+    "gas_test_record": {
+      "title": "Atmospheric test record",
+      "summary": "Atmospheric test record shows atmospheric results, test timing and the basis for continued monitoring.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "isolation_record": {
+      "title": "Isolation record",
+      "summary": "Isolation record identifies hazardous-energy or process-isolation controls and how their effectiveness is verified.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "fire_watch_plan": {
+      "title": "Fire-watch plan",
+      "summary": "Fire-watch plan provides task-specific information needed to verify controls before work proceeds.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    },
+    "incident_record": {
+      "title": "Incident / near-miss record",
+      "summary": "Incident / near-miss record captures what happened, immediate controls and information needed for investigation and recovery.",
+      "details": "Confirm the document applies to this job and equipment.\nCheck current status, limits and any unresolved conditions.\nUse it together with field verification rather than as a substitute for field conditions."
+    }
+  },
+  "decisionPresentation": {
+    "authorization_decision": {
+      "title": "Authorize the hot-work task"
+    },
+    "fire_prevention_decision": {
+      "title": "Build the fire-prevention barrier"
+    },
+    "changing_conditions_decision": {
+      "title": "Respond to a changing atmosphere"
+    },
+    "emergency_decision": {
+      "title": "Control the developing fire"
+    },
+    "closeout_decision": {
+      "title": "Decide whether work can restart"
+    }
+  },
+  "consequencePresentation": {
+    "authorization_decision_defensible": {
+      "observable": "The action improves control at the authorize the hot-work task stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "authorization_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the authorize the hot-work task stage before exposure continues. The hot-work task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "authorization_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the authorize the hot-work task stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "authorization_decision_critical": {
+      "observable": "The hot-work task proceeds on an unsupported assumption at the authorize the hot-work task stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "fire_prevention_decision_defensible": {
+      "observable": "The action improves control at the build the fire-prevention barrier stage, but one important verification or scope gap remains. Work proceeds with less assurance.",
+      "guidedInsight": "This is professionally plausible and partly correct, but it leaves one material criterion unresolved compared with the BEST action."
+    },
+    "fire_prevention_decision_weak": {
+      "observable": "Preparation or work continues while a significant control question remains unresolved at the build the fire-prevention barrier stage. The available recovery margin decreases.",
+      "guidedInsight": "The action contains a valid element, but sequencing is weak because work advances before the decisive safeguard has been verified."
+    },
+    "fire_prevention_decision_critical": {
+      "observable": "The hot-work task proceeds on an unsupported assumption at the build the fire-prevention barrier stage. A critical safeguard is bypassed and risk escalates sharply.",
+      "guidedInsight": "A critical choice often sounds efficient because it relies on prior status, appearance or experience. High-hazard work requires positive verification of the critical barrier."
+    },
+    "fire_prevention_decision_best": {
+      "observable": "The team verifies the decisive safeguards at the build the fire-prevention barrier stage before exposure continues. The hot-work task moves forward from a controlled condition.",
+      "guidedInsight": "The BEST option closes the important uncertainty before work proceeds. It controls the hazard through verification rather than assumption."
+    },
+    "changing_conditions_decision_best": {
+      "observable": "The team stops or stabilizes the work when conditions change at the respond to a changing atmosphere stage. The new condition is verified before the task continues.",
+      "guidedInsight": "Changing conditions invalidate earlier assumptions. The BEST response creates a deliberate hold point and reassesses the controls before exposure continues."
+    },
+    "changing_conditions_decision_defensible": {
+      "observable": "The team pauses part of the activity and gathers more information, but some exposure or uncertainty remains during the respond to a changing atmosphere stage.",
+      "guidedInsight": "This choice recognizes the change, yet it leaves a narrower safety margin than a full stop-and-reassess response."
+    },
+    "changing_conditions_decision_weak": {
+      "observable": "The work continues under modified monitoring or local precautions even though the respond to a changing atmosphere condition has changed materially. Risk begins to rise.",
+      "guidedInsight": "Extra observation is not equivalent to restoring a failed or uncertain barrier. Changed conditions should be controlled, not merely watched."
+    },
+    "changing_conditions_decision_critical": {
+      "observable": "The changed condition is effectively accepted and the hot-work task continues. A critical barrier is lost and the scenario moves into emergency territory.",
+      "guidedInsight": "Proceeding because an alarm limit, schedule or visible condition has not yet become extreme can miss the earlier point where safe intervention was still easy."
+    },
+    "emergency_decision_defensible": {
+      "observable": "The immediate area is secured and help is mobilized, but one element of the control the developing fire response remains less complete than the preferred plan.",
+      "guidedInsight": "This action can reduce harm, but the BEST response integrates personnel protection, alarm, isolation and planned emergency control without leaving a material response gap."
+    },
+    "emergency_decision_weak": {
+      "observable": "Some protective action is taken, but personnel remain closer to the hazard than necessary during the control the developing fire response. The margin for a secondary casualty narrows.",
+      "guidedInsight": "A partial emergency action may sound practical, but it is weak when it keeps people exposed or delays full hazard-zone control."
+    },
+    "emergency_decision_best": {
+      "observable": "The team activates the planned emergency response at the control the developing fire stage, keeps people out of the hazard zone and controls the event before re-entry.",
+      "guidedInsight": "The strongest emergency choice protects responders first. Rescue, isolation and source control should follow the planned capability rather than expose another person."
+    },
+    "emergency_decision_critical": {
+      "observable": "An unprotected or inadequately controlled intervention is attempted during the control the developing fire stage. The event escalates and a secondary casualty or larger release becomes credible.",
+      "guidedInsight": "Critical emergency decisions often fail by sending people toward an uncontrolled hazard. Protect responders and establish control before attempting intervention."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The team strengthens the immediate controls and uses a controlled restart review, but the closeout does not explore the underlying failure as completely as the BEST path.",
+      "guidedInsight": "Corrective action is valuable, but restart assurance is stronger when the underlying cause and all affected safeguards are verified."
+    },
+    "closeout_decision_best": {
+      "observable": "The hot-work task remains suspended while causes, damaged safeguards and corrective actions are verified. Work is reauthorized only after a safe basis is re-established.",
+      "guidedInsight": "Safe closeout is not simply returning conditions to normal. It must address why control was lost and verify the barriers needed for a safe restart."
+    },
+    "closeout_decision_weak": {
+      "observable": "The team corrects the most visible problem and prepares to resume the hot-work task before the full causal chain has been resolved.",
+      "guidedInsight": "A technically acceptable local fix can still be weak if it restores production before learning and system-level corrections are complete."
+    },
+    "closeout_decision_critical": {
+      "observable": "The hot-work task is pushed toward restart after only superficial recovery. Critical causes or damaged safeguards remain unresolved.",
+      "guidedInsight": "Restart pressure can recreate the same hazard. A major event is more likely when work resumes before critical barriers are restored and verified."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The hot-work task was completed with the critical hazards controlled and changing conditions managed before escalation.",
+      "keyTurningPoint": "You verified the critical controls before ignition sources were introduced and stopped when conditions changed."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "The hot-work task developed a significant control weakness, but later decisions restored a controlled state before serious harm occurred.",
+      "keyTurningPoint": "A control gap emerged, but intervention restored safe control before the event could escalate."
+    },
+    "incident_contained": {
+      "title": "Incident contained",
+      "narrative": "The scenario developed into an incident, but emergency and recovery actions contained the event and limited its consequences.",
+      "keyTurningPoint": "The fire developed, but alarm, isolation and response actions limited the consequences."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control failures allowed the hot-work task to escalate into a major incident requiring extended response, investigation and corrective action.",
+      "keyTurningPoint": "Warning signs were not controlled early enough, allowing fire and process hazards to combine."
+    },
+    "critical_failure": {
+      "title": "Critical failure",
+      "narrative": "The decision path produced a severe uncontrolled outcome in the hot-work task. Recovery options were overwhelmed by a critical barrier failure.",
+      "keyTurningPoint": "A critical ignition or emergency barrier was bypassed at the decisive moment."
+    }
+  }
+}
