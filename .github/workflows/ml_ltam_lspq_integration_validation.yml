@@ -1,0 +1,152 @@
+name: ML LTAM LSPQ Integration Validation
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam-lspq-integration
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ml-ltam-lspq-integration
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+
+    steps:
+      - name: Checkout exact integration SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen ancestry and boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD
+          git merge-base --is-ancestor af0dfd673daee2e7081e7c35828c88ae9a43aca4 HEAD
+          git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- content/micro_learning/facts
+          git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- lib/features/learning_twin/domain
+          test -f content/integration/ml_ltam_lspq_integration_manifest_v1.json
+          test -f docs/integration/PHASE_ML_LTAM_LSPQ_INTEGRATION.md
+          test -f content/lab_population/manifest.json
+          test -f content/integration/ml_ltam_integration_freeze_v1.json
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Verify frozen ML runtime bundle
+        run: dart run tool/generate_ml10_runtime_bundle.dart --check
+
+      - name: LSP Q1 canonical question parser
+        run: flutter test test/services/questions/canonical_question_parser_test.dart
+
+      - name: LSP Q2 decision adapter
+        run: flutter test test/lab_quality/lsp_q2_lab_decision_question_adapter_test.dart
+
+      - name: LSP Q3 evidence rationale
+        run: flutter test test/lab_quality/lsp_q3_evidence_backed_rationale_test.dart
+
+      - name: LSP Q4 decision batch parse
+        run: flutter test test/lab_quality/lsp_q4_canonical_decision_batch_parse_test.dart
+
+      - name: LSP Q5 strict H0.3 gate
+        run: flutter test test/lab_quality/lsp_q5_strict_h0_3_gate_test.dart
+
+      - name: Frozen H0.3 regression
+        run: flutter test test/services/question_quality_validator_test.dart
+
+      - name: DQG300 LAB adapter regression
+        run: flutter test test/lab_quality/l4k_dqg300_lab_gate_test.dart
+
+      - name: LSP Q6 combined decision gate
+        run: flutter test test/lab_quality/lsp_q6_combined_decision_quality_gate_test.dart
+
+      - name: LSP Q7 DQG300 semantic authority
+        run: flutter test test/lab_quality/lsp_q7_dqg300_semantic_authority_test.dart
+
+      - name: LSP Q8 learner presentation
+        run: flutter test test/lab_quality/lsp_q8_learner_presentation_validation_test.dart
+
+      - name: LSP Q9 population manifest
+        run: flutter test test/lab_quality/lsp_q9_scenario_population_manifest_test.dart
+
+      - name: LSP Q10 manifest population
+        run: flutter test test/lab_quality/lsp_q10_manifest_backed_scenario_population_test.dart
+
+      - name: LSP Q11 publication gate
+        run: flutter test test/lab_quality/lsp_q11_population_publication_gate_test.dart
+
+      - name: LSP Q12 learner catalogue
+        run: flutter test test/lab_quality/lsp_q12_learner_catalogue_delivery_test.dart
+
+      - name: LSP Q13 persistent runtime
+        run: flutter test test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
+
+      - name: LSP Q14 production seed
+        run: flutter test test/lab_quality/lsp_q14_production_population_seed_test.dart
+
+      - name: LSP Q15 release closure
+        run: flutter test test/lab_quality/lsp_q15_production_release_closure_test.dart
+
+      - name: LSP Q16 release operator
+        run: flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
+
+      - name: LSP Q17 deployment acceptance
+        run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
+
+      - name: Studio import regression
+        run: flutter test test/services/studio_question_import_service_test.dart
+
+      - name: Studio service regression
+        run: flutter test test/services/studio_question_service_test.dart
+
+      - name: ML-LTAM presentation seam
+        run: flutter test test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
+
+      - name: Learning Twin regression
+        run: flutter test test/features/learning_twin
+
+      - name: ML runtime regression
+        run: flutter test test/micro_learning/local_micro_fact_repository_asset_test.dart test/micro_learning/micro_fact_selector_runtime_corpus_test.dart test/micro_learning/startup_micro_fact_service_test.dart test/startup/startup_micro_fact_card_test.dart test/startup/startup_micro_fact_integration_test.dart test/startup/startup_micro_fact_motion_unit_test.dart test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Startup motion and handoff regression
+        run: flutter test test/startup/startup_motion_policy_test.dart test/startup/startup_timeline_test.dart test/startup/startup_screen_hardening_test.dart test/startup/startup_release_render_smoke_test.dart
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Commit formatter output
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format             lib/services/questions/canonical_question_parser.dart             lib/services/studio/studio_question_import_service.dart             lib/features/lab             lib/features/learning_twin/integration             lib/screens/startup/startup_micro_fact_card.dart             test/lab_quality             test/features/learning_twin/integration
+          git diff --check
+          if git diff --quiet; then
+            echo "No formatter changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             lib/services/questions/canonical_question_parser.dart             lib/services/studio/studio_question_import_service.dart             lib/features/lab             lib/features/learning_twin/integration             lib/screens/startup/startup_micro_fact_card.dart             test/lab_quality             test/features/learning_twin/integration
+          git commit -m "INT-LQ normalize combined integration files"
+          git push origin HEAD:phase-ml-ltam-lspq-integration
