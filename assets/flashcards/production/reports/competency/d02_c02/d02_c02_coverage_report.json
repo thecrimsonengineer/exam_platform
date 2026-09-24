@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2B",
+  "domainId": "d02",
+  "competencyId": "d02_c02",
+  "approvedConceptCount": 9,
+  "cardBackedConceptCount": 5,
+  "crossCompetencyCanonicalReferenceCount": 3,
+  "mergedConceptCount": 1,
+  "rejectedConceptCount": 0,
+  "notFlashcardWorthyCount": 0,
+  "holdCount": 0,
+  "unresolvedConceptCount": 0,
+  "resolutionCoverageRatio": 1,
+  "status": "PASS"
+}
