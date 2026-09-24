@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2B",
+  "competencyId": "d02_c02",
+  "cardCount": 5,
+  "cardsWithProvenance": 5,
+  "cardsWithExactlyOnePrimarySource": 5,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.nist.baldrige_commentary",
+    "csp11.source.nist.baldrige_key_terms",
+    "csp11.source.nist.strategy",
+    "csp11.source.opm.performance_standards"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.opm.performance_standards": 1,
+    "csp11.source.nist.baldrige_commentary": 2,
+    "csp11.source.nist.strategy": 1,
+    "csp11.source.nist.baldrige_key_terms": 1
+  },
+  "status": "PASS"
+}
