@@ -369,8 +369,6 @@ class LabBatch2ReleaseEvidence {
     required this.releaseId,
     required this.manifestId,
     required this.manifestFingerprint,
-    required this.predecessorReleaseId,
-    required this.predecessorAcceptanceFingerprint,
     required this.preCatalogueClosedSha,
     required this.preCatalogueValidationRunId,
     required this.environmentId,
@@ -389,17 +387,12 @@ class LabBatch2ReleaseEvidence {
            ..sort((left, right) => left.identityKey.compareTo(right.identityKey)),
        ) {
     if (releaseId != kBatch2ReleaseId ||
-        predecessorReleaseId != kInitialLabProductionReleaseId ||
         preCatalogueClosedSha != kBatch2PreCatalogueClosedSha ||
         preCatalogueValidationRunId != kBatch2PreCatalogueValidationRunId ||
         environmentId != kExpectedLabProductionEnvironmentId ||
         !_batch2Sha256(
           manifestFingerprint,
           kLabProductionManifestFingerprintSchema,
-        ) ||
-        !_batch2Sha256(
-          predecessorAcceptanceFingerprint,
-          kLabProductionReleaseAcceptanceFingerprintSchema,
         ) ||
         labCount != 10 ||
         totalDecisionCount != 50 ||
@@ -416,8 +409,6 @@ class LabBatch2ReleaseEvidence {
       releaseId: releaseId,
       manifestId: manifestId,
       manifestFingerprint: manifestFingerprint,
-      predecessorReleaseId: predecessorReleaseId,
-      predecessorAcceptanceFingerprint: predecessorAcceptanceFingerprint,
       environmentId: environmentId,
       executedBy: executedBy,
       executedAtIso: executedAtIso,
@@ -433,7 +424,6 @@ class LabBatch2ReleaseEvidence {
 
   factory LabBatch2ReleaseEvidence.issue({
     required LabScenarioPopulationManifest manifest,
-    required LabProductionReleaseAcceptance predecessorAcceptance,
     required String environmentId,
     required String executedBy,
     required DateTime executedAt,
@@ -450,9 +440,6 @@ class LabBatch2ReleaseEvidence {
       releaseId: kBatch2ReleaseId,
       manifestId: manifest.manifestId,
       manifestFingerprint: manifestFingerprint,
-      predecessorReleaseId: predecessorAcceptance.releaseId,
-      predecessorAcceptanceFingerprint:
-          predecessorAcceptance.acceptanceFingerprint,
       environmentId: environmentId,
       executedBy: executedBy.trim(),
       executedAtIso: executedAtIso,
@@ -463,9 +450,6 @@ class LabBatch2ReleaseEvidence {
       releaseId: kBatch2ReleaseId,
       manifestId: manifest.manifestId,
       manifestFingerprint: manifestFingerprint,
-      predecessorReleaseId: predecessorAcceptance.releaseId,
-      predecessorAcceptanceFingerprint:
-          predecessorAcceptance.acceptanceFingerprint,
       preCatalogueClosedSha: kBatch2PreCatalogueClosedSha,
       preCatalogueValidationRunId: kBatch2PreCatalogueValidationRunId,
       environmentId: environmentId,
@@ -499,9 +483,6 @@ class LabBatch2ReleaseEvidence {
       releaseId: json['releaseId']?.toString() ?? '',
       manifestId: json['manifestId']?.toString() ?? '',
       manifestFingerprint: json['manifestFingerprint']?.toString() ?? '',
-      predecessorReleaseId: json['predecessorReleaseId']?.toString() ?? '',
-      predecessorAcceptanceFingerprint:
-          json['predecessorAcceptanceFingerprint']?.toString() ?? '',
       preCatalogueClosedSha: json['preCatalogueClosedSha']?.toString() ?? '',
       preCatalogueValidationRunId:
           json['preCatalogueValidationRunId']?.toString() ?? '',
@@ -529,8 +510,6 @@ class LabBatch2ReleaseEvidence {
     required String releaseId,
     required String manifestId,
     required String manifestFingerprint,
-    required String predecessorReleaseId,
-    required String predecessorAcceptanceFingerprint,
     required String environmentId,
     required String executedBy,
     required String executedAtIso,
@@ -545,8 +524,6 @@ class LabBatch2ReleaseEvidence {
       'releaseId': releaseId,
       'manifestId': manifestId,
       'manifestFingerprint': manifestFingerprint,
-      'predecessorReleaseId': predecessorReleaseId,
-      'predecessorAcceptanceFingerprint': predecessorAcceptanceFingerprint,
       'preCatalogueClosedSha': kBatch2PreCatalogueClosedSha,
       'preCatalogueValidationRunId': kBatch2PreCatalogueValidationRunId,
       'environmentId': environmentId,
@@ -565,8 +542,6 @@ class LabBatch2ReleaseEvidence {
   final String releaseId;
   final String manifestId;
   final String manifestFingerprint;
-  final String predecessorReleaseId;
-  final String predecessorAcceptanceFingerprint;
   final String preCatalogueClosedSha;
   final String preCatalogueValidationRunId;
   final String environmentId;
@@ -583,8 +558,6 @@ class LabBatch2ReleaseEvidence {
     'releaseId': releaseId,
     'manifestId': manifestId,
     'manifestFingerprint': manifestFingerprint,
-    'predecessorReleaseId': predecessorReleaseId,
-    'predecessorAcceptanceFingerprint': predecessorAcceptanceFingerprint,
     'preCatalogueClosedSha': preCatalogueClosedSha,
     'preCatalogueValidationRunId': preCatalogueValidationRunId,
     'environmentId': environmentId,
@@ -770,7 +743,6 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
     required this.populationSource,
     required this.publishedRepository,
     required this.stagingRepository,
-    required this.predecessorAcceptanceRepository,
     required this.evidenceRepository,
     required this.environmentId,
   });
@@ -790,10 +762,6 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
       stagingRepository: FirestoreLabBatch2CatalogueStagingRepository(
         firestore: instance,
       ),
-      predecessorAcceptanceRepository:
-          FirestoreLabProductionReleaseAcceptanceRepository(
-            firestore: instance,
-          ),
       evidenceRepository: FirestoreLabBatch2ReleaseEvidenceRepository(
         firestore: instance,
       ),
@@ -805,13 +773,8 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
   final LabProductionPopulationSource populationSource;
   final LabPublishedRepository publishedRepository;
   final LabBatch2CatalogueStagingRepository stagingRepository;
-  final LabProductionReleaseAcceptanceRepository
-  predecessorAcceptanceRepository;
   final LabBatch2ReleaseEvidenceRepository evidenceRepository;
   final String environmentId;
-
-  Future<LabProductionReleaseAcceptance?> _predecessorAcceptance() =>
-      predecessorAcceptanceRepository.load(kInitialLabProductionReleaseId);
 
   @override
   Future<LabBatch2ReleaseInspection> inspect() async {
@@ -840,14 +803,6 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
         );
       }
 
-      final predecessor = await _predecessorAcceptance();
-      if (predecessor == null ||
-          predecessor.releaseId != kInitialLabProductionReleaseId) {
-        return blocked(
-          'Batch 2 Q16 requires the original Q17 live release acceptance first.',
-        );
-      }
-
       for (final entry in manifest.entries) {
         if (await publishedRepository.load(entry.labId, entry.versionId) !=
             null) {
@@ -868,8 +823,6 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
         if (!marker ||
             evidence.manifestId != manifest.manifestId ||
             evidence.manifestFingerprint != fingerprint ||
-            evidence.predecessorAcceptanceFingerprint !=
-                predecessor.acceptanceFingerprint ||
             publishedCount != manifest.entries.length ||
             stagedCount != manifest.entries.length) {
           return blocked(
@@ -994,13 +947,6 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
     required DateTime executedAt,
   }) async {
     final manifest = await populationSource.loadManifest();
-    final predecessor = await _predecessorAcceptance();
-    if (predecessor == null) {
-      throw const LabBatch2ReleaseException(
-        'Batch 2 Q16 cannot close without original Q17 acceptance.',
-      );
-    }
-
     final entries = <LabProductionReleaseEntryEvidence>[];
     final catalogueKeys = <String>[];
     for (final manifestEntry in manifest.entries) {
@@ -1039,7 +985,6 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
 
     final evidence = LabBatch2ReleaseEvidence.issue(
       manifest: manifest,
-      predecessorAcceptance: predecessor,
       environmentId: environmentId,
       executedBy: executedBy,
       executedAt: executedAt,
@@ -1147,7 +1092,6 @@ class LabBatch2ReleaseAcceptance {
   LabBatch2ReleaseAcceptance._({
     required this.releaseId,
     required this.evidenceFingerprint,
-    required this.predecessorAcceptanceFingerprint,
     required this.environmentId,
     required this.labCount,
     required this.totalDecisionCount,
@@ -1163,10 +1107,6 @@ class LabBatch2ReleaseAcceptance {
           evidenceFingerprint,
           kBatch2EvidenceFingerprintSchema,
         ) ||
-        !_batch2Sha256(
-          predecessorAcceptanceFingerprint,
-          kLabProductionReleaseAcceptanceFingerprintSchema,
-        ) ||
         acceptedBy.trim().isEmpty ||
         DateTime.tryParse(acceptedAtIso) == null) {
       throw const LabBatch2ReleaseException(
@@ -1177,7 +1117,6 @@ class LabBatch2ReleaseAcceptance {
     final expected = _fingerprint(
       releaseId: releaseId,
       evidenceFingerprint: evidenceFingerprint,
-      predecessorAcceptanceFingerprint: predecessorAcceptanceFingerprint,
       environmentId: environmentId,
       acceptedBy: acceptedBy,
       acceptedAtIso: acceptedAtIso,
@@ -1198,8 +1137,6 @@ class LabBatch2ReleaseAcceptance {
     final fingerprint = _fingerprint(
       releaseId: evidence.releaseId,
       evidenceFingerprint: evidence.evidenceFingerprint,
-      predecessorAcceptanceFingerprint:
-          evidence.predecessorAcceptanceFingerprint,
       environmentId: evidence.environmentId,
       acceptedBy: acceptedBy.trim(),
       acceptedAtIso: acceptedAtIso,
@@ -1207,8 +1144,6 @@ class LabBatch2ReleaseAcceptance {
     return LabBatch2ReleaseAcceptance._(
       releaseId: evidence.releaseId,
       evidenceFingerprint: evidence.evidenceFingerprint,
-      predecessorAcceptanceFingerprint:
-          evidence.predecessorAcceptanceFingerprint,
       environmentId: evidence.environmentId,
       labCount: evidence.labCount,
       totalDecisionCount: evidence.totalDecisionCount,
@@ -1229,8 +1164,6 @@ class LabBatch2ReleaseAcceptance {
     return LabBatch2ReleaseAcceptance._(
       releaseId: json['releaseId']?.toString() ?? '',
       evidenceFingerprint: json['evidenceFingerprint']?.toString() ?? '',
-      predecessorAcceptanceFingerprint:
-          json['predecessorAcceptanceFingerprint']?.toString() ?? '',
       environmentId: json['environmentId']?.toString() ?? '',
       labCount: labCount,
       totalDecisionCount: totalDecisionCount,
@@ -1243,7 +1176,6 @@ class LabBatch2ReleaseAcceptance {
   static String _fingerprint({
     required String releaseId,
     required String evidenceFingerprint,
-    required String predecessorAcceptanceFingerprint,
     required String environmentId,
     required String acceptedBy,
     required String acceptedAtIso,
@@ -1251,7 +1183,6 @@ class LabBatch2ReleaseAcceptance {
     'schemaVersion': kBatch2AcceptanceSchemaVersion,
     'releaseId': releaseId,
     'evidenceFingerprint': evidenceFingerprint,
-    'predecessorAcceptanceFingerprint': predecessorAcceptanceFingerprint,
     'environmentId': environmentId,
     'labCount': 10,
     'totalDecisionCount': 50,
@@ -1261,7 +1192,6 @@ class LabBatch2ReleaseAcceptance {
 
   final String releaseId;
   final String evidenceFingerprint;
-  final String predecessorAcceptanceFingerprint;
   final String environmentId;
   final int labCount;
   final int totalDecisionCount;
@@ -1273,7 +1203,6 @@ class LabBatch2ReleaseAcceptance {
     'schemaVersion': kBatch2AcceptanceSchemaVersion,
     'releaseId': releaseId,
     'evidenceFingerprint': evidenceFingerprint,
-    'predecessorAcceptanceFingerprint': predecessorAcceptanceFingerprint,
     'environmentId': environmentId,
     'labCount': labCount,
     'totalDecisionCount': totalDecisionCount,
@@ -1579,8 +1508,6 @@ class LabBatch2AcceptanceService {
 
     if (acceptance.evidenceFingerprint !=
             release.evidence!.evidenceFingerprint ||
-        acceptance.predecessorAcceptanceFingerprint !=
-            release.evidence!.predecessorAcceptanceFingerprint ||
         activated != manifest.entries.length) {
       return blocked(
         'Batch 2 Q17 persisted acceptance does not match the active catalogue.',
