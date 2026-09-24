@@ -1,0 +1,100 @@
+name: LTAM-5 Runtime Pilot
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam5-runtime-pilot
+      - phase-ml-ltam5-hero-pilot-gated
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ltam5-runtime-pilot-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout exact LTAM-5 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact baseline and protected boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD
+          git diff --check d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD
+          git diff --quiet d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD -- content/micro_learning/facts
+          git diff --quiet d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD -- lib/features/learning_twin/domain
+          git diff --quiet d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD -- lib/features/learning_twin/coaching
+          git diff --quiet d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD -- lib/features/learning_twin/integration
+          git diff --quiet d3b4529501bd1a1e9c5059e133b98bafda885da0 HEAD -- lib/screens/startup/startup_micro_fact_card.dart
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Normalize LTAM-5 files
+        run: |
+          dart format             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             lib/features/learning_twin/ui/learning_twin_ui.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
+
+      - name: Analyze LTAM-5 slice
+        run: |
+          dart analyze             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
+
+      - name: Run LTAM-5 focused tests
+        run: |
+          flutter test             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_motion_policy_test.dart             test/features/learning_twin/ui/learning_twin_motion_controller_test.dart
+
+      - name: Revalidate complete Learning Twin
+        run: flutter test test/features/learning_twin
+
+      - name: Revalidate ML LTAM integration seam
+        run: |
+          flutter test             test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart             test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart             test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
+
+      - name: Revalidate startup static boundary
+        run: |
+          flutter test             test/startup/startup_micro_fact_card_test.dart             test/startup/startup_micro_fact_integration_test.dart             test/startup/startup_micro_fact_motion_unit_test.dart             test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Run full Flutter regression
+        run: flutter test
+
+      - name: Build Web release
+        run: flutter build web --release
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+
+      - name: Final diff hygiene
+        run: git diff --check
+
+      - name: Commit formatter normalization
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet --             lib/features/learning_twin/ui             test/features/learning_twin/ui; then
+            echo "LTAM-5 files are already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/features/learning_twin/ui
+          git add test/features/learning_twin/ui
+          git commit -m "LTAM-5 normalize Hero pilot slice"
+          git push origin HEAD:${GITHUB_REF_NAME}
