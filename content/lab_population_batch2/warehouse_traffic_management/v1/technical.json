@@ -642,7 +642,7 @@
     {
       "id": "change_decision",
       "type": "DECISION",
-      "prompt": "A spill diverts pedestrians toward the edge of a forklift lane. What should happen?",
+      "prompt": "A spill diverts pedestrians toward the edge of an active forklift lane during the busiest loading period. What should happen before traffic continues?",
       "options": [
         {
           "id": "change_decision_o1",
