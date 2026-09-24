@@ -54,9 +54,7 @@ void main() {
 
   test('D01 C01 inventory stays at canonical competency placement', () {
     final inventory = readObject(inventoryPath);
-    final placement = Map<String, dynamic>.from(
-      inventory['placement'] as Map,
-    );
+    final placement = Map<String, dynamic>.from(inventory['placement'] as Map);
 
     expect(inventory['domainId'], 'd01');
     expect(inventory['competencyId'], 'd01_c01');
@@ -84,10 +82,7 @@ void main() {
 
     expect(slugs.toSet().length, slugs.length);
     expect(labels.toSet().length, labels.length);
-    expect(
-      candidates.every((item) => item['decision'] == 'CANDIDATE'),
-      isTrue,
-    );
+    expect(candidates.every((item) => item['decision'] == 'CANDIDATE'), isTrue);
   });
 
   test('FCP D01 source registry is valid and resolves inventory sources', () {
@@ -112,8 +107,9 @@ void main() {
     );
 
     final inventory = readObject(inventoryPath);
-    final candidates = (inventory['candidateConcepts'] as List)
-        .map((item) => Map<String, dynamic>.from(item as Map));
+    final candidates = (inventory['candidateConcepts'] as List).map(
+      (item) => Map<String, dynamic>.from(item as Map),
+    );
 
     for (final candidate in candidates) {
       final sourceIds = (candidate['sourceIds'] as List).cast<String>();
