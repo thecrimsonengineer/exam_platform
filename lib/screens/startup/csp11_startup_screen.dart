@@ -22,6 +22,10 @@ class Csp11StartupScreen extends StatefulWidget {
     this.microLearningService,
     this.microLearningNowProvider,
     this.motionPolicyOverride,
+    this.microFactService,
+    this.microFactRotationOrdinalOverride,
+    this.recentMicroFactIds = const <String>[],
+    this.activeAssessmentConceptIds = const <String>{},
     this.startupAssetPath = 'assets/startup/csp11_startup_master.json',
   });
 
@@ -30,6 +34,10 @@ class Csp11StartupScreen extends StatefulWidget {
   final StartupMicroLearningService? microLearningService;
   final DateTime Function()? microLearningNowProvider;
   final StartupMotionPolicy? motionPolicyOverride;
+  final StartupMicroFactService? microFactService;
+  final int? microFactRotationOrdinalOverride;
+  final List<String> recentMicroFactIds;
+  final Set<String> activeAssessmentConceptIds;
   final String startupAssetPath;
 
   @override
@@ -83,6 +91,7 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
 
     _watchdog = Timer(_hardTimeout, _dismissOverlay);
     unawaited(_preflightStartupAsset());
+    unawaited(_loadMicroFact());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startMicroLearningLoad();
     });
@@ -192,6 +201,20 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
     }
   }
 
+  Future<void> _loadMicroFact() async {
+    final fact = await _microFactService.load(
+      rotationOrdinal: widget.microFactRotationOrdinalOverride,
+      recentMicroFactIds: widget.recentMicroFactIds,
+      activeAssessmentConceptIds: widget.activeAssessmentConceptIds,
+    );
+
+    if (!mounted || !_showOverlay || fact == null) {
+      return;
+    }
+
+    setState(() => _microFact = fact);
+  }
+
   void _startMicroLearningLoad() {
     if (!mounted || !_showOverlay || _microLearningLoadStarted) {
       return;
@@ -278,6 +301,7 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
                     if (_motionPolicy.isReduced) {
                       return _ReducedStartupCanvas(
                         personalization: _personalization,
+                        microFact: _microFact,
                         highContrast: _highContrast,
                       );
                     }
@@ -320,10 +344,12 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
 class _ReducedStartupCanvas extends StatelessWidget {
   const _ReducedStartupCanvas({
     required this.personalization,
+    required this.microFact,
     required this.highContrast,
   });
 
   final StartupPersonalizationSnapshot personalization;
+  final MicroFact? microFact;
   final bool highContrast;
 
   @override
@@ -369,6 +395,14 @@ class _ReducedStartupCanvas extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+                if (microFact != null) ...[
+                  const SizedBox(height: 18),
+                  StartupMicroFactCard(
+                    key: const ValueKey('startup-microfact-card'),
+                    fact: microFact!,
+                    highContrast: highContrast,
+                  ),
+                ],
               ],
             ),
           ),
@@ -469,6 +503,18 @@ class _StartupCanvas extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (microFact != null)
+                    Align(
+                      alignment: const Alignment(0, -0.50),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: StartupMicroFactCard(
+                          key: const ValueKey('startup-microfact-card'),
+                          fact: microFact!,
+                          highContrast: highContrast,
+                        ),
+                      ),
+                    ),
                   if (motionPolicy.playLottie && lottieReady)
                     Center(
                       child: RepaintBoundary(
