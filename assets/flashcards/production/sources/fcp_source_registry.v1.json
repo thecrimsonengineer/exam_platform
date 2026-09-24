@@ -953,6 +953,108 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Supports immediate investigation, trained management/worker teams, root-cause analysis, communication of results, hazard prioritization, and corrective action."
+    },
+    {
+      "id": "csp11.source.nasa.system_safety",
+      "organization": "NASA",
+      "title": "System Safety",
+      "canonicalUrl": "https://sma.nasa.gov/sma-disciplines/system-safety",
+      "allowedDomains": [
+        "nasa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NASA system-safety overview supporting integrated hazard analysis, reliability analysis, FMEA, FTA, event-tree and related risk-analysis techniques. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nasa.software_fmea",
+      "organization": "NASA",
+      "title": "Software Failure Modes and Effects Analysis",
+      "canonicalUrl": "https://swehb.nasa.gov/pages/viewpage.action?pageId=72024565",
+      "allowedDomains": [
+        "nasa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NASA guidance describing FMEA as a bottom-up analysis of component failure modes, propagation, effects, detection, and corrective actions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nrc.fault_tree_handbook",
+      "organization": "U.S. Nuclear Regulatory Commission",
+      "title": "Fault Tree Handbook (NUREG-0492)",
+      "canonicalUrl": "https://www.nrc.gov/regulations-legislation/nureg-series-publications/publications-prepared-by-nrc-staff/sr0492",
+      "allowedDomains": [
+        "nrc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NRC technical handbook supporting fault-tree construction, evaluation, Boolean logic, top-event reasoning, and cut-set analysis. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nrc.pra_backgrounder",
+      "organization": "U.S. Nuclear Regulatory Commission",
+      "title": "Backgrounder on Probabilistic Risk Assessment",
+      "canonicalUrl": "https://www.nrc.gov/regulations-legislation/fact-sheets-brochures/backgrounder-on-probabilistic-risk-assessment",
+      "allowedDomains": [
+        "nrc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NRC overview supporting event-tree sequences, fault-tree system modeling, initiating events, sequence probabilities, and aggregation of sequence frequencies. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nrc.top_event_glossary",
+      "organization": "U.S. Nuclear Regulatory Commission",
+      "title": "Top event",
+      "canonicalUrl": "https://www.nrc.gov/education-regulatory-research/glossary/top-event",
+      "allowedDomains": [
+        "nrc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "officialGlossary",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NRC glossary entry supporting the role of a top event in fault-tree and event-tree analysis. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.hse.offshore_law",
+      "organization": "Health and Safety Executive",
+      "title": "Offshore health and safety law",
+      "canonicalUrl": "https://www.hse.gov.uk/offshore/law.htm",
+      "allowedDomains": [
+        "hse.gov.uk"
+      ],
+      "authorityTier": "otherSupporting",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official UK HSE guidance supporting the offshore Safety Case approach and the demonstration that major-accident risks are effectively controlled. Educational paraphrase only."
     }
   ]
 }
