@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2C",
+  "competencyId": "d02_c03",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "performance_measure",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01"
+    },
+    {
+      "semanticSlug": "performance_analysis",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "action_plan",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "leading_indicator",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c07"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}

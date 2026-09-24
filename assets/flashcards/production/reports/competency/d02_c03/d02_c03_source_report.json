@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2C",
+  "competencyId": "d02_c03",
+  "cardCount": 10,
+  "cardsWithProvenance": 10,
+  "cardsWithExactlyOnePrimarySource": 10,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.niosh.construction_safety_culture",
+    "csp11.source.niosh.safety_climate_scat",
+    "csp11.source.osha.program_evaluation",
+    "csp11.source.osha.safe_sound_management_leadership",
+    "csp11.source.osha.worker_participation"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.niosh.construction_safety_culture": 1,
+    "csp11.source.niosh.safety_climate_scat": 5,
+    "csp11.source.osha.safe_sound_management_leadership": 1,
+    "csp11.source.osha.worker_participation": 2,
+    "csp11.source.osha.program_evaluation": 1
+  },
+  "status": "PASS"
+}
