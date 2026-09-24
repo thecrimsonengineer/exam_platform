@@ -13,6 +13,9 @@ jobs:
   build-android-apk:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+      SUPABASE_PUBLISHABLE_KEY: sb_publishable_M34kd0a0SWVAXy88iuLFfg_-5jz22oo
 
     steps:
       - name: Checkout
@@ -52,8 +55,8 @@ jobs:
       - name: Build debug APK with Supabase
         run: >
           flutter build apk --debug
-          --dart-define=SUPABASE_URL=https://esfycnmfywxczfillioj.supabase.co
-          --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_M34kd0a0SWVAXy88iuLFfg_-5jz22oo
+          --dart-define=SUPABASE_URL=$SUPABASE_URL
+          --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY
 
       - name: Verify APK exists
         run: |
