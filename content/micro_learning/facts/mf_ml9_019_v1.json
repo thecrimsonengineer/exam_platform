@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentVersion": 1,
-  "status": "validated",
+  "status": "published",
   "assessment": {
     "sensitivity": "none",
     "linkedQuestionConcepts": []
@@ -17,7 +17,7 @@
     "nextReviewDueAt": "2027-09-24"
   },
   "runtime": {
-    "startupEligible": false
+    "startupEligible": true
   },
   "supersession": {
     "supersedesMicroFactId": null,

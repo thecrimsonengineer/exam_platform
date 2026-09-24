@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9F",
+  "applicationStatus": "published",
+  "publishedAt": "2026-09-24",
+  "publicationSourceSha": "e6566e04065ca41f5cee033e51b020693208276f",
+  "publishedFactCount": 120,
+  "startupEligibleFactCount": 120
+}
