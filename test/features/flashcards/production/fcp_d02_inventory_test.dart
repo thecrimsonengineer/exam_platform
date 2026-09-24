@@ -42,7 +42,7 @@ void main() {
       expect(observed['statement'], expected.statement);
     }
 
-    expect(competencies.first['status'], 'validating');
+    expect(competencies.first['status'], 'closed');
     expect(
       competencies.skip(1).every((item) => item['status'] == 'not_started'),
       isTrue,
