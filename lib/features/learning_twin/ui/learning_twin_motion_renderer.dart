@@ -9,6 +9,9 @@ import 'learning_twin_motion_manifest.dart';
 import 'learning_twin_motion_policy.dart';
 import 'learning_twin_motion_state.dart';
 
+final Map<String, Future<bool>> _learningTwinMotionAssetAvailabilityCache =
+    <String, Future<bool>>{};
+
 class LearningTwinMotionRenderer extends StatefulWidget {
   const LearningTwinMotionRenderer({
     super.key,
@@ -51,6 +54,11 @@ class LearningTwinMotionRenderer extends StatefulWidget {
   final VoidCallback? onCompleted;
   final String debugSurface;
 
+  @visibleForTesting
+  static void clearAssetAvailabilityCacheForTesting() {
+    _learningTwinMotionAssetAvailabilityCache.clear();
+  }
+
   @override
   State<LearningTwinMotionRenderer> createState() =>
       _LearningTwinMotionRendererState();
@@ -58,9 +66,6 @@ class LearningTwinMotionRenderer extends StatefulWidget {
 
 class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  static final Map<String, Future<bool>> _assetAvailabilityCache =
-      <String, Future<bool>>{};
-
   late final AnimationController _animationController;
   late LearningTwinMotionController _motionController;
   late bool _ownsMotionController;
@@ -238,7 +243,7 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
   }
 
   Future<void> _preflightAsset(String assetPath) async {
-    final available = await (_assetAvailabilityCache[assetPath] ??=
+    final available = await (_learningTwinMotionAssetAvailabilityCache[assetPath] ??=
         _assetExists(assetPath));
 
     if (!mounted) {
@@ -325,7 +330,7 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
         _unavailableAssetPaths.add(assetPath);
         _availableAssetPaths.remove(assetPath);
       });
-      _assetAvailabilityCache[assetPath] = Future<bool>.value(false);
+      _learningTwinMotionAssetAvailabilityCache[assetPath] = Future<bool>.value(false);
       _logFallback(assetPath, 'asset_load');
       final manifest = _manifestResult?.manifest;
       _animationController.stop(canceled: false);
@@ -444,11 +449,6 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
       label: widget.semanticLabel,
       child: ExcludeSemantics(child: framed),
     );
-  }
-
-  @visibleForTesting
-  static void clearAssetAvailabilityCacheForTesting() {
-    _assetAvailabilityCache.clear();
   }
 
   @override
