@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'lab_batch2_release_integration.dart';
 import 'lab_firestore_repositories.dart';
 import 'lab_learner_catalogue.dart';
 import 'lab_production_release_closure.dart';
@@ -9,6 +10,7 @@ class LabLearnerRuntimeBinding {
     required this.deliveryService,
     this.releaseEvidenceRepository,
     this.requiredReleaseId,
+    this.batch2AcceptanceRepository,
   });
 
   factory LabLearnerRuntimeBinding.firestore({FirebaseFirestore? firestore}) {
@@ -27,7 +29,6 @@ class LabLearnerRuntimeBinding {
 
   factory LabLearnerRuntimeBinding.firestoreProduction({
     FirebaseFirestore? firestore,
-    String releaseId = kInitialLabProductionReleaseId,
   }) {
     final instance = firestore ?? FirebaseFirestore.instance;
     return LabLearnerRuntimeBinding(
@@ -37,17 +38,20 @@ class LabLearnerRuntimeBinding {
         ),
         catalogueRepository: FirestoreLabLearnerCatalogueRepository(
           firestore: instance,
+          visibleReleaseId: kLearnerVisibleLabReleaseId,
         ),
       ),
-      releaseEvidenceRepository:
-          FirestoreLabProductionReleaseEvidenceRepository(firestore: instance),
-      requiredReleaseId: releaseId,
+      batch2AcceptanceRepository:
+          FirestoreLabBatch2ReleaseAcceptanceRepository(
+            firestore: instance,
+          ),
     );
   }
 
   final LabLearnerControlledDeliveryService deliveryService;
   final LabProductionReleaseEvidenceRepository? releaseEvidenceRepository;
   final String? requiredReleaseId;
+  final LabBatch2ReleaseAcceptanceRepository? batch2AcceptanceRepository;
 
   Future<List<LabLearnerCatalogueEntry>> listAvailable() async {
     await _requireProductionRelease();
@@ -63,6 +67,19 @@ class LabLearnerRuntimeBinding {
   }
 
   Future<void> _requireProductionRelease() async {
+    final batch2Repository = batch2AcceptanceRepository;
+    if (batch2Repository != null) {
+      final acceptance = await batch2Repository.load(
+        kLearnerVisibleLabReleaseId,
+      );
+      if (acceptance == null) {
+        throw const LabProductionReleaseClosureException(
+          'Learner-visible LAB population has not passed Batch 2 Q17 acceptance.',
+        );
+      }
+      return;
+    }
+
     final repository = releaseEvidenceRepository;
     if (repository == null) return;
 
