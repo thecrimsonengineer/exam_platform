@@ -46,7 +46,7 @@ void main() {
       'fcp10',
       'fcp11',
     ]);
-    expect(runs['fcp0'], 'in_progress');
+    expect(runs['fcp0'], 'closed');
     expect(
       runs.entries.skip(1).every((entry) => entry.value == 'not_started'),
       isTrue,
