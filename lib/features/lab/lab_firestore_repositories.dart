@@ -140,10 +140,16 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
 
 class FirestoreLabLearnerCatalogueRepository
     implements LabLearnerCatalogueRepository {
-  FirestoreLabLearnerCatalogueRepository({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirestoreLabLearnerCatalogueRepository({
+    FirebaseFirestore? firestore,
+    String? visibleReleaseId,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _visibleReleaseId = visibleReleaseId?.trim().isEmpty == true
+           ? null
+           : visibleReleaseId?.trim();
 
   final FirebaseFirestore _firestore;
+  final String? _visibleReleaseId;
 
   CollectionReference<Map<String, dynamic>> get _collection =>
       _firestore.collection('labLearnerCatalogue');
@@ -192,6 +198,10 @@ class FirestoreLabLearnerCatalogueRepository
     if (!snapshot.exists) return null;
     final data = snapshot.data();
     if (data == null || data['available'] != true) return null;
+    final visibleReleaseId = _visibleReleaseId;
+    if (visibleReleaseId != null && data['releaseId'] != visibleReleaseId) {
+      return null;
+    }
 
     final entry = _decodeCatalogueEntry(data);
     if (entry.labId != labId || entry.versionId != versionId) {
@@ -204,10 +214,15 @@ class FirestoreLabLearnerCatalogueRepository
 
   @override
   Future<List<LabLearnerCatalogueEntry>> listAvailable() async {
-    final snapshot = await _collection
-        .where('available', isEqualTo: true)
-        .where('releaseId', isEqualTo: kLearnerVisibleLabReleaseId)
-        .get();
+    Query<Map<String, dynamic>> query = _collection.where(
+      'available',
+      isEqualTo: true,
+    );
+    final visibleReleaseId = _visibleReleaseId;
+    if (visibleReleaseId != null) {
+      query = query.where('releaseId', isEqualTo: visibleReleaseId);
+    }
+    final snapshot = await query.get();
 
     final entries =
         snapshot.docs
