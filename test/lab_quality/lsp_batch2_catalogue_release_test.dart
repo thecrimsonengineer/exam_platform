@@ -210,8 +210,15 @@ void main() {
       contains("'4aa151a749b2324e9edd69a40781d7f8169a72c0'"),
     );
     expect(rules, contains("'36015831093'"));
-    expect(rules, contains('labResourceReleased(resource.data)'));
+    expect(rules, contains('initialLabPopulationReleased()'));
+    expect(rules, contains('function isInitialLabId(labId)'));
+    expect(rules, contains('function isBatch2LabId(labId)'));
+    expect(
+      rules,
+      contains('isBatch2LabId(request.resource.data.labId)'),
+    );
     expect(rules, contains("!('releaseId' in request.resource.data)"));
+    expect(rules, isNot(contains('labResourceReleased(resource.data)')));
     expect(rules, contains('existsAfter('));
     expect(rules, contains('getAfter('));
   });
