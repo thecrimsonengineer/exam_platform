@@ -132,50 +132,48 @@ class RepositoryProvenanceInspector {
 
   static final RegExp _gitShaPattern = RegExp(r'^[0-9a-f]{40}$');
 
-  Future<RepositoryProvenanceEvidence> inspect({
-    String directory = '.',
-  }) async {
-    final root = await _git(
-      directory,
-      const <String>['rev-parse', '--show-toplevel'],
-    );
-    final remoteUrl = await _git(
-      root,
-      const <String>['remote', 'get-url', 'origin'],
-    );
+  Future<RepositoryProvenanceEvidence> inspect({String directory = '.'}) async {
+    final root = await _git(directory, const <String>[
+      'rev-parse',
+      '--show-toplevel',
+    ]);
+    final remoteUrl = await _git(root, const <String>[
+      'remote',
+      'get-url',
+      'origin',
+    ]);
     final repository = normalizeRepositoryRemote(remoteUrl);
     final headSha = await _git(root, const <String>['rev-parse', 'HEAD']);
-    final treeSha = await _git(
-      root,
-      const <String>['rev-parse', 'HEAD^{tree}'],
-    );
+    final treeSha = await _git(root, const <String>[
+      'rev-parse',
+      'HEAD^{tree}',
+    ]);
 
     _requireGitSha(headSha, 'HEAD');
     _requireGitSha(treeSha, 'HEAD tree');
 
-    final branchOutput = await _git(
-      root,
-      const <String>['symbolic-ref', '--short', '-q', 'HEAD'],
-      allowFailure: true,
-    );
+    final branchOutput = await _git(root, const <String>[
+      'symbolic-ref',
+      '--short',
+      '-q',
+      'HEAD',
+    ], allowFailure: true);
     final branch = branchOutput.isEmpty ? null : branchOutput;
 
-    final tagOutput = await _git(
-      root,
-      const <String>['tag', '--points-at', 'HEAD'],
-    );
+    final tagOutput = await _git(root, const <String>[
+      'tag',
+      '--points-at',
+      'HEAD',
+    ]);
     final tags = _nonEmptyLines(tagOutput)..sort();
 
-    final statusOutput = await _git(
-      root,
-      const <String>[
-        '-c',
-        'core.quotepath=false',
-        'status',
-        '--porcelain=v1',
-        '--untracked-files=all',
-      ],
-    );
+    final statusOutput = await _git(root, const <String>[
+      '-c',
+      'core.quotepath=false',
+      'status',
+      '--porcelain=v1',
+      '--untracked-files=all',
+    ]);
     final changes = _parseStatus(statusOutput);
 
     return RepositoryProvenanceEvidence(
@@ -254,11 +252,7 @@ class RepositoryProvenanceInspector {
       final status = line.substring(0, 2);
       final path = line.substring(3);
       changes.add(
-        RepositoryChange(
-          status: status,
-          path: path,
-          tracked: status != '??',
-        ),
+        RepositoryChange(status: status, path: path, tracked: status != '??'),
       );
     }
     return changes;
