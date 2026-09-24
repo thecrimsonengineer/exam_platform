@@ -919,7 +919,7 @@
       "fromNodeId": "closeout_decision",
       "endingId": "safe_completion",
       "condition": {
-        "op": "BOOL",
+        "op": "BOOLEAN",
         "stateId": "closeout_verified",
         "equals": true
       }
