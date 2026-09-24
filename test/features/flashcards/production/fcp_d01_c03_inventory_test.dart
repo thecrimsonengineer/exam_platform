@@ -13,8 +13,8 @@ void main() {
       'assets/flashcards/production/sources/fcp_source_registry.v1.json';
 
   Map<String, dynamic> readObject(String path) => Map<String, dynamic>.from(
-        jsonDecode(File(path).readAsStringSync()) as Map,
-      );
+    jsonDecode(File(path).readAsStringSync()) as Map,
+  );
 
   test('D01 C03 starts at canonical competency placement', () {
     final inventory = readObject(inventoryPath);
@@ -33,10 +33,12 @@ void main() {
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
     expect(candidates.length, 14);
-    final slugs =
-        candidates.map((item) => item['semanticSlug'] as String).toList();
-    final labels =
-        candidates.map((item) => item['canonicalLabel'] as String).toList();
+    final slugs = candidates
+        .map((item) => item['semanticSlug'] as String)
+        .toList();
+    final labels = candidates
+        .map((item) => item['canonicalLabel'] as String)
+        .toList();
     expect(slugs.toSet().length, slugs.length);
     expect(labels.toSet().length, labels.length);
 
