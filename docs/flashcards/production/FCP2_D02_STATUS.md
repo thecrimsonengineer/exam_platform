@@ -6,7 +6,7 @@ Recovery base: `phase-fcp1-d01-closed@45d00a95dc6d8cb9e7c06db6df57bb71c5e17fe2`
 
 ```text
 FCP-2A  d02_c01  CLOSED             8 cards
-FCP-2B  d02_c02  VALIDATING   5 cards
+FCP-2B  d02_c02  CLOSED             5 cards
 FCP-2C  d02_c03  NOT STARTED
 FCP-2D  d02_c04  NOT STARTED
 FCP-2E  d02_c05  NOT STARTED
@@ -24,3 +24,8 @@ FCP-2N  d02_c14  NOT STARTED
 FCP-2B started strictly from `phase-fcp2a-d02-c01-closed`.
 
 FCP-2A package validation: SHA `9a044d50969ad6c4a1e6313077a63cb6ed3ac1fc`, run `35960983124`, SUCCESS, 8 cards, FCQ100 100/100, HOLD 0.
+
+
+FCP-2B package validation: SHA `ae03de09574de5ec4ae7bbdebc52aa7788ab3ed4`, run `35963750625`, SUCCESS, 5 cards, FCQ100 100/100, HOLD 0.
+
+FCP-2C may begin only from `phase-fcp2b-d02-c02-closed`.
