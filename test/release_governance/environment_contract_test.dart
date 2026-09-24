@@ -33,9 +33,7 @@ void main() {
         '17.0.16',
       );
       expect(
-        BuildEnvironmentInspector.parseJavaVersion(
-          'openjdk 21.0.8 2025-07-15',
-        ),
+        BuildEnvironmentInspector.parseJavaVersion('openjdk 21.0.8 2025-07-15'),
         '21.0.8',
       );
     });
@@ -91,14 +89,8 @@ targetCompatibility = JavaVersion.VERSION_17
 jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
 ''';
 
-      expect(
-        BuildEnvironmentInspector.parseJavaTargetVersion(appGradle),
-        '17',
-      );
-      expect(
-        BuildEnvironmentInspector.parseKotlinJvmTarget(appGradle),
-        '17',
-      );
+      expect(BuildEnvironmentInspector.parseJavaTargetVersion(appGradle), '17');
+      expect(BuildEnvironmentInspector.parseKotlinJvmTarget(appGradle), '17');
     });
   });
 
@@ -110,9 +102,7 @@ jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
       await Directory(
         '${root.path}/android/gradle/wrapper',
       ).create(recursive: true);
-      await Directory(
-        '${root.path}/android/app',
-      ).create(recursive: true);
+      await Directory('${root.path}/android/app').create(recursive: true);
 
       await File(
         '${root.path}/android/gradle/wrapper/gradle-wrapper.properties',
@@ -120,26 +110,20 @@ jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
         'distributionUrl=https\\://services.gradle.org/distributions/'
         'gradle-9.1.0-all.zip\n',
       );
-      await File(
-        '${root.path}/android/settings.gradle.kts',
-      ).writeAsString(
+      await File('${root.path}/android/settings.gradle.kts').writeAsString(
         'plugins {\n'
         '  id("com.android.application") version "9.0.1" apply false\n'
         '  id("org.jetbrains.kotlin.android") version "2.3.20" apply false\n'
         '}\n',
       );
-      await File(
-        '${root.path}/android/app/build.gradle.kts',
-      ).writeAsString(
+      await File('${root.path}/android/app/build.gradle.kts').writeAsString(
         'targetCompatibility = JavaVersion.VERSION_17\n'
         'jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17\n',
       );
       await File(
         '${root.path}/pubspec.yaml',
       ).writeAsString('name: synthetic\n');
-      await File(
-        '${root.path}/pubspec.lock',
-      ).writeAsString('packages: {}\n');
+      await File('${root.path}/pubspec.lock').writeAsString('packages: {}\n');
     });
 
     tearDown(() async {
@@ -178,29 +162,34 @@ jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
 
     test('fails closed when Flutter and Dart disagree', () async {
       final inspector = BuildEnvironmentInspector(
-        commandRunner: (
-          String executable,
-          List<String> arguments,
-          String workingDirectory,
-        ) async {
-          if (executable == 'flutter') {
-            return const EnvironmentCommandResult(
-              exitCode: 0,
-              stdout:
-                  '{"frameworkVersion":"3.44.9",'
-                  '"dartSdkVersion":"3.12.2"}',
-              stderr: '',
-            );
-          }
-          if (executable == 'dart') {
-            return const EnvironmentCommandResult(
-              exitCode: 0,
-              stdout: '',
-              stderr: 'Dart SDK version: 3.13.0 (stable)',
-            );
-          }
-          return _fakeCommandRunner(executable, arguments, workingDirectory);
-        },
+        commandRunner:
+            (
+              String executable,
+              List<String> arguments,
+              String workingDirectory,
+            ) async {
+              if (executable == 'flutter') {
+                return const EnvironmentCommandResult(
+                  exitCode: 0,
+                  stdout:
+                      '{"frameworkVersion":"3.44.9",'
+                      '"dartSdkVersion":"3.12.2"}',
+                  stderr: '',
+                );
+              }
+              if (executable == 'dart') {
+                return const EnvironmentCommandResult(
+                  exitCode: 0,
+                  stdout: '',
+                  stderr: 'Dart SDK version: 3.13.0 (stable)',
+                );
+              }
+              return _fakeCommandRunner(
+                executable,
+                arguments,
+                workingDirectory,
+              );
+            },
       );
 
       expect(
@@ -302,30 +291,33 @@ jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
       expect(codes, contains('ENV008_KOTLIN_JVM_TARGET_DRIFT'));
     });
 
-    test('allows runner version and architecture to be intentionally unpinned', () {
-      const expected = BuildEnvironmentExpectation(
-        flutterVersion: '3.44.9',
-        dartVersion: '3.12.2',
-        javaVersion: '17.0.16',
-        gradleVersion: '9.1.0',
-        androidGradlePluginVersion: '9.0.1',
-        kotlinVersion: '2.3.20',
-        javaTargetVersion: '17',
-        kotlinJvmTarget: '17',
-        runnerOs: 'linux',
-        pubspecYamlSha256:
-            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        pubspecLockSha256:
-            'dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
-      );
+    test(
+      'allows runner version and architecture to be intentionally unpinned',
+      () {
+        const expected = BuildEnvironmentExpectation(
+          flutterVersion: '3.44.9',
+          dartVersion: '3.12.2',
+          javaVersion: '17.0.16',
+          gradleVersion: '9.1.0',
+          androidGradlePluginVersion: '9.0.1',
+          kotlinVersion: '2.3.20',
+          javaTargetVersion: '17',
+          kotlinJvmTarget: '17',
+          runnerOs: 'linux',
+          pubspecYamlSha256:
+              'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+          pubspecLockSha256:
+              'dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
+        );
 
-      final result = validator.evaluate(
-        expected: expected,
-        actual: _snapshot,
-      );
+        final result = validator.evaluate(
+          expected: expected,
+          actual: _snapshot,
+        );
 
-      expect(result.pass, isTrue);
-    });
+        expect(result.pass, isTrue);
+      },
+    );
 
     test('blocks malformed dependency hashes', () {
       final expected = BuildEnvironmentExpectation.exact(_snapshot);

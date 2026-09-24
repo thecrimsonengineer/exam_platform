@@ -87,9 +87,7 @@ class BuildEnvironmentExpectation {
     this.runnerArchitecture,
   });
 
-  factory BuildEnvironmentExpectation.exact(
-    BuildEnvironmentSnapshot snapshot,
-  ) {
+  factory BuildEnvironmentExpectation.exact(BuildEnvironmentSnapshot snapshot) {
     return BuildEnvironmentExpectation(
       flutterVersion: snapshot.flutterVersion,
       dartVersion: snapshot.dartVersion,
@@ -333,10 +331,9 @@ class BuildEnvironmentValidator {
           field: field,
           expected: expected,
           actual: actual,
-          message:
-              actual == null
-                  ? 'Required build environment value is missing.'
-                  : 'Build environment value differs from the frozen value.',
+          message: actual == null
+              ? 'Required build environment value is missing.'
+              : 'Build environment value differs from the frozen value.',
         ),
       );
     }
@@ -353,44 +350,30 @@ class BuildEnvironmentInspector {
   final ChecksumService _checksumService;
   final EnvironmentCommandRunner _commandRunner;
 
-  Future<BuildEnvironmentSnapshot> inspect({
-    String rootDirectory = '.',
-  }) async {
-    final flutter = await _requiredCommand(
-      'flutter',
-      const <String>['--version', '--machine'],
-      rootDirectory,
-    );
+  Future<BuildEnvironmentSnapshot> inspect({String rootDirectory = '.'}) async {
+    final flutter = await _requiredCommand('flutter', const <String>[
+      '--version',
+      '--machine',
+    ], rootDirectory);
     final flutterInfo = parseFlutterMachine(flutter.stdout);
 
-    final dart = await _requiredCommand(
-      'dart',
-      const <String>['--version'],
-      rootDirectory,
-    );
-    final dartVersion = parseDartVersion(
-      '${dart.stdout}\n${dart.stderr}',
-    );
+    final dart = await _requiredCommand('dart', const <String>[
+      '--version',
+    ], rootDirectory);
+    final dartVersion = parseDartVersion('${dart.stdout}\n${dart.stderr}');
     if (dartVersion != flutterInfo.dartVersion) {
       throw StateError(
         'Flutter-reported Dart SDK does not match the active dart executable.',
       );
     }
 
-    final java = await _requiredCommand(
-      'java',
-      const <String>['-version'],
-      rootDirectory,
-    );
-    final javaVersion = parseJavaVersion(
-      '${java.stdout}\n${java.stderr}',
-    );
+    final java = await _requiredCommand('java', const <String>[
+      '-version',
+    ], rootDirectory);
+    final javaVersion = parseJavaVersion('${java.stdout}\n${java.stderr}');
 
     final wrapper = await File(
-      _path(
-        rootDirectory,
-        'android/gradle/wrapper/gradle-wrapper.properties',
-      ),
+      _path(rootDirectory, 'android/gradle/wrapper/gradle-wrapper.properties'),
     ).readAsString();
     final settings = await File(
       _path(rootDirectory, 'android/settings.gradle.kts'),
@@ -512,9 +495,7 @@ class BuildEnvironmentInspector {
   }
 
   static String? parseKotlinJvmTarget(String raw) {
-    final match = RegExp(
-      r'JvmTarget\.JVM_([0-9_]+)',
-    ).firstMatch(raw);
+    final match = RegExp(r'JvmTarget\.JVM_([0-9_]+)').firstMatch(raw);
     return match?.group(1)?.replaceAll('_', '.');
   }
 
@@ -532,11 +513,9 @@ class BuildEnvironmentInspector {
       throw StateError('Unable to determine Windows runner architecture.');
     }
 
-    final result = await _requiredCommand(
-      'uname',
-      const <String>['-m'],
-      rootDirectory,
-    );
+    final result = await _requiredCommand('uname', const <String>[
+      '-m',
+    ], rootDirectory);
     final architecture = result.stdout.trim();
     if (architecture.isEmpty) {
       throw StateError('Unable to determine runner architecture.');
@@ -583,10 +562,7 @@ class BuildEnvironmentInspector {
   }
 
   static String _path(String rootDirectory, String relativePath) {
-    final nativeRelative = relativePath.replaceAll(
-      '/',
-      Platform.pathSeparator,
-    );
+    final nativeRelative = relativePath.replaceAll('/', Platform.pathSeparator);
     return '${Directory(rootDirectory).absolute.path}'
         '${Platform.pathSeparator}$nativeRelative';
   }
