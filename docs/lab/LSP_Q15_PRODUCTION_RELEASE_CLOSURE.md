@@ -188,3 +188,29 @@ All Q1-Q14 gates and the full repository regression remain mandatory.
 ## Closure condition
 
 LSP-Q15 closes only after the dedicated Q15 tests, all prior LSP-Q gates, static analysis, full repository regression, diff hygiene and canonical formatting are green on the exact Q15 closure SHA.
+
+
+## Closure candidate
+
+Q15 production release evidence implementation commit: `275252963a2c596e7a149a927b31779893d7b428`
+
+Synthetic evidence fixture repair commit: `53a7e08e9635a80aa05ede430fb8957ad21f4d6c`
+
+Learner release barrier commit: `83559cb9a8eb3c76296d06c91d946babf8b1eee6`
+
+Successful full validation run including Q15 closure tests and full repository regression: `35921615556`
+
+Canonical formatter output commit: `824a030bb23ff64f65b07cefbd3d776b70fe29c0`
+
+The formatter commit changes formatting only in:
+
+- `lib/features/lab/lab_firestore_repositories.dart`
+- `lib/features/lab/lab_production_release_closure.dart`
+- `lib/features/lab/lab_runtime_binding.dart`
+- `test/lab_quality/lsp_q15_production_release_closure_test.dart`
+
+This documentation-only closure commit is the exact-SHA validation target for LSP-Q15. It does not change the production seed contract, immutable publication records, release evidence semantics, learner release barrier, Firestore data model, learner presentation content or LAB player behavior.
+
+## Next authorized action
+
+LSP-Q16 - Production Execution Command Surface and Operator Runbook.
