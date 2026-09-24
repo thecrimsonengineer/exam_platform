@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
   "contentVersion": 1,
-  "status": "review",
+  "status": "validated",
   "assessment": {
     "sensitivity": "none",
     "linkedQuestionConcepts": []
   },
   "review": {
-    "technicalStatus": "pending",
-    "sourceStatus": "pending",
-    "pedagogyStatus": "pending",
-    "copyrightStatus": "pending",
-    "uiStatus": "pending",
-    "humanTechnicalStatus": "pending",
-    "reviewedAt": null,
-    "nextReviewDueAt": null
+    "technicalStatus": "pass",
+    "sourceStatus": "pass",
+    "pedagogyStatus": "pass",
+    "copyrightStatus": "pass",
+    "uiStatus": "pass",
+    "humanTechnicalStatus": "pass",
+    "reviewedAt": "2026-09-24",
+    "nextReviewDueAt": "2027-09-24"
   },
   "runtime": {
     "startupEligible": false

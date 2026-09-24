@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9E",
+  "applicationStatus": "human_review_applied",
+  "appliedAt": "2026-09-24",
+  "humanReviewSourceSha": "56b7986929a214d4a50af463bd6e2bc86fc63518",
+  "reviewerId": "Naveed",
+  "validatedFactCount": 120,
+  "publishedFactCount": 0,
+  "startupEligibleFactCount": 0
+}

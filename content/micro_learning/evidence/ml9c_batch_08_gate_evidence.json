@@ -51,11 +51,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -83,13 +83,13 @@
           "mappingKey": "d02|d02_c14|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d02/d02_c14; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -112,30 +112,30 @@
           "computedShortReadSeconds": 4
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -182,11 +182,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -214,13 +214,13 @@
           "mappingKey": "d06|d06_c01|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c01; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -243,30 +243,30 @@
           "computedShortReadSeconds": 5
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -313,11 +313,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -345,13 +345,13 @@
           "mappingKey": "d06|d06_c03|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c03; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -374,30 +374,30 @@
           "computedShortReadSeconds": 4
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -444,11 +444,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -476,13 +476,13 @@
           "mappingKey": "d06|d06_c04|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c04; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -505,30 +505,30 @@
           "computedShortReadSeconds": 4
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -575,11 +575,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -607,13 +607,13 @@
           "mappingKey": "d02|d02_c14|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d02/d02_c14; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -636,30 +636,30 @@
           "computedShortReadSeconds": 4
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -706,11 +706,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -738,13 +738,13 @@
           "mappingKey": "d06|d06_c01|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c01; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -767,30 +767,30 @@
           "computedShortReadSeconds": 4
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -837,11 +837,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -869,13 +869,13 @@
           "mappingKey": "d06|d06_c03|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c03; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -898,30 +898,30 @@
           "computedShortReadSeconds": 5
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -968,11 +968,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -1000,13 +1000,13 @@
           "mappingKey": "d06|d06_c04|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c04; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -1029,30 +1029,30 @@
           "computedShortReadSeconds": 5
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -1099,11 +1099,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -1131,13 +1131,13 @@
           "mappingKey": "d02|d02_c14|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d02/d02_c14; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -1160,30 +1160,30 @@
           "computedShortReadSeconds": 4
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     },
@@ -1230,11 +1230,11 @@
           "protectedStructureReusePermitted": null
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "restrictedMaterial": {
           "rawSourceDocumentStored": false,
@@ -1262,13 +1262,13 @@
           "mappingKey": "d06|d06_c01|-|-"
         },
         "review": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "conceptAlignmentConfirmed": false,
-          "placementRationale": "Machine-prepared mapping mirrors d06/d06_c01; human concept-alignment review remains pending.",
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "conceptAlignmentConfirmed": true,
+          "placementRationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       },
       "pedagogyEvidence": {
@@ -1291,30 +1291,30 @@
           "computedShortReadSeconds": 4
         },
         "pedagogyReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "singleConceptConfirmed": false,
-          "standaloneMeaningConfirmed": false,
-          "cognitiveLoadAcceptable": false,
-          "jargonLoadAcceptable": false,
-          "shortVariantMeaningPreserved": false,
-          "precisionPreserved": false,
-          "assessmentLeakageReviewed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "singleConceptConfirmed": true,
+          "standaloneMeaningConfirmed": true,
+          "cognitiveLoadAcceptable": true,
+          "jargonLoadAcceptable": true,
+          "shortVariantMeaningPreserved": true,
+          "precisionPreserved": true,
+          "assessmentLeakageReviewed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         },
         "accessibilityReview": {
-          "status": "pending",
+          "status": "pass",
           "reviewerRole": "content_governance_reviewer",
-          "humanReviewed": false,
-          "screenReaderStandaloneConfirmed": false,
-          "visualIndependenceConfirmed": false,
-          "reducedMotionEquivalentConfirmed": false,
-          "plainLanguageAccessibleConfirmed": false,
-          "noForcedInteractionConfirmed": false,
-          "reviewedAt": null,
-          "nextReviewDueAt": null
+          "humanReviewed": true,
+          "screenReaderStandaloneConfirmed": true,
+          "visualIndependenceConfirmed": true,
+          "reducedMotionEquivalentConfirmed": true,
+          "plainLanguageAccessibleConfirmed": true,
+          "noForcedInteractionConfirmed": true,
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24"
         }
       }
     }
