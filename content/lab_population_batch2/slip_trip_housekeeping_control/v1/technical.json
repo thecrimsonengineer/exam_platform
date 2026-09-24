@@ -581,7 +581,7 @@
     {
       "id": "controls_decision",
       "type": "DECISION",
-      "prompt": "The delivery cannot be moved immediately. What is the best temporary arrangement?",
+      "prompt": "The delivered materials cannot be moved immediately and pedestrian traffic must still pass through the area. What is the best temporary arrangement?",
       "options": [
         {
           "id": "controls_decision_o1",
