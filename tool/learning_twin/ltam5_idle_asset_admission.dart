@@ -57,9 +57,7 @@ Future<void> main(List<String> args) async {
 
   stdout.writeln('LTAM-5 IDLE CANDIDATE VALID');
   stdout.writeln('Candidate: $candidatePath');
-  stdout.writeln(
-    'Canonical: ${LearningTwinIdleAssetContract.canonicalPath}',
-  );
+  stdout.writeln('Canonical: ${LearningTwinIdleAssetContract.canonicalPath}');
   stdout.writeln('SHA-256: $digest');
   stdout.writeln('Frame rate: ${LearningTwinIdleAssetContract.frameRate}');
   stdout.writeln(
@@ -109,8 +107,7 @@ Future<void> main(List<String> args) async {
   final rolloutSource = rolloutFile.readAsStringSync();
   const expectedAdmitted =
       'static const bool canonicalIdleClipAdmitted = false;';
-  const expectedSha =
-      'static const String? canonicalIdleClipSha256 = null;';
+  const expectedSha = 'static const String? canonicalIdleClipSha256 = null;';
 
   if (!rolloutSource.contains(expectedAdmitted) ||
       !rolloutSource.contains(expectedSha)) {
@@ -161,11 +158,7 @@ Future<void> main(List<String> args) async {
     'outPoint': LearningTwinIdleAssetContract.outPoint,
     'durationSeconds': LearningTwinIdleAssetContract.durationSeconds,
     'finalRuntimeAcceptance': 'pending',
-    'allowedFinalOutcomes': <String>[
-      'ACCEPT',
-      'TUNE',
-      'REJECT_TO_STATIC',
-    ],
+    'allowedFinalOutcomes': <String>['ACCEPT', 'TUNE', 'REJECT_TO_STATIC'],
   };
   evidenceFile.writeAsStringSync(
     const JsonEncoder.withIndent('  ').convert(evidence) + '\n',
