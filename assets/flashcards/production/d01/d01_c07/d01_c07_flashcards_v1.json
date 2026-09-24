@@ -507,13 +507,13 @@
         {
           "sourceId": "csp11.source.niosh.robotics_overview",
           "locator": "Robotics in the Workplace > Why it's important",
-          "primary": true,
+          "primary": false,
           "definitionMode": "educationalParaphrase"
         },
         {
           "sourceId": "csp11.source.osha.1910_212",
           "locator": "1910.212(a)(1) Types of guarding",
-          "primary": false,
+          "primary": true,
           "definitionMode": "educationalParaphrase"
         }
       ],
