@@ -51,7 +51,7 @@ void main() {
     expect(competencies[3]['status'], 'validating');
     expect(competencies[4]['status'], 'validating');
     expect(competencies[5]['status'], 'validating');
-    expect(competencies[6]['status'], 'in_progress');
+    expect(competencies[6]['status'], 'validating');
 
   });
 

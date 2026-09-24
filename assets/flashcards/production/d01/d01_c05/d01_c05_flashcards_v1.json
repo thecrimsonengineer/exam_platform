@@ -226,7 +226,7 @@
       "id": "csp11.flashcard.fleet_telematics",
       "conceptId": "csp11.concept.fleet_telematics",
       "version": 1,
-      "type": "system",
+      "type": "concept",
       "frontLabel": "Fleet Telematics",
       "backDefinition": "Technology that collects and transmits vehicle data such as GPS location, diagnostics, utilization, maintenance indicators, and driver-behavior events for fleet management.",
       "whyItMatters": "Telematics can reveal maintenance needs, route and utilization patterns, unsafe driving trends, and collision information that support targeted risk controls.",

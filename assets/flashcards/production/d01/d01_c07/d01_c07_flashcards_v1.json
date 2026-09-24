@@ -1,0 +1,695 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d01_c07_flashcards_v1",
+    "domainId": "d01",
+    "competencyId": "d01_c07",
+    "title": "Tools, Machines, and Equipment Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.tool_equipment_condition",
+      "csp11.flashcard.portable_power_tool_guarding",
+      "csp11.flashcard.power_tool_operating_control",
+      "csp11.flashcard.machine_guarding",
+      "csp11.flashcard.point_of_operation",
+      "csp11.flashcard.fixed_machine_anchoring",
+      "csp11.flashcard.abrasive_wheel_guarding",
+      "csp11.flashcard.grinder_work_rest",
+      "csp11.flashcard.ladder_safety",
+      "csp11.flashcard.hydraulic_tool_pressure",
+      "csp11.flashcard.robot_work_envelope",
+      "csp11.flashcard.robot_safeguarding",
+      "csp11.flashcard.nonroutine_robot_task_hazard"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.tool_equipment_condition",
+      "canonicalLabel": "Tool and Equipment Condition",
+      "flashcardId": "csp11.flashcard.tool_equipment_condition",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "safe tool condition"
+      ]
+    },
+    {
+      "id": "csp11.concept.portable_power_tool_guarding",
+      "canonicalLabel": "Portable Power Tool Guarding",
+      "flashcardId": "csp11.flashcard.portable_power_tool_guarding",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "portable tool guard"
+      ]
+    },
+    {
+      "id": "csp11.concept.power_tool_operating_control",
+      "canonicalLabel": "Power Tool Operating Control",
+      "flashcardId": "csp11.flashcard.power_tool_operating_control",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "power tool switch control"
+      ]
+    },
+    {
+      "id": "csp11.concept.machine_guarding",
+      "canonicalLabel": "Machine Guarding",
+      "flashcardId": "csp11.flashcard.machine_guarding",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "machine guard"
+      ]
+    },
+    {
+      "id": "csp11.concept.point_of_operation",
+      "canonicalLabel": "Point of Operation",
+      "flashcardId": "csp11.flashcard.point_of_operation",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "machine point of operation"
+      ]
+    },
+    {
+      "id": "csp11.concept.fixed_machine_anchoring",
+      "canonicalLabel": "Fixed Machine Anchoring",
+      "flashcardId": "csp11.flashcard.fixed_machine_anchoring",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "machine anchoring"
+      ]
+    },
+    {
+      "id": "csp11.concept.abrasive_wheel_guarding",
+      "canonicalLabel": "Abrasive Wheel Guarding",
+      "flashcardId": "csp11.flashcard.abrasive_wheel_guarding",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "grinding wheel guard"
+      ]
+    },
+    {
+      "id": "csp11.concept.grinder_work_rest",
+      "canonicalLabel": "Grinder Work Rest",
+      "flashcardId": "csp11.flashcard.grinder_work_rest",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "abrasive wheel work rest"
+      ]
+    },
+    {
+      "id": "csp11.concept.ladder_safety",
+      "canonicalLabel": "Ladder Safety",
+      "flashcardId": "csp11.flashcard.ladder_safety",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "safe ladder use"
+      ]
+    },
+    {
+      "id": "csp11.concept.hydraulic_tool_pressure",
+      "canonicalLabel": "Hydraulic Tool Operating Pressure",
+      "flashcardId": "csp11.flashcard.hydraulic_tool_pressure",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "hydraulic tool pressure limit"
+      ]
+    },
+    {
+      "id": "csp11.concept.robot_work_envelope",
+      "canonicalLabel": "Robot Work Envelope",
+      "flashcardId": "csp11.flashcard.robot_work_envelope",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "robot working envelope"
+      ]
+    },
+    {
+      "id": "csp11.concept.robot_safeguarding",
+      "canonicalLabel": "Robot Safeguarding",
+      "flashcardId": "csp11.flashcard.robot_safeguarding",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "robot safety guarding"
+      ]
+    },
+    {
+      "id": "csp11.concept.nonroutine_robot_task_hazard",
+      "canonicalLabel": "Nonroutine Robot Task Hazard",
+      "flashcardId": "csp11.flashcard.nonroutine_robot_task_hazard",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "aliases": [
+        "robot maintenance hazard"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.tool_equipment_condition",
+      "conceptId": "csp11.concept.tool_equipment_condition",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Tool and Equipment Condition",
+      "backDefinition": "The condition in which hand tools, portable tools, and related equipment are maintained so defects or damage do not create avoidable hazards during use.",
+      "whyItMatters": "Even a correctly selected tool can become hazardous when handles, guards, controls, cords, attachments, or other parts are damaged or unsafe.",
+      "keyPoint": "Remove defective tools or equipment from use until they are made safe.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_242",
+          "locator": "1910.242(a) General requirements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "tool-safety",
+        "equipment-condition",
+        "inspection"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.portable_power_tool_guarding",
+      "conceptId": "csp11.concept.portable_power_tool_guarding",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Portable Power Tool Guarding",
+      "backDefinition": "Physical guarding on portable powered tools that limits access to cutting, rotating, nip-point, or other hazardous moving parts during operation.",
+      "whyItMatters": "Portable tools place hazardous motion close to the operator's hands and body, so effective guarding reduces direct contact and ejected-part exposure.",
+      "keyPoint": "Use the tool only with required guards correctly installed and functioning.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_243",
+          "locator": "1910.243(a) Portable powered tool guarding",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "power-tools",
+        "guarding",
+        "tool-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.power_tool_operating_control",
+      "conceptId": "csp11.concept.power_tool_operating_control",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Power Tool Operating Control",
+      "backDefinition": "A switch or control arrangement that allows safe activation and prompt shutoff of a powered hand tool while reducing the chance of unintended operation.",
+      "whyItMatters": "Control design affects whether an operator can stop hazardous motion quickly and whether accidental activation can occur during handling.",
+      "keyPoint": "The operating control should match the tool hazard and support rapid power shutoff.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_243",
+          "locator": "1910.243(a)(2) Switches and controls",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "power-tools",
+        "operating-control",
+        "tool-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.machine_guarding",
+      "conceptId": "csp11.concept.machine_guarding",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Machine Guarding",
+      "backDefinition": "One or more safeguarding methods used to protect operators and nearby employees from hazardous machine motion, points of operation, nip points, rotating parts, chips, or sparks.",
+      "whyItMatters": "Machine hazards can cause severe crush, amputation, impact, and entanglement injuries when workers can enter a danger zone during operation.",
+      "keyPoint": "Guard the hazard without creating a new hazard from the guard itself.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_212",
+          "locator": "1910.212(a)(1)-(2) Machine guarding",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "machine-safety",
+        "guarding",
+        "hazard-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.point_of_operation",
+      "conceptId": "csp11.concept.point_of_operation",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Point of Operation",
+      "backDefinition": "The area of a machine where work is actually performed on the material being processed and where hazardous motion may expose a worker to injury.",
+      "whyItMatters": "The point of operation is a frequent high-severity hazard zone and requires guarding when machine operation exposes employees to injury.",
+      "keyPoint": "Keep body parts out of the machine danger zone during the operating cycle.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_212",
+          "locator": "1910.212(a)(3) Point of operation guarding",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "machine-safety",
+        "point-of-operation",
+        "guarding"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.fixed_machine_anchoring",
+      "conceptId": "csp11.concept.fixed_machine_anchoring",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Fixed Machine Anchoring",
+      "backDefinition": "Securing machinery designed for a fixed location so operating forces do not cause the machine to walk, shift, or move unexpectedly.",
+      "whyItMatters": "Unexpected machine movement can change guarding relationships, destabilize equipment, damage utilities, or expose nearby workers to impact and pinch hazards.",
+      "keyPoint": "Fixed machines should remain stable at their intended installation location.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_212",
+          "locator": "1910.212(b) Anchoring fixed machinery",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "machine-safety",
+        "anchoring",
+        "equipment-stability"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.abrasive_wheel_guarding",
+      "conceptId": "csp11.concept.abrasive_wheel_guarding",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Abrasive Wheel Guarding",
+      "backDefinition": "A safety guard arrangement that limits worker exposure to an abrasive wheel and helps contain hazards from wheel contact or breakage during grinding operations.",
+      "whyItMatters": "Abrasive wheels rotate at high speed and can cause severe contact injuries or release fragments if a wheel fails.",
+      "keyPoint": "Use the required guard and keep its exposure opening within the applicable limits.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_215",
+          "locator": "1910.215(a)(1)-(2) Machine guarding and guard design",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "grinder-safety",
+        "abrasive-wheel",
+        "guarding"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.grinder_work_rest",
+      "conceptId": "csp11.concept.grinder_work_rest",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Grinder Work Rest",
+      "backDefinition": "A rigid, adjustable support on an offhand grinding machine positioned close to the wheel to support the work and reduce the chance of material being jammed between the rest and wheel.",
+      "whyItMatters": "Excessive clearance can allow the workpiece to wedge into the gap and contribute to wheel breakage or sudden movement.",
+      "keyPoint": "Adjust the work rest only with the wheel stopped and keep the allowed gap small.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_215",
+          "locator": "1910.215(a)(4) Work rests",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "grinder-safety",
+        "work-rest",
+        "abrasive-wheel"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.ladder_safety",
+      "conceptId": "csp11.concept.ladder_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Ladder Safety",
+      "backDefinition": "The selection, inspection, setup, access, and use of ladders so they remain structurally sound, stable, appropriately positioned, and suitable for the task.",
+      "whyItMatters": "Ladder defects or poor setup can create rapid fall exposure even during short-duration or routine work.",
+      "keyPoint": "Use a ladder only when its condition, type, setup, and task are compatible.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_23",
+          "locator": "1910.23 General requirements for ladders",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "ladder-safety",
+        "fall-prevention",
+        "equipment-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.hydraulic_tool_pressure",
+      "conceptId": "csp11.concept.hydraulic_tool_pressure",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Hydraulic Tool Operating Pressure",
+      "backDefinition": "The safe pressure limit for hydraulic tool hoses, valves, pipes, filters, fittings, and related components established by the manufacturer for operation.",
+      "whyItMatters": "Exceeding pressure limits can cause component rupture, fluid release, loss of control, or sudden tool movement.",
+      "keyPoint": "Do not exceed the manufacturer's safe operating pressure for the hydraulic system components.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1926_302",
+          "locator": "1926.302(d) Hydraulic power tools",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "hydraulic-tools",
+        "operating-pressure",
+        "power-tools"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.robot_work_envelope",
+      "conceptId": "csp11.concept.robot_work_envelope",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Robot Work Envelope",
+      "backDefinition": "The space through which a robot or its moving parts can travel while performing programmed or unintended motion.",
+      "whyItMatters": "Workers inside or near the robot work envelope can be exposed to impact, trapping, crushing, or interaction hazards if movement occurs unexpectedly.",
+      "keyPoint": "Control human access whenever hazardous robot motion can reach the occupied space.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.robotics_overview",
+          "locator": "Robotics > Overview",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "robotics",
+        "work-envelope",
+        "machine-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.robot_safeguarding",
+      "conceptId": "csp11.concept.robot_safeguarding",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Robot Safeguarding",
+      "backDefinition": "Physical, sensing, control, or procedural measures used to prevent or control worker exposure to hazardous robot motion and associated machine hazards.",
+      "whyItMatters": "Robot applications can change movement and interaction patterns, so safeguards must address both the robot and the larger automated system.",
+      "keyPoint": "Safeguarding should control access to hazardous motion without relying on worker reaction alone.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.robotics_overview",
+          "locator": "Robotics in the Workplace > Why it's important",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_212",
+          "locator": "1910.212(a)(1) Types of guarding",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "robotics",
+        "safeguarding",
+        "machine-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.nonroutine_robot_task_hazard",
+      "conceptId": "csp11.concept.nonroutine_robot_task_hazard",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Nonroutine Robot Task Hazard",
+      "backDefinition": "Elevated robot-system risk during programming, maintenance, testing, setup, adjustment, or troubleshooting when workers may enter areas normally separated from automatic motion.",
+      "whyItMatters": "Non-routine tasks can defeat normal separation between people and robot movement and may expose workers to unexpected or stored motion.",
+      "keyPoint": "Treat non-routine robot tasks as a distinct exposure condition requiring specific controls.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.robotics_overview",
+          "locator": "Robotics > Overview > non-routine operating conditions",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "robotics",
+        "nonroutine-work",
+        "machine-hazard"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.1910_242",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.242 - Hand and portable powered tools and equipment, general",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.242",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "General safe-condition requirement for hand and portable tools. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_243",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.243 - Guarding of portable powered tools",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.243",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Portable powered-tool guards, switches, controls, and related requirements."
+    },
+    {
+      "id": "csp11.source.osha.1910_212",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.212 - General requirements for all machines",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.212",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "General machine guarding, point-of-operation guarding, and fixed-machine anchoring requirements."
+    },
+    {
+      "id": "csp11.source.osha.1910_215",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.215 - Abrasive wheel machinery",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.215",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Abrasive-wheel guards, work rests, exposure angles, and wheel mounting requirements."
+    },
+    {
+      "id": "csp11.source.osha.1910_23",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.23 - Ladders",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.23",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "General-industry ladder requirements. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1926_302",
+      "organization": "OSHA",
+      "title": "29 CFR 1926.302 - Power-operated hand tools",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.302",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Construction power-tool requirements including hydraulic and pneumatic operating-pressure controls."
+    },
+    {
+      "id": "csp11.source.osha.robotics_overview",
+      "organization": "OSHA",
+      "title": "Robotics - Overview",
+      "canonicalUrl": "https://www.osha.gov/robotics",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OSHA overview of industrial robot uses and hazards, especially during non-routine tasks."
+    },
+    {
+      "id": "csp11.source.niosh.robotics_overview",
+      "organization": "NIOSH",
+      "title": "Robotics in the Workplace: An Overview",
+      "canonicalUrl": "https://www.cdc.gov/niosh/robotics/about/index.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current NIOSH workplace-robotics overview supporting robot hazard and human-robot interaction concepts."
+    }
+  ]
+}

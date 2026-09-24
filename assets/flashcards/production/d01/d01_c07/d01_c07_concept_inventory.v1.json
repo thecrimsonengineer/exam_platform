@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-1G",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d01",
   "competencyId": "d01_c07",
   "competencyStatement": "Evaluate the use of tools, machines, and equipment (e.g., hand tools, power tools, ladders, grinders, hydraulics, robotics)",
@@ -65,130 +65,124 @@
       ]
     }
   ],
-  "candidateConcepts": [
+  "acceptedConcepts": [
     {
       "semanticSlug": "tool_equipment_condition",
       "canonicalLabel": "Tool and Equipment Condition",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_242"
       ],
-      "rationale": "Employers are responsible for maintaining tools and equipment in safe condition."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "portable_power_tool_guarding",
       "canonicalLabel": "Portable Power Tool Guarding",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_243"
       ],
-      "rationale": "Portable powered tools require guards that prevent contact with exposed cutting or moving parts."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "power_tool_operating_control",
       "canonicalLabel": "Power Tool Operating Control",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_243"
       ],
-      "rationale": "Switch and control design can reduce unintended operation and provide prompt power shutoff."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "machine_guarding",
       "canonicalLabel": "Machine Guarding",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_212"
       ],
-      "rationale": "Machine guards protect operators and nearby employees from points of operation, nip points, rotating parts, chips, and sparks."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "point_of_operation",
       "canonicalLabel": "Point of Operation",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_212"
       ],
-      "rationale": "The area where work is performed on material is a key machine hazard zone requiring guarding when exposure can injure workers."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "fixed_machine_anchoring",
       "canonicalLabel": "Fixed Machine Anchoring",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_212"
       ],
-      "rationale": "Fixed machinery must be securely anchored so it does not walk or move during operation."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "abrasive_wheel_guarding",
       "canonicalLabel": "Abrasive Wheel Guarding",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_215"
       ],
-      "rationale": "Abrasive-wheel machinery generally requires safety guards controlling exposure to wheel hazards."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "grinder_work_rest",
       "canonicalLabel": "Grinder Work Rest",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_215"
       ],
-      "rationale": "Offhand grinders use properly adjusted work rests to support work and reduce jamming between the rest and wheel."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "ladder_safety",
       "canonicalLabel": "Ladder Safety",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_23"
       ],
-      "rationale": "Ladder selection, condition, setup, and use require controls to prevent falls and structural failure."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "hydraulic_tool_pressure",
       "canonicalLabel": "Hydraulic Tool Operating Pressure",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1926_302"
       ],
-      "rationale": "Hydraulic tool hoses, valves, pipes, filters, and fittings must stay within manufacturer safe operating pressure."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "robot_work_envelope",
       "canonicalLabel": "Robot Work Envelope",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.robotics_overview"
       ],
-      "rationale": "Robot motion occurs within a work envelope where unintended motion can expose workers to impact, crushing, or trapping hazards."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "robot_safeguarding",
       "canonicalLabel": "Robot Safeguarding",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.1910_212",
         "csp11.source.niosh.robotics_overview"
       ],
-      "rationale": "Robot systems require safeguarding based on machine hazards and human-robot interaction."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "nonroutine_robot_task_hazard",
       "canonicalLabel": "Nonroutine Robot Task Hazard",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.osha.robotics_overview"
       ],
-      "rationale": "Programming, maintenance, testing, setup, and adjustment can place workers inside the robot work envelope where unintended operation becomes especially hazardous."
+      "decision": "CARD"
     }
   ],
-  "acceptedConcepts": [],
   "mergedConcepts": [],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve D01 C07 concept boundaries before learner-ready package authoring."
+  "nextGate": "Validate d01_c07_flashcards_v1.json and the complete D01 corpus through FCQ100, provenance, deterministic round-trip, global duplicate checks, and full repository regression.",
+  "resolutionSummary": {
+    "candidateCount": 13,
+    "acceptedCardCount": 13,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
 }

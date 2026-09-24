@@ -89,8 +89,11 @@
       "competencyId": "d01_c07",
       "number": 7,
       "statement": "Evaluate the use of tools, machines, and equipment (e.g., hand tools, power tools, ladders, grinders, hydraulics, robotics)",
-      "status": "in_progress",
-      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c07/d01_c07_concept_inventory.v1.json"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c07/d01_c07_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c07/d01_c07_flashcards_v1.json",
+      "cardCount": 13,
+      "conceptInventoryStatus": "resolved_inventory"
     }
   ]
 }
