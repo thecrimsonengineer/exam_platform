@@ -1,6 +1,7 @@
-# FCP-2F — d02_c06 Validation Candidate
+# FCP-2F — d02_c06 Validation Record
 
-Status: VALIDATING
+Status: VALIDATION COMPLETE  
+Gate: `FCP2F_D02_C06_GREEN`
 
 Recovery base:
 
@@ -9,16 +10,29 @@ phase-fcp2e-d02-c05-closed
 fee2f4f9619b5e3eb151e563321f5c8fad54dd49
 ```
 
-Candidate scope:
+Pre-validation refinement:
 
-- Competency: `d02_c06`
-- Statement: Describe system safety analysis techniques (e.g., fault tree analysis, failure modes and effects analysis [FMEA], Safety Case approach, risk summation)
+Three unnecessary OSHA supporting references were removed because their authority tier was stronger than the technical primary source on the same cards. The change affected provenance only; learner-facing content was unchanged.
+
+Successful package validation:
+
+```text
+SHA: 9cd2a834ae519d3dbf9f798257e2037526eb353e
+Run: 35974799508
+Result: SUCCESS
+```
+
+Validated scope:
+
 - 12 resolved concepts
 - 12 learner-ready flashcards
 - 3 cross-competency canonical references
+- canonical `csp11.concept.event_tree` admitted in D02 C06
 - 0 HOLD
-- Includes the canonical `csp11.concept.event_tree` identity previously deferred from D02 C04
-- Generic Process Safety Management and Process Safety Information remain canonical in D01 C02
-- Generic Root Cause Analysis remains canonical in D02 C04
+- FCQ100 100/100
+- deterministic JSON round trip PASS
+- provenance PASS
+- frozen Flashcard Core regression PASS
+- full repository regression PASS
 
-Closure requires the dedicated Phase FCP workflow, frozen Flashcard Core regression, and full repository regression to pass.
+The closure metadata state must pass the dedicated FCP workflow before `phase-fcp2f-d02-c06-closed` is created.
