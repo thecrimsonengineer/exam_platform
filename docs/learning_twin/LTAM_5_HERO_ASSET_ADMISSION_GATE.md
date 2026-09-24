@@ -77,6 +77,16 @@ The following remain blocked until the real canonical clip is supplied:
 8. Record Hero as ACCEPT, TUNE or REJECT_TO_STATIC.
 9. Proceed to LearningTwinCard only if Hero is ACCEPT.
 
+## Implemented admission enforcement
+
+The branch now contains a typed idle-asset validator and repository admission test.
+
+The validator enforces the frozen 30 fps / 180 frame / 6 second contract, vector-only composition policy, local-only references, no text layers and no raster or embedded-image assets.
+
+Admission also requires a frozen SHA-256 in `LearningTwinMotionRollout` when the canonical file is present.
+
+A Windows CI lane validates the Hero fallback/admission tests and builds the Windows desktop application. Linux CI continues to cover Web release and Android debug builds.
+
 ## Safety conclusion
 
 LTAM-5 remains fail-closed.
