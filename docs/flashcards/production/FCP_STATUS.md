@@ -14,7 +14,7 @@ FCP-2D  d02_c04  CLOSED
 FCP-2E  d02_c05  CLOSED
 FCP-2F  d02_c06  CLOSED
 FCP-2G  d02_c07  CLOSED
-FCP-2H  d02_c08  VALIDATING
+FCP-2H  d02_c08  CLOSED
 FCP-2I  d02_c09  NOT STARTED
 FCP-2J  d02_c10  NOT STARTED
 FCP-2K  d02_c11  NOT STARTED
@@ -23,6 +23,4 @@ FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2G closed at `phase-fcp2g-d02-c07-closed@0e9f2608b8beb54b05aab81cfab92badebac66fc`.
-
-FCP-2H started strictly from that closed checkpoint. Candidate package: 12 safety, health, environmental management and audit-system cards.
+FCP-2H package validation passed at `b1590fd7f5cb6d0a261c9af5b2d7fb93829a8cec` in run `36000014475`. The closure metadata state must pass CI before `phase-fcp2h-d02-c08-closed` is created.
