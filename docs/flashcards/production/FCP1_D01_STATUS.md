@@ -3,54 +3,30 @@
 Status: IN PROGRESS  
 Recovery base: `phase-fcp0-production-spec-closed@42dd596449a6a1265a5fc505d4f32b26956c912c`
 
-## Canonical Domain
-
-```text
-d01
-Advanced Application of Safety Principles
-Weight: 25%
-Competencies: 7
-```
-
 ## Competency sequence
 
 ```text
 FCP-1A  d01_c01  CLOSED
-FCP-1B  d01_c02  VALIDATING
-FCP-1C  d01_c03  NOT STARTED
+FCP-1B  d01_c02  CLOSED
+FCP-1C  d01_c03  IN PROGRESS
 FCP-1D  d01_c04  NOT STARTED
 FCP-1E  d01_c05  NOT STARTED
 FCP-1F  d01_c06  NOT STARTED
 FCP-1G  d01_c07  NOT STARTED
 ```
 
-### FCP-1A closure
+### Closed checkpoints
 
 ```text
-Gate: FCP1A_D01_C01_GREEN
-Package validation SHA: bb75c0c98c4236b97dda3c004a65e62e0fe39e8d
-Workflow: 35955655296
-FCQ100: 100/100
-Cards: 8
-Unresolved concepts: 0
+FCP1A_D01_C01_GREEN
+SHA bb75c0c98c4236b97dda3c004a65e62e0fe39e8d
+Run 35955655296
+
+FCP1B_D01_C02_GREEN
+SHA 442c2b984e02145bdbb46169ffea3419ea0f0ff3
+Run 35956562360
 ```
 
-### FCP-1B current task
+### Current task
 
-Validate the resolved `d01_c02` process-safety inventory and learner-ready package.
-
-Current authoritative source basis:
-
-- OSHA 29 CFR 1910.119
-- OSHA 29 CFR 1910.119 Appendix C
-
-Management of Change is represented in the d01_c02 inventory but deferred to the dedicated canonical competency `d02_c05` so FCP does not create duplicate collectible concepts.
-
-
-### FCP-1B package candidate
-
-```text
-d01_c02_flashcards_v1
-Cards: 11
-Cross-competency canonical reference: Management of Change -> d02_c05
-```
+Build and resolve the `d01_c03` common-workplace-hazards concept inventory from OSHA electrical, fall, confined-space, hazardous-energy, water, Focus Four, and excavation authorities.

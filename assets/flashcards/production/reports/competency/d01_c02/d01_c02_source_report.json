@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1B",
+  "competencyId": "d01_c02",
+  "cardCount": 11,
+  "cardsWithProvenance": 11,
+  "cardsWithExactlyOnePrimarySource": 11,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.osha.1910_119",
+    "csp11.source.osha.1910_119_app_c"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.osha.1910_119": 11
+  },
+  "status": "PASS"
+}

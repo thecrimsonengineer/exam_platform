@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1B",
+  "competencyId": "d01_c02",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "conceptId": "csp11.concept.management_of_change",
+      "resolution": "MERGED_TO_FUTURE_CANONICAL",
+      "targetCompetencyId": "d02_c05"
+    }
+  ],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}

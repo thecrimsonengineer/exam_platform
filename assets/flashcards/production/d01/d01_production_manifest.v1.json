@@ -33,17 +33,24 @@
       "competencyId": "d01_c02",
       "number": 2,
       "statement": "Apply the principles of process safety (e.g., pressure relief systems, chemical compatibility, management of change, materials of construction, process flow diagrams)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d01/d01_c02/d01_c02_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d01/d01_c02/d01_c02_flashcards_v1.json",
       "cardCount": 11,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "checkpoint": {
+        "gate": "FCP1B_D01_C02_GREEN",
+        "validationSha": "442c2b984e02145bdbb46169ffea3419ea0f0ff3",
+        "workflowRun": 35956562360
+      },
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c02"
     },
     {
       "competencyId": "d01_c03",
       "number": 3,
       "statement": "Evaluate common workplace hazards (e.g., electrical, falls, confined spaces, lockout/tagout, working around water, caught in, struck by, excavation)",
-      "status": "not_started"
+      "status": "in_progress",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c03/d01_c03_concept_inventory.v1.json"
     },
     {
       "competencyId": "d01_c04",

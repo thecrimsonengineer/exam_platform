@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1C",
+  "status": "candidate_inventory",
+  "domainId": "d01",
+  "competencyId": "d01_c03",
+  "competencyStatement": "Evaluate common workplace hazards (e.g., electrical, falls, confined spaces, lockout/tagout, working around water, caught in, struck by, excavation)",
+  "placement": {
+    "domainId": "d01",
+    "competencyId": "d01_c03",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D01 topic/subtopic StudyContent tree exists at the frozen FCP base. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.1910_333",
+      "locators": [
+        "1910.333(a) General",
+        "1910.333(a)(1) Deenergized parts",
+        "1910.333(b)(2)(iv) Verification of deenergized condition"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_28",
+      "locators": [
+        "1910.28(a) General",
+        "1910.28(b) Protection from fall hazards"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_146",
+      "locators": [
+        "1910.146(b) Definitions",
+        "1910.146(c) General requirements"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_147",
+      "locators": [
+        "1910.147(a) Scope, application, and purpose",
+        "1910.147(c) General",
+        "1910.147(d) Application of control"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1926_106",
+      "locators": [
+        "1926.106(a)-(d) Working over or near water"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.focus_four",
+      "locators": [
+        "Construction Focus Four > Caught-In or -Between",
+        "Construction Focus Four > Struck-By"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1926_651",
+      "locators": [
+        "1926.651(b) Underground installations",
+        "1926.651(h) Water accumulation"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1926_652",
+      "locators": [
+        "1926.652(a) Protection of employees in excavations"
+      ]
+    }
+  ],
+  "candidateConcepts": [
+    {
+      "semanticSlug": "electrical_hazard",
+      "canonicalLabel": "Electrical Hazard",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_333"
+      ],
+      "rationale": "Exposure to energized conductors or equipment can create shock, burn, arc, or related injury risks."
+    },
+    {
+      "semanticSlug": "electrical_deenergization",
+      "canonicalLabel": "Electrical Deenergization",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_333"
+      ],
+      "rationale": "OSHA generally requires exposed live parts to be deenergized before work unless specified exceptions apply."
+    },
+    {
+      "semanticSlug": "verification_of_deenergized_condition",
+      "canonicalLabel": "Verification of Deenergized Condition",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_333"
+      ],
+      "rationale": "Deenergized electrical parts require verification before they are treated as safe to work on."
+    },
+    {
+      "semanticSlug": "fall_hazard",
+      "canonicalLabel": "Fall Hazard",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_28"
+      ],
+      "rationale": "Workers exposed to qualifying fall hazards require protection appropriate to the walking-working surface and task."
+    },
+    {
+      "semanticSlug": "fall_protection_system",
+      "canonicalLabel": "Fall Protection System",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_28"
+      ],
+      "rationale": "Fall protection includes systems such as guardrails, safety nets, travel restraint, or personal fall arrest where applicable."
+    },
+    {
+      "semanticSlug": "permit_required_confined_space",
+      "canonicalLabel": "Permit-Required Confined Space",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_146"
+      ],
+      "rationale": "A confined-space concept requiring formal evaluation and entry controls when permit-space hazards are present."
+    },
+    {
+      "semanticSlug": "acceptable_entry_conditions",
+      "canonicalLabel": "Acceptable Entry Conditions",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_146"
+      ],
+      "rationale": "Conditions that must exist to allow safe permit-space entry and work."
+    },
+    {
+      "semanticSlug": "hazardous_energy_control",
+      "canonicalLabel": "Hazardous Energy Control",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_147"
+      ],
+      "rationale": "Control of unexpected energization, startup, or release of stored energy during servicing or maintenance."
+    },
+    {
+      "semanticSlug": "lockout_tagout",
+      "canonicalLabel": "Lockout/Tagout",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_147"
+      ],
+      "rationale": "A formal energy-control method using lockout or tagout devices and procedures."
+    },
+    {
+      "semanticSlug": "working_over_or_near_water",
+      "canonicalLabel": "Working Over or Near Water",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1926_106"
+      ],
+      "rationale": "Work with drowning exposure requires specific lifesaving protections in the construction standard."
+    },
+    {
+      "semanticSlug": "struck_by_hazard",
+      "canonicalLabel": "Struck-By Hazard",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.focus_four"
+      ],
+      "rationale": "Hazards where forceful contact or impact from an object, vehicle, equipment, or material can injure a worker."
+    },
+    {
+      "semanticSlug": "caught_in_between_hazard",
+      "canonicalLabel": "Caught-In or -Between Hazard",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.focus_four"
+      ],
+      "rationale": "Hazards where a worker can be caught, compressed, pinched, crushed, or trapped between objects or materials."
+    },
+    {
+      "semanticSlug": "excavation_hazard",
+      "canonicalLabel": "Excavation Hazard",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1926_651",
+        "csp11.source.osha.1926_652"
+      ],
+      "rationale": "Excavation work can expose workers to cave-ins, utilities, water accumulation, falling material, access, and other hazards."
+    },
+    {
+      "semanticSlug": "excavation_protective_system",
+      "canonicalLabel": "Excavation Protective System",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1926_652"
+      ],
+      "rationale": "Protective systems such as sloping, benching, support, or shields are used to protect against cave-in hazards."
+    }
+  ],
+  "acceptedConcepts": [],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Resolve D01 C03 concept boundaries before learner-ready package authoring."
+}
