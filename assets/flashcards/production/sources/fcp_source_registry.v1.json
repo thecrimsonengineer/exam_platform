@@ -1055,6 +1055,108 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Official UK HSE guidance supporting the offshore Safety Case approach and the demonstration that major-accident risks are effectively controlled. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.management_system_standards",
+      "organization": "ISO",
+      "title": "Management system standards",
+      "canonicalUrl": "https://www.iso.org/management-system-standards.html",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official ISO overview of management systems, management system standards, audits, certification, and harmonized structure. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.14000_family",
+      "organization": "ISO",
+      "title": "ISO 14000 family — Environmental management",
+      "canonicalUrl": "https://www.iso.org/standards/popular/iso-14000-family",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official ISO overview of the ISO 14000 environmental management family and the role of ISO 14001. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.14001_2026",
+      "organization": "ISO",
+      "title": "ISO 14001:2026 — Environmental management systems — Requirements with guidance for use",
+      "canonicalUrl": "https://committee.iso.org/standard/14001",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 14001 edition as of 2026-09-24. Requirements standard for environmental management systems. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.45001_2018",
+      "organization": "ISO",
+      "title": "ISO 45001:2018 — Occupational health and safety management systems — Requirements with guidance for use",
+      "canonicalUrl": "https://www.iso.org/standard/45001",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 45001 edition as of 2026-09-24. Confirmed current in 2024; replacement draft under development for 2027. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.19011_2026",
+      "organization": "ISO",
+      "title": "ISO 19011:2026 — Guidelines for auditing management systems",
+      "canonicalUrl": "https://committee.iso.org/standard/19011",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 19011 edition as of 2026-09-24. Guidance for audit principles, audit programmes, conducting audits, and auditor competence. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.assp.z10_2019",
+      "organization": "ASSP",
+      "title": "ANSI/ASSP Z10.0-2019 Occupational Health and Safety Management Systems",
+      "canonicalUrl": "https://www.assp.org/standards/standards-topics/osh-management-z10",
+      "allowedDomains": [
+        "assp.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official ASSP topic page for the ANSI/ASSP Z10.0 occupational health and safety management system standard. Educational paraphrase only."
     }
   ]
 }
