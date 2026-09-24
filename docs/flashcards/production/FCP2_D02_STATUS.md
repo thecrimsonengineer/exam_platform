@@ -10,7 +10,7 @@ FCP-2B  d02_c02  CLOSED             5 cards
 FCP-2C  d02_c03  CLOSED            10 cards
 FCP-2D  d02_c04  CLOSED            12 cards
 FCP-2E  d02_c05  CLOSED            12 cards
-FCP-2F  d02_c06  NOT STARTED
+FCP-2F  d02_c06  VALIDATING         12 cards
 FCP-2G  d02_c07  NOT STARTED
 FCP-2H  d02_c08  NOT STARTED
 FCP-2I  d02_c09  NOT STARTED
@@ -29,4 +29,8 @@ FCP-2E started strictly from `phase-fcp2d-d02-c04-closed@fc3e883d658aca40bf5760f
 
 FCP-2E package validation: SHA `cc58d577877d8fbb88a71cda32f6e2fc479ad684`, run `35970245287`, SUCCESS, 12 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2F may begin only from `phase-fcp2e-d02-c05-closed`.
+FCP-2F started strictly from `phase-fcp2e-d02-c05-closed@fee2f4f9619b5e3eb151e563321f5c8fad54dd49`.
+
+C06 candidate package: 12 system-safety analysis cards covering system safety analysis, FTA, top events, minimal cut sets, FMEA, failure modes/effects, event trees, initiating events, accident sequences, the Safety Case approach, and risk summation.
+
+FCP-2F remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
