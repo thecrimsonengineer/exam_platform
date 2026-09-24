@@ -1,0 +1,192 @@
+name: CSP11 Release Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_ordinal:
+        description: Release-candidate ordinal
+        required: true
+        default: '1'
+        type: string
+      build_android:
+        description: Build Android APK candidate
+        required: true
+        default: true
+        type: boolean
+      build_web:
+        description: Build Web candidate archive
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: csp11-release-candidate-${{ github.sha }}-${{ inputs.candidate_ordinal }}
+  cancel-in-progress: false
+
+jobs:
+  release_candidate:
+    name: Governed release candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    steps:
+      - name: Reject empty build selection
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ inputs.build_android }}" != "true" && "${{ inputs.build_web }}" != "true" ]]; then
+            echo "At least one candidate build must be selected."
+            exit 1
+          fi
+
+      - name: Checkout exact dispatched commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17.0.16'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Create CI evidence workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-governance-input/ci_evidence
+          mkdir -p build/release-candidate
+
+      - name: Validate locked dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter pub get --enforce-lockfile 2>&1 | tee build/release-governance-input/ci_evidence/dependency_gate.txt
+          git diff --exit-code -- pubspec.yaml pubspec.lock
+          echo "dependency_lock=PASS" >> build/release-governance-input/ci_evidence/dependency_gate.txt
+
+      - name: Validate governed version
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(awk '/^version:/ {print $2; exit}' pubspec.yaml)"
+          if [[ ! "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\+(0|[1-9][0-9]*)$ ]]; then
+            echo "Invalid governed version: $VERSION"
+            exit 1
+          fi
+          {
+            echo "version=$VERSION"
+            echo "candidateOrdinal=${{ inputs.candidate_ordinal }}"
+            echo "version_gate=PASS"
+          } | tee build/release-governance-input/ci_evidence/version_gate.txt
+
+      - name: Check formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format --output=none --set-exit-if-changed lib test tool 2>&1 | tee build/release-governance-input/ci_evidence/format.txt
+
+      - name: Analyze application
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter analyze 2>&1 | tee build/release-governance-input/ci_evidence/analyze.txt
+
+      - name: Run REL-GOV regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test test/release_governance 2>&1 | tee build/release-governance-input/ci_evidence/release_governance_tests.txt
+
+      - name: Run full Flutter test suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test 2>&1 | tee build/release-governance-input/ci_evidence/full_flutter_tests.txt
+
+      - name: Verify repository identity and cleanliness
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --exit-code
+          if [[ -n "$(git status --porcelain=v1 --untracked-files=all)" ]]; then
+            git status --porcelain=v1 --untracked-files=all
+            echo "Repository is not clean."
+            exit 1
+          fi
+          {
+            echo "repository=thecrimsonengineer/exam_platform"
+            echo "sourceRef=${GITHUB_REF_NAME}"
+            echo "commitSha=$(git rev-parse HEAD)"
+            echo "treeSha=$(git rev-parse 'HEAD^{tree}')"
+            echo "repository_gate=PASS"
+          } | tee build/release-governance-input/ci_evidence/repository_gate.txt
+
+      - name: Build Android APK candidate
+        if: ${{ inputs.build_android }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk build/release-candidate/csp11-android-release.apk
+
+      - name: Build Web candidate
+        if: ${{ inputs.build_web }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter build web --release
+          tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner             -czf build/release-candidate/csp11-web-release.tar.gz             -C build/web .
+
+      - name: Assemble release-candidate input
+        shell: bash
+        run: |
+          set -euo pipefail
+          CREATED_AT="$(git show -s --format=%cI HEAD)"
+          ARTIFACT_ARGS=()
+          if [[ "${{ inputs.build_android }}" == "true" ]]; then
+            ARTIFACT_ARGS+=(--artifact "android-apk=build/release-candidate/csp11-android-release.apk")
+          fi
+          if [[ "${{ inputs.build_web }}" == "true" ]]; then
+            ARTIFACT_ARGS+=(--artifact "web-archive=build/release-candidate/csp11-web-release.tar.gz")
+          fi
+          dart run tool/release_governance/release_candidate_input.dart             --root .             --source-ref "${GITHUB_REF_NAME}"             --expected-sha "${GITHUB_SHA}"             --candidate-ordinal "${{ inputs.candidate_ordinal }}"             --created-at "$CREATED_AT"             --output build/release-governance-input/candidate_input.json             "${ARTIFACT_ARGS[@]}"
+
+      - name: Generate governed evidence package
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart run tool/release_governance/release_governance.dart generate             --input build/release-governance-input/candidate_input.json             --output build/release-evidence             2>&1 | tee build/release-governance-input/ci_evidence/evidence_generation.txt
+          grep -Fxq 'decision=ADMISSIBLE' build/release-governance-input/ci_evidence/evidence_generation.txt
+
+      - name: Verify governed evidence package
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart run tool/release_governance/release_governance.dart verify             --directory build/release-evidence             2>&1 | tee build/release-governance-input/ci_evidence/evidence_verification.txt
+          grep -Fxq 'releaseEvidence=PASS' build/release-governance-input/ci_evidence/evidence_verification.txt
+
+      - name: Upload governed candidate bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: csp11-release-candidate-${{ github.sha }}-rc${{ inputs.candidate_ordinal }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            build/release-candidate/
+            build/release-evidence/
+            build/release-governance-input/candidate_input.json
+            build/release-governance-input/ci_evidence/

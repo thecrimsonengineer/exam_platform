@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "expectedRepository": "thecrimsonengineer/exam_platform",
+  "flutterVersion": "3.44.9",
+  "dartVersion": "3.12.2",
+  "javaVersion": "17.0.16",
+  "gradleVersion": "9.1.0",
+  "androidGradlePluginVersion": "9.0.1",
+  "kotlinVersion": "2.3.20",
+  "javaTargetVersion": "17",
+  "kotlinJvmTarget": "17",
+  "runnerOs": "linux",
+  "runnerArchitecture": "X64"
+}
