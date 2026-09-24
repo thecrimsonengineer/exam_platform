@@ -1,0 +1,1263 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9E",
+  "batchId": "ml9_batch_12",
+  "sourceCorpusRef": "phase-ml9d-whole-corpus-ml8-closed",
+  "sourceCorpusSha": "f4d7e8bde1e5584f27fdce98741b7ab7db0ab23b",
+  "reviewStatus": "pending",
+  "humanReviewComplete": false,
+  "facts": [
+    {
+      "microFactId": "mf_ml9_093",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_093_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.epa.gov/smm/sustainable-materials-management-tools",
+      "sourceLocator": "Why is Measurement Important? - life-cycle approach to materials management",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_094",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_094_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.epa.gov/pm-pollution/particulate-matter-pm-basics",
+      "sourceLocator": "What are the Harmful Effects of PM? - health effects and reduced visibility",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_100",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_100_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://training.fema.gov/programs/independent-study/courseoverview.aspx?code=IS-2900.a&lang=",
+      "sourceLocator": "Course Overview - national approach to disaster recovery and recovery continuum",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_101",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_101_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.159",
+      "sourceLocator": "1910.159(c)(2) - maintenance of automatic sprinkler systems",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_102",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_102_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://preptoolkit.fema.gov/web/cip-citap/ncig/-/knowledge_base/ncig/e-4-comprehensive-preparedness-guide-201",
+      "sourceLocator": "THIRA three-step risk assessment process and capability targets",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_108",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_108_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.phmsa.dot.gov/regulations/title49/interp/10-0205",
+      "sourceLocator": "Question 3 - transportation security plan elements",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_113",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_113_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.cdc.gov/niosh/research-programs/evaluation/index.html",
+      "sourceLocator": "Overview - documented evidence used to assess relevance and impact",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "not_applicable",
+          "reviewerId": null,
+          "reviewerRole": null,
+          "humanAttested": false,
+          "rationale": "General-scope CSP reasoning fact; curriculum mapping review is not applicable.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_114",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_114_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.cdc.gov/niosh/bulletin/2020/osh-focus.html",
+      "sourceLocator": "Summary - expanded systems-thinking approach to occupational safety and health",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "not_applicable",
+          "reviewerId": null,
+          "reviewerRole": null,
+          "humanAttested": false,
+          "rationale": "General-scope CSP reasoning fact; curriculum mapping review is not applicable.",
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_119",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_119_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.cdc.gov/niosh/bulletin/2010/workplace-training.html",
+      "sourceLocator": "Systematic Review - learner engagement and hands-on practice",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    },
+    {
+      "microFactId": "mf_ml9_120",
+      "contentVersion": 1,
+      "candidatePath": "content/micro_learning/facts/mf_ml9_120_v1.json",
+      "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_12_gate_evidence.json",
+      "sourceUrl": "https://www.cdc.gov/niosh/publications/numbered/2005-152.html",
+      "sourceLocator": "About - adult learning, mentoring, storytelling, and experiential training context",
+      "channels": {
+        "technical": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "subject_matter_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "source": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "rights": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "curriculum": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "curriculum_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "pedagogy": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "pedagogy_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ],
+          "confirmedChecks": []
+        },
+        "accessibility": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "accessibility_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ],
+          "confirmedChecks": []
+        },
+        "ui": {
+          "status": "pending",
+          "reviewerId": null,
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": false,
+          "rationale": null,
+          "reviewedAt": null,
+          "nextReviewDueAt": null,
+          "requiredChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ],
+          "confirmedChecks": []
+        }
+      },
+      "overallDecision": "pending",
+      "revisionNotes": null
+    }
+  ]
+}
