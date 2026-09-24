@@ -1,7 +1,7 @@
 # CSP11 ML-9E Human Review Runbook
 
-Status: READY FOR HUMAN REVIEW  
-Parent checkpoint: `phase-ml9d-whole-corpus-ml8-closed`  
+Status: READY FOR HUMAN REVIEW
+Parent checkpoint: `phase-ml9d-whole-corpus-ml8-closed`
 Working branch: `phase-ml9e-human-review`
 
 ## Purpose
