@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - phase-l4-scenario-population
+      - phase-lsp-q17-production-deployment-preflight
   workflow_dispatch:
 
 permissions:
@@ -50,7 +51,9 @@ jobs:
             lib/features/lab/lab_production_population_seed.dart \
             lib/features/lab/lab_production_release_closure.dart \
             lib/features/lab/lab_production_release_operator.dart \
+            lib/features/lab/lab_production_deployment_acceptance.dart \
             lib/screens/admin/lab/lab_production_release_screen.dart \
+            lib/screens/admin/lab/lab_production_deployment_acceptance_screen.dart \
             lib/screens/lab/lab_scenario_catalog.dart \
             lib/screens/lab/lab_library_screen.dart \
             lib/screens/lab/lab_scenario_briefing_screen.dart \
@@ -72,7 +75,8 @@ jobs:
             test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart \
             test/lab_quality/lsp_q14_production_population_seed_test.dart \
             test/lab_quality/lsp_q15_production_release_closure_test.dart \
-            test/lab_quality/lsp_q16_production_release_operator_test.dart
+            test/lab_quality/lsp_q16_production_release_operator_test.dart \
+            test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
@@ -130,6 +134,9 @@ jobs:
 
       - name: Production release operator tests
         run: flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
+
+      - name: Production deployment acceptance tests
+        run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
 
       - name: Studio import regression
         run: flutter test test/services/studio_question_import_service_test.dart
@@ -191,6 +198,7 @@ jobs:
             test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart \
             test/lab_quality/lsp_q14_production_population_seed_test.dart \
             test/lab_quality/lsp_q15_production_release_closure_test.dart \
-            test/lab_quality/lsp_q16_production_release_operator_test.dart
+            test/lab_quality/lsp_q16_production_release_operator_test.dart \
+            test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
           git commit -m "Format LSP unified question quality files"
-          git push origin HEAD:phase-l4-scenario-population
+          git push origin HEAD:${GITHUB_REF_NAME}
