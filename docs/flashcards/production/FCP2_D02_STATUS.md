@@ -13,7 +13,7 @@ FCP-2E  d02_c05  CLOSED            12 cards
 FCP-2F  d02_c06  CLOSED            12 cards
 FCP-2G  d02_c07  CLOSED            12 cards
 FCP-2H  d02_c08  CLOSED            12 cards
-FCP-2I  d02_c09  NOT STARTED
+FCP-2I  d02_c09  VALIDATING         13 cards
 FCP-2J  d02_c10  NOT STARTED
 FCP-2K  d02_c11  NOT STARTED
 FCP-2L  d02_c12  NOT STARTED
@@ -41,4 +41,8 @@ FCP-2H started strictly from `phase-fcp2g-d02-c07-closed@0e9f2608b8beb54b05aab81
 
 FCP-2H package validation: SHA `b1590fd7f5cb6d0a261c9af5b2d7fb93829a8cec`, run `36000014475`, SUCCESS, 12 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2I may begin only from `phase-fcp2h-d02-c08-closed`.
+FCP-2I started strictly from `phase-fcp2h-d02-c08-closed@0a167f3f60bccd7bd839f24e02719c211b263e26`.
+
+C09 candidate package: 13 cards covering policy, scope/applicability, applicable requirements, roles/responsibilities/authorities, objectives and action planning, hazard/risk/environmental-aspect assessment, operational controls, competence/training/awareness, communication/consultation/participation, emergency preparedness/response, documented information/records, performance evaluation/audit, and management review/continual improvement.
+
+FCP-2I remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
