@@ -120,8 +120,9 @@ void main() {
 
     for (var competency = 1; competency <= 7; competency++) {
       final id = 'd01_c${competency.toString().padLeft(2, '0')}';
-      final reportDir =
-          Directory('assets/flashcards/production/reports/competency/$id');
+      final reportDir = Directory(
+        'assets/flashcards/production/reports/competency/$id',
+      );
 
       expect(reportDir.existsSync(), isTrue, reason: id);
       final names = reportDir
