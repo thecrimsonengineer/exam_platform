@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9F",
+  "freezeStatus": "closed_publication_checkpoint",
+  "closedAt": "2026-09-24",
+  "sourceHumanReview": {
+    "ref": "phase-ml9e-human-review-closed",
+    "sha": "4e388ab419f2c93213c5aa01140562de019a6872",
+    "acceptedFactCount": 120
+  },
+  "publication": {
+    "publishedCorpusSha": "4a1bca7678265c48ba6c8cc28f583df5b3477509",
+    "exactVerificationSha": "fadd866ebbaaf36eac91051032be535a4ceca489",
+    "publishedFactCount": 120,
+    "startupEligibleFactCount": 120,
+    "sourceCurrentFactCount": 120,
+    "mappedFactCount": 114,
+    "generalScopeFactCount": 6,
+    "pairwiseMl8Comparisons": 7140,
+    "unresolvedMl8ReviewCandidates": 0,
+    "ml8ConcentrationSignals": 0
+  },
+  "gates": {
+    "ml2Schema": "pass",
+    "ml3Source": "pass",
+    "ml4ClaimSemantics": "pass",
+    "ml5Rights": "pass",
+    "ml6Curriculum": "pass",
+    "ml7StartupSuitability": "pass",
+    "ml8WholeCorpus": "pass",
+    "ml9eHumanReview": "pass",
+    "publicationRegression": "pass"
+  },
+  "verification": {
+    "workflow": ".github/workflows/ml9f_publication_freeze_validation.yml",
+    "workflowRunId": 35950596923,
+    "workflowConclusion": "success"
+  },
+  "productionManifest": "content/micro_learning/ml9f_production_manifest_v1.json",
+  "phaseMl9Status": "closed"
+}

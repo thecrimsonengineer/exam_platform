@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "ML-9F",
-  "verificationStatus": "requested",
+  "verificationStatus": "verified",
   "requestedAt": "2026-09-24",
   "publishedCorpusSha": "4a1bca7678265c48ba6c8cc28f583df5b3477509",
   "expectedState": {
@@ -13,5 +13,9 @@
     "pairwiseMl8Comparisons": 7140,
     "unresolvedMl8ReviewCandidates": 0,
     "ml8ConcentrationSignals": 0
-  }
+  },
+  "verifiedAt": "2026-09-24",
+  "verificationSha": "fadd866ebbaaf36eac91051032be535a4ceca489",
+  "workflowRunId": 35950596923,
+  "workflowConclusion": "success"
 }

@@ -1,6 +1,6 @@
 # CSP11 Phase ML-9 - First 120-Fact Curated Bank
 
-Status: IN PROGRESS  
+Status: CLOSED  
 Parent: `docs/micro_learning/PHASE_ML8_DUPLICATE_CONTRADICTION_DETECTION.md`  
 Branch: `phase-ml9-first-120-fact-curated-bank`  
 Parent recovery point: `cad3cd44983ba5385704b552ae476cb01ac9e938`
@@ -623,6 +623,35 @@ ML-9E completion artifacts:
 - `content/micro_learning/review/ml9e_human_review_freeze.json`
 - `tool/validate_ml9e_post_application.dart`
 
+### ML-9F - Publication Freeze
+
+- Exactly 120 accepted MicroFacts are published.
+- Exactly 120 published MicroFacts are startup eligible.
+- Source verification is current for all 120 facts at the 2026-09-24 release checkpoint.
+- ML-2 schema validation passes for the complete published corpus.
+- ML-3 authority and first-party source gates pass.
+- ML-4 claim and legal-status gates pass.
+- ML-5 rights/provenance gates pass with human-reviewed evidence.
+- ML-6 curriculum gates pass for 114 mapped facts; 6 general-scope facts remain correctly exempt from mapping evidence.
+- ML-7 startup pedagogy, readability, precision, and accessibility gates pass.
+- ML-8 whole-corpus validation covers all 7,140 pairs with 0 unresolved review candidates and 0 concentration signals.
+- ML-9E human-review state remains intact for all 120 facts.
+- Publication regression passed.
+- Published corpus commit: `4a1bca7678265c48ba6c8cc28f583df5b3477509`.
+- Independent exact-SHA verification commit: `fadd866ebbaaf36eac91051032be535a4ceca489`.
+- Verification workflow run: `35950596923`.
+- Phase ML-9 is closed.
+
+ML-9F artifacts:
+
+- `content/micro_learning/ml9f_production_manifest_v1.json`
+- `content/micro_learning/review/ml9f_publication_application_checkpoint.json`
+- `content/micro_learning/review/ml9f_post_publication_verification_request.json`
+- `content/micro_learning/review/ml9f_publication_freeze.json`
+- `tool/validate_ml9f_publication_freeze.dart`
+- `tool/apply_ml9f_publication.dart`
+- `.github/workflows/ml9f_publication_freeze_validation.yml`
+
 ## Next action
 
-ML-9F - Publication Freeze. Publish exactly the 120 accepted facts, enable startup eligibility only after all frozen release gates pass, rerun complete corpus and evidence validation, and freeze the exact closing SHA.
+Phase ML-9 is complete. Any subsequent work should begin from the ML-9F closed recovery point and treat the 120 published MicroFacts as immutable production content except through the normal versioning and supersession contracts.
