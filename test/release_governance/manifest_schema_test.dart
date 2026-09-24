@@ -59,23 +59,19 @@ void main() {
     test('freezes all governed release states', () {
       final properties = schema['properties']! as Map<String, Object?>;
       final release = properties['release']! as Map<String, Object?>;
-      final releaseProperties =
-          release['properties']! as Map<String, Object?>;
+      final releaseProperties = release['properties']! as Map<String, Object?>;
       final status = releaseProperties['status']! as Map<String, Object?>;
       final values = (status['enum']! as List<Object?>).cast<String>();
 
-      expect(
-        values,
-        <String>[
-          'development',
-          'candidate',
-          'validated',
-          'frozen',
-          'released',
-          'withdrawn',
-          'superseded',
-        ],
-      );
+      expect(values, <String>[
+        'development',
+        'candidate',
+        'validated',
+        'frozen',
+        'released',
+        'withdrawn',
+        'superseded',
+      ]);
     });
   });
 
@@ -129,10 +125,7 @@ void main() {
         candidateOrdinal: 1,
         createdAt: DateTime.utc(2026, 9, 24),
         source: _source(),
-        environment: <String, Object?>{
-          'flutter': '3.44.9',
-          'dart': '3.12.2',
-        },
+        environment: <String, Object?>{'flutter': '3.44.9', 'dart': '3.12.2'},
       ).buildCanonicalJson();
 
       final second = ReleaseManifestBuilder.candidate(
@@ -140,10 +133,7 @@ void main() {
         candidateOrdinal: 1,
         createdAt: DateTime.utc(2026, 9, 24),
         source: _source(),
-        environment: <String, Object?>{
-          'dart': '3.12.2',
-          'flutter': '3.44.9',
-        },
+        environment: <String, Object?>{'dart': '3.12.2', 'flutter': '3.44.9'},
       ).buildCanonicalJson();
 
       expect(first, second);
@@ -232,10 +222,7 @@ void main() {
           requiredGateCount: 1,
           passedGateCount: 1,
           blockingFailureCount: 0,
-          evidenceRefs: <String>[
-            'test_evidence.json',
-            'test_evidence.json',
-          ],
+          evidenceRefs: <String>['test_evidence.json', 'test_evidence.json'],
         ),
       );
 
