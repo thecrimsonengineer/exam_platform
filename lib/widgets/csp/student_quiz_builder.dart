@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -21,12 +22,13 @@ class StudentQuizBuilder extends StatefulWidget {
 class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
   final QuizService _quizService = QuizService.shared;
 
-  static const int _maxAllScopePackages = 4;
+  static const int _maxRuntimeScopePackages = 4;
 
   List<PublishedQuestionPackageDescriptor> _catalog =
       <PublishedQuestionPackageDescriptor>[];
 
   bool _loading = true;
+  bool _startingQuiz = false;
   int _prepareGeneration = 0;
 
   String _scope = 'all';
@@ -58,9 +60,9 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
 
       setState(() {
         _catalog = catalog;
+        _loading = false;
+        _availableCount = _catalogueScopeCount();
       });
-
-      await _prepareCurrentScope();
     } catch (error) {
       if (!mounted) {
         return;
@@ -128,12 +130,64 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
     return result;
   }
 
-  void _schedulePrepare() {
-    unawaited(_prepareCurrentScope());
+  int _catalogueScopeCount() {
+    if (_scope == 'all') {
+      return _catalog.fold<int>(
+        0,
+        (sum, descriptor) => sum + descriptor.publishedQuestionCount,
+      );
+    }
+
+    if (_scope == 'domain') {
+      if (_domain == null) {
+        return 0;
+      }
+      return _domainDescriptors.fold<int>(
+        0,
+        (sum, descriptor) => sum + descriptor.publishedQuestionCount,
+      );
+    }
+
+    final competencyId = _competencyId?.trim();
+    if (competencyId == null || competencyId.isEmpty) {
+      return 0;
+    }
+
+    if (_scope == 'subtopic') {
+      return _availablePreparedQuestionCount();
+    }
+
+    for (final descriptor in _catalog) {
+      if (descriptor.competencyId == competencyId) {
+        return descriptor.publishedQuestionCount;
+      }
+    }
+
+    return 0;
   }
 
-  Future<void> _prepareCurrentScope() async {
+  void _refreshCatalogueCount() {
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _availableCount = _catalogueScopeCount();
+    });
+  }
+
+  void _scheduleSubtopicPreparation() {
+    unawaited(_prepareSubtopicScope());
+  }
+
+  Future<void> _prepareSubtopicScope() async {
     final generation = ++_prepareGeneration;
+    final competencyId = _competencyId?.trim();
+
+    if (competencyId == null || competencyId.isEmpty) {
+      _finishPreparation(generation, availableCount: 0);
+      return;
+    }
 
     if (mounted) {
       setState(() {
@@ -143,48 +197,21 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
     }
 
     try {
-      if (_scope == 'all') {
-        await _prepareBoundedAllScope();
-      } else if (_scope == 'domain') {
-        final selectedDomain = _domain;
-        if (selectedDomain == null) {
-          _finishPreparation(generation, availableCount: 0);
-          return;
-        }
-
-        final competencyIds = _domainDescriptors
-            .where((descriptor) => descriptor.publishedQuestionCount > 0)
-            .map((descriptor) => descriptor.competencyId)
-            .toList(growable: false);
-
-        if (competencyIds.isEmpty) {
-          _finishPreparation(generation, availableCount: 0);
-          return;
-        }
-
-        await _quizService.prepareCompetencies(competencyIds);
-      } else {
-        final competencyId = _competencyId?.trim();
-        if (competencyId == null || competencyId.isEmpty) {
-          _finishPreparation(generation, availableCount: 0);
-          return;
-        }
-
-        await _quizService.prepareCompetencies(<String>[competencyId]);
-      }
+      await _quizService.prepareCompetencies(<String>[competencyId]);
 
       if (!mounted || generation != _prepareGeneration) {
         return;
       }
 
-      if (_scope == 'subtopic' &&
-          _subtopicId != null &&
+      if (_subtopicId != null &&
           !_subtopics.any((item) => item.id == _subtopicId)) {
         _subtopicId = null;
       }
 
-      final count = _availablePreparedQuestionCount();
-      _finishPreparation(generation, availableCount: count);
+      _finishPreparation(
+        generation,
+        availableCount: _availablePreparedQuestionCount(),
+      );
     } catch (error) {
       if (!mounted || generation != _prepareGeneration) {
         return;
@@ -195,40 +222,51 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
         _availableCount = 0;
       });
 
-      _showMessage('Unable to prepare custom quiz questions.\n$error');
+      _showMessage('Unable to prepare subtopic questions.\n$error');
     }
   }
 
-  Future<void> _prepareBoundedAllScope() async {
-    final candidates = _catalog
-        .where((descriptor) => descriptor.publishedQuestionCount > 0)
-        .toList(growable: false);
-
-    if (candidates.isEmpty) {
+  Future<void> _prepareCurrentQuizPool() async {
+    if (_scope == 'all') {
+      await _prepareBoundedDescriptors(_catalog);
       return;
     }
 
-    final selected = <String>[];
-    var advertisedCount = 0;
-
-    for (final descriptor in candidates.take(_maxAllScopePackages)) {
-      selected.add(descriptor.competencyId);
-      advertisedCount += descriptor.publishedQuestionCount;
-
-      if (advertisedCount < _questionCount) {
-        continue;
+    if (_scope == 'domain') {
+      if (_domain == null) {
+        throw StateError('Select a domain before starting the quiz.');
       }
-
-      await _quizService.prepareCompetencies(selected);
-
-      if (_availablePreparedQuestionCount() >= _questionCount) {
-        return;
-      }
+      await _prepareBoundedDescriptors(_domainDescriptors);
+      return;
     }
 
-    if (selected.isNotEmpty) {
-      await _quizService.prepareCompetencies(selected);
+    final competencyId = _competencyId?.trim();
+    if (competencyId == null || competencyId.isEmpty) {
+      throw StateError('Select a competency before starting the quiz.');
     }
+
+    await _quizService.prepareCompetencies(<String>[competencyId]);
+  }
+
+  Future<void> _prepareBoundedDescriptors(
+    List<PublishedQuestionPackageDescriptor> descriptors,
+  ) async {
+    final candidates = descriptors
+        .where((descriptor) => descriptor.publishedQuestionCount > 0)
+        .toList();
+
+    if (candidates.isEmpty) {
+      throw StateError('No published question packages exist for this scope.');
+    }
+
+    candidates.shuffle(Random());
+
+    final selected = candidates
+        .take(_maxRuntimeScopePackages)
+        .map((descriptor) => descriptor.competencyId)
+        .toList(growable: false);
+
+    await _quizService.prepareCompetencies(selected);
   }
 
   int _availablePreparedQuestionCount() {
@@ -282,7 +320,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       }
     });
 
-    _schedulePrepare();
+    _refreshCatalogueCount();
   }
 
   void _changeDomain(int? value) {
@@ -292,7 +330,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _subtopicId = null;
     });
 
-    _schedulePrepare();
+    _refreshCatalogueCount();
   }
 
   void _changeCompetency(String? value) {
@@ -301,7 +339,11 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _subtopicId = null;
     });
 
-    _schedulePrepare();
+    if (_scope == 'subtopic') {
+      _scheduleSubtopicPreparation();
+    } else {
+      _refreshCatalogueCount();
+    }
   }
 
   void _changeSubtopic(String? value) {
@@ -317,7 +359,11 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _difficulty = value == 'Any' ? null : value;
     });
 
-    _schedulePrepare();
+    if (_scope == 'subtopic') {
+      _refreshPreparedCount();
+    } else {
+      _refreshCatalogueCount();
+    }
   }
 
   void _changeCognitiveLevel(String? value) {
@@ -325,20 +371,45 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _cognitiveLevel = value == 'Any' ? null : value;
     });
 
-    _schedulePrepare();
+    if (_scope == 'subtopic') {
+      _refreshPreparedCount();
+    } else {
+      _refreshCatalogueCount();
+    }
   }
 
-  void _startQuiz() {
-    if (_availableCount < _questionCount) {
+  Future<void> _startQuiz() async {
+    if (_startingQuiz) {
+      return;
+    }
+
+    final scopeCount = _catalogueScopeCount();
+    if (scopeCount < _questionCount) {
       _showMessage(
-        'Only $_availableCount published questions '
-        'are available for the selected criteria. '
+        'Only $scopeCount published questions exist in the selected scope. '
         '$_questionCount were requested.',
       );
       return;
     }
 
+    setState(() => _startingQuiz = true);
+
     try {
+      await _prepareCurrentQuizPool();
+
+      if (!mounted) {
+        return;
+      }
+
+      final preparedCount = _availablePreparedQuestionCount();
+      if (preparedCount < _questionCount) {
+        _showMessage(
+          'The selected filters produced only $preparedCount questions in the '
+          'bounded runtime sample. Try broader filters or another quiz.',
+        );
+        return;
+      }
+
       final questions = _quizService.buildQuiz(
         domain: _scope == 'all' ? null : _domain,
         competencyId: _scope == 'competency' || _scope == 'subtopic'
@@ -370,7 +441,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
         subtopicId: _scope == 'subtopic' ? _subtopicId : null,
       );
 
-      Navigator.of(context).push(
+      await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => LearningTwinPracticeSessionHost(
             practiceContext: learningTwinPracticeContext,
@@ -384,7 +455,13 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
         ),
       );
     } catch (error) {
-      _showMessage(error.toString().replaceFirst('Bad state: ', ''));
+      if (mounted) {
+        _showMessage(error.toString().replaceFirst('Bad state: ', ''));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _startingQuiz = false);
+      }
     }
   }
 
@@ -567,8 +644,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      '$_availableCount published '
-                      'questions available',
+                      '$_availableCount published questions in scope',
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -580,16 +656,41 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
               ),
             ),
 
+            const SizedBox(height: 8),
+            Text(
+              _scope == 'all' || _scope == 'domain'
+                  ? 'The total comes from compact Supabase catalogue metadata. '
+                        'Only up to $_maxRuntimeScopePackages competency packages '
+                        'are downloaded to assemble each quiz.'
+                  : _scope == 'competency'
+                  ? 'The total comes from the published competency package metadata.'
+                  : 'Subtopic availability is calculated from the selected competency package.',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+
             const SizedBox(height: 16),
 
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _availableCount >= _questionCount
+                onPressed:
+                    !_startingQuiz && _availableCount >= _questionCount
                     ? _startQuiz
                     : null,
-                icon: const Icon(Icons.play_arrow_rounded),
-                label: Text('Start $_questionCount-Question Quiz'),
+                icon: _startingQuiz
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.play_arrow_rounded),
+                label: Text(
+                  _startingQuiz
+                      ? 'Preparing quiz...'
+                      : 'Start $_questionCount-Question Quiz',
+                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
@@ -716,7 +817,11 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
           _questionCount = value;
         });
 
-        _schedulePrepare();
+        if (_scope == 'subtopic') {
+          _refreshPreparedCount();
+        } else {
+          _refreshCatalogueCount();
+        }
       },
     );
   }
