@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2A",
+  "status": "candidate_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c01",
+  "competencyStatement": "Compare performance against established benchmarks (e.g., gap analysis)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c01",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.program_evaluation",
+      "locators": [
+        "Monitor performance and progress",
+        "Verify that the program is implemented and is operating",
+        "Correct program shortcomings and identify opportunities to improve"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.program_tools",
+      "locators": [
+        "Safety and Health Program Self-Evaluation",
+        "Safety and Health Program Audit Tool"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nist.baldrige_framework",
+      "locators": [
+        "Results dimensions: Levels, Trends, Comparisons, Integration",
+        "identify strengths and gaps"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nist.performance_measurement",
+      "locators": [
+        "trends over time",
+        "comparisons relative to competitors, industry averages, and benchmark performance",
+        "basis for decision making"
+      ]
+    }
+  ],
+  "candidateConcepts": [
+    {
+      "semanticSlug": "benchmark",
+      "canonicalLabel": "Benchmark",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_framework",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "rationale": "A reference level or comparison point used to judge current performance."
+    },
+    {
+      "semanticSlug": "benchmarking",
+      "canonicalLabel": "Benchmarking",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_framework"
+      ],
+      "rationale": "The process of comparing performance with relevant internal, external, industry, competitor, or best-practice references."
+    },
+    {
+      "semanticSlug": "performance_measure",
+      "canonicalLabel": "Performance Measure",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.performance_measurement",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "rationale": "A defined measure used to track and evaluate performance, progress, or results."
+    },
+    {
+      "semanticSlug": "performance_baseline",
+      "canonicalLabel": "Performance Baseline",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_framework"
+      ],
+      "rationale": "The established current or starting performance level against which later change can be assessed."
+    },
+    {
+      "semanticSlug": "performance_target",
+      "canonicalLabel": "Performance Target",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation"
+      ],
+      "rationale": "A desired measurable performance level used to judge progress toward a goal."
+    },
+    {
+      "semanticSlug": "performance_gap",
+      "canonicalLabel": "Performance Gap",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_framework"
+      ],
+      "rationale": "The difference between current performance and a desired, benchmark, or required performance level."
+    },
+    {
+      "semanticSlug": "gap_analysis",
+      "canonicalLabel": "Gap Analysis",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.program_tools",
+        "csp11.source.nist.baldrige_framework"
+      ],
+      "rationale": "A structured comparison of current performance or practices with a desired benchmark or requirement to identify shortcomings and improvement needs."
+    },
+    {
+      "semanticSlug": "comparative_performance_data",
+      "canonicalLabel": "Comparative Performance Data",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_framework",
+        "csp11.source.nist.performance_measurement"
+      ],
+      "rationale": "Performance information used to compare an organization with relevant internal units, competitors, industry averages, benchmarks, or leading performers."
+    }
+  ],
+  "acceptedConcepts": [],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Resolve D02 C01 concept boundaries before learner-ready package authoring."
+}

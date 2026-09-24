@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2",
+  "domainId": "d02",
+  "domainNumber": 2,
+  "title": "Program Management",
+  "weightPercent": 25,
+  "status": "in_progress",
+  "canonicalBlueprint": {
+    "path": "docs/source_pipeline/CSP11_canonical_blueprint.json",
+    "version": "V.2024.04.24",
+    "effectiveDate": "2025-08-01"
+  },
+  "competencyCount": 14,
+  "competencies": [
+    {
+      "competencyId": "d02_c01",
+      "number": 1,
+      "statement": "Compare performance against established benchmarks (e.g., gap analysis)",
+      "status": "in_progress",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c01/d02_c01_concept_inventory.v1.json"
+    },
+    {
+      "competencyId": "d02_c02",
+      "number": 2,
+      "statement": "Analyze performance standards to determine plan of action",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c03",
+      "number": 3,
+      "statement": "Determine how to measure, analyze, and improve EHS culture",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c04",
+      "number": 4,
+      "statement": "Determine appropriate incident investigation techniques (root causes) and apply corrective actions",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c05",
+      "number": 5,
+      "statement": "Describe the Management of Change process (prior, during, after)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c06",
+      "number": 6,
+      "statement": "Describe system safety analysis techniques (e.g., fault tree analysis, failure modes and effects analysis [FMEA], Safety Case approach, risk summation)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c07",
+      "number": 7,
+      "statement": "Evaluate leading and lagging indicators",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c08",
+      "number": 8,
+      "statement": "Recognize safety, health, and environmental management and audit systems (e.g., ISO 14000 series, 45001, 19011, ANSI Z10)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c09",
+      "number": 9,
+      "statement": "Describe required components for plans, systems, and policies (e.g., safety, health, and environmental regulations and standards)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c10",
+      "number": 10,
+      "statement": "Utilize document retention or management principles (e.g., incident investigation, training records, exposure records, maintenance records, environmental management system, audit results, privacy, trade secrets, personal information)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c11",
+      "number": 11,
+      "statement": "Apply budgeting, finance, and economic analysis techniques and principles (e.g., timelines, budget development, resourcing, return on investment, cost/benefit analysis, role in procurement process)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c12",
+      "number": 12,
+      "statement": "Differentiate management leadership techniques (e.g., management theories, leadership theories, motivation, discipline, authority, responsibility, accountability, communication styles)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c13",
+      "number": 13,
+      "statement": "Apply project management principles and techniques (e.g., RACI charts, project timelines)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d02_c14",
+      "number": 14,
+      "statement": "Analyze and/or interpret data (e.g., exposure, release concentrations, sampling data, mean, median, mode, confidence intervals, probabilities, Pareto analysis)",
+      "status": "not_started"
+    }
+  ]
+}

@@ -14,7 +14,7 @@
   "runs": {
     "fcp0": "closed",
     "fcp1": "closed",
-    "fcp2": "not_started",
+    "fcp2": "in_progress",
     "fcp3": "not_started",
     "fcp4": "not_started",
     "fcp5": "not_started",
@@ -44,6 +44,17 @@
       "cardCount": 78,
       "status": "closed",
       "manifestPath": "assets/flashcards/production/d01/d01_production_manifest.v1.json"
+    },
+    "d02": {
+      "title": "Program Management",
+      "weightPercent": 25,
+      "competencyCount": 14,
+      "status": "in_progress",
+      "manifestPath": "assets/flashcards/production/d02/d02_production_manifest.v1.json"
     }
+  },
+  "fcp1RecoveryPoint": {
+    "branch": "phase-fcp1-d01-closed",
+    "sha": "45d00a95dc6d8cb9e7c06db6df57bb71c5e17fe2"
   }
 }

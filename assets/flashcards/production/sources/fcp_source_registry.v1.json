@@ -664,6 +664,74 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "OSHA overview of industrial robot uses and hazards, especially during non-routine tasks."
+    },
+    {
+      "id": "csp11.source.osha.program_evaluation",
+      "organization": "OSHA",
+      "title": "Safety Management - Program Evaluation and Improvement",
+      "canonicalUrl": "https://www.osha.gov/safety-management/program-evaluation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports goals, targets, indicators, performance monitoring, periodic program evaluation, comparisons to similar facilities, and improvement. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.program_tools",
+      "organization": "OSHA",
+      "title": "Safety Management - Explore Tools",
+      "canonicalUrl": "https://www.osha.gov/safety-management/explore-tools",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports self-evaluation, audit, identification of weaknesses, and continual improvement. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.baldrige_framework",
+      "organization": "NIST",
+      "title": "About the Baldrige Excellence Framework",
+      "canonicalUrl": "https://www.nist.gov/baldrige/about-baldrige-excellence-framework",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports performance levels, trends, comparisons to benchmarks or industry leaders, integration, strengths, gaps, and improvement cycles. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.performance_measurement",
+      "organization": "NIST",
+      "title": "Thinking about Performance Measurement",
+      "canonicalUrl": "https://www.nist.gov/baldrige/thinking-about-performance-measurement",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports trends, comparisons, benchmark performance, accurate and timely measures, and decision-useful performance information. Educational paraphrase only."
     }
   ]
 }
