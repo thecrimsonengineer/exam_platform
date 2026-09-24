@@ -117,7 +117,6 @@ void main() {
             facts.first['review'] as Map,
           );
           review['reviewedAt'] = '2026-09-22';
-          review['reviewedAt'] = '2026-09-23';
           review['nextReviewDueAt'] = '2026-09-23';
           facts.first['review'] = review;
           final provenance = Map<String, dynamic>.from(
@@ -133,7 +132,11 @@ void main() {
       now: DateTime(2026, 9, 24),
     );
 
-    expect(snapshot.bundleValid, isTrue);
+    expect(
+      snapshot.bundleValid,
+      isTrue,
+      reason: snapshot.diagnostics.join(' | '),
+    );
     expect(snapshot.eligibleFacts, hasLength(119));
     expect(snapshot.staleFactCount, 1);
   });
