@@ -703,9 +703,12 @@ service cloud.firestore {
 
 
     match /labLearnerReleaseState/{releaseId} {
-      allow get: if signedIn()
-        && resource.data.schemaVersion == 'csp11.lab.learner_release_state.v1'
-        && resource.data.released == true;
+      allow get: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.schemaVersion == 'csp11.lab.learner_release_state.v1'
+          && resource.data.released == true
+        );
 
       allow list: if isAdmin();
 
