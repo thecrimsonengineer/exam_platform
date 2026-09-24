@@ -53,8 +53,8 @@ void main() {
           'firebase_',
           'supabase',
           'package:http',
-          'http://',
-          'https://',
+          "import 'dart:io';",
+          'NetworkAssetBundle',
         ]) {
           expect(
             text,
@@ -65,6 +65,17 @@ void main() {
       }
     },
   );
+
+  test('manifest may only mention URLs to reject them', () async {
+    final manifest = await File(
+      'lib/features/learning_twin/ui/learning_twin_motion_manifest.dart',
+    ).readAsString();
+
+    expect(manifest, contains("startsWith('http://')"));
+    expect(manifest, contains("startsWith('https://')"));
+    expect(manifest, isNot(contains('HttpClient')));
+    expect(manifest, isNot(contains('Uri.parse')));
+  });
 
   test('production MicroFact surface remains static during LTAM-4', () async {
     final startupCard = await File(
