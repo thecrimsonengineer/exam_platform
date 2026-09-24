@@ -12,7 +12,7 @@ FCP-2D  d02_c04  CLOSED            12 cards
 FCP-2E  d02_c05  CLOSED            12 cards
 FCP-2F  d02_c06  CLOSED            12 cards
 FCP-2G  d02_c07  CLOSED            12 cards
-FCP-2H  d02_c08  NOT STARTED
+FCP-2H  d02_c08  VALIDATING         12 cards
 FCP-2I  d02_c09  NOT STARTED
 FCP-2J  d02_c10  NOT STARTED
 FCP-2K  d02_c11  NOT STARTED
@@ -37,4 +37,8 @@ FCP-2G started strictly from `phase-fcp2f-d02-c06-closed@c946f2b72af03cc86e4f3da
 
 FCP-2G package validation: SHA `2bcabaf9a0f299910010ee8a920bc0082016fe97`, run `35992273111`, SUCCESS, 12 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2H may begin only from `phase-fcp2g-d02-c07-closed`.
+FCP-2H started strictly from `phase-fcp2g-d02-c07-closed@0e9f2608b8beb54b05aab81cfab92badebac66fc`.
+
+C08 candidate package: 12 cards covering management systems, the ISO 14000 family, ISO 14001:2026, EMS, ISO 45001:2018, OHSMS, ISO 19011:2026, management-system audits, audit programmes, ANSI/ASSP Z10.0-2019, PDCA, and management-system certification.
+
+FCP-2H remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
