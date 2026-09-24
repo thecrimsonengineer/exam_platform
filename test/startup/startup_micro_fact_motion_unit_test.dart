@@ -85,10 +85,7 @@ void main() {
       (1 - balancedEnter.scale).abs(),
       lessThan((1 - fullEnter.scale).abs()),
     );
-    expect(
-      balancedExit.translateY.abs(),
-      lessThan(fullExit.translateY.abs()),
-    );
+    expect(balancedExit.translateY.abs(), lessThan(fullExit.translateY.abs()));
     expect(
       (balancedExit.scale - 1).abs(),
       lessThan((fullExit.scale - 1).abs()),

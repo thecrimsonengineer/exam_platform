@@ -50,8 +50,7 @@ class StartupMicroFactMotion {
 
     if (frame < _enterEndFrame) {
       final t = _easeOutCubic(
-        (frame - _enterStartFrame) /
-            (_enterEndFrame - _enterStartFrame),
+        (frame - _enterStartFrame) / (_enterEndFrame - _enterStartFrame),
       );
       final distance = mode == StartupMotionMode.balanced ? 7.0 : 10.0;
       final scaleDepth = mode == StartupMotionMode.balanced ? 0.008 : 0.015;
@@ -73,8 +72,7 @@ class StartupMicroFactMotion {
     }
 
     final t = _easeInCubic(
-      (frame - _exitStartFrame) /
-          (_exitEndFrame - _exitStartFrame),
+      (frame - _exitStartFrame) / (_exitEndFrame - _exitStartFrame),
     );
     final distance = mode == StartupMotionMode.balanced ? 6.0 : 9.0;
     final scaleLift = mode == StartupMotionMode.balanced ? 0.004 : 0.008;

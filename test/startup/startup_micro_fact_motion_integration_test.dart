@@ -8,50 +8,51 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const destinationKey = ValueKey('ml13-destination');
 
-  testWidgets('MicroFact choreography stays inside the existing startup clock', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Csp11StartupScreen(
-          motionPolicyOverride: StartupMotionPolicy.full,
-          microFactService: _FakeStartupMicroFactService(_fact()),
-          child: const SizedBox(
-            key: destinationKey,
-            child: Text('Destination'),
+  testWidgets(
+    'MicroFact choreography stays inside the existing startup clock',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Csp11StartupScreen(
+            motionPolicyOverride: StartupMotionPolicy.full,
+            microFactService: _FakeStartupMicroFactService(_fact()),
+            child: const SizedBox(
+              key: destinationKey,
+              child: Text('Destination'),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 20));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 20));
 
-    final motionFinder = find.byKey(
-      const ValueKey('startup-microfact-motion'),
-    );
-    expect(motionFinder, findsOneWidget);
-    expect(tester.widget<Opacity>(motionFinder).opacity, 0);
+      final motionFinder = find.byKey(
+        const ValueKey('startup-microfact-motion'),
+      );
+      expect(motionFinder, findsOneWidget);
+      expect(tester.widget<Opacity>(motionFinder).opacity, 0);
 
-    await tester.pump(const Duration(milliseconds: 800));
-    final enteringOpacity = tester.widget<Opacity>(motionFinder).opacity;
-    expect(enteringOpacity, greaterThan(0));
-    expect(enteringOpacity, lessThanOrEqualTo(1));
+      await tester.pump(const Duration(milliseconds: 800));
+      final enteringOpacity = tester.widget<Opacity>(motionFinder).opacity;
+      expect(enteringOpacity, greaterThan(0));
+      expect(enteringOpacity, lessThanOrEqualTo(1));
 
-    await tester.pump(const Duration(milliseconds: 700));
-    expect(tester.widget<Opacity>(motionFinder).opacity, 1);
+      await tester.pump(const Duration(milliseconds: 700));
+      expect(tester.widget<Opacity>(motionFinder).opacity, 1);
 
-    await tester.pump(const Duration(milliseconds: 2400));
-    final exitingOpacity = tester.widget<Opacity>(motionFinder).opacity;
-    expect(exitingOpacity, lessThan(1));
-    expect(exitingOpacity, greaterThanOrEqualTo(0));
+      await tester.pump(const Duration(milliseconds: 2400));
+      final exitingOpacity = tester.widget<Opacity>(motionFinder).opacity;
+      expect(exitingOpacity, lessThan(1));
+      expect(exitingOpacity, greaterThanOrEqualTo(0));
 
-    await tester.pump(const Duration(milliseconds: 1000));
+      await tester.pump(const Duration(milliseconds: 1000));
 
-    expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
-    expect(find.byKey(destinationKey), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
+      expect(find.byKey(destinationKey), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('reduced motion renders the fact without motion wrapper', (
     tester,
