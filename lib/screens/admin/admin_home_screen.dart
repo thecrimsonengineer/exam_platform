@@ -8,6 +8,7 @@ import '../../services/auth/learner_local_identity.dart';
 import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import 'lab/lab1000_studio_screen.dart';
+import 'lab/lab_production_release_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -135,6 +136,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
+  void _openProductionRelease() {
+    final adminUserId = widget.adminUserId?.trim();
+    if (adminUserId == null || adminUserId.isEmpty) {
+      _showComingSoon('Production release');
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => LabProductionReleaseScreen(
+          adminUserId: adminUserId,
+        ),
+      ),
+    );
+  }
+
   Future<void> _openStudentPortal() async {
     final adminUserId = widget.adminUserId?.trim();
 
@@ -219,6 +236,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       _openLabStudio();
     } else if (index == 4) {
       _openRepository();
+    } else if (index == 5) {
+      _openProductionRelease();
     } else if (index == 6) {
       _openStudio();
     }

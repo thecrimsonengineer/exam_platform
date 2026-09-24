@@ -603,10 +603,13 @@ service cloud.firestore {
     }
 
     match /labLearnerCatalogue/{versionKey} {
-      allow get, list: if signedIn()
-        && initialLabPopulationReleased()
-        && resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
-        && resource.data.available == true;
+      allow get, list: if isAdmin()
+        || (
+          signedIn()
+          && initialLabPopulationReleased()
+          && resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
+          && resource.data.available == true
+        );
 
       allow create: if isAdmin() && validLabCatalogueEntry(versionKey);
 
