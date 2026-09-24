@@ -27,16 +27,35 @@ void main() {
     expect(d02.length, 14);
   });
 
-  test('D02 manifest closes C01 before C02 starts', () {
+  test('D02 run states form a closed prefix followed by one active run', () {
+    final corpus = readObject(corpusPath);
+    final allRuns = Map<String, dynamic>.from(corpus['competencyRuns'] as Map);
+    final d02Runs = Map<String, dynamic>.from(allRuns['d02'] as Map).values
+        .map((item) => Map<String, dynamic>.from(item as Map)['status'])
+        .toList();
+
+    final firstNotClosed = d02Runs.indexWhere((status) => status != 'closed');
+    expect(firstNotClosed, greaterThanOrEqualTo(0));
+    expect(
+      d02Runs.take(firstNotClosed).every((status) => status == 'closed'),
+      isTrue,
+    );
+    expect(d02Runs[firstNotClosed], 'in_progress');
+    expect(
+      d02Runs
+          .skip(firstNotClosed + 1)
+          .every((status) => status == 'not_started'),
+      isTrue,
+    );
+
     final manifest = readObject(d02ManifestPath);
     final competencies = (manifest['competencies'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
-
-    expect(manifest['runModel'], 'one_competency_per_run');
     expect(competencies.first['status'], 'closed');
+    expect(competencies[1]['status'], 'in_progress');
     expect(
-      competencies.skip(1).every((item) => item['status'] == 'not_started'),
+      competencies.skip(2).every((item) => item['status'] == 'not_started'),
       isTrue,
     );
   });
