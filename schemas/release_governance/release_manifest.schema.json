@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://csp11.local/schemas/release_governance/release_manifest.schema.json",
+  "title": "CSP11 Release Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "release",
+    "source",
+    "environment",
+    "dependencies",
+    "components",
+    "validation",
+    "artifacts",
+    "recovery"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "releaseId",
+        "versionName",
+        "buildNumber",
+        "status",
+        "createdAt"
+      ],
+      "properties": {
+        "releaseId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionName": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+        },
+        "buildNumber": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": [
+            "development",
+            "candidate",
+            "validated",
+            "frozen",
+            "released",
+            "withdrawn",
+            "superseded"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "branch",
+        "commitSha",
+        "treeSha",
+        "clean"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commitSha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "treeSha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "clean": {
+          "type": "boolean"
+        }
+      }
+    },
+    "environment": {
+      "type": "object"
+    },
+    "dependencies": {
+      "type": "object"
+    },
+    "components": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/component"
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requiredGateCount",
+        "passedGateCount",
+        "blockingFailureCount",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "requiredGateCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passedGateCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blockingFailureCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "required": [
+        "previousStableRelease",
+        "rollbackEligible"
+      ],
+      "properties": {
+        "previousStableRelease": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rollbackEligible": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "componentId",
+        "status",
+        "checkpoint",
+        "commitSha",
+        "version",
+        "evidence"
+      ],
+      "properties": {
+        "componentId": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "checkpoint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commitSha": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}
