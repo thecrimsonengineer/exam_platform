@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://csp11.local/schemas/ml9e_human_review_packet_v1.schema.json",
+  "title": "CSP11 ML-9E Human Review Packet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "phase",
+    "batchId",
+    "sourceCorpusRef",
+    "sourceCorpusSha",
+    "reviewStatus",
+    "humanReviewComplete",
+    "facts"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "phase": {
+      "const": "ML-9E"
+    },
+    "batchId": {
+      "type": "string",
+      "pattern": "^ml9_batch_(0[1-9]|1[0-2])$"
+    },
+    "sourceCorpusRef": {
+      "const": "phase-ml9d-whole-corpus-ml8-closed"
+    },
+    "sourceCorpusSha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "reviewStatus": {
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed"
+      ]
+    },
+    "humanReviewComplete": {
+      "type": "boolean"
+    },
+    "facts": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/factReview"
+      }
+    }
+  },
+  "$defs": {
+    "channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewerId",
+        "reviewerRole",
+        "humanAttested",
+        "rationale",
+        "reviewedAt",
+        "nextReviewDueAt",
+        "requiredChecks",
+        "confirmedChecks"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail",
+            "not_applicable"
+          ]
+        },
+        "reviewerId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "reviewerRole": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "humanAttested": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "nextReviewDueAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "requiredChecks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]{3,80}$"
+          }
+        },
+        "confirmedChecks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]{3,80}$"
+          }
+        }
+      }
+    },
+    "factReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "microFactId",
+        "contentVersion",
+        "candidatePath",
+        "evidenceBundlePath",
+        "sourceUrl",
+        "sourceLocator",
+        "channels",
+        "overallDecision",
+        "revisionNotes"
+      ],
+      "properties": {
+        "microFactId": {
+          "type": "string",
+          "pattern": "^mf_ml9_[0-9]{3}$"
+        },
+        "contentVersion": {
+          "const": 1
+        },
+        "candidatePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceBundlePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceUrl": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "sourceLocator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "channels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "technical",
+            "source",
+            "rights",
+            "curriculum",
+            "pedagogy",
+            "accessibility",
+            "ui"
+          ],
+          "properties": {
+            "technical": {
+              "$ref": "#/$defs/channel"
+            },
+            "source": {
+              "$ref": "#/$defs/channel"
+            },
+            "rights": {
+              "$ref": "#/$defs/channel"
+            },
+            "curriculum": {
+              "$ref": "#/$defs/channel"
+            },
+            "pedagogy": {
+              "$ref": "#/$defs/channel"
+            },
+            "accessibility": {
+              "$ref": "#/$defs/channel"
+            },
+            "ui": {
+              "$ref": "#/$defs/channel"
+            }
+          }
+        },
+        "overallDecision": {
+          "enum": [
+            "pending",
+            "accept",
+            "revise",
+            "reject"
+          ]
+        },
+        "revisionNotes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2000
+        }
+      }
+    }
+  },
+  "x-csp11": {
+    "phase": "ML-9E",
+    "failClosed": true,
+    "notes": [
+      "Automation may prepare packets but must not populate human attestations.",
+      "A passing channel requires explicit human attestation and all required checks.",
+      "General-scope facts use not_applicable only for curriculum review."
+    ]
+  }
+}
