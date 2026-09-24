@@ -1,0 +1,116 @@
+name: ML-12 Startup MicroFactCard
+
+on:
+  push:
+    branches:
+      - phase-ml12-startup-microfact-card
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ml12-startup-microfact-card
+  cancel-in-progress: true
+
+jobs:
+  validate-ml12:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout exact ML-12 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify frozen ML-10 bundle
+        run: dart run tool/generate_ml10_runtime_bundle.dart --check
+
+      - name: Analyze ML-12
+        run: >
+          dart analyze
+          lib/services/micro_learning/startup_micro_fact_service.dart
+          lib/screens/startup/startup_micro_fact_card.dart
+          lib/screens/startup/csp11_startup_screen.dart
+          test/micro_learning/startup_micro_fact_service_test.dart
+          test/startup/startup_micro_fact_card_test.dart
+          test/startup/startup_micro_fact_integration_test.dart
+
+      - name: Format ML-12 files
+        run: >
+          dart format
+          lib/services/micro_learning/startup_micro_fact_service.dart
+          lib/screens/startup/startup_micro_fact_card.dart
+          lib/screens/startup/csp11_startup_screen.dart
+          test/micro_learning/startup_micro_fact_service_test.dart
+          test/startup/startup_micro_fact_card_test.dart
+          test/startup/startup_micro_fact_integration_test.dart
+
+      - name: Run ML-12 tests
+        run: |
+          flutter test \
+            test/micro_learning/startup_micro_fact_service_test.dart \
+            test/startup/startup_micro_fact_card_test.dart \
+            test/startup/startup_micro_fact_integration_test.dart
+
+      - name: Revalidate ML-11 selector
+        run: |
+          flutter test \
+            test/micro_learning/micro_fact_selector_test.dart \
+            test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
+
+      - name: Revalidate ML-10 repository
+        run: |
+          flutter test \
+            test/micro_learning/local_micro_fact_repository_test.dart \
+            test/micro_learning/local_micro_fact_repository_asset_test.dart
+
+      - name: Revalidate startup hardening and render
+        run: |
+          flutter test \
+            test/startup/startup_screen_hardening_test.dart \
+            test/startup/startup_release_render_smoke_test.dart
+
+      - name: Commit normalized ML-12 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          if git diff --quiet -- \
+            lib/services/micro_learning/startup_micro_fact_service.dart \
+            lib/screens/startup/startup_micro_fact_card.dart \
+            lib/screens/startup/csp11_startup_screen.dart \
+            test/micro_learning/startup_micro_fact_service_test.dart \
+            test/startup/startup_micro_fact_card_test.dart \
+            test/startup/startup_micro_fact_integration_test.dart; then
+            echo "ML-12 files are already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/services/micro_learning/startup_micro_fact_service.dart
+          git add lib/screens/startup/startup_micro_fact_card.dart
+          git add lib/screens/startup/csp11_startup_screen.dart
+          git add test/micro_learning/startup_micro_fact_service_test.dart
+          git add test/startup/startup_micro_fact_card_test.dart
+          git add test/startup/startup_micro_fact_integration_test.dart
+          git commit -m "ML-12 normalize startup MicroFact integration"
+          git push origin HEAD:phase-ml12-startup-microfact-card
