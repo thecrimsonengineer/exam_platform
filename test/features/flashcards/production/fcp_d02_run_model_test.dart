@@ -28,15 +28,16 @@ void main() {
     );
 
     final tail = statuses.skip(firstNotClosed).toList();
-    expect(<String>{'in_progress', 'validating', 'not_started'}, contains(tail.first));
+    expect(<String>{
+      'in_progress',
+      'validating',
+      'not_started',
+    }, contains(tail.first));
 
     if (tail.first == 'not_started') {
       expect(tail.every((status) => status == 'not_started'), isTrue);
     } else {
-      expect(
-        tail.skip(1).every((status) => status == 'not_started'),
-        isTrue,
-      );
+      expect(tail.skip(1).every((status) => status == 'not_started'), isTrue);
     }
   }
 
@@ -65,9 +66,7 @@ void main() {
         .toList();
 
     expect(manifest['runModel'], 'one_competency_per_run');
-    expectSequentialStates(
-      competencies.map((item) => item['status']).toList(),
-    );
+    expectSequentialStates(competencies.map((item) => item['status']).toList());
   });
 
   test('every closed D02 competency owns a complete evidence bundle', () {
