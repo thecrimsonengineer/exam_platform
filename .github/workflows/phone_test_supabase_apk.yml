@@ -1,0 +1,71 @@
+name: Phone Test Supabase APK
+
+on:
+  push:
+    branches:
+      - phone-test-supabase-apk
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-android-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: "3.44.9"
+          cache: true
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Verify Supabase configuration inputs
+        shell: bash
+        run: |
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_PUBLISHABLE_KEY"
+          [[ "$SUPABASE_URL" == "https://esfycnmfywxczfillioj.supabase.co" ]]
+          [[ "$SUPABASE_PUBLISHABLE_KEY" == sb_publishable_* ]]
+          echo "Supabase phone-test configuration confirmed."
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Build debug APK with Supabase
+        run: >
+          flutter build apk --debug
+          --dart-define=SUPABASE_URL=https://esfycnmfywxczfillioj.supabase.co
+          --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_M34kd0a0SWVAXy88iuLFfg_-5jz22oo
+
+      - name: Verify APK exists
+        run: |
+          test -f build/app/outputs/flutter-apk/app-debug.apk
+          sha256sum build/app/outputs/flutter-apk/app-debug.apk | tee apk-sha256.txt
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: csp11-phone-test-supabase-apk
+          path: |
+            build/app/outputs/flutter-apk/app-debug.apk
+            apk-sha256.txt
+          if-no-files-found: error
+          retention-days: 7
