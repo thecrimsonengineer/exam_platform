@@ -1,0 +1,51 @@
+name: REL-GOV Phase Validation
+
+on:
+  push:
+    branches:
+      - phase-rel-gov-release-governance
+    paths:
+      - 'tool/release_governance/**'
+      - 'test/release_governance/**'
+      - 'docs/release_governance/**'
+      - 'config/release_governance/**'
+      - 'schemas/release_governance/**'
+      - '.github/workflows/rel_gov_validation.yml'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rel-gov-phase-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact REL-GOV commit
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check REL-GOV formatting
+        run: dart format --output=none --set-exit-if-changed tool/release_governance test/release_governance
+
+      - name: Analyze REL-GOV
+        run: dart analyze tool/release_governance test/release_governance
+
+      - name: Run REL-GOV tests
+        run: flutter test test/release_governance
