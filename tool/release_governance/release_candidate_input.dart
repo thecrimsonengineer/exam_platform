@@ -149,13 +149,17 @@ class ReleaseCandidateInputAssembler {
       const ReleaseTestEvidence(
         suiteId: 'flutter-full',
         status: ReleaseTestStatus.pass,
-        evidenceRefs: <String>['build/release-governance-input/ci_evidence/full_flutter_tests.txt'],
+        evidenceRefs: <String>[
+          'build/release-governance-input/ci_evidence/full_flutter_tests.txt',
+        ],
         message: 'Full Flutter test suite passed in release-candidate CI.',
       ),
       const ReleaseTestEvidence(
         suiteId: 'release-governance',
         status: ReleaseTestStatus.pass,
-        evidenceRefs: <String>['build/release-governance-input/ci_evidence/release_governance_tests.txt'],
+        evidenceRefs: <String>[
+          'build/release-governance-input/ci_evidence/release_governance_tests.txt',
+        ],
         message: 'Dedicated REL-GOV regression suite passed.',
       ),
     ];

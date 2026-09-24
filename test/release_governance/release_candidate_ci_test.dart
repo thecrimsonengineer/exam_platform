@@ -243,7 +243,9 @@ void main() {
     test('uploads evidence without publishing or deployment', () {
       expect(
         workflow,
-        contains('mkdir -p build/release-upload/build/release-governance-input'),
+        contains(
+          'mkdir -p build/release-upload/build/release-governance-input',
+        ),
       );
       expect(workflow, contains('path: build/release-upload/'));
       expect(workflow, contains('uses: actions/upload-artifact@v4'));
