@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../features/lab/lab_production_release_operator.dart';
+import 'lab_batch2_release_screen.dart';
 
 class LabProductionReleaseScreen extends StatefulWidget {
   const LabProductionReleaseScreen({
@@ -244,6 +245,25 @@ class _LabProductionReleaseScreenState
                             inspection.evidence!.executedAtIso +
                             '\nFingerprint: ' +
                             inspection.evidence!.evidenceFingerprint,
+                      ),
+                    ],
+                    if (inspection.isClosed) ...[
+                      const SizedBox(height: 14),
+                      OutlinedButton.icon(
+                        key: const ValueKey('open-batch2-release'),
+                        onPressed: _executing
+                            ? null
+                            : () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => LabBatch2ReleaseScreen(
+                                      adminUserId: widget.adminUserId,
+                                    ),
+                                  ),
+                                );
+                              },
+                        icon: const Icon(Icons.library_add_check_rounded),
+                        label: const Text('OPEN BATCH 2 RELEASE'),
                       ),
                     ],
                     if (inspection.requiredConfirmationPhrase != null) ...[
