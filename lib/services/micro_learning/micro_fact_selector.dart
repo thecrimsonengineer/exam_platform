@@ -108,7 +108,7 @@ class MicroFactSelector {
       for (final fact in runtimeEligible) fact.microFactId: fact,
     };
     final recentFacts = recentIds
-        .map(baseById.call)
+        .map((id) => baseById[id])
         .whereType<MicroFact>()
         .toList(growable: false);
 
@@ -339,6 +339,3 @@ class _SelectionScore implements Comparable<_SelectionScore> {
   }
 }
 
-extension _MicroFactMapLookup on Map<String, MicroFact> {
-  MicroFact? call(String key) => this[key];
-}
