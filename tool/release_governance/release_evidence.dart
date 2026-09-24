@@ -500,22 +500,10 @@ class ReleaseEvidenceGenerator {
         final buildNumber = _integer(release, 'buildNumber');
         final releaseId = _string(release, 'releaseId');
 
-        final evidenceVersionName = _string(
-          versionEvidence,
-          'versionName',
-        );
-        final evidenceBuildNumber = _integer(
-          versionEvidence,
-          'buildNumber',
-        );
-        final evidenceFullVersion = _string(
-          versionEvidence,
-          'fullVersion',
-        );
-        final evidenceReleaseId = _string(
-          versionEvidence,
-          'releaseId',
-        );
+        final evidenceVersionName = _string(versionEvidence, 'versionName');
+        final evidenceBuildNumber = _integer(versionEvidence, 'buildNumber');
+        final evidenceFullVersion = _string(versionEvidence, 'fullVersion');
+        final evidenceReleaseId = _string(versionEvidence, 'releaseId');
 
         if (evidenceVersionName != versionName ||
             evidenceBuildNumber != buildNumber ||

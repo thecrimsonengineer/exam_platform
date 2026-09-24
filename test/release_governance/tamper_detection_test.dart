@@ -40,10 +40,7 @@ void main() {
       expect(generated.admission.admissible, isTrue);
       expect(generated.admission.blockingFailureCount, 0);
       expect(verified.pass, isTrue);
-      expect(
-        verified.evidenceIdentitySha256,
-        generated.evidenceIdentitySha256,
-      );
+      expect(verified.evidenceIdentitySha256, generated.evidenceIdentitySha256);
     });
   });
 
@@ -60,71 +57,58 @@ void main() {
       }
     });
 
-    test('blocks version and build mismatch even after identity refresh', () async {
-      const generator = ReleaseEvidenceGenerator();
-      final directory = '${root.path}/version';
-      await generator.generate(
-        request: _request(),
-        outputDirectory: directory,
-      );
+    test(
+      'blocks version and build mismatch even after identity refresh',
+      () async {
+        const generator = ReleaseEvidenceGenerator();
+        final directory = '${root.path}/version';
+        await generator.generate(
+          request: _request(),
+          outputDirectory: directory,
+        );
 
-      final file = File('$directory/version_evidence.json');
-      final json = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-      json['buildNumber'] = 2;
-      json['fullVersion'] = '1.0.0+2';
-      await _writeCanonicalJson(file, json);
-      await _refreshSummaryIdentity(directory);
+        final file = File('$directory/version_evidence.json');
+        final json =
+            jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+        json['buildNumber'] = 2;
+        json['fullVersion'] = '1.0.0+2';
+        await _writeCanonicalJson(file, json);
+        await _refreshSummaryIdentity(directory);
 
-      final verified = await generator.verify(directory: directory);
+        final verified = await generator.verify(directory: directory);
 
-      expect(verified.pass, isFalse);
-      expect(
-        verified.issues,
-        contains('EVD010_VERSION_EVIDENCE_MISMATCH'),
-      );
-      expect(
-        verified.issues,
-        isNot(contains('EVD009_SUMMARY_IDENTITY_MISMATCH')),
-      );
-    });
+        expect(verified.pass, isFalse);
+        expect(verified.issues, contains('EVD010_VERSION_EVIDENCE_MISMATCH'));
+        expect(
+          verified.issues,
+          isNot(contains('EVD009_SUMMARY_IDENTITY_MISMATCH')),
+        );
+      },
+    );
 
     test('blocks manifest alteration', () async {
       const generator = ReleaseEvidenceGenerator();
       final directory = '${root.path}/manifest-alteration';
-      await generator.generate(
-        request: _request(),
-        outputDirectory: directory,
-      );
+      await generator.generate(request: _request(), outputDirectory: directory);
 
       final file = File('$directory/release_manifest.json');
       final content = await file.readAsString();
       await file.writeAsString(
-        content.replaceFirst(
-          'csp11-1.0.0-rc.1',
-          'csp11-9.9.9-rc.9',
-        ),
+        content.replaceFirst('csp11-1.0.0-rc.1', 'csp11-9.9.9-rc.9'),
       );
 
       final verified = await generator.verify(directory: directory);
 
       expect(verified.pass, isFalse);
-      expect(
-        verified.issues,
-        contains('EVD009_SUMMARY_IDENTITY_MISMATCH'),
-      );
+      expect(verified.issues, contains('EVD009_SUMMARY_IDENTITY_MISMATCH'));
     });
 
     test('blocks corrupt manifest JSON', () async {
       const generator = ReleaseEvidenceGenerator();
       final directory = '${root.path}/corrupt-manifest';
-      await generator.generate(
-        request: _request(),
-        outputDirectory: directory,
-      );
+      await generator.generate(request: _request(), outputDirectory: directory);
 
-      await File(
-        '$directory/release_manifest.json',
-      ).writeAsString('{not-json');
+      await File('$directory/release_manifest.json').writeAsString('{not-json');
 
       final verified = await generator.verify(directory: directory);
 
@@ -138,10 +122,7 @@ void main() {
     test('blocks checksum mismatch', () async {
       const generator = ReleaseEvidenceGenerator();
       final directory = '${root.path}/checksum';
-      await generator.generate(
-        request: _request(),
-        outputDirectory: directory,
-      );
+      await generator.generate(request: _request(), outputDirectory: directory);
 
       await File('$directory/checksums.sha256').writeAsString(
         'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
@@ -157,32 +138,36 @@ void main() {
       );
     });
 
-    test('blocks evidence from another commit after identity refresh', () async {
-      const generator = ReleaseEvidenceGenerator();
-      final directory = '${root.path}/foreign-commit';
-      await generator.generate(
-        request: _request(),
-        outputDirectory: directory,
-      );
+    test(
+      'blocks evidence from another commit after identity refresh',
+      () async {
+        const generator = ReleaseEvidenceGenerator();
+        final directory = '${root.path}/foreign-commit';
+        await generator.generate(
+          request: _request(),
+          outputDirectory: directory,
+        );
 
-      final file = File('$directory/repository_evidence.json');
-      final json = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-      json['headSha'] = 'ffffffffffffffffffffffffffffffffffffffff';
-      await _writeCanonicalJson(file, json);
-      await _refreshSummaryIdentity(directory);
+        final file = File('$directory/repository_evidence.json');
+        final json =
+            jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+        json['headSha'] = 'ffffffffffffffffffffffffffffffffffffffff';
+        await _writeCanonicalJson(file, json);
+        await _refreshSummaryIdentity(directory);
 
-      final verified = await generator.verify(directory: directory);
+        final verified = await generator.verify(directory: directory);
 
-      expect(verified.pass, isFalse);
-      expect(
-        verified.issues,
-        contains('EVD011_REPOSITORY_EVIDENCE_MISMATCH'),
-      );
-      expect(
-        verified.issues,
-        isNot(contains('EVD009_SUMMARY_IDENTITY_MISMATCH')),
-      );
-    });
+        expect(verified.pass, isFalse);
+        expect(
+          verified.issues,
+          contains('EVD011_REPOSITORY_EVIDENCE_MISMATCH'),
+        );
+        expect(
+          verified.issues,
+          isNot(contains('EVD009_SUMMARY_IDENTITY_MISMATCH')),
+        );
+      },
+    );
   });
 
   group('REL-GOV-10 admission tamper regression', () {
@@ -267,11 +252,7 @@ void main() {
         treeSha: _treeSha,
         tagsAtHead: <String>[],
         changes: <RepositoryChange>[
-          RepositoryChange(
-            status: ' M',
-            path: 'lib/main.dart',
-            tracked: true,
-          ),
+          RepositoryChange(status: ' M', path: 'lib/main.dart', tracked: true),
         ],
       );
       const policy = RepositoryProvenancePolicy(
@@ -336,9 +317,9 @@ void main() {
         'targetCompatibility = JavaVersion.VERSION_17\n'
         'jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17\n',
       );
-      await File('${root.path}/pubspec.yaml').writeAsString(
-        'name: synthetic\nversion: 1.0.0+1\n',
-      );
+      await File(
+        '${root.path}/pubspec.yaml',
+      ).writeAsString('name: synthetic\nversion: 1.0.0+1\n');
 
       final inspector = BuildEnvironmentInspector(
         commandRunner: _fakeCommandRunner,
@@ -487,10 +468,7 @@ void main() {
   });
 }
 
-Future<void> _writeCanonicalJson(
-  File file,
-  Map<String, dynamic> json,
-) async {
+Future<void> _writeCanonicalJson(File file, Map<String, dynamic> json) async {
   await file.writeAsString(
     '${const JsonEncoder.withIndent('  ').convert(json)}\n',
     flush: true,
@@ -517,9 +495,7 @@ Future<void> _refreshSummaryIdentity(String directory) async {
       ..write(parts[name])
       ..write('\u0000');
   }
-  final identity = checksumService.sha256Bytes(
-    utf8.encode(buffer.toString()),
-  );
+  final identity = checksumService.sha256Bytes(utf8.encode(buffer.toString()));
 
   final summary = File('$directory/release_summary.txt');
   final lines = const LineSplitter().convert(await summary.readAsString());
@@ -668,7 +644,6 @@ const ArtifactRecord _artifact = ArtifactRecord(
   artifactId: 'android-apk',
   fileName: 'build/app.apk',
   sizeBytes: 10,
-  sha256:
-      'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  sha256: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   required: true,
 );
