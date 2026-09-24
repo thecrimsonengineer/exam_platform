@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2G",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c07",
+  "competencyStatement": "Evaluate leading and lagging indicators",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c07",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.leading_indicators",
+      "locators": [
+        "Leading Indicators > leading and lagging indicators",
+        "Using Leading Indicators guidance > Characteristics of Effective Leading Indicators",
+        "Using Leading Indicators guidance > hazard-report response-time example"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.program_evaluation",
+      "locators": [
+        "Program Evaluation and Improvement > Monitor performance and progress",
+        "leading indicator examples",
+        "lagging indicator examples",
+        "analyze indicators and evaluate progress over time"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "performance_measure",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_measure",
+      "reason": "Leading and lagging indicators are performance measures, but the generic Performance Measure concept is canonical in D02 C01."
+    },
+    {
+      "semanticSlug": "performance_target",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_target",
+      "reason": "Indicator targets support evaluation, but the generic Performance Target concept is canonical in D02 C01."
+    },
+    {
+      "semanticSlug": "performance_analysis",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.performance_analysis",
+      "reason": "Indicator trends require analysis, but the generic Performance Analysis concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "worker_safety_participation",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.worker_safety_participation",
+      "reason": "Worker participation can serve as a leading indicator, but the generic participation concept is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "safety_climate",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.safety_climate",
+      "reason": "Safety-climate survey results can serve as leading indicators, but the generic Safety Climate concept is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "close_call",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c04",
+      "intendedConceptId": "csp11.concept.close_call",
+      "reason": "Near-miss or close-call reporting can be tracked as a leading indicator, but the generic Close Call concept is canonical in D02 C04."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "leading_indicator",
+      "canonicalLabel": "Leading Indicator",
+      "sourceIds": [
+        "csp11.source.osha.leading_indicators",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "lagging_indicator",
+      "canonicalLabel": "Lagging Indicator",
+      "sourceIds": [
+        "csp11.source.osha.leading_indicators",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "balanced_leading_lagging_indicators",
+      "canonicalLabel": "Balanced Leading and Lagging Indicators",
+      "sourceIds": [
+        "csp11.source.osha.leading_indicators",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "smart_leading_indicator",
+      "canonicalLabel": "SMART Leading Indicator",
+      "sourceIds": [
+        "csp11.source.osha.leading_indicators"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "hazard_report_response_time",
+      "canonicalLabel": "Hazard Report Response Time",
+      "sourceIds": [
+        "csp11.source.osha.leading_indicators",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "corrective_action_completion_timeliness",
+      "canonicalLabel": "Corrective Action Completion Timeliness",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "management_walkthrough_frequency",
+      "canonicalLabel": "Management Walkthrough Frequency",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "preventive_maintenance_completion_indicator",
+      "canonicalLabel": "Preventive Maintenance Completion Indicator",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_training_completion_indicator",
+      "canonicalLabel": "Safety Training Completion Indicator",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "injury_illness_outcome_indicator",
+      "canonicalLabel": "Injury and Illness Outcome Indicator",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation",
+        "csp11.source.osha.leading_indicators"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "exposure_monitoring_lagging_indicator",
+      "canonicalLabel": "Exposure Monitoring Lagging Indicator",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "workers_compensation_lagging_indicator",
+      "canonicalLabel": "Workers' Compensation Lagging Indicator",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c07_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 12,
+    "acceptedCardCount": 12,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
