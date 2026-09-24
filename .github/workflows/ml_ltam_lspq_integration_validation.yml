@@ -54,6 +54,20 @@ jobs:
       - name: Verify frozen ML runtime bundle
         run: dart run tool/generate_ml10_runtime_bundle.dart --check
 
+      - name: INT-LQ7 integration repair regressions
+        run: |
+          flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+          flutter test test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
+          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+          flutter test test/screens/lab/lab_library_scenario_test.dart
+
+      - name: INT-LQ6 Firebase and security convergence
+        run: |
+          flutter test test/security/firestore_final_rules_contract_test.dart
+          flutter test test/security/firestore_users_rules_contract_test.dart
+          flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+          flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
+
       - name: LSP Q1 canonical question parser
         run: flutter test test/services/questions/canonical_question_parser_test.dart
 
@@ -129,13 +143,6 @@ jobs:
       - name: Startup motion and handoff regression
         run: flutter test test/startup/startup_motion_policy_test.dart test/startup/startup_timeline_test.dart test/startup/startup_screen_hardening_test.dart test/startup/startup_release_render_smoke_test.dart
 
-      - name: INT-LQ7 integration repair regressions
-        run: |
-          flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
-          flutter test test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
-          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
-          flutter test test/screens/lab/lab_library_scenario_test.dart
-
       - name: Full repository regression
         run: flutter test
 
@@ -146,7 +153,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          dart format             lib/services/questions/canonical_question_parser.dart             lib/services/studio/studio_question_import_service.dart             lib/features/lab             lib/features/learning_twin/integration             lib/screens/startup/startup_micro_fact_card.dart             test/lab_quality             test/features/learning_twin/integration
+          dart format             lib/services/questions/canonical_question_parser.dart             lib/services/studio/studio_question_import_service.dart             lib/features/lab             lib/features/learning_twin/integration             lib/screens/startup/startup_micro_fact_card.dart             lib/screens/lab/lab_library_screen.dart             test/lab_quality             test/features/learning_twin/integration             test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart             test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart             test/integration/home_startup/int_r7_integrated_render_navigation_test.dart             test/screens/lab/lab_library_scenario_test.dart
           git diff --check
           if git diff --quiet; then
             echo "No formatter changes required."
@@ -154,6 +161,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add             lib/services/questions/canonical_question_parser.dart             lib/services/studio/studio_question_import_service.dart             lib/features/lab             lib/features/learning_twin/integration             lib/screens/startup/startup_micro_fact_card.dart             test/lab_quality             test/features/learning_twin/integration
+          git add             lib/services/questions/canonical_question_parser.dart             lib/services/studio/studio_question_import_service.dart             lib/features/lab             lib/features/learning_twin/integration             lib/screens/startup/startup_micro_fact_card.dart             lib/screens/lab/lab_library_screen.dart             test/lab_quality             test/features/learning_twin/integration             test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart             test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart             test/integration/home_startup/int_r7_integrated_render_navigation_test.dart             test/screens/lab/lab_library_scenario_test.dart
           git commit -m "INT-LQ normalize combined integration files"
           git push origin HEAD:phase-ml-ltam-lspq-integration
