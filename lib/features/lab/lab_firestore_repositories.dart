@@ -206,6 +206,7 @@ class FirestoreLabLearnerCatalogueRepository
   Future<List<LabLearnerCatalogueEntry>> listAvailable() async {
     final snapshot = await _collection
         .where('available', isEqualTo: true)
+        .where('releaseId', isEqualTo: kLearnerVisibleLabReleaseId)
         .get();
 
     final entries =
