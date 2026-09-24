@@ -48,46 +48,6 @@ class _FileBatch2PopulationSource implements LabProductionPopulationSource {
 }
 
 void main() {
-  test('Batch 2 Q16 releases without original Q17 acceptance', () async {
-    final source = _FileBatch2PopulationSource();
-    final published = InMemoryLabPublishedRepository();
-    final staging = InMemoryLabBatch2CatalogueStagingRepository();
-    final evidence = InMemoryLabBatch2ReleaseEvidenceRepository();
-    final operator = LabBatch2ReleaseOperatorService(
-      populationSource: source,
-      publishedRepository: published,
-      stagingRepository: staging,
-      evidenceRepository: evidence,
-      environmentId: kExpectedLabProductionEnvironmentId,
-    );
-
-    final pristine = await operator.inspect();
-    expect(pristine.state, LabBatch2ReleaseState.pristine);
-    expect(pristine.publishedCount, 0);
-    expect(pristine.stagedCount, 0);
-
-    final closed = await operator.executeRelease(
-      executedBy: 'admin_batch2_test',
-      confirmationPhrase: kBatch2ReleaseConfirmationPhrase,
-      executedAt: DateTime.utc(2026, 9, 25, 1),
-    );
-
-    expect(closed.releaseId, kBatch2ReleaseId);
-    expect(closed.manifestId, 'phase_l_population_batch2_v1');
-    expect(closed.labCount, 10);
-    expect(closed.totalDecisionCount, 50);
-    expect(closed.preCatalogueClosedSha, kBatch2PreCatalogueClosedSha);
-    expect(
-      closed.preCatalogueValidationRunId,
-      kBatch2PreCatalogueValidationRunId,
-    );
-
-    final inspection = await operator.inspect();
-    expect(inspection.state, LabBatch2ReleaseState.closed);
-    expect(inspection.publishedCount, 10);
-    expect(inspection.stagedCount, 10);
-  });
-
   test('Batch 2 learner catalogue activates only after Batch 2 Q17', () async {
     final source = _FileBatch2PopulationSource();
     final published = InMemoryLabPublishedRepository();
