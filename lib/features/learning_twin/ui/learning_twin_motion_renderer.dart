@@ -243,8 +243,9 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
   }
 
   Future<void> _preflightAsset(String assetPath) async {
-    final available = await (_learningTwinMotionAssetAvailabilityCache[assetPath] ??=
-        _assetExists(assetPath));
+    final available =
+        await (_learningTwinMotionAssetAvailabilityCache[assetPath] ??=
+            _assetExists(assetPath));
 
     if (!mounted) {
       return;
@@ -330,7 +331,9 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
         _unavailableAssetPaths.add(assetPath);
         _availableAssetPaths.remove(assetPath);
       });
-      _learningTwinMotionAssetAvailabilityCache[assetPath] = Future<bool>.value(false);
+      _learningTwinMotionAssetAvailabilityCache[assetPath] = Future<bool>.value(
+        false,
+      );
       _logFallback(assetPath, 'asset_load');
       final manifest = _manifestResult?.manifest;
       _animationController.stop(canceled: false);
