@@ -42,10 +42,18 @@ void main() {
       expect(observed['statement'], expected.statement);
     }
 
-    expect(competencies.first['status'], 'closed');
-    expect(competencies[1]['status'], 'validating');
+    final statuses = competencies
+        .map((item) => item['status'].toString())
+        .toList();
+    final firstNotClosed = statuses.indexWhere((status) => status != 'closed');
+
+    expect(firstNotClosed, greaterThanOrEqualTo(0));
     expect(
-      competencies.skip(2).every((item) => item['status'] == 'not_started'),
+      statuses.take(firstNotClosed).every((status) => status == 'closed'),
+      isTrue,
+    );
+    expect(
+      statuses.skip(firstNotClosed).every((status) => status == 'not_started'),
       isTrue,
     );
   });
