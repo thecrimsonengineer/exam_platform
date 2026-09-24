@@ -8,7 +8,7 @@ FCP-2 execution model: **one competency per run**.
 
 ```text
 FCP-2A  d02_c01  CLOSED
-FCP-2B  d02_c02  VALIDATING
+FCP-2B  d02_c02  CLOSED
 FCP-2C  d02_c03  NOT STARTED
 FCP-2D  d02_c04  NOT STARTED
 FCP-2E  d02_c05  NOT STARTED
@@ -24,3 +24,6 @@ FCP-2N  d02_c14  NOT STARTED
 ```
 
 FCP-2A package validation passed at `9a044d50969ad6c4a1e6313077a63cb6ed3ac1fc` in run `35960983124`. The closure metadata/evidence commit must also pass CI before its checkpoint branch is created.
+
+
+FCP-2B package validation passed at `ae03de09574de5ec4ae7bbdebc52aa7788ab3ed4` in run `35963750625`. The closure state is ready for `phase-fcp2b-d02-c02-closed`.
