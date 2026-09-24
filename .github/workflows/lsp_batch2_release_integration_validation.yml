@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: lsp-batch2-release-integration-${{ github.ref }}
+  group: lsp-batch2-release-integration-${{ github.sha }}
   cancel-in-progress: true
 
 jobs:
