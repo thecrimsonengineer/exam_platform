@@ -596,6 +596,33 @@ ML-9E artifacts:
 - `.github/workflows/ml9e_human_review_validation.yml`
 - `docs/micro_learning/ML9E_HUMAN_REVIEW_RUNBOOK.md`
 
+### ML-9E - Human Review Completion
+
+- Human review was explicitly completed by Naveed for the complete 120-fact corpus.
+- All 12 review packets are completed.
+- Accepted facts: 120.
+- Facts requiring revision: 0.
+- Rejected facts: 0.
+- Applicable signed human review channels: 834.
+- General-scope curriculum review exemptions: 6.
+- Rights human-pass evidence: 120.
+- Curriculum human-pass evidence: 114.
+- Pedagogy human-pass evidence: 120.
+- Accessibility human-pass evidence: 120.
+- All 120 facts were mechanically promoted from `review` to `validated` only after the `--require-complete` gate passed.
+- Published facts remain 0.
+- Startup-eligible facts remain 0.
+- The post-application validator passed on exact SHA `898fb30fb659cc015996e755d349fe4d19dc31fb`.
+- Exact verification workflow run: `35949971416`.
+- No publication or startup admission was performed in ML-9E.
+
+ML-9E completion artifacts:
+
+- `content/micro_learning/review/ml9e_human_review_application_checkpoint.json`
+- `content/micro_learning/review/ml9e_post_application_verification_request.json`
+- `content/micro_learning/review/ml9e_human_review_freeze.json`
+- `tool/validate_ml9e_post_application.dart`
+
 ## Next action
 
-ML-9E Batch 01 - a real reviewer completes the first 10-fact human-review packet. Continue through Batch 12. Do not advance to ML-9F until `dart run tool/validate_ml9e_human_review.dart --require-complete` passes.
+ML-9F - Publication Freeze. Publish exactly the 120 accepted facts, enable startup eligibility only after all frozen release gates pass, rerun complete corpus and evidence validation, and freeze the exact closing SHA.

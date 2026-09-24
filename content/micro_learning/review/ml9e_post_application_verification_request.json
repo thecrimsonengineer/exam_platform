@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "ML-9E",
-  "verificationStatus": "requested",
+  "verificationStatus": "verified",
   "requestedAt": "2026-09-24",
   "appliedHumanReviewSha": "de10c2fa79fff79acdd38f2661db305da7caf5fe",
   "expectedState": {
@@ -13,5 +13,9 @@
     "generalCurriculumExemptions": 6,
     "pedagogyHumanPassCount": 120,
     "accessibilityHumanPassCount": 120
-  }
+  },
+  "verifiedAt": "2026-09-24",
+  "verificationSha": "898fb30fb659cc015996e755d349fe4d19dc31fb",
+  "workflowRunId": 35949971416,
+  "workflowConclusion": "success"
 }

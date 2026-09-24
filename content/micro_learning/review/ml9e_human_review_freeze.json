@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9E",
+  "freezeStatus": "closed_human_review_checkpoint",
+  "closedAt": "2026-09-24",
+  "reviewer": {
+    "reviewerId": "Naveed",
+    "reviewerRole": "content_governance_reviewer",
+    "humanAttestationSource": "User explicitly confirmed all human reviews completed."
+  },
+  "sourceCorpus": {
+    "ref": "phase-ml9d-whole-corpus-ml8-closed",
+    "sha": "f4d7e8bde1e5584f27fdce98741b7ab7db0ab23b",
+    "candidateCount": 120
+  },
+  "reviewResult": {
+    "reviewedFactCount": 120,
+    "acceptedFactCount": 120,
+    "revisedFactCount": 0,
+    "rejectedFactCount": 0,
+    "completedBatchCount": 12,
+    "signedApplicableChannelReviews": 834,
+    "curriculumNotApplicableCount": 6,
+    "reviewDate": "2026-09-24",
+    "nextReviewDueAt": "2027-09-24"
+  },
+  "evidenceResult": {
+    "rightsHumanPassCount": 120,
+    "curriculumHumanPassCount": 114,
+    "generalCurriculumExemptions": 6,
+    "pedagogyHumanPassCount": 120,
+    "accessibilityHumanPassCount": 120
+  },
+  "lifecycle": {
+    "validatedFactCount": 120,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "application": {
+    "appliedHumanReviewSha": "de10c2fa79fff79acdd38f2661db305da7caf5fe",
+    "exactVerificationSha": "898fb30fb659cc015996e755d349fe4d19dc31fb",
+    "workflowRunId": 35949971416,
+    "workflowConclusion": "success",
+    "postApplicationValidator": "pass"
+  },
+  "nextAction": "ML-9F Publication Freeze"
+}
