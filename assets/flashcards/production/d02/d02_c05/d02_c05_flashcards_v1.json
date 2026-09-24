@@ -424,13 +424,13 @@
         {
           "sourceId": "csp11.source.osha.1910_119_app_c",
           "locator": "Appendix C, Section 11 - temporary changes, time limits, and return to original conditions",
-          "primary": true,
+          "primary": false,
           "definitionMode": "educationalParaphrase"
         },
         {
           "sourceId": "csp11.source.osha.1910_119",
           "locator": "29 CFR 1910.119(l)(2)(iv) - necessary time period for the change",
-          "primary": false,
+          "primary": true,
           "definitionMode": "educationalParaphrase"
         }
       ],
@@ -560,13 +560,13 @@
         {
           "sourceId": "csp11.source.osha.1910_119_app_c",
           "locator": "Appendix C, Section 11 - documentation, review, temporary-change restoration, and MOC follow-through",
-          "primary": true,
+          "primary": false,
           "definitionMode": "educationalParaphrase"
         },
         {
           "sourceId": "csp11.source.osha.1910_119",
           "locator": "29 CFR 1910.119(l)(3)-(5) - training and information/procedure updates",
-          "primary": false,
+          "primary": true,
           "definitionMode": "educationalParaphrase"
         }
       ],
