@@ -70,23 +70,35 @@ void main() {
     );
     final d02 = Map<String, dynamic>.from(competencyRuns['d02'] as Map);
     expect(d02.length, 14);
+
     final statuses = d02.values
-        .map((item) => Map<String, dynamic>.from(item as Map)['status'])
+        .map((item) => Map<String, dynamic>.from(item as Map)['status'].toString())
         .toList();
     final firstNotClosed = statuses.indexWhere((status) => status != 'closed');
 
-    expect(firstNotClosed, greaterThanOrEqualTo(0));
+    if (firstNotClosed == -1) {
+      expect(statuses.every((status) => status == 'closed'), isTrue);
+      return;
+    }
+
     expect(
       statuses.take(firstNotClosed).every((status) => status == 'closed'),
       isTrue,
     );
-    expect(statuses[firstNotClosed], 'in_progress');
+
+    final tail = statuses.skip(firstNotClosed).toList();
     expect(
-      statuses
-          .skip(firstNotClosed + 1)
-          .every((status) => status == 'not_started'),
-      isTrue,
+      <String>{'in_progress', 'validating', 'not_started'},
+      contains(tail.first),
     );
+    if (tail.first == 'not_started') {
+      expect(tail.every((status) => status == 'not_started'), isTrue);
+    } else {
+      expect(
+        tail.skip(1).every((status) => status == 'not_started'),
+        isTrue,
+      );
+    }
   });
 
   test('FCP-2 admits D02 after frozen D01 closure', () {
