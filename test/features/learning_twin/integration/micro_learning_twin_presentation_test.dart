@@ -66,8 +66,9 @@ void main() {
       tags: ['hazardous_energy', 'bridge_test'],
     );
 
-    final presentation =
-        const MicroLearningTwinPresentationBridge().forFact(fact);
+    final presentation = const MicroLearningTwinPresentationBridge().forFact(
+      fact,
+    );
 
     expect(presentation.asset, LearningTwinAsset.explain);
     expect(presentation.eventKey, 'microfact:mf_bridge_001:v3');
