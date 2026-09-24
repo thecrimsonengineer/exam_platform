@@ -46,7 +46,8 @@
     },
     "fcp2c": {
       "name": "FCP2C_D02_C03_GREEN",
-      "branch": "phase-fcp2c-d02-c03-closed"
+      "branch": "phase-fcp2c-d02-c03-closed",
+      "sha": "b5c83522f123c51e086e3f059cc1f97926c99607"
     }
   },
   "domains": {
@@ -95,7 +96,7 @@
       },
       "fcp2d": {
         "competencyId": "d02_c04",
-        "status": "not_started",
+        "status": "in_progress",
         "checkpointBranch": "phase-fcp2d-d02-c04-closed"
       },
       "fcp2e": {

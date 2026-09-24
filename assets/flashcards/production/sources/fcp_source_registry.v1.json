@@ -885,6 +885,74 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Supports the importance of safety climate and safety culture, worker input, participatory approaches, and prevention. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.incident_investigation",
+      "organization": "OSHA",
+      "title": "Incident Investigation - Overview",
+      "canonicalUrl": "https://www.osha.gov/incident-investigation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports investigation of injuries, illnesses and close calls, root-cause focus, systems thinking, management/worker involvement, and corrective actions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.incident_investigation_guide",
+      "organization": "OSHA",
+      "title": "Incident [Accident] Investigations: A Guide for Employers",
+      "canonicalUrl": "https://www.osha.gov/sites/default/files/IncInvGuide4Empl_Dec2015.pdf",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Advisory OSHA systems-approach guide. Supports incident/close-call definitions, preserve-document scene, collect information, determine root causes, and implement corrective actions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.root_cause_fact_sheet",
+      "organization": "OSHA",
+      "title": "The Importance of Root Cause Analysis During Incident Investigation",
+      "canonicalUrl": "https://www.osha.gov/sites/default/files/publications/OSHA3895.pdf",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Joint OSHA/EPA fact sheet supporting root cause, immediate cause distinction, contributing factors, root cause analysis tools, timelines, causal factor determination, and corrective focus. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.hazard_identification",
+      "organization": "OSHA",
+      "title": "Safety Management - Hazard Identification and Assessment",
+      "canonicalUrl": "https://www.osha.gov/safety-management/hazard-identification",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports immediate investigation, trained management/worker teams, root-cause analysis, communication of results, hazard prioritization, and corrective action."
     }
   ]
 }

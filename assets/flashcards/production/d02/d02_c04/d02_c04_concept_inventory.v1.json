@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2D",
+  "status": "candidate_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c04",
+  "competencyStatement": "Determine appropriate incident investigation techniques (root causes) and apply corrective actions",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c04",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.incident_investigation",
+      "locators": [
+        "Investigating a Worksite Incident",
+        "look beyond immediate causes",
+        "identify and implement corrective actions"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.incident_investigation_guide",
+      "locators": [
+        "Conduct Incident Investigations - A Four-Step Systems Approach",
+        "Step 1 Preserve/Document the Scene",
+        "Step 2 Collect Information",
+        "Step 3 Determine Root Causes",
+        "Step 4 Implement Corrective Actions"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.root_cause_fact_sheet",
+      "locators": [
+        "Root cause definition",
+        "underlying or systemic rather than immediate causes",
+        "Root Cause Analysis Tools",
+        "timelines and causal factor determination"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.hazard_identification",
+      "locators": [
+        "Action item 4: Conduct incident investigations",
+        "trained team",
+        "identify and analyze root causes",
+        "communicate results"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.program_evaluation",
+      "locators": [
+        "Correct program shortcomings and identify opportunities to improve",
+        "verify actions prevent recurrence"
+      ]
+    }
+  ],
+  "candidateConcepts": [
+    {
+      "semanticSlug": "incident_investigation",
+      "canonicalLabel": "Incident Investigation",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.incident_investigation",
+        "csp11.source.osha.incident_investigation_guide"
+      ],
+      "rationale": "A structured examination of an incident or close call to understand what happened, why it happened, and what must change to prevent recurrence."
+    },
+    {
+      "semanticSlug": "close_call",
+      "canonicalLabel": "Close Call",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.incident_investigation",
+        "csp11.source.osha.incident_investigation_guide"
+      ],
+      "rationale": "An incident that could have caused injury or illness but did not; also called a near miss."
+    },
+    {
+      "semanticSlug": "incident_investigation_systems_approach",
+      "canonicalLabel": "Incident Investigation Systems Approach",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.incident_investigation_guide",
+        "csp11.source.osha.incident_investigation"
+      ],
+      "rationale": "A method that looks beyond the worker action nearest the event to program, design, planning, organizational, equipment, training, and operational factors."
+    },
+    {
+      "semanticSlug": "scene_preservation",
+      "canonicalLabel": "Scene Preservation",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.incident_investigation_guide"
+      ],
+      "rationale": "Protecting and documenting relevant physical conditions before evidence is disturbed so the investigation can reconstruct what occurred."
+    },
+    {
+      "semanticSlug": "incident_information_collection",
+      "canonicalLabel": "Incident Information Collection",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.incident_investigation_guide",
+        "csp11.source.osha.root_cause_fact_sheet"
+      ],
+      "rationale": "Systematic collection of observations, interviews, documents, logs, records, photographs, and other information needed to establish the event sequence and contributing conditions."
+    },
+    {
+      "semanticSlug": "immediate_cause",
+      "canonicalLabel": "Immediate Cause",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.root_cause_fact_sheet",
+        "csp11.source.osha.incident_investigation"
+      ],
+      "rationale": "The direct or readily visible condition or action associated with an incident, which may be a symptom rather than the underlying system failure."
+    },
+    {
+      "semanticSlug": "root_cause",
+      "canonicalLabel": "Root Cause",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.root_cause_fact_sheet",
+        "csp11.source.osha.incident_investigation_guide"
+      ],
+      "rationale": "A fundamental underlying system-related reason an incident occurred that identifies a correctable failure."
+    },
+    {
+      "semanticSlug": "root_cause_analysis",
+      "canonicalLabel": "Root Cause Analysis",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.root_cause_fact_sheet",
+        "csp11.source.osha.incident_investigation"
+      ],
+      "rationale": "A structured analysis used to move beyond immediate causes and identify the underlying systemic reasons that allowed an incident or near miss to occur."
+    },
+    {
+      "semanticSlug": "causal_factor",
+      "canonicalLabel": "Causal Factor",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.root_cause_fact_sheet"
+      ],
+      "rationale": "A condition, event, decision, action, or system weakness that contributed to how an incident developed and that may help reveal root causes."
+    },
+    {
+      "semanticSlug": "incident_timeline",
+      "canonicalLabel": "Incident Timeline",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.root_cause_fact_sheet",
+        "csp11.source.osha.incident_investigation_guide"
+      ],
+      "rationale": "A chronological reconstruction of relevant events and conditions used to understand sequence, interactions, missing information, and causal relationships."
+    },
+    {
+      "semanticSlug": "corrective_action",
+      "canonicalLabel": "Corrective Action",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.incident_investigation",
+        "csp11.source.osha.incident_investigation_guide"
+      ],
+      "rationale": "An action that addresses an identified cause or program deficiency so the same or a similar incident is less likely to recur."
+    },
+    {
+      "semanticSlug": "corrective_action_effectiveness_verification",
+      "canonicalLabel": "Corrective Action Effectiveness Verification",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation",
+        "csp11.source.osha.hazard_identification"
+      ],
+      "rationale": "Follow-up that checks whether an implemented corrective action actually controls the identified problem and prevents recurrence rather than merely closing the action administratively."
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "action_plan",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.action_plan",
+      "reason": "Corrective actions may be organized in an action plan, but the generic Action Plan concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "event_tree",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c06",
+      "intendedConceptId": "csp11.concept.event_tree",
+      "reason": "OSHA lists logic/event trees as possible root-cause tools, but the generic system-safety Event Tree concept belongs with D02 C06."
+    },
+    {
+      "semanticSlug": "worker_safety_participation",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.worker_safety_participation",
+      "reason": "Worker involvement strengthens investigations, but the generic participation concept is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "organizational_learning_for_safety",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.organizational_learning_for_safety",
+      "reason": "Investigation findings support organizational learning, but the generic learning concept is canonical in D02 C03."
+    }
+  ],
+  "acceptedConcepts": [],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Resolve D02 C04 investigation-technique boundaries and canonical references before learner-ready package authoring."
+}
