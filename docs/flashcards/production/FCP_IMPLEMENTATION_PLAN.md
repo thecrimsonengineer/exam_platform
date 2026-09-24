@@ -30,7 +30,11 @@ FCP-10  Human review
 FCP-11  Production freeze
 ```
 
-There are 12 FCP runs in total: FCP-0 through FCP-11.
+FCP retains 12 top-level phases: FCP-0 through FCP-11.
+
+Beginning with FCP-2, domain-production phases are executed as independent competency runs. Each competency run owns its own inventory, package, evidence bundle, full CI result, and immutable recovery checkpoint before the next competency begins.
+
+The top-level domain phase remains open until all competency runs in that domain are closed.
 
 ## Permanent architecture boundary
 
@@ -316,7 +320,30 @@ phase-fcp1-d01-closed
 
 ## FCP-2 — D02
 
-Checkpoint:
+FCP-2 uses competency-run execution.
+
+```text
+FCP-2A  d02_c01  phase-fcp2a-d02-c01-closed
+FCP-2B  d02_c02  phase-fcp2b-d02-c02-closed
+FCP-2C  d02_c03  phase-fcp2c-d02-c03-closed
+FCP-2D  d02_c04  phase-fcp2d-d02-c04-closed
+FCP-2E  d02_c05  phase-fcp2e-d02-c05-closed
+FCP-2F  d02_c06  phase-fcp2f-d02-c06-closed
+FCP-2G  d02_c07  phase-fcp2g-d02-c07-closed
+FCP-2H  d02_c08  phase-fcp2h-d02-c08-closed
+FCP-2I  d02_c09  phase-fcp2i-d02-c09-closed
+FCP-2J  d02_c10  phase-fcp2j-d02-c10-closed
+FCP-2K  d02_c11  phase-fcp2k-d02-c11-closed
+FCP-2L  d02_c12  phase-fcp2l-d02-c12-closed
+FCP-2M  d02_c13  phase-fcp2m-d02-c13-closed
+FCP-2N  d02_c14  phase-fcp2n-d02-c14-closed
+```
+
+Each run closes only after concept resolution, package creation, FCQ100 100/100, deterministic JSON round trip, provenance validation, evidence reports, frozen Flashcard Core regression, and full repository regression.
+
+The next competency starts strictly from the immediately preceding closed checkpoint.
+
+FCP-2N also executes the cumulative Domain 02 gate. After FCP-2N is green, create:
 
 ```text
 FCP2_D02_GREEN
@@ -551,6 +578,6 @@ FCP closes only when:
 
 ## Immediate next action
 
-Execute FCP-0 only.
+Close FCP-2A / d02_c01 under the competency-run model.
 
-Do not begin D01 authoring until FCP-0 is green and closed.
+Do not begin FCP-2B until `phase-fcp2a-d02-c01-closed` exists.

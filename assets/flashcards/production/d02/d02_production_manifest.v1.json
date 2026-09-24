@@ -17,11 +17,18 @@
       "competencyId": "d02_c01",
       "number": 1,
       "statement": "Compare performance against established benchmarks (e.g., gap analysis)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c01/d02_c01_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c01/d02_c01_flashcards_v1.json",
       "cardCount": 8,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c01",
+      "checkpoint": {
+        "gate": "FCP2A_D02_C01_GREEN",
+        "branch": "phase-fcp2a-d02-c01-closed",
+        "packageValidationSha": "9a044d50969ad6c4a1e6313077a63cb6ed3ac1fc",
+        "packageValidationRun": 35960983124
+      }
     },
     {
       "competencyId": "d02_c02",
@@ -101,5 +108,6 @@
       "statement": "Analyze and/or interpret data (e.g., exposure, release concentrations, sampling data, mean, median, mode, confidence intervals, probabilities, Pareto analysis)",
       "status": "not_started"
     }
-  ]
+  ],
+  "runModel": "one_competency_per_run"
 }

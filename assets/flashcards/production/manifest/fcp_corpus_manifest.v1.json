@@ -34,6 +34,10 @@
     "fcp1": {
       "name": "FCP1_D01_GREEN",
       "branch": "phase-fcp1-d01-closed"
+    },
+    "fcp2a": {
+      "name": "FCP2A_D02_C01_GREEN",
+      "branch": "phase-fcp2a-d02-c01-closed"
     }
   },
   "domains": {
@@ -56,5 +60,85 @@
   "fcp1RecoveryPoint": {
     "branch": "phase-fcp1-d01-closed",
     "sha": "45d00a95dc6d8cb9e7c06db6df57bb71c5e17fe2"
+  },
+  "productionRunModel": {
+    "version": 2,
+    "unit": "competency",
+    "effectiveFrom": "FCP-2",
+    "rule": "Close each competency with full CI and an immutable checkpoint before starting the next competency."
+  },
+  "competencyRuns": {
+    "d02": {
+      "fcp2a": {
+        "competencyId": "d02_c01",
+        "status": "closed",
+        "checkpointBranch": "phase-fcp2a-d02-c01-closed"
+      },
+      "fcp2b": {
+        "competencyId": "d02_c02",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2b-d02-c02-closed"
+      },
+      "fcp2c": {
+        "competencyId": "d02_c03",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2c-d02-c03-closed"
+      },
+      "fcp2d": {
+        "competencyId": "d02_c04",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2d-d02-c04-closed"
+      },
+      "fcp2e": {
+        "competencyId": "d02_c05",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2e-d02-c05-closed"
+      },
+      "fcp2f": {
+        "competencyId": "d02_c06",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2f-d02-c06-closed"
+      },
+      "fcp2g": {
+        "competencyId": "d02_c07",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2g-d02-c07-closed"
+      },
+      "fcp2h": {
+        "competencyId": "d02_c08",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2h-d02-c08-closed"
+      },
+      "fcp2i": {
+        "competencyId": "d02_c09",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2i-d02-c09-closed"
+      },
+      "fcp2j": {
+        "competencyId": "d02_c10",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2j-d02-c10-closed"
+      },
+      "fcp2k": {
+        "competencyId": "d02_c11",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2k-d02-c11-closed"
+      },
+      "fcp2l": {
+        "competencyId": "d02_c12",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2l-d02-c12-closed"
+      },
+      "fcp2m": {
+        "competencyId": "d02_c13",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2m-d02-c13-closed"
+      },
+      "fcp2n": {
+        "competencyId": "d02_c14",
+        "status": "not_started",
+        "checkpointBranch": "phase-fcp2n-d02-c14-closed"
+      }
+    }
   }
 }
