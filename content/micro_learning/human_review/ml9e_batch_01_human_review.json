@@ -265,7 +265,7 @@
       "candidatePath": "content/micro_learning/facts/mf_ml9_026_v1.json",
       "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_01_gate_evidence.json",
       "sourceUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/index.html",
-      "sourceLocator": "Hierarchy of Controls overview",
+      "sourceLocator": "Key points and overview",
       "channels": {
         "technical": {
           "status": "pending",
@@ -391,7 +391,7 @@
       "candidatePath": "content/micro_learning/facts/mf_ml9_027_v1.json",
       "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_01_gate_evidence.json",
       "sourceUrl": "https://www.cdc.gov/niosh/heat-stress/recommendations/acclimatization.html",
-      "sourceLocator": "Acclimatization overview",
+      "sourceLocator": "What to know and overview",
       "channels": {
         "technical": {
           "status": "pending",
@@ -769,7 +769,7 @@
       "candidatePath": "content/micro_learning/facts/mf_ml9_073_v1.json",
       "evidenceBundlePath": "content/micro_learning/evidence/ml9c_batch_01_gate_evidence.json",
       "sourceUrl": "https://www.osha.gov/safety-management/management-leadership",
-      "sourceLocator": "Management Leadership",
+      "sourceLocator": "Management Leadership opening principles",
       "channels": {
         "technical": {
           "status": "pending",
