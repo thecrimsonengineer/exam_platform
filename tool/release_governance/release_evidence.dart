@@ -354,8 +354,6 @@ class ReleaseEvidenceGenerator {
     ).writeAsString(checksums, flush: true);
     identityParts['checksums.sha256'] = checksums;
 
-    issues.addAll(_semanticConsistencyIssues(decoded));
-
     final identity = _evidenceIdentity(identityParts);
     final release = manifest['release']! as Map<String, Object?>;
     final summary = _summary(
@@ -466,6 +464,8 @@ class ReleaseEvidenceGenerator {
         issues.add('EVD008_ARTIFACT_MANIFEST_INVALID');
       }
     }
+
+    issues.addAll(_semanticConsistencyIssues(decoded));
 
     final identity = _evidenceIdentity(identityParts);
     final summary = await File(
