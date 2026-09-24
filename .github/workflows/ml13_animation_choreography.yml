@@ -1,0 +1,117 @@
+name: ML-13 MicroFact Animation Choreography
+
+on:
+  push:
+    branches:
+      - phase-ml13-animation-choreography
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ml13-animation-choreography
+  cancel-in-progress: true
+
+jobs:
+  validate-ml13:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout exact ML-13 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and immutable production corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+          git diff --quiet 06765ab7950cdb894ed5c1b415b798c64ce35c31 HEAD -- content/micro_learning/facts
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify frozen ML-10 bundle
+        run: dart run tool/generate_ml10_runtime_bundle.dart --check
+
+      - name: Analyze ML-13
+        run: >
+          dart analyze
+          lib/screens/startup/startup_micro_fact_motion.dart
+          lib/screens/startup/csp11_startup_screen.dart
+          test/startup/startup_micro_fact_motion_unit_test.dart
+          test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Format ML-13 files
+        run: >
+          dart format
+          lib/screens/startup/startup_micro_fact_motion.dart
+          lib/screens/startup/csp11_startup_screen.dart
+          test/startup/startup_micro_fact_motion_unit_test.dart
+          test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Run ML-13 choreography tests
+        run: |
+          flutter test \
+            test/startup/startup_micro_fact_motion_unit_test.dart \
+            test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Revalidate ML-12
+        run: |
+          flutter test \
+            test/micro_learning/startup_micro_fact_service_test.dart \
+            test/startup/startup_micro_fact_card_test.dart \
+            test/startup/startup_micro_fact_integration_test.dart
+
+      - name: Revalidate ML-11
+        run: |
+          flutter test \
+            test/micro_learning/micro_fact_selector_test.dart \
+            test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
+
+      - name: Revalidate ML-10
+        run: |
+          flutter test \
+            test/micro_learning/local_micro_fact_repository_test.dart \
+            test/micro_learning/local_micro_fact_repository_asset_test.dart
+
+      - name: Revalidate startup motion contract
+        run: |
+          flutter test \
+            test/startup/startup_motion_policy_test.dart \
+            test/startup/startup_timeline_test.dart \
+            test/startup/startup_screen_hardening_test.dart \
+            test/startup/startup_release_render_smoke_test.dart
+
+      - name: Commit normalized ML-13 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          if git diff --quiet -- \
+            lib/screens/startup/startup_micro_fact_motion.dart \
+            lib/screens/startup/csp11_startup_screen.dart \
+            test/startup/startup_micro_fact_motion_unit_test.dart \
+            test/startup/startup_micro_fact_motion_integration_test.dart; then
+            echo "ML-13 files are already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/screens/startup/startup_micro_fact_motion.dart
+          git add lib/screens/startup/csp11_startup_screen.dart
+          git add test/startup/startup_micro_fact_motion_unit_test.dart
+          git add test/startup/startup_micro_fact_motion_integration_test.dart
+          git commit -m "ML-13 normalize MicroFact choreography"
+          git push origin HEAD:phase-ml13-animation-choreography
