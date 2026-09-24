@@ -1,0 +1,151 @@
+name: LTAM-5 Asset Admission Exact SHA
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam5-hero-asset-admission
+      - phase-ml-ltam5-hero-asset-admission-blocked
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux_exact_sha:
+    name: Linux exact-SHA admission
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout exact SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git merge-base --is-ancestor 720f88328bc1985e25f3bc3feea225cea0adae48 HEAD
+          git diff --check 720f88328bc1985e25f3bc3feea225cea0adae48 HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: false
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: |
+          dart format --output=none --set-exit-if-changed             lib/features/learning_twin/ui/learning_twin_motion_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart
+
+      - name: Analyze admission slice
+        run: |
+          dart analyze             lib/features/learning_twin/ui/learning_twin_motion_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart
+
+      - name: Run admission and Hero pilot tests
+        run: |
+          flutter test             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
+
+      - name: Revalidate complete Learning Twin
+        run: flutter test test/features/learning_twin
+
+      - name: Revalidate ML and startup boundaries
+        run: |
+          flutter test             test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart             test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart             test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart             test/startup/startup_micro_fact_card_test.dart             test/startup/startup_micro_fact_integration_test.dart             test/startup/startup_micro_fact_motion_unit_test.dart             test/startup/startup_micro_fact_motion_integration_test.dart
+
+      - name: Run full Flutter regression
+        id: full_regression
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          flutter test 2>&1 | tee /tmp/ltam5_exact_full_regression.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Prove inherited baseline-only regression debt
+        if: steps.full_regression.outcome == 'failure'
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart" /tmp/ltam5_exact_full_regression.log
+          grep -F "test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart" /tmp/ltam5_exact_full_regression.log
+          grep -E "[0-9]+ tests passed, 2 failed, 1 skipped\." /tmp/ltam5_exact_full_regression.log
+          test "$(grep -c "❌" /tmp/ltam5_exact_full_regression.log)" -eq 2
+
+          git worktree add --detach /tmp/ltam5-exact-baseline d3b4529501bd1a1e9c5059e133b98bafda885da0
+          cd /tmp/ltam5-exact-baseline
+          flutter pub get
+
+          set +e
+          flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+          android_status=$?
+          flutter test test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
+          supabase_status=$?
+          set -e
+
+          test "$android_status" -ne 0
+          test "$supabase_status" -ne 0
+
+      - name: Build Web release
+        run: flutter build web --release
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+
+      - name: Final exact-SHA hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check
+          git status --porcelain
+
+  windows_exact_sha:
+    name: Windows exact-SHA admission
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout exact SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA and ancestry
+        shell: pwsh
+        run: |
+          if ((git rev-parse HEAD) -ne "${env:GITHUB_SHA}") {
+            throw "Checkout SHA does not match GITHUB_SHA."
+          }
+          git merge-base --is-ancestor 720f88328bc1985e25f3bc3feea225cea0adae48 HEAD
+          if ($LASTEXITCODE -ne 0) {
+            throw "Asset-admission branch is not descended from the frozen Hero checkpoint."
+          }
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: false
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Validate admission and Hero fallback
+        run: |
+          flutter test test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart
+          flutter test test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart
+          flutter test test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart
+          flutter test test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart
+
+      - name: Build Windows
+        run: flutter build windows
