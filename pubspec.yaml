@@ -58,6 +58,17 @@ flutter:
     - content/lab_population/flammable_tank_truck_loading/v1/
     - content/lab_population/pneumatic_pressure_test/v1/
     - content/lab_population/scaffold_erection_overhead_power/v1/
+    - content/lab_population_batch2/
+    - content/lab_population_batch2/contractor_permit_coordination/v1/
+    - content/lab_population_batch2/warehouse_traffic_management/v1/
+    - content/lab_population_batch2/machine_guarding_jam_clearance/v1/
+    - content/lab_population_batch2/heat_stress_outdoor_work/v1/
+    - content/lab_population_batch2/noise_control_selection/v1/
+    - content/lab_population_batch2/manual_handling_team_lift/v1/
+    - content/lab_population_batch2/night_shift_fatigue_management/v1/
+    - content/lab_population_batch2/incident_investigation_scene_control/v1/
+    - content/lab_population_batch2/slip_trip_housekeeping_control/v1/
+    - content/lab_population_batch2/emergency_evacuation_muster/v1/
     - assets/learning_twin/
     - assets/learning_twin/candidates/
     - assets/startup/
