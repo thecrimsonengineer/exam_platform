@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9E",
+  "verificationStatus": "requested",
+  "requestedAt": "2026-09-24",
+  "appliedHumanReviewSha": "de10c2fa79fff79acdd38f2661db305da7caf5fe",
+  "expectedState": {
+    "validatedFactCount": 120,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0,
+    "rightsHumanPassCount": 120,
+    "curriculumHumanPassCount": 114,
+    "generalCurriculumExemptions": 6,
+    "pedagogyHumanPassCount": 120,
+    "accessibilityHumanPassCount": 120
+  }
+}
