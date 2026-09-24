@@ -85,11 +85,18 @@
       "competencyId": "d02_c05",
       "number": 5,
       "statement": "Describe the Management of Change process (prior, during, after)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c05/d02_c05_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c05/d02_c05_flashcards_v1.json",
       "cardCount": 12,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c05",
+      "checkpoint": {
+        "gate": "FCP2E_D02_C05_GREEN",
+        "branch": "phase-fcp2e-d02-c05-closed",
+        "packageValidationSha": "cc58d577877d8fbb88a71cda32f6e2fc479ad684",
+        "packageValidationRun": 35970245287
+      }
     },
     {
       "competencyId": "d02_c06",
