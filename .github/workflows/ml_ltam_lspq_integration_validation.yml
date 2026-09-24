@@ -34,6 +34,9 @@ jobs:
           git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- content/micro_learning/facts
           git diff --quiet 49d0f7d69d8338e3bb09b12444c09a641886e67a HEAD -- lib/features/learning_twin/domain
           test -f content/integration/ml_ltam_lspq_integration_manifest_v1.json
+          test -f content/integration/ml_ltam_lspq_integration_freeze_v1.json
+          grep -q '"freezeStatus": "closed_combined_runtime_baseline"' content/integration/ml_ltam_lspq_integration_freeze_v1.json
+          grep -q '"status": "closed_combined_runtime_baseline"' content/integration/ml_ltam_lspq_integration_manifest_v1.json
           test -f docs/integration/PHASE_ML_LTAM_LSPQ_INTEGRATION.md
           test -f content/lab_population/manifest.json
           test -f content/integration/ml_ltam_integration_freeze_v1.json

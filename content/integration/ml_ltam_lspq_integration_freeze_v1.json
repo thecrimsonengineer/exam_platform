@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-LTAM-LSPQ-INTEGRATION",
+  "freezeStatus": "closed_combined_runtime_baseline",
+  "frozenAt": "2026-09-24",
+  "sourceCheckpoints": {
+    "mlLtam": {
+      "ref": "phase-ml-ltam-integration-closed",
+      "sha": "49d0f7d69d8338e3bb09b12444c09a641886e67a",
+      "validationRunId": 35955880471
+    },
+    "lspQ": {
+      "ref": "phase-lsp-q17-closed",
+      "sha": "af0dfd673daee2e7081e7c35828c88ae9a43aca4",
+      "validationRunId": 35954257324
+    }
+  },
+  "convergence": {
+    "intLq0FreezeCommit": "3f581e1bfa024dbb19e1c85fe0374cba4d6e4208",
+    "intLq1MergeCommit": "df41631caee5f0813a41cafbf7d0ffc351976de6",
+    "historicalMergeBase": "56cf3031709ca2ff9da81d48d8ede47bb589ee51",
+    "historyPreserved": true
+  },
+  "repairAndNormalization": {
+    "repairCommit": "2c137f67e2ccd1cd6d28e724e6328d6fa30e6dca",
+    "closureWorkflowHardeningCommit": "1fa53d7932f4a20a8fbb622e719ae19f2fc13425",
+    "formatterNormalizationCommit": "7063b74487e75c42d3c16ba9e0290123975671ee",
+    "repairedFullSuiteFailures": [
+      "INT-R4 Android signing contract updated for explicit production signing with debug fallback",
+      "INT-R9A3 Supabase environment contract updated to fail closed when dart-defines are absent",
+      "Persistent LAB library now fails soft when Firebase is unavailable in a render/test context"
+    ]
+  },
+  "validatedCorpus": {
+    "productionMicroFacts": 120,
+    "productionLabs": 10,
+    "labDecisions": 50
+  },
+  "preservation": {
+    "productionMicroFactsUnchanged": true,
+    "learningTwinDomainUnchanged": true,
+    "lspQ1ThroughQ17Pass": true,
+    "studioRegressionsPass": true,
+    "mlLtamPresentationPass": true,
+    "learningTwinRegressionPass": true,
+    "mlRuntimeRegressionPass": true,
+    "startupHandoffRegressionPass": true,
+    "firebaseSecurityConvergencePass": true,
+    "fullRepositoryRegressionPass": true,
+    "diffHygienePass": true,
+    "formatterPass": true,
+    "ciMayPerformLiveQ17Acceptance": false,
+    "ltamMotionEnabledByIntegration": false,
+    "labStartupCouplingAdded": false,
+    "adaptiveLabToMlCouplingAdded": false
+  },
+  "preClosureValidation": {
+    "workflow": "ML LTAM LSPQ Integration Validation",
+    "runId": 35961974918,
+    "validatedSha": "1fa53d7932f4a20a8fbb622e719ae19f2fc13425",
+    "conclusion": "success",
+    "normalizedResultSha": "7063b74487e75c42d3c16ba9e0290123975671ee"
+  },
+  "exactShaClosurePolicy": {
+    "required": true,
+    "rule": "This freeze becomes authoritative only when the exact commit containing this file passes the dedicated integration workflow and phase-ml-ltam-lspq-integration-closed is created at that same SHA.",
+    "closedBranch": "phase-ml-ltam-lspq-integration-closed",
+    "noCommitAfterSuccessfulExactShaValidation": true
+  },
+  "ml14": {
+    "branch": "phase-ml14-learner-state-weighting",
+    "frozenSha": "49d0f7d69d8338e3bb09b12444c09a641886e67a",
+    "mayResumeOnlyFrom": "phase-ml-ltam-lspq-integration-closed"
+  }
+}

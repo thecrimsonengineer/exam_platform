@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "ML-LTAM-LSPQ-INTEGRATION",
-  "status": "frozen_for_implementation",
+  "status": "closed_combined_runtime_baseline",
   "createdAt": "2026-09-24",
   "workingBranch": "phase-ml-ltam-lspq-integration",
   "sources": {
@@ -26,7 +26,7 @@
   "ml14Gate": {
     "branch": "phase-ml14-learner-state-weighting",
     "observedPreIntegrationSha": "49d0f7d69d8338e3bb09b12444c09a641886e67a",
-    "state": "blocked_until_integration_closed",
+    "state": "blocked_until_exact_sha_integration_closed",
     "resumeFrom": "phase-ml-ltam-lspq-integration-closed"
   },
   "frozenBoundaries": {
@@ -50,5 +50,21 @@
     "INT-LQ7_CROSS_STREAM_CI_FULL_REGRESSION",
     "INT-LQ8_EXACT_SHA_FREEZE"
   ],
-  "nextGate": "INT-LQ1 history-preserving merge of phase-lsp-q17-closed"
+  "nextGate": "INT-LQ8 exact-SHA validation, then create phase-ml-ltam-lspq-integration-closed at the validated SHA",
+  "normalizedIntegrationSha": "7063b74487e75c42d3c16ba9e0290123975671ee",
+  "preClosureValidation": {
+    "workflow": "ML LTAM LSPQ Integration Validation",
+    "runId": 35961974918,
+    "validatedSha": "1fa53d7932f4a20a8fbb622e719ae19f2fc13425",
+    "conclusion": "success",
+    "fullRepositoryRegression": "pass",
+    "diffHygiene": "pass",
+    "formatter": "pass",
+    "formatterProducedNormalizationSha": "7063b74487e75c42d3c16ba9e0290123975671ee"
+  },
+  "exactShaClosure": {
+    "required": true,
+    "policy": "The commit containing this manifest and freeze evidence is closed only after the dedicated integration workflow succeeds on that exact SHA and the closed recovery branch is created at the same SHA.",
+    "closureBranch": "phase-ml-ltam-lspq-integration-closed"
+  }
 }
