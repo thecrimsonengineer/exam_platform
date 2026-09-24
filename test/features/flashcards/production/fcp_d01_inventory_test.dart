@@ -52,7 +52,6 @@ void main() {
     expect(competencies[4]['status'], 'validating');
     expect(competencies[5]['status'], 'validating');
     expect(competencies[6]['status'], 'validating');
-
   });
 
   test('D01 C01 inventory stays at canonical competency placement', () {

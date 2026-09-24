@@ -8,12 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const domainRoot = 'assets/flashcards/production/d01';
 
-  List<File> packages() => Directory(domainRoot)
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((file) => file.path.endsWith('_flashcards_v1.json'))
-      .toList()
-    ..sort((a, b) => a.path.compareTo(b.path));
+  List<File> packages() =>
+      Directory(domainRoot)
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((file) => file.path.endsWith('_flashcards_v1.json'))
+          .toList()
+        ..sort((a, b) => a.path.compareTo(b.path));
 
   test('D01 contains exactly seven competency packages', () {
     final files = packages();
@@ -21,38 +22,39 @@ void main() {
 
     final decoded = files
         .map(
-          (file) => const FlashcardPackageJsonCodec().decode(
-            file.readAsStringSync(),
-          ),
+          (file) =>
+              const FlashcardPackageJsonCodec().decode(file.readAsStringSync()),
         )
         .toList();
 
-    expect(
-      decoded.map((item) => item.deck.competencyId).toList(),
-      <String>[
-        'd01_c01',
-        'd01_c02',
-        'd01_c03',
-        'd01_c04',
-        'd01_c05',
-        'd01_c06',
-        'd01_c07',
-      ],
-    );
+    expect(decoded.map((item) => item.deck.competencyId).toList(), <String>[
+      'd01_c01',
+      'd01_c02',
+      'd01_c03',
+      'd01_c04',
+      'd01_c05',
+      'd01_c06',
+      'd01_c07',
+    ]);
   });
 
   test('D01 production IDs are globally unique', () {
     final decoded = packages()
         .map(
-          (file) => const FlashcardPackageJsonCodec().decode(
-            file.readAsStringSync(),
-          ),
+          (file) =>
+              const FlashcardPackageJsonCodec().decode(file.readAsStringSync()),
         )
         .toList();
 
     final deckIds = decoded.map((item) => item.deck.id).toList();
-    final conceptIds = decoded.expand((item) => item.concepts).map((x) => x.id).toList();
-    final cardIds = decoded.expand((item) => item.cards).map((x) => x.id).toList();
+    final conceptIds = decoded
+        .expand((item) => item.concepts)
+        .map((x) => x.id)
+        .toList();
+    final cardIds = decoded
+        .expand((item) => item.cards)
+        .map((x) => x.id)
+        .toList();
 
     expect(deckIds.toSet().length, deckIds.length);
     expect(conceptIds.toSet().length, conceptIds.length);
@@ -67,7 +69,10 @@ void main() {
         file.readAsStringSync(),
       );
       for (final concept in package.concepts) {
-        for (final value in <String>[concept.canonicalLabel, ...concept.aliases]) {
+        for (final value in <String>[
+          concept.canonicalLabel,
+          ...concept.aliases,
+        ]) {
           final normalized = FlashcardDuplicateDetector.normalize(value);
           if (normalized.isEmpty) continue;
           owners.putIfAbsent(normalized, () => <String>{}).add(concept.id);
@@ -84,12 +89,13 @@ void main() {
   });
 
   test('D01 inventories are fully resolved with no holds', () {
-    final files = Directory(domainRoot)
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((file) => file.path.endsWith('_concept_inventory.v1.json'))
-        .toList()
-      ..sort((a, b) => a.path.compareTo(b.path));
+    final files =
+        Directory(domainRoot)
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((file) => file.path.endsWith('_concept_inventory.v1.json'))
+            .toList()
+          ..sort((a, b) => a.path.compareTo(b.path));
 
     expect(files.length, 7);
 
