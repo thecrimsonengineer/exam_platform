@@ -20,8 +20,7 @@ const String kBatch2ManifestAsset = 'content/lab_population_batch2/manifest.json
 const String kBatch2PreCatalogueClosedSha =
     '8a3ee7a5e27ec4b63793dddbb3982e3f0f42c429';
 const String kBatch2PreCatalogueValidationRunId = '36015831093';
-const String kBatch2ReleaseId =
-    'phase_l_population_batch2_v1_q16_extension_v1';
+const String kBatch2ReleaseId = kLearnerVisibleLabReleaseId;
 const String kBatch2ReleaseConfirmationPhrase = 'RELEASE BATCH 2 LABS';
 const String kBatch2CloseConfirmationPhrase = 'CLOSE BATCH 2 RELEASE';
 const String kBatch2AcceptanceConfirmationPhrase =
