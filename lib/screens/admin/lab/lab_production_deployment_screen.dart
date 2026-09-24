@@ -10,11 +10,14 @@ class LabProductionDeploymentScreen extends StatefulWidget {
     required this.adminUserId,
     this.service,
     this.releaseOperator,
+    this.releaseScreenBuilder,
   });
 
   final String adminUserId;
   final LabProductionDeploymentAcceptanceService? service;
   final LabProductionReleaseOperator? releaseOperator;
+  final Widget Function(LabProductionReleaseOperator operator)?
+  releaseScreenBuilder;
 
   @override
   State<LabProductionDeploymentScreen> createState() =>
@@ -93,10 +96,12 @@ class _LabProductionDeploymentScreenState
 
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => LabProductionReleaseScreen(
-          adminUserId: widget.adminUserId,
-          operator: guarded,
-        ),
+        builder: (_) =>
+            widget.releaseScreenBuilder?.call(guarded) ??
+            LabProductionReleaseScreen(
+              adminUserId: widget.adminUserId,
+              operator: guarded,
+            ),
       ),
     );
     if (mounted) await _refresh();
