@@ -251,6 +251,7 @@ void main() {
         File('lib/screens/admin/admin_home_screen.dart').readAsStringSync();
 
     expect(source, contains('LabProductionDeploymentScreen('));
-    expect(source, isNot(contains('LabProductionReleaseScreen(')));
+    expect(source, contains('LabProductionReleaseScreen('));
+    expect(source, contains('releaseScreenBuilder:'));
   });
 }
