@@ -76,7 +76,7 @@
       },
       "fcp2b": {
         "competencyId": "d02_c02",
-        "status": "not_started",
+        "status": "in_progress",
         "checkpointBranch": "phase-fcp2b-d02-c02-closed"
       },
       "fcp2c": {
