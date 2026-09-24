@@ -42,10 +42,10 @@ jobs:
         run: flutter pub get
 
       - name: Analyze ML-10 tooling
-        run: dart analyze tool/generate_ml10_runtime_bundle.dart lib/services/micro_learning/local_micro_fact_repository.dart test/micro_learning/local_micro_fact_repository_test.dart
+        run: dart analyze tool/generate_ml10_runtime_bundle.dart lib/services/micro_learning/local_micro_fact_repository.dart test/micro_learning/local_micro_fact_repository_test.dart test/micro_learning/local_micro_fact_repository_asset_test.dart
 
       - name: Format ML-10 files
-        run: dart format tool/generate_ml10_runtime_bundle.dart lib/services/micro_learning/local_micro_fact_repository.dart test/micro_learning/local_micro_fact_repository_test.dart
+        run: dart format tool/generate_ml10_runtime_bundle.dart lib/services/micro_learning/local_micro_fact_repository.dart test/micro_learning/local_micro_fact_repository_test.dart test/micro_learning/local_micro_fact_repository_asset_test.dart
 
       - name: Generate local runtime bundle
         run: dart run tool/generate_ml10_runtime_bundle.dart
@@ -54,7 +54,10 @@ jobs:
         run: dart run tool/generate_ml10_runtime_bundle.dart --check
 
       - name: Test local repository
-        run: flutter test test/micro_learning/local_micro_fact_repository_test.dart
+        run: |
+          flutter test \\
+            test/micro_learning/local_micro_fact_repository_test.dart \\
+            test/micro_learning/local_micro_fact_repository_asset_test.dart
 
       - name: Revalidate startup independence
         run: |
@@ -71,7 +74,8 @@ jobs:
             content/micro_learning/ml10_runtime_bundle_v1.json \
             tool/generate_ml10_runtime_bundle.dart \
             lib/services/micro_learning/local_micro_fact_repository.dart \
-            test/micro_learning/local_micro_fact_repository_test.dart; then
+            test/micro_learning/local_micro_fact_repository_test.dart \\
+            test/micro_learning/local_micro_fact_repository_asset_test.dart; then
             echo "ML-10 generated bundle and Dart files are already byte-stable."
             exit 0
           fi
@@ -81,5 +85,6 @@ jobs:
           git add tool/generate_ml10_runtime_bundle.dart
           git add lib/services/micro_learning/local_micro_fact_repository.dart
           git add test/micro_learning/local_micro_fact_repository_test.dart
+          git add test/micro_learning/local_micro_fact_repository_asset_test.dart
           git commit -m "ML-10 freeze local runtime bundle"
           git push origin HEAD:phase-ml10-runtime-consumption-rotation
