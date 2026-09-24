@@ -9,6 +9,9 @@ import 'lab_scenario_population_manifest.dart';
 import 'lab_snapshot_fingerprint.dart';
 import 'lab_studio.dart';
 
+const String kLearnerVisibleLabReleaseId =
+    'phase_l_population_batch2_v1_q16_extension_v1';
+
 class LabLearnerCatalogueException implements Exception {
   const LabLearnerCatalogueException(this.message);
 
