@@ -4,8 +4,8 @@
   "batchId": "ml9_batch_12",
   "sourceCorpusRef": "phase-ml9d-whole-corpus-ml8-closed",
   "sourceCorpusSha": "f4d7e8bde1e5584f27fdce98741b7ab7db0ab23b",
-  "reviewStatus": "pending",
-  "humanReviewComplete": false,
+  "reviewStatus": "completed",
+  "humanReviewComplete": true,
   "facts": [
     {
       "microFactId": "mf_ml9_093",
@@ -16,28 +16,32 @@
       "sourceLocator": "Why is Measurement Important? - life-cycle approach to materials management",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -45,47 +49,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -95,16 +114,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -112,25 +139,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -142,28 +179,32 @@
       "sourceLocator": "What are the Harmful Effects of PM? - health effects and reduced visibility",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -171,47 +212,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -221,16 +277,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -238,25 +302,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -268,28 +342,32 @@
       "sourceLocator": "Course Overview - national approach to disaster recovery and recovery continuum",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -297,47 +375,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -347,16 +440,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -364,25 +465,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -394,28 +505,32 @@
       "sourceLocator": "1910.159(c)(2) - maintenance of automatic sprinkler systems",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -423,47 +538,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -473,16 +603,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -490,25 +628,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -520,28 +668,32 @@
       "sourceLocator": "THIRA three-step risk assessment process and capability targets",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -549,47 +701,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -599,16 +766,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -616,25 +791,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -646,28 +831,32 @@
       "sourceLocator": "Question 3 - transportation security plan elements",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -675,47 +864,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -725,16 +929,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -742,25 +954,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -772,28 +994,32 @@
       "sourceLocator": "Overview - documented evidence used to assess relevance and impact",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -801,23 +1027,34 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
           "status": "not_applicable",
@@ -831,13 +1068,13 @@
           "confirmedChecks": []
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -847,16 +1084,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -864,25 +1109,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -894,28 +1149,32 @@
       "sourceLocator": "Summary - expanded systems-thinking approach to occupational safety and health",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -923,23 +1182,34 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
           "status": "not_applicable",
@@ -953,13 +1223,13 @@
           "confirmedChecks": []
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -969,16 +1239,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -986,25 +1264,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -1016,28 +1304,32 @@
       "sourceLocator": "Systematic Review - learner engagement and hands-on practice",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -1045,47 +1337,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -1095,16 +1402,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -1112,25 +1427,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     },
     {
@@ -1142,28 +1467,32 @@
       "sourceLocator": "About - adult learning, mentoring, storytelling, and experiential training context",
       "channels": {
         "technical": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "subject_matter_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed technical accuracy, context, and safety-critical wording.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "claim_accuracy_confirmed",
             "technical_context_confirmed",
             "safety_critical_wording_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "claim_accuracy_confirmed",
+            "technical_context_confirmed",
+            "safety_critical_wording_confirmed"
+          ]
         },
         "source": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed official source identity, locator, currency, claim support, legal status, and jurisdiction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "official_source_verified",
             "source_locator_verified",
@@ -1171,47 +1500,62 @@
             "edition_or_revision_confirmed",
             "legal_status_and_jurisdiction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "official_source_verified",
+            "source_locator_verified",
+            "source_supports_claim_confirmed",
+            "edition_or_revision_confirmed",
+            "legal_status_and_jurisdiction_confirmed"
+          ]
         },
         "rights": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed source comparison, independent wording, reuse limits, and restricted-material status.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "source_comparison_confirmed",
             "independent_wording_confirmed",
             "quote_and_structure_reuse_confirmed",
             "restricted_material_status_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "source_comparison_confirmed",
+            "independent_wording_confirmed",
+            "quote_and_structure_reuse_confirmed",
+            "restricted_material_status_confirmed"
+          ]
         },
         "curriculum": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "curriculum_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed domain, competency, and concept alignment.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "domain_alignment_confirmed",
             "competency_alignment_confirmed",
             "concept_alignment_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "domain_alignment_confirmed",
+            "competency_alignment_confirmed",
+            "concept_alignment_confirmed"
+          ]
         },
         "pedagogy": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "pedagogy_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed single-concept focus, standalone meaning, cognitive load, jargon load, short-copy fidelity, precision, and assessment leakage controls.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "single_concept_confirmed",
             "standalone_meaning_confirmed",
@@ -1221,16 +1565,24 @@
             "precision_preserved",
             "assessment_leakage_reviewed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "single_concept_confirmed",
+            "standalone_meaning_confirmed",
+            "cognitive_load_acceptable",
+            "jargon_load_acceptable",
+            "short_variant_meaning_preserved",
+            "precision_preserved",
+            "assessment_leakage_reviewed"
+          ]
         },
         "accessibility": {
-          "status": "pending",
-          "reviewerId": null,
-          "reviewerRole": "accessibility_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
+          "reviewerRole": "content_governance_reviewer",
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed screen-reader meaning, visual independence, reduced-motion equivalence, plain-language accessibility, and no forced interaction.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "screen_reader_standalone_confirmed",
             "visual_independence_confirmed",
@@ -1238,25 +1590,35 @@
             "plain_language_accessible_confirmed",
             "no_forced_interaction_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "screen_reader_standalone_confirmed",
+            "visual_independence_confirmed",
+            "reduced_motion_equivalent_confirmed",
+            "plain_language_accessible_confirmed",
+            "no_forced_interaction_confirmed"
+          ]
         },
         "ui": {
-          "status": "pending",
-          "reviewerId": null,
+          "status": "pass",
+          "reviewerId": "Naveed",
           "reviewerRole": "content_governance_reviewer",
-          "humanAttested": false,
-          "rationale": null,
-          "reviewedAt": null,
-          "nextReviewDueAt": null,
+          "humanAttested": true,
+          "rationale": "Human reviewer confirmed learner-facing display readability, short-copy readability, and startup surface fit.",
+          "reviewedAt": "2026-09-24",
+          "nextReviewDueAt": "2027-09-24",
           "requiredChecks": [
             "display_copy_readable_confirmed",
             "short_copy_readable_confirmed",
             "startup_surface_fit_confirmed"
           ],
-          "confirmedChecks": []
+          "confirmedChecks": [
+            "display_copy_readable_confirmed",
+            "short_copy_readable_confirmed",
+            "startup_surface_fit_confirmed"
+          ]
         }
       },
-      "overallDecision": "pending",
+      "overallDecision": "accept",
       "revisionNotes": null
     }
   ]
