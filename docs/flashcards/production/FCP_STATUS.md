@@ -10,7 +10,7 @@ FCP-2 execution model: **one competency per run**.
 FCP-2A  d02_c01  CLOSED
 FCP-2B  d02_c02  CLOSED
 FCP-2C  d02_c03  CLOSED
-FCP-2D  d02_c04  NOT STARTED
+FCP-2D  d02_c04  CLOSED
 FCP-2E  d02_c05  NOT STARTED
 FCP-2F  d02_c06  NOT STARTED
 FCP-2G  d02_c07  NOT STARTED
@@ -23,8 +23,4 @@ FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2A checkpoint: `phase-fcp2a-d02-c01-closed`.
-
-FCP-2B checkpoint: `phase-fcp2b-d02-c02-closed@20447693e03e061451b91cf5d870095ad66b7ce5`.
-
-FCP-2C package validation passed at `c9defd864d2d6227d9a88b1983b32bf9bc215d28` in run `35965581406`. The closure metadata state must pass CI before `phase-fcp2c-d02-c03-closed` is created.
+FCP-2D package validation passed at `fa4f28459b8644fa1084ef5707e0c5da78182fe3` in run `35966860425`. The closure metadata state must pass CI before `phase-fcp2d-d02-c04-closed` is created.

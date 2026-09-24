@@ -68,11 +68,18 @@
       "competencyId": "d02_c04",
       "number": 4,
       "statement": "Determine appropriate incident investigation techniques (root causes) and apply corrective actions",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c04/d02_c04_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c04/d02_c04_flashcards_v1.json",
       "cardCount": 12,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c04",
+      "checkpoint": {
+        "gate": "FCP2D_D02_C04_GREEN",
+        "branch": "phase-fcp2d-d02-c04-closed",
+        "packageValidationSha": "fa4f28459b8644fa1084ef5707e0c5da78182fe3",
+        "packageValidationRun": 35966860425
+      }
     },
     {
       "competencyId": "d02_c05",
