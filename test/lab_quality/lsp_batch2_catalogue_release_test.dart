@@ -41,7 +41,12 @@ List<LabProductionPopulationSeedCandidate> _candidates(
   }).toList(growable: false);
 }
 
-Future<LabBatch2ReleaseBundle> _bundle() {
+Future<LabBatch2ReleaseBundle>? _cachedBundle;
+
+Future<LabBatch2ReleaseBundle> _bundle() =>
+    _cachedBundle ??= _buildBundle();
+
+Future<LabBatch2ReleaseBundle> _buildBundle() {
   final manifest = _manifest();
   return const LabBatch2ReleaseService().prepare(
     manifest: manifest,
