@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-12",
+  "freezeStatus": "closed_startup_microfact_card_checkpoint",
+  "closedAt": "2026-09-24",
+  "sourceSelector": {
+    "ref": "phase-ml11-intelligent-selector-closed",
+    "sha": "bad40be6783a7a29ef8bba8a1a4ae68945f37e9b"
+  },
+  "implementation": {
+    "normalizedCommit": "51b66e3660a1a7ed94be8b76bc8c1bd36a35385e",
+    "service": "lib/services/micro_learning/startup_micro_fact_service.dart",
+    "card": "lib/screens/startup/startup_micro_fact_card.dart",
+    "startupIntegration": "lib/screens/startup/csp11_startup_screen.dart",
+    "productionFactFilesModified": 0
+  },
+  "runtimeContract": {
+    "networkReadsIntroduced": 0,
+    "persistenceWritesIntroduced": 0,
+    "startupDurationExtended": false,
+    "watchdogExtended": false,
+    "noFactFailsSoft": true,
+    "pendingFactLoadMayBlockStartup": false,
+    "learnerStateWeighting": false,
+    "customCardChoreography": false
+  },
+  "validation": {
+    "implementationWorkflowRunId": 35954171773,
+    "implementationWorkflowConclusion": "success",
+    "ml12Tests": "pass",
+    "ml11SelectorRegression": "pass",
+    "ml10RepositoryRegression": "pass",
+    "startupHardeningRegression": "pass",
+    "startupRenderRegression": "pass"
+  },
+  "nextAction": "ML-13 Animation Choreography"
+}
