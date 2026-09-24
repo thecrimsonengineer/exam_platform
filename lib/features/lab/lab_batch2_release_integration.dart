@@ -722,6 +722,16 @@ class LabBatch2ReleaseInspection {
   }
 }
 
+class _LabBatch2PreflightResult {
+  const _LabBatch2PreflightResult({
+    required this.publishedVersions,
+    required this.stagedCatalogue,
+  });
+
+  final List<LabPublishedVersion> publishedVersions;
+  final List<LabBatch2StagedCatalogueDocument> stagedCatalogue;
+}
+
 abstract class LabBatch2ReleaseOperator {
   Future<LabBatch2ReleaseInspection> inspect();
 
@@ -881,7 +891,7 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
     }
   }
 
-  Future<List<LabBatch2StagedCatalogueDocument>> _preflight() async {
+  Future<_LabBatch2PreflightResult> _preflight() async {
     final manifest = await populationSource.loadManifest();
     final candidates = await populationSource.loadCandidates(manifest);
     final byEntry = <String, LabProductionPopulationSeedCandidate>{
@@ -902,6 +912,7 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
       publishedRepository: preflightPublished,
       catalogueRepository: preflightCatalogue,
     );
+    final versions = <LabPublishedVersion>[];
     final staged = <LabBatch2StagedCatalogueDocument>[];
 
     for (var index = 0; index < manifest.entries.length; index++) {
@@ -926,6 +937,17 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
           'Batch 2 publication preflight failed for ' + entry.identityKey + '.',
         );
       }
+      final version = await preflightPublished.load(
+        entry.labId,
+        entry.versionId,
+      );
+      if (version == null) {
+        throw LabBatch2ReleaseException(
+          'Batch 2 preflight did not produce ' + entry.identityKey + '.',
+        );
+      }
+      versions.add(version);
+
       final catalogueEntry = await admission.admit(
         manifest: manifest,
         entryId: entry.entryId,
@@ -939,7 +961,11 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
       );
     }
 
-    return List<LabBatch2StagedCatalogueDocument>.unmodifiable(staged);
+    return _LabBatch2PreflightResult(
+      publishedVersions: List<LabPublishedVersion>.unmodifiable(versions),
+      stagedCatalogue:
+          List<LabBatch2StagedCatalogueDocument>.unmodifiable(staged),
+    );
   }
 
   Future<LabBatch2ReleaseEvidence> _close({
@@ -1024,37 +1050,14 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
       );
     }
 
-    final staged = await _preflight();
-    final manifest = await populationSource.loadManifest();
-    final preflightPublished = InMemoryLabPublishedRepository();
-    final candidates = await populationSource.loadCandidates(manifest);
-    final publication = LabScenarioPopulationPublicationGate(
-      studio: Lab1000StudioService(repository: preflightPublished),
-    );
-    final byEntry = <String, LabProductionPopulationSeedCandidate>{
-      for (final item in candidates) item.entryId: item,
-    };
-
-    for (var index = 0; index < manifest.entries.length; index++) {
-      final entry = manifest.entries[index];
-      final candidate = byEntry[entry.entryId]!;
-      await publication.admit(
-        manifest: manifest,
-        entryId: entry.entryId,
-        technicalRoot: candidate.technicalRoot,
-        dqg300Evidence: candidate.dqg300Evidence,
-        presentationPackage: candidate.presentationPackage,
-        validatedAt: DateTime.utc(2026, 9, 25, 0, 0, index),
-        publishedAt: DateTime.utc(2026, 9, 25, 0, 1, index),
+    final preflight = await _preflight();
+    for (var index = 0; index < preflight.publishedVersions.length; index++) {
+      await publishedRepository.saveImmutable(
+        preflight.publishedVersions[index],
       );
-      final version = await preflightPublished.load(entry.labId, entry.versionId);
-      if (version == null) {
-        throw LabBatch2ReleaseException(
-          'Batch 2 preflight did not produce ' + entry.identityKey + '.',
-        );
-      }
-      await publishedRepository.saveImmutable(version);
-      await stagingRepository.saveImmutable(staged[index]);
+      await stagingRepository.saveImmutable(
+        preflight.stagedCatalogue[index],
+      );
     }
 
     return _close(
