@@ -1,0 +1,1005 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "contractor_permit_coordination",
+    "versionId": "v1",
+    "title": "Contractor Permit Coordination",
+    "description": "Coordinate contractor work when permits, simultaneous activities and site conditions change.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "prejob_decision",
+    "startingState": {
+      "route": "start",
+      "risk": 0,
+      "observations": [],
+      "authorization_verified": false,
+      "controls_verified": false,
+      "change_controlled": false,
+      "response_verified": false,
+      "closeout_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "authorization_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "change_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "response_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "closeout_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "supervisor",
+      "role": "area_supervisor"
+    },
+    {
+      "id": "worker",
+      "role": "worker"
+    },
+    {
+      "id": "support",
+      "role": "support_person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "work_authorization_record",
+      "type": "work_authorization",
+      "required": false
+    },
+    {
+      "id": "control_verification_record",
+      "type": "control_verification",
+      "required": false
+    },
+    {
+      "id": "condition_change_record",
+      "type": "condition_change",
+      "required": false
+    },
+    {
+      "id": "response_record",
+      "type": "response",
+      "required": false
+    },
+    {
+      "id": "closeout_record",
+      "type": "closeout",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "prejob_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "prejob_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "prejob_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "prejob_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "controls_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "controls_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "change_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "change_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "response_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "response_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prejob_decision",
+      "type": "DECISION",
+      "prompt": "Two contractor crews arrive with valid permits, but their work areas now overlap and both teams expect to start immediately. What should the area supervisor do first?",
+      "options": [
+        {
+          "id": "prejob_decision_o1",
+          "text": "Check each permit separately and allow the lower-risk job to start while the second crew waits nearby. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "prejob_decision_defensible",
+          "mistakeTags": [
+            "prejob_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "prejob_decision_o2",
+          "text": "Pause both starts and jointly verify permit scope, work boundaries, interfaces and responsible persons before releasing either activity.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "prejob_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "prejob_decision_o3",
+          "text": "Let both crews stage tools inside their work areas while supervisors compare the permits.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "prejob_decision_weak",
+          "mistakeTags": [
+            "prejob_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "prejob_decision_o4",
+          "text": "Allow both jobs to begin because each permit was independently approved. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "prejob_decision_critical",
+          "mistakeTags": [
+            "prejob_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "controls_decision",
+      "type": "DECISION",
+      "prompt": "The interface review identifies shared access and a common isolation boundary. What is the best next action?",
+      "options": [
+        {
+          "id": "controls_decision_o1",
+          "text": "Tell each supervisor about the shared boundary and rely on them to brief their own workers. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "controls_decision_defensible",
+          "mistakeTags": [
+            "controls_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "controls_decision_o2",
+          "text": "Start one crew while the second supervisor completes the joint briefing. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "controls_decision_weak",
+          "mistakeTags": [
+            "controls_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "controls_decision_o3",
+          "text": "Proceed because both crews have worked in the area before and understand the layout.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "controls_decision_critical",
+          "mistakeTags": [
+            "controls_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "controls_decision_o4",
+          "text": "Verify the shared isolation and access controls with both crews, document the interface and brief everyone before work begins.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "controls_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "change_decision",
+      "type": "DECISION",
+      "prompt": "A third maintenance activity is added nearby after the first two jobs have started. What should happen?",
+      "options": [
+        {
+          "id": "change_decision_o1",
+          "text": "Stop and reassess the combined work interfaces, update controls and permits as needed, and rebrief affected crews before continuing.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "change_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "change_decision_o2",
+          "text": "Inform the original supervisors by radio and continue unless they identify a direct conflict.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "change_decision_defensible",
+          "mistakeTags": [
+            "change_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "change_decision_o3",
+          "text": "Let the new crew stage equipment while the original work continues and review interfaces afterward. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "change_decision_weak",
+          "mistakeTags": [
+            "change_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "change_decision_o4",
+          "text": "Continue because the new activity has its own approved permit. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "change_decision_critical",
+          "mistakeTags": [
+            "change_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response_decision",
+      "type": "DECISION",
+      "prompt": "One contractor begins working outside the agreed boundary and blocks the shared access route. What is the best response?",
+      "options": [
+        {
+          "id": "response_decision_o1",
+          "text": "Ask the contractor to move back inside the boundary while the other crew continues working. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "response_decision_defensible",
+          "mistakeTags": [
+            "response_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "response_decision_o2",
+          "text": "Move the shared access route temporarily and review the deviation at the next toolbox talk.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "response_decision_weak",
+          "mistakeTags": [
+            "response_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "response_decision_o3",
+          "text": "Stop the affected work, restore the agreed boundary and access, determine why the control failed and rebrief the crews before restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "response_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "response_decision_o4",
+          "text": "Allow the work to continue because the deviation is small and no incident has occurred.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "response_decision_critical",
+          "mistakeTags": [
+            "response_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "Both contractor jobs are complete. What should occur before the area is returned to normal operation?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Close each permit when its supervisor reports completion and inspect the area later during normal operations.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Verify work completion, remove temporary controls, reconcile permits and isolations, confirm the area condition and formally hand back the worksite.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Allow operations to resume while contractors remove remaining barriers and paperwork. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Return the area to service as soon as tools are removed because the physical work is complete. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "contractor_safety"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "prejob_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "prejob_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "controls_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "controls_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "change_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "change_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "response_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "response_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_safe",
+      "type": "COMPLETION",
+      "priority": 30,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "BOOL",
+        "stateId": "closeout_verified",
+        "equals": true
+      }
+    },
+    {
+      "id": "closeout_critical",
+      "type": "COMPLETION",
+      "priority": 20,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "closeout_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA Recommended Practices for Safety and Health Programs",
+    "ISO 45001 Occupational health and safety management systems"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "prejob_decision",
+        "alternateOptionId": "prejob_decision_o2"
+      },
+      {
+        "nodeId": "controls_decision",
+        "alternateOptionId": "controls_decision_o4"
+      },
+      {
+        "nodeId": "change_decision",
+        "alternateOptionId": "change_decision_o1"
+      },
+      {
+        "nodeId": "response_decision",
+        "alternateOptionId": "response_decision_o3"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "response_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

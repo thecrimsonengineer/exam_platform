@@ -1,0 +1,1005 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "machine_guarding_jam_clearance",
+    "versionId": "v1",
+    "title": "Machine Guarding and Jam Clearance",
+    "description": "Control jam-clearing work when guarding and hazardous-energy conditions are uncertain.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "prejob_decision",
+    "startingState": {
+      "route": "start",
+      "risk": 0,
+      "observations": [],
+      "authorization_verified": false,
+      "controls_verified": false,
+      "change_controlled": false,
+      "response_verified": false,
+      "closeout_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "authorization_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "change_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "response_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "closeout_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "supervisor",
+      "role": "maintenance_supervisor"
+    },
+    {
+      "id": "worker",
+      "role": "worker"
+    },
+    {
+      "id": "support",
+      "role": "support_person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "work_authorization_record",
+      "type": "work_authorization",
+      "required": false
+    },
+    {
+      "id": "control_verification_record",
+      "type": "control_verification",
+      "required": false
+    },
+    {
+      "id": "condition_change_record",
+      "type": "condition_change",
+      "required": false
+    },
+    {
+      "id": "response_record",
+      "type": "response",
+      "required": false
+    },
+    {
+      "id": "closeout_record",
+      "type": "closeout",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "prejob_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "prejob_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "prejob_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "prejob_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "controls_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "controls_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "change_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "change_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "response_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "response_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prejob_decision",
+      "type": "DECISION",
+      "prompt": "An operator wants to reach through an opened guard to clear a visible jam after pressing the local stop. What should the supervisor do first?",
+      "options": [
+        {
+          "id": "prejob_decision_o1",
+          "text": "Verify the machine is stationary and leave the main disconnect energized for faster troubleshooting. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "prejob_decision_defensible",
+          "mistakeTags": [
+            "prejob_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "prejob_decision_o2",
+          "text": "Stop the task and apply the required energy-control procedure before anyone enters the hazard zone.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "prejob_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "prejob_decision_o3",
+          "text": "Use a long tool through the opening while maintenance prepares the isolation equipment.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "prejob_decision_weak",
+          "mistakeTags": [
+            "prejob_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "prejob_decision_o4",
+          "text": "Allow a quick clearance because the operator controls the local stop.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "prejob_decision_critical",
+          "mistakeTags": [
+            "prejob_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "controls_decision",
+      "type": "DECISION",
+      "prompt": "The electrical disconnect is locked, but pneumatic pressure remains available to an actuator. What is the best action?",
+      "options": [
+        {
+          "id": "controls_decision_o1",
+          "text": "Bleed the nearest gauge and rely on the electrical lockout while work begins. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "controls_decision_defensible",
+          "mistakeTags": [
+            "controls_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "controls_decision_o2",
+          "text": "Enter the guarded space and install a mechanical block before releasing the jam.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "controls_decision_weak",
+          "mistakeTags": [
+            "controls_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "controls_decision_o3",
+          "text": "Proceed because the main electrical source is already locked. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "controls_decision_critical",
+          "mistakeTags": [
+            "controls_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "controls_decision_o4",
+          "text": "Isolate and control the stored pneumatic energy, verify zero-energy condition and test against restart before access.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "controls_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "change_decision",
+      "type": "DECISION",
+      "prompt": "After the jam is cleared, the guard interlock fails intermittently during testing. What should happen?",
+      "options": [
+        {
+          "id": "change_decision_o1",
+          "text": "Keep the machine out of service, repair the safeguarding defect and verify its function before production restart.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "change_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "change_decision_o2",
+          "text": "Operate at reduced speed with a supervisor present while a replacement is ordered. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "change_decision_defensible",
+          "mistakeTags": [
+            "change_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "change_decision_o3",
+          "text": "Run production with the guard closed and instruct operators not to open it.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "change_decision_weak",
+          "mistakeTags": [
+            "change_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "change_decision_o4",
+          "text": "Return to service because the interlock succeeds on most tests. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "change_decision_critical",
+          "mistakeTags": [
+            "change_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response_decision",
+      "type": "DECISION",
+      "prompt": "During controlled troubleshooting, the mechanism moves unexpectedly when residual energy is discovered. What is the best response?",
+      "options": [
+        {
+          "id": "response_decision_o1",
+          "text": "Add a block to the moving part and continue after the mechanism stops. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "response_decision_defensible",
+          "mistakeTags": [
+            "response_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "response_decision_o2",
+          "text": "Have one technician hold the control valve while another checks the actuator.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "response_decision_weak",
+          "mistakeTags": [
+            "response_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "response_decision_o3",
+          "text": "Stop work, withdraw, re-establish complete energy control and verify the missed source before further troubleshooting.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "response_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "response_decision_o4",
+          "text": "Continue because the electrical disconnect remains locked. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "response_decision_critical",
+          "mistakeTags": [
+            "response_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "Repairs are complete and locks are ready to be removed. What should occur before production resumes?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Remove locks after checking the immediate area and test the interlock during the first production cycle. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Inspect the machine, restore guards, account for people and tools, follow lock-removal rules and conduct a controlled functional test.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Restart slowly and reinstall nonessential guarding after several successful cycles. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Return to normal speed once the machine powers up because the repair is complete.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "machine_guarding"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "prejob_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "prejob_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "controls_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "controls_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "change_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "change_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "response_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "response_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_safe",
+      "type": "COMPLETION",
+      "priority": 30,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "BOOL",
+        "stateId": "closeout_verified",
+        "equals": true
+      }
+    },
+    {
+      "id": "closeout_critical",
+      "type": "COMPLETION",
+      "priority": 20,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "closeout_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1910.147 Control of Hazardous Energy",
+    "OSHA 29 CFR 1910.212 General Requirements for All Machines"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "prejob_decision",
+        "alternateOptionId": "prejob_decision_o2"
+      },
+      {
+        "nodeId": "controls_decision",
+        "alternateOptionId": "controls_decision_o4"
+      },
+      {
+        "nodeId": "change_decision",
+        "alternateOptionId": "change_decision_o1"
+      },
+      {
+        "nodeId": "response_decision",
+        "alternateOptionId": "response_decision_o3"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "response_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

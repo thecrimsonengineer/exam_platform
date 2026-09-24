@@ -1,0 +1,1005 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "incident_investigation_scene_control",
+    "versionId": "v1",
+    "title": "Incident Investigation and Scene Control",
+    "description": "Preserve evidence, gather reliable information and convert findings into corrective action after a non-fatal workplace incident.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "prejob_decision",
+    "startingState": {
+      "route": "start",
+      "risk": 0,
+      "observations": [],
+      "authorization_verified": false,
+      "controls_verified": false,
+      "change_controlled": false,
+      "response_verified": false,
+      "closeout_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "authorization_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "change_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "response_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "closeout_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "supervisor",
+      "role": "HSE_supervisor"
+    },
+    {
+      "id": "worker",
+      "role": "worker"
+    },
+    {
+      "id": "support",
+      "role": "support_person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "work_authorization_record",
+      "type": "work_authorization",
+      "required": false
+    },
+    {
+      "id": "control_verification_record",
+      "type": "control_verification",
+      "required": false
+    },
+    {
+      "id": "condition_change_record",
+      "type": "condition_change",
+      "required": false
+    },
+    {
+      "id": "response_record",
+      "type": "response",
+      "required": false
+    },
+    {
+      "id": "closeout_record",
+      "type": "closeout",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "prejob_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "prejob_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "prejob_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "prejob_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "controls_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "controls_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "change_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "change_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "response_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "response_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prejob_decision",
+      "type": "DECISION",
+      "prompt": "The injured worker has received first aid and production wants to clear the area quickly. What should the HSE supervisor do first?",
+      "options": [
+        {
+          "id": "prejob_decision_o1",
+          "text": "Photograph the equipment and release the area once the supervisor confirms production can restart safely. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "prejob_decision_defensible",
+          "mistakeTags": [
+            "prejob_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "prejob_decision_o2",
+          "text": "Secure the relevant scene, preserve transient evidence, identify immediate controls and begin the investigation without unnecessarily disturbing conditions.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "prejob_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "prejob_decision_o3",
+          "text": "Ask witnesses what happened while maintenance begins returning the equipment to service.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "prejob_decision_weak",
+          "mistakeTags": [
+            "prejob_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "prejob_decision_o4",
+          "text": "Resume production because the injury was minor and the equipment is no longer moving.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "prejob_decision_critical",
+          "mistakeTags": [
+            "prejob_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "controls_decision",
+      "type": "DECISION",
+      "prompt": "Several witnesses give slightly different accounts of the sequence. What is the best approach?",
+      "options": [
+        {
+          "id": "controls_decision_o1",
+          "text": "Bring all witnesses together so they can agree on a single sequence before statements are recorded.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "controls_decision_defensible",
+          "mistakeTags": [
+            "controls_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "controls_decision_o2",
+          "text": "Use the most experienced worker's account as the primary version and check only major inconsistencies.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "controls_decision_weak",
+          "mistakeTags": [
+            "controls_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "controls_decision_o3",
+          "text": "Choose the account that best matches the supervisor's understanding so the report can be completed quickly.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "controls_decision_critical",
+          "mistakeTags": [
+            "controls_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "controls_decision_o4",
+          "text": "Collect accounts separately, compare them with physical and documentary evidence, and distinguish observed facts from assumptions.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "controls_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "change_decision",
+      "type": "DECISION",
+      "prompt": "Maintenance records reveal a recurring defect that was not mentioned in the initial interviews. What should happen?",
+      "options": [
+        {
+          "id": "change_decision_o1",
+          "text": "Expand the investigation to include the defect history, prior responses and management-system factors before finalizing causes.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "change_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "change_decision_o2",
+          "text": "Add the maintenance defect as the direct cause and complete the report without reopening interviews. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "change_decision_defensible",
+          "mistakeTags": [
+            "change_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "change_decision_o3",
+          "text": "Record the defect as background information but keep the original cause analysis unchanged.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "change_decision_weak",
+          "mistakeTags": [
+            "change_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "change_decision_o4",
+          "text": "Exclude the old defect because the current incident has already been explained by worker actions.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "change_decision_critical",
+          "mistakeTags": [
+            "change_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response_decision",
+      "type": "DECISION",
+      "prompt": "The investigation finds an operator error, a weak procedure and an unresolved equipment defect. What is the best response?",
+      "options": [
+        {
+          "id": "response_decision_o1",
+          "text": "List the operator error as the root cause and address the other findings as separate observations. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "response_decision_defensible",
+          "mistakeTags": [
+            "response_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "response_decision_o2",
+          "text": "Focus corrective action on retraining because it can be implemented faster than equipment or procedural changes.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "response_decision_weak",
+          "mistakeTags": [
+            "response_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "response_decision_o3",
+          "text": "Analyze how the human, equipment and management factors interacted and select controls that address underlying causes rather than stopping at the operator error.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "response_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "response_decision_o4",
+          "text": "Close the investigation once the immediate unsafe act has been identified and corrected.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "response_decision_critical",
+          "mistakeTags": [
+            "response_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "Corrective actions are assigned and the equipment has been repaired. What should occur before the investigation is formally closed?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Close the report when every action has an owner and due date, then verify effectiveness during the next audit.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Verify actions are implemented and effective, communicate relevant lessons and retain evidence that the identified causes have been addressed.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Return the equipment to service and close the incident once the repair work order is complete.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Close the case after management signs the report because implementation is owned by the assigned departments.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "incident_investigation"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "prejob_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "prejob_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "controls_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "controls_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "change_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "change_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "response_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "response_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_safe",
+      "type": "COMPLETION",
+      "priority": 30,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "BOOL",
+        "stateId": "closeout_verified",
+        "equals": true
+      }
+    },
+    {
+      "id": "closeout_critical",
+      "type": "COMPLETION",
+      "priority": 20,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "closeout_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA Incident Investigation guidance",
+    "ISO 45001 Occupational health and safety management systems"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "prejob_decision",
+        "alternateOptionId": "prejob_decision_o2"
+      },
+      {
+        "nodeId": "controls_decision",
+        "alternateOptionId": "controls_decision_o4"
+      },
+      {
+        "nodeId": "change_decision",
+        "alternateOptionId": "change_decision_o1"
+      },
+      {
+        "nodeId": "response_decision",
+        "alternateOptionId": "response_decision_o3"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "response_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "csp11.lab.presentation.v1",
+  "labId": "incident_investigation_scene_control",
+  "versionId": "v1",
+  "presentation": {
+    "summary": "Preserve evidence, gather reliable information and convert findings into corrective action after a non-fatal workplace incident.",
+    "estimatedTime": "10-15 minutes",
+    "decisionCountLabel": "5 decisions",
+    "role": "HSE supervisor",
+    "situation": "A worker has a minor injury after equipment unexpectedly moved. The area is stable and immediate medical needs have been addressed.",
+    "objective": "Make five professional safety decisions as conditions change.",
+    "peopleInvolved": [
+      "supervisor",
+      "worker",
+      "support person"
+    ],
+    "knownFacts": [
+      "A worker has a minor injury after equipment unexpectedly moved. The area is stable and immediate medical needs have been addressed."
+    ],
+    "focusTags": [
+      "incident investigation",
+      "evidence",
+      "root causes",
+      "corrective action"
+    ]
+  },
+  "evidencePresentation": {
+    "work_authorization_record": {
+      "title": "Work Authorization Record",
+      "summary": "Review the verified record before making the next decision.",
+      "details": [
+        "Use the record to confirm the current work boundary and control status."
+      ]
+    },
+    "control_verification_record": {
+      "title": "Control Verification Record",
+      "summary": "Review the verified record before making the next decision.",
+      "details": [
+        "Use the record to confirm the current work boundary and control status."
+      ]
+    },
+    "condition_change_record": {
+      "title": "Condition Change Record",
+      "summary": "Review the verified record before making the next decision.",
+      "details": [
+        "Use the record to confirm the current work boundary and control status."
+      ]
+    },
+    "response_record": {
+      "title": "Response Record",
+      "summary": "Review the verified record before making the next decision.",
+      "details": [
+        "Use the record to confirm the current work boundary and control status."
+      ]
+    },
+    "closeout_record": {
+      "title": "Closeout Record",
+      "summary": "Review the verified record before making the next decision.",
+      "details": [
+        "Use the record to confirm the current work boundary and control status."
+      ]
+    }
+  },
+  "decisionPresentation": {
+    "prejob_decision": {
+      "title": "Scene control"
+    },
+    "controls_decision": {
+      "title": "Evidence collection"
+    },
+    "change_decision": {
+      "title": "Changing information"
+    },
+    "response_decision": {
+      "title": "Cause analysis"
+    },
+    "closeout_decision": {
+      "title": "Corrective action closeout"
+    }
+  },
+  "consequencePresentation": {
+    "prejob_decision_defensible": {
+      "observable": "The situation is partly controlled, but a remaining gap requires recovery.",
+      "guidedInsight": "A partial control is not equivalent to completing every prerequisite."
+    },
+    "prejob_decision_best": {
+      "observable": "The work remains controlled and the next stage is approached with the required safeguards verified.",
+      "guidedInsight": "Verify the complete control sequence before work continues."
+    },
+    "prejob_decision_weak": {
+      "observable": "The control gap increases exposure and weakens the work position.",
+      "guidedInsight": "Schedule pressure should not replace verification."
+    },
+    "prejob_decision_critical": {
+      "observable": "The decision creates a serious loss of control.",
+      "guidedInsight": "Do not substitute assumptions for verified control."
+    },
+    "controls_decision_defensible": {
+      "observable": "The situation is partly controlled, but a remaining gap requires recovery.",
+      "guidedInsight": "A partial control is not equivalent to completing every prerequisite."
+    },
+    "controls_decision_best": {
+      "observable": "The work remains controlled and the next stage is approached with the required safeguards verified.",
+      "guidedInsight": "Verify the complete control sequence before work continues."
+    },
+    "controls_decision_weak": {
+      "observable": "The control gap increases exposure and weakens the work position.",
+      "guidedInsight": "Schedule pressure should not replace verification."
+    },
+    "controls_decision_critical": {
+      "observable": "The decision creates a serious loss of control.",
+      "guidedInsight": "Do not substitute assumptions for verified control."
+    },
+    "change_decision_defensible": {
+      "observable": "The situation is partly controlled, but a remaining gap requires recovery.",
+      "guidedInsight": "A partial control is not equivalent to completing every prerequisite."
+    },
+    "change_decision_best": {
+      "observable": "The work remains controlled and the next stage is approached with the required safeguards verified.",
+      "guidedInsight": "Verify the complete control sequence before work continues."
+    },
+    "change_decision_weak": {
+      "observable": "The control gap increases exposure and weakens the work position.",
+      "guidedInsight": "Schedule pressure should not replace verification."
+    },
+    "change_decision_critical": {
+      "observable": "The decision creates a serious loss of control.",
+      "guidedInsight": "Do not substitute assumptions for verified control."
+    },
+    "response_decision_defensible": {
+      "observable": "The situation is partly controlled, but a remaining gap requires recovery.",
+      "guidedInsight": "A partial control is not equivalent to completing every prerequisite."
+    },
+    "response_decision_best": {
+      "observable": "The work remains controlled and the next stage is approached with the required safeguards verified.",
+      "guidedInsight": "Verify the complete control sequence before work continues."
+    },
+    "response_decision_weak": {
+      "observable": "The control gap increases exposure and weakens the work position.",
+      "guidedInsight": "Schedule pressure should not replace verification."
+    },
+    "response_decision_critical": {
+      "observable": "The decision creates a serious loss of control.",
+      "guidedInsight": "Do not substitute assumptions for verified control."
+    },
+    "closeout_decision_defensible": {
+      "observable": "The situation is partly controlled, but a remaining gap requires recovery.",
+      "guidedInsight": "A partial control is not equivalent to completing every prerequisite."
+    },
+    "closeout_decision_best": {
+      "observable": "The work remains controlled and the next stage is approached with the required safeguards verified.",
+      "guidedInsight": "Verify the complete control sequence before work continues."
+    },
+    "closeout_decision_weak": {
+      "observable": "The control gap increases exposure and weakens the work position.",
+      "guidedInsight": "Schedule pressure should not replace verification."
+    },
+    "closeout_decision_critical": {
+      "observable": "The decision creates a serious loss of control.",
+      "guidedInsight": "Do not substitute assumptions for verified control."
+    }
+  },
+  "endingPresentation": {
+    "safe_completion": {
+      "title": "Safe completion",
+      "narrative": "The work is completed with controls verified.",
+      "keyTurningPoint": "The key controls were verified before work continued."
+    },
+    "controlled_recovery": {
+      "title": "Controlled recovery",
+      "narrative": "Earlier gaps are recognized and corrected before completion.",
+      "keyTurningPoint": "The team recovered by restoring the control boundary."
+    },
+    "major_incident": {
+      "title": "Major incident",
+      "narrative": "Unresolved control gaps lead to a significant modeled outcome.",
+      "keyTurningPoint": "Work continued before the required controls were verified."
+    }
+  }
+}

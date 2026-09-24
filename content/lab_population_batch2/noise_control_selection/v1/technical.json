@@ -1,0 +1,1005 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "noise_control_selection",
+    "versionId": "v1",
+    "title": "Noise Exposure Control Selection",
+    "description": "Choose and verify noise controls when production conditions and exposure patterns change.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "prejob_decision",
+    "startingState": {
+      "route": "start",
+      "risk": 0,
+      "observations": [],
+      "authorization_verified": false,
+      "controls_verified": false,
+      "change_controlled": false,
+      "response_verified": false,
+      "closeout_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "authorization_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "change_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "response_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "closeout_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "supervisor",
+      "role": "industrial_hygiene_coordinator"
+    },
+    {
+      "id": "worker",
+      "role": "worker"
+    },
+    {
+      "id": "support",
+      "role": "support_person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "work_authorization_record",
+      "type": "work_authorization",
+      "required": false
+    },
+    {
+      "id": "control_verification_record",
+      "type": "control_verification",
+      "required": false
+    },
+    {
+      "id": "condition_change_record",
+      "type": "condition_change",
+      "required": false
+    },
+    {
+      "id": "response_record",
+      "type": "response",
+      "required": false
+    },
+    {
+      "id": "closeout_record",
+      "type": "closeout",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "prejob_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "prejob_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "prejob_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "prejob_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "controls_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "controls_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "change_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "change_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "response_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "response_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prejob_decision",
+      "type": "DECISION",
+      "prompt": "Workers report that a modified line is louder than before, but the most recent exposure survey predates the modification. What should happen first?",
+      "options": [
+        {
+          "id": "prejob_decision_o1",
+          "text": "Issue additional hearing protection and keep using the earlier survey until the annual review. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "prejob_decision_defensible",
+          "mistakeTags": [
+            "prejob_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "prejob_decision_o2",
+          "text": "Reassess noise exposure under current operating conditions and use the results to select appropriate controls before assuming previous data remain valid.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "prejob_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "prejob_decision_o3",
+          "text": "Ask workers whether the line feels significantly louder and measure only if several agree.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "prejob_decision_weak",
+          "mistakeTags": [
+            "prejob_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "prejob_decision_o4",
+          "text": "Continue because the equipment change did not alter the posted hearing-protection area.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "prejob_decision_critical",
+          "mistakeTags": [
+            "prejob_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "controls_decision",
+      "type": "DECISION",
+      "prompt": "Measurements confirm excessive noise near one machine. What is the best next action?",
+      "options": [
+        {
+          "id": "controls_decision_o1",
+          "text": "Upgrade hearing protectors for everyone and postpone engineering review until the next shutdown. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "controls_decision_defensible",
+          "mistakeTags": [
+            "controls_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "controls_decision_o2",
+          "text": "Rotate workers more frequently without evaluating whether total daily exposure is reduced sufficiently.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "controls_decision_weak",
+          "mistakeTags": [
+            "controls_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "controls_decision_o3",
+          "text": "Keep the existing program because workers already wear hearing protection in the area.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "controls_decision_critical",
+          "mistakeTags": [
+            "controls_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "controls_decision_o4",
+          "text": "Prioritize feasible engineering and administrative controls, then use suitable hearing protection for the remaining exposure within the hearing-conservation program.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "controls_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "change_decision",
+      "type": "DECISION",
+      "prompt": "Production increases and workers now spend more time at the loudest station than during the assessment. What should happen?",
+      "options": [
+        {
+          "id": "change_decision_o1",
+          "text": "Reassess the exposure pattern and adjust controls or work organization so the revised duration is reflected in protection decisions.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "change_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "change_decision_o2",
+          "text": "Keep the same controls because the sound level at the machine has not changed.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "change_decision_defensible",
+          "mistakeTags": [
+            "change_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "change_decision_o3",
+          "text": "Tell workers to be more consistent with hearing protection and review exposure at the next scheduled survey. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "change_decision_weak",
+          "mistakeTags": [
+            "change_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "change_decision_o4",
+          "text": "Continue because the increased time is temporary and the shift length is unchanged.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "change_decision_critical",
+          "mistakeTags": [
+            "change_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response_decision",
+      "type": "DECISION",
+      "prompt": "A noise enclosure door is found open and damaged during production. What is the best response?",
+      "options": [
+        {
+          "id": "response_decision_o1",
+          "text": "Close the damaged door as far as possible and continue until maintenance can repair it. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "response_decision_defensible",
+          "mistakeTags": [
+            "response_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "response_decision_o2",
+          "text": "Move the nearest worker farther away but keep the rest of the line unchanged.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "response_decision_weak",
+          "mistakeTags": [
+            "response_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "response_decision_o3",
+          "text": "Restore the engineering control, manage exposure while it is unavailable and verify effectiveness before returning to normal operation.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "response_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "response_decision_o4",
+          "text": "Continue because hearing protection is already mandatory in the area. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "response_decision_critical",
+          "mistakeTags": [
+            "response_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The enclosure is repaired and staffing returns to the normal pattern. What should happen next?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Record the repair and wait for the next routine survey because the equipment is back to normal. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Verify the control performs as intended, document the change and confirm the exposure assessment and hearing-conservation measures remain appropriate.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Remove temporary controls as soon as the enclosure door closes properly. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Resume normal arrangements because the original engineering design has been restored. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "noise"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "prejob_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "prejob_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "controls_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "controls_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "change_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "change_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "response_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "response_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_safe",
+      "type": "COMPLETION",
+      "priority": 30,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "BOOL",
+        "stateId": "closeout_verified",
+        "equals": true
+      }
+    },
+    {
+      "id": "closeout_critical",
+      "type": "COMPLETION",
+      "priority": 20,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "closeout_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "OSHA 29 CFR 1910.95 Occupational Noise Exposure",
+    "NIOSH Criteria for a Recommended Standard: Occupational Noise Exposure"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "prejob_decision",
+        "alternateOptionId": "prejob_decision_o2"
+      },
+      {
+        "nodeId": "controls_decision",
+        "alternateOptionId": "controls_decision_o4"
+      },
+      {
+        "nodeId": "change_decision",
+        "alternateOptionId": "change_decision_o1"
+      },
+      {
+        "nodeId": "response_decision",
+        "alternateOptionId": "response_decision_o3"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "response_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}

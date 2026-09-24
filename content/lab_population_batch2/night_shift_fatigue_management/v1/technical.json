@@ -1,0 +1,1005 @@
+{
+  "schemaVersion": "csp11.lab.v1",
+  "lab": {
+    "id": "night_shift_fatigue_management",
+    "versionId": "v1",
+    "title": "Night-Shift Fatigue Management",
+    "description": "Manage fatigue-related performance risk during an extended night shift with changing workload.",
+    "lifecycle": "DRAFT",
+    "supportedModes": [
+      "GUIDED",
+      "PROFESSIONAL",
+      "ASSESSMENT"
+    ],
+    "startingNodeId": "prejob_decision",
+    "startingState": {
+      "route": "start",
+      "risk": 0,
+      "observations": [],
+      "authorization_verified": false,
+      "controls_verified": false,
+      "change_controlled": false,
+      "response_verified": false,
+      "closeout_verified": false
+    }
+  },
+  "stateSchema": {
+    "route": {
+      "type": "ENUM",
+      "allowedValues": [
+        "start",
+        "safe",
+        "recovery",
+        "weak",
+        "critical"
+      ]
+    },
+    "risk": {
+      "type": "BOUNDED_NUMERIC",
+      "min": 0,
+      "max": 10
+    },
+    "observations": {
+      "type": "STRING_SET"
+    },
+    "authorization_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "controls_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "change_controlled": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "response_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    },
+    "closeout_verified": {
+      "type": "BOOLEAN",
+      "irreversible": true
+    }
+  },
+  "characters": [
+    {
+      "id": "supervisor",
+      "role": "shift_supervisor"
+    },
+    {
+      "id": "worker",
+      "role": "worker"
+    },
+    {
+      "id": "support",
+      "role": "support_person"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "work_authorization_record",
+      "type": "work_authorization",
+      "required": false
+    },
+    {
+      "id": "control_verification_record",
+      "type": "control_verification",
+      "required": false
+    },
+    {
+      "id": "condition_change_record",
+      "type": "condition_change",
+      "required": false
+    },
+    {
+      "id": "response_record",
+      "type": "response",
+      "required": false
+    },
+    {
+      "id": "closeout_record",
+      "type": "closeout",
+      "required": false
+    }
+  ],
+  "consequences": [
+    {
+      "id": "prejob_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "prejob_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "authorization_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "work_authorization_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "prejob_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "prejob_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "controls_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "controls_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "control_verification_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "controls_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "controls_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "change_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "change_controlled",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "condition_change_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "change_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "change_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "response_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "response_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "response_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "response_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "response_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_defensible",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "recovery"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 3
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 2
+    },
+    {
+      "id": "closeout_decision_best",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "safe"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 1
+        },
+        {
+          "op": "SET",
+          "stateId": "closeout_verified",
+          "value": true
+        }
+      ],
+      "evidenceUnlocks": [
+        "closeout_record"
+      ],
+      "simulatedMinutes": 3
+    },
+    {
+      "id": "closeout_decision_weak",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "weak"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 6
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    },
+    {
+      "id": "closeout_decision_critical",
+      "mutations": [
+        {
+          "op": "SET",
+          "stateId": "route",
+          "value": "critical"
+        },
+        {
+          "op": "SET",
+          "stateId": "risk",
+          "value": 9
+        }
+      ],
+      "evidenceUnlocks": [],
+      "simulatedMinutes": 1
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prejob_decision",
+      "type": "DECISION",
+      "prompt": "The shift will extend beyond the planned finish and a critical task is still pending. What should the supervisor do first?",
+      "options": [
+        {
+          "id": "prejob_decision_o1",
+          "text": "Ask workers whether they feel able to continue and proceed if nobody reports significant fatigue. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "prejob_decision_defensible",
+          "mistakeTags": [
+            "prejob_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "prejob_decision_o2",
+          "text": "Reassess staffing, task criticality and fatigue risk, redistribute or defer work where necessary, and set additional recovery and supervision controls.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "prejob_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "prejob_decision_o3",
+          "text": "Keep the original assignments but add an extra coffee break before the critical task.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "prejob_decision_weak",
+          "mistakeTags": [
+            "prejob_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "prejob_decision_o4",
+          "text": "Continue because the extension is only for one shift and the team is experienced.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "prejob_decision_critical",
+          "mistakeTags": [
+            "prejob_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "controls_decision",
+      "type": "DECISION",
+      "prompt": "One worker has been awake much longer than the others but is the most experienced person for the next task. What is the best action?",
+      "options": [
+        {
+          "id": "controls_decision_o1",
+          "text": "Let the experienced worker lead alone because familiarity reduces the likelihood of error.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "controls_decision_defensible",
+          "mistakeTags": [
+            "controls_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "controls_decision_o2",
+          "text": "Assign a less experienced worker alone and have the fatigued worker available by phone. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "controls_decision_weak",
+          "mistakeTags": [
+            "controls_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "controls_decision_o3",
+          "text": "Keep the original plan because changing roles late in the shift may create confusion.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "controls_decision_critical",
+          "mistakeTags": [
+            "controls_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "controls_decision_o4",
+          "text": "Use the worker's expertise without relying on fatigued solo performance, and assign the task so checking, workload and rest controls address the fatigue risk.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "controls_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "change_decision",
+      "type": "DECISION",
+      "prompt": "A second urgent task arrives while the crew is already behind schedule. What should happen?",
+      "options": [
+        {
+          "id": "change_decision_o1",
+          "text": "Reprioritize the work, defer nonessential tasks and ensure staffing and rest remain adequate for the higher-risk activities.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "change_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "change_decision_o2",
+          "text": "Split the crew and ask both groups to work faster so all tasks finish before handover.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "change_decision_defensible",
+          "mistakeTags": [
+            "change_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "change_decision_o3",
+          "text": "Cancel the next planned break and use that time to clear the backlog.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "change_decision_weak",
+          "mistakeTags": [
+            "change_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "change_decision_o4",
+          "text": "Continue the existing plan and add the new task at the end of the queue without reassessment.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "change_decision_critical",
+          "mistakeTags": [
+            "change_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response_decision",
+      "type": "DECISION",
+      "prompt": "A worker makes two unusual procedural errors within a short period. What is the best response?",
+      "options": [
+        {
+          "id": "response_decision_o1",
+          "text": "Remind the worker to concentrate and have a coworker watch the next step closely. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "response_decision_defensible",
+          "mistakeTags": [
+            "response_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "response_decision_o2",
+          "text": "Move the worker to the next task so a change of activity improves alertness.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "response_decision_weak",
+          "mistakeTags": [
+            "response_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "response_decision_o3",
+          "text": "Pause the worker's safety-critical activity, check fitness and fatigue factors, correct the immediate work and adjust duties or staffing before continuing.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "response_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "response_decision_o4",
+          "text": "Continue because neither error caused an incident and both were corrected quickly.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "response_decision_critical",
+          "mistakeTags": [
+            "response_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "closeout_decision",
+      "type": "DECISION",
+      "prompt": "The extended shift is ending and several tasks remain partially complete. What should happen at handover?",
+      "options": [
+        {
+          "id": "closeout_decision_o1",
+          "text": "Ask each outgoing worker to brief their replacement informally at the workstation. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "DEFENSIBLE",
+          "consequenceId": "closeout_decision_defensible",
+          "mistakeTags": [
+            "closeout_decision_defensible_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "closeout_decision_o2",
+          "text": "Provide a structured handover of work status, hazards, controls and incomplete actions so the incoming team can resume without relying on fatigued memory.",
+          "isBest": true,
+          "quality": "OPTIMAL",
+          "consequenceId": "closeout_decision_best",
+          "mistakeTags": [],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "closeout_decision_o3",
+          "text": "Leave written notes for the day supervisor and let the incoming team inspect the work before starting. while maintaining the documented work boundary and supervision.",
+          "isBest": false,
+          "quality": "WEAK",
+          "consequenceId": "closeout_decision_weak",
+          "mistakeTags": [
+            "closeout_decision_weak_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        },
+        {
+          "id": "closeout_decision_o4",
+          "text": "Finish the highest-priority task after handover time so fewer incomplete items are transferred.",
+          "isBest": false,
+          "quality": "CRITICAL",
+          "consequenceId": "closeout_decision_critical",
+          "mistakeTags": [
+            "closeout_decision_critical_gap"
+          ],
+          "competencyEvidence": [
+            "d07_c01",
+            "fatigue"
+          ]
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "id": "prejob_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "prejob_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "prejob_decision",
+      "targetNodeId": "controls_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "controls_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "controls_decision_route",
+      "type": "ROUTE",
+      "priority": 10,
+      "fromNodeId": "controls_decision",
+      "targetNodeId": "change_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "change_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "change_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "change_decision",
+      "targetNodeId": "response_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "response_decision_critical_event",
+      "type": "CRITICAL_EVENT",
+      "priority": 100,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "response_decision_route",
+      "type": "CONVERGENCE",
+      "priority": 10,
+      "fromNodeId": "response_decision",
+      "targetNodeId": "closeout_decision",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    },
+    {
+      "id": "closeout_safe",
+      "type": "COMPLETION",
+      "priority": 30,
+      "fromNodeId": "closeout_decision",
+      "endingId": "safe_completion",
+      "condition": {
+        "op": "BOOL",
+        "stateId": "closeout_verified",
+        "equals": true
+      }
+    },
+    {
+      "id": "closeout_critical",
+      "type": "COMPLETION",
+      "priority": 20,
+      "fromNodeId": "closeout_decision",
+      "endingId": "major_incident",
+      "condition": {
+        "op": "ENUM",
+        "stateId": "route",
+        "equals": "critical"
+      }
+    },
+    {
+      "id": "closeout_recovery",
+      "type": "COMPLETION",
+      "priority": 10,
+      "fromNodeId": "closeout_decision",
+      "endingId": "controlled_recovery",
+      "condition": {
+        "op": "ALWAYS"
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "safe_completion",
+      "family": "SAFE_COMPLETION",
+      "title": "Safe completion"
+    },
+    {
+      "id": "controlled_recovery",
+      "family": "CONTROLLED_RECOVERY",
+      "title": "Controlled recovery"
+    },
+    {
+      "id": "major_incident",
+      "family": "MAJOR_INCIDENT",
+      "title": "Major incident"
+    }
+  ],
+  "competencyMappings": [
+    "d07_c01"
+  ],
+  "sources": [
+    "NIOSH Training for Nurses on Shift Work and Long Work Hours",
+    "OSHA Worker Fatigue Safety and Health Topics"
+  ],
+  "debrief": {
+    "alternateTimelineOptions": [
+      {
+        "nodeId": "prejob_decision",
+        "alternateOptionId": "prejob_decision_o2"
+      },
+      {
+        "nodeId": "controls_decision",
+        "alternateOptionId": "controls_decision_o4"
+      },
+      {
+        "nodeId": "change_decision",
+        "alternateOptionId": "change_decision_o1"
+      },
+      {
+        "nodeId": "response_decision",
+        "alternateOptionId": "response_decision_o3"
+      },
+      {
+        "nodeId": "closeout_decision",
+        "alternateOptionId": "closeout_decision_o2"
+      }
+    ]
+  },
+  "learningSignals": {
+    "recoveryDecisionNodeIds": [
+      "response_decision",
+      "closeout_decision"
+    ],
+    "privacy": "sanitized_decision_evidence_only"
+  }
+}
