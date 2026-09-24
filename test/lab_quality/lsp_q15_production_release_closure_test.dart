@@ -262,10 +262,7 @@ void main() {
       expect(rules, contains('match /labLearnerReleaseState/{releaseId}'));
       expect(rules, contains('function initialLabPopulationReleased()'));
       expect(rules, contains('function batch2LabPopulationAccepted()'));
-      expect(
-        rules,
-        isNot(contains('&& initialLabPopulationReleased()')),
-      );
+      expect(rules, isNot(contains('&& initialLabPopulationReleased()')));
 
       final screen = File(
         'lib/screens/lab/lab_library_screen.dart',

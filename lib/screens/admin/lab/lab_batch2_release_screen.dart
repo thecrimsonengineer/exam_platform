@@ -272,7 +272,8 @@ class _LabBatch2ReleaseScreenState extends State<LabBatch2ReleaseScreen> {
                     const SizedBox(height: 18),
                     _Panel(
                       key: const ValueKey('batch2-q17-state'),
-                      icon: acceptance.state == LabBatch2AcceptanceState.accepted
+                      icon:
+                          acceptance.state == LabBatch2AcceptanceState.accepted
                           ? Icons.verified_user_rounded
                           : Icons.fact_check_outlined,
                       title: 'Q17 extension: ' + acceptance.stateLabel,

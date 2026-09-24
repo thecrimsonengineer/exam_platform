@@ -32,18 +32,20 @@ class _FileBatch2PopulationSource implements LabProductionPopulationSource {
   Future<List<LabProductionPopulationSeedCandidate>> loadCandidates(
     LabScenarioPopulationManifest manifest,
   ) async {
-    return manifest.entries.map((entry) {
-      return LabProductionPopulationSeedCandidate(
-        entryId: entry.entryId,
-        technicalRoot: _readObject(entry.technicalLabPath),
-        dqg300Evidence: const LabDqg300EvidenceCodec().decode(
-          File(entry.dqg300EvidencePath).readAsStringSync(),
-        ),
-        presentationPackage: LabLearnerPresentationPackage.fromJson(
-          _readObject(entry.learnerPresentationPath),
-        ),
-      );
-    }).toList(growable: false);
+    return manifest.entries
+        .map((entry) {
+          return LabProductionPopulationSeedCandidate(
+            entryId: entry.entryId,
+            technicalRoot: _readObject(entry.technicalLabPath),
+            dqg300Evidence: const LabDqg300EvidenceCodec().decode(
+              File(entry.dqg300EvidencePath).readAsStringSync(),
+            ),
+            presentationPackage: LabLearnerPresentationPackage.fromJson(
+              _readObject(entry.learnerPresentationPath),
+            ),
+          );
+        })
+        .toList(growable: false);
   }
 }
 
@@ -61,11 +63,10 @@ void main() {
       evidenceRepository: evidence,
       environmentId: kExpectedLabProductionEnvironmentId,
     );
-    final acceptanceRepository =
-        InMemoryLabBatch2ReleaseAcceptanceRepository(
-          stagingRepository: staging,
-          catalogueRepository: catalogue,
-        );
+    final acceptanceRepository = InMemoryLabBatch2ReleaseAcceptanceRepository(
+      stagingRepository: staging,
+      catalogueRepository: catalogue,
+    );
     final acceptanceService = LabBatch2AcceptanceService(
       releaseOperator: releaseOperator,
       populationSource: source,
@@ -148,10 +149,7 @@ void main() {
       ),
     );
     expect(rules, contains('batch2LabPopulationAccepted()'));
-    expect(
-      rules,
-      contains('csp11.lab.learner_extension_visibility.v1'),
-    );
+    expect(rules, contains('csp11.lab.learner_extension_visibility.v1'));
     expect(
       rules,
       contains('match /labProductionReleaseExtensionState/{releaseId}'),
@@ -167,14 +165,8 @@ void main() {
       ),
     );
     expect(repository, contains('visibleReleaseId'));
-    expect(
-      runtime,
-      contains('visibleReleaseId: kLearnerVisibleLabReleaseId'),
-    );
-    expect(
-      runtime,
-      contains('FirestoreLabBatch2LearnerVisibilityRepository'),
-    );
+    expect(runtime, contains('visibleReleaseId: kLearnerVisibleLabReleaseId'));
+    expect(runtime, contains('FirestoreLabBatch2LearnerVisibilityRepository'));
 
     final catalogueBlock = RegExp(
       r'match /labLearnerCatalogue/\{versionKey\} \{([\s\S]*?)match /labProductionCatalogueStaging',

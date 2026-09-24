@@ -149,9 +149,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => LabProductionReleaseScreen(
-          adminUserId: adminUserId,
-        ),
+        builder: (_) => LabProductionReleaseScreen(adminUserId: adminUserId),
       ),
     );
   }
@@ -165,9 +163,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => LabProductionDeploymentAcceptanceScreen(
-          adminUserId: adminUserId,
-        ),
+        builder: (_) =>
+            LabProductionDeploymentAcceptanceScreen(adminUserId: adminUserId),
       ),
     );
   }

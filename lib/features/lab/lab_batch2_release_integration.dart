@@ -17,7 +17,8 @@ import 'lab_scenario_population_manifest.dart';
 import 'lab_scenario_population_publication.dart';
 import 'lab_studio.dart';
 
-const String kBatch2ManifestAsset = 'content/lab_population_batch2/manifest.json';
+const String kBatch2ManifestAsset =
+    'content/lab_population_batch2/manifest.json';
 const String kBatch2PreCatalogueClosedSha =
     '8a3ee7a5e27ec4b63793dddbb3982e3f0f42c429';
 const String kBatch2PreCatalogueValidationRunId = '36015831093';
@@ -57,7 +58,8 @@ bool _batch2Sha256(String value, String schema) {
 String _batch2Hash(String schema, Map<String, Object?> payload) =>
     schema + ':' + sha256.convert(utf8.encode(jsonEncode(payload))).toString();
 
-class BundledLabBatch2PopulationSource implements LabProductionPopulationSource {
+class BundledLabBatch2PopulationSource
+    implements LabProductionPopulationSource {
   const BundledLabBatch2PopulationSource({required this.bundle});
 
   final AssetBundle bundle;
@@ -160,10 +162,9 @@ class InMemoryLabBatch2CatalogueStagingRepository
   @override
   Future<List<LabBatch2StagedCatalogueDocument>> listForRelease(
     String releaseId,
-  ) async =>
-      List<LabBatch2StagedCatalogueDocument>.unmodifiable(
-        _documents.values.where((item) => item.releaseId == releaseId),
-      );
+  ) async => List<LabBatch2StagedCatalogueDocument>.unmodifiable(
+    _documents.values.where((item) => item.releaseId == releaseId),
+  );
 }
 
 Map<String, Object?> _batch2EncodePresentation(
@@ -235,9 +236,7 @@ Map<String, Object?> _batch2CatalogueFields(
   'presentation': _batch2EncodePresentation(entry.presentation),
 };
 
-LabLearnerCatalogueEntry _batch2DecodeCatalogue(
-  Map<String, dynamic> data,
-) {
+LabLearnerCatalogueEntry _batch2DecodeCatalogue(Map<String, dynamic> data) {
   String text(String key) {
     final value = data[key]?.toString().trim() ?? '';
     if (value.isEmpty) {
@@ -280,9 +279,8 @@ LabLearnerCatalogueEntry _batch2DecodeCatalogue(
 
 class FirestoreLabBatch2CatalogueStagingRepository
     implements LabBatch2CatalogueStagingRepository {
-  FirestoreLabBatch2CatalogueStagingRepository({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirestoreLabBatch2CatalogueStagingRepository({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -350,18 +348,20 @@ class FirestoreLabBatch2CatalogueStagingRepository
     final snapshot = await _collection
         .where('releaseId', isEqualTo: releaseId)
         .get();
-    final documents = snapshot.docs.map((item) {
-      final data = item.data();
-      if (data['schemaVersion'] != kBatch2StagingSchemaVersion) {
-        throw const LabBatch2ReleaseException(
-          'Unsupported Batch 2 staged catalogue document.',
-        );
-      }
-      return LabBatch2StagedCatalogueDocument(
-        releaseId: releaseId,
-        entry: _batch2DecodeCatalogue(data),
-      );
-    }).toList(growable: false);
+    final documents = snapshot.docs
+        .map((item) {
+          final data = item.data();
+          if (data['schemaVersion'] != kBatch2StagingSchemaVersion) {
+            throw const LabBatch2ReleaseException(
+              'Unsupported Batch 2 staged catalogue document.',
+            );
+          }
+          return LabBatch2StagedCatalogueDocument(
+            releaseId: releaseId,
+            entry: _batch2DecodeCatalogue(data),
+          );
+        })
+        .toList(growable: false);
     return List<LabBatch2StagedCatalogueDocument>.unmodifiable(documents);
   }
 }
@@ -385,8 +385,9 @@ class LabBatch2ReleaseEvidence {
          catalogueIdentityKeys.toList()..sort(),
        ),
        entries = List<LabProductionReleaseEntryEvidence>.unmodifiable(
-         entries.toList()
-           ..sort((left, right) => left.identityKey.compareTo(right.identityKey)),
+         entries.toList()..sort(
+           (left, right) => left.identityKey.compareTo(right.identityKey),
+         ),
        ) {
     if (releaseId != kBatch2ReleaseId ||
         preCatalogueClosedSha != kBatch2PreCatalogueClosedSha ||
@@ -607,9 +608,8 @@ class InMemoryLabBatch2ReleaseEvidenceRepository
 
 class FirestoreLabBatch2ReleaseEvidenceRepository
     implements LabBatch2ReleaseEvidenceRepository {
-  FirestoreLabBatch2ReleaseEvidenceRepository({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirestoreLabBatch2ReleaseEvidenceRepository({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -768,9 +768,7 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
       populationSource: BundledLabBatch2PopulationSource(
         bundle: bundle ?? rootBundle,
       ),
-      publishedRepository: FirestoreLabPublishedRepository(
-        firestore: instance,
-      ),
+      publishedRepository: FirestoreLabPublishedRepository(firestore: instance),
       stagingRepository: FirestoreLabBatch2CatalogueStagingRepository(
         firestore: instance,
       ),
@@ -965,8 +963,9 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
 
     return _LabBatch2PreflightResult(
       publishedVersions: List<LabPublishedVersion>.unmodifiable(versions),
-      stagedCatalogue:
-          List<LabBatch2StagedCatalogueDocument>.unmodifiable(staged),
+      stagedCatalogue: List<LabBatch2StagedCatalogueDocument>.unmodifiable(
+        staged,
+      ),
     );
   }
 
@@ -1046,9 +1045,7 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
     final before = await inspect();
     if (!before.canRelease) {
       throw LabBatch2ReleaseException(
-        'Batch 2 Q16 release is not permitted from ' +
-            before.stateLabel +
-            '.',
+        'Batch 2 Q16 release is not permitted from ' + before.stateLabel + '.',
       );
     }
 
@@ -1057,9 +1054,7 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
       await publishedRepository.saveImmutable(
         preflight.publishedVersions[index],
       );
-      await stagingRepository.saveImmutable(
-        preflight.stagedCatalogue[index],
-      );
+      await stagingRepository.saveImmutable(preflight.stagedCatalogue[index]);
     }
 
     return _close(
@@ -1108,10 +1103,7 @@ class LabBatch2ReleaseAcceptance {
         environmentId != kExpectedLabProductionEnvironmentId ||
         labCount != 10 ||
         totalDecisionCount != 50 ||
-        !_batch2Sha256(
-          evidenceFingerprint,
-          kBatch2EvidenceFingerprintSchema,
-        ) ||
+        !_batch2Sha256(evidenceFingerprint, kBatch2EvidenceFingerprintSchema) ||
         acceptedBy.trim().isEmpty ||
         DateTime.tryParse(acceptedAtIso) == null) {
       throw const LabBatch2ReleaseException(
@@ -1286,7 +1278,8 @@ class InMemoryLabBatch2ReleaseAcceptanceRepository
   }) async {
     var count = 0;
     for (final entry in manifest.entries) {
-      if (await catalogueRepository.load(entry.labId, entry.versionId) != null) {
+      if (await catalogueRepository.load(entry.labId, entry.versionId) !=
+          null) {
         count++;
       }
     }
@@ -1296,9 +1289,8 @@ class InMemoryLabBatch2ReleaseAcceptanceRepository
 
 class FirestoreLabBatch2ReleaseAcceptanceRepository
     implements LabBatch2ReleaseAcceptanceRepository {
-  FirestoreLabBatch2ReleaseAcceptanceRepository({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirestoreLabBatch2ReleaseAcceptanceRepository({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -1424,7 +1416,6 @@ class FirestoreLabBatch2ReleaseAcceptanceRepository
   }
 }
 
-
 abstract class LabBatch2LearnerVisibilityRepository {
   Future<bool> isAccepted(String releaseId);
 }
@@ -1442,9 +1433,8 @@ class InMemoryLabBatch2LearnerVisibilityRepository
 
 class FirestoreLabBatch2LearnerVisibilityRepository
     implements LabBatch2LearnerVisibilityRepository {
-  FirestoreLabBatch2LearnerVisibilityRepository({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirestoreLabBatch2LearnerVisibilityRepository({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -1517,10 +1507,9 @@ class LabBatch2AcceptanceService {
         bundle: bundle,
       ),
       populationSource: source,
-      acceptanceRepository:
-          FirestoreLabBatch2ReleaseAcceptanceRepository(
-            firestore: instance,
-          ),
+      acceptanceRepository: FirestoreLabBatch2ReleaseAcceptanceRepository(
+        firestore: instance,
+      ),
     );
   }
 

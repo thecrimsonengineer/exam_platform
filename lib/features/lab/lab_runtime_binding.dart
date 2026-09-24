@@ -41,10 +41,9 @@ class LabLearnerRuntimeBinding {
           visibleReleaseId: kLearnerVisibleLabReleaseId,
         ),
       ),
-      batch2VisibilityRepository:
-          FirestoreLabBatch2LearnerVisibilityRepository(
-            firestore: instance,
-          ),
+      batch2VisibilityRepository: FirestoreLabBatch2LearnerVisibilityRepository(
+        firestore: instance,
+      ),
     );
   }
 
