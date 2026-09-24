@@ -49,6 +49,9 @@ jobs:
       - name: Verify LAB production operator regression
         run: flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
 
+      - name: Verify FR9 Custom Quiz cutover
+        run: flutter test test/architecture/phase_fr9_custom_quiz_builder_cutover_test.dart
+
       - name: Full repository regression
         run: flutter test
 

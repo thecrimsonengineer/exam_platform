@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import '../../data/csp11_blueprint.dart';
-import '../../models/content_repository.dart';
+import '../../services/questions/published_question_package.dart';
 import '../../services/quiz_service.dart';
 import '../../features/learning_twin/coaching/learning_twin_practice_context.dart';
 import '../../features/learning_twin/integration/learning_twin_pre_practice_guidance.dart';
@@ -19,9 +21,13 @@ class StudentQuizBuilder extends StatefulWidget {
 class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
   final QuizService _quizService = QuizService.shared;
 
-  List<ContentPackageSummary> _packages = <ContentPackageSummary>[];
+  static const int _maxAllScopePackages = 4;
+
+  List<PublishedQuestionPackageDescriptor> _catalog =
+      <PublishedQuestionPackageDescriptor>[];
 
   bool _loading = true;
+  int _prepareGeneration = 0;
 
   String _scope = 'all';
 
@@ -44,26 +50,17 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
 
   Future<void> _load() async {
     try {
-      await _quizService.initialize();
-
-      final published = _quizService
-          .getPublishedContent()
-          .map(
-            (content) =>
-                ContentPackageSummary(content: content, isPublishedCopy: true),
-          )
-          .toList();
+      final catalog = await _quizService.loadCatalogMetadata();
 
       if (!mounted) {
         return;
       }
 
       setState(() {
-        _packages = published;
-        _loading = false;
+        _catalog = catalog;
       });
 
-      _refreshAvailableCount();
+      await _prepareCurrentScope();
     } catch (error) {
       if (!mounted) {
         return;
@@ -71,75 +68,171 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
 
       setState(() {
         _loading = false;
+        _availableCount = 0;
       });
 
       _showMessage('Unable to load the quiz builder.\n$error');
     }
   }
 
-  List<ContentPackageSummary> get _publishedPackages {
-    return _packages;
-  }
-
-  List<ContentPackageSummary> get _domainPackages {
-    if (_domain == null) {
-      return _publishedPackages;
+  List<PublishedQuestionPackageDescriptor> get _domainDescriptors {
+    final selectedDomain = _domain;
+    if (selectedDomain == null) {
+      return List<PublishedQuestionPackageDescriptor>.unmodifiable(_catalog);
     }
 
-    return _publishedPackages
+    final prefix = 'd${selectedDomain.toString().padLeft(2, '0')}_c';
+    return _catalog
         .where(
-          (package) =>
-              domainForContentId(package.content.domainId)?.number == _domain,
+          (descriptor) =>
+              descriptor.competencyId.toLowerCase().startsWith(prefix),
         )
-        .toList();
-  }
-
-  List<ContentPackageSummary> get _competencyPackages {
-    if (_competencyId == null) {
-      return _domainPackages;
-    }
-
-    return _domainPackages
-        .where((package) => package.content.competencyId == _competencyId)
-        .toList();
+        .toList(growable: false);
   }
 
   List<String> get _competencyIds {
-    final values = _domainPackages
-        .map((package) => package.content.competencyId)
-        .where((id) => id.trim().isNotEmpty)
+    final values = _domainDescriptors
+        .where((descriptor) => descriptor.publishedQuestionCount > 0)
+        .map((descriptor) => descriptor.competencyId)
         .toSet()
-        .toList();
-
-    values.sort();
+        .toList()
+      ..sort();
 
     return values;
   }
 
   List<_SubtopicChoice> get _subtopics {
-    final values = <String, _SubtopicChoice>{};
-
-    for (final package in _competencyPackages) {
-      for (final topic in package.content.topics) {
-        for (final subtopic in topic.subtopics) {
-          values[subtopic.id] = _SubtopicChoice(
-            id: subtopic.id,
-            title: subtopic.title,
-            competencyId: package.content.competencyId,
-          );
-        }
-      }
+    final competencyId = _competencyId;
+    if (competencyId == null || competencyId.trim().isEmpty) {
+      return const <_SubtopicChoice>[];
     }
 
-    final result = values.values.toList();
+    final values = <String, _SubtopicChoice>{};
 
-    result.sort((a, b) => a.title.compareTo(b.title));
+    for (final question in _quizService.getQuestionsByCompetency(competencyId)) {
+      final id = question.subtopicId.trim();
+      if (id.isEmpty) {
+        continue;
+      }
+
+      values[id] = _SubtopicChoice(
+        id: id,
+        title: id.toUpperCase(),
+        competencyId: competencyId,
+      );
+    }
+
+    final result = values.values.toList()
+      ..sort((a, b) => a.id.compareTo(b.id));
 
     return result;
   }
 
-  void _refreshAvailableCount() {
-    final count = _quizService.getAvailableQuestionCount(
+  void _schedulePrepare() {
+    unawaited(_prepareCurrentScope());
+  }
+
+  Future<void> _prepareCurrentScope() async {
+    final generation = ++_prepareGeneration;
+
+    if (mounted) {
+      setState(() {
+        _loading = true;
+        _availableCount = 0;
+      });
+    }
+
+    try {
+      if (_scope == 'all') {
+        await _prepareBoundedAllScope();
+      } else if (_scope == 'domain') {
+        final selectedDomain = _domain;
+        if (selectedDomain == null) {
+          _finishPreparation(generation, availableCount: 0);
+          return;
+        }
+
+        final competencyIds = _domainDescriptors
+            .where((descriptor) => descriptor.publishedQuestionCount > 0)
+            .map((descriptor) => descriptor.competencyId)
+            .toList(growable: false);
+
+        if (competencyIds.isEmpty) {
+          _finishPreparation(generation, availableCount: 0);
+          return;
+        }
+
+        await _quizService.prepareCompetencies(competencyIds);
+      } else {
+        final competencyId = _competencyId?.trim();
+        if (competencyId == null || competencyId.isEmpty) {
+          _finishPreparation(generation, availableCount: 0);
+          return;
+        }
+
+        await _quizService.prepareCompetencies(<String>[competencyId]);
+      }
+
+      if (!mounted || generation != _prepareGeneration) {
+        return;
+      }
+
+      if (_scope == 'subtopic' &&
+          _subtopicId != null &&
+          !_subtopics.any((item) => item.id == _subtopicId)) {
+        _subtopicId = null;
+      }
+
+      final count = _availablePreparedQuestionCount();
+      _finishPreparation(generation, availableCount: count);
+    } catch (error) {
+      if (!mounted || generation != _prepareGeneration) {
+        return;
+      }
+
+      setState(() {
+        _loading = false;
+        _availableCount = 0;
+      });
+
+      _showMessage('Unable to prepare custom quiz questions.\n$error');
+    }
+  }
+
+  Future<void> _prepareBoundedAllScope() async {
+    final candidates = _catalog
+        .where((descriptor) => descriptor.publishedQuestionCount > 0)
+        .toList(growable: false);
+
+    if (candidates.isEmpty) {
+      return;
+    }
+
+    final selected = <String>[];
+    var advertisedCount = 0;
+
+    for (final descriptor in candidates.take(_maxAllScopePackages)) {
+      selected.add(descriptor.competencyId);
+      advertisedCount += descriptor.publishedQuestionCount;
+
+      if (advertisedCount < _questionCount) {
+        continue;
+      }
+
+      await _quizService.prepareCompetencies(selected);
+
+      if (_availablePreparedQuestionCount() >= _questionCount) {
+        return;
+      }
+    }
+
+    if (selected.isNotEmpty) {
+      await _quizService.prepareCompetencies(selected);
+    }
+  }
+
+  int _availablePreparedQuestionCount() {
+    return _quizService.getAvailableQuestionCount(
       domain: _scope == 'all' ? null : _domain,
       competencyId: _scope == 'competency' || _scope == 'subtopic'
           ? _competencyId
@@ -148,13 +241,26 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       difficulty: _difficulty,
       cognitiveLevel: _cognitiveLevel,
     );
+  }
 
+  void _finishPreparation(int generation, {required int availableCount}) {
+    if (!mounted || generation != _prepareGeneration) {
+      return;
+    }
+
+    setState(() {
+      _loading = false;
+      _availableCount = availableCount;
+    });
+  }
+
+  void _refreshPreparedCount() {
     if (!mounted) {
       return;
     }
 
     setState(() {
-      _availableCount = count;
+      _availableCount = _availablePreparedQuestionCount();
     });
   }
 
@@ -166,23 +272,17 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
         _domain = null;
         _competencyId = null;
         _subtopicId = null;
-      }
-
-      if (value == 'domain') {
+      } else if (value == 'domain') {
         _competencyId = null;
         _subtopicId = null;
-      }
-
-      if (value == 'competency') {
+      } else if (value == 'competency') {
         _subtopicId = null;
-      }
-
-      if (value == 'subtopic') {
+      } else if (value == 'subtopic') {
         _subtopicId = null;
       }
     });
 
-    _refreshAvailableCount();
+    _schedulePrepare();
   }
 
   void _changeDomain(int? value) {
@@ -192,7 +292,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _subtopicId = null;
     });
 
-    _refreshAvailableCount();
+    _schedulePrepare();
   }
 
   void _changeCompetency(String? value) {
@@ -201,7 +301,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _subtopicId = null;
     });
 
-    _refreshAvailableCount();
+    _schedulePrepare();
   }
 
   void _changeSubtopic(String? value) {
@@ -209,7 +309,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _subtopicId = value;
     });
 
-    _refreshAvailableCount();
+    _refreshPreparedCount();
   }
 
   void _changeDifficulty(String? value) {
@@ -217,7 +317,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _difficulty = value == 'Any' ? null : value;
     });
 
-    _refreshAvailableCount();
+    _schedulePrepare();
   }
 
   void _changeCognitiveLevel(String? value) {
@@ -225,7 +325,7 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
       _cognitiveLevel = value == 'Any' ? null : value;
     });
 
-    _refreshAvailableCount();
+    _schedulePrepare();
   }
 
   void _startQuiz() {
@@ -295,15 +395,12 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
   }
 
   String _competencyLabel(String id) {
-    for (final package in _domainPackages) {
-      if (package.content.competencyId == id) {
-        return 'Competency '
-            '${package.content.competencyNumber} • '
-            '${package.content.title}';
-      }
+    final competency = competencyForId(id);
+    if (competency == null) {
+      return id;
     }
 
-    return id;
+    return 'Competency ${competency.number} • ${competency.statement}';
   }
 
   @override
@@ -618,6 +715,8 @@ class _StudentQuizBuilderState extends State<StudentQuizBuilder> {
         setState(() {
           _questionCount = value;
         });
+
+        _schedulePrepare();
       },
     );
   }
