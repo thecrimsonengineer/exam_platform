@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-10",
+  "freezeStatus": "closed_local_runtime_repository_checkpoint",
+  "closedAt": "2026-09-24",
+  "sourcePublication": {
+    "ref": "phase-ml9f-publication-freeze-closed",
+    "sha": "b9915db98fc644edaee8ed51e707dd24b120104f",
+    "publishedFactCount": 120,
+    "startupEligibleFactCount": 120
+  },
+  "runtimeBundle": {
+    "path": "content/micro_learning/ml10_runtime_bundle_v1.json",
+    "bundleId": "csp11_micro_learning_runtime_v1",
+    "bundleVersion": 1,
+    "factCount": 120,
+    "generatedBundleCommit": "da136fdfc6596bda15ce69cd07177de1e0599cc4",
+    "byteStable": true
+  },
+  "repository": {
+    "path": "lib/services/micro_learning/local_micro_fact_repository.dart",
+    "assetReadsPerLoad": 1,
+    "backendReadsForFactRetrieval": 0,
+    "failClosedOnStructuralCorruption": true,
+    "failSoftOnAssetFailure": true,
+    "staleFactsExcluded": true
+  },
+  "validation": {
+    "implementationWorkflowRunId": 35952811933,
+    "implementationWorkflowConclusion": "success",
+    "analyzer": "pass",
+    "bundleGeneration": "pass",
+    "byteStability": "pass",
+    "repositoryTests": "pass",
+    "realRootBundleAssetTest": "pass",
+    "startupHardeningRegression": "pass",
+    "startupRenderRegression": "pass"
+  },
+  "integrity": {
+    "productionFactFilesModified": 0,
+    "eligibleFactCountAtReleaseCheckpoint": 120
+  },
+  "nextAction": "ML-11 Intelligent Selector"
+}

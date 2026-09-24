@@ -1,6 +1,6 @@
 # CSP11 Phase ML-10 — Local Runtime Repository
 
-Status: IN PROGRESS
+Status: CLOSED
 
 Base recovery point: `phase-ml9f-publication-freeze-closed`
 
@@ -84,19 +84,29 @@ No repository error owns navigation or startup failure.
 
 ## ML-10 exit criteria
 
-- [ ] deterministic runtime bundle generated from ML-9F;
-- [ ] byte-stability gate passes;
-- [ ] one-read local repository implemented;
-- [ ] exactly 120 current facts load at the release checkpoint;
-- [ ] stale fact exclusion is tested;
-- [ ] corrupted fact causes fail-closed empty result;
-- [ ] asset failure causes fail-soft no-fact result;
-- [ ] startup regression remains green;
-- [ ] exact closing SHA validated;
-- [ ] immutable ML-10 recovery branch created.
+- [x] deterministic runtime bundle generated from ML-9F;
+- [x] byte-stability gate passes;
+- [x] one-read local repository implemented;
+- [x] exactly 120 current facts load at the release checkpoint;
+- [x] stale fact exclusion is tested;
+- [x] corrupted fact causes fail-closed empty result;
+- [x] asset failure causes fail-soft no-fact result;
+- [x] startup regression remains green;
+- [x] exact closing SHA validated;
+- [x] immutable ML-10 recovery branch created.
 
 ## Next phase
 
 ML-11 — Intelligent Selector.
 
 ML-11 will consume the ordered eligible list from ML-10 and add deterministic rotation, diversity, assessment-sensitivity exclusion, and repetition rules. It must not add a network dependency.
+
+## Closure evidence
+
+- Production content remains unchanged from ML-9F.
+- Runtime bundle commit: `da136fdfc6596bda15ce69cd07177de1e0599cc4`.
+- Implementation validation run: `35952811933` — PASS.
+- The real Flutter `rootBundle` test loaded all 120 current facts.
+- Fact-only backend reads introduced by ML-10: 0.
+- Startup hardening and render regressions: PASS.
+- ML-11 must branch from the immutable ML-10 recovery point after exact freeze-SHA validation.
