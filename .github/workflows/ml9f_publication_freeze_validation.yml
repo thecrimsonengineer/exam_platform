@@ -1,0 +1,117 @@
+name: ML-9F Publication Freeze Validation
+
+on:
+  push:
+    branches:
+      - phase-ml9f-publication-freeze
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ml9f-publication-freeze
+  cancel-in-progress: true
+
+jobs:
+  validate-ml9f:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout exact ML-9F SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Detect publication state
+        id: state
+        shell: bash
+        run: |
+          if [ -f content/micro_learning/review/ml9f_publication_application_checkpoint.json ]; then
+            echo "published=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "published=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Revalidate ML-9E human-review state
+        if: steps.state.outputs.published == 'false'
+        run: dart run tool/validate_ml9e_post_application.dart
+
+      - name: Analyze ML-9F tooling
+        run: dart analyze tool/validate_ml9f_publication_freeze.dart tool/apply_ml9f_publication.dart
+
+      - name: Validate publication readiness
+        if: steps.state.outputs.published == 'false'
+        run: dart run tool/validate_ml9f_publication_freeze.dart
+
+      - name: Dry-run publication
+        if: steps.state.outputs.published == 'false'
+        run: dart run tool/apply_ml9f_publication.dart
+
+      - name: Apply publication
+        if: steps.state.outputs.published == 'false'
+        run: dart run tool/apply_ml9f_publication.dart --apply
+
+      - name: Write publication checkpoint
+        if: steps.state.outputs.published == 'false'
+        shell: bash
+        run: |
+          cat > content/micro_learning/review/ml9f_publication_application_checkpoint.json <<EOF
+          {
+            "schemaVersion": 1,
+            "phase": "ML-9F",
+            "applicationStatus": "published",
+            "publishedAt": "2026-09-24",
+            "publicationSourceSha": "${GITHUB_SHA}",
+            "publishedFactCount": 120,
+            "startupEligibleFactCount": 120
+          }
+          EOF
+
+      - name: Validate published corpus
+        run: dart run tool/validate_ml9f_publication_freeze.dart --published
+
+      - name: Run publication regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test \
+            test/micro_learning/micro_fact_schema_validator_test.dart \
+            test/micro_learning/micro_fact_source_gate_validator_test.dart \
+            test/micro_learning/micro_fact_claim_gate_validator_test.dart \
+            test/micro_learning/micro_fact_rights_gate_validator_test.dart \
+            test/micro_learning/micro_fact_curriculum_gate_validator_test.dart \
+            test/micro_learning/micro_fact_startup_suitability_gate_validator_test.dart \
+            test/micro_learning/micro_fact_corpus_integrity_validator_test.dart
+
+      - name: Commit published corpus
+        if: steps.state.outputs.published == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/micro_learning/facts
+          git add content/micro_learning/ml9f_production_manifest_v1.json
+          git add content/micro_learning/review/ml9f_publication_application_checkpoint.json
+          git commit -m "ML-9F publish 120-fact production corpus"
+          git push origin HEAD:phase-ml9f-publication-freeze
