@@ -1157,6 +1157,91 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Official ASSP topic page for the ANSI/ASSP Z10.0 occupational health and safety management system standard. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.management_leadership",
+      "organization": "OSHA",
+      "title": "Safety Management - Management Leadership",
+      "canonicalUrl": "https://www.osha.gov/safety-management/management-leadership",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports written policy, program goals, responsibilities, resources, and integration of safety and health into organizational decisions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.hazard_prevention",
+      "organization": "OSHA",
+      "title": "Safety Management - Hazard Prevention and Control",
+      "canonicalUrl": "https://www.osha.gov/safety-management/hazard-prevention",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports control selection, control implementation, verification, safe work practices, PPE, preventive maintenance, and evaluation of control effectiveness. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.education_training",
+      "organization": "OSHA",
+      "title": "Safety Management - Education and Training",
+      "canonicalUrl": "https://www.osha.gov/safety-management/education-training",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports training on program structure, policies, goals, procedures, responsibilities, hazard controls, reporting, emergency actions, and worker rights. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.communication_coordination",
+      "organization": "OSHA",
+      "title": "Safety Management - Communication and Coordination for Host Employers, Contractors, and Staffing Agencies",
+      "canonicalUrl": "https://www.osha.gov/safety-management/communication",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports procedures for exchanging hazard, control, incident, responsibility, work-planning, and emergency information among employers and workers. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_38",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.38 - Emergency action plans",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.38",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports emergency action plan applicability, written-plan availability, minimum emergency procedures, alarm systems, training, and plan review. Educational paraphrase only."
     }
   ]
 }
