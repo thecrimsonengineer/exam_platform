@@ -55,8 +55,8 @@ jobs:
 
       - name: Test local repository
         run: |
-          flutter test \\
-            test/micro_learning/local_micro_fact_repository_test.dart \\
+          flutter test \
+            test/micro_learning/local_micro_fact_repository_test.dart \
             test/micro_learning/local_micro_fact_repository_asset_test.dart
 
       - name: Revalidate startup independence
@@ -74,7 +74,7 @@ jobs:
             content/micro_learning/ml10_runtime_bundle_v1.json \
             tool/generate_ml10_runtime_bundle.dart \
             lib/services/micro_learning/local_micro_fact_repository.dart \
-            test/micro_learning/local_micro_fact_repository_test.dart \\
+            test/micro_learning/local_micro_fact_repository_test.dart \
             test/micro_learning/local_micro_fact_repository_asset_test.dart; then
             echo "ML-10 generated bundle and Dart files are already byte-stable."
             exit 0
