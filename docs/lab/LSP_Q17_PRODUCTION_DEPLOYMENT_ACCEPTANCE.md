@@ -172,3 +172,23 @@ LSP-Q17 closes only when:
 - the exact Q17 closure SHA has a successful validation run
 
 Live acceptance itself is an operator action after the validated build is deployed to the frozen production Firebase project.
+
+## Closure candidate
+
+Q17 deployment acceptance implementation commit: `af0dfd673daee2e7081e7c35828c88ae9a43aca4`
+
+Successful full validation run including Q17 deployment acceptance tests, Studio regressions, full repository regression, diff hygiene and formatter closure: `35954257324`
+
+Canonical formatter output commit: `3b92054154da54f6d1bfa3f3b65368d7ee0cd429`
+
+The formatter commit changes formatting only in:
+
+- `test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart`
+
+This documentation-only closure commit is the exact-SHA validation target for LSP-Q17. It does not change the Q14 seed contract, Q15 immutable release evidence, Q16 operator contract, Firestore authorization model, production environment binding, Q17 acceptance state machine or live acceptance semantics.
+
+## Next authorized action
+
+After this exact documentation-only closure SHA has a successful validation run, freeze it as `phase-lsp-q17-closed`.
+
+No LSP-Q18 checkpoint is currently defined in the repository. Any further LSP-Q work should begin from a separately frozen implementation plan rather than extending Q17 implicitly.
