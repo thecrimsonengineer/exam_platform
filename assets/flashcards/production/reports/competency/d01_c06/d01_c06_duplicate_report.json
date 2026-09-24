@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1F",
+  "competencyId": "d01_c06",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}

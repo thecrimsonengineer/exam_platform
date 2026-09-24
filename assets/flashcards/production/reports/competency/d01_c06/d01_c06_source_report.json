@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1F",
+  "competencyId": "d01_c06",
+  "cardCount": 14,
+  "cardsWithProvenance": 14,
+  "cardsWithExactlyOnePrimarySource": 14,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.faa.part107",
+    "csp11.source.niosh.rnle",
+    "csp11.source.osha.1910_176",
+    "csp11.source.osha.1910_178",
+    "csp11.source.osha.1910_179",
+    "csp11.source.osha.1910_184",
+    "csp11.source.osha.1910_67",
+    "csp11.source.osha.1926_1412"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.osha.1910_176": 3,
+    "csp11.source.osha.1910_178": 3,
+    "csp11.source.osha.1910_67": 2,
+    "csp11.source.osha.1910_179": 1,
+    "csp11.source.osha.1926_1412": 1,
+    "csp11.source.osha.1910_184": 2,
+    "csp11.source.niosh.rnle": 1,
+    "csp11.source.faa.part107": 1
+  },
+  "status": "PASS"
+}

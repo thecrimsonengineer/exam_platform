@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1G",
+  "competencyId": "d01_c07",
+  "cardCount": 13,
+  "cardsWithProvenance": 13,
+  "cardsWithExactlyOnePrimarySource": 13,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.niosh.robotics_overview",
+    "csp11.source.osha.1910_212",
+    "csp11.source.osha.1910_215",
+    "csp11.source.osha.1910_23",
+    "csp11.source.osha.1910_242",
+    "csp11.source.osha.1910_243",
+    "csp11.source.osha.1926_302",
+    "csp11.source.osha.robotics_overview"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.osha.1910_242": 1,
+    "csp11.source.osha.1910_243": 2,
+    "csp11.source.osha.1910_212": 4,
+    "csp11.source.osha.1910_215": 2,
+    "csp11.source.osha.1910_23": 1,
+    "csp11.source.osha.1926_302": 1,
+    "csp11.source.osha.robotics_overview": 2
+  },
+  "status": "PASS"
+}

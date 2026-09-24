@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1E",
+  "competencyId": "d01_c05",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [],
+  "withinCompetencyMerges": [
+    {
+      "semanticSlug": "gps_fleet_monitoring",
+      "resolution": "MERGED",
+      "mergedInto": "fleet_telematics"
+    },
+    {
+      "semanticSlug": "driver_behavior_monitoring",
+      "resolution": "MERGED",
+      "mergedInto": "fleet_telematics"
+    }
+  ],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}

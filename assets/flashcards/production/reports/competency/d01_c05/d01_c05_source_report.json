@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1E",
+  "competencyId": "d01_c05",
+  "cardCount": 9,
+  "cardsWithProvenance": 9,
+  "cardsWithExactlyOnePrimarySource": 9,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.ecfr.49_571_301",
+    "csp11.source.energy.femp_fleet_telematics",
+    "csp11.source.fmcsa.driver_fatigue",
+    "csp11.source.fmcsa.driver_safety",
+    "csp11.source.fmcsa.part396_maintenance",
+    "csp11.source.gsa.fleet_telematics",
+    "csp11.source.nhtsa.drug_impaired_driving",
+    "csp11.source.nhtsa.ev_emergency_guides"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.fmcsa.driver_safety": 2,
+    "csp11.source.fmcsa.part396_maintenance": 2,
+    "csp11.source.gsa.fleet_telematics": 1,
+    "csp11.source.fmcsa.driver_fatigue": 1,
+    "csp11.source.nhtsa.drug_impaired_driving": 1,
+    "csp11.source.nhtsa.ev_emergency_guides": 1,
+    "csp11.source.ecfr.49_571_301": 1
+  },
+  "status": "PASS"
+}
