@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9E",
+  "checkpointStatus": "human_review_package_ready",
+  "preparedAt": "2026-09-24",
+  "sourceCorpus": {
+    "ref": "phase-ml9d-whole-corpus-ml8-closed",
+    "sha": "f4d7e8bde1e5584f27fdce98741b7ab7db0ab23b",
+    "candidateCount": 120
+  },
+  "reviewPackage": {
+    "packetCount": 12,
+    "factsPerPacket": 10,
+    "factCount": 120,
+    "channels": [
+      "technical",
+      "source",
+      "rights",
+      "curriculum_when_mapped",
+      "pedagogy",
+      "accessibility",
+      "ui"
+    ],
+    "schema": "content/micro_learning/ml9e_human_review_packet_schema_v1.json",
+    "manifest": "content/micro_learning/human_review/ml9e_human_review_manifest_v1.json",
+    "validator": "tool/validate_ml9e_human_review.dart",
+    "workflow": ".github/workflows/ml9e_human_review_validation.yml"
+  },
+  "humanReviewState": {
+    "completedBatches": 0,
+    "acceptedFacts": 0,
+    "pendingFacts": 120,
+    "humanReviewComplete": false,
+    "approvalsGeneratedByAutomation": false
+  },
+  "lifecycle": {
+    "validatedFactCount": 0,
+    "publishedFactCount": 0,
+    "startupEligibleFactCount": 0
+  },
+  "nextHumanAction": "Complete ML-9E Batch 01 review packet with explicit reviewer attestations. Continue batch-by-batch until all 12 packets pass the require-complete validator."
+}
