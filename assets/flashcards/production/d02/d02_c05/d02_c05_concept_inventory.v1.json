@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2E",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c05",
+  "competencyStatement": "Describe the Management of Change process (prior, during, after)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c05",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.1910_119",
+      "locators": [
+        "29 CFR 1910.119(b) - Replacement in kind",
+        "29 CFR 1910.119(l)(1) - written MOC procedures and scope",
+        "29 CFR 1910.119(l)(2)(i)-(v) - pre-change considerations",
+        "29 CFR 1910.119(l)(3) - affected employee information and training before startup",
+        "29 CFR 1910.119(l)(4)-(5) - post-change information and procedure updates"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_119_app_c",
+      "locators": [
+        "Appendix C, Section 1 - integrate MOC with operating procedures",
+        "Appendix C, Section 11 - Managing Change",
+        "temporary changes and time limits",
+        "typical change form and authorization",
+        "documentation, review, and return from temporary change"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "process_safety_information",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02",
+      "intendedConceptId": "csp11.concept.process_safety_information",
+      "reason": "MOC may require process safety information to be updated, but the generic Process Safety Information concept is canonical in D01 C02."
+    },
+    {
+      "semanticSlug": "pre_startup_safety_review",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02",
+      "intendedConceptId": "csp11.concept.pre_startup_safety_review",
+      "reason": "A significant modification may trigger pre-startup safety review requirements, but the generic PSSR concept is canonical in D01 C02."
+    },
+    {
+      "semanticSlug": "process_operating_limits",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02",
+      "intendedConceptId": "csp11.concept.process_operating_limits",
+      "reason": "MOC can affect operating parameters and limits, but the generic Process Operating Limits concept is canonical in D01 C02."
+    },
+    {
+      "semanticSlug": "piping_and_instrumentation_diagram",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02",
+      "intendedConceptId": "csp11.concept.piping_and_instrumentation_diagram",
+      "reason": "P&IDs may require updating after a process change, but the generic Piping and Instrumentation Diagram concept is canonical in D01 C02."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "management_of_change",
+      "canonicalLabel": "Management of Change",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "replacement_in_kind",
+      "canonicalLabel": "Replacement in Kind",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "moc_change_screening",
+      "canonicalLabel": "MOC Change Screening",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "technical_basis_for_change",
+      "canonicalLabel": "Technical Basis for Change",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "change_safety_health_impact_review",
+      "canonicalLabel": "Change Safety and Health Impact Review",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "moc_operating_procedure_impact_review",
+      "canonicalLabel": "MOC Operating Procedure Impact Review",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "moc_change_authorization",
+      "canonicalLabel": "MOC Change Authorization",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "temporary_change_control",
+      "canonicalLabel": "Temporary Change Control",
+      "sourceIds": [
+        "csp11.source.osha.1910_119_app_c",
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "moc_change_communication_training",
+      "canonicalLabel": "MOC Change Communication and Training",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "moc_process_safety_information_update",
+      "canonicalLabel": "MOC Process Safety Information Update",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "moc_operating_procedure_update",
+      "canonicalLabel": "MOC Operating Procedure Update",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "moc_change_closeout",
+      "canonicalLabel": "MOC Change Closeout",
+      "sourceIds": [
+        "csp11.source.osha.1910_119_app_c",
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c05_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 12,
+    "acceptedCardCount": 12,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
