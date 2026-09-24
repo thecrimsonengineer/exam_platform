@@ -337,7 +337,7 @@ service cloud.firestore {
     }
 
 
-    function labPublishedAllowedKeys() {
+    function labPublishedRequiredKeys() {
       return [
         'schemaVersion',
         'labId',
@@ -355,8 +355,27 @@ service cloud.firestore {
       ];
     }
 
+    function labPublishedAllowedKeys() {
+      return [
+        'schemaVersion',
+        'releaseId',
+        'labId',
+        'versionId',
+        'lifecycle',
+        'publishedJson',
+        'publishedAt',
+        'reviewerId',
+        'validationAuthority',
+        'qualityEvidenceJson',
+        'exhaustiveRouteEvidenceJson',
+        'publishEvidenceJson',
+        'snapshotFingerprint',
+        'serverCreatedAt'
+      ];
+    }
+
     function validLabPublishedVersion(versionKey) {
-      return request.resource.data.keys().hasAll(labPublishedAllowedKeys())
+      return request.resource.data.keys().hasAll(labPublishedRequiredKeys())
         && request.resource.data.keys().hasOnly(labPublishedAllowedKeys())
         && versionKey == request.resource.data.labId + '__' + request.resource.data.versionId
         && request.resource.data.schemaVersion == 'csp11.lab.published_repository.v1'
@@ -371,10 +390,23 @@ service cloud.firestore {
         && request.resource.data.exhaustiveRouteEvidenceJson is string
         && request.resource.data.publishEvidenceJson is string
         && request.resource.data.snapshotFingerprint is string
-        && request.resource.data.serverCreatedAt is timestamp;
+        && request.resource.data.serverCreatedAt is timestamp
+        && (
+          !('releaseId' in request.resource.data)
+          || (
+            request.resource.data.releaseId
+              == 'phase_l_population_batch2_v1_q15_release_v1'
+            && existsAfter(
+              /databases/$(database)/documents/labLearnerReleaseState/$(request.resource.data.releaseId)
+            )
+            && getAfter(
+              /databases/$(database)/documents/labLearnerReleaseState/$(request.resource.data.releaseId)
+            ).data.released == true
+          )
+        );
     }
 
-    function labCatalogueAllowedKeys() {
+    function labCatalogueRequiredKeys() {
       return [
         'schemaVersion',
         'available',
@@ -393,8 +425,28 @@ service cloud.firestore {
       ];
     }
 
+    function labCatalogueAllowedKeys() {
+      return [
+        'schemaVersion',
+        'releaseId',
+        'available',
+        'manifestEntryId',
+        'labId',
+        'versionId',
+        'title',
+        'summary',
+        'focusTags',
+        'estimatedTime',
+        'decisionCountLabel',
+        'decisionCount',
+        'supportedModes',
+        'presentation',
+        'serverCreatedAt'
+      ];
+    }
+
     function validLabCatalogueEntry(versionKey) {
-      return request.resource.data.keys().hasAll(labCatalogueAllowedKeys())
+      return request.resource.data.keys().hasAll(labCatalogueRequiredKeys())
         && request.resource.data.keys().hasOnly(labCatalogueAllowedKeys())
         && versionKey == request.resource.data.labId + '__' + request.resource.data.versionId
         && request.resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
@@ -411,7 +463,20 @@ service cloud.firestore {
         && request.resource.data.decisionCount > 0
         && request.resource.data.supportedModes is list
         && request.resource.data.presentation is map
-        && request.resource.data.serverCreatedAt is timestamp;
+        && request.resource.data.serverCreatedAt is timestamp
+        && (
+          !('releaseId' in request.resource.data)
+          || (
+            request.resource.data.releaseId
+              == 'phase_l_population_batch2_v1_q15_release_v1'
+            && existsAfter(
+              /databases/$(database)/documents/labLearnerReleaseState/$(request.resource.data.releaseId)
+            )
+            && getAfter(
+              /databases/$(database)/documents/labLearnerReleaseState/$(request.resource.data.releaseId)
+            ).data.released == true
+          )
+        );
     }
 
     function labProductionReleaseAllowedKeys() {
@@ -439,10 +504,26 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(labProductionReleaseAllowedKeys())
         && releaseId == request.resource.data.releaseId
         && request.resource.data.schemaVersion == 'csp11.lab.production_release.v1'
-        && request.resource.data.manifestId == 'phase_l_population_v1'
-        && request.resource.data.q14ClosureSha == '5beee3db89a43267a4cc5b2956b117a344afe648'
-        && request.resource.data.q14ValidationRunId == '35918656487'
         && request.resource.data.releaseId is string
+        && (
+          (
+            request.resource.data.manifestId == 'phase_l_population_v1'
+            && request.resource.data.releaseId
+              == 'phase_l_population_v1_q15_release_v1'
+            && request.resource.data.q14ClosureSha
+              == '5beee3db89a43267a4cc5b2956b117a344afe648'
+            && request.resource.data.q14ValidationRunId == '35918656487'
+          )
+          || (
+            request.resource.data.manifestId
+              == 'phase_l_population_batch2_v1'
+            && request.resource.data.releaseId
+              == 'phase_l_population_batch2_v1_q15_release_v1'
+            && request.resource.data.q14ClosureSha
+              == '4aa151a749b2324e9edd69a40781d7f8169a72c0'
+            && request.resource.data.q14ValidationRunId == '36015831093'
+          )
+        )
         && request.resource.data.manifestFingerprint is string
         && request.resource.data.environmentId is string
         && request.resource.data.executedBy is string
@@ -481,7 +562,6 @@ service cloud.firestore {
         && request.resource.data.schemaVersion
           == 'csp11.lab.learner_release_state.v1'
         && request.resource.data.releaseId == releaseId
-        && request.resource.data.manifestId == 'phase_l_population_v1'
         && request.resource.data.released == true
         && request.resource.data.labCount == 10
         && request.resource.data.totalDecisionCount == 50
@@ -492,7 +572,16 @@ service cloud.firestore {
         )
         && getAfter(
           /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
-        ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint;
+        ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint
+        && getAfter(
+          /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
+        ).data.manifestId == request.resource.data.manifestId
+        && getAfter(
+          /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
+        ).data.labCount == request.resource.data.labCount
+        && getAfter(
+          /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
+        ).data.totalDecisionCount == request.resource.data.totalDecisionCount;
     }
 
 
@@ -562,24 +651,40 @@ service cloud.firestore {
         ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint;
     }
 
-    function initialLabPopulationReleased() {
+    function labReleaseActive(releaseId) {
       return exists(
-          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+          /databases/$(database)/documents/labLearnerReleaseState/$(releaseId)
         )
         && exists(
-          /databases/$(database)/documents/labProductionReleaseEvidence/phase_l_population_v1_q15_release_v1
+          /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
         )
         && get(
-          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+          /databases/$(database)/documents/labLearnerReleaseState/$(releaseId)
         ).data.schemaVersion == 'csp11.lab.learner_release_state.v1'
         && get(
-          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+          /databases/$(database)/documents/labLearnerReleaseState/$(releaseId)
         ).data.released == true
         && get(
-          /databases/$(database)/documents/labLearnerReleaseState/phase_l_population_v1_q15_release_v1
+          /databases/$(database)/documents/labLearnerReleaseState/$(releaseId)
         ).data.evidenceFingerprint == get(
-          /databases/$(database)/documents/labProductionReleaseEvidence/phase_l_population_v1_q15_release_v1
+          /databases/$(database)/documents/labProductionReleaseEvidence/$(releaseId)
         ).data.evidenceFingerprint;
+    }
+
+    function initialLabPopulationReleased() {
+      return labReleaseActive('phase_l_population_v1_q15_release_v1');
+    }
+
+    function labResourceReleased(data) {
+      return (
+          !('releaseId' in data)
+          && initialLabPopulationReleased()
+        )
+        || (
+          'releaseId' in data
+          && data.releaseId == 'phase_l_population_batch2_v1_q15_release_v1'
+          && labReleaseActive(data.releaseId)
+        );
     }
 
     match /users/{uid} {
@@ -658,6 +763,7 @@ service cloud.firestore {
       allow get: if isAdmin()
         || (
           signedIn()
+          && labResourceReleased(resource.data)
           && resource.data.schemaVersion == 'csp11.lab.published_repository.v1'
           && resource.data.lifecycle == 'published'
         );
@@ -673,7 +779,7 @@ service cloud.firestore {
       allow get, list: if isAdmin()
         || (
           signedIn()
-          && initialLabPopulationReleased()
+          && labResourceReleased(resource.data)
           && resource.data.schemaVersion == 'csp11.lab.learner_catalogue.v1'
           && resource.data.available == true
         );
