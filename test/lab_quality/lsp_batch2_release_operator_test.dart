@@ -35,18 +35,20 @@ class _FileBatch2Source implements LabBatch2PopulationSource {
   Future<List<LabProductionPopulationSeedCandidate>> loadCandidates(
     LabScenarioPopulationManifest manifest,
   ) async {
-    return manifest.entries.map((entry) {
-      return LabProductionPopulationSeedCandidate(
-        entryId: entry.entryId,
-        technicalRoot: _readObject(entry.technicalLabPath),
-        dqg300Evidence: const LabDqg300EvidenceCodec().decode(
-          File(entry.dqg300EvidencePath).readAsStringSync(),
-        ),
-        presentationPackage: LabLearnerPresentationPackage.fromJson(
-          _readObject(entry.learnerPresentationPath),
-        ),
-      );
-    }).toList(growable: false);
+    return manifest.entries
+        .map((entry) {
+          return LabProductionPopulationSeedCandidate(
+            entryId: entry.entryId,
+            technicalRoot: _readObject(entry.technicalLabPath),
+            dqg300Evidence: const LabDqg300EvidenceCodec().decode(
+              File(entry.dqg300EvidencePath).readAsStringSync(),
+            ),
+            presentationPackage: LabLearnerPresentationPackage.fromJson(
+              _readObject(entry.learnerPresentationPath),
+            ),
+          );
+        })
+        .toList(growable: false);
   }
 }
 
@@ -100,30 +102,36 @@ Future<void> _seedInitialRelease(FakeFirebaseFirestore firestore) async {
 }
 
 void main() {
-  test('Batch 2 operator blocks until original production release is closed', () async {
-    final firestore = FakeFirebaseFirestore();
-    final inspection = await _operator(firestore).inspect();
+  test(
+    'Batch 2 operator blocks until original production release is closed',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      final inspection = await _operator(firestore).inspect();
 
-    expect(inspection.state, LabBatch2OperatorState.blockedOriginalRelease);
-    expect(inspection.originalReleaseClosed, isFalse);
-    expect(inspection.canPublish, isFalse);
-    expect(inspection.publishedCount, 0);
-    expect(inspection.catalogueCount, 0);
-  });
+      expect(inspection.state, LabBatch2OperatorState.blockedOriginalRelease);
+      expect(inspection.originalReleaseClosed, isFalse);
+      expect(inspection.canPublish, isFalse);
+      expect(inspection.publishedCount, 0);
+      expect(inspection.catalogueCount, 0);
+    },
+  );
 
-  test('Batch 2 operator is READY after original release and before Batch 2', () async {
-    final firestore = FakeFirebaseFirestore();
-    await _seedInitialRelease(firestore);
+  test(
+    'Batch 2 operator is READY after original release and before Batch 2',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      await _seedInitialRelease(firestore);
 
-    final inspection = await _operator(firestore).inspect();
+      final inspection = await _operator(firestore).inspect();
 
-    expect(inspection.state, LabBatch2OperatorState.ready);
-    expect(inspection.originalReleaseClosed, isTrue);
-    expect(inspection.canPublish, isTrue);
-    expect(inspection.expectedLabCount, 10);
-    expect(inspection.publishedCount, 0);
-    expect(inspection.catalogueCount, 0);
-  });
+      expect(inspection.state, LabBatch2OperatorState.ready);
+      expect(inspection.originalReleaseClosed, isTrue);
+      expect(inspection.canPublish, isTrue);
+      expect(inspection.expectedLabCount, 10);
+      expect(inspection.publishedCount, 0);
+      expect(inspection.catalogueCount, 0);
+    },
+  );
 
   test('Batch 2 operator rejects an incorrect publication phrase', () async {
     final firestore = FakeFirebaseFirestore();
@@ -147,30 +155,33 @@ void main() {
     );
   });
 
-  test('Batch 2 operator atomically publishes and closes all ten LABs', () async {
-    final firestore = FakeFirebaseFirestore();
-    await _seedInitialRelease(firestore);
-    final operator = _operator(firestore);
+  test(
+    'Batch 2 operator atomically publishes and closes all ten LABs',
+    () async {
+      final firestore = FakeFirebaseFirestore();
+      await _seedInitialRelease(firestore);
+      final operator = _operator(firestore);
 
-    final evidence = await operator.publish(
-      executedBy: 'batch2_test_admin',
-      confirmationPhrase: kBatch2ReleaseConfirmationPhrase,
-      executedAt: DateTime.utc(2026, 9, 24, 17),
-    );
-    final inspection = await operator.inspect();
+      final evidence = await operator.publish(
+        executedBy: 'batch2_test_admin',
+        confirmationPhrase: kBatch2ReleaseConfirmationPhrase,
+        executedAt: DateTime.utc(2026, 9, 24, 17),
+      );
+      final inspection = await operator.inspect();
 
-    expect(evidence.manifestId, kBatch2LabProductionManifestId);
-    expect(evidence.labCount, 10);
-    expect(evidence.totalDecisionCount, 50);
-    expect(inspection.state, LabBatch2OperatorState.closed);
-    expect(inspection.isClosed, isTrue);
-    expect(inspection.publishedCount, 10);
-    expect(inspection.catalogueCount, 10);
-    expect(
-      inspection.evidence?.evidenceFingerprint,
-      evidence.evidenceFingerprint,
-    );
-  });
+      expect(evidence.manifestId, kBatch2LabProductionManifestId);
+      expect(evidence.labCount, 10);
+      expect(evidence.totalDecisionCount, 50);
+      expect(inspection.state, LabBatch2OperatorState.closed);
+      expect(inspection.isClosed, isTrue);
+      expect(inspection.publishedCount, 10);
+      expect(inspection.catalogueCount, 10);
+      expect(
+        inspection.evidence?.evidenceFingerprint,
+        evidence.evidenceFingerprint,
+      );
+    },
+  );
 
   test('Batch 2 operator refuses a second publication attempt', () async {
     final firestore = FakeFirebaseFirestore();
