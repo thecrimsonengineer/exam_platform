@@ -9,7 +9,7 @@ void main() {
   late String sql;
 
   setUpAll(() {
-    sql = File(migrationPath).readAsStringSync();
+    sql = _readNormalized(migrationPath);
   });
 
   test('FR3 schema migration is schema-only', () {
@@ -123,6 +123,11 @@ void main() {
     expect(sql, isNot(contains('SUPABASE_SERVICE_ROLE_KEY')));
   });
 }
+
+String _readNormalized(String path) => File(path)
+    .readAsStringSync()
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n');
 
 const _allTables = <String>[
   'app_users',

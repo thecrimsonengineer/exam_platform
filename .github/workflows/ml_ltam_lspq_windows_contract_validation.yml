@@ -1,0 +1,57 @@
+name: ML LTAM LSPQ Windows Contract Validation
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam-lspq-windows-test-hardening
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml-ltam-lspq-windows-contract
+  cancel-in-progress: true
+
+jobs:
+  windows-contracts:
+    runs-on: windows-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout exact SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify closed integration ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor a059e2c59d918b5be7e2b21ca44ebdeaeb5d0d5c HEAD
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Analyze portability patch
+        run: flutter analyze --no-fatal-infos test/architecture/phase_fr_supabase_schema_test.dart test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart test/screens/home/home_r9_closure_contract_test.dart
+
+      - name: Run Windows portability regressions
+        run: |
+          flutter test test/architecture/phase_fr_supabase_schema_test.dart
+          flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+          flutter test test/screens/home/home_r9_closure_contract_test.dart
+
+      - name: Full Windows repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        shell: bash
+        run: git diff --check

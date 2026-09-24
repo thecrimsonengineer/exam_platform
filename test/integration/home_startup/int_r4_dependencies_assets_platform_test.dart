@@ -29,7 +29,7 @@ void main() {
     );
 
     test('lockfile resolves both frozen Startup direct dependencies', () {
-      final lock = File('pubspec.lock').readAsStringSync();
+      final lock = _readNormalized('pubspec.lock');
 
       expect(lock, contains('  lottie:'));
       expect(lock, contains('    dependency: "direct main"'));
@@ -128,6 +128,11 @@ void main() {
     });
   });
 }
+
+String _readNormalized(String path) => File(path)
+    .readAsStringSync()
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n');
 
 String _packageSection(String lock, String packageName) {
   final marker = '  $packageName:\n';
