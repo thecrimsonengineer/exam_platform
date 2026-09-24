@@ -50,7 +50,10 @@ void main() {
     expect(labels.toSet().length, labels.length);
     expect(slugs, contains('safety_health_environmental_policy'));
     expect(slugs, contains('emergency_preparedness_response_component'));
-    expect(slugs, contains('management_review_continual_improvement_component'));
+    expect(
+      slugs,
+      contains('management_review_continual_improvement_component'),
+    );
 
     final sourceJson = readObject(sourcePath);
     final registry = FlashcardSourceRegistry.build(
