@@ -658,7 +658,7 @@
         },
         {
           "id": "change_decision_o2",
-          "text": "Give one shaded break and allow return if dizziness resolves. while maintaining the documented work boundary and supervision.",
+          "text": "Move the worker to shade for one recovery period, reassess symptoms and allow return only if the worker is fully recovered and appropriately cleared.",
           "isBest": false,
           "quality": "DEFENSIBLE",
           "consequenceId": "change_decision_defensible",
@@ -686,7 +686,7 @@
         },
         {
           "id": "change_decision_o4",
-          "text": "Let the worker continue slowly because they remain alert and have started drinking water. while maintaining the documented work boundary and supervision.",
+          "text": "Let the worker continue at a slower pace with additional water and close observation because the worker remains alert and can still communicate normally.",
           "isBest": false,
           "quality": "CRITICAL",
           "consequenceId": "change_decision_critical",
