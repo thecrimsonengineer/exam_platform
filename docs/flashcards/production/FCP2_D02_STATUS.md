@@ -9,7 +9,7 @@ FCP-2A  d02_c01  CLOSED             8 cards
 FCP-2B  d02_c02  CLOSED             5 cards
 FCP-2C  d02_c03  CLOSED            10 cards
 FCP-2D  d02_c04  CLOSED            12 cards
-FCP-2E  d02_c05  NOT STARTED
+FCP-2E  d02_c05  VALIDATING         12 cards
 FCP-2F  d02_c06  NOT STARTED
 FCP-2G  d02_c07  NOT STARTED
 FCP-2H  d02_c08  NOT STARTED
@@ -25,4 +25,8 @@ FCP-2D started strictly from `phase-fcp2c-d02-c03-closed@b5c83522f123c51e086e3f0
 
 FCP-2D package validation: SHA `fa4f28459b8644fa1084ef5707e0c5da78182fe3`, run `35966860425`, SUCCESS, 12 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2E may begin only from `phase-fcp2d-d02-c04-closed`.
+FCP-2E started strictly from `phase-fcp2d-d02-c04-closed@fc3e883d658aca40bf5760f97e519368f2dd28b4`.
+
+C05 candidate package: 12 Management of Change cards covering change screening, required pre-change considerations, authorization, temporary-change control, affected-worker training, document updates, and closeout. Generic PSI, PSSR, operating-limits, and P&ID concepts remain canonical in D01 C02.
+
+FCP-2E remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
