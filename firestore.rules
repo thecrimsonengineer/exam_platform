@@ -910,8 +910,7 @@ service cloud.firestore {
             == 'phase_l_population_batch2_v1_q16_extension_v1'
         );
 
-      allow create: if isAdmin()
-        && validLabCatalogueEntry(versionKey)
+      allow create: if isAdmin() && validLabCatalogueEntry(versionKey)
         && batch2LabPopulationAcceptedAfter();
 
       allow update, delete: if false;
