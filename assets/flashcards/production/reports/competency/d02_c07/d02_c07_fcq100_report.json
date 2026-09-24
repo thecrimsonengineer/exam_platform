@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2G",
+  "competencyId": "d02_c07",
+  "packagePath": "assets/flashcards/production/d02/d02_c07/d02_c07_flashcards_v1.json",
+  "validator": "FCQ100-V1",
+  "score": 100,
+  "maxScore": 100,
+  "passed": true,
+  "failedRules": [],
+  "validation": {
+    "sha": "2bcabaf9a0f299910010ee8a920bc0082016fe97",
+    "workflowRun": 35992273111
+  }
+}
