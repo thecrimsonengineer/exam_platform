@@ -55,6 +55,35 @@ void main() {
     );
   });
 
+  test('FCP-2 uses one competency per independently closable run', () {
+    final manifest = Map<String, dynamic>.from(
+      jsonDecode(File(manifestPath).readAsStringSync()) as Map,
+    );
+    final model = Map<String, dynamic>.from(
+      manifest['productionRunModel'] as Map,
+    );
+    expect(model['unit'], 'competency');
+    expect(model['effectiveFrom'], 'FCP-2');
+
+    final competencyRuns = Map<String, dynamic>.from(
+      manifest['competencyRuns'] as Map,
+    );
+    final d02 = Map<String, dynamic>.from(competencyRuns['d02'] as Map);
+    expect(d02.length, 14);
+    expect(
+      Map<String, dynamic>.from(d02['fcp2a'] as Map)['status'],
+      'closed',
+    );
+    expect(
+      d02.entries.skip(1).every(
+        (entry) =>
+            Map<String, dynamic>.from(entry.value as Map)['status'] ==
+            'not_started',
+      ),
+      isTrue,
+    );
+  });
+
   test('FCP-2 admits D02 after frozen D01 closure', () {
     final manifest = Map<String, dynamic>.from(
       jsonDecode(File(manifestPath).readAsStringSync()) as Map,
