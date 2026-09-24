@@ -800,6 +800,74 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Supports specific time-limited actions, resource availability, monitoring progress, and adapting actions when needed. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.niosh.safety_climate_scat",
+      "organization": "NIOSH",
+      "title": "The Safety Climate Assessment Tool (S-CAT) for Construction",
+      "canonicalUrl": "https://www.cdc.gov/niosh/bulletin/2019/scat.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports organizational safety climate, safety-climate assessment, management commitment, safety as a value, accountability, worker involvement, communication, training, intervention, and reassessment. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.safe_sound_management_leadership",
+      "organization": "OSHA",
+      "title": "Safe + Sound - Management Leadership",
+      "canonicalUrl": "https://www.osha.gov/safeandsound/safety-and-health-programs/management-leadership",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports visible management commitment, resources, safety integration into decisions, recognition, leading by example, communication, and continuous improvement."
+    },
+    {
+      "id": "csp11.source.osha.worker_participation",
+      "organization": "OSHA",
+      "title": "Safety Management - Worker Participation",
+      "canonicalUrl": "https://www.osha.gov/safety-management/worker-participation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports meaningful worker participation, reporting, non-retaliation, information access, participation in program evaluation, feedback, ownership, and improvement."
+    },
+    {
+      "id": "csp11.source.osha.leading_indicators",
+      "organization": "OSHA",
+      "title": "Leading Indicators",
+      "canonicalUrl": "https://www.osha.gov/leading-indicators",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports proactive measurement of safety-program effectiveness and culture-related leading indicators. Generic leading-indicator concept remains reserved for D02 C07."
     }
   ]
 }
