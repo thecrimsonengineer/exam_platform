@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-LTAM-LSPQ-INTEGRATION",
+  "status": "frozen_for_implementation",
+  "createdAt": "2026-09-24",
+  "workingBranch": "phase-ml-ltam-lspq-integration",
+  "sources": {
+    "mlLtam": {
+      "ref": "phase-ml-ltam-integration-closed",
+      "sha": "49d0f7d69d8338e3bb09b12444c09a641886e67a",
+      "validationRunId": 35955880471
+    },
+    "lspQ": {
+      "ref": "phase-lsp-q17-closed",
+      "sha": "af0dfd673daee2e7081e7c35828c88ae9a43aca4",
+      "validationRunId": 35954257324
+    },
+    "historicalMergeBase": "56cf3031709ca2ff9da81d48d8ede47bb589ee51"
+  },
+  "expectedCorpus": {
+    "microFacts": 120,
+    "labs": 10,
+    "labDecisions": 50
+  },
+  "integrationStrategy": "history_preserving_merge_no_squash",
+  "ml14Gate": {
+    "branch": "phase-ml14-learner-state-weighting",
+    "observedPreIntegrationSha": "49d0f7d69d8338e3bb09b12444c09a641886e67a",
+    "state": "blocked_until_integration_closed",
+    "resumeFrom": "phase-ml-ltam-lspq-integration-closed"
+  },
+  "frozenBoundaries": {
+    "productionMicroFactsMutable": false,
+    "learningTwinDomainMutable": false,
+    "lspQClosedHistoryMutable": false,
+    "ciMayPerformLiveReleaseAcceptance": false,
+    "labMayBlockStartup": false,
+    "labMayInfluenceMicroFactSelection": false,
+    "microLearningMayInfluenceLabDecision": false,
+    "ltamMotionEnabledByThisPhase": false
+  },
+  "gates": [
+    "INT-LQ0_SOURCE_AND_ARCHITECTURE_FREEZE",
+    "INT-LQ1_HISTORY_PRESERVING_CONVERGENCE",
+    "INT-LQ2_STATIC_AND_COMPILE_COMPATIBILITY",
+    "INT-LQ3_LSPQ_PRESERVATION_REGRESSION",
+    "INT-LQ4_ML_LTAM_PRESERVATION_REGRESSION",
+    "INT-LQ5_SHARED_RUNTIME_SEAM",
+    "INT-LQ6_FIREBASE_SECURITY_CONVERGENCE",
+    "INT-LQ7_CROSS_STREAM_CI_FULL_REGRESSION",
+    "INT-LQ8_EXACT_SHA_FREEZE"
+  ],
+  "nextGate": "INT-LQ1 history-preserving merge of phase-lsp-q17-closed"
+}
