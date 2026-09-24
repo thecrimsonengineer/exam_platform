@@ -69,14 +69,18 @@
       "competencyId": "d01_c05",
       "number": 5,
       "statement": "Describe fleet safety principles (e.g., driver and equipment safety, maintenance, surveillance equipment, GPS monitoring, telematics, hybrid vehicles, fuel systems, driving under the influence, fatigue)",
-      "status": "in_progress",
-      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c05/d01_c05_concept_inventory.v1.json"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c05/d01_c05_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c05/d01_c05_flashcards_v1.json",
+      "cardCount": 9,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d01_c06",
       "number": 6,
       "statement": "Evaluate materials handling methods and controls (e.g., forklifts, aerial lifts, and other powered industrial trucks; cranes, hand trucks, hoists, rigging, manual handling, drones)",
-      "status": "not_started"
+      "status": "in_progress",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c06/d01_c06_concept_inventory.v1.json"
     },
     {
       "competencyId": "d01_c07",

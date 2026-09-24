@@ -1,0 +1,539 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d01_c05_flashcards_v1",
+    "domainId": "d01",
+    "competencyId": "d01_c05",
+    "title": "Fleet Safety Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.fleet_safety_management",
+      "csp11.flashcard.systematic_vehicle_maintenance",
+      "csp11.flashcard.vehicle_safety_inspection",
+      "csp11.flashcard.fleet_telematics",
+      "csp11.flashcard.driver_fatigue",
+      "csp11.flashcard.distracted_driving",
+      "csp11.flashcard.impaired_driving",
+      "csp11.flashcard.electric_hybrid_vehicle_emergency_safety",
+      "csp11.flashcard.vehicle_fuel_system_integrity"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.fleet_safety_management",
+      "canonicalLabel": "Fleet Safety Management",
+      "flashcardId": "csp11.flashcard.fleet_safety_management",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "fleet safety program"
+      ]
+    },
+    {
+      "id": "csp11.concept.systematic_vehicle_maintenance",
+      "canonicalLabel": "Systematic Vehicle Maintenance",
+      "flashcardId": "csp11.flashcard.systematic_vehicle_maintenance",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "fleet preventive maintenance"
+      ]
+    },
+    {
+      "id": "csp11.concept.vehicle_safety_inspection",
+      "canonicalLabel": "Vehicle Safety Inspection",
+      "flashcardId": "csp11.flashcard.vehicle_safety_inspection",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "fleet vehicle inspection"
+      ]
+    },
+    {
+      "id": "csp11.concept.fleet_telematics",
+      "canonicalLabel": "Fleet Telematics",
+      "flashcardId": "csp11.flashcard.fleet_telematics",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "vehicle telematics",
+        "fleet monitoring system"
+      ]
+    },
+    {
+      "id": "csp11.concept.driver_fatigue",
+      "canonicalLabel": "Driver Fatigue",
+      "flashcardId": "csp11.flashcard.driver_fatigue",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "drowsy driving"
+      ]
+    },
+    {
+      "id": "csp11.concept.distracted_driving",
+      "canonicalLabel": "Distracted Driving",
+      "flashcardId": "csp11.flashcard.distracted_driving",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "driver distraction"
+      ]
+    },
+    {
+      "id": "csp11.concept.impaired_driving",
+      "canonicalLabel": "Impaired Driving",
+      "flashcardId": "csp11.flashcard.impaired_driving",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "driving under the influence"
+      ]
+    },
+    {
+      "id": "csp11.concept.electric_hybrid_vehicle_emergency_safety",
+      "canonicalLabel": "Electric and Hybrid Vehicle Emergency Safety",
+      "flashcardId": "csp11.flashcard.electric_hybrid_vehicle_emergency_safety",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "ev emergency safety",
+        "hev emergency safety"
+      ]
+    },
+    {
+      "id": "csp11.concept.vehicle_fuel_system_integrity",
+      "canonicalLabel": "Vehicle Fuel System Integrity",
+      "flashcardId": "csp11.flashcard.vehicle_fuel_system_integrity",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "aliases": [
+        "fuel system integrity"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.fleet_safety_management",
+      "conceptId": "csp11.concept.fleet_safety_management",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Fleet Safety Management",
+      "backDefinition": "A coordinated approach to managing driver behavior, vehicle condition, maintenance, monitoring, and operating controls so fleet risks are identified and reduced.",
+      "whyItMatters": "Fleet incidents rarely have a single cause; combining driver and vehicle controls creates a more reliable safety system than isolated interventions.",
+      "keyPoint": "Manage the driver, vehicle, journey, and data as one safety system.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.fmcsa.driver_safety",
+          "locator": "Tips for Truck and Bus Drivers",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.gsa.fleet_telematics",
+          "locator": "GSA telematics benefits and data elements",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "driver-safety",
+        "vehicle-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.systematic_vehicle_maintenance",
+      "conceptId": "csp11.concept.systematic_vehicle_maintenance",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Systematic Vehicle Maintenance",
+      "backDefinition": "A planned process for inspecting, repairing, and maintaining vehicles so parts and accessories remain in safe and proper operating condition.",
+      "whyItMatters": "Routine maintenance reduces the chance that predictable equipment deterioration becomes a roadway failure or contributes to a crash.",
+      "keyPoint": "Maintenance should be systematic rather than only reactive after failure.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.fmcsa.part396_maintenance",
+          "locator": "Part 396 > General - 396.3(a)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "maintenance",
+        "vehicle-condition"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.vehicle_safety_inspection",
+      "conceptId": "csp11.concept.vehicle_safety_inspection",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Vehicle Safety Inspection",
+      "backDefinition": "A structured examination of vehicle condition and safety-critical components to identify defects that require correction before or during continued service.",
+      "whyItMatters": "Inspection provides the evidence needed to detect unsafe conditions before they cause breakdowns, loss of control, or other roadway events.",
+      "keyPoint": "Inspection findings must feed repair and maintenance decisions.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.fmcsa.part396_maintenance",
+          "locator": "Part 396 > Inspection, repair, and maintenance",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "vehicle-inspection",
+        "maintenance"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.fleet_telematics",
+      "conceptId": "csp11.concept.fleet_telematics",
+      "version": 1,
+      "type": "system",
+      "frontLabel": "Fleet Telematics",
+      "backDefinition": "Technology that collects and transmits vehicle data such as GPS location, diagnostics, utilization, maintenance indicators, and driver-behavior events for fleet management.",
+      "whyItMatters": "Telematics can reveal maintenance needs, route and utilization patterns, unsafe driving trends, and collision information that support targeted risk controls.",
+      "keyPoint": "GPS and driver-behavior monitoring are functions within a broader telematics system.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gsa.fleet_telematics",
+          "locator": "Data elements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.energy.femp_fleet_telematics",
+          "locator": "Overview of Telematics Systems and Data Elements",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "telematics",
+        "gps-monitoring"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.driver_fatigue",
+      "conceptId": "csp11.concept.driver_fatigue",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Driver Fatigue",
+      "backDefinition": "Physical or mental fatigue that reduces a driver's alertness and can impair reaction time, attention, judgment, or other driving performance.",
+      "whyItMatters": "A fatigued driver may respond too slowly to hazards or fail to maintain attention, increasing the likelihood of a serious roadway event.",
+      "keyPoint": "Rest is the primary control when drowsiness appears; alertness tricks are not a substitute.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.fmcsa.driver_fatigue",
+          "locator": "CMV Driving Tips - Driver Fatigue",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "driver-fatigue",
+        "drowsy-driving"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.distracted_driving",
+      "conceptId": "csp11.concept.distracted_driving",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Distracted Driving",
+      "backDefinition": "Driving while attention is diverted from the primary driving task by activities such as texting, device use, or other competing visual, manual, or cognitive demands.",
+      "whyItMatters": "Diverted attention reduces a driver's ability to recognize and respond to changing road conditions and hazards.",
+      "keyPoint": "Keep attention on driving and eliminate avoidable competing tasks.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.fmcsa.driver_safety",
+          "locator": "Stay Focused and Avoid Distracted Driving",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "distracted-driving",
+        "driver-safety"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.impaired_driving",
+      "conceptId": "csp11.concept.impaired_driving",
+      "version": 1,
+      "type": "hazard",
+      "frontLabel": "Impaired Driving",
+      "backDefinition": "Vehicle operation when alcohol, drugs, or some medicines impair judgment, coordination, reaction time, alertness, or other abilities needed for safe driving.",
+      "whyItMatters": "Impairment can make a driver unable to reliably control a vehicle or respond to hazards even when the substance was legally obtained.",
+      "keyPoint": "If a substance may impair safe driving, the driver should not operate the vehicle.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nhtsa.drug_impaired_driving",
+          "locator": "Many Substances Can Impair Driving",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "impaired-driving",
+        "driver-fitness"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.electric_hybrid_vehicle_emergency_safety",
+      "conceptId": "csp11.concept.electric_hybrid_vehicle_emergency_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Electric and Hybrid Vehicle Emergency Safety",
+      "backDefinition": "Vehicle-specific precautions for safely managing electric or hybrid vehicles during crashes, fires, submersion, towing, storage, or other emergency conditions.",
+      "whyItMatters": "Electric-powered vehicles can contain high-voltage systems and energy-storage components that require model-specific information during emergency handling.",
+      "keyPoint": "Use the manufacturer-specific emergency response guide or rescue sheet for the vehicle.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nhtsa.ev_emergency_guides",
+          "locator": "Standardized Emergency Response Information for Electric-Powered Vehicles",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "electric-vehicle",
+        "hybrid-vehicle"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.vehicle_fuel_system_integrity",
+      "conceptId": "csp11.concept.vehicle_fuel_system_integrity",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Vehicle Fuel System Integrity",
+      "backDefinition": "The ability of a vehicle fuel system to limit hazardous fuel leakage and maintain required safety performance under specified crash and rollover conditions.",
+      "whyItMatters": "Loss of fuel-system integrity can add fire and exposure hazards to a collision, so safe fleet management includes attention to fuel-system condition and damage.",
+      "keyPoint": "Fuel-system safety concerns the integrity of the complete vehicle fuel system.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.ecfr.49_571_301",
+          "locator": "49 CFR 571.301 S1-S6",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "fleet-safety",
+        "fuel-system",
+        "vehicle-integrity"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.fmcsa.driver_safety",
+      "organization": "FMCSA",
+      "title": "Tips for Truck and Bus Drivers",
+      "canonicalUrl": "https://www.fmcsa.dot.gov/ourroads/tips-truck-and-bus-drivers",
+      "allowedDomains": [
+        "fmcsa.dot.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal guidance supporting safe speed, seat belt, distraction, fatigue, and general CMV driver-safety concepts."
+    },
+    {
+      "id": "csp11.source.gsa.fleet_telematics",
+      "organization": "GSA",
+      "title": "GSA Fleet telematics",
+      "canonicalUrl": "https://www.gsa.gov/buy-through-us/products-and-services/transportation-and-logistics-services/fleet-management/vehicle-leasing/telematics",
+      "allowedDomains": [
+        "gsa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports fleet telematics, GPS, vehicle diagnostics, maintenance reminders, driver coaching, and accident-reconstruction concepts. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.fmcsa.part396_maintenance",
+      "organization": "FMCSA",
+      "title": "Inspection, Repair, and Maintenance - Part 396",
+      "canonicalUrl": "https://www.fmcsa.dot.gov/safety/passenger-safety/inspection-repair-and-maintenance-motor-carriers-passengers-part-396",
+      "allowedDomains": [
+        "fmcsa.dot.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FMCSA regulatory guidance supporting systematic vehicle inspection, repair, maintenance, and maintenance records."
+    },
+    {
+      "id": "csp11.source.energy.femp_fleet_telematics",
+      "organization": "U.S. Department of Energy",
+      "title": "Telematics for Federal Fleets: A Guide for Efficient Fleet Management",
+      "canonicalUrl": "https://www.energy.gov/cmei/femp/telematics-federal-fleets-guide-efficient-fleet-management",
+      "allowedDomains": [
+        "energy.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supporting federal guidance for GPS, diagnostics, driver safety monitoring, utilization, and proactive maintenance."
+    },
+    {
+      "id": "csp11.source.fmcsa.driver_fatigue",
+      "organization": "FMCSA",
+      "title": "CMV Driving Tips - Driver Fatigue",
+      "canonicalUrl": "https://www.fmcsa.dot.gov/safety/driver-safety/cmv-driving-tips-driver-fatigue",
+      "allowedDomains": [
+        "fmcsa.dot.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal driver-safety guidance for fatigue recognition and management. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nhtsa.drug_impaired_driving",
+      "organization": "NHTSA",
+      "title": "Drug-Impaired Driving",
+      "canonicalUrl": "https://www.nhtsa.gov/risky-driving/drug-impaired-driving",
+      "allowedDomains": [
+        "nhtsa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal road-safety guidance on impairment from alcohol, drugs, and some medicines. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nhtsa.ev_emergency_guides",
+      "organization": "NHTSA",
+      "title": "Emergency Response Guides for Electric-Powered Vehicles",
+      "canonicalUrl": "https://www.nhtsa.gov/emergency-response-guides",
+      "allowedDomains": [
+        "nhtsa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal vehicle-specific emergency response information for battery-electric, hybrid, plug-in hybrid, and fuel-cell vehicles."
+    },
+    {
+      "id": "csp11.source.ecfr.49_571_301",
+      "organization": "eCFR",
+      "title": "49 CFR 571.301 - Standard No. 301; Fuel system integrity",
+      "canonicalUrl": "https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-571/subpart-B/section-571.301",
+      "allowedDomains": [
+        "ecfr.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current eCFR regulatory text for motor-vehicle fuel-system integrity. FCP uses educational paraphrase."
+    }
+  ]
+}

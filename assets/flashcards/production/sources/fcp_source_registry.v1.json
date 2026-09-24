@@ -375,6 +375,159 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Federal vehicle-specific emergency response information for battery-electric, hybrid, plug-in hybrid, and fuel-cell vehicles."
+    },
+    {
+      "id": "csp11.source.ecfr.49_571_301",
+      "organization": "eCFR",
+      "title": "49 CFR 571.301 - Standard No. 301; Fuel system integrity",
+      "canonicalUrl": "https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-571/subpart-B/section-571.301",
+      "allowedDomains": [
+        "ecfr.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current eCFR regulatory text for motor-vehicle fuel-system integrity. FCP uses educational paraphrase."
+    },
+    {
+      "id": "csp11.source.osha.1910_176",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.176 - Handling materials - general",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.176",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Material handling clearances, secure storage, housekeeping, and guarding. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_178",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.178 - Powered industrial trucks",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.178",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Powered industrial truck design, use, maintenance, and operator training. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_67",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.67 - Vehicle-mounted elevating and rotating work platforms",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.67",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Aerial-lift definitions and safe operating requirements. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_179",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.179 - Overhead and gantry cranes",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.179",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Overhead/gantry crane definitions and requirements. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1926_1412",
+      "organization": "OSHA",
+      "title": "29 CFR 1926.1412 - Cranes and derricks inspections",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1412",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Construction crane inspection requirements including shift, monthly, and annual/comprehensive inspection."
+    },
+    {
+      "id": "csp11.source.osha.1910_184",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.184 - Slings",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.184",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Sling safe operating practices, rated capacity, inspection, and removal from service."
+    },
+    {
+      "id": "csp11.source.niosh.rnle",
+      "organization": "NIOSH",
+      "title": "Revised NIOSH Lifting Equation",
+      "canonicalUrl": "https://www.cdc.gov/niosh/ergonomics/about/rnle.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current NIOSH guidance for evaluating two-handed manual lifting risk. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.faa.part107",
+      "organization": "FAA",
+      "title": "Small Unmanned Aircraft Systems Regulations (Part 107)",
+      "canonicalUrl": "https://www.faa.gov/newsroom/small-unmanned-aircraft-systems-uas-regulations-part-107",
+      "allowedDomains": [
+        "faa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current FAA summary of small UAS operating requirements under Part 107. Educational paraphrase only."
     }
   ]
 }

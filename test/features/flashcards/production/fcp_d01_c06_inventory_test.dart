@@ -7,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const inventoryPath =
-      'assets/flashcards/production/d01/d01_c05/'
-      'd01_c05_concept_inventory.v1.json';
+      'assets/flashcards/production/d01/d01_c06/'
+      'd01_c06_concept_inventory.v1.json';
   const sourcePath =
       'assets/flashcards/production/sources/fcp_source_registry.v1.json';
 
@@ -16,27 +16,25 @@ void main() {
     jsonDecode(File(path).readAsStringSync()) as Map,
   );
 
-  test('D01 C05 starts at canonical competency placement', () {
+  test('D01 C06 starts at canonical competency placement', () {
     final inventory = readObject(inventoryPath);
     final placement = Map<String, dynamic>.from(inventory['placement'] as Map);
-    expect(inventory['phase'], 'FCP-1E');
-    expect(inventory['status'], 'resolved_inventory');
-    expect(inventory['competencyId'], 'd01_c05');
+    expect(inventory['phase'], 'FCP-1F');
+    expect(inventory['status'], 'candidate_inventory');
+    expect(inventory['competencyId'], 'd01_c06');
     expect(placement['domainId'], 'd01');
-    expect(placement['competencyId'], 'd01_c05');
+    expect(placement['competencyId'], 'd01_c06');
     expect(placement['topicId'], isNull);
     expect(placement['subtopicId'], isNull);
   });
 
-  test('D01 C05 candidate concepts are unique and source-backed', () {
+  test('D01 C06 candidate concepts are unique and source-backed', () {
     final inventory = readObject(inventoryPath);
-    final candidates = (inventory['acceptedConcepts'] as List)
+    final candidates = (inventory['candidateConcepts'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
 
-    expect(candidates.length, 9);
-    expect((inventory['mergedConcepts'] as List).length, 2);
-    expect(inventory['holds'], isEmpty);
+    expect(candidates.length, 14);
     final slugs = candidates
         .map((item) => item['semanticSlug'] as String)
         .toList();

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-1E",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d01",
   "competencyId": "d01_c05",
   "competencyStatement": "Describe fleet safety principles (e.g., driver and equipment safety, maintenance, surveillance equipment, GPS monitoring, telematics, hybrid vehicles, fuel systems, driving under the influence, fatigue)",
@@ -61,106 +61,108 @@
       ]
     }
   ],
-  "candidateConcepts": [
+  "acceptedConcepts": [
     {
       "semanticSlug": "fleet_safety_management",
       "canonicalLabel": "Fleet Safety Management",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.fmcsa.driver_safety",
         "csp11.source.gsa.fleet_telematics"
       ],
-      "rationale": "Umbrella concept connecting safe drivers, roadworthy vehicles, monitoring, and management controls."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "systematic_vehicle_maintenance",
       "canonicalLabel": "Systematic Vehicle Maintenance",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.fmcsa.part396_maintenance"
       ],
-      "rationale": "Systematic inspection, repair, and maintenance keeps vehicles and safety-critical parts in safe condition."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "vehicle_safety_inspection",
       "canonicalLabel": "Vehicle Safety Inspection",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.fmcsa.part396_maintenance"
       ],
-      "rationale": "Inspection identifies unsafe vehicle conditions before they contribute to roadway incidents or breakdowns."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "fleet_telematics",
       "canonicalLabel": "Fleet Telematics",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.gsa.fleet_telematics",
         "csp11.source.energy.femp_fleet_telematics"
       ],
-      "rationale": "Telematics combines near-real-time vehicle data, diagnostics, utilization, and safety information for fleet decisions."
-    },
-    {
-      "semanticSlug": "gps_fleet_monitoring",
-      "canonicalLabel": "GPS Fleet Monitoring",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.gsa.fleet_telematics",
-        "csp11.source.energy.femp_fleet_telematics"
-      ],
-      "rationale": "GPS location, route history, and geofencing are specific fleet-monitoring functions within modern telematics."
-    },
-    {
-      "semanticSlug": "driver_behavior_monitoring",
-      "canonicalLabel": "Driver Behavior Monitoring",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.gsa.fleet_telematics",
-        "csp11.source.energy.femp_fleet_telematics"
-      ],
-      "rationale": "Hard braking, rapid acceleration, speeding, seatbelt, and related data can support coaching and risk reduction."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "driver_fatigue",
       "canonicalLabel": "Driver Fatigue",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.fmcsa.driver_fatigue"
       ],
-      "rationale": "Fatigue can impair alertness, reaction time, judgment, and driving performance."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "distracted_driving",
       "canonicalLabel": "Distracted Driving",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.fmcsa.driver_safety"
       ],
-      "rationale": "Attention diversion such as texting increases driving risk and is a core driver-safety issue."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "impaired_driving",
       "canonicalLabel": "Impaired Driving",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.nhtsa.drug_impaired_driving"
       ],
-      "rationale": "Alcohol, drugs, and some medicines can impair judgment, coordination, reaction time, and safe vehicle operation."
+      "decision": "CARD"
     },
     {
       "semanticSlug": "electric_hybrid_vehicle_emergency_safety",
       "canonicalLabel": "Electric and Hybrid Vehicle Emergency Safety",
-      "decision": "CANDIDATE",
       "sourceIds": [
         "csp11.source.nhtsa.ev_emergency_guides"
       ],
-      "rationale": "Electric-powered vehicles introduce vehicle-specific emergency, towing, storage, submersion, fire, and high-voltage considerations."
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "vehicle_fuel_system_integrity",
+      "canonicalLabel": "Vehicle Fuel System Integrity",
+      "sourceIds": [
+        "csp11.source.ecfr.49_571_301"
+      ],
+      "decision": "CARD"
     }
   ],
-  "acceptedConcepts": [],
-  "mergedConcepts": [],
+  "mergedConcepts": [
+    {
+      "semanticSlug": "gps_fleet_monitoring",
+      "canonicalLabel": "GPS Fleet Monitoring",
+      "decision": "MERGED",
+      "mergedInto": "fleet_telematics",
+      "reason": "GPS location, trip history, and geofencing are data functions within fleet telematics rather than a separate parent concept."
+    },
+    {
+      "semanticSlug": "driver_behavior_monitoring",
+      "canonicalLabel": "Driver Behavior Monitoring",
+      "decision": "MERGED",
+      "mergedInto": "fleet_telematics",
+      "reason": "Driver behavior alerts, coaching, and scorecard data are telematics functions and are retained inside the Fleet Telematics card."
+    }
+  ],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve telematics/GPS/driver-monitoring concept boundaries and fleet-safety coverage before learner-ready package authoring."
+  "nextGate": "Validate d01_c05_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and repository regression.",
+  "resolutionSummary": {
+    "candidateCount": 11,
+    "acceptedCardCount": 9,
+    "mergedCount": 2,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
 }
