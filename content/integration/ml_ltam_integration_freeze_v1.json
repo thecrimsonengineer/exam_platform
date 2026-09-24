@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-LTAM-INTEGRATION",
+  "freezeStatus": "closed_static_presentation_integration_checkpoint",
+  "closedAt": "2026-09-24",
+  "sources": {
+    "microLearning": {
+      "ref": "phase-ml13-animation-choreography-closed",
+      "sha": "d49950184ae38803f4a55e0e033e7c048e3f9c27"
+    },
+    "ltamPlanning": {
+      "ref": "phase-learning-twin-motion-avatar",
+      "sha": "992adf804133f31a4e56325adfdb4e8ae90ba1e2",
+      "type": "frozen_plan_only"
+    },
+    "commonBaseSha": "acf87f6a67a923f2dcc9b70485cfac2f56962050"
+  },
+  "implementation": {
+    "normalizedSha": "dc18c561253a221acfb6f09fc211e76efb2f2abe",
+    "bridge": "lib/features/learning_twin/integration/micro_learning_twin_presentation.dart",
+    "integratedSurface": "lib/screens/startup/startup_micro_fact_card.dart",
+    "canonicalAvatar": "LearningTwinAvatar",
+    "visualMode": "static_svg_fallback",
+    "futureMotionEventKeyFormat": "microfact:<microFactId>:v<contentVersion>",
+    "motionEnabled": false
+  },
+  "boundaries": {
+    "productionMicroFactFilesModified": 0,
+    "learningTwinDomainFilesModified": 0,
+    "networkReadsAdded": 0,
+    "persistenceWritesAdded": 0,
+    "sharedAnimationControllersAdded": 0,
+    "secondAvatarFamilyCreated": false
+  },
+  "validation": {
+    "workflowRunId": 35955880471,
+    "workflowConclusion": "success",
+    "presentationBridgeTests": "pass",
+    "architectureGuard": "pass",
+    "learningTwinRegression": "pass",
+    "ml10ToMl13RuntimeRegression": "pass",
+    "startupMotionAndHandoffRegression": "pass"
+  },
+  "nextAction": "Implement LTAM-4 motion foundation and LTAM-5 controlled hero pilot from this closed integrated baseline. Keep MicroFact surface static until the LTAM pilot closes."
+}

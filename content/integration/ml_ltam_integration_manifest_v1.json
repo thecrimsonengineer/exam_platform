@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "ML-LTAM-INTEGRATION",
-  "status": "in_progress",
+  "status": "closed",
   "createdAt": "2026-09-24",
   "sources": {
     "microLearning": {
@@ -34,5 +34,17 @@
     "docs/learning_twin/LTAM_4_MOTION_MANIFEST_STATE_MAPPER_FLUTTER_RENDERER_FOUNDATION.md",
     "docs/learning_twin/LTAM_5_BACKWARD_COMPATIBLE_AVATAR_UPGRADE_AND_CONTROLLED_RUNTIME_PILOT.md"
   ],
-  "nextGate": "INT-4 cross-stream regression and freeze"
+  "nextGate": "Implement LTAM-4/5 motion infrastructure on top of this integrated checkpoint before enabling Learning Twin animation in MicroFact surfaces.",
+  "closedAt": "2026-09-24",
+  "normalizedImplementationSha": "dc18c561253a221acfb6f09fc211e76efb2f2abe",
+  "validation": {
+    "workflowRunId": 35955880471,
+    "conclusion": "success",
+    "integrationSeam": "pass",
+    "learningTwinRegression": "pass",
+    "mlStartupRegression": "pass",
+    "startupMotionAndHandoff": "pass",
+    "productionMicroFactsImmutable": true,
+    "learningTwinDomainImmutable": true
+  }
 }

@@ -1,6 +1,6 @@
 # CSP11 ML × LTAM Integration
 
-Status: IN PROGRESS
+Status: CLOSED
 
 Working branch: `phase-ml-ltam-integration`
 
@@ -191,3 +191,17 @@ INT-4  Cross-stream regression + freeze
 ```
 
 Only after this integration checkpoint closes should actual LTAM-4/5 motion implementation begin on top of the integrated ML baseline.
+
+
+## Integration closure
+
+- Normalized integrated implementation SHA: `dc18c561253a221acfb6f09fc211e76efb2f2abe`.
+- Cross-stream validation run: `35955880471` — PASS.
+- ML production MicroFact files changed: 0.
+- Learning Twin domain files changed: 0.
+- The startup MicroFact card now renders the canonical `LearningTwinAvatar`.
+- Current integrated avatar mode is static SVG fallback.
+- A stable future motion event key is available as `microfact:<microFactId>:v<contentVersion>`.
+- LTAM motion is intentionally **not enabled** because LTAM-4/5 remain frozen implementation plans rather than implemented runtime phases.
+- The first animated LTAM production pilot remains `LearningTwinHero`, as required by the LTAM-5 contract.
+- MicroFact surfaces must stay static until that controlled LTAM motion pilot closes.
