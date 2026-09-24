@@ -337,8 +337,7 @@ Future<int> runReleaseCandidateInputCli(
     final policyPath = _option(
       arguments,
       '--policy',
-      fallback:
-          'config/release_governance/release_candidate_environment.json',
+      fallback: 'config/release_governance/release_candidate_environment.json',
     );
     final sourceRef = _option(arguments, '--source-ref');
     final expectedCommitSha = _option(arguments, '--expected-sha');
@@ -349,9 +348,10 @@ Future<int> runReleaseCandidateInputCli(
       _option(arguments, '--created-at'),
     ).toUtc();
     final outputPath = _option(arguments, '--output');
-    final artifacts = _multiOption(arguments, '--artifact')
-        .map(parseArtifactDeclaration)
-        .toList();
+    final artifacts = _multiOption(
+      arguments,
+      '--artifact',
+    ).map(parseArtifactDeclaration).toList();
 
     if (artifacts.isEmpty) {
       throw const FormatException(
@@ -386,11 +386,7 @@ Future<int> runReleaseCandidateInputCli(
   }
 }
 
-String _option(
-  List<String> arguments,
-  String name, {
-  String? fallback,
-}) {
+String _option(List<String> arguments, String name, {String? fallback}) {
   final index = arguments.indexOf(name);
   if (index < 0) {
     if (fallback != null) {
@@ -481,10 +477,7 @@ Object? _canonicalizeValue(Object? value) {
 }
 
 String _resolve(String rootDirectory, String relativePath) {
-  final nativeRelative = relativePath.replaceAll(
-    '/',
-    Platform.pathSeparator,
-  );
+  final nativeRelative = relativePath.replaceAll('/', Platform.pathSeparator);
   return '${Directory(rootDirectory).absolute.path}'
       '${Platform.pathSeparator}$nativeRelative';
 }

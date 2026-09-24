@@ -12,22 +12,21 @@ import '../../tool/release_governance/repository_provenance.dart';
 void main() {
   group('ReleaseCandidateEnvironmentPolicy', () {
     test('parses the frozen policy contract', () {
-      final policy = ReleaseCandidateEnvironmentPolicy.fromJson(
-        <String, Object?>{
-          'schemaVersion': 1,
-          'expectedRepository': 'thecrimsonengineer/exam_platform',
-          'flutterVersion': '3.44.9',
-          'dartVersion': '3.12.2',
-          'javaVersion': '17.0.16',
-          'gradleVersion': '9.1.0',
-          'androidGradlePluginVersion': '9.0.1',
-          'kotlinVersion': '2.3.20',
-          'javaTargetVersion': '17',
-          'kotlinJvmTarget': '17',
-          'runnerOs': 'linux',
-          'runnerArchitecture': 'X64',
-        },
-      );
+      final policy =
+          ReleaseCandidateEnvironmentPolicy.fromJson(<String, Object?>{
+            'schemaVersion': 1,
+            'expectedRepository': 'thecrimsonengineer/exam_platform',
+            'flutterVersion': '3.44.9',
+            'dartVersion': '3.12.2',
+            'javaVersion': '17.0.16',
+            'gradleVersion': '9.1.0',
+            'androidGradlePluginVersion': '9.0.1',
+            'kotlinVersion': '2.3.20',
+            'javaTargetVersion': '17',
+            'kotlinJvmTarget': '17',
+            'runnerOs': 'linux',
+            'runnerArchitecture': 'X64',
+          });
 
       expect(policy.expectedRepository, 'thecrimsonengineer/exam_platform');
       expect(policy.flutterVersion, '3.44.9');
@@ -37,12 +36,10 @@ void main() {
 
     test('rejects unknown policy schema versions', () {
       expect(
-        () => ReleaseCandidateEnvironmentPolicy.fromJson(
-          <String, Object?>{
-            'schemaVersion': 2,
-            'expectedRepository': 'thecrimsonengineer/exam_platform',
-          },
-        ),
+        () => ReleaseCandidateEnvironmentPolicy.fromJson(<String, Object?>{
+          'schemaVersion': 2,
+          'expectedRepository': 'thecrimsonengineer/exam_platform',
+        }),
         throwsFormatException,
       );
     });
@@ -75,8 +72,7 @@ void main() {
       expect(gates, hasLength(17));
       expect(
         gates.every(
-          (value) =>
-              (value! as Map<String, Object?>)['status'] == 'PASS',
+          (value) => (value! as Map<String, Object?>)['status'] == 'PASS',
         ),
         isTrue,
       );
@@ -87,8 +83,7 @@ void main() {
         () => assembler.assemble(
           policy: _policy,
           sourceRef: 'release/candidate',
-          expectedCommitSha:
-              'ffffffffffffffffffffffffffffffffffffffff',
+          expectedCommitSha: 'ffffffffffffffffffffffffffffffffffffffff',
           candidateOrdinal: 1,
           createdAt: DateTime.utc(2026, 9, 24),
           version: ReleaseVersion.parse('1.0.0+1'),
@@ -163,10 +158,7 @@ void main() {
       );
 
       expect(artifact.artifactId, 'android-apk');
-      expect(
-        artifact.fileName,
-        'build/release-candidate/app.apk',
-      );
+      expect(artifact.fileName, 'build/release-candidate/app.apk');
     });
 
     test('rejects malformed declarations', () {
@@ -257,11 +249,7 @@ void main() {
       ];
 
       for (final value in forbidden) {
-        expect(
-          workflow.toLowerCase(),
-          isNot(contains(value)),
-          reason: value,
-        );
+        expect(workflow.toLowerCase(), isNot(contains(value)), reason: value);
       }
     });
 
@@ -299,16 +287,15 @@ const ReleaseCandidateEnvironmentPolicy _policy =
       runnerArchitecture: 'X64',
     );
 
-const RepositoryProvenanceEvidence _repository =
-    RepositoryProvenanceEvidence(
-      repository: 'thecrimsonengineer/exam_platform',
-      remoteUrl: 'https://github.com/thecrimsonengineer/exam_platform.git',
-      branch: null,
-      headSha: _headSha,
-      treeSha: '89abcdef0123456789abcdef0123456789abcdef',
-      tagsAtHead: <String>[],
-      changes: <RepositoryChange>[],
-    );
+const RepositoryProvenanceEvidence _repository = RepositoryProvenanceEvidence(
+  repository: 'thecrimsonengineer/exam_platform',
+  remoteUrl: 'https://github.com/thecrimsonengineer/exam_platform.git',
+  branch: null,
+  headSha: _headSha,
+  treeSha: '89abcdef0123456789abcdef0123456789abcdef',
+  tagsAtHead: <String>[],
+  changes: <RepositoryChange>[],
+);
 
 const BuildEnvironmentSnapshot _environment = BuildEnvironmentSnapshot(
   flutterVersion: '3.44.9',
