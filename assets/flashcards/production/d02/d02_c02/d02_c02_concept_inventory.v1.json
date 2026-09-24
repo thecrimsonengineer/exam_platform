@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-2B",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d02",
   "competencyId": "d02_c02",
   "competencyStatement": "Analyze performance standards to determine plan of action",
@@ -50,75 +50,6 @@
       ]
     }
   ],
-  "candidateConcepts": [
-    {
-      "semanticSlug": "performance_standard",
-      "canonicalLabel": "Performance Standard",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.opm.performance_standards"
-      ],
-      "rationale": "Defines the threshold, requirement, or expectation against which observed performance is judged."
-    },
-    {
-      "semanticSlug": "performance_threshold",
-      "canonicalLabel": "Performance Threshold",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.opm.performance_standards"
-      ],
-      "rationale": "A boundary or level that separates acceptable from below-standard performance for a defined measure."
-    },
-    {
-      "semanticSlug": "performance_deviation",
-      "canonicalLabel": "Performance Deviation",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.opm.performance_standards",
-        "csp11.source.nist.baldrige_commentary"
-      ],
-      "rationale": "The observed difference between actual performance and the applicable standard, expectation, target, or projected level."
-    },
-    {
-      "semanticSlug": "performance_analysis",
-      "canonicalLabel": "Performance Analysis",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.nist.baldrige_commentary"
-      ],
-      "rationale": "Analysis of performance information to understand results, trends, causes, implications, and needed actions."
-    },
-    {
-      "semanticSlug": "improvement_priority",
-      "canonicalLabel": "Improvement Priority",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.nist.baldrige_commentary",
-        "csp11.source.nist.strategy"
-      ],
-      "rationale": "A selected improvement need given precedence based on importance, gap, risk, objectives, and available resources."
-    },
-    {
-      "semanticSlug": "action_plan",
-      "canonicalLabel": "Action Plan",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.nist.baldrige_key_terms",
-        "csp11.source.nist.strategy"
-      ],
-      "rationale": "Specific actions, resources, responsibilities, and time horizons used to accomplish an objective."
-    },
-    {
-      "semanticSlug": "resource_allocation",
-      "canonicalLabel": "Resource Allocation",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.nist.baldrige_commentary",
-        "csp11.source.nist.strategy"
-      ],
-      "rationale": "Assignment of financial, workforce, facility, time, or other resources needed to carry out selected actions."
-    }
-  ],
   "crossCompetencyReferences": [
     {
       "semanticSlug": "performance_measure",
@@ -133,12 +64,80 @@
       "targetCompetencyId": "d02_c01",
       "intendedConceptId": "csp11.concept.performance_target",
       "reason": "Performance targets were canonically authored in D02 C01 and are inputs to evaluating standards and action needs."
+    },
+    {
+      "semanticSlug": "performance_gap",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_gap",
+      "reason": "The candidate Performance Deviation describes the same semantic difference between actual and required/desired performance already represented by the canonical Performance Gap card."
     }
   ],
-  "acceptedConcepts": [],
-  "mergedConcepts": [],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "performance_standard",
+      "canonicalLabel": "Performance Standard",
+      "sourceIds": [
+        "csp11.source.opm.performance_standards"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "performance_analysis",
+      "canonicalLabel": "Performance Analysis",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_commentary"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "improvement_priority",
+      "canonicalLabel": "Improvement Priority",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_commentary",
+        "csp11.source.nist.strategy"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "action_plan",
+      "canonicalLabel": "Action Plan",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_key_terms",
+        "csp11.source.nist.strategy"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "resource_allocation",
+      "canonicalLabel": "Resource Allocation",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_commentary",
+        "csp11.source.nist.strategy"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [
+    {
+      "semanticSlug": "performance_threshold",
+      "canonicalLabel": "Performance Threshold",
+      "decision": "MERGED",
+      "mergedInto": "performance_standard",
+      "reason": "A performance standard is itself an expression of the threshold, requirement, or expectation to be met; a separate collectible would fragment one concept."
+    }
+  ],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve D02 C02 concept boundaries and canonical references before learner-ready package authoring."
+  "nextGate": "Validate d02_c02_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, frozen-core regression, and full repository regression.",
+  "resolutionSummary": {
+    "candidateCount": 7,
+    "acceptedCardCount": 5,
+    "mergedCount": 1,
+    "crossCompetencyReferenceCount": 3,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
 }
