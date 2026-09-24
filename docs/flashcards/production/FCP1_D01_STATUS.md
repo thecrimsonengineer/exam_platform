@@ -12,19 +12,11 @@ Weight: 25%
 Competencies: 7
 ```
 
-Authoritative structure:
-
-```text
-docs/source_pipeline/CSP11_canonical_blueprint.json
-Version V.2024.04.24
-Effective 2025-08-01
-```
-
 ## Competency sequence
 
 ```text
-FCP-1A  d01_c01  VALIDATING
-FCP-1B  d01_c02  NOT STARTED
+FCP-1A  d01_c01  CLOSED
+FCP-1B  d01_c02  IN PROGRESS
 FCP-1C  d01_c03  NOT STARTED
 FCP-1D  d01_c04  NOT STARTED
 FCP-1E  d01_c05  NOT STARTED
@@ -32,30 +24,24 @@ FCP-1F  d01_c06  NOT STARTED
 FCP-1G  d01_c07  NOT STARTED
 ```
 
-## FCP-1A current task
-
-Validate the resolved concept inventory and learner-ready package for:
+### FCP-1A closure
 
 ```text
-d01_c01
-Describe the principles of minimizing hazards using Prevention-Through-Design
+Gate: FCP1A_D01_C01_GREEN
+Package validation SHA: bb75c0c98c4236b97dda3c004a65e62e0fe39e8d
+Workflow: 35955655296
+FCQ100: 100/100
+Cards: 8
+Unresolved concepts: 0
 ```
 
-The concept inventory is resolved at 8 cards plus 1 merged candidate. The learner-ready package is now at FCQ100 and repository validation.
+### FCP-1B current task
 
-Topic/subtopic IDs remain unset because the FCP-0 frozen repository contains no authoritative D01 StudyContent topic/subtopic tree. FCP will not invent these identifiers.
+Build and resolve the canonical concept inventory for `d01_c02` process safety.
 
-## Current source basis
+Current authoritative source basis:
 
-- NIOSH Prevention through Design
-- NIOSH Hierarchy of Controls
+- OSHA 29 CFR 1910.119
+- OSHA 29 CFR 1910.119 Appendix C
 
-These sources are registered in:
-
-```text
-assets/flashcards/production/sources/fcp_source_registry.v1.json
-```
-
-## Next gate
-
-Resolve the nine d01_c01 candidate concepts, including overlap with the existing FC reference concepts `hierarchy_of_controls` and `elimination_control`, before writing learner-ready card JSON.
+Management of Change is represented in the d01_c02 inventory but deferred to the dedicated canonical competency `d02_c05` so FCP does not create duplicate collectible concepts.

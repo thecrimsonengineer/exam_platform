@@ -45,9 +45,10 @@ void main() {
       expect(observed['statement'], expected.statement);
     }
 
-    expect(competencies.first['status'], 'validating');
+    expect(competencies.first['status'], 'closed');
+    expect(competencies[1]['status'], 'in_progress');
     expect(
-      competencies.skip(1).every((item) => item['status'] == 'not_started'),
+      competencies.skip(2).every((item) => item['status'] == 'not_started'),
       isTrue,
     );
   });
@@ -102,7 +103,7 @@ void main() {
         .toList();
 
     final registry = FlashcardSourceRegistry.build(entries: entries);
-    expect(registry.count, 2);
+    expect(registry.count, greaterThanOrEqualTo(4));
     expect(
       registry.contains('csp11.source.niosh.prevention_through_design'),
       isTrue,

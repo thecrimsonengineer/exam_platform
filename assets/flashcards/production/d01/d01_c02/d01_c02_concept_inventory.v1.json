@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1B",
+  "status": "candidate_inventory",
+  "domainId": "d01",
+  "competencyId": "d01_c02",
+  "competencyStatement": "Apply the principles of process safety (e.g., pressure relief systems, chemical compatibility, management of change, materials of construction, process flow diagrams)",
+  "placement": {
+    "domainId": "d01",
+    "competencyId": "d01_c02",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D01 topic/subtopic StudyContent tree exists at the frozen FCP base. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.1910_119",
+      "locators": [
+        "1910.119 purpose",
+        "1910.119(d) Process safety information",
+        "1910.119(d)(1)(vii) hazardous effects of inadvertent mixing",
+        "1910.119(d)(2) process technology information",
+        "1910.119(d)(3) process equipment information",
+        "1910.119(i) pre-startup safety review",
+        "1910.119(l) management of change"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_119_app_c",
+      "locators": [
+        "Appendix C > 3. Process Safety Information",
+        "Appendix C > 8. Pre-Startup Safety",
+        "Appendix C > 11. Managing Change"
+      ]
+    }
+  ],
+  "candidateConcepts": [
+    {
+      "semanticSlug": "process_safety_management",
+      "canonicalLabel": "Process Safety Management",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "rationale": "Core systematic process-safety concept underlying the competency."
+    },
+    {
+      "semanticSlug": "process_safety_information",
+      "canonicalLabel": "Process Safety Information",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "rationale": "OSHA requires written information on process chemical hazards, technology, and equipment before PHA."
+    },
+    {
+      "semanticSlug": "chemical_compatibility_process_safety",
+      "canonicalLabel": "Chemical Compatibility in Process Safety",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "rationale": "The standard requires information on reactivity, stability, corrosivity, and hazardous effects of foreseeable inadvertent mixing."
+    },
+    {
+      "semanticSlug": "process_flow_diagram",
+      "canonicalLabel": "Process Flow Diagram",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "rationale": "Process technology information includes a block flow or simplified process flow diagram."
+    },
+    {
+      "semanticSlug": "piping_and_instrumentation_diagram",
+      "canonicalLabel": "Piping and Instrumentation Diagram",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "rationale": "P&IDs are required equipment information and support understanding of process configuration and controls."
+    },
+    {
+      "semanticSlug": "process_operating_limits",
+      "canonicalLabel": "Process Operating Limits",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "rationale": "Process safety information includes safe upper and lower limits for temperature, pressure, flow, composition, and consequences of deviation."
+    },
+    {
+      "semanticSlug": "materials_of_construction",
+      "canonicalLabel": "Materials of Construction",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "rationale": "Materials of construction are explicitly required process equipment information."
+    },
+    {
+      "semanticSlug": "pressure_relief_system",
+      "canonicalLabel": "Pressure Relief System",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "rationale": "Relief and vent systems are process equipment covered by PSM mechanical-integrity requirements."
+    },
+    {
+      "semanticSlug": "relief_system_design_basis",
+      "canonicalLabel": "Relief System Design Basis",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "rationale": "OSHA requires relief system design and design basis as part of process equipment information."
+    },
+    {
+      "semanticSlug": "recognized_good_engineering_practices",
+      "canonicalLabel": "Recognized Good Engineering Practices",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "rationale": "Covered equipment must comply with recognized and generally accepted good engineering practices."
+    },
+    {
+      "semanticSlug": "pre_startup_safety_review",
+      "canonicalLabel": "Pre-Startup Safety Review",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ],
+      "rationale": "PSR confirms design, procedures, PHA/MOC obligations, and training before introduction of highly hazardous chemicals."
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "management_of_change",
+      "canonicalLabel": "Management of Change",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c05",
+      "intendedConceptId": "csp11.concept.management_of_change",
+      "reason": "MOC is explicitly named in d01_c02 but d02_c05 is the dedicated canonical competency. FCP will avoid creating a second MOC collectible card."
+    }
+  ],
+  "acceptedConcepts": [],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Resolve d01_c02 candidate boundaries and the deferred MOC reference before learner-ready authoring."
+}

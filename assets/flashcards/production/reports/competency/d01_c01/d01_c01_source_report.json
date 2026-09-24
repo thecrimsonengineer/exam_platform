@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1A",
+  "competencyId": "d01_c01",
+  "cardCount": 8,
+  "cardsWithProvenance": 8,
+  "cardsWithExactlyOnePrimarySource": 8,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.niosh.prevention_through_design",
+    "csp11.source.niosh.hierarchy_of_controls"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.niosh.prevention_through_design": 5,
+    "csp11.source.niosh.hierarchy_of_controls": 3
+  },
+  "status": "PASS"
+}

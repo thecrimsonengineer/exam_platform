@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1A",
+  "competencyId": "d01_c01",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCorpusPreResolution": [
+    {
+      "conceptId": "csp11.concept.hierarchy_of_controls",
+      "resolution": "REFERENCE_ONLY_NO_DUPLICATE"
+    },
+    {
+      "conceptId": "csp11.concept.elimination_control",
+      "resolution": "DISTINGUISH"
+    }
+  ],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}

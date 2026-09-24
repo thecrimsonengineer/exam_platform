@@ -7,7 +7,9 @@
       "organization": "NIOSH",
       "title": "Prevention through Design",
       "canonicalUrl": "https://www.cdc.gov/niosh/ptd/about/index.html",
-      "allowedDomains": ["cdc.gov"],
+      "allowedDomains": [
+        "cdc.gov"
+      ],
       "authorityTier": "federalTechnical",
       "sourceType": "agencyGuidance",
       "copyrightMode": "federalGovernmentWork",
@@ -22,7 +24,9 @@
       "organization": "NIOSH",
       "title": "Hierarchy of Controls",
       "canonicalUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/index.html",
-      "allowedDomains": ["cdc.gov"],
+      "allowedDomains": [
+        "cdc.gov"
+      ],
       "authorityTier": "federalTechnical",
       "sourceType": "agencyGuidance",
       "copyrightMode": "federalGovernmentWork",
@@ -31,6 +35,40 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "FCP uses educational paraphrase. Exact section locators are required on learner-ready cards."
+    },
+    {
+      "id": "csp11.source.osha.1910_119",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 - Process safety management of highly hazardous chemicals",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for FCP process-safety cards. FCP uses educational paraphrase and paragraph-level locators."
+    },
+    {
+      "id": "csp11.source.osha.1910_119_app_c",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 Appendix C - Compliance Guidelines and Recommendations for Process Safety Management",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119AppC",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Nonmandatory OSHA guidance used as supporting context for process diagrams, MOC, and PSM implementation. Regulatory text remains primary where applicable."
     }
   ]
 }
