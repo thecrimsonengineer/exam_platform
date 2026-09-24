@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "csp11.flashcard-sources.v1",
+  "verifiedOn": "2026-09-24",
+  "sources": [
+    {
+      "id": "csp11.source.niosh.prevention_through_design",
+      "organization": "NIOSH",
+      "title": "Prevention through Design",
+      "canonicalUrl": "https://www.cdc.gov/niosh/ptd/about/index.html",
+      "allowedDomains": ["cdc.gov"],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase. Source supports design-out, hazard minimization, facilities, operations, processes, equipment, tools, technologies, and organization-of-work concepts."
+    },
+    {
+      "id": "csp11.source.niosh.hierarchy_of_controls",
+      "organization": "NIOSH",
+      "title": "Hierarchy of Controls",
+      "canonicalUrl": "https://www.cdc.gov/niosh/hierarchy-of-controls/about/index.html",
+      "allowedDomains": ["cdc.gov"],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FCP uses educational paraphrase. Exact section locators are required on learner-ready cards."
+    }
+  ]
+}

@@ -6,10 +6,14 @@
     "branch": "phase-fc-closed",
     "sha": "eeaad1d2d02c3aaf3c09f39ed277185624542c93"
   },
+  "fcp0RecoveryPoint": {
+    "branch": "phase-fcp0-production-spec-closed",
+    "sha": "42dd596449a6a1265a5fc505d4f32b26956c912c"
+  },
   "workingBranch": "phase-fcp-flashcard-production",
   "runs": {
     "fcp0": "closed",
-    "fcp1": "not_started",
+    "fcp1": "in_progress",
     "fcp2": "not_started",
     "fcp3": "not_started",
     "fcp4": "not_started",
@@ -24,8 +28,17 @@
   "checkpoints": {
     "fcp0": {
       "name": "FCP0_PRODUCTION_SPEC_GREEN",
-      "branch": "phase-fcp0-production-spec-closed"
+      "branch": "phase-fcp0-production-spec-closed",
+      "sha": "42dd596449a6a1265a5fc505d4f32b26956c912c"
     }
   },
-  "domains": {}
+  "domains": {
+    "d01": {
+      "title": "Advanced Application of Safety Principles",
+      "weightPercent": 25,
+      "competencyCount": 7,
+      "status": "in_progress",
+      "manifestPath": "assets/flashcards/production/d01/d01_production_manifest.v1.json"
+    }
+  }
 }

@@ -47,18 +47,22 @@ void main() {
       'fcp11',
     ]);
     expect(runs['fcp0'], 'closed');
+    expect(runs['fcp1'], 'in_progress');
     expect(
-      runs.entries.skip(1).every((entry) => entry.value == 'not_started'),
+      runs.entries.skip(2).every((entry) => entry.value == 'not_started'),
       isTrue,
     );
   });
 
-  test('FCP-0 starts with no falsely declared production domains', () {
+  test('FCP-1 admits only D01 at startup', () {
     final manifest = Map<String, dynamic>.from(
       jsonDecode(File(manifestPath).readAsStringSync()) as Map,
     );
     final domains = Map<String, dynamic>.from(manifest['domains'] as Map);
 
-    expect(domains, isEmpty);
+    expect(domains.keys.toList(), <String>['d01']);
+    final d01 = Map<String, dynamic>.from(domains['d01'] as Map);
+    expect(d01['competencyCount'], 7);
+    expect(d01['status'], 'in_progress');
   });
 }

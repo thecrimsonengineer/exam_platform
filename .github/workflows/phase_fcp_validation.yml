@@ -40,8 +40,8 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-fatal-infos --fatal-warnings
 
-      - name: FCP production manifest
-        run: flutter test test/features/flashcards/production/fcp_manifest_test.dart
+      - name: FCP production validation
+        run: flutter test test/features/flashcards/production
 
       - name: Frozen Flashcard Core regression
         run: flutter test test/features/flashcards

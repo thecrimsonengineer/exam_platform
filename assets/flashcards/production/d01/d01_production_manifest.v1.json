@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1",
+  "domainId": "d01",
+  "domainNumber": 1,
+  "title": "Advanced Application of Safety Principles",
+  "weightPercent": 25,
+  "status": "in_progress",
+  "canonicalBlueprint": {
+    "path": "docs/source_pipeline/CSP11_canonical_blueprint.json",
+    "version": "V.2024.04.24",
+    "effectiveDate": "2025-08-01"
+  },
+  "competencyCount": 7,
+  "competencies": [
+    {
+      "competencyId": "d01_c01",
+      "number": 1,
+      "statement": "Describe the principles of minimizing hazards using Prevention-Through-Design (e.g., avoidance, elimination, substitution, safety design criteria for workplace facilities, machines, and practices)",
+      "status": "in_progress",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c01/d01_c01_concept_inventory.v1.json"
+    },
+    {
+      "competencyId": "d01_c02",
+      "number": 2,
+      "statement": "Apply the principles of process safety (e.g., pressure relief systems, chemical compatibility, management of change, materials of construction, process flow diagrams)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d01_c03",
+      "number": 3,
+      "statement": "Evaluate common workplace hazards (e.g., electrical, falls, confined spaces, lockout/tagout, working around water, caught in, struck by, excavation)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d01_c04",
+      "number": 4,
+      "statement": "Evaluate facility life safety features (e.g., public space safety, floor loading, occupancy loads)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d01_c05",
+      "number": 5,
+      "statement": "Describe fleet safety principles (e.g., driver and equipment safety, maintenance, surveillance equipment, GPS monitoring, telematics, hybrid vehicles, fuel systems, driving under the influence, fatigue)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d01_c06",
+      "number": 6,
+      "statement": "Evaluate materials handling methods and controls (e.g., forklifts, aerial lifts, and other powered industrial trucks; cranes, hand trucks, hoists, rigging, manual handling, drones)",
+      "status": "not_started"
+    },
+    {
+      "competencyId": "d01_c07",
+      "number": 7,
+      "statement": "Evaluate the use of tools, machines, and equipment (e.g., hand tools, power tools, ladders, grinders, hydraulics, robotics)",
+      "status": "not_started"
+    }
+  ]
+}

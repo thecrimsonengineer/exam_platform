@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1A",
+  "status": "candidate_inventory",
+  "domainId": "d01",
+  "competencyId": "d01_c01",
+  "competencyStatement": "Describe the principles of minimizing hazards using Prevention-Through-Design (e.g., avoidance, elimination, substitution, safety design criteria for workplace facilities, machines, and practices)",
+  "placement": {
+    "domainId": "d01",
+    "competencyId": "d01_c01",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "The frozen FCP-0 repository contains the canonical Domain/Competency blueprint but no authoritative D01 topic/subtopic StudyContent tree. Topic and subtopic placement are therefore intentionally unset rather than inferred.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.niosh.prevention_through_design",
+      "locators": [
+        "Prevention through Design > Overview",
+        "Prevention through Design > Defining"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.niosh.hierarchy_of_controls",
+      "locators": [
+        "Hierarchy of Controls > Overview",
+        "Hierarchy of Controls > Elimination",
+        "Hierarchy of Controls > Substitution",
+        "Hierarchy of Controls > Engineering controls"
+      ]
+    }
+  ],
+  "candidateConcepts": [
+    {
+      "semanticSlug": "prevention_through_design",
+      "canonicalLabel": "Prevention through Design",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.prevention_through_design"],
+      "rationale": "Core competency concept covering anticipation and design-out of occupational hazards and risk."
+    },
+    {
+      "semanticSlug": "hazard_avoidance_by_design",
+      "canonicalLabel": "Hazard Avoidance by Design",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.prevention_through_design"],
+      "rationale": "Captures the competency's explicit avoidance principle without converting it into a question."
+    },
+    {
+      "semanticSlug": "hazard_elimination_by_design",
+      "canonicalLabel": "Hazard Elimination by Design",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.niosh.prevention_through_design",
+        "csp11.source.niosh.hierarchy_of_controls"
+      ],
+      "rationale": "Represents designing the hazard out at the source or as early as possible in the lifecycle."
+    },
+    {
+      "semanticSlug": "hazard_substitution_by_design",
+      "canonicalLabel": "Hazard Substitution by Design",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.hierarchy_of_controls"],
+      "rationale": "Represents selecting a safer material, process, operation, or equipment during design."
+    },
+    {
+      "semanticSlug": "engineering_controls_by_design",
+      "canonicalLabel": "Engineering Controls by Design",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.hierarchy_of_controls"],
+      "rationale": "Captures controls incorporated into equipment or workplaces so risk reduction is less dependent on worker action."
+    },
+    {
+      "semanticSlug": "life_cycle_safety_by_design",
+      "canonicalLabel": "Life-Cycle Safety by Design",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.prevention_through_design"],
+      "rationale": "PtD considers hazards across construction, manufacture, use, maintenance, redesign, disposal, and reuse."
+    },
+    {
+      "semanticSlug": "facility_safety_design_criteria",
+      "canonicalLabel": "Facility Safety Design Criteria",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.prevention_through_design"],
+      "rationale": "Matches the blueprint requirement to address safety criteria in workplace and facility design."
+    },
+    {
+      "semanticSlug": "machine_safety_design_criteria",
+      "canonicalLabel": "Machine Safety Design Criteria",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.prevention_through_design"],
+      "rationale": "Matches the blueprint requirement to consider machines, equipment, and tools during design or redesign."
+    },
+    {
+      "semanticSlug": "work_practice_safety_design",
+      "canonicalLabel": "Work Practice Safety Design",
+      "decision": "CANDIDATE",
+      "sourceIds": ["csp11.source.niosh.prevention_through_design"],
+      "rationale": "Captures design of work methods, operations, and organization of work to minimize occupational risk."
+    }
+  ],
+  "crossCorpusReuseCandidates": [
+    {
+      "conceptId": "csp11.concept.hierarchy_of_controls",
+      "reason": "Existing FC reference concept may support D01 C01 but must not be duplicated. Production primary placement will be resolved during corpus authoring and FCP-8."
+    },
+    {
+      "conceptId": "csp11.concept.elimination_control",
+      "reason": "Existing FC reference concept overlaps elimination-by-design. FCP must determine whether to reuse, merge, or distinguish before learner-ready packaging."
+    }
+  ],
+  "acceptedConcepts": [],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Resolve candidate concept boundaries and reuse decisions before authoring d01_c01 learner-ready cards."
+}
