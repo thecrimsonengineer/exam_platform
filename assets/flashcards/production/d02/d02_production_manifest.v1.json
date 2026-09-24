@@ -34,7 +34,8 @@
       "competencyId": "d02_c02",
       "number": 2,
       "statement": "Analyze performance standards to determine plan of action",
-      "status": "not_started"
+      "status": "in_progress",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c02/d02_c02_concept_inventory.v1.json"
     },
     {
       "competencyId": "d02_c03",
