@@ -44,8 +44,8 @@ jobs:
       - name: Revalidate ML-9D corpus checkpoint
         run: dart run tool/validate_ml9d_whole_corpus_ml8.dart
 
-      - name: Analyze ML-9E validator
-        run: dart analyze tool/validate_ml9e_human_review.dart
+      - name: Analyze ML-9E tooling
+        run: dart analyze tool/validate_ml9e_human_review.dart tool/apply_ml9e_human_review.dart
 
       - name: Validate human-review package readiness
         run: dart run tool/validate_ml9e_human_review.dart
