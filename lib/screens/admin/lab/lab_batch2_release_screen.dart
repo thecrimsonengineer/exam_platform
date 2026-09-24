@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../features/lab/lab_batch2_release.dart';
 import '../../../features/lab/lab_batch2_release_operator.dart';
+import '../../../features/lab/lab_production_release_closure.dart';
 
 class LabBatch2ReleaseScreen extends StatefulWidget {
   const LabBatch2ReleaseScreen({
