@@ -11,7 +11,7 @@ FCP-2C  d02_c03  CLOSED            10 cards
 FCP-2D  d02_c04  CLOSED            12 cards
 FCP-2E  d02_c05  CLOSED            12 cards
 FCP-2F  d02_c06  CLOSED            12 cards
-FCP-2G  d02_c07  NOT STARTED
+FCP-2G  d02_c07  VALIDATING         12 cards
 FCP-2H  d02_c08  NOT STARTED
 FCP-2I  d02_c09  NOT STARTED
 FCP-2J  d02_c10  NOT STARTED
@@ -33,4 +33,8 @@ FCP-2F started strictly from `phase-fcp2e-d02-c05-closed@fee2f4f9619b5e3eb151e56
 
 FCP-2F package validation: SHA `9cd2a834ae519d3dbf9f798257e2037526eb353e`, run `35974799508`, SUCCESS, 12 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2G may begin only from `phase-fcp2f-d02-c06-closed`.
+FCP-2G started strictly from `phase-fcp2f-d02-c06-closed@c946f2b72af03cc86e4f3da607fa2f639d00ff4e`.
+
+C07 candidate package: 12 cards covering leading indicators, lagging indicators, balanced use, SMART leading indicators, response-time and completion measures, management walkthroughs, preventive maintenance, training completion, injury/illness outcomes, hazardous-exposure results, and workers' compensation outcomes.
+
+FCP-2G remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
