@@ -1,13 +1,26 @@
 # LAB Batch 2 Authoring
 
-Status: VALIDATION CANDIDATE
+Status: CLOSED FOR PRE-CATALOGUE VALIDATION
 
-Ten new LAB technical packages, learner presentations, and deterministic DQG300 evidence bundles are isolated under `content/lab_population_batch2/`. They do not modify the frozen production population and are not learner-visible.
+Ten new LAB technical packages, learner presentations, deterministic DQG300 evidence bundles, and the strict Batch 2 population manifest are isolated under `content/lab_population_batch2/`.
 
-Validated pre-catalogue run: `36012889049`
+They do not modify the frozen production population and are not learner-visible.
 
-That run passed:
-- deterministic Batch 2 DQG300 generation
+## Closure checkpoint
+
+Validated content SHA: `4aa151a749b2324e9edd69a40781d7f8169a72c0`
+
+Initial full green admission run: `36012889049`
+
+Committed-artifact reproducibility run: `36015831093`
+
+Reproducibility result:
+- 3,239 tests passed
+- 1 test skipped
+- 0 failed
+
+The committed-artifact run passed:
+- deterministic Batch 2 DQG300 regeneration
 - canonical formatting
 - Flutter analyze
 - canonical question parser
@@ -21,12 +34,13 @@ That run passed:
 - DQG300 semantic authority
 - learner presentation validation
 - scenario manifest contract
-- original population regression
+- original production population regression
 - Batch 2 complete pre-catalogue admission
 - full repository regression
 - diff hygiene
+- no-op evidence persistence, confirming generated evidence already matches committed evidence
 
-The validated evidence was persisted in commit `d58ce496d6881af0c8132ae3c4f6371fd7590461`. A reproducibility run on the committed artifacts is required before this batch can be considered closed for catalogue integration.
+## Batch 2 LABs
 
 1. Contractor Permit Coordination - contractor_permit_coordination@v1
 2. Warehouse Traffic Management - warehouse_traffic_management@v1
@@ -38,3 +52,9 @@ The validated evidence was persisted in commit `d58ce496d6881af0c8132ae3c4f6371f
 8. Incident Investigation and Scene Control - incident_investigation_scene_control@v1
 9. Slip, Trip and Housekeeping Control - slip_trip_housekeeping_control@v1
 10. Emergency Evacuation and Muster Coordination - emergency_evacuation_muster@v1
+
+## Frozen boundary
+
+This closure does not publish to Firebase, does not update the learner catalogue, and does not replace `content/lab_population/manifest.json`.
+
+Any learner release must start from this closed checkpoint on a new integration/release branch and must preserve the existing Q16/Q17 production-release dependency.
