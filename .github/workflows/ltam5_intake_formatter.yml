@@ -1,0 +1,49 @@
+name: LTAM-5 Intake Formatter
+
+on:
+  push:
+    branches:
+      - phase-ml-ltam5-hero-asset-intake
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ltam5-intake-formatter-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout intake branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Normalize intake CLI
+        run: dart format tool/learning_twin/ltam5_idle_asset_admission.dart
+
+      - name: Commit normalization when required
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- tool/learning_twin/ltam5_idle_asset_admission.dart; then
+            echo "LTAM-5 intake CLI already normalized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tool/learning_twin/ltam5_idle_asset_admission.dart
+          git commit -m "LTAM-5 normalize guarded asset intake CLI"
+          git push origin HEAD:${GITHUB_REF_NAME}
