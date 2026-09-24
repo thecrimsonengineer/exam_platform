@@ -239,10 +239,7 @@ void main() {
       status: 'validated',
       startupEligible: false,
     );
-    final publishedDisabled = fact(
-      'mf_invalid_002',
-      startupEligible: false,
-    );
+    final publishedDisabled = fact('mf_invalid_002', startupEligible: false);
 
     final result = selector.select([validated, publishedDisabled]);
 

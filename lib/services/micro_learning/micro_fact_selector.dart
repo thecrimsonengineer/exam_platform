@@ -45,8 +45,7 @@ class MicroFactSelector {
 
     final runtimeEligible = facts
         .where(
-          (fact) =>
-              fact.status == 'published' && fact.runtime.startupEligible,
+          (fact) => fact.status == 'published' && fact.runtime.startupEligible,
         )
         .toList(growable: false);
 
@@ -93,8 +92,7 @@ class MicroFactSelector {
         .toList(growable: false);
 
     final List<MicroFact> pool;
-    final repetitionExcludedCount =
-        assessmentSafe.length - nonRecent.length;
+    final repetitionExcludedCount = assessmentSafe.length - nonRecent.length;
     if (nonRecent.isNotEmpty) {
       pool = nonRecent;
     } else {
@@ -127,11 +125,7 @@ class MicroFactSelector {
         ifAbsent: () => 1,
       );
       for (final concept in fact.curriculum.conceptIds) {
-        conceptRecency.update(
-          concept,
-          (value) => value + 1,
-          ifAbsent: () => 1,
-        );
+        conceptRecency.update(concept, (value) => value + 1, ifAbsent: () => 1);
       }
     }
 
@@ -147,8 +141,7 @@ class MicroFactSelector {
       final fact = sequence[(startIndex + offset) % sequence.length];
       final score = _SelectionScore(
         categoryRecency: categoryRecency[fact.category] ?? 0,
-        sourceRecency:
-            sourceRecency[fact.provenance.sourceRegistryId] ?? 0,
+        sourceRecency: sourceRecency[fact.provenance.sourceRegistryId] ?? 0,
         conceptRecency: fact.curriculum.conceptIds.fold<int>(
           0,
           (sum, concept) => sum + (conceptRecency[concept] ?? 0),
@@ -338,4 +331,3 @@ class _SelectionScore implements Comparable<_SelectionScore> {
     return stableId.compareTo(other.stableId);
   }
 }
-
