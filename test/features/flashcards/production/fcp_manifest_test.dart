@@ -47,14 +47,14 @@ void main() {
       'fcp11',
     ]);
     expect(runs['fcp0'], 'closed');
-    expect(runs['fcp1'], 'in_progress');
+    expect(runs['fcp1'], 'closed');
     expect(
       runs.entries.skip(2).every((entry) => entry.value == 'not_started'),
       isTrue,
     );
   });
 
-  test('FCP-1 admits only D01 at startup', () {
+  test('FCP-1 closes only D01 before FCP-2 begins', () {
     final manifest = Map<String, dynamic>.from(
       jsonDecode(File(manifestPath).readAsStringSync()) as Map,
     );
@@ -63,6 +63,7 @@ void main() {
     expect(domains.keys.toList(), <String>['d01']);
     final d01 = Map<String, dynamic>.from(domains['d01'] as Map);
     expect(d01['competencyCount'], 7);
-    expect(d01['status'], 'in_progress');
+    expect(d01['status'], 'closed');
+    expect(d01['cardCount'], 78);
   });
 }
