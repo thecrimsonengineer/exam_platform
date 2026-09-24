@@ -13,7 +13,7 @@
   "workingBranch": "phase-fcp-flashcard-production",
   "runs": {
     "fcp0": "closed",
-    "fcp1": "in_progress",
+    "fcp1": "closed",
     "fcp2": "not_started",
     "fcp3": "not_started",
     "fcp4": "not_started",
@@ -30,6 +30,10 @@
       "name": "FCP0_PRODUCTION_SPEC_GREEN",
       "branch": "phase-fcp0-production-spec-closed",
       "sha": "42dd596449a6a1265a5fc505d4f32b26956c912c"
+    },
+    "fcp1": {
+      "name": "FCP1_D01_GREEN",
+      "branch": "phase-fcp1-d01-closed"
     }
   },
   "domains": {
@@ -37,7 +41,8 @@
       "title": "Advanced Application of Safety Principles",
       "weightPercent": 25,
       "competencyCount": 7,
-      "status": "in_progress",
+      "cardCount": 78,
+      "status": "closed",
       "manifestPath": "assets/flashcards/production/d01/d01_production_manifest.v1.json"
     }
   }

@@ -47,11 +47,11 @@ void main() {
 
     expect(competencies.first['status'], 'closed');
     expect(competencies[1]['status'], 'closed');
-    expect(competencies[2]['status'], 'validating');
-    expect(competencies[3]['status'], 'validating');
-    expect(competencies[4]['status'], 'validating');
-    expect(competencies[5]['status'], 'validating');
-    expect(competencies[6]['status'], 'validating');
+    expect(competencies[2]['status'], 'closed');
+    expect(competencies[3]['status'], 'closed');
+    expect(competencies[4]['status'], 'closed');
+    expect(competencies[5]['status'], 'closed');
+    expect(competencies[6]['status'], 'closed');
   });
 
   test('D01 C01 inventory stays at canonical competency placement', () {

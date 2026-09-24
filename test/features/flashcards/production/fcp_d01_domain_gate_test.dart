@@ -109,6 +109,37 @@ void main() {
     }
   });
 
+  test('D01 closed competencies have complete report bundles', () {
+    const requiredSuffixes = <String>[
+      '_fcq100_report.json',
+      '_duplicate_report.json',
+      '_source_report.json',
+      '_coverage_report.json',
+      '_validation_summary.md',
+    ];
+
+    for (var competency = 1; competency <= 7; competency++) {
+      final id = 'd01_c${competency.toString().padLeft(2, '0')}';
+      final reportDir =
+          Directory('assets/flashcards/production/reports/competency/$id');
+
+      expect(reportDir.existsSync(), isTrue, reason: id);
+      final names = reportDir
+          .listSync()
+          .whereType<File>()
+          .map((file) => file.path.split(Platform.pathSeparator).last)
+          .toSet();
+
+      for (final suffix in requiredSuffixes) {
+        expect(
+          names.contains('$id$suffix'),
+          isTrue,
+          reason: '$id missing $suffix',
+        );
+      }
+    }
+  });
+
   test('D01 resolved card count is 78', () {
     final total = packages().fold<int>(
       0,
