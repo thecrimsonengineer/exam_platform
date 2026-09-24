@@ -64,7 +64,7 @@ void main() {
       'supersedesMicroFactId': null,
       'supersededByMicroFactId': null,
     },
-    'tags': ['hazardous_energy'],
+    'tags': ['hazardous_energy', 'lockout_tagout'],
   };
 
   String bundle({void Function(List<Map<String, dynamic>> facts)? mutate}) {
