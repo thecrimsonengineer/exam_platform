@@ -10,8 +10,7 @@ import 'lab_production_release_closure.dart';
 import 'lab_production_release_operator.dart';
 import 'lab_runtime_binding.dart';
 
-const String kLspQ16ClosedSha =
-    '04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a';
+const String kLspQ16ClosedSha = '04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a';
 const String kLspQ16ClosureValidationRunId = '35950731991';
 const String kExpectedProductionFirebaseProjectId = 'csp11-exam-platform';
 const String kInitialLabDeploymentPreflightId =
@@ -210,20 +209,23 @@ class LabProductionDeploymentPreflightEvidence {
     required int labCount,
     required int totalDecisionCount,
   }) {
-    return _fingerprint(kLabDeploymentPreflightFingerprintSchema, <String, Object?>{
-      'schemaVersion': schemaVersion,
-      'preflightId': preflightId,
-      'projectId': projectId,
-      'manifestId': manifestId,
-      'manifestFingerprint': manifestFingerprint,
-      'q16ClosureSha': q16ClosureSha,
-      'q16ValidationRunId': q16ValidationRunId,
-      'operatorState': operatorState,
-      'verifiedBy': verifiedBy,
-      'verifiedAtIso': verifiedAtIso,
-      'labCount': labCount,
-      'totalDecisionCount': totalDecisionCount,
-    });
+    return _fingerprint(
+      kLabDeploymentPreflightFingerprintSchema,
+      <String, Object?>{
+        'schemaVersion': schemaVersion,
+        'preflightId': preflightId,
+        'projectId': projectId,
+        'manifestId': manifestId,
+        'manifestFingerprint': manifestFingerprint,
+        'q16ClosureSha': q16ClosureSha,
+        'q16ValidationRunId': q16ValidationRunId,
+        'operatorState': operatorState,
+        'verifiedBy': verifiedBy,
+        'verifiedAtIso': verifiedAtIso,
+        'labCount': labCount,
+        'totalDecisionCount': totalDecisionCount,
+      },
+    );
   }
 }
 
@@ -404,20 +406,23 @@ class LabProductionReleaseAcceptanceEvidence {
     required Iterable<String> learnerCatalogueIdentityKeys,
   }) {
     final keys = learnerCatalogueIdentityKeys.toList()..sort();
-    return _fingerprint(kLabReleaseAcceptanceFingerprintSchema, <String, Object?>{
-      'schemaVersion': schemaVersion,
-      'acceptanceId': acceptanceId,
-      'preflightId': preflightId,
-      'preflightFingerprint': preflightFingerprint,
-      'projectId': projectId,
-      'releaseId': releaseId,
-      'releaseEvidenceFingerprint': releaseEvidenceFingerprint,
-      'acceptedBy': acceptedBy,
-      'acceptedAtIso': acceptedAtIso,
-      'labCount': labCount,
-      'totalDecisionCount': totalDecisionCount,
-      'learnerCatalogueIdentityKeys': keys,
-    });
+    return _fingerprint(
+      kLabReleaseAcceptanceFingerprintSchema,
+      <String, Object?>{
+        'schemaVersion': schemaVersion,
+        'acceptanceId': acceptanceId,
+        'preflightId': preflightId,
+        'preflightFingerprint': preflightFingerprint,
+        'projectId': projectId,
+        'releaseId': releaseId,
+        'releaseEvidenceFingerprint': releaseEvidenceFingerprint,
+        'acceptedBy': acceptedBy,
+        'acceptedAtIso': acceptedAtIso,
+        'labCount': labCount,
+        'totalDecisionCount': totalDecisionCount,
+        'learnerCatalogueIdentityKeys': keys,
+      },
+    );
   }
 }
 
@@ -746,11 +751,12 @@ class LabProductionDeploymentAcceptanceService {
       if (package.metadata.id != entry.labId ||
           package.metadata.versionId != entry.versionId) {
         throw LabProductionDeploymentException(
-          'Q17 population asset identity mismatch for ' + entry.identityKey + '.',
+          'Q17 population asset identity mismatch for ' +
+              entry.identityKey +
+              '.',
         );
       }
-      totalDecisionCount +=
-          package.nodes.whereType<LabDecisionNode>().length;
+      totalDecisionCount += package.nodes.whereType<LabDecisionNode>().length;
     }
 
     if (totalDecisionCount != 50) {
@@ -838,8 +844,9 @@ class LabProductionDeploymentAcceptanceService {
         labId: entry.labId,
         versionId: entry.versionId,
       );
-      totalDecisionCount +=
-          delivery.package.nodes.whereType<LabDecisionNode>().length;
+      totalDecisionCount += delivery.package.nodes
+          .whereType<LabDecisionNode>()
+          .length;
     }
 
     if (totalDecisionCount != 50 ||
