@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2G",
+  "competencyId": "d02_c07",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "performance_measure",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01"
+    },
+    {
+      "semanticSlug": "performance_target",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01"
+    },
+    {
+      "semanticSlug": "performance_analysis",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "worker_safety_participation",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03"
+    },
+    {
+      "semanticSlug": "safety_climate",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03"
+    },
+    {
+      "semanticSlug": "close_call",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c04"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
