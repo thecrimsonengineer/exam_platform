@@ -119,7 +119,11 @@
       "competencyId": "d02_c07",
       "number": 7,
       "statement": "Evaluate leading and lagging indicators",
-      "status": "not_started"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c07/d02_c07_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d02/d02_c07/d02_c07_flashcards_v1.json",
+      "cardCount": 12,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d02_c08",
