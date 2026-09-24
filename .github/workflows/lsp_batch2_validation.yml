@@ -96,6 +96,7 @@ jobs:
         run: |
           set -euo pipefail
           git add content/lab_population_batch2/manifest.json
+          git add test/lab_quality/lsp_batch2_population_gate_test.dart
           find content/lab_population_batch2 -name dqg300_evidence.json -print0 |
             xargs -0 git add
           if git diff --cached --quiet; then
