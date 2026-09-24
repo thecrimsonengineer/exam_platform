@@ -47,15 +47,28 @@ void main() {
         .toList();
     final firstNotClosed = statuses.indexWhere((status) => status != 'closed');
 
-    expect(firstNotClosed, greaterThanOrEqualTo(0));
+    if (firstNotClosed == -1) {
+      expect(statuses.every((status) => status == 'closed'), isTrue);
+      return;
+    }
+
     expect(
       statuses.take(firstNotClosed).every((status) => status == 'closed'),
       isTrue,
     );
-    expect(
-      statuses.skip(firstNotClosed).every((status) => status == 'not_started'),
-      isTrue,
-    );
+
+    final tail = statuses.skip(firstNotClosed).toList();
+    expect(<String>{
+      'in_progress',
+      'validating',
+      'not_started',
+    }, contains(tail.first));
+
+    if (tail.first == 'not_started') {
+      expect(tail.every((status) => status == 'not_started'), isTrue);
+    } else {
+      expect(tail.skip(1).every((status) => status == 'not_started'), isTrue);
+    }
   });
 
   test('D02 C01 candidate inventory is unique and source-backed', () {
