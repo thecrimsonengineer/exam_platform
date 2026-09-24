@@ -4,6 +4,8 @@ import 'package:exam_platform/theme/glass/student_glass.dart';
 
 import 'learning_twin_asset.dart';
 import 'learning_twin_avatar.dart';
+import 'learning_twin_motion_rollout.dart';
+import 'learning_twin_motion_state.dart';
 
 class LearningTwinHero extends StatelessWidget {
   const LearningTwinHero({
@@ -12,6 +14,7 @@ class LearningTwinHero extends StatelessWidget {
     required this.message,
     this.actionLabel,
     this.onAction,
+    this.motionPilotEnabled = LearningTwinMotionRollout.heroMotionEnabled,
   });
 
   final String title;
@@ -19,10 +22,26 @@ class LearningTwinHero extends StatelessWidget {
   final String? actionLabel;
   final VoidCallback? onAction;
 
+  /// Presentation-only LTAM-5 Hero pilot switch.
+  ///
+  /// The production default remains fail-closed until the canonical reviewed
+  /// idle Lottie clip is admitted. Tests and controlled review builds may
+  /// explicitly enable this path to exercise fallback and lifecycle behavior.
+  final bool motionPilotEnabled;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+
+    final pilotState =
+        motionPilotEnabled &&
+            LearningTwinMotionRollout.stateAllowedFor(
+              LearningTwinMotionSurface.hero,
+              LearningTwinMotionState.idle,
+            )
+        ? LearningTwinMotionState.idle
+        : null;
 
     final copy = Column(
       mainAxisSize: MainAxisSize.min,
@@ -43,6 +62,17 @@ class LearningTwinHero extends StatelessWidget {
       ],
     );
 
+    Widget avatar(double size) {
+      return LearningTwinAvatar(
+        asset: LearningTwinAsset.hero,
+        size: size,
+        compactCrop: false,
+        motionState: pilotState,
+        animationEnabled: pilotState != null,
+        motionSurface: 'hero',
+      );
+    }
+
     return StudentGlassSurface(
       padding: const EdgeInsets.all(20),
       borderRadius: BorderRadius.circular(24),
@@ -56,13 +86,7 @@ class LearningTwinHero extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Center(
-                  child: LearningTwinAvatar(
-                    asset: LearningTwinAsset.hero,
-                    size: 150,
-                    compactCrop: false,
-                  ),
-                ),
+                Center(child: avatar(150)),
                 const SizedBox(height: 14),
                 copy,
               ],
@@ -71,11 +95,7 @@ class LearningTwinHero extends StatelessWidget {
 
           return Row(
             children: [
-              const LearningTwinAvatar(
-                asset: LearningTwinAsset.hero,
-                size: 180,
-                compactCrop: false,
-              ),
+              avatar(180),
               const SizedBox(width: 24),
               Expanded(child: copy),
             ],

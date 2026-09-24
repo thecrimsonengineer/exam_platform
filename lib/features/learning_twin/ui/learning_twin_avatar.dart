@@ -22,6 +22,7 @@ class LearningTwinAvatar extends StatelessWidget {
     this.motionController,
     this.motionManifest,
     this.onMotionCompleted,
+    this.motionSurface = 'avatar',
   }) : assert(size > 0);
 
   final LearningTwinAsset asset;
@@ -40,6 +41,7 @@ class LearningTwinAvatar extends StatelessWidget {
   final LearningTwinMotionController? motionController;
   final LearningTwinMotionManifest? motionManifest;
   final VoidCallback? onMotionCompleted;
+  final String motionSurface;
 
   bool get _shouldCrop =>
       compactCrop && size <= 72 && asset != LearningTwinAsset.hero;
@@ -62,6 +64,7 @@ class LearningTwinAvatar extends StatelessWidget {
         manifest: motionManifest,
         controller: motionController,
         onCompleted: onMotionCompleted,
+        debugSurface: motionSurface,
       );
     }
 

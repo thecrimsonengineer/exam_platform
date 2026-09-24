@@ -15,4 +15,5 @@ export 'learning_twin_motion_manifest.dart';
 export 'learning_twin_motion_mapper.dart';
 export 'learning_twin_motion_policy.dart';
 export 'learning_twin_motion_renderer.dart';
+export 'learning_twin_motion_rollout.dart';
 export 'learning_twin_motion_state.dart';

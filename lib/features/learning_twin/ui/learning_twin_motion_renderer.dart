@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 
 import 'learning_twin_motion_controller.dart';
@@ -27,6 +29,7 @@ class LearningTwinMotionRenderer extends StatefulWidget {
     this.manifestLoader = const LearningTwinMotionManifestLoader(),
     this.controller,
     this.onCompleted,
+    this.debugSurface = 'avatar',
   }) : assert(size > 0);
 
   final LearningTwinMotionState state;
@@ -46,14 +49,19 @@ class LearningTwinMotionRenderer extends StatefulWidget {
   final LearningTwinMotionManifestLoader manifestLoader;
   final LearningTwinMotionController? controller;
   final VoidCallback? onCompleted;
+  final String debugSurface;
 
   @override
   State<LearningTwinMotionRenderer> createState() =>
       _LearningTwinMotionRendererState();
 }
 
-class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
+class _LearningTwinMotionRendererState
+    extends State<LearningTwinMotionRenderer>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  static final Map<String, Future<bool>> _assetAvailabilityCache =
+      <String, Future<bool>>{};
+
   late final AnimationController _animationController;
   late LearningTwinMotionController _motionController;
   late bool _ownsMotionController;
@@ -61,7 +69,9 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
   LearningTwinMotionManifestResult? _manifestResult;
   bool _appActive = true;
   bool _platformAnimationsDisabled = false;
-  final Set<String> _failedAssetPaths = <String>{};
+  final Set<String> _availableAssetPaths = <String>{};
+  final Set<String> _unavailableAssetPaths = <String>{};
+  final Set<String> _loggedFallbackPaths = <String>{};
   String? _playbackToken;
   bool _rebuildScheduled = false;
 
@@ -204,11 +214,19 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
       return;
     }
 
-    if (_failedAssetPaths.contains(requestedDescriptor.assetPath)) {
+    final assetPath = requestedDescriptor.assetPath;
+    if (_unavailableAssetPaths.contains(assetPath)) {
       _animationController.stop(canceled: false);
       _motionController.stopToIdle(
         idleDescriptor: manifest?.descriptorFor(LearningTwinMotionState.idle),
       );
+      return;
+    }
+
+    if (!_availableAssetPaths.contains(assetPath)) {
+      _preflightAsset(assetPath);
+      _animationController.stop(canceled: false);
+      _motionController.pause();
       return;
     }
 
@@ -218,6 +236,37 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
       forceReplay: widget.developerForceAnimation,
     );
     _configurePlaybackForCurrent();
+  }
+
+  Future<void> _preflightAsset(String assetPath) async {
+    final available = await (_assetAvailabilityCache[assetPath] ??=
+        _assetExists(assetPath));
+
+    if (!mounted) {
+      return;
+    }
+
+    if (available) {
+      if (_availableAssetPaths.add(assetPath)) {
+        _scheduleRebuild();
+        _synchronizeMotion();
+      }
+      return;
+    }
+
+    if (_unavailableAssetPaths.add(assetPath)) {
+      _logFallback(assetPath, 'asset_missing');
+      _scheduleRebuild();
+    }
+  }
+
+  static Future<bool> _assetExists(String assetPath) async {
+    try {
+      await rootBundle.load(assetPath);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   void _configurePlaybackForCurrent() {
@@ -264,25 +313,39 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
   }
 
   void _scheduleAssetFailure(String assetPath) {
-    if (_failedAssetPaths.contains(assetPath)) {
+    if (_unavailableAssetPaths.contains(assetPath)) {
       return;
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || _failedAssetPaths.contains(assetPath)) {
+      if (!mounted || _unavailableAssetPaths.contains(assetPath)) {
         return;
       }
 
       setState(() {
-        _failedAssetPaths.add(assetPath);
+        _unavailableAssetPaths.add(assetPath);
+        _availableAssetPaths.remove(assetPath);
       });
-
+      _assetAvailabilityCache[assetPath] = Future<bool>.value(false);
+      _logFallback(assetPath, 'asset_load');
       final manifest = _manifestResult?.manifest;
       _animationController.stop(canceled: false);
       _motionController.stopToIdle(
         idleDescriptor: manifest?.descriptorFor(LearningTwinMotionState.idle),
       );
     });
+  }
+
+  void _logFallback(String assetPath, String reason) {
+    if (!kDebugMode || !_loggedFallbackPaths.add(assetPath)) {
+      return;
+    }
+    debugPrint(
+      'LearningTwinMotion fallback: '
+      'surface=${widget.debugSurface} '
+      'state=${widget.state.manifestKey} '
+      'reason=$reason',
+    );
   }
 
   @override
@@ -311,9 +374,14 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
         manifest?.descriptorFor(_motionController.currentState) ??
         requestedDescriptor;
 
+    final activeAssetAvailable =
+        activeDescriptor != null &&
+        _availableAssetPaths.contains(activeDescriptor.assetPath);
+
     if (!decision.animate ||
         activeDescriptor == null ||
-        _failedAssetPaths.contains(activeDescriptor.assetPath)) {
+        !activeAssetAvailable ||
+        _unavailableAssetPaths.contains(activeDescriptor.assetPath)) {
       return LearningTwinMotionFallback(
         assetPath:
             widget.fallbackAssetPath ??
@@ -377,6 +445,11 @@ class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
       label: widget.semanticLabel,
       child: ExcludeSemantics(child: framed),
     );
+  }
+
+  @visibleForTesting
+  static void clearAssetAvailabilityCacheForTesting() {
+    _assetAvailabilityCache.clear();
   }
 
   @override
