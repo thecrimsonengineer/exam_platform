@@ -1,4 +1,4 @@
-name: ML-9E Human Review Package Validation
+name: ML-9E Human Review Validation
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: ml9e-human-review-${{ github.sha }}
+  group: ml9e-human-review
   cancel-in-progress: true
 
 jobs:
@@ -41,17 +41,64 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
+      - name: Detect review application state
+        id: state
+        shell: bash
+        run: |
+          if [ -f content/micro_learning/review/ml9e_human_review_application_checkpoint.json ]; then
+            echo "applied=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "applied=false" >> "${GITHUB_OUTPUT}"
+          fi
+
       - name: Revalidate ML-9D corpus checkpoint
+        if: steps.state.outputs.applied == 'false'
         run: dart run tool/validate_ml9d_whole_corpus_ml8.dart
 
       - name: Analyze ML-9E tooling
-        run: dart analyze tool/validate_ml9e_human_review.dart tool/apply_ml9e_human_review.dart
-
-      - name: Validate human-review package readiness
-        run: dart run tool/validate_ml9e_human_review.dart
+        run: dart analyze tool/validate_ml9e_human_review.dart tool/apply_ml9e_human_review.dart tool/validate_ml9e_post_application.dart
 
       - name: Validate completed human review
-        run: dart run tool/validate_ml9e_human_review.dart --require-complete
+        if: steps.state.outputs.applied == 'false'
+        run: |
+          dart run tool/validate_ml9e_human_review.dart
+          dart run tool/validate_ml9e_human_review.dart --require-complete
 
-      - name: Dry-run human review application
-        run: dart run tool/apply_ml9e_human_review.dart
+      - name: Apply completed human review
+        if: steps.state.outputs.applied == 'false'
+        run: dart run tool/apply_ml9e_human_review.dart --apply
+
+      - name: Write application checkpoint
+        if: steps.state.outputs.applied == 'false'
+        shell: bash
+        run: |
+          cat > content/micro_learning/review/ml9e_human_review_application_checkpoint.json <<EOF
+          {
+            "schemaVersion": 1,
+            "phase": "ML-9E",
+            "applicationStatus": "human_review_applied",
+            "appliedAt": "2026-09-24",
+            "humanReviewSourceSha": "${GITHUB_SHA}",
+            "reviewerId": "Naveed",
+            "validatedFactCount": 120,
+            "publishedFactCount": 0,
+            "startupEligibleFactCount": 0
+          }
+          EOF
+
+      - name: Validate post-application state
+        run: dart run tool/validate_ml9e_post_application.dart
+
+      - name: Commit applied human review
+        if: steps.state.outputs.applied == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/micro_learning/facts
+          git add content/micro_learning/evidence
+          git add content/micro_learning/review/ml9e_human_review_application_checkpoint.json
+          git commit -m "ML-9E apply completed human review"
+          git push origin HEAD:phase-ml9e-human-review
