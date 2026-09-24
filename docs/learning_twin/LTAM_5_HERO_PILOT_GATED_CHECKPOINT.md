@@ -6,8 +6,9 @@
 **Source baseline:** phase-ml-ltam4-motion-foundation-closed
 **Baseline SHA:** d3b4529501bd1a1e9c5059e133b98bafda885da0
 **Implementation branch:** phase-ml-ltam5-runtime-pilot
-**Validated implementation SHA before this evidence commit:** 39ed4a124f59a700e06cf7e1d96b6353e934f451
-**Validation run:** 35960561293
+**Frozen checkpoint branch:** phase-ml-ltam5-hero-pilot-gated
+**Validated implementation SHA:** f393f4cd97d1c93ad88b16ea88969ffac8d81c43
+**Validation run:** 35961953635
 
 ## Checkpoint purpose
 
@@ -59,7 +60,7 @@ The title, message, CTA, layout, semantics and navigation remain available throu
 
 ## Validation evidence
 
-GitHub Actions run 35960561293 completed successfully for the LTAM-5 validation job.
+GitHub Actions run 35961953635 completed successfully for the LTAM-5 validation job.
 
 Validated gates include:
 
