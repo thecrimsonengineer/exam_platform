@@ -8,7 +8,7 @@ FCP-2 execution model: **one competency per run**.
 
 ```text
 FCP-2A  d02_c01  CLOSED
-FCP-2B  d02_c02  IN PROGRESS
+FCP-2B  d02_c02  VALIDATING
 FCP-2C  d02_c03  NOT STARTED
 FCP-2D  d02_c04  NOT STARTED
 FCP-2E  d02_c05  NOT STARTED
