@@ -1,6 +1,6 @@
 # CSP11 Phase ML-13 — MicroFact Animation Choreography
 
-Status: IN PROGRESS
+Status: CLOSED
 
 Base recovery point: `phase-ml12-startup-microfact-card-closed`
 
@@ -129,23 +129,40 @@ Regressions must also keep green:
 
 ## ML-13 exit criteria
 
-- [ ] deterministic MicroFact choreography implemented;
-- [ ] no independent animation controller or timer added;
-- [ ] full mode entrance/hold/exit windows pass;
-- [ ] balanced mode uses reduced motion amplitude;
-- [ ] reduced mode remains static;
-- [ ] full startup duration remains 4.8 seconds;
-- [ ] reduced startup remains 250 ms;
-- [ ] seven-second watchdog remains unchanged;
-- [ ] ML-12 regression remains green;
-- [ ] ML-11 regression remains green;
-- [ ] ML-10 regression remains green;
-- [ ] production MicroFact files remain unchanged;
-- [ ] exact closing SHA is validated;
-- [ ] immutable ML-13 recovery branch is created.
+- [x] deterministic MicroFact choreography implemented;
+- [x] no independent animation controller or timer added;
+- [x] full mode entrance/hold/exit windows pass;
+- [x] balanced mode uses reduced motion amplitude;
+- [x] reduced mode remains static;
+- [x] full startup duration remains 4.8 seconds;
+- [x] reduced startup remains 250 ms;
+- [x] seven-second watchdog remains unchanged;
+- [x] ML-12 regression remains green;
+- [x] ML-11 regression remains green;
+- [x] ML-10 regression remains green;
+- [x] production MicroFact files remain unchanged;
+- [x] exact closing SHA is validated;
+- [x] immutable ML-13 recovery branch is created.
 
 ## Stop boundary
 
 Per the current execution instruction, work stops after ML-13 is closed.
 
 ML-14 Learner-State Weighting must not be started in this execution.
+
+
+## Closure evidence
+
+- Normalized implementation commit: `4d90d1317b5642593802cc2acc298924e598c3f7`.
+- Implementation validation run: `35954810900` — PASS.
+- ML-13 choreography unit tests: PASS.
+- ML-13 startup timing integration tests: PASS.
+- ML-12 startup MicroFact regression: PASS.
+- ML-11 selector regression: PASS.
+- ML-10 local repository regression: PASS.
+- Startup motion policy and timeline regressions: PASS.
+- Startup watchdog/hardening and release render regressions: PASS.
+- Production MicroFact files modified by ML-13: 0.
+- Independent animation controllers introduced by ML-13: 0.
+- Independent timers introduced by ML-13: 0.
+- ML-14 was not started. Execution stops at the ML-13 closed recovery point.

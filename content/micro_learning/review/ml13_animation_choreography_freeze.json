@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-13",
+  "freezeStatus": "closed_animation_choreography_checkpoint",
+  "closedAt": "2026-09-24",
+  "sourceStartupCard": {
+    "ref": "phase-ml12-startup-microfact-card-closed",
+    "sha": "06765ab7950cdb894ed5c1b415b798c64ce35c31"
+  },
+  "implementation": {
+    "normalizedCommit": "4d90d1317b5642593802cc2acc298924e598c3f7",
+    "motionFunction": "lib/screens/startup/startup_micro_fact_motion.dart",
+    "startupIntegration": "lib/screens/startup/csp11_startup_screen.dart",
+    "independentAnimationControllersAdded": 0,
+    "independentTimersAdded": 0,
+    "productionFactFilesModified": 0
+  },
+  "choreography": {
+    "totalFrames": 144,
+    "enterStartFrame": 12,
+    "enterEndFrame": 28,
+    "exitStartFrame": 110,
+    "exitEndFrame": 130,
+    "fullDurationMs": 4800,
+    "balancedDurationMs": 4800,
+    "reducedDurationMs": 250,
+    "watchdogMs": 7000,
+    "reducedMotionStatic": true
+  },
+  "validation": {
+    "implementationWorkflowRunId": 35954810900,
+    "implementationWorkflowConclusion": "success",
+    "choreographyUnitTests": "pass",
+    "choreographyIntegrationTests": "pass",
+    "ml12Regression": "pass",
+    "ml11Regression": "pass",
+    "ml10Regression": "pass",
+    "startupMotionPolicyRegression": "pass",
+    "startupTimelineRegression": "pass",
+    "startupHardeningRegression": "pass",
+    "startupRenderRegression": "pass",
+    "immutableProductionCorpusCheck": "pass"
+  },
+  "stopBoundary": {
+    "stopAfterPhase": "ML-13",
+    "ml14Started": false
+  }
+}
