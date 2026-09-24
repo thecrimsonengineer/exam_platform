@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2A",
+  "competencyId": "d02_c01",
+  "cardCount": 8,
+  "cardsWithProvenance": 8,
+  "cardsWithExactlyOnePrimarySource": 8,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.nist.baldrige_commentary",
+    "csp11.source.nist.baldrige_framework",
+    "csp11.source.nist.performance_measurement",
+    "csp11.source.osha.program_evaluation",
+    "csp11.source.osha.program_tools"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.nist.baldrige_framework": 3,
+    "csp11.source.nist.baldrige_commentary": 2,
+    "csp11.source.nist.performance_measurement": 1,
+    "csp11.source.osha.program_evaluation": 1,
+    "csp11.source.osha.program_tools": 1
+  },
+  "status": "PASS"
+}
