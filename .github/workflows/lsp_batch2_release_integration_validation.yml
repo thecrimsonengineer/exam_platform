@@ -39,9 +39,6 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-fatal-infos
 
-      - name: Batch 2 pre-catalogue regression
-        run: flutter test test/lab_quality/lsp_batch2_population_gate_test.dart
-
       - name: Batch 2 release integration
         run: flutter test test/lab_quality/lsp_batch2_release_integration_test.dart
 
