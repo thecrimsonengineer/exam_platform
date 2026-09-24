@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1D",
+  "competencyId": "d01_c04",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "conceptId": "csp11.concept.emergency_action_plan",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d04_c01"
+    }
+  ],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
