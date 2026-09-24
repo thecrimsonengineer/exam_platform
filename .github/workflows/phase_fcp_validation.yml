@@ -1,0 +1,49 @@
+name: Phase FCP Flashcard Production Corpus Validation
+
+on:
+  push:
+    branches:
+      - phase-fcp-flashcard-production
+      - 'phase-fcp*'
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-fcp-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: FCP formatting gate
+        run: |
+          dart format test/features/flashcards/production
+          git diff --exit-code -- test/features/flashcards/production
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos --fatal-warnings
+
+      - name: FCP production manifest
+        run: flutter test test/features/flashcards/production/fcp_manifest_test.dart
+
+      - name: Frozen Flashcard Core regression
+        run: flutter test test/features/flashcards
+
+      - name: Full repository regression
+        run: flutter test
