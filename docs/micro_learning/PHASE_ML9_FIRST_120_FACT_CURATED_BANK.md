@@ -1,6 +1,6 @@
 # CSP11 Phase ML-9 - First 120-Fact Curated Bank
 
-Status: CLOSED  
+Status: CLOSED
 Parent: `docs/micro_learning/PHASE_ML8_DUPLICATE_CONTRADICTION_DETECTION.md`  
 Branch: `phase-ml9-first-120-fact-curated-bank`  
 Parent recovery point: `cad3cd44983ba5385704b552ae476cb01ac9e938`
