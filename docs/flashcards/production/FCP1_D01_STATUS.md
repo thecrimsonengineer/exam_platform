@@ -16,7 +16,7 @@ Competencies: 7
 
 ```text
 FCP-1A  d01_c01  CLOSED
-FCP-1B  d01_c02  IN PROGRESS
+FCP-1B  d01_c02  VALIDATING
 FCP-1C  d01_c03  NOT STARTED
 FCP-1D  d01_c04  NOT STARTED
 FCP-1E  d01_c05  NOT STARTED
@@ -37,7 +37,7 @@ Unresolved concepts: 0
 
 ### FCP-1B current task
 
-Build and resolve the canonical concept inventory for `d01_c02` process safety.
+Validate the resolved `d01_c02` process-safety inventory and learner-ready package.
 
 Current authoritative source basis:
 
@@ -45,3 +45,12 @@ Current authoritative source basis:
 - OSHA 29 CFR 1910.119 Appendix C
 
 Management of Change is represented in the d01_c02 inventory but deferred to the dedicated canonical competency `d02_c05` so FCP does not create duplicate collectible concepts.
+
+
+### FCP-1B package candidate
+
+```text
+d01_c02_flashcards_v1
+Cards: 11
+Cross-competency canonical reference: Management of Change -> d02_c05
+```

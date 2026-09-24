@@ -33,8 +33,11 @@
       "competencyId": "d01_c02",
       "number": 2,
       "statement": "Apply the principles of process safety (e.g., pressure relief systems, chemical compatibility, management of change, materials of construction, process flow diagrams)",
-      "status": "in_progress",
-      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c02/d01_c02_concept_inventory.v1.json"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c02/d01_c02_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c02/d01_c02_flashcards_v1.json",
+      "cardCount": 11,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d01_c03",

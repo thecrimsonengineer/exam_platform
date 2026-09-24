@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-1B",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d01",
   "competencyId": "d01_c02",
   "competencyStatement": "Apply the principles of process safety (e.g., pressure relief systems, chemical compatibility, management of change, materials of construction, process flow diagrams)",
@@ -143,16 +143,117 @@
     {
       "semanticSlug": "management_of_change",
       "canonicalLabel": "Management of Change",
-      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "decision": "MERGED_TO_FUTURE_CANONICAL",
       "targetCompetencyId": "d02_c05",
       "intendedConceptId": "csp11.concept.management_of_change",
       "reason": "MOC is explicitly named in d01_c02 but d02_c05 is the dedicated canonical competency. FCP will avoid creating a second MOC collectible card."
     }
   ],
-  "acceptedConcepts": [],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "process_safety_management",
+      "canonicalLabel": "Process Safety Management",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ]
+    },
+    {
+      "semanticSlug": "process_safety_information",
+      "canonicalLabel": "Process Safety Information",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ]
+    },
+    {
+      "semanticSlug": "chemical_compatibility_process_safety",
+      "canonicalLabel": "Chemical Compatibility in Process Safety",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ]
+    },
+    {
+      "semanticSlug": "process_flow_diagram",
+      "canonicalLabel": "Process Flow Diagram",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ]
+    },
+    {
+      "semanticSlug": "piping_and_instrumentation_diagram",
+      "canonicalLabel": "Piping and Instrumentation Diagram",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ]
+    },
+    {
+      "semanticSlug": "process_operating_limits",
+      "canonicalLabel": "Process Operating Limits",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ]
+    },
+    {
+      "semanticSlug": "materials_of_construction",
+      "canonicalLabel": "Materials of Construction",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ]
+    },
+    {
+      "semanticSlug": "pressure_relief_system",
+      "canonicalLabel": "Pressure Relief System",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ]
+    },
+    {
+      "semanticSlug": "relief_system_design_basis",
+      "canonicalLabel": "Relief System Design Basis",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ]
+    },
+    {
+      "semanticSlug": "recognized_good_engineering_practices",
+      "canonicalLabel": "Recognized Good Engineering Practices",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ]
+    },
+    {
+      "semanticSlug": "pre_startup_safety_review",
+      "canonicalLabel": "Pre-Startup Safety Review",
+      "decision": "CARD",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.osha.1910_119_app_c"
+      ]
+    }
+  ],
   "mergedConcepts": [],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve d01_c02 candidate boundaries and the deferred MOC reference before learner-ready authoring."
+  "nextGate": "Validate d01_c02_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, and repository regression.",
+  "resolutionSummary": {
+    "candidateCardCount": 11,
+    "acceptedCardCount": 11,
+    "crossCompetencyReferenceCount": 1,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "holdCount": 0
+  }
 }

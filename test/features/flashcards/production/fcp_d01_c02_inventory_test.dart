@@ -18,12 +18,12 @@ void main() {
     );
   }
 
-  test('D01 C02 starts as a candidate inventory at competency placement', () {
+  test('D01 C02 resolves at canonical competency placement', () {
     final inventory = readObject(inventoryPath);
     final placement = Map<String, dynamic>.from(inventory['placement'] as Map);
 
     expect(inventory['phase'], 'FCP-1B');
-    expect(inventory['status'], 'candidate_inventory');
+    expect(inventory['status'], 'resolved_inventory');
     expect(inventory['domainId'], 'd01');
     expect(inventory['competencyId'], 'd01_c02');
     expect(placement['domainId'], 'd01');
@@ -32,9 +32,9 @@ void main() {
     expect(placement['subtopicId'], isNull);
   });
 
-  test('D01 C02 candidate concepts are unique and source-backed', () {
+  test('D01 C02 accepted concepts are unique and source-backed', () {
     final inventory = readObject(inventoryPath);
-    final candidates = (inventory['candidateConcepts'] as List)
+    final accepted = (inventory['acceptedConcepts'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
 
@@ -45,10 +45,10 @@ void main() {
         .map((item) => item['canonicalLabel'] as String)
         .toList();
 
-    expect(candidates.length, 11);
+    expect(accepted.length, 11);
     expect(slugs.toSet().length, slugs.length);
     expect(labels.toSet().length, labels.length);
-    expect(candidates.every((item) => item['decision'] == 'CANDIDATE'), isTrue);
+    expect(accepted.every((item) => item['decision'] == 'CARD'), isTrue);
 
     final sourceJson = readObject(sourcePath);
     final entries = (sourceJson['sources'] as List)
@@ -60,8 +60,8 @@ void main() {
         .toList();
     final registry = FlashcardSourceRegistry.build(entries: entries);
 
-    for (final candidate in candidates) {
-      final sourceIds = (candidate['sourceIds'] as List).cast<String>();
+    for (final concept in accepted) {
+      final sourceIds = (concept['sourceIds'] as List).cast<String>();
       expect(sourceIds, isNotEmpty);
       expect(sourceIds.every(registry.contains), isTrue);
     }
