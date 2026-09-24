@@ -15,7 +15,7 @@ FCP-2E  d02_c05  CLOSED
 FCP-2F  d02_c06  CLOSED
 FCP-2G  d02_c07  CLOSED
 FCP-2H  d02_c08  CLOSED
-FCP-2I  d02_c09  VALIDATING
+FCP-2I  d02_c09  CLOSED
 FCP-2J  d02_c10  NOT STARTED
 FCP-2K  d02_c11  NOT STARTED
 FCP-2L  d02_c12  NOT STARTED
@@ -23,6 +23,4 @@ FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2H closed at `phase-fcp2h-d02-c08-closed@0a167f3f60bccd7bd839f24e02719c211b263e26`.
-
-FCP-2I started strictly from that closed checkpoint. Candidate package: 13 required-component cards for plans, systems, and policies.
+FCP-2I package validation passed at `581974ade60bbc4920bd3c8e86b475a08c0d4f18` in run `36005181011`. The closure metadata state must pass CI before `phase-fcp2i-d02-c09-closed` is created.
