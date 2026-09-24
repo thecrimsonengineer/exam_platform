@@ -18,11 +18,11 @@ void main() {
   late String atomicSql;
 
   setUpAll(() {
-    core = File(corePath).readAsStringSync();
-    cli = File(cliPath).readAsStringSync();
-    workflow = File(workflowPath).readAsStringSync();
-    productionWorkflow = File(productionWorkflowPath).readAsStringSync();
-    atomicSql = File(atomicSqlPath).readAsStringSync();
+    core = _readNormalized(corePath);
+    cli = _readNormalized(cliPath);
+    workflow = _readNormalized(workflowPath);
+    productionWorkflow = _readNormalized(productionWorkflowPath);
+    atomicSql = _readNormalized(atomicSqlPath);
   });
 
   test('FR7 publisher stays out of Flutter learner runtime', () {
@@ -154,3 +154,8 @@ void main() {
     expect(workflow, contains('Diff hygiene'));
   });
 }
+
+String _readNormalized(String path) => File(path)
+    .readAsStringSync()
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n');

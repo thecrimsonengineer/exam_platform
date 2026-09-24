@@ -15,9 +15,9 @@ void main() {
   late String workflow;
 
   setUpAll(() {
-    sql = File(migrationPath).readAsStringSync();
-    fr3Sql = File(fr3MigrationPath).readAsStringSync();
-    workflow = File(workflowPath).readAsStringSync();
+    sql = _readNormalized(migrationPath);
+    fr3Sql = _readNormalized(fr3MigrationPath);
+    workflow = _readNormalized(workflowPath);
   });
 
   test('FR6 catalogue migration is schema-only', () {
@@ -140,3 +140,8 @@ void main() {
     expect(sql, isNot(contains('auth.uid()')));
   });
 }
+
+String _readNormalized(String path) => File(path)
+    .readAsStringSync()
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n');

@@ -13,9 +13,9 @@ void main() {
   late String workflow;
 
   setUpAll(() {
-    source = File(sourcePath).readAsStringSync();
-    config = File(configPath).readAsStringSync();
-    workflow = File(workflowPath).readAsStringSync();
+    source = _readNormalized(sourcePath);
+    config = _readNormalized(configPath);
+    workflow = _readNormalized(workflowPath);
   });
 
   test('FR9C gateway verifies only the CSP11 Firebase project', () {
@@ -130,3 +130,8 @@ void main() {
     );
   });
 }
+
+String _readNormalized(String path) => File(path)
+    .readAsStringSync()
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n');

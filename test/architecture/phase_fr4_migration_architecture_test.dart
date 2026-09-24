@@ -16,10 +16,10 @@ void main() {
   late String workflow;
 
   setUpAll(() {
-    schema = File(schemaPath).readAsStringSync();
-    core = File(corePath).readAsStringSync();
-    cli = File(cliPath).readAsStringSync();
-    workflow = File(workflowPath).readAsStringSync();
+    schema = _readNormalized(schemaPath);
+    core = _readNormalized(corePath);
+    cli = _readNormalized(cliPath);
+    workflow = _readNormalized(workflowPath);
   });
 
   test('FR4 readiness correction is schema-only and fail-closed', () {
@@ -93,3 +93,8 @@ void main() {
     expect(workflow, contains('Full repository regression'));
   });
 }
+
+String _readNormalized(String path) => File(path)
+    .readAsStringSync()
+    .replaceAll('\r\n', '\n')
+    .replaceAll('\r', '\n');
