@@ -9,6 +9,7 @@ import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import 'lab/lab1000_studio_screen.dart';
 import 'lab/lab_production_deployment_screen.dart';
+import 'lab/lab_production_release_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -147,6 +148,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
       MaterialPageRoute<void>(
         builder: (_) => LabProductionDeploymentScreen(
           adminUserId: adminUserId,
+          releaseScreenBuilder: (operator) => LabProductionReleaseScreen(
+            adminUserId: adminUserId,
+            operator: operator,
+          ),
         ),
       ),
     );
