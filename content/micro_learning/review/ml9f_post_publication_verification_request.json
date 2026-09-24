@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "phase": "ML-9F",
+  "verificationStatus": "requested",
+  "requestedAt": "2026-09-24",
+  "publishedCorpusSha": "4a1bca7678265c48ba6c8cc28f583df5b3477509",
+  "expectedState": {
+    "publishedFactCount": 120,
+    "startupEligibleFactCount": 120,
+    "sourceCurrentFactCount": 120,
+    "mappedFactCount": 114,
+    "generalScopeFactCount": 6,
+    "pairwiseMl8Comparisons": 7140,
+    "unresolvedMl8ReviewCandidates": 0,
+    "ml8ConcentrationSignals": 0
+  }
+}
