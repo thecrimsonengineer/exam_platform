@@ -14,8 +14,8 @@ Competencies: 14
 ## Competency sequence
 
 ```text
-FCP-2A  d02_c01  VALIDATING
-FCP-2B  d02_c02  NOT STARTED
+FCP-2A  d02_c01  VALIDATING   8 cards
+FCP-2B  d02_c02  IN PROGRESS
 FCP-2C  d02_c03  NOT STARTED
 FCP-2D  d02_c04  NOT STARTED
 FCP-2E  d02_c05  NOT STARTED
@@ -30,13 +30,6 @@ FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-### FCP-2A package
+C01 has passed the FCP production and frozen Flashcard Core gates on its package SHA. It remains VALIDATING until the cumulative D02 exact-SHA closure gate.
 
-```text
-d02_c01
-8 cards
-Benchmarking / performance comparison / gap analysis
-status: VALIDATING
-```
-
-C01 remains fail-closed until the package passes FCQ100, deterministic JSON round-trip, provenance, duplicate checks, frozen Flashcard Core regression, and repository regression.
+C02 begins with 7 new candidate concepts plus canonical references to D02 C01 Performance Measure and Performance Target.

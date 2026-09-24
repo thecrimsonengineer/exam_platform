@@ -749,6 +749,57 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Supports comparative data, benchmarking, performance comparisons, stretch goals, and performance analysis. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.opm.performance_standards",
+      "organization": "U.S. Office of Personnel Management",
+      "title": "Developing Performance Standards",
+      "canonicalUrl": "https://www.opm.gov/policy-data-oversight/performance-management/reference-materials/articles/developing-performance-standards/",
+      "allowedDomains": [
+        "opm.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports performance standards, thresholds, requirements, expectations, and quality/quantity/timeliness/cost-effectiveness measures. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.baldrige_key_terms",
+      "organization": "NIST",
+      "title": "Baldrige Key Terms",
+      "canonicalUrl": "https://www.nist.gov/baldrige/self-assessing/baldrige-key-terms",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports Action Plan and other Baldrige management terms. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.strategy",
+      "organization": "NIST",
+      "title": "Foundations for a Successful Business - Strategy",
+      "canonicalUrl": "https://www.nist.gov/baldrige/self-assessing/improvement-tools/foundations-successful-business/strategy",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports specific time-limited actions, resource availability, monitoring progress, and adapting actions when needed. Educational paraphrase only."
     }
   ]
 }

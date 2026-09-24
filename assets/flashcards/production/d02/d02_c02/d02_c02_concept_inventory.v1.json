@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2B",
+  "status": "candidate_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c02",
+  "competencyStatement": "Analyze performance standards to determine plan of action",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c02",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.opm.performance_standards",
+      "locators": [
+        "Definition",
+        "General Measures",
+        "Specific Measures",
+        "Writing Standards"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nist.baldrige_commentary",
+      "locators": [
+        "Performance analysis",
+        "Strategy Implementation > Developing and deploying action plans",
+        "Performing analyses to support resource allocation"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nist.baldrige_key_terms",
+      "locators": [
+        "Action Plan"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nist.strategy",
+      "locators": [
+        "Decide on the actions your organization must take to reach its objectives",
+        "Monitor your progress and adapt if needed"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.program_evaluation",
+      "locators": [
+        "Correct program shortcomings and identify opportunities to improve"
+      ]
+    }
+  ],
+  "candidateConcepts": [
+    {
+      "semanticSlug": "performance_standard",
+      "canonicalLabel": "Performance Standard",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.opm.performance_standards"
+      ],
+      "rationale": "Defines the threshold, requirement, or expectation against which observed performance is judged."
+    },
+    {
+      "semanticSlug": "performance_threshold",
+      "canonicalLabel": "Performance Threshold",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.opm.performance_standards"
+      ],
+      "rationale": "A boundary or level that separates acceptable from below-standard performance for a defined measure."
+    },
+    {
+      "semanticSlug": "performance_deviation",
+      "canonicalLabel": "Performance Deviation",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.opm.performance_standards",
+        "csp11.source.nist.baldrige_commentary"
+      ],
+      "rationale": "The observed difference between actual performance and the applicable standard, expectation, target, or projected level."
+    },
+    {
+      "semanticSlug": "performance_analysis",
+      "canonicalLabel": "Performance Analysis",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_commentary"
+      ],
+      "rationale": "Analysis of performance information to understand results, trends, causes, implications, and needed actions."
+    },
+    {
+      "semanticSlug": "improvement_priority",
+      "canonicalLabel": "Improvement Priority",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_commentary",
+        "csp11.source.nist.strategy"
+      ],
+      "rationale": "A selected improvement need given precedence based on importance, gap, risk, objectives, and available resources."
+    },
+    {
+      "semanticSlug": "action_plan",
+      "canonicalLabel": "Action Plan",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_key_terms",
+        "csp11.source.nist.strategy"
+      ],
+      "rationale": "Specific actions, resources, responsibilities, and time horizons used to accomplish an objective."
+    },
+    {
+      "semanticSlug": "resource_allocation",
+      "canonicalLabel": "Resource Allocation",
+      "decision": "CANDIDATE",
+      "sourceIds": [
+        "csp11.source.nist.baldrige_commentary",
+        "csp11.source.nist.strategy"
+      ],
+      "rationale": "Assignment of financial, workforce, facility, time, or other resources needed to carry out selected actions."
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "performance_measure",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_measure",
+      "reason": "Performance measures were canonically authored in D02 C01 and should be reused rather than duplicated."
+    },
+    {
+      "semanticSlug": "performance_target",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_target",
+      "reason": "Performance targets were canonically authored in D02 C01 and are inputs to evaluating standards and action needs."
+    }
+  ],
+  "acceptedConcepts": [],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Resolve D02 C02 concept boundaries and canonical references before learner-ready package authoring."
+}
