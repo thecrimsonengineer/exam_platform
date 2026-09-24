@@ -11,7 +11,7 @@ FCP-2A  d02_c01  CLOSED
 FCP-2B  d02_c02  CLOSED
 FCP-2C  d02_c03  CLOSED
 FCP-2D  d02_c04  CLOSED
-FCP-2E  d02_c05  NOT STARTED
+FCP-2E  d02_c05  VALIDATING
 FCP-2F  d02_c06  NOT STARTED
 FCP-2G  d02_c07  NOT STARTED
 FCP-2H  d02_c08  NOT STARTED
@@ -23,4 +23,6 @@ FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2D package validation passed at `fa4f28459b8644fa1084ef5707e0c5da78182fe3` in run `35966860425`. The closure metadata state must pass CI before `phase-fcp2d-d02-c04-closed` is created.
+FCP-2D closed at `phase-fcp2d-d02-c04-closed@fc3e883d658aca40bf5760f97e519368f2dd28b4`.
+
+FCP-2E started strictly from that closed checkpoint. Candidate package: 12 Management of Change lifecycle cards.
