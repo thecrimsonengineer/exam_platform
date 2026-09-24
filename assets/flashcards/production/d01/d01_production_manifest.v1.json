@@ -59,14 +59,18 @@
       "competencyId": "d01_c04",
       "number": 4,
       "statement": "Evaluate facility life safety features (e.g., public space safety, floor loading, occupancy loads)",
-      "status": "in_progress",
-      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c04/d01_c04_concept_inventory.v1.json"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c04/d01_c04_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c04/d01_c04_flashcards_v1.json",
+      "cardCount": 9,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d01_c05",
       "number": 5,
       "statement": "Describe fleet safety principles (e.g., driver and equipment safety, maintenance, surveillance equipment, GPS monitoring, telematics, hybrid vehicles, fuel systems, driving under the influence, fatigue)",
-      "status": "not_started"
+      "status": "in_progress",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c05/d01_c05_concept_inventory.v1.json"
     },
     {
       "competencyId": "d01_c06",

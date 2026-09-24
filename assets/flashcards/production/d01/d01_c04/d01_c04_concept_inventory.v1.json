@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-1D",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d01",
   "competencyId": "d01_c04",
   "competencyStatement": "Evaluate facility life safety features (e.g., public space safety, floor loading, occupancy loads)",
@@ -39,90 +39,6 @@
       ]
     }
   ],
-  "candidateConcepts": [
-    {
-      "semanticSlug": "exit_route",
-      "canonicalLabel": "Exit Route",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_36",
-        "csp11.source.osha.1910_37"
-      ],
-      "rationale": "Core life-safety path of travel used to move occupants from the workplace to a safe discharge during an emergency."
-    },
-    {
-      "semanticSlug": "exit_route_quantity",
-      "canonicalLabel": "Exit Route Quantity",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_36"
-      ],
-      "rationale": "The number of exit routes must be adequate for building size, occupancy, arrangement, and safe evacuation."
-    },
-    {
-      "semanticSlug": "exit_route_capacity",
-      "canonicalLabel": "Exit Route Capacity",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_36"
-      ],
-      "rationale": "Exit-route capacity must support the maximum permitted occupant load and may not decrease toward discharge."
-    },
-    {
-      "semanticSlug": "occupant_load",
-      "canonicalLabel": "Occupant Load",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_36"
-      ],
-      "rationale": "Occupant load is a key input to exit-route quantity, capacity, and width decisions."
-    },
-    {
-      "semanticSlug": "exit_discharge",
-      "canonicalLabel": "Exit Discharge",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_36"
-      ],
-      "rationale": "Exit discharge connects the protected route to the outside, public way, refuge area, or open space with outside access."
-    },
-    {
-      "semanticSlug": "exit_route_fire_separation",
-      "canonicalLabel": "Exit Route Fire Separation",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_36"
-      ],
-      "rationale": "Protected exits require separation from other workplace areas by specified fire-resistant construction."
-    },
-    {
-      "semanticSlug": "exit_door_swing",
-      "canonicalLabel": "Exit Door Swing",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_36"
-      ],
-      "rationale": "Door swing direction becomes a life-safety design requirement for rooms with more than 50 occupants or high-hazard contents."
-    },
-    {
-      "semanticSlug": "unobstructed_exit_route",
-      "canonicalLabel": "Unobstructed Exit Route",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_37"
-      ],
-      "rationale": "Exit routes must remain free and unobstructed so emergency travel is not compromised."
-    },
-    {
-      "semanticSlug": "walking_working_surface_load_capacity",
-      "canonicalLabel": "Walking-Working Surface Load Capacity",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.1910_22"
-      ],
-      "rationale": "Walking-working surfaces must support the maximum intended load, directly addressing the blueprint's floor-loading example."
-    }
-  ],
   "crossCompetencyReferences": [
     {
       "semanticSlug": "emergency_action_plan",
@@ -132,10 +48,92 @@
       "reason": "Emergency planning is related to life safety but belongs to the dedicated Emergency Management competency."
     }
   ],
-  "acceptedConcepts": [],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "exit_route",
+      "canonicalLabel": "Exit Route",
+      "sourceIds": [
+        "csp11.source.osha.1910_36",
+        "csp11.source.osha.1910_37"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "exit_route_quantity",
+      "canonicalLabel": "Exit Route Quantity",
+      "sourceIds": [
+        "csp11.source.osha.1910_36"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "exit_route_capacity",
+      "canonicalLabel": "Exit Route Capacity",
+      "sourceIds": [
+        "csp11.source.osha.1910_36"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "occupant_load",
+      "canonicalLabel": "Occupant Load",
+      "sourceIds": [
+        "csp11.source.osha.1910_36"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "exit_discharge",
+      "canonicalLabel": "Exit Discharge",
+      "sourceIds": [
+        "csp11.source.osha.1910_36"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "exit_route_fire_separation",
+      "canonicalLabel": "Exit Route Fire Separation",
+      "sourceIds": [
+        "csp11.source.osha.1910_36"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "exit_door_swing",
+      "canonicalLabel": "Exit Door Swing",
+      "sourceIds": [
+        "csp11.source.osha.1910_36"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "unobstructed_exit_route",
+      "canonicalLabel": "Unobstructed Exit Route",
+      "sourceIds": [
+        "csp11.source.osha.1910_37"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "walking_working_surface_load_capacity",
+      "canonicalLabel": "Walking-Working Surface Load Capacity",
+      "sourceIds": [
+        "csp11.source.osha.1910_22"
+      ],
+      "decision": "CARD"
+    }
+  ],
   "mergedConcepts": [],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve D01 C04 concept boundaries before learner-ready package authoring."
+  "nextGate": "Validate d01_c04_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and repository regression.",
+  "resolutionSummary": {
+    "candidateCount": 9,
+    "acceptedCardCount": 9,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
 }

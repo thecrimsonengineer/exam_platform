@@ -256,6 +256,125 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Primary regulatory source for walking-working-surface load capacity, access/egress, inspection, maintenance, and repair. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.gsa.fleet_telematics",
+      "organization": "GSA",
+      "title": "GSA Fleet telematics",
+      "canonicalUrl": "https://www.gsa.gov/buy-through-us/products-and-services/transportation-and-logistics-services/fleet-management/vehicle-leasing/telematics",
+      "allowedDomains": [
+        "gsa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports fleet telematics, GPS, vehicle diagnostics, maintenance reminders, driver coaching, and accident-reconstruction concepts. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.energy.femp_fleet_telematics",
+      "organization": "U.S. Department of Energy",
+      "title": "Telematics for Federal Fleets: A Guide for Efficient Fleet Management",
+      "canonicalUrl": "https://www.energy.gov/cmei/femp/telematics-federal-fleets-guide-efficient-fleet-management",
+      "allowedDomains": [
+        "energy.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supporting federal guidance for GPS, diagnostics, driver safety monitoring, utilization, and proactive maintenance."
+    },
+    {
+      "id": "csp11.source.fmcsa.driver_fatigue",
+      "organization": "FMCSA",
+      "title": "CMV Driving Tips - Driver Fatigue",
+      "canonicalUrl": "https://www.fmcsa.dot.gov/safety/driver-safety/cmv-driving-tips-driver-fatigue",
+      "allowedDomains": [
+        "fmcsa.dot.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal driver-safety guidance for fatigue recognition and management. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.fmcsa.driver_safety",
+      "organization": "FMCSA",
+      "title": "Tips for Truck and Bus Drivers",
+      "canonicalUrl": "https://www.fmcsa.dot.gov/ourroads/tips-truck-and-bus-drivers",
+      "allowedDomains": [
+        "fmcsa.dot.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal guidance supporting safe speed, seat belt, distraction, fatigue, and general CMV driver-safety concepts."
+    },
+    {
+      "id": "csp11.source.fmcsa.part396_maintenance",
+      "organization": "FMCSA",
+      "title": "Inspection, Repair, and Maintenance - Part 396",
+      "canonicalUrl": "https://www.fmcsa.dot.gov/safety/passenger-safety/inspection-repair-and-maintenance-motor-carriers-passengers-part-396",
+      "allowedDomains": [
+        "fmcsa.dot.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FMCSA regulatory guidance supporting systematic vehicle inspection, repair, maintenance, and maintenance records."
+    },
+    {
+      "id": "csp11.source.nhtsa.drug_impaired_driving",
+      "organization": "NHTSA",
+      "title": "Drug-Impaired Driving",
+      "canonicalUrl": "https://www.nhtsa.gov/risky-driving/drug-impaired-driving",
+      "allowedDomains": [
+        "nhtsa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal road-safety guidance on impairment from alcohol, drugs, and some medicines. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nhtsa.ev_emergency_guides",
+      "organization": "NHTSA",
+      "title": "Emergency Response Guides for Electric-Powered Vehicles",
+      "canonicalUrl": "https://www.nhtsa.gov/emergency-response-guides",
+      "allowedDomains": [
+        "nhtsa.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal vehicle-specific emergency response information for battery-electric, hybrid, plug-in hybrid, and fuel-cell vehicles."
     }
   ]
 }
