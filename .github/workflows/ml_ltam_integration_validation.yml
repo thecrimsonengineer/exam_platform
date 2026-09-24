@@ -59,6 +59,7 @@ jobs:
           lib/screens/startup/startup_micro_fact_card.dart
           test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
           test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+          test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
 
       - name: Format integration seam
         run: >
@@ -72,7 +73,8 @@ jobs:
         run: |
           flutter test \
             test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart \
-            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart \\
+            test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
 
       - name: Revalidate Learning Twin
         run: flutter test test/features/learning_twin
@@ -105,7 +107,8 @@ jobs:
             lib/features/learning_twin/integration/micro_learning_twin_presentation.dart \
             lib/screens/startup/startup_micro_fact_card.dart \
             test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart \
-            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart; then
+            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart \\
+            test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart; then
             echo "Integration files are already normalized."
             exit 0
           fi
@@ -115,5 +118,6 @@ jobs:
           git add lib/screens/startup/startup_micro_fact_card.dart
           git add test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
           git add test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+          git add test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
           git commit -m "INT-ML-LTAM normalize presentation integration"
           git push origin HEAD:phase-ml-ltam-integration
