@@ -8,8 +8,7 @@ void main() {
       'assets/flashcards/production/manifest/fcp_corpus_manifest.v1.json';
   const d02ManifestPath =
       'assets/flashcards/production/d02/d02_production_manifest.v1.json';
-  const reportRoot =
-      'assets/flashcards/production/reports/competency/d02_c01';
+  const reportRoot = 'assets/flashcards/production/reports/competency/d02_c01';
 
   Map<String, dynamic> readObject(String path) => Map<String, dynamic>.from(
     jsonDecode(File(path).readAsStringSync()) as Map,
@@ -23,9 +22,7 @@ void main() {
     expect(model['unit'], 'competency');
     expect(model['effectiveFrom'], 'FCP-2');
 
-    final allRuns = Map<String, dynamic>.from(
-      corpus['competencyRuns'] as Map,
-    );
+    final allRuns = Map<String, dynamic>.from(corpus['competencyRuns'] as Map);
     final d02 = Map<String, dynamic>.from(allRuns['d02'] as Map);
     expect(d02.length, 14);
   });
