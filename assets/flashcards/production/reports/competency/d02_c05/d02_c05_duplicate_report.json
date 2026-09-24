@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2E",
+  "competencyId": "d02_c05",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "process_safety_information",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02"
+    },
+    {
+      "semanticSlug": "pre_startup_safety_review",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02"
+    },
+    {
+      "semanticSlug": "process_operating_limits",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02"
+    },
+    {
+      "semanticSlug": "piping_and_instrumentation_diagram",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d01_c02"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
