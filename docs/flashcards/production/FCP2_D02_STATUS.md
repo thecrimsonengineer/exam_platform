@@ -6,7 +6,7 @@ Recovery base: `phase-fcp1-d01-closed@45d00a95dc6d8cb9e7c06db6df57bb71c5e17fe2`
 
 ```text
 FCP-2A  d02_c01  CLOSED             8 cards
-FCP-2B  d02_c02  IN PROGRESS
+FCP-2B  d02_c02  VALIDATING   5 cards
 FCP-2C  d02_c03  NOT STARTED
 FCP-2D  d02_c04  NOT STARTED
 FCP-2E  d02_c05  NOT STARTED
