@@ -1,6 +1,7 @@
 name: Phase FCP Flashcard Production Corpus Validation
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - phase-fcp-flashcard-production
