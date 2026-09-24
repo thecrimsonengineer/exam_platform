@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2F",
+  "competencyId": "d02_c06",
+  "cardCount": 12,
+  "cardsWithProvenance": 12,
+  "cardsWithExactlyOnePrimarySource": 12,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.hse.offshore_law",
+    "csp11.source.nasa.software_fmea",
+    "csp11.source.nasa.system_safety",
+    "csp11.source.nrc.fault_tree_handbook",
+    "csp11.source.nrc.pra_backgrounder",
+    "csp11.source.nrc.top_event_glossary"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.nasa.system_safety": 1,
+    "csp11.source.nrc.fault_tree_handbook": 2,
+    "csp11.source.nrc.top_event_glossary": 1,
+    "csp11.source.nasa.software_fmea": 3,
+    "csp11.source.nrc.pra_backgrounder": 4,
+    "csp11.source.hse.offshore_law": 1
+  },
+  "status": "PASS"
+}
