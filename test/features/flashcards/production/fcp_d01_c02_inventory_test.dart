@@ -38,10 +38,12 @@ void main() {
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
 
-    final slugs =
-        candidates.map((item) => item['semanticSlug'] as String).toList();
-    final labels =
-        candidates.map((item) => item['canonicalLabel'] as String).toList();
+    final slugs = candidates
+        .map((item) => item['semanticSlug'] as String)
+        .toList();
+    final labels = candidates
+        .map((item) => item['canonicalLabel'] as String)
+        .toList();
 
     expect(candidates.length, 11);
     expect(slugs.toSet().length, slugs.length);
@@ -73,10 +75,7 @@ void main() {
 
     expect(references.length, 1);
     expect(references.single['semanticSlug'], 'management_of_change');
-    expect(
-      references.single['decision'],
-      'DEFER_TO_CANONICAL_COMPETENCY',
-    );
+    expect(references.single['decision'], 'DEFER_TO_CANONICAL_COMPETENCY');
     expect(references.single['targetCompetencyId'], 'd02_c05');
   });
 }
