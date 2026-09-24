@@ -179,14 +179,20 @@ jobs:
           dart run tool/release_governance/release_governance.dart verify             --directory build/release-evidence             2>&1 | tee build/release-governance-input/ci_evidence/evidence_verification.txt
           grep -Fxq 'releaseEvidence=PASS' build/release-governance-input/ci_evidence/evidence_verification.txt
 
+      - name: Assemble upload bundle with repository-relative paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-upload/build/release-governance-input
+          cp -a build/release-candidate build/release-upload/build/
+          cp -a build/release-evidence build/release-upload/build/
+          cp build/release-governance-input/candidate_input.json build/release-upload/build/release-governance-input/
+          cp -a build/release-governance-input/ci_evidence build/release-upload/build/release-governance-input/
+
       - name: Upload governed candidate bundle
         uses: actions/upload-artifact@v4
         with:
           name: csp11-release-candidate-${{ github.sha }}-rc${{ inputs.candidate_ordinal }}
           if-no-files-found: error
           retention-days: 30
-          path: |
-            build/release-candidate/
-            build/release-evidence/
-            build/release-governance-input/candidate_input.json
-            build/release-governance-input/ci_evidence/
+          path: build/release-upload/

@@ -203,7 +203,9 @@ before evidence upload.
 
 ## 12. Evidence bundle
 
-The uploaded GitHub Actions artifact contains:
+Before upload, REL-GOV-8 assembles a staging directory whose contents preserve the repository-relative `build/` root.
+
+The downloaded GitHub Actions artifact therefore contains:
 
 ```
 build/release-candidate/
@@ -211,6 +213,8 @@ build/release-evidence/
 build/release-governance-input/candidate_input.json
 build/release-governance-input/ci_evidence/
 ```
+
+All admission evidence references use the same bundle-root-relative `build/...` convention. The paths recorded in `checksums.sha256` therefore resolve to the same artifact paths after the Actions artifact is downloaded.
 
 The final 11-file `build/release-evidence/` directory remains subject to the REL-GOV-7 exact package-shape verifier.
 

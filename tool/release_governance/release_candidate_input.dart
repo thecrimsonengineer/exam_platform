@@ -149,13 +149,13 @@ class ReleaseCandidateInputAssembler {
       const ReleaseTestEvidence(
         suiteId: 'flutter-full',
         status: ReleaseTestStatus.pass,
-        evidenceRefs: <String>['ci_evidence/full_flutter_tests.txt'],
+        evidenceRefs: <String>['build/release-governance-input/ci_evidence/full_flutter_tests.txt'],
         message: 'Full Flutter test suite passed in release-candidate CI.',
       ),
       const ReleaseTestEvidence(
         suiteId: 'release-governance',
         status: ReleaseTestStatus.pass,
-        evidenceRefs: <String>['ci_evidence/release_governance_tests.txt'],
+        evidenceRefs: <String>['build/release-governance-input/ci_evidence/release_governance_tests.txt'],
         message: 'Dedicated REL-GOV regression suite passed.',
       ),
     ];
@@ -208,34 +208,34 @@ class ReleaseCandidateInputAssembler {
     switch (gateId) {
       case 'RG001':
       case 'RG002':
-        return 'ci_evidence/repository_gate.txt';
+        return 'build/release-governance-input/ci_evidence/repository_gate.txt';
       case 'RG003':
       case 'RG004':
-        return 'ci_evidence/version_gate.txt';
+        return 'build/release-governance-input/ci_evidence/version_gate.txt';
       case 'RG005':
-        return 'ci_evidence/dependency_gate.txt';
+        return 'build/release-governance-input/ci_evidence/dependency_gate.txt';
       case 'RG006':
-        return 'environment_evidence.json';
+        return 'build/release-evidence/environment_evidence.json';
       case 'RG007':
-        return 'ci_evidence/format.txt';
+        return 'build/release-governance-input/ci_evidence/format.txt';
       case 'RG008':
-        return 'ci_evidence/analyze.txt';
+        return 'build/release-governance-input/ci_evidence/analyze.txt';
       case 'RG009':
       case 'RG010':
-        return 'ci_evidence/full_flutter_tests.txt';
+        return 'build/release-governance-input/ci_evidence/full_flutter_tests.txt';
       case 'RG011':
-        return 'ci_evidence/release_governance_tests.txt';
+        return 'build/release-governance-input/ci_evidence/release_governance_tests.txt';
       case 'RG012':
-        return 'component_evidence.json';
+        return 'build/release-evidence/component_evidence.json';
       case 'RG013':
-        return 'artifact_manifest.json';
+        return 'build/release-evidence/artifact_manifest.json';
       case 'RG014':
-        return 'checksums.sha256';
+        return 'build/release-evidence/checksums.sha256';
       case 'RG015':
-        return 'repository_evidence.json';
+        return 'build/release-evidence/repository_evidence.json';
       case 'RG016':
       case 'RG017':
-        return 'release_manifest.json';
+        return 'build/release-evidence/release_manifest.json';
     }
     throw StateError('Unknown canonical release gate: $gateId');
   }

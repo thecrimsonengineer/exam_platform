@@ -76,6 +76,14 @@ void main() {
         ),
         isTrue,
       );
+      expect(
+        gates.every((value) {
+          final gate = value! as Map<String, Object?>;
+          final evidence = gate['evidence']! as List<String>;
+          return evidence.every((ref) => ref.startsWith('build/'));
+        }),
+        isTrue,
+      );
     });
 
     test('blocks repository SHA drift', () {
@@ -233,6 +241,11 @@ void main() {
     });
 
     test('uploads evidence without publishing or deployment', () {
+      expect(
+        workflow,
+        contains('mkdir -p build/release-upload/build/release-governance-input'),
+      );
+      expect(workflow, contains('path: build/release-upload/'));
       expect(workflow, contains('uses: actions/upload-artifact@v4'));
 
       final forbidden = <String>[
