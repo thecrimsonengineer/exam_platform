@@ -3,6 +3,9 @@
         android:label="exam_platform"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.csp11.SCREENSHOT_PROTECTION"
+            android:value="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
