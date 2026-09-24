@@ -59,7 +59,8 @@
       "competencyId": "d01_c04",
       "number": 4,
       "statement": "Evaluate facility life safety features (e.g., public space safety, floor loading, occupancy loads)",
-      "status": "not_started"
+      "status": "in_progress",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c04/d01_c04_concept_inventory.v1.json"
     },
     {
       "competencyId": "d01_c05",

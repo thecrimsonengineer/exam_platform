@@ -205,6 +205,57 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "FCP uses educational paraphrase with exact learner-card locators."
+    },
+    {
+      "id": "csp11.source.osha.1910_36",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.36 - Design and construction requirements for exit routes",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.36",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for FCP facility life-safety exit-route concepts. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_37",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.37 - Maintenance, safeguards, and operational features for exit routes",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.37",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for maintaining usable, marked, unobstructed exit routes. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_22",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.22 - General requirements for walking-working surfaces",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.22",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for walking-working-surface load capacity, access/egress, inspection, maintenance, and repair. Educational paraphrase only."
     }
   ]
 }
