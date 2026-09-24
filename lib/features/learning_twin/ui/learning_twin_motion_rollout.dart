@@ -15,6 +15,7 @@ abstract final class LearningTwinMotionRollout {
   /// until the reviewed canonical idle clip is admitted to the repository.
   static const bool heroPilotRequested = true;
   static const bool canonicalIdleClipAdmitted = false;
+  static const String? canonicalIdleClipSha256 = null;
 
   static const bool heroMotionEnabled =
       heroPilotRequested && canonicalIdleClipAdmitted;
