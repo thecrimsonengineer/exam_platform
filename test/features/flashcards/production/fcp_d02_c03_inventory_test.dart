@@ -71,9 +71,10 @@ void main() {
         .toList();
 
     expect(refs.length, 4);
-    expect(
-      refs.map((item) => item['targetCompetencyId']).toSet(),
-      <String>{'d02_c01', 'd02_c02', 'd02_c07'},
-    );
+    expect(refs.map((item) => item['targetCompetencyId']).toSet(), <String>{
+      'd02_c01',
+      'd02_c02',
+      'd02_c07',
+    });
   });
 }
