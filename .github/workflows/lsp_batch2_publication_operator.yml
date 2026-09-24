@@ -1,0 +1,83 @@
+name: LSP Batch 2 Publication Operator
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-publication-operator
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lsp-batch2-publication-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Canonical Batch 2 publication formatting
+        run: |
+          dart format \
+            lib/features/lab/lab_batch2_release_operator.dart \
+            lib/screens/admin/lab/lab_batch2_release_screen.dart \
+            lib/screens/admin/lab/lab_production_release_screen.dart \
+            test/lab_quality/lsp_batch2_release_operator_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Batch 2 pre-catalogue regression
+        run: flutter test test/lab_quality/lsp_batch2_population_gate_test.dart
+
+      - name: Batch 2 atomic catalogue regression
+        run: flutter test test/lab_quality/lsp_batch2_catalogue_release_test.dart
+
+      - name: Batch 2 publication operator
+        run: flutter test test/lab_quality/lsp_batch2_release_operator_test.dart
+
+      - name: Original Q16 operator regression
+        run: flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
+
+      - name: Original Q17 acceptance regression
+        run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Persist canonical formatting after all gates pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add \
+            lib/features/lab/lab_batch2_release_operator.dart \
+            lib/screens/admin/lab/lab_batch2_release_screen.dart \
+            lib/screens/admin/lab/lab_production_release_screen.dart \
+            test/lab_quality/lsp_batch2_release_operator_test.dart
+          if git diff --cached --quiet; then
+            echo "Batch 2 publication sources already canonically formatted."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Format Batch 2 publication sources"
+          git push origin HEAD:${GITHUB_REF_NAME}
