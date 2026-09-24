@@ -150,6 +150,18 @@ void main() {
     expect(rules, contains('batch2LabPopulationAccepted()'));
     expect(
       rules,
+      contains('csp11.lab.learner_extension_visibility.v1'),
+    );
+    expect(
+      rules,
+      contains('match /labProductionReleaseExtensionState/{releaseId}'),
+    );
+    expect(
+      rules,
+      contains('match /labLearnerReleaseExtensionState/{releaseId}'),
+    );
+    expect(
+      rules,
       contains(
         '/documents/labProductionReleaseExtensionAcceptance/phase_l_population_batch2_v1_q16_extension_v1',
       ),
@@ -161,7 +173,7 @@ void main() {
     );
     expect(
       runtime,
-      contains('FirestoreLabBatch2ReleaseAcceptanceRepository'),
+      contains('FirestoreLabBatch2LearnerVisibilityRepository'),
     );
 
     final catalogueBlock = RegExp(
