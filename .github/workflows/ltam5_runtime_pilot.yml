@@ -51,15 +51,15 @@ jobs:
 
       - name: Normalize LTAM-5 files
         run: |
-          dart format             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             lib/features/learning_twin/ui/learning_twin_ui.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
+          dart format             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             lib/features/learning_twin/ui/learning_twin_ui.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
 
       - name: Analyze LTAM-5 slice
         run: |
-          dart analyze             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
+          dart analyze             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_idle_asset_contract.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
 
       - name: Run LTAM-5 focused tests
         run: |
-          flutter test             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_motion_policy_test.dart             test/features/learning_twin/ui/learning_twin_motion_controller_test.dart
+          flutter test             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_idle_asset_contract_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_motion_policy_test.dart             test/features/learning_twin/ui/learning_twin_motion_controller_test.dart
 
       - name: Revalidate complete Learning Twin
         run: flutter test test/features/learning_twin
@@ -88,7 +88,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           grep -F "test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart" /tmp/ltam5_full_regression.log
           grep -F "test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart" /tmp/ltam5_full_regression.log
           grep -E "[0-9]+ tests passed, 2 failed, 1 skipped\." /tmp/ltam5_full_regression.log
@@ -107,7 +106,6 @@ jobs:
 
           test "$android_status" -ne 0
           test "$supabase_status" -ne 0
-
           echo "::warning::Full regression has exactly two failures and both reproduce on the frozen LTAM-4 baseline."
 
       - name: Build Web release
@@ -132,9 +130,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add lib/features/learning_twin/ui
           git add test/features/learning_twin/ui
-          git commit -m "LTAM-5 normalize Hero pilot slice"
+          git commit -m "LTAM-5 normalize Hero asset admission slice"
           git push origin HEAD:${GITHUB_REF_NAME}
-
 
   windows_fallback_validation:
     name: Windows fallback validation
