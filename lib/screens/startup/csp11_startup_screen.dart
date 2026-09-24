@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../models/micro_learning/micro_fact.dart';
 import '../../services/auth/learner_local_identity.dart';
+import 'startup_micro_learning_service.dart';
 import 'startup_motion_policy.dart';
 import 'startup_personalization_service.dart';
 import 'startup_timeline.dart';
@@ -17,12 +19,16 @@ class Csp11StartupScreen extends StatefulWidget {
     super.key,
     required this.child,
     this.personalizationService,
+    this.microLearningService,
+    this.microLearningNowProvider,
     this.motionPolicyOverride,
     this.startupAssetPath = 'assets/startup/csp11_startup_master.json',
   });
 
   final Widget child;
   final StartupPersonalizationService? personalizationService;
+  final StartupMicroLearningService? microLearningService;
+  final DateTime Function()? microLearningNowProvider;
   final StartupMotionPolicy? motionPolicyOverride;
   final String startupAssetPath;
 
@@ -36,12 +42,16 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
 
   late final AnimationController _controller;
   late final StartupPersonalizationService _personalizationService;
+  late final StartupMicroLearningService _microLearningService;
 
   Timer? _watchdog;
   StartupMotionPolicy _motionPolicy = StartupMotionPolicy.full;
   StartupPersonalizationSnapshot _personalization =
       const StartupPersonalizationSnapshot.empty();
+  StartupMicroLearningSnapshot _microLearning =
+      const StartupMicroLearningSnapshot.empty();
   bool _personalizationLoadStarted = false;
+  bool _microLearningLoadStarted = false;
   String? _personalizationUserId;
   bool _showOverlay = true;
   bool _animationStarted = false;
@@ -55,6 +65,8 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
 
     _personalizationService =
         widget.personalizationService ?? StartupPersonalizationService();
+    _microLearningService =
+        widget.microLearningService ?? StartupMicroLearningService();
 
     _controller =
         AnimationController(
@@ -71,6 +83,9 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
 
     _watchdog = Timer(_hardTimeout, _dismissOverlay);
     unawaited(_preflightStartupAsset());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startMicroLearningLoad();
+    });
   }
 
   @override
@@ -177,6 +192,27 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
     }
   }
 
+  void _startMicroLearningLoad() {
+    if (!mounted || !_showOverlay || _microLearningLoadStarted) {
+      return;
+    }
+
+    _microLearningLoadStarted = true;
+    unawaited(_loadMicroLearning());
+  }
+
+  Future<void> _loadMicroLearning() async {
+    final snapshot = await _microLearningService.load(
+      now: widget.microLearningNowProvider?.call(),
+    );
+
+    if (!mounted || !_showOverlay) {
+      return;
+    }
+
+    setState(() => _microLearning = snapshot);
+  }
+
   void _maybeLoadPersonalization() {
     if (_personalizationLoadStarted) {
       return;
@@ -262,6 +298,7 @@ class _Csp11StartupScreenState extends State<Csp11StartupScreen>
                           progress: value,
                           animation: _controller,
                           personalization: _personalization,
+                          microFact: _microLearning.fact,
                           motionPolicy: _motionPolicy,
                           lottieReady: _lottieReady,
                           startupAssetPath: widget.startupAssetPath,
@@ -346,6 +383,7 @@ class _StartupCanvas extends StatelessWidget {
     required this.progress,
     required this.animation,
     required this.personalization,
+    required this.microFact,
     required this.motionPolicy,
     required this.lottieReady,
     required this.startupAssetPath,
@@ -356,6 +394,7 @@ class _StartupCanvas extends StatelessWidget {
   final double progress;
   final Animation<double> animation;
   final StartupPersonalizationSnapshot personalization;
+  final MicroFact? microFact;
   final StartupMotionPolicy motionPolicy;
   final bool lottieReady;
   final String startupAssetPath;
@@ -450,6 +489,20 @@ class _StartupCanvas extends StatelessWidget {
                         ),
                       ),
                     ),
+                  if (microFact != null &&
+                      beat != StartupBeat.ignite &&
+                      beat != StartupBeat.converge)
+                    Align(
+                      alignment: const Alignment(0, 0.28),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 28),
+                        child: _StartupMicroFactCard(
+                          fact: microFact!,
+                          highContrast: highContrast,
+                          compact: constraints.maxHeight < 700,
+                        ),
+                      ),
+                    ),
                   Align(
                     alignment: const Alignment(0, 0.69),
                     child: Padding(
@@ -510,6 +563,111 @@ class _BrandLockup extends StatelessWidget {
       ],
     );
   }
+}
+
+class _StartupMicroFactCard extends StatelessWidget {
+  const _StartupMicroFactCard({
+    required this.fact,
+    required this.highContrast,
+    required this.compact,
+  });
+
+  final MicroFact fact;
+  final bool highContrast;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = fact.display.shortVariant?.trim().isNotEmpty == true
+        ? fact.display.shortVariant!.trim()
+        : fact.display.displayText.trim();
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 180),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      child: Container(
+        key: ValueKey('csp11-startup-microfact-card|${fact.microFactId}'),
+        constraints: const BoxConstraints(maxWidth: 430),
+        padding: EdgeInsets.fromLTRB(15, compact ? 10 : 12, 15, compact ? 10 : 12),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: highContrast ? 0.74 : 0.54),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: const Color(
+              0xFF9FE8FF,
+            ).withValues(alpha: highContrast ? 0.72 : 0.30),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  Icons.lightbulb_outline_rounded,
+                  size: 15,
+                  color: Color(0xFFB6EFFF),
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  'MICRO LEARNING',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: highContrast
+                        ? Colors.white
+                        : const Color(0xFFB6EFFF),
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  _microFactSourceLabel(fact.provenance.sourceRegistryId),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: highContrast ? Colors.white70 : Colors.white54,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: compact ? 5 : 7),
+            Text(
+              text,
+              maxLines: compact ? 2 : 3,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.white,
+                height: 1.30,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String _microFactSourceLabel(String sourceRegistryId) {
+  return switch (sourceRegistryId) {
+    'SRC-01' => 'OSHA',
+    'SRC-02' => 'NIOSH',
+    'SRC-03' => 'ANSI / ASSP',
+    'SRC-04' => 'ISO',
+    'SRC-05' => 'NFPA',
+    'SRC-06' => 'ACGIH',
+    'SRC-07' => 'AIHA',
+    'SRC-08' => 'EPA',
+    'SRC-09' => 'DOT',
+    'SRC-10' => 'FEMA / NIMS',
+    'SRC-11' => 'AIChE / CCPS',
+    'SRC-12' => 'NSC',
+    'SRC-13' => 'ASSP',
+    'SRC-14' => 'FM Global',
+    'SRC-15' => 'UL',
+    _ => sourceRegistryId,
+  };
 }
 
 class _BeatGlassCard extends StatelessWidget {
