@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2I",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c09",
+  "competencyStatement": "Describe required components for plans, systems, and policies (e.g., safety, health, and environmental regulations and standards)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c09",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.osha.management_leadership",
+      "locators": [
+        "written policy",
+        "program goals",
+        "responsibilities",
+        "resources"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.worker_participation",
+      "locators": [
+        "worker participation in establishing, operating, evaluating, and improving the program"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.hazard_identification",
+      "locators": [
+        "proactive hazard identification and assessment",
+        "emergency and nonroutine hazards",
+        "prioritization"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.hazard_prevention",
+      "locators": [
+        "control selection",
+        "implementation",
+        "verification",
+        "maintenance",
+        "control effectiveness"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.education_training",
+      "locators": [
+        "program structure",
+        "policies",
+        "goals",
+        "procedures",
+        "responsibilities",
+        "hazards",
+        "controls",
+        "emergencies"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.communication_coordination",
+      "locators": [
+        "hazard information exchange",
+        "responsibility coordination",
+        "emergency communication",
+        "multiemployer work planning"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.program_evaluation",
+      "locators": [
+        "monitor performance",
+        "evaluate program effectiveness",
+        "identify improvements"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_38",
+      "locators": [
+        "29 CFR 1910.38(c) minimum EAP elements",
+        "29 CFR 1910.38(e) training",
+        "29 CFR 1910.38(f) plan review"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.14001_2026",
+      "locators": [
+        "EMS scope",
+        "compliance obligations",
+        "environmental aspects",
+        "documented information",
+        "performance evaluation",
+        "improvement"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.45001_2018",
+      "locators": [
+        "OH&S management-system scope",
+        "roles and responsibilities",
+        "planning",
+        "support",
+        "operation",
+        "performance evaluation",
+        "improvement"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "performance_target",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_target",
+      "reason": "Objectives may use performance targets, but the generic Performance Target concept is canonical in D02 C01."
+    },
+    {
+      "semanticSlug": "action_plan",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.action_plan",
+      "reason": "Objectives require action planning, but the generic Action Plan concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "safety_communication",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.safety_communication",
+      "reason": "Communication is a required program component, but the generic Safety Communication concept is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "worker_safety_participation",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.worker_safety_participation",
+      "reason": "Worker participation is a required program mechanism, but the generic Worker Safety Participation concept is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "management_system_audit",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c08",
+      "intendedConceptId": "csp11.concept.management_system_audit",
+      "reason": "Auditing is part of performance evaluation, but the generic Management System Audit concept is canonical in D02 C08."
+    },
+    {
+      "semanticSlug": "corrective_action_completion_timeliness",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c07",
+      "intendedConceptId": "csp11.concept.corrective_action_completion_timeliness",
+      "reason": "Improvement includes corrective-action follow-through, but the existing corrective-action timeliness indicator is canonical in D02 C07."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "safety_health_environmental_policy",
+      "canonicalLabel": "Safety, Health, and Environmental Policy",
+      "sourceIds": [
+        "csp11.source.osha.management_leadership",
+        "csp11.source.iso.45001_2018",
+        "csp11.source.iso.14001_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "scope_and_applicability",
+      "canonicalLabel": "Scope and Applicability",
+      "sourceIds": [
+        "csp11.source.iso.45001_2018",
+        "csp11.source.iso.14001_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "applicable_legal_other_requirements",
+      "canonicalLabel": "Applicable Legal and Other Requirements",
+      "sourceIds": [
+        "csp11.source.iso.45001_2018",
+        "csp11.source.iso.14001_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "roles_responsibilities_authorities",
+      "canonicalLabel": "Roles, Responsibilities, and Authorities",
+      "sourceIds": [
+        "csp11.source.osha.management_leadership",
+        "csp11.source.iso.45001_2018"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "objectives_and_action_planning_component",
+      "canonicalLabel": "Objectives and Action Planning Component",
+      "sourceIds": [
+        "csp11.source.osha.management_leadership",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "hazard_risk_environmental_aspect_assessment",
+      "canonicalLabel": "Hazard, Risk, and Environmental Aspect Assessment",
+      "sourceIds": [
+        "csp11.source.osha.hazard_identification",
+        "csp11.source.iso.14001_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "operational_controls_and_procedures",
+      "canonicalLabel": "Operational Controls and Procedures",
+      "sourceIds": [
+        "csp11.source.osha.hazard_prevention",
+        "csp11.source.iso.45001_2018"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "competence_training_awareness",
+      "canonicalLabel": "Competence, Training, and Awareness",
+      "sourceIds": [
+        "csp11.source.osha.education_training",
+        "csp11.source.iso.45001_2018"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "communication_consultation_participation_component",
+      "canonicalLabel": "Communication, Consultation, and Participation",
+      "sourceIds": [
+        "csp11.source.osha.worker_participation",
+        "csp11.source.osha.communication_coordination"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "emergency_preparedness_response_component",
+      "canonicalLabel": "Emergency Preparedness and Response Component",
+      "sourceIds": [
+        "csp11.source.osha.1910_38",
+        "csp11.source.iso.45001_2018"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "documented_information_records_component",
+      "canonicalLabel": "Documented Information and Records",
+      "sourceIds": [
+        "csp11.source.iso.45001_2018",
+        "csp11.source.iso.14001_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "performance_evaluation_audit_component",
+      "canonicalLabel": "Performance Evaluation and Audit Component",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation",
+        "csp11.source.iso.45001_2018"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "management_review_continual_improvement_component",
+      "canonicalLabel": "Management Review and Continual Improvement",
+      "sourceIds": [
+        "csp11.source.osha.program_evaluation",
+        "csp11.source.iso.45001_2018"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c09_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 13,
+    "acceptedCardCount": 13,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
