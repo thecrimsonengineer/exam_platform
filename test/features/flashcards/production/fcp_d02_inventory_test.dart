@@ -43,7 +43,7 @@ void main() {
     }
 
     expect(competencies.first['status'], 'closed');
-    expect(competencies[1]['status'], 'in_progress');
+    expect(competencies[1]['status'], 'validating');
     expect(
       competencies.skip(2).every((item) => item['status'] == 'not_started'),
       isTrue,
