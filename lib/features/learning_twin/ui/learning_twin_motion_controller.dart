@@ -54,7 +54,9 @@ final class LearningTwinMotionController extends ChangeNotifier {
     }
 
     final current = _currentDescriptor;
-    if (current == null || !_isPlaying || current.state == LearningTwinMotionState.idle) {
+    if (current == null ||
+        !_isPlaying ||
+        current.state == LearningTwinMotionState.idle) {
       _start(descriptor, eventKey);
       return true;
     }
@@ -72,7 +74,8 @@ final class LearningTwinMotionController extends ChangeNotifier {
 
     if (descriptor.state != LearningTwinMotionState.idle) {
       final pending = _pending;
-      if (pending == null || descriptor.priority >= pending.descriptor.priority) {
+      if (pending == null ||
+          descriptor.priority >= pending.descriptor.priority) {
         _pending = _PendingMotion(descriptor, eventKey);
         notifyListeners();
       }

@@ -20,10 +20,7 @@ void main() {
     );
 
     expect(decision.animate, isTrue);
-    expect(
-      decision.fallbackReason,
-      LearningTwinMotionFallbackReason.none,
-    );
+    expect(decision.fallbackReason, LearningTwinMotionFallbackReason.none);
   });
 
   test('platform reduced motion always wins', () {
@@ -43,10 +40,7 @@ void main() {
     );
 
     expect(decision.animate, isFalse);
-    expect(
-      decision.effectiveState,
-      LearningTwinMotionState.reducedMotion,
-    );
+    expect(decision.effectiveState, LearningTwinMotionState.reducedMotion);
     expect(
       decision.fallbackReason,
       LearningTwinMotionFallbackReason.reducedMotion,

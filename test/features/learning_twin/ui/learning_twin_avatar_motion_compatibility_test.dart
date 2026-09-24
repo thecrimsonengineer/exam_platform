@@ -9,7 +9,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 void main() {
   Future<void> pumpAvatar(WidgetTester tester, Widget avatar) async {
     await tester.pumpWidget(
-      MaterialApp(home: Scaffold(body: Center(child: avatar))),
+      MaterialApp(
+        home: Scaffold(body: Center(child: avatar)),
+      ),
     );
     await tester.pump();
   }
@@ -32,10 +34,7 @@ void main() {
         children: [
           LearningTwinAvatar(asset: LearningTwinAsset.explain),
           LearningTwinAvatar(asset: LearningTwinAsset.success),
-          LearningTwinAvatar(
-            asset: LearningTwinAsset.hero,
-            compactCrop: false,
-          ),
+          LearningTwinAvatar(asset: LearningTwinAsset.hero, compactCrop: false),
         ],
       ),
     );

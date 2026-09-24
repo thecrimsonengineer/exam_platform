@@ -9,8 +9,7 @@ String learningTwinFallbackPathFor(LearningTwinMotionState state) {
     LearningTwinMotionState.insightReady ||
     LearningTwinMotionState.resultReview =>
       'assets/learning_twin/naveed_twin_explain.svg',
-    LearningTwinMotionState.celebrate ||
-    LearningTwinMotionState.checkpoint =>
+    LearningTwinMotionState.celebrate || LearningTwinMotionState.checkpoint =>
       'assets/learning_twin/naveed_twin_success.svg',
     LearningTwinMotionState.idle ||
     LearningTwinMotionState.welcome ||

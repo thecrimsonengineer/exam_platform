@@ -12,9 +12,7 @@ void main() {
   late LearningTwinMotionManifest manifest;
 
   setUpAll(() async {
-    final raw = await File(
-      LearningTwinMotionManifest.assetPath,
-    ).readAsString();
+    final raw = await File(LearningTwinMotionManifest.assetPath).readAsString();
     manifest = LearningTwinMotionManifest.parse(raw).manifest!;
   });
 
@@ -59,11 +57,7 @@ void main() {
   testWidgets('reduced motion selects SVG even when animation is enabled', (
     tester,
   ) async {
-    await pumpRenderer(
-      tester,
-      animationEnabled: true,
-      disableAnimations: true,
-    );
+    await pumpRenderer(tester, animationEnabled: true, disableAnimations: true);
 
     expect(find.byType(SvgPicture), findsOneWidget);
     expect(find.byType(Lottie), findsNothing);
@@ -73,10 +67,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     try {
       await pumpRenderer(tester, decorative: true);
-      expect(
-        find.bySemanticsLabel('Naveed Learning Guide'),
-        findsNothing,
-      );
+      expect(find.bySemanticsLabel('Naveed Learning Guide'), findsNothing);
     } finally {
       semantics.dispose();
     }
@@ -88,10 +79,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     try {
       await pumpRenderer(tester);
-      expect(
-        find.bySemanticsLabel('Naveed Learning Guide'),
-        findsOneWidget,
-      );
+      expect(find.bySemanticsLabel('Naveed Learning Guide'), findsOneWidget);
     } finally {
       semantics.dispose();
     }

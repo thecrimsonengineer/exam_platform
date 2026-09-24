@@ -23,7 +23,10 @@ void main() {
     final controller = LearningTwinMotionController();
     addTearDown(controller.dispose);
 
-    expect(controller.request(descriptor(LearningTwinMotionState.idle)), isTrue);
+    expect(
+      controller.request(descriptor(LearningTwinMotionState.idle)),
+      isTrue,
+    );
     expect(controller.currentState, LearningTwinMotionState.idle);
     expect(controller.isPlaying, isTrue);
     expect(controller.isLooping, isTrue);
@@ -90,14 +93,8 @@ void main() {
     controller.request(celebrate, eventKey: 'milestone:1');
     controller.completeCurrent();
 
-    expect(
-      controller.request(celebrate, eventKey: 'milestone:1'),
-      isFalse,
-    );
-    expect(
-      controller.request(celebrate, eventKey: 'milestone:2'),
-      isTrue,
-    );
+    expect(controller.request(celebrate, eventKey: 'milestone:1'), isFalse);
+    expect(controller.request(celebrate, eventKey: 'milestone:2'), isTrue);
   });
 
   test('app inactive pauses and resume restarts current playback', () {

@@ -52,8 +52,7 @@ class LearningTwinMotionRenderer extends StatefulWidget {
       _LearningTwinMotionRendererState();
 }
 
-class _LearningTwinMotionRendererState
-    extends State<LearningTwinMotionRenderer>
+class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _animationController;
   late LearningTwinMotionController _motionController;

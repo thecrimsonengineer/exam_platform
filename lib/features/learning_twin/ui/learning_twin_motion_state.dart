@@ -63,8 +63,7 @@ extension LearningTwinMotionStateX on LearningTwinMotionState {
     LearningTwinMotionState.encourage => 30,
     LearningTwinMotionState.welcome => 20,
     LearningTwinMotionState.thinking => 10,
-    LearningTwinMotionState.idle ||
-    LearningTwinMotionState.reducedMotion => 0,
+    LearningTwinMotionState.idle || LearningTwinMotionState.reducedMotion => 0,
   };
 
   bool get isLooping => switch (this) {

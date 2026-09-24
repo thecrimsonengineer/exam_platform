@@ -23,20 +23,14 @@ void main() {
       result.manifest!.descriptors.keys.toSet(),
       canonicalLearningTwinMotionStates.toSet(),
     );
-    expect(
-      result.manifest!.defaultState,
-      LearningTwinMotionState.idle,
-    );
+    expect(result.manifest!.defaultState, LearningTwinMotionState.idle);
   });
 
   test('malformed JSON fails closed', () {
     final result = LearningTwinMotionManifest.parse('{broken');
 
     expect(result.isValid, isFalse);
-    expect(
-      result.failure!.code,
-      LearningTwinMotionErrorCode.malformedJson,
-    );
+    expect(result.failure!.code, LearningTwinMotionErrorCode.malformedJson);
   });
 
   test('unsupported schema fails closed', () {
@@ -45,15 +39,15 @@ void main() {
     );
 
     expect(result.isValid, isFalse);
-    expect(
-      result.failure!.code,
-      LearningTwinMotionErrorCode.unsupportedSchema,
-    );
+    expect(result.failure!.code, LearningTwinMotionErrorCode.unsupportedSchema);
   });
 
   test('missing default state fails closed', () {
     final result = LearningTwinMotionManifest.parse(
-      validManifest.replaceFirst('"default_state": "idle"', '"default_state": "missing"'),
+      validManifest.replaceFirst(
+        '"default_state": "idle"',
+        '"default_state": "missing"',
+      ),
     );
 
     expect(result.isValid, isFalse);
@@ -65,7 +59,10 @@ void main() {
 
   test('missing canonical state fails closed', () {
     final result = LearningTwinMotionManifest.parse(
-      validManifest.replaceFirst('"result_review": {', '"result_review_removed": {'),
+      validManifest.replaceFirst(
+        '"result_review": {',
+        '"result_review_removed": {',
+      ),
     );
 
     expect(result.isValid, isFalse);
@@ -81,22 +78,19 @@ void main() {
     );
 
     expect(result.isValid, isFalse);
-    expect(
-      result.failure!.code,
-      LearningTwinMotionErrorCode.invalidDescriptor,
-    );
+    expect(result.failure!.code, LearningTwinMotionErrorCode.invalidDescriptor);
   });
 
   test('invalid intensity fails closed', () {
     final result = LearningTwinMotionManifest.parse(
-      validManifest.replaceFirst('"motion_intensity": 1', '"motion_intensity": 4'),
+      validManifest.replaceFirst(
+        '"motion_intensity": 1',
+        '"motion_intensity": 4',
+      ),
     );
 
     expect(result.isValid, isFalse);
-    expect(
-      result.failure!.code,
-      LearningTwinMotionErrorCode.invalidDescriptor,
-    );
+    expect(result.failure!.code, LearningTwinMotionErrorCode.invalidDescriptor);
   });
 
   test('remote motion asset path is rejected', () {
@@ -108,10 +102,7 @@ void main() {
     );
 
     expect(result.isValid, isFalse);
-    expect(
-      result.failure!.code,
-      LearningTwinMotionErrorCode.remoteAssetPath,
-    );
+    expect(result.failure!.code, LearningTwinMotionErrorCode.remoteAssetPath);
   });
 
   test('path traversal is rejected', () {
@@ -123,10 +114,7 @@ void main() {
     );
 
     expect(result.isValid, isFalse);
-    expect(
-      result.failure!.code,
-      LearningTwinMotionErrorCode.pathTraversal,
-    );
+    expect(result.failure!.code, LearningTwinMotionErrorCode.pathTraversal);
   });
 
   test('duplicate canonical state key is rejected', () {
@@ -137,9 +125,6 @@ void main() {
     final result = LearningTwinMotionManifest.parse(duplicate);
 
     expect(result.isValid, isFalse);
-    expect(
-      result.failure!.code,
-      LearningTwinMotionErrorCode.duplicateState,
-    );
+    expect(result.failure!.code, LearningTwinMotionErrorCode.duplicateState);
   });
 }

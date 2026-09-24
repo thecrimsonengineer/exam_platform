@@ -269,7 +269,8 @@ final class LearningTwinMotionManifest {
 final class LearningTwinMotionManifestResult {
   const LearningTwinMotionManifestResult.valid(this.manifest) : failure = null;
 
-  const LearningTwinMotionManifestResult.invalid(this.failure) : manifest = null;
+  const LearningTwinMotionManifestResult.invalid(this.failure)
+    : manifest = null;
 
   final LearningTwinMotionManifest? manifest;
   final LearningTwinMotionFailure? failure;

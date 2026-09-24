@@ -56,8 +56,7 @@ abstract final class LearningTwinMotionPolicy {
       return LearningTwinMotionPolicyDecision(
         animate: false,
         effectiveState: requestedState,
-        fallbackReason:
-            LearningTwinMotionFallbackReason.developerForcedStatic,
+        fallbackReason: LearningTwinMotionFallbackReason.developerForcedStatic,
       );
     }
 
