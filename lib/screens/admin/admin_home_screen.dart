@@ -9,6 +9,7 @@ import 'content_repository/content_repository_screen.dart';
 import 'study_content/study_content_studio_screen.dart';
 import 'lab/lab1000_studio_screen.dart';
 import 'lab/lab_production_release_screen.dart';
+import 'lab/lab_production_deployment_acceptance_screen.dart';
 import '../navigation/bottom_navigation.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -43,6 +44,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     _NavItem(Icons.science_rounded, 'LAB1000 Studio', 'CONTENT'),
     _NavItem(Icons.storage_rounded, 'Repository', 'CONTENT'),
     _NavItem(Icons.publish_rounded, 'Publishing', 'CONTENT'),
+    _NavItem(Icons.verified_user_rounded, 'Release Acceptance', 'CONTENT'),
     _NavItem(Icons.quiz_rounded, 'Question Bank', 'ASSESSMENT'),
     _NavItem(
       Icons.assignment_rounded,
@@ -152,6 +154,22 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     );
   }
 
+  void _openProductionAcceptance() {
+    final adminUserId = widget.adminUserId?.trim();
+    if (adminUserId == null || adminUserId.isEmpty) {
+      _showComingSoon('Deployment acceptance');
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => LabProductionDeploymentAcceptanceScreen(
+          adminUserId: adminUserId,
+        ),
+      ),
+    );
+  }
+
   Future<void> _openStudentPortal() async {
     final adminUserId = widget.adminUserId?.trim();
 
@@ -239,7 +257,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     } else if (index == 5) {
       _openProductionRelease();
     } else if (index == 6) {
-      _openStudio();
+      _openProductionAcceptance();
     }
   }
 
