@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2D",
+  "competencyId": "d02_c04",
+  "cardCount": 12,
+  "cardsWithProvenance": 12,
+  "cardsWithExactlyOnePrimarySource": 12,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.osha.hazard_identification",
+    "csp11.source.osha.incident_investigation",
+    "csp11.source.osha.incident_investigation_guide",
+    "csp11.source.osha.program_evaluation",
+    "csp11.source.osha.root_cause_fact_sheet"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.osha.incident_investigation": 1,
+    "csp11.source.osha.incident_investigation_guide": 5,
+    "csp11.source.osha.root_cause_fact_sheet": 5,
+    "csp11.source.osha.program_evaluation": 1
+  },
+  "status": "PASS"
+}

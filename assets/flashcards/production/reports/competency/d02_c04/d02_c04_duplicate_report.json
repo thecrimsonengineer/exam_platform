@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2D",
+  "competencyId": "d02_c04",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "action_plan",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "event_tree",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c06"
+    },
+    {
+      "semanticSlug": "worker_safety_participation",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03"
+    },
+    {
+      "semanticSlug": "organizational_learning_for_safety",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
