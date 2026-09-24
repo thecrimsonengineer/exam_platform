@@ -45,6 +45,7 @@ flutter:
 
   assets:
     - content/
+    - content/micro_learning/
     - content/domain_07/competencies/
     - assets/learning_twin/
     - assets/learning_twin/candidates/
