@@ -1,0 +1,652 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c08_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c08",
+    "title": "Safety, Health, Environmental Management and Audit Systems Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.management_system",
+      "csp11.flashcard.iso_14000_family",
+      "csp11.flashcard.iso_14001_2026",
+      "csp11.flashcard.environmental_management_system",
+      "csp11.flashcard.iso_45001_2018",
+      "csp11.flashcard.occupational_health_safety_management_system",
+      "csp11.flashcard.iso_19011_2026",
+      "csp11.flashcard.management_system_audit",
+      "csp11.flashcard.audit_programme",
+      "csp11.flashcard.ansi_assp_z10_2019",
+      "csp11.flashcard.plan_do_check_act_cycle",
+      "csp11.flashcard.management_system_certification"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.management_system",
+      "canonicalLabel": "Management System",
+      "flashcardId": "csp11.flashcard.management_system",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "organizational management system"
+      ]
+    },
+    {
+      "id": "csp11.concept.iso_14000_family",
+      "canonicalLabel": "ISO 14000 Family",
+      "flashcardId": "csp11.flashcard.iso_14000_family",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "ISO 14000 series",
+        "ISO 14000"
+      ]
+    },
+    {
+      "id": "csp11.concept.iso_14001_2026",
+      "canonicalLabel": "ISO 14001:2026",
+      "flashcardId": "csp11.flashcard.iso_14001_2026",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "ISO 14001",
+        "environmental management systems standard"
+      ]
+    },
+    {
+      "id": "csp11.concept.environmental_management_system",
+      "canonicalLabel": "Environmental Management System",
+      "flashcardId": "csp11.flashcard.environmental_management_system",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "EMS"
+      ]
+    },
+    {
+      "id": "csp11.concept.iso_45001_2018",
+      "canonicalLabel": "ISO 45001:2018",
+      "flashcardId": "csp11.flashcard.iso_45001_2018",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "ISO 45001",
+        "OH&S management systems standard"
+      ]
+    },
+    {
+      "id": "csp11.concept.occupational_health_safety_management_system",
+      "canonicalLabel": "Occupational Health and Safety Management System",
+      "flashcardId": "csp11.flashcard.occupational_health_safety_management_system",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "OH&S management system",
+        "OHSMS"
+      ]
+    },
+    {
+      "id": "csp11.concept.iso_19011_2026",
+      "canonicalLabel": "ISO 19011:2026",
+      "flashcardId": "csp11.flashcard.iso_19011_2026",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "ISO 19011",
+        "management system auditing guidelines"
+      ]
+    },
+    {
+      "id": "csp11.concept.management_system_audit",
+      "canonicalLabel": "Management System Audit",
+      "flashcardId": "csp11.flashcard.management_system_audit",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "management systems audit"
+      ]
+    },
+    {
+      "id": "csp11.concept.audit_programme",
+      "canonicalLabel": "Audit Programme",
+      "flashcardId": "csp11.flashcard.audit_programme",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "audit program"
+      ]
+    },
+    {
+      "id": "csp11.concept.ansi_assp_z10_2019",
+      "canonicalLabel": "ANSI/ASSP Z10.0-2019",
+      "flashcardId": "csp11.flashcard.ansi_assp_z10_2019",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "ANSI Z10",
+        "ASSP Z10",
+        "Z10.0"
+      ]
+    },
+    {
+      "id": "csp11.concept.plan_do_check_act_cycle",
+      "canonicalLabel": "Plan-Do-Check-Act Cycle",
+      "flashcardId": "csp11.flashcard.plan_do_check_act_cycle",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "PDCA",
+        "PDCA cycle"
+      ]
+    },
+    {
+      "id": "csp11.concept.management_system_certification",
+      "canonicalLabel": "Management System Certification",
+      "flashcardId": "csp11.flashcard.management_system_certification",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "aliases": [
+        "ISO management system certification"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.management_system",
+      "conceptId": "csp11.concept.management_system",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Management System",
+      "backDefinition": "The organized set of interrelated policies, processes, responsibilities, controls, and activities an organization uses to achieve defined objectives and manage performance in a systematic way.",
+      "whyItMatters": "A management system connects leadership, planning, operations, checking, and improvement instead of treating safety, health, or environmental controls as isolated activities.",
+      "keyPoint": "Think of a management system as the coordinated way an organization manages related parts of its business to achieve objectives.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.management_system_standards",
+          "locator": "Management system standards > What is a management system?",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "management-system"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.iso_14000_family",
+      "conceptId": "csp11.concept.iso_14000_family",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "ISO 14000 Family",
+      "backDefinition": "A family of ISO environmental management standards covering environmental management systems and supporting topics such as implementation, auditing, communication, labelling, life-cycle approaches, and environmental performance.",
+      "whyItMatters": "Recognizing the family prevents the common mistake of treating ISO 14000 as one certifiable standard; ISO 14001 is the central requirements standard within the broader family.",
+      "keyPoint": "ISO 14000 is a family; ISO 14001 is the certifiable environmental management system requirements standard.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.14000_family",
+          "locator": "ISO 14000 family — Environmental management > family scope and ISO 14001 role",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "environmental-management"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.iso_14001_2026",
+      "conceptId": "csp11.concept.iso_14001_2026",
+      "version": 1,
+      "type": "standard",
+      "frontLabel": "ISO 14001:2026",
+      "backDefinition": "The current ISO requirements standard for establishing, implementing, maintaining, and continually improving an environmental management system so an organization can systematically manage its environmental responsibilities.",
+      "whyItMatters": "It provides the main certifiable environmental management system framework within the ISO 14000 family and is relevant wherever environmental aspects, compliance obligations, objectives, controls, and improvement must be managed systematically.",
+      "keyPoint": "As of September 2026, ISO 14001:2026 is the current published edition.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 — Environmental management systems — Requirements with guidance for use",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14000_family",
+          "locator": "ISO 14000 family > ISO 14001 is the certifiable EMS standard",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "environmental-management"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.environmental_management_system",
+      "conceptId": "csp11.concept.environmental_management_system",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Environmental Management System",
+      "backDefinition": "The part of an organization's management system used to manage environmental aspects, fulfil applicable environmental obligations, achieve environmental objectives, and improve environmental performance.",
+      "whyItMatters": "An EMS turns environmental commitments into an organized operating system of responsibilities, planning, controls, monitoring, evaluation, and continual improvement.",
+      "keyPoint": "An EMS is the management framework; ISO 14001 provides requirements for that framework.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 > environmental management system requirements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14000_family",
+          "locator": "ISO 14000 family > environmental management systems",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "environmental-management"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.iso_45001_2018",
+      "conceptId": "csp11.concept.iso_45001_2018",
+      "version": 1,
+      "type": "standard",
+      "frontLabel": "ISO 45001:2018",
+      "backDefinition": "The current published ISO requirements standard for an occupational health and safety management system, providing a framework to manage OH&S risks, improve performance, prevent work-related injury and ill health, and support continual improvement.",
+      "whyItMatters": "It gives organizations an internationally recognized systems framework that integrates leadership, worker participation, hazard and risk management, operational controls, performance evaluation, and improvement.",
+      "keyPoint": "As of September 2026, ISO 45001:2018 remains the current published edition; a replacement edition is still under development.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 — Occupational health and safety management systems",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "ohs-management"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.occupational_health_safety_management_system",
+      "conceptId": "csp11.concept.occupational_health_safety_management_system",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Occupational Health and Safety Management System",
+      "backDefinition": "The management-system framework an organization uses to establish OH&S policy and objectives, manage hazards and risks, involve workers, implement controls, evaluate performance, and continually improve occupational health and safety outcomes.",
+      "whyItMatters": "An OHSMS organizes safety and health responsibilities into a repeatable business system rather than relying only on individual rules, inspections, or reactive incident responses.",
+      "keyPoint": "ISO 45001 and ANSI/ASSP Z10 are two recognized frameworks for occupational health and safety management systems.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001 > OH&S management system framework",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.assp.z10_2019",
+          "locator": "ANSI/ASSP Z10 > OSH management system",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "ohs-management"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.iso_19011_2026",
+      "conceptId": "csp11.concept.iso_19011_2026",
+      "version": 1,
+      "type": "standard",
+      "frontLabel": "ISO 19011:2026",
+      "backDefinition": "The current ISO guidance standard for auditing management systems, covering audit principles, management of audit programmes, conducting management-system audits, and the competence and evaluation of auditors.",
+      "whyItMatters": "It provides a common auditing framework that can be applied across management systems such as environmental, quality, and occupational health and safety systems.",
+      "keyPoint": "ISO 19011:2026 guides auditing; it does not itself establish a certifiable management system.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.19011_2026",
+          "locator": "ISO 19011:2026 — Guidelines for auditing management systems",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "auditing"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.management_system_audit",
+      "conceptId": "csp11.concept.management_system_audit",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Management System Audit",
+      "backDefinition": "A systematic audit used to evaluate a management system against defined audit criteria and determine whether arrangements are implemented and effective enough to support the organization's objectives and conformity needs.",
+      "whyItMatters": "Management-system audits provide structured evidence about how the system is functioning, where requirements are not met, and where improvement is needed.",
+      "keyPoint": "The audit evaluates the system against defined criteria; it is more than a general workplace inspection.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.19011_2026",
+          "locator": "ISO 19011:2026 > conducting management system audits",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.management_system_standards",
+          "locator": "Management system standards > Audits",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "auditing"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.audit_programme",
+      "conceptId": "csp11.concept.audit_programme",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Audit Programme",
+      "backDefinition": "The organized arrangements for one or more audits over a planned period, including objectives, scope priorities, resources, responsibilities, scheduling, monitoring, review, and improvement of the auditing activity.",
+      "whyItMatters": "Managing audits as a programme helps organizations prioritize risk, coordinate resources, maintain consistency, and ensure that important parts of the management system receive appropriate audit attention.",
+      "keyPoint": "An audit programme manages the overall set of audits; an individual audit is one activity within that programme.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.19011_2026",
+          "locator": "ISO 19011:2026 > Managing an audit programme",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "auditing"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.ansi_assp_z10_2019",
+      "conceptId": "csp11.concept.ansi_assp_z10_2019",
+      "version": 1,
+      "type": "standard",
+      "frontLabel": "ANSI/ASSP Z10.0-2019",
+      "backDefinition": "A U.S. national consensus standard that provides a systems-based framework for establishing and improving an occupational health and safety management system that organizations can tailor to their risks and operating context.",
+      "whyItMatters": "Z10 gives organizations a recognized U.S. consensus framework for integrating occupational safety and health into business systems and continually improving OSH performance.",
+      "keyPoint": "ANSI/ASSP Z10 is an occupational health and safety management-system standard, not an environmental management standard.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.assp.z10_2019",
+          "locator": "ANSI/ASSP Z10 OSH Management Standard > What is the Z10.0 standard?",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "ohs-management"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.plan_do_check_act_cycle",
+      "conceptId": "csp11.concept.plan_do_check_act_cycle",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Plan-Do-Check-Act Cycle",
+      "backDefinition": "A recurring management-system improvement model in which an organization plans objectives and processes, implements them, checks performance and results, and acts on findings to correct or improve the system.",
+      "whyItMatters": "PDCA provides a simple structure for linking planning, implementation, performance evaluation, and continual improvement across management-system activities.",
+      "keyPoint": "Plan sets direction, Do implements, Check evaluates, and Act improves.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001 > Plan-Do-Check-Act methodology",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 > PDCA management-system model",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "pdca"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.management_system_certification",
+      "conceptId": "csp11.concept.management_system_certification",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Management System Certification",
+      "backDefinition": "Independent third-party confirmation by a certification body that an organization's management system conforms to the requirements of a certifiable management-system standard; certification is optional unless separately required by a customer, contract, or other obligation.",
+      "whyItMatters": "Recognizing the distinction prevents the misconception that implementing an ISO management system automatically means the organization is certified or that ISO itself performs certification.",
+      "keyPoint": "An organization can implement a management-system standard without certification; ISO does not certify organizations.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c08"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.management_system_standards",
+          "locator": "Management system standards > Certification",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-systems",
+        "certification"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.iso.management_system_standards",
+      "organization": "ISO",
+      "title": "Management system standards",
+      "canonicalUrl": "https://www.iso.org/management-system-standards.html",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official ISO overview of management systems, management system standards, audits, certification, and harmonized structure. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.14000_family",
+      "organization": "ISO",
+      "title": "ISO 14000 family — Environmental management",
+      "canonicalUrl": "https://www.iso.org/standards/popular/iso-14000-family",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official ISO overview of the ISO 14000 environmental management family and the role of ISO 14001. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.14001_2026",
+      "organization": "ISO",
+      "title": "ISO 14001:2026 — Environmental management systems — Requirements with guidance for use",
+      "canonicalUrl": "https://committee.iso.org/standard/14001",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 14001 edition as of 2026-09-24. Requirements standard for environmental management systems. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.45001_2018",
+      "organization": "ISO",
+      "title": "ISO 45001:2018 — Occupational health and safety management systems — Requirements with guidance for use",
+      "canonicalUrl": "https://www.iso.org/standard/45001",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 45001 edition as of 2026-09-24. Confirmed current in 2024; replacement draft under development for 2027. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.19011_2026",
+      "organization": "ISO",
+      "title": "ISO 19011:2026 — Guidelines for auditing management systems",
+      "canonicalUrl": "https://committee.iso.org/standard/19011",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 19011 edition as of 2026-09-24. Guidance for audit principles, audit programmes, conducting audits, and auditor competence. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.assp.z10_2019",
+      "organization": "ASSP",
+      "title": "ANSI/ASSP Z10.0-2019 Occupational Health and Safety Management Systems",
+      "canonicalUrl": "https://www.assp.org/standards/standards-topics/osh-management-z10",
+      "allowedDomains": [
+        "assp.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official ASSP topic page for the ANSI/ASSP Z10.0 occupational health and safety management system standard. Educational paraphrase only."
+    }
+  ]
+}
