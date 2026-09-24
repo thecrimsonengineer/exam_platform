@@ -216,9 +216,7 @@ class _Sha256Digest {
       _processBlock(padding, offset);
     }
 
-    return _state
-        .map((word) => word.toRadixString(16).padLeft(8, '0'))
-        .join();
+    return _state.map((word) => word.toRadixString(16).padLeft(8, '0')).join();
   }
 
   void _processBlock(List<int> block, int offset) {
@@ -242,14 +240,9 @@ class _Sha256Digest {
           _rotateRight(value15, 18) ^
           (value15 >>> 3);
       final sigma1 =
-          _rotateRight(value2, 17) ^
-          _rotateRight(value2, 19) ^
-          (value2 >>> 10);
+          _rotateRight(value2, 17) ^ _rotateRight(value2, 19) ^ (value2 >>> 10);
       schedule[index] = _u32(
-        schedule[index - 16] +
-            sigma0 +
-            schedule[index - 7] +
-            sigma1,
+        schedule[index - 16] + sigma0 + schedule[index - 7] + sigma1,
       );
     }
 

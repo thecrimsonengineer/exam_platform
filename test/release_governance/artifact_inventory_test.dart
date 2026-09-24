@@ -86,10 +86,7 @@ void main() {
       final result = await service.capture(
         rootDirectory: root.path,
         declarations: const <ArtifactDeclaration>[
-          ArtifactDeclaration(
-            artifactId: 'web-zip',
-            fileName: 'build/web.zip',
-          ),
+          ArtifactDeclaration(artifactId: 'web-zip', fileName: 'build/web.zip'),
         ],
       );
 
@@ -100,21 +97,24 @@ void main() {
       );
     });
 
-    test('allows an absent optional artifact without inventing a record', () async {
-      final result = await service.capture(
-        rootDirectory: root.path,
-        declarations: const <ArtifactDeclaration>[
-          ArtifactDeclaration(
-            artifactId: 'symbols',
-            fileName: 'build/symbols.zip',
-            required: false,
-          ),
-        ],
-      );
+    test(
+      'allows an absent optional artifact without inventing a record',
+      () async {
+        final result = await service.capture(
+          rootDirectory: root.path,
+          declarations: const <ArtifactDeclaration>[
+            ArtifactDeclaration(
+              artifactId: 'symbols',
+              fileName: 'build/symbols.zip',
+              required: false,
+            ),
+          ],
+        );
 
-      expect(result.pass, isTrue);
-      expect(result.records, isEmpty);
-    });
+        expect(result.pass, isTrue);
+        expect(result.records, isEmpty);
+      },
+    );
 
     test('blocks duplicate artifact IDs and file names', () async {
       final result = await service.capture(
@@ -144,10 +144,7 @@ void main() {
       final result = await service.capture(
         rootDirectory: root.path,
         declarations: const <ArtifactDeclaration>[
-          ArtifactDeclaration(
-            artifactId: 'escape',
-            fileName: '../outside.apk',
-          ),
+          ArtifactDeclaration(artifactId: 'escape', fileName: '../outside.apk'),
           ArtifactDeclaration(
             artifactId: 'windows-absolute',
             fileName: 'C:/temp/app.apk',
@@ -223,9 +220,7 @@ void main() {
     test('detects file-name substitution for the same artifact ID', () {
       final result = verifier.verify(
         expected: <ArtifactRecord>[_record()],
-        actual: <ArtifactRecord>[
-          _record(fileName: 'build/substituted.apk'),
-        ],
+        actual: <ArtifactRecord>[_record(fileName: 'build/substituted.apk')],
       );
 
       expect(

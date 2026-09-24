@@ -53,19 +53,14 @@ void main() {
         ChecksumEntry(fileName: 'a/app.apk', sha256: zeroHash),
       ]);
 
-      expect(
-        content,
-        '$zeroHash  a/app.apk\n$fHash  z/app.zip\n',
-      );
+      expect(content, '$zeroHash  a/app.apk\n$fHash  z/app.zip\n');
     });
 
     test('rejects malformed hashes', () {
       expect(
-        () => service.renderChecksumFile(
-          const <ChecksumEntry>[
-            ChecksumEntry(fileName: 'app.apk', sha256: 'not-a-sha'),
-          ],
-        ),
+        () => service.renderChecksumFile(const <ChecksumEntry>[
+          ChecksumEntry(fileName: 'app.apk', sha256: 'not-a-sha'),
+        ]),
         throwsArgumentError,
       );
     });
