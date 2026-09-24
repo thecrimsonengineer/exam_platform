@@ -61,8 +61,12 @@ void main() {
         .toList();
     expect(candidates.length, 8);
 
-    final slugs = candidates.map((item) => item['semanticSlug'] as String).toList();
-    final labels = candidates.map((item) => item['canonicalLabel'] as String).toList();
+    final slugs = candidates
+        .map((item) => item['semanticSlug'] as String)
+        .toList();
+    final labels = candidates
+        .map((item) => item['canonicalLabel'] as String)
+        .toList();
     expect(slugs.toSet().length, slugs.length);
     expect(labels.toSet().length, labels.length);
 
