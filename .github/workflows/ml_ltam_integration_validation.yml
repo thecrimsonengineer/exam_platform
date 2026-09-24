@@ -53,63 +53,29 @@ jobs:
         run: dart run tool/generate_ml10_runtime_bundle.dart --check
 
       - name: Analyze integration seam
-        run: >
-          dart analyze
-          lib/features/learning_twin/integration/micro_learning_twin_presentation.dart
-          lib/screens/startup/startup_micro_fact_card.dart
-          test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
-          test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
-          test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
-          test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
+        run: dart analyze lib/features/learning_twin/integration/micro_learning_twin_presentation.dart lib/screens/startup/startup_micro_fact_card.dart test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
 
       - name: Format integration seam
-        run: >
-          dart format
-          lib/features/learning_twin/integration/micro_learning_twin_presentation.dart
-          lib/screens/startup/startup_micro_fact_card.dart
-          test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart
-          test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart
+        run: dart format lib/features/learning_twin/integration/micro_learning_twin_presentation.dart lib/screens/startup/startup_micro_fact_card.dart test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
 
       - name: Run integration seam tests
-        run: |
-          flutter test \
-            test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart \
-            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart \\
-            test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
+        run: flutter test test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart
 
       - name: Revalidate Learning Twin
         run: flutter test test/features/learning_twin
 
       - name: Revalidate ML startup stack
-        run: |
-          flutter test \
-            test/micro_learning/local_micro_fact_repository_asset_test.dart \
-            test/micro_learning/micro_fact_selector_runtime_corpus_test.dart \
-            test/micro_learning/startup_micro_fact_service_test.dart \
-            test/startup/startup_micro_fact_card_test.dart \
-            test/startup/startup_micro_fact_integration_test.dart \
-            test/startup/startup_micro_fact_motion_unit_test.dart \
-            test/startup/startup_micro_fact_motion_integration_test.dart
+        run: flutter test test/micro_learning/local_micro_fact_repository_asset_test.dart test/micro_learning/micro_fact_selector_runtime_corpus_test.dart test/micro_learning/startup_micro_fact_service_test.dart test/startup/startup_micro_fact_card_test.dart test/startup/startup_micro_fact_integration_test.dart test/startup/startup_micro_fact_motion_unit_test.dart test/startup/startup_micro_fact_motion_integration_test.dart
 
       - name: Revalidate startup motion and handoff
-        run: |
-          flutter test \
-            test/startup/startup_motion_policy_test.dart \
-            test/startup/startup_timeline_test.dart \
-            test/startup/startup_screen_hardening_test.dart \
-            test/startup/startup_release_render_smoke_test.dart
+        run: flutter test test/startup/startup_motion_policy_test.dart test/startup/startup_timeline_test.dart test/startup/startup_screen_hardening_test.dart test/startup/startup_release_render_smoke_test.dart
 
       - name: Commit normalized integration files
         shell: bash
         run: |
           set -euo pipefail
           git diff --check
-          if git diff --quiet -- \
-            lib/features/learning_twin/integration/micro_learning_twin_presentation.dart \
-            lib/screens/startup/startup_micro_fact_card.dart \
-            test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart \
-            test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart \\
-            test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart; then
+          if git diff --quiet -- lib/features/learning_twin/integration/micro_learning_twin_presentation.dart lib/screens/startup/startup_micro_fact_card.dart test/features/learning_twin/integration/micro_learning_twin_presentation_test.dart test/features/learning_twin/integration/micro_learning_startup_avatar_integration_test.dart test/features/learning_twin/integration/micro_learning_twin_architecture_guard_test.dart; then
             echo "Integration files are already normalized."
             exit 0
           fi
