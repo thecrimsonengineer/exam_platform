@@ -34,11 +34,18 @@
       "competencyId": "d02_c02",
       "number": 2,
       "statement": "Analyze performance standards to determine plan of action",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c02/d02_c02_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c02/d02_c02_flashcards_v1.json",
       "cardCount": 5,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c02",
+      "checkpoint": {
+        "gate": "FCP2B_D02_C02_GREEN",
+        "branch": "phase-fcp2b-d02-c02-closed",
+        "packageValidationSha": "ae03de09574de5ec4ae7bbdebc52aa7788ab3ed4",
+        "packageValidationRun": 35963750625
+      }
     },
     {
       "competencyId": "d02_c03",
