@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2I",
+  "competencyId": "d02_c09",
+  "cardCount": 13,
+  "cardsWithProvenance": 13,
+  "cardsWithExactlyOnePrimarySource": 13,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.iso.14001_2026",
+    "csp11.source.iso.45001_2018",
+    "csp11.source.osha.1910_38",
+    "csp11.source.osha.communication_coordination",
+    "csp11.source.osha.education_training",
+    "csp11.source.osha.hazard_identification",
+    "csp11.source.osha.hazard_prevention",
+    "csp11.source.osha.management_leadership",
+    "csp11.source.osha.program_evaluation",
+    "csp11.source.osha.worker_participation"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.osha.management_leadership": 3,
+    "csp11.source.iso.45001_2018": 3,
+    "csp11.source.osha.hazard_identification": 1,
+    "csp11.source.osha.hazard_prevention": 1,
+    "csp11.source.osha.education_training": 1,
+    "csp11.source.osha.worker_participation": 1,
+    "csp11.source.osha.1910_38": 1,
+    "csp11.source.osha.program_evaluation": 2
+  },
+  "status": "PASS"
+}
