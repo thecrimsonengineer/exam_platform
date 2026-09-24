@@ -1,0 +1,663 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c04_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c04",
+    "title": "Incident Investigation and Corrective Action Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.incident_investigation",
+      "csp11.flashcard.close_call",
+      "csp11.flashcard.incident_investigation_systems_approach",
+      "csp11.flashcard.scene_preservation",
+      "csp11.flashcard.incident_information_collection",
+      "csp11.flashcard.immediate_cause",
+      "csp11.flashcard.root_cause",
+      "csp11.flashcard.root_cause_analysis",
+      "csp11.flashcard.causal_factor",
+      "csp11.flashcard.incident_timeline",
+      "csp11.flashcard.corrective_action",
+      "csp11.flashcard.corrective_action_effectiveness_verification"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.incident_investigation",
+      "canonicalLabel": "Incident Investigation",
+      "flashcardId": "csp11.flashcard.incident_investigation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "workplace incident investigation"
+      ]
+    },
+    {
+      "id": "csp11.concept.close_call",
+      "canonicalLabel": "Close Call",
+      "flashcardId": "csp11.flashcard.close_call",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "near miss"
+      ]
+    },
+    {
+      "id": "csp11.concept.incident_investigation_systems_approach",
+      "canonicalLabel": "Incident Investigation Systems Approach",
+      "flashcardId": "csp11.flashcard.incident_investigation_systems_approach",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "systems approach to incident investigation"
+      ]
+    },
+    {
+      "id": "csp11.concept.scene_preservation",
+      "canonicalLabel": "Scene Preservation",
+      "flashcardId": "csp11.flashcard.scene_preservation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "preserve incident scene"
+      ]
+    },
+    {
+      "id": "csp11.concept.incident_information_collection",
+      "canonicalLabel": "Incident Information Collection",
+      "flashcardId": "csp11.flashcard.incident_information_collection",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "incident evidence collection"
+      ]
+    },
+    {
+      "id": "csp11.concept.immediate_cause",
+      "canonicalLabel": "Immediate Cause",
+      "flashcardId": "csp11.flashcard.immediate_cause",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "direct cause"
+      ]
+    },
+    {
+      "id": "csp11.concept.root_cause",
+      "canonicalLabel": "Root Cause",
+      "flashcardId": "csp11.flashcard.root_cause",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "underlying cause"
+      ]
+    },
+    {
+      "id": "csp11.concept.root_cause_analysis",
+      "canonicalLabel": "Root Cause Analysis",
+      "flashcardId": "csp11.flashcard.root_cause_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "rca"
+      ]
+    },
+    {
+      "id": "csp11.concept.causal_factor",
+      "canonicalLabel": "Causal Factor",
+      "flashcardId": "csp11.flashcard.causal_factor",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "contributing factor"
+      ]
+    },
+    {
+      "id": "csp11.concept.incident_timeline",
+      "canonicalLabel": "Incident Timeline",
+      "flashcardId": "csp11.flashcard.incident_timeline",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "event timeline"
+      ]
+    },
+    {
+      "id": "csp11.concept.corrective_action",
+      "canonicalLabel": "Corrective Action",
+      "flashcardId": "csp11.flashcard.corrective_action",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "incident corrective action"
+      ]
+    },
+    {
+      "id": "csp11.concept.corrective_action_effectiveness_verification",
+      "canonicalLabel": "Corrective Action Effectiveness Verification",
+      "flashcardId": "csp11.flashcard.corrective_action_effectiveness_verification",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "aliases": [
+        "corrective action follow-up"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.incident_investigation",
+      "conceptId": "csp11.concept.incident_investigation",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Incident Investigation",
+      "backDefinition": "A structured examination of a work-related incident or close call to determine what happened, why it happened, and what must change to prevent recurrence.",
+      "whyItMatters": "A disciplined investigation can expose hazards and program weaknesses that would remain hidden if the organization only records the outcome or assigns blame.",
+      "keyPoint": "The purpose is prevention through learning and corrective action, not fault finding.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.incident_investigation",
+          "locator": "Investigating a Worksite Incident",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Purpose of the Guide - Why Investigate?",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "incident-investigation",
+        "prevention"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.close_call",
+      "conceptId": "csp11.concept.close_call",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Close Call",
+      "backDefinition": "A work-related incident that could have caused serious injury or illness but did not, often because circumstances were only slightly different.",
+      "whyItMatters": "Close calls reveal hazards and system weaknesses without the human cost of an injury, giving the organization an opportunity to learn before a more serious event occurs.",
+      "keyPoint": "Investigate close calls with the same prevention mindset used for harmful incidents.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Principles of Incident Investigations > key terms > Close Call",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation",
+          "locator": "Overview > close calls or near misses",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "close-call",
+        "near-miss"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.incident_investigation_systems_approach",
+      "conceptId": "csp11.concept.incident_investigation_systems_approach",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Incident Investigation Systems Approach",
+      "backDefinition": "An investigation approach that looks beyond the worker action nearest the event to underlying program, design, planning, organizational, technical, and operational factors.",
+      "whyItMatters": "Stopping at a behavior or immediate condition can leave the system weakness intact, allowing similar incidents to recur under the same underlying conditions.",
+      "keyPoint": "Ask what in the system created or allowed the conditions for the event.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Principles of Incident Investigations > Investigate Programs, Not Behaviors",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation",
+          "locator": "Investigating a Worksite Incident > look beyond immediate causes",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "systems-approach",
+        "incident-investigation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.scene_preservation",
+      "conceptId": "csp11.concept.scene_preservation",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Scene Preservation",
+      "backDefinition": "Protecting and documenting relevant physical conditions at an incident scene before evidence is moved, altered, lost, or contaminated.",
+      "whyItMatters": "Preserving the scene protects the factual basis of the investigation and helps the team reconstruct conditions and event sequences more reliably.",
+      "keyPoint": "Emergency response and life safety come first; preserve what remains once the scene is safe to investigate.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Four-Step Systems Approach > Step 1 Preserve/Document the Scene",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "scene-preservation",
+        "evidence"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.incident_information_collection",
+      "conceptId": "csp11.concept.incident_information_collection",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Incident Information Collection",
+      "backDefinition": "Systematic collection of observations, interviews, records, logs, photographs, documents, and other information needed to reconstruct the event and its conditions.",
+      "whyItMatters": "A broad evidence base reduces premature conclusions and helps investigators compare accounts, establish sequence, and identify contributing system factors.",
+      "keyPoint": "Collect information from multiple sources before settling on a causal explanation.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Four-Step Systems Approach > Step 2 Collect Information",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.root_cause_fact_sheet",
+          "locator": "Root Cause Analysis Tools > interviews and review of documents",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "information-collection",
+        "incident-investigation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.immediate_cause",
+      "conceptId": "csp11.concept.immediate_cause",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Immediate Cause",
+      "backDefinition": "A direct or readily visible condition or action associated with an incident that may explain the event locally without explaining the underlying system failure.",
+      "whyItMatters": "Correcting only the immediate cause can remove a symptom while leaving the conditions that allowed the problem to develop and recur.",
+      "keyPoint": "Immediate cause answers what was closest to the event; root cause asks why the system allowed it.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.root_cause_fact_sheet",
+          "locator": "Root cause analysis > underlying or systemic rather than generalized or immediate causes",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation",
+          "locator": "Investigating a Worksite Incident > look beyond immediate causes",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "immediate-cause",
+        "causal-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.root_cause",
+      "conceptId": "csp11.concept.root_cause",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Root Cause",
+      "backDefinition": "A fundamental, underlying, system-related reason an incident occurred that identifies one or more correctable failures in the way work is designed or managed.",
+      "whyItMatters": "Root causes point toward system changes that can prevent recurrence instead of merely treating the visible symptom of an incident.",
+      "keyPoint": "An incident may have more than one root cause.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.root_cause_fact_sheet",
+          "locator": "Root cause definition and How to Conduct a Root Cause Analysis",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Principles of Incident Investigations > Root Causes",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "root-cause",
+        "causal-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.root_cause_analysis",
+      "conceptId": "csp11.concept.root_cause_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Root Cause Analysis",
+      "backDefinition": "A structured analysis that asks what, how, and why an incident occurred to identify the underlying systemic causes and correctable failures behind the event.",
+      "whyItMatters": "Root cause analysis connects incident evidence to prevention by identifying the deeper conditions that must change for recurrence risk to be reduced.",
+      "keyPoint": "Use enough depth and more than one line of inquiry when the event is complex.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.root_cause_fact_sheet",
+          "locator": "How to Conduct a Root Cause Analysis and Root Cause Analysis Tools",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation",
+          "locator": "Investigating a Worksite Incident > underlying or root causes",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "root-cause-analysis",
+        "incident-investigation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.causal_factor",
+      "conceptId": "csp11.concept.causal_factor",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Causal Factor",
+      "backDefinition": "An event, condition, decision, action, or system weakness that contributed to how an incident developed and helps explain the pathway from conditions to outcome.",
+      "whyItMatters": "Identifying multiple causal factors prevents the investigation from collapsing a complex event into one convenient explanation and supports deeper root-cause analysis.",
+      "keyPoint": "A causal factor can contribute to the event without being the deepest root cause.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.root_cause_fact_sheet",
+          "locator": "Root Cause Analysis Tools > Causal Factor Determination",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation",
+          "locator": "Investigating a Worksite Incident > discover and correct all factors contributing to an incident",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "causal-factor",
+        "root-cause-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.incident_timeline",
+      "conceptId": "csp11.concept.incident_timeline",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Incident Timeline",
+      "backDefinition": "A chronological reconstruction of relevant events, actions, conditions, and changes before, during, and after an incident to support causal analysis.",
+      "whyItMatters": "A timeline makes sequence and timing visible, helping investigators find gaps, interactions, conflicting evidence, and points where controls failed or could have intervened.",
+      "keyPoint": "Use the timeline to organize evidence, not as a substitute for root-cause reasoning.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.root_cause_fact_sheet",
+          "locator": "Root Cause Analysis Tools > Timelines",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Collect Information and determine event sequence",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "incident-timeline",
+        "causal-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.corrective_action",
+      "conceptId": "csp11.concept.corrective_action",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Corrective Action",
+      "backDefinition": "An action taken to address an identified cause, hazard, or program deficiency so the same or a similar incident is less likely to occur again.",
+      "whyItMatters": "An investigation has little preventive value unless findings are translated into effective changes that control the conditions and system failures revealed by the evidence.",
+      "keyPoint": "Correct the underlying causes, not only the visible consequence of the event.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.incident_investigation_guide",
+          "locator": "Four-Step Systems Approach > Step 4 Implement Corrective Actions",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.incident_investigation",
+          "locator": "Investigating a Worksite Incident > identify and implement corrective actions",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "corrective-action",
+        "prevention"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.corrective_action_effectiveness_verification",
+      "conceptId": "csp11.concept.corrective_action_effectiveness_verification",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Corrective Action Effectiveness Verification",
+      "backDefinition": "Follow-up evaluation that confirms a corrective action was implemented and is effectively controlling the identified problem or preventing recurrence.",
+      "whyItMatters": "Administrative closure does not prove risk reduction; effectiveness verification checks whether the change works in practice and whether additional improvement is needed.",
+      "keyPoint": "Verify both implementation and continuing effectiveness.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Verify key processes and actions are preventing recurrence",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.hazard_identification",
+          "locator": "Communicate investigation results and prioritize corrective actions",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "corrective-action",
+        "effectiveness"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.incident_investigation",
+      "organization": "OSHA",
+      "title": "Incident Investigation - Overview",
+      "canonicalUrl": "https://www.osha.gov/incident-investigation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports investigation of injuries, illnesses and close calls, root-cause focus, systems thinking, management/worker involvement, and corrective actions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.incident_investigation_guide",
+      "organization": "OSHA",
+      "title": "Incident [Accident] Investigations: A Guide for Employers",
+      "canonicalUrl": "https://www.osha.gov/sites/default/files/IncInvGuide4Empl_Dec2015.pdf",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Advisory OSHA systems-approach guide. Supports incident/close-call definitions, preserve-document scene, collect information, determine root causes, and implement corrective actions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.root_cause_fact_sheet",
+      "organization": "OSHA",
+      "title": "The Importance of Root Cause Analysis During Incident Investigation",
+      "canonicalUrl": "https://www.osha.gov/sites/default/files/publications/OSHA3895.pdf",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Joint OSHA/EPA fact sheet supporting root cause, immediate cause distinction, contributing factors, root cause analysis tools, timelines, causal factor determination, and corrective focus. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.program_evaluation",
+      "organization": "OSHA",
+      "title": "Safety Management - Program Evaluation and Improvement",
+      "canonicalUrl": "https://www.osha.gov/safety-management/program-evaluation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports goals, targets, indicators, performance monitoring, periodic program evaluation, comparisons to similar facilities, and improvement. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.hazard_identification",
+      "organization": "OSHA",
+      "title": "Safety Management - Hazard Identification and Assessment",
+      "canonicalUrl": "https://www.osha.gov/safety-management/hazard-identification",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports immediate investigation, trained management/worker teams, root-cause analysis, communication of results, hazard prioritization, and corrective action."
+    }
+  ]
+}
