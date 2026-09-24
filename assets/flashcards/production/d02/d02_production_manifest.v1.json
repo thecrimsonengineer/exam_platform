@@ -102,11 +102,18 @@
       "competencyId": "d02_c06",
       "number": 6,
       "statement": "Describe system safety analysis techniques (e.g., fault tree analysis, failure modes and effects analysis [FMEA], Safety Case approach, risk summation)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c06/d02_c06_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c06/d02_c06_flashcards_v1.json",
       "cardCount": 12,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c06",
+      "checkpoint": {
+        "gate": "FCP2F_D02_C06_GREEN",
+        "branch": "phase-fcp2f-d02-c06-closed",
+        "packageValidationSha": "9cd2a834ae519d3dbf9f798257e2037526eb353e",
+        "packageValidationRun": 35974799508
+      }
     },
     {
       "competencyId": "d02_c07",
