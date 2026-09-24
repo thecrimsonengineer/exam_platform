@@ -186,7 +186,7 @@ class _LabBatch2ReleaseScreenState extends State<LabBatch2ReleaseScreen> {
                         kBatch2PreCatalogueClosedSha +
                         '\nValidation run: ' +
                         kBatch2PreCatalogueValidationRunId +
-                        '\nRequired predecessor: original Q17 ACCEPTED',
+                        '\nLearner visibility: Batch 2 only',
                   ),
                   if (_error != null) ...[
                     const SizedBox(height: 14),
