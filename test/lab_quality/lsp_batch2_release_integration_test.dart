@@ -133,6 +133,9 @@ void main() {
     final repository = File(
       'lib/features/lab/lab_firestore_repositories.dart',
     ).readAsStringSync();
+    final runtime = File(
+      'lib/features/lab/lab_runtime_binding.dart',
+    ).readAsStringSync();
 
     expect(
       kLearnerVisibleLabReleaseId,
@@ -151,11 +154,14 @@ void main() {
         '/documents/labProductionReleaseExtensionAcceptance/phase_l_population_batch2_v1_q16_extension_v1',
       ),
     );
+    expect(repository, contains('visibleReleaseId'));
     expect(
-      repository,
-      contains(
-        ".where('releaseId', isEqualTo: kLearnerVisibleLabReleaseId)",
-      ),
+      runtime,
+      contains('visibleReleaseId: kLearnerVisibleLabReleaseId'),
+    );
+    expect(
+      runtime,
+      contains('FirestoreLabBatch2ReleaseAcceptanceRepository'),
     );
 
     final catalogueBlock = RegExp(
