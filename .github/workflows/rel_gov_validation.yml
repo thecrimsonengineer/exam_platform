@@ -42,7 +42,14 @@ jobs:
         run: flutter pub get
 
       - name: Check REL-GOV formatting
-        run: dart format --output=none --set-exit-if-changed tool/release_governance test/release_governance
+        shell: bash
+        run: |
+          set -euo pipefail
+          dart format tool/release_governance test/release_governance
+          if ! git diff --exit-code -- tool/release_governance test/release_governance; then
+            echo "REL-GOV formatting drift detected."
+            exit 1
+          fi
 
       - name: Analyze REL-GOV
         run: dart analyze tool/release_governance test/release_governance
