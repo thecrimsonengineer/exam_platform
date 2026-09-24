@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../features/learning_twin/integration/micro_learning_twin_presentation.dart';
+import '../../features/learning_twin/ui/learning_twin_avatar.dart';
 import '../../models/micro_learning/micro_fact.dart';
 
 class StartupMicroFactCard extends StatelessWidget {
@@ -18,6 +20,7 @@ class StartupMicroFactCard extends StatelessWidget {
         ? fact.display.shortVariant!.trim()
         : fact.display.displayText.trim();
     final category = _categoryLabel(fact.category);
+    final twin = const MicroLearningTwinPresentationBridge().forFact(fact);
 
     return Semantics(
       label: 'Quick CSP insight. $text',
@@ -39,19 +42,12 @@ class StartupMicroFactCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(
-                        alpha: highContrast ? 0.16 : 0.08,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.lightbulb_outline_rounded,
-                      size: 18,
-                      color: Colors.white,
+                  KeyedSubtree(
+                    key: ValueKey(twin.eventKey),
+                    child: LearningTwinAvatar(
+                      asset: twin.asset,
+                      size: 34,
+                      decorative: true,
                     ),
                   ),
                   const SizedBox(width: 12),
