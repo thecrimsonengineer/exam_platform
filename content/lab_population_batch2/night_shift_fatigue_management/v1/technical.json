@@ -599,7 +599,7 @@
         },
         {
           "id": "controls_decision_o2",
-          "text": "Assign a less experienced worker alone and have the fatigued worker available by phone. while maintaining the documented work boundary and supervision.",
+          "text": "Assign a less experienced worker to perform the task with direct checking, while the fatigued expert remains available to advise without carrying the full workload.",
           "isBest": false,
           "quality": "WEAK",
           "consequenceId": "controls_decision_weak",
