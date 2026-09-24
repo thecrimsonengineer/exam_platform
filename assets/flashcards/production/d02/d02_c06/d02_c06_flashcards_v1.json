@@ -191,12 +191,6 @@
           "locator": "System Safety > hazard analysis, reliability calculations, and risk-management techniques",
           "primary": true,
           "definitionMode": "educationalParaphrase"
-        },
-        {
-          "sourceId": "csp11.source.osha.1910_119",
-          "locator": "29 CFR 1910.119(e)(1)-(2) - appropriate process hazard analysis methodology",
-          "primary": false,
-          "definitionMode": "educationalParaphrase"
         }
       ],
       "lifecycle": "validated",
@@ -224,12 +218,6 @@
           "sourceId": "csp11.source.nrc.fault_tree_handbook",
           "locator": "NUREG-0492 - fault tree construction and evaluation",
           "primary": true,
-          "definitionMode": "educationalParaphrase"
-        },
-        {
-          "sourceId": "csp11.source.osha.1910_119",
-          "locator": "29 CFR 1910.119(e)(2)(vi) - Fault Tree Analysis",
-          "primary": false,
           "definitionMode": "educationalParaphrase"
         }
       ],
@@ -320,12 +308,6 @@
           "sourceId": "csp11.source.nasa.software_fmea",
           "locator": "Software FMEA > bottom-up analysis and basic procedure",
           "primary": true,
-          "definitionMode": "educationalParaphrase"
-        },
-        {
-          "sourceId": "csp11.source.osha.1910_119",
-          "locator": "29 CFR 1910.119(e)(2)(v) - Failure Mode and Effects Analysis",
-          "primary": false,
           "definitionMode": "educationalParaphrase"
         }
       ],
@@ -642,23 +624,6 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Official UK HSE guidance supporting the offshore Safety Case approach and the demonstration that major-accident risks are effectively controlled. Educational paraphrase only."
-    },
-    {
-      "id": "csp11.source.osha.1910_119",
-      "organization": "OSHA",
-      "title": "29 CFR 1910.119 - Process safety management of highly hazardous chemicals",
-      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
-      "allowedDomains": [
-        "osha.gov"
-      ],
-      "authorityTier": "federalLawRegulation",
-      "sourceType": "regulation",
-      "copyrightMode": "federalGovernmentWork",
-      "verificationStatus": "verified",
-      "verifiedOn": "2026-09-24",
-      "primaryEligible": true,
-      "verbatimEligible": false,
-      "notes": "Primary regulatory source for FCP process-safety cards. FCP uses educational paraphrase and paragraph-level locators."
     }
   ]
 }
