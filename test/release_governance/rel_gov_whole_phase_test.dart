@@ -124,15 +124,12 @@ void main() {
 
     test('blocks tampered evidence after package identity refresh', () async {
       final run = await _generateSyntheticCandidate(root);
-      final repositoryFile = File(
-        '${run.directory}/repository_evidence.json',
-      );
+      final repositoryFile = File('${run.directory}/repository_evidence.json');
       final repositoryJson =
           jsonDecode(await repositoryFile.readAsString())
               as Map<String, dynamic>;
 
-      repositoryJson['headSha'] =
-          'ffffffffffffffffffffffffffffffffffffffff';
+      repositoryJson['headSha'] = 'ffffffffffffffffffffffffffffffffffffffff';
       await _writeCanonicalJson(repositoryFile, repositoryJson);
       await _refreshSummaryIdentity(run.directory);
 
@@ -141,10 +138,7 @@ void main() {
       );
 
       expect(verified.pass, isFalse);
-      expect(
-        verified.issues,
-        contains('EVD011_REPOSITORY_EVIDENCE_MISMATCH'),
-      );
+      expect(verified.issues, contains('EVD011_REPOSITORY_EVIDENCE_MISMATCH'));
       expect(
         verified.issues,
         isNot(contains('EVD009_SUMMARY_IDENTITY_MISMATCH')),
@@ -179,10 +173,10 @@ void main() {
 
   group('REL-GOV-11 repository hygiene', () {
     test('does not track generated build artifacts', () async {
-      final result = await Process.run(
-        'git',
-        const <String>['ls-files', 'build'],
-      );
+      final result = await Process.run('git', const <String>[
+        'ls-files',
+        'build',
+      ]);
 
       expect(result.exitCode, 0);
       expect((result.stdout as String).trim(), isEmpty);
@@ -309,10 +303,7 @@ List<ReleaseAdmissionGate> _passingGates() {
   }).toList();
 }
 
-Future<void> _writeCanonicalJson(
-  File file,
-  Map<String, dynamic> json,
-) async {
+Future<void> _writeCanonicalJson(File file, Map<String, dynamic> json) async {
   await file.writeAsString(
     '${const JsonEncoder.withIndent('  ').convert(json)}\n',
     flush: true,
@@ -340,9 +331,7 @@ Future<void> _refreshSummaryIdentity(String directory) async {
       ..write('\u0000');
   }
 
-  final identity = checksumService.sha256Bytes(
-    utf8.encode(buffer.toString()),
-  );
+  final identity = checksumService.sha256Bytes(utf8.encode(buffer.toString()));
   final summary = File('$directory/release_summary.txt');
   final lines = const LineSplitter().convert(await summary.readAsString());
   final updated = lines
@@ -373,17 +362,15 @@ class _SyntheticRun {
 const String _commitSha = '0123456789abcdef0123456789abcdef01234567';
 const String _treeSha = '89abcdef0123456789abcdef0123456789abcdef';
 
-const RepositoryProvenanceEvidence _repository =
-    RepositoryProvenanceEvidence(
-      repository: 'thecrimsonengineer/exam_platform',
-      remoteUrl:
-          'https://github.com/thecrimsonengineer/exam_platform.git',
-      branch: 'synthetic/internal-candidate',
-      headSha: _commitSha,
-      treeSha: _treeSha,
-      tagsAtHead: <String>[],
-      changes: <RepositoryChange>[],
-    );
+const RepositoryProvenanceEvidence _repository = RepositoryProvenanceEvidence(
+  repository: 'thecrimsonengineer/exam_platform',
+  remoteUrl: 'https://github.com/thecrimsonengineer/exam_platform.git',
+  branch: 'synthetic/internal-candidate',
+  headSha: _commitSha,
+  treeSha: _treeSha,
+  tagsAtHead: <String>[],
+  changes: <RepositoryChange>[],
+);
 
 const BuildEnvironmentSnapshot _environment = BuildEnvironmentSnapshot(
   flutterVersion: '3.44.9',
