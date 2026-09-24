@@ -1,0 +1,95 @@
+name: LSP Batch 2 Live Release Preflight
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-live-release-prep
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lsp-batch2-live-preflight-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen Batch 2 ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor             4aa151a749b2324e9edd69a40781d7f8169a72c0 HEAD
+          git merge-base --is-ancestor             674b5206647d217d2026193845fcff98f408d880 HEAD
+          git merge-base --is-ancestor             db327a3cf26106496747927f8a3608122b7ed8cc HEAD
+          git diff --check
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Analyze Batch 2 release scope
+        run: |
+          flutter analyze --no-fatal-infos \
+            lib/features/lab/lab_batch2_release.dart \
+            lib/features/lab/lab_batch2_release_operator.dart \
+            lib/features/lab/lab_firestore_repositories.dart \
+            lib/screens/admin/lab/lab_batch2_release_screen.dart \
+            lib/screens/admin/lab/lab_production_release_screen.dart
+
+      - name: Verify Batch 2 Firestore release boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "phase_l_population_batch2_v1_q15_release_v1" firestore.rules
+          grep -Fq "4aa151a749b2324e9edd69a40781d7f8169a72c0" firestore.rules
+          grep -Fq "36015831093" firestore.rules
+          grep -Fq "labResourceReleased(resource.data)" firestore.rules
+          grep -Fq "existsAfter(" firestore.rules
+          grep -Fq "getAfter(" firestore.rules
+
+      - name: Verify live runbook boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "firebase deploy --only firestore:rules --project csp11-exam-platform"             docs/lab/LAB_BATCH2_LIVE_RELEASE_RUNBOOK.md
+          grep -Fq "RELEASE BATCH 2 10 LABS"             docs/lab/LAB_BATCH2_LIVE_RELEASE_RUNBOOK.md
+          grep -Fq "Automatic overwrite, repair, partial continuation, or a second publication attempt is forbidden."             docs/lab/LAB_BATCH2_LIVE_RELEASE_RUNBOOK.md
+
+      - name: Batch 2 pre-catalogue gate
+        run: flutter test test/lab_quality/lsp_batch2_population_gate_test.dart
+
+      - name: Batch 2 atomic catalogue gate
+        run: flutter test test/lab_quality/lsp_batch2_catalogue_release_test.dart
+
+      - name: Batch 2 production operator gate
+        run: flutter test test/lab_quality/lsp_batch2_release_operator_test.dart
+
+      - name: Original Q16 regression
+        run: flutter test test/lab_quality/lsp_q16_production_release_operator_test.dart
+
+      - name: Original Q17 regression
+        run: flutter test test/lab_quality/lsp_q17_production_deployment_acceptance_test.dart
+
+      - name: No production deployment in preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -R -F "firebase deploy" .github/workflows/lsp_batch2_live_release_preflight.yml
+          echo "Live-release preflight is read-only: PASS"
+
+      - name: Diff hygiene
+        run: git diff --check
