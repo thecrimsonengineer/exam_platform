@@ -50,7 +50,7 @@ jobs:
 
       - name: Normalize LTAM-5 files
         run: |
-          dart format             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             lib/features/learning_twin/ui/learning_twin_ui.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
+          dart format             lib/features/learning_twin/ui/learning_twin_avatar.dart             lib/features/learning_twin/ui/learning_twin_hero.dart             lib/features/learning_twin/ui/learning_twin_motion_renderer.dart             lib/features/learning_twin/ui/learning_twin_motion_rollout.dart             lib/features/learning_twin/ui/learning_twin_ui.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart
 
       - name: Analyze LTAM-5 slice
         run: |
@@ -58,7 +58,7 @@ jobs:
 
       - name: Run LTAM-5 focused tests
         run: |
-          flutter test             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_motion_policy_test.dart             test/features/learning_twin/ui/learning_twin_motion_controller_test.dart
+          flutter test             test/features/learning_twin/ui/learning_twin_motion_rollout_test.dart             test/features/learning_twin/ui/learning_twin_motion_asset_admission_test.dart             test/features/learning_twin/ui/learning_twin_hero_motion_pilot_test.dart             test/features/learning_twin/ui/learning_twin_ltam5_architecture_guard_test.dart             test/features/learning_twin/ui/learning_twin_avatar_motion_compatibility_test.dart             test/features/learning_twin/ui/learning_twin_motion_renderer_test.dart             test/features/learning_twin/ui/learning_twin_motion_policy_test.dart             test/features/learning_twin/ui/learning_twin_motion_controller_test.dart
 
       - name: Revalidate complete Learning Twin
         run: flutter test test/features/learning_twin
@@ -90,7 +90,8 @@ jobs:
 
           grep -F "test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart" /tmp/ltam5_full_regression.log
           grep -F "test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart" /tmp/ltam5_full_regression.log
-          grep -F "3169 tests passed, 2 failed, 1 skipped." /tmp/ltam5_full_regression.log
+          grep -E "[0-9]+ tests passed, 2 failed, 1 skipped\." /tmp/ltam5_full_regression.log
+          test "$(grep -c "❌" /tmp/ltam5_full_regression.log)" -eq 2
 
           git worktree add --detach /tmp/ltam5-baseline d3b4529501bd1a1e9c5059e133b98bafda885da0
           cd /tmp/ltam5-baseline
