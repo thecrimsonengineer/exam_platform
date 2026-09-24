@@ -153,7 +153,11 @@
       "competencyId": "d02_c09",
       "number": 9,
       "statement": "Describe required components for plans, systems, and policies (e.g., safety, health, and environmental regulations and standards)",
-      "status": "not_started"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c09/d02_c09_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d02/d02_c09/d02_c09_flashcards_v1.json",
+      "cardCount": 13,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d02_c10",
