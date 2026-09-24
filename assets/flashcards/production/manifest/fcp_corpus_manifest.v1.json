@@ -8,7 +8,7 @@
   },
   "workingBranch": "phase-fcp-flashcard-production",
   "runs": {
-    "fcp0": "in_progress",
+    "fcp0": "closed",
     "fcp1": "not_started",
     "fcp2": "not_started",
     "fcp3": "not_started",
@@ -20,6 +20,12 @@
     "fcp9": "not_started",
     "fcp10": "not_started",
     "fcp11": "not_started"
+  },
+  "checkpoints": {
+    "fcp0": {
+      "name": "FCP0_PRODUCTION_SPEC_GREEN",
+      "branch": "phase-fcp0-production-spec-closed"
+    }
   },
   "domains": {}
 }

@@ -5,7 +5,7 @@ Working branch: `phase-fcp-flashcard-production`
 
 | Run | Scope | Status | Blocking | Checkpoint |
 |---|---|---|---:|---|
-| FCP-0 | Production specification freeze | IN PROGRESS | 0 | |
+| FCP-0 | Production specification freeze | CLOSED | 0 | `phase-fcp0-production-spec-closed` |
 | FCP-1 | D01 production | NOT STARTED | 0 | |
 | FCP-2 | D02 production | NOT STARTED | 0 | |
 | FCP-3 | D03 production | NOT STARTED | 0 | |
@@ -17,6 +17,12 @@ Working branch: `phase-fcp-flashcard-production`
 | FCP-9 | Curriculum coverage gate | NOT STARTED | 0 | |
 | FCP-10 | Human review | NOT STARTED | 0 | |
 | FCP-11 | Production freeze | NOT STARTED | 0 | |
+
+FCP-0 closure gate:
+
+```text
+FCP0_PRODUCTION_SPEC_GREEN
+```
 
 Allowed states:
 
