@@ -1,9 +1,9 @@
 # CSP11 LTAM-5 Hero Asset Admission Gate
 
-**Status:** BLOCKED ON CANONICAL AUTHORING ASSET  
-**Date:** 2026-09-24  
-**Source checkpoint:** phase-ml-ltam5-hero-pilot-gated  
-**Source SHA:** 720f88328bc1985e25f3bc3feea225cea0adae48  
+**Status:** BLOCKED ON CANONICAL AUTHORING ASSET
+**Date:** 2026-09-24
+**Source checkpoint:** phase-ml-ltam5-hero-pilot-gated
+**Source SHA:** 720f88328bc1985e25f3bc3feea225cea0adae48
 **Working branch:** phase-ml-ltam5-hero-asset-admission
 
 ## Finding
