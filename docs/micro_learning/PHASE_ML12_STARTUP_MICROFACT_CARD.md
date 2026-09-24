@@ -1,6 +1,6 @@
 # CSP11 Phase ML-12 — Startup MicroFactCard
 
-Status: IN PROGRESS
+Status: CLOSED
 
 Base recovery point: `phase-ml11-intelligent-selector-closed`
 
@@ -102,24 +102,39 @@ ML-12 does not weight selection from mastery/readiness state. That work belongs 
 
 ## ML-12 exit criteria
 
-- [ ] one selected MicroFact can render on startup;
-- [ ] short variant is preferred when present;
-- [ ] full display text is a safe fallback;
-- [ ] narrow-screen card rendering has no overflow;
-- [ ] real frozen ML-10 bundle can supply a startup fact;
-- [ ] daily fallback ordinal is deterministic;
-- [ ] no-fact state preserves normal startup;
-- [ ] selected fact does not extend startup handoff;
-- [ ] ML-11 selector regression remains green;
-- [ ] ML-10 repository regression remains green;
-- [ ] startup watchdog/hardening regression remains green;
-- [ ] startup render regression remains green;
-- [ ] production MicroFact files remain unchanged;
-- [ ] exact closing SHA is validated;
-- [ ] immutable ML-12 recovery branch is created.
+- [x] one selected MicroFact can render on startup;
+- [x] short variant is preferred when present;
+- [x] full display text is a safe fallback;
+- [x] narrow-screen card rendering has no overflow;
+- [x] real frozen ML-10 bundle can supply a startup fact;
+- [x] daily fallback ordinal is deterministic;
+- [x] no-fact state preserves normal startup;
+- [x] selected fact does not extend startup handoff;
+- [x] ML-11 selector regression remains green;
+- [x] ML-10 repository regression remains green;
+- [x] startup watchdog/hardening regression remains green;
+- [x] startup render regression remains green;
+- [x] production MicroFact files remain unchanged;
+- [x] exact closing SHA is validated;
+- [x] immutable ML-12 recovery branch is created.
 
 ## Next phase
 
 ML-13 — Animation Choreography.
 
 ML-13 may animate the MicroFact surface within the existing motion policy, but must never extend startup duration or create a reading-completion dependency.
+
+
+## Closure evidence
+
+- Normalized implementation commit: `51b66e3660a1a7ed94be8b76bc8c1bd36a35385e`.
+- Implementation validation run: `35954171773` — PASS.
+- ML-12 service/card/integration tests: PASS.
+- ML-11 selector regression: PASS.
+- ML-10 local repository regression: PASS.
+- Existing startup hardening and render regression: PASS.
+- A pending MicroFact load was proven unable to extend startup duration.
+- Production MicroFact files modified by ML-12: 0.
+- Network reads introduced by ML-12: 0.
+- Persistence writes introduced by ML-12: 0.
+- Custom MicroFact choreography remains deferred to ML-13.
