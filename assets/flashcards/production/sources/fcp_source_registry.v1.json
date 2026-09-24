@@ -868,6 +868,23 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Supports proactive measurement of safety-program effectiveness and culture-related leading indicators. Generic leading-indicator concept remains reserved for D02 C07."
+    },
+    {
+      "id": "csp11.source.niosh.construction_safety_culture",
+      "organization": "NIOSH",
+      "title": "Construction - Safety climate and safety culture",
+      "canonicalUrl": "https://www.cdc.gov/niosh/construction/about/",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports the importance of safety climate and safety culture, worker input, participatory approaches, and prevention. Educational paraphrase only."
     }
   ]
 }

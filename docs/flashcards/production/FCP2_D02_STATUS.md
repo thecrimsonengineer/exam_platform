@@ -7,7 +7,7 @@ Recovery base: `phase-fcp1-d01-closed@45d00a95dc6d8cb9e7c06db6df57bb71c5e17fe2`
 ```text
 FCP-2A  d02_c01  CLOSED             8 cards
 FCP-2B  d02_c02  CLOSED             5 cards
-FCP-2C  d02_c03  IN PROGRESS
+FCP-2C  d02_c03  VALIDATING        10 cards
 FCP-2D  d02_c04  NOT STARTED
 FCP-2E  d02_c05  NOT STARTED
 FCP-2F  d02_c06  NOT STARTED
@@ -23,6 +23,6 @@ FCP-2N  d02_c14  NOT STARTED
 
 FCP-2C started strictly from `phase-fcp2b-d02-c02-closed@20447693e03e061451b91cf5d870095ad66b7ce5`.
 
-FCP-2B closure validation: run `35964619484`, SUCCESS.
+C03 package: 10 culture/climate cards. Generic Performance Measure, Performance Analysis, Action Plan, and Leading Indicator remain canonical in their existing or reserved competencies.
 
-FCP-2C begins with 10 culture/climate candidates plus canonical references to Performance Measure, Performance Analysis, Action Plan, and Leading Indicator.
+FCP-2C remains VALIDATING until its learner package, evidence bundle, frozen Flashcard Core regression, and full repository regression are green.

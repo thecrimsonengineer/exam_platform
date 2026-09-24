@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": "FCP-2C",
-  "status": "candidate_inventory",
+  "status": "resolved_inventory",
   "domainId": "d02",
   "competencyId": "d02_c03",
   "competencyStatement": "Determine how to measure, analyze, and improve EHS culture",
@@ -47,105 +47,6 @@
       ]
     }
   ],
-  "candidateConcepts": [
-    {
-      "semanticSlug": "safety_culture",
-      "canonicalLabel": "Safety Culture",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.niosh.safety_climate_scat",
-        "csp11.source.osha.safe_sound_management_leadership"
-      ],
-      "rationale": "The enduring organizational values, expectations, priorities, and practices that shape how safety is understood and acted upon."
-    },
-    {
-      "semanticSlug": "safety_climate",
-      "canonicalLabel": "Safety Climate",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.niosh.safety_climate_scat"
-      ],
-      "rationale": "Shared employee perceptions of what is rewarded, expected, valued, and reinforced regarding safety; a measurable snapshot of the wider culture."
-    },
-    {
-      "semanticSlug": "safety_climate_assessment",
-      "canonicalLabel": "Safety Climate Assessment",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.niosh.safety_climate_scat"
-      ],
-      "rationale": "Structured assessment of safety-climate factors to identify maturity, strengths, and low-scoring areas needing intervention."
-    },
-    {
-      "semanticSlug": "management_commitment_to_safety",
-      "canonicalLabel": "Management Commitment to Safety",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.safe_sound_management_leadership",
-        "csp11.source.niosh.safety_climate_scat"
-      ],
-      "rationale": "Visible leadership actions that demonstrate safety is important through decisions, resources, communication, recognition, and example."
-    },
-    {
-      "semanticSlug": "safety_as_a_core_value",
-      "canonicalLabel": "Safety as a Core Value",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.niosh.safety_climate_scat",
-        "csp11.source.osha.safe_sound_management_leadership"
-      ],
-      "rationale": "Alignment and integration of safety into organizational priorities and routine decisions rather than treating it as an isolated program."
-    },
-    {
-      "semanticSlug": "safety_accountability",
-      "canonicalLabel": "Safety Accountability",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.niosh.safety_climate_scat"
-      ],
-      "rationale": "Clear expectations and responsibility for safety performance at all organizational levels."
-    },
-    {
-      "semanticSlug": "worker_safety_participation",
-      "canonicalLabel": "Worker Safety Participation",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.worker_participation",
-        "csp11.source.niosh.safety_climate_scat"
-      ],
-      "rationale": "Meaningful involvement of workers in reporting, evaluating, designing, operating, and improving safety and health activities."
-    },
-    {
-      "semanticSlug": "safety_communication",
-      "canonicalLabel": "Safety Communication",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.niosh.safety_climate_scat",
-        "csp11.source.osha.worker_participation"
-      ],
-      "rationale": "Two-way exchange of safety information, concerns, feedback, and management responses that supports trust and informed action."
-    },
-    {
-      "semanticSlug": "organizational_learning_for_safety",
-      "canonicalLabel": "Organizational Learning for Safety",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.osha.worker_participation",
-        "csp11.source.osha.program_evaluation"
-      ],
-      "rationale": "Using reports, evaluation findings, worker knowledge, and feedback to change systems and improve safety performance."
-    },
-    {
-      "semanticSlug": "safety_culture_improvement_cycle",
-      "canonicalLabel": "Safety Culture Improvement Cycle",
-      "decision": "CANDIDATE",
-      "sourceIds": [
-        "csp11.source.niosh.safety_climate_scat",
-        "csp11.source.osha.program_evaluation"
-      ],
-      "rationale": "A repeatable assess-prioritize-intervene-reassess cycle used to strengthen weak culture or climate factors and evaluate whether changes worked."
-    }
-  ],
   "crossCompetencyReferences": [
     {
       "semanticSlug": "performance_measure",
@@ -176,10 +77,107 @@
       "reason": "Safety climate can function as a leading indicator, but the generic indicator concept belongs to D02 C07."
     }
   ],
-  "acceptedConcepts": [],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "safety_culture",
+      "canonicalLabel": "Safety Culture",
+      "sourceIds": [
+        "csp11.source.niosh.safety_climate_scat",
+        "csp11.source.osha.safe_sound_management_leadership",
+        "csp11.source.niosh.construction_safety_culture"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_climate",
+      "canonicalLabel": "Safety Climate",
+      "sourceIds": [
+        "csp11.source.niosh.safety_climate_scat"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_climate_assessment",
+      "canonicalLabel": "Safety Climate Assessment",
+      "sourceIds": [
+        "csp11.source.niosh.safety_climate_scat"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "management_commitment_to_safety",
+      "canonicalLabel": "Management Commitment to Safety",
+      "sourceIds": [
+        "csp11.source.osha.safe_sound_management_leadership",
+        "csp11.source.niosh.safety_climate_scat"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_as_a_core_value",
+      "canonicalLabel": "Safety as a Core Value",
+      "sourceIds": [
+        "csp11.source.niosh.safety_climate_scat",
+        "csp11.source.osha.safe_sound_management_leadership"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_accountability",
+      "canonicalLabel": "Safety Accountability",
+      "sourceIds": [
+        "csp11.source.niosh.safety_climate_scat"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "worker_safety_participation",
+      "canonicalLabel": "Worker Safety Participation",
+      "sourceIds": [
+        "csp11.source.osha.worker_participation",
+        "csp11.source.niosh.safety_climate_scat"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_communication",
+      "canonicalLabel": "Safety Communication",
+      "sourceIds": [
+        "csp11.source.niosh.safety_climate_scat",
+        "csp11.source.osha.worker_participation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "organizational_learning_for_safety",
+      "canonicalLabel": "Organizational Learning for Safety",
+      "sourceIds": [
+        "csp11.source.osha.worker_participation",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "safety_culture_improvement_cycle",
+      "canonicalLabel": "Safety Culture Improvement Cycle",
+      "sourceIds": [
+        "csp11.source.niosh.safety_climate_scat",
+        "csp11.source.osha.program_evaluation"
+      ],
+      "decision": "CARD"
+    }
+  ],
   "mergedConcepts": [],
   "rejectedConcepts": [],
   "notFlashcardWorthy": [],
   "holds": [],
-  "nextGate": "Resolve D02 C03 culture/climate boundaries and canonical references before learner-ready package authoring."
+  "nextGate": "Validate d02_c03_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 10,
+    "acceptedCardCount": 10,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
 }
