@@ -13,7 +13,7 @@ FCP-2C  d02_c03  CLOSED
 FCP-2D  d02_c04  CLOSED
 FCP-2E  d02_c05  CLOSED
 FCP-2F  d02_c06  CLOSED
-FCP-2G  d02_c07  VALIDATING
+FCP-2G  d02_c07  CLOSED
 FCP-2H  d02_c08  NOT STARTED
 FCP-2I  d02_c09  NOT STARTED
 FCP-2J  d02_c10  NOT STARTED
@@ -23,6 +23,4 @@ FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2F closed at `phase-fcp2f-d02-c06-closed@c946f2b72af03cc86e4f3da607fa2f639d00ff4e`.
-
-FCP-2G started strictly from that closed checkpoint. Candidate package: 12 leading and lagging indicator cards.
+FCP-2G package validation passed at `2bcabaf9a0f299910010ee8a920bc0082016fe97` in run `35992273111`. The closure metadata state must pass CI before `phase-fcp2g-d02-c07-closed` is created.
