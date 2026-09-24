@@ -87,7 +87,8 @@ void main() {
       expect(
         text,
         isNot(contains('onMotionCompleted:')),
-        reason: 'Business surface depends on animation completion: ${file.path}',
+        reason:
+            'Business surface depends on animation completion: ${file.path}',
       );
     }
   });

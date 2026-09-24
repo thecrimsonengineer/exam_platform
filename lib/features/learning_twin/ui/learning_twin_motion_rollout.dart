@@ -43,15 +43,13 @@ abstract final class LearningTwinMotionRollout {
     LearningTwinMotionState state,
   ) {
     return switch (surface) {
-      LearningTwinMotionSurface.hero =>
-        state == LearningTwinMotionState.idle,
+      LearningTwinMotionSurface.hero => state == LearningTwinMotionState.idle,
       LearningTwinMotionSurface.card ||
       LearningTwinMotionSurface.celebration ||
       LearningTwinMotionSurface.compactTip ||
       LearningTwinMotionSurface.inlineBlock ||
       LearningTwinMotionSurface.bubble ||
-      LearningTwinMotionSurface.coachSheet =>
-        false,
+      LearningTwinMotionSurface.coachSheet => false,
     };
   }
 

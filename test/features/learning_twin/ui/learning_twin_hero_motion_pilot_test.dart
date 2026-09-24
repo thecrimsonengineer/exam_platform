@@ -69,20 +69,21 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('forced pilot enters motion facade but missing idle asset is static-safe', (
-    tester,
-  ) async {
-    await pumpHero(tester, width: 390, motionPilotEnabled: true);
-    await tester.pump(const Duration(milliseconds: 20));
+  testWidgets(
+    'forced pilot enters motion facade but missing idle asset is static-safe',
+    (tester) async {
+      await pumpHero(tester, width: 390, motionPilotEnabled: true);
+      await tester.pump(const Duration(milliseconds: 20));
 
-    expect(find.byType(LearningTwinMotionRenderer), findsOneWidget);
-    expect(find.byType(SvgPicture), findsOneWidget);
-    expect(find.byType(Lottie), findsNothing);
-    expect(find.text('Your Learning Guide'), findsOneWidget);
-    expect(find.text('Keep the next step clear.'), findsOneWidget);
-    expect(find.text('Continue'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(find.byType(LearningTwinMotionRenderer), findsOneWidget);
+      expect(find.byType(SvgPicture), findsOneWidget);
+      expect(find.byType(Lottie), findsNothing);
+      expect(find.text('Your Learning Guide'), findsOneWidget);
+      expect(find.text('Keep the next step clear.'), findsOneWidget);
+      expect(find.text('Continue'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('reduced motion keeps forced pilot static', (tester) async {
     await pumpHero(
@@ -127,9 +128,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('wide Hero preserves 180 square avatar contract', (
-    tester,
-  ) async {
+  testWidgets('wide Hero preserves 180 square avatar contract', (tester) async {
     await pumpHero(tester, width: 760, motionPilotEnabled: true);
 
     expect(

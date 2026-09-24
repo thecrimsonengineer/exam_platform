@@ -56,8 +56,7 @@ class LearningTwinMotionRenderer extends StatefulWidget {
       _LearningTwinMotionRendererState();
 }
 
-class _LearningTwinMotionRendererState
-    extends State<LearningTwinMotionRenderer>
+class _LearningTwinMotionRendererState extends State<LearningTwinMotionRenderer>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   static final Map<String, Future<bool>> _assetAvailabilityCache =
       <String, Future<bool>>{};

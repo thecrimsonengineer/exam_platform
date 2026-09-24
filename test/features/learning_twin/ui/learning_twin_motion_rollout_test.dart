@@ -3,17 +3,20 @@ import 'package:exam_platform/features/learning_twin/ui/learning_twin_motion_sta
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('Hero pilot is requested but gated by canonical idle asset admission', () {
-    expect(LearningTwinMotionRollout.heroPilotRequested, isTrue);
-    expect(LearningTwinMotionRollout.canonicalIdleClipAdmitted, isFalse);
-    expect(LearningTwinMotionRollout.heroMotionEnabled, isFalse);
-    expect(
-      LearningTwinMotionRollout.blockedReasonFor(
-        LearningTwinMotionSurface.hero,
-      ),
-      'canonical_idle_clip_not_admitted',
-    );
-  });
+  test(
+    'Hero pilot is requested but gated by canonical idle asset admission',
+    () {
+      expect(LearningTwinMotionRollout.heroPilotRequested, isTrue);
+      expect(LearningTwinMotionRollout.canonicalIdleClipAdmitted, isFalse);
+      expect(LearningTwinMotionRollout.heroMotionEnabled, isFalse);
+      expect(
+        LearningTwinMotionRollout.blockedReasonFor(
+          LearningTwinMotionSurface.hero,
+        ),
+        'canonical_idle_clip_not_admitted',
+      );
+    },
+  );
 
   test('only idle is permitted for the LTAM-5 Hero pilot', () {
     for (final state in canonicalLearningTwinMotionStates) {
