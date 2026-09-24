@@ -354,6 +354,8 @@ class ReleaseEvidenceGenerator {
     ).writeAsString(checksums, flush: true);
     identityParts['checksums.sha256'] = checksums;
 
+    issues.addAll(_semanticConsistencyIssues(decoded));
+
     final identity = _evidenceIdentity(identityParts);
     final release = manifest['release']! as Map<String, Object?>;
     final summary = _summary(
@@ -479,6 +481,73 @@ class ReleaseEvidenceGenerator {
       evidenceIdentitySha256: identity,
       issues: List<String>.unmodifiable(issues),
     );
+  }
+
+  static List<String> _semanticConsistencyIssues(
+    Map<String, Map<String, Object?>> decoded,
+  ) {
+    final issues = <String>[];
+    final manifest = decoded['release_manifest.json'];
+    if (manifest == null) {
+      return issues;
+    }
+
+    final versionEvidence = decoded['version_evidence.json'];
+    if (versionEvidence != null) {
+      try {
+        final release = _map(manifest, 'release');
+        final versionName = _string(release, 'versionName');
+        final buildNumber = _integer(release, 'buildNumber');
+        final releaseId = _string(release, 'releaseId');
+
+        final evidenceVersionName = _string(
+          versionEvidence,
+          'versionName',
+        );
+        final evidenceBuildNumber = _integer(
+          versionEvidence,
+          'buildNumber',
+        );
+        final evidenceFullVersion = _string(
+          versionEvidence,
+          'fullVersion',
+        );
+        final evidenceReleaseId = _string(
+          versionEvidence,
+          'releaseId',
+        );
+
+        if (evidenceVersionName != versionName ||
+            evidenceBuildNumber != buildNumber ||
+            evidenceFullVersion != '$versionName+$buildNumber' ||
+            evidenceReleaseId != releaseId) {
+          issues.add('EVD010_VERSION_EVIDENCE_MISMATCH');
+        }
+      } on Object {
+        issues.add('EVD010_VERSION_EVIDENCE_MISMATCH');
+      }
+    }
+
+    final repositoryEvidence = decoded['repository_evidence.json'];
+    if (repositoryEvidence != null) {
+      try {
+        final source = _map(manifest, 'source');
+        if (_string(repositoryEvidence, 'repository') !=
+                _string(source, 'repository') ||
+            _string(repositoryEvidence, 'headSha') !=
+                _string(source, 'commitSha') ||
+            _string(repositoryEvidence, 'treeSha') !=
+                _string(source, 'treeSha') ||
+            _boolean(repositoryEvidence, 'clean') !=
+                _boolean(source, 'clean')) {
+          issues.add('EVD011_REPOSITORY_EVIDENCE_MISMATCH');
+        }
+      } on Object {
+        issues.add('EVD011_REPOSITORY_EVIDENCE_MISMATCH');
+      }
+    }
+
+    return issues;
   }
 
   void _validateRequest(ReleaseEvidenceRequest request) {
