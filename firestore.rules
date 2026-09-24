@@ -746,17 +746,66 @@ service cloud.firestore {
           /databases/$(database)/documents/labProductionReleaseExtensionEvidence/$(releaseId)
         )
         && exists(
-          /databases/$(database)/documents/labLearnerReleaseExtensionState/$(releaseId)
+          /databases/$(database)/documents/labProductionReleaseExtensionState/$(releaseId)
         )
         && get(
           /databases/$(database)/documents/labProductionReleaseExtensionEvidence/$(releaseId)
         ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint
         && get(
-          /databases/$(database)/documents/labLearnerReleaseExtensionState/$(releaseId)
+          /databases/$(database)/documents/labProductionReleaseExtensionState/$(releaseId)
         ).data.released == true
         && get(
-          /databases/$(database)/documents/labLearnerReleaseExtensionState/$(releaseId)
+          /databases/$(database)/documents/labProductionReleaseExtensionState/$(releaseId)
         ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint;
+    }
+
+    function batch2LearnerVisibilityAllowedKeys() {
+      return [
+        'schemaVersion',
+        'releaseId',
+        'accepted',
+        'evidenceFingerprint',
+        'acceptanceFingerprint',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validBatch2LearnerVisibility(releaseId) {
+      return request.resource.data.keys().hasAll(
+          batch2LearnerVisibilityAllowedKeys()
+        )
+        && request.resource.data.keys().hasOnly(
+          batch2LearnerVisibilityAllowedKeys()
+        )
+        && request.resource.data.schemaVersion
+          == 'csp11.lab.learner_extension_visibility.v1'
+        && request.resource.data.releaseId == releaseId
+        && releaseId == 'phase_l_population_batch2_v1_q16_extension_v1'
+        && request.resource.data.accepted == true
+        && request.resource.data.evidenceFingerprint is string
+        && request.resource.data.acceptanceFingerprint is string
+        && request.resource.data.serverCreatedAt is timestamp
+        && existsAfter(
+          /databases/$(database)/documents/labProductionReleaseExtensionAcceptance/$(releaseId)
+        )
+        && exists(
+          /databases/$(database)/documents/labProductionReleaseExtensionEvidence/$(releaseId)
+        )
+        && exists(
+          /databases/$(database)/documents/labProductionReleaseExtensionState/$(releaseId)
+        )
+        && getAfter(
+          /databases/$(database)/documents/labProductionReleaseExtensionAcceptance/$(releaseId)
+        ).data.acceptanceFingerprint == request.resource.data.acceptanceFingerprint
+        && getAfter(
+          /databases/$(database)/documents/labProductionReleaseExtensionAcceptance/$(releaseId)
+        ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint
+        && get(
+          /databases/$(database)/documents/labProductionReleaseExtensionEvidence/$(releaseId)
+        ).data.evidenceFingerprint == request.resource.data.evidenceFingerprint
+        && get(
+          /databases/$(database)/documents/labProductionReleaseExtensionState/$(releaseId)
+        ).data.released == true;
     }
 
     function batch2LabPopulationAccepted() {
@@ -765,6 +814,9 @@ service cloud.firestore {
         )
         && exists(
           /databases/$(database)/documents/labProductionReleaseExtensionEvidence/phase_l_population_batch2_v1_q16_extension_v1
+        )
+        && exists(
+          /databases/$(database)/documents/labProductionReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
         )
         && exists(
           /databases/$(database)/documents/labLearnerReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
@@ -776,29 +828,40 @@ service cloud.firestore {
         ).data.evidenceFingerprint
         && get(
           /databases/$(database)/documents/labLearnerReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
-        ).data.released == true
+        ).data.schemaVersion == 'csp11.lab.learner_extension_visibility.v1'
         && get(
           /databases/$(database)/documents/labLearnerReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
-        ).data.evidenceFingerprint == get(
-          /databases/$(database)/documents/labProductionReleaseExtensionEvidence/phase_l_population_batch2_v1_q16_extension_v1
-        ).data.evidenceFingerprint;
+        ).data.accepted == true
+        && get(
+          /databases/$(database)/documents/labLearnerReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
+        ).data.acceptanceFingerprint == get(
+          /databases/$(database)/documents/labProductionReleaseExtensionAcceptance/phase_l_population_batch2_v1_q16_extension_v1
+        ).data.acceptanceFingerprint;
     }
 
     function batch2LabPopulationAcceptedAfter() {
       return existsAfter(
           /databases/$(database)/documents/labProductionReleaseExtensionAcceptance/phase_l_population_batch2_v1_q16_extension_v1
         )
+        && existsAfter(
+          /databases/$(database)/documents/labLearnerReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
+        )
         && exists(
           /databases/$(database)/documents/labProductionReleaseExtensionEvidence/phase_l_population_batch2_v1_q16_extension_v1
         )
         && exists(
-          /databases/$(database)/documents/labLearnerReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
+          /databases/$(database)/documents/labProductionReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
         )
         && getAfter(
           /databases/$(database)/documents/labProductionReleaseExtensionAcceptance/phase_l_population_batch2_v1_q16_extension_v1
         ).data.evidenceFingerprint == get(
           /databases/$(database)/documents/labProductionReleaseExtensionEvidence/phase_l_population_batch2_v1_q16_extension_v1
-        ).data.evidenceFingerprint;
+        ).data.evidenceFingerprint
+        && getAfter(
+          /databases/$(database)/documents/labLearnerReleaseExtensionState/phase_l_population_batch2_v1_q16_extension_v1
+        ).data.acceptanceFingerprint == getAfter(
+          /databases/$(database)/documents/labProductionReleaseExtensionAcceptance/phase_l_population_batch2_v1_q16_extension_v1
+        ).data.acceptanceFingerprint;
     }
 
     match /users/{uid} {
@@ -932,10 +995,29 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    match /labLearnerReleaseExtensionState/{releaseId} {
+    match /labProductionReleaseExtensionState/{releaseId} {
       allow get, list: if isAdmin();
 
       allow create: if isAdmin() && validBatch2ReleaseState(releaseId);
+
+      allow update, delete: if false;
+    }
+
+    match /labLearnerReleaseExtensionState/{releaseId} {
+      allow get: if isAdmin()
+        || (
+          signedIn()
+          && resource.data.schemaVersion
+            == 'csp11.lab.learner_extension_visibility.v1'
+          && resource.data.releaseId
+            == 'phase_l_population_batch2_v1_q16_extension_v1'
+          && resource.data.accepted == true
+        );
+
+      allow list: if isAdmin();
+
+      allow create: if isAdmin()
+        && validBatch2LearnerVisibility(releaseId);
 
       allow update, delete: if false;
     }
