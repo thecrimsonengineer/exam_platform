@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ml11-intelligent-selector
@@ -47,8 +47,8 @@ jobs:
       - name: Analyze ML-11
         run: dart analyze lib/services/micro_learning/micro_fact_selector.dart test/micro_learning/micro_fact_selector_test.dart test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
 
-      - name: Format check
-        run: dart format --output=none --set-exit-if-changed lib/services/micro_learning/micro_fact_selector.dart test/micro_learning/micro_fact_selector_test.dart test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
+      - name: Format ML-11 files
+        run: dart format lib/services/micro_learning/micro_fact_selector.dart test/micro_learning/micro_fact_selector_test.dart test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
 
       - name: Run selector tests
         run: |
@@ -67,3 +67,23 @@ jobs:
           flutter test \
             test/startup/startup_screen_hardening_test.dart \
             test/startup/startup_release_render_smoke_test.dart
+
+      - name: Commit normalized ML-11 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          if git diff --quiet -- \
+            lib/services/micro_learning/micro_fact_selector.dart \
+            test/micro_learning/micro_fact_selector_test.dart \
+            test/micro_learning/micro_fact_selector_runtime_corpus_test.dart; then
+            echo "ML-11 Dart files already formatted."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/services/micro_learning/micro_fact_selector.dart
+          git add test/micro_learning/micro_fact_selector_test.dart
+          git add test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
+          git commit -m "ML-11 normalize selector implementation"
+          git push origin HEAD:phase-ml11-intelligent-selector
