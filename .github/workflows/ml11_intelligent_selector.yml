@@ -1,0 +1,69 @@
+name: ML-11 Intelligent MicroFact Selector
+
+on:
+  push:
+    branches:
+      - phase-ml11-intelligent-selector
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml11-intelligent-selector
+  cancel-in-progress: true
+
+jobs:
+  validate-ml11:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact ML-11 SHA
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git diff --check HEAD^
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify ML-10 runtime bundle
+        run: dart run tool/generate_ml10_runtime_bundle.dart --check
+
+      - name: Analyze ML-11
+        run: dart analyze lib/services/micro_learning/micro_fact_selector.dart test/micro_learning/micro_fact_selector_test.dart test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
+
+      - name: Format check
+        run: dart format --output=none --set-exit-if-changed lib/services/micro_learning/micro_fact_selector.dart test/micro_learning/micro_fact_selector_test.dart test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
+
+      - name: Run selector tests
+        run: |
+          flutter test \
+            test/micro_learning/micro_fact_selector_test.dart \
+            test/micro_learning/micro_fact_selector_runtime_corpus_test.dart
+
+      - name: Revalidate ML-10 local repository
+        run: |
+          flutter test \
+            test/micro_learning/local_micro_fact_repository_test.dart \
+            test/micro_learning/local_micro_fact_repository_asset_test.dart
+
+      - name: Revalidate startup independence
+        run: |
+          flutter test \
+            test/startup/startup_screen_hardening_test.dart \
+            test/startup/startup_release_render_smoke_test.dart
