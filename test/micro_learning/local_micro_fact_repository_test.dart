@@ -116,8 +116,14 @@ void main() {
           final review = Map<String, dynamic>.from(
             facts.first['review'] as Map,
           );
+          review['reviewedAt'] = '2026-09-22';
           review['nextReviewDueAt'] = '2026-09-23';
           facts.first['review'] = review;
+          final provenance = Map<String, dynamic>.from(
+            facts.first['provenance'] as Map,
+          );
+          provenance['sourceVerifiedAt'] = '2026-09-22';
+          facts.first['provenance'] = provenance;
         },
       ),
     );
