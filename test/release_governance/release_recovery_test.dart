@@ -23,20 +23,16 @@ void main() {
     test('records a complete rollback-eligible stable anchor', () {
       const recovery = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
-        previousStableCommit:
-            '0123456789abcdef0123456789abcdef01234567',
-        previousStableTree:
-            '89abcdef0123456789abcdef0123456789abcdef',
+        previousStableCommit: '0123456789abcdef0123456789abcdef01234567',
+        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
         rollbackEligible: true,
       );
 
       expect(recovery.hasPreviousStable, isTrue);
       expect(recovery.toJson(), <String, Object?>{
         'previousStableRelease': 'csp11-1.0.0',
-        'previousStableCommit':
-            '0123456789abcdef0123456789abcdef01234567',
-        'previousStableTree':
-            '89abcdef0123456789abcdef0123456789abcdef',
+        'previousStableCommit': '0123456789abcdef0123456789abcdef01234567',
+        'previousStableTree': '89abcdef0123456789abcdef0123456789abcdef'
         'rollbackEligible': true,
       });
     });
@@ -44,10 +40,8 @@ void main() {
     test('allows complete lineage to be recorded but ineligible', () {
       const recovery = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
-        previousStableCommit:
-            '0123456789abcdef0123456789abcdef01234567',
-        previousStableTree:
-            '89abcdef0123456789abcdef0123456789abcdef',
+        previousStableCommit: '0123456789abcdef0123456789abcdef01234567',
+        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef',
         rollbackEligible: false,
       );
 
@@ -59,8 +53,7 @@ void main() {
       const recovery = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
         previousStableCommit: null,
-        previousStableTree:
-            '89abcdef0123456789abcdef0123456789abcdef',
+        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
         rollbackEligible: false,
       );
 
@@ -82,14 +75,12 @@ void main() {
       const badCommit = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
         previousStableCommit: 'bad',
-        previousStableTree:
-            '89abcdef0123456789abcdef0123456789abcdef',
+        previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
         rollbackEligible: true,
       );
       const badTree = ReleaseRecoveryMetadata(
         previousStableRelease: 'csp11-1.0.0',
-        previousStableCommit:
-            '0123456789abcdef0123456789abcdef01234567',
+        previousStableCommit: '0123456789abcdef0123456789abcdef01234567',
         previousStableTree: 'BAD',
         rollbackEligible: true,
       );
@@ -210,10 +201,8 @@ void main() {
 
 const ReleaseRecoveryMetadata _eligibleRecovery = ReleaseRecoveryMetadata(
   previousStableRelease: 'csp11-1.0.0',
-  previousStableCommit:
-      '0123456789abcdef0123456789abcdef01234567',
-  previousStableTree:
-      '89abcdef0123456789abcdef0123456789abcdef',
+  previousStableCommit: '0123456789abcdef0123456789abcdef01234567',
+  previousStableTree: '89abcdef0123456789abcdef0123456789abcdef'
   rollbackEligible: true,
 );
 

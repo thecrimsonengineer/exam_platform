@@ -80,9 +80,7 @@ class ReleaseRecoveryMetadata {
     final tree = previousStableTree!;
 
     if (release.trim().isEmpty) {
-      throw const FormatException(
-        'previousStableRelease must not be empty.',
-      );
+      throw const FormatException('previousStableRelease must not be empty.');
     }
     if (!_gitShaPattern.hasMatch(commit)) {
       throw FormatException(
