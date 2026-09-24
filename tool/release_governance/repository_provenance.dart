@@ -167,13 +167,17 @@ class RepositoryProvenanceInspector {
     ]);
     final tags = _nonEmptyLines(tagOutput)..sort();
 
-    final statusOutput = await _git(root, const <String>[
-      '-c',
-      'core.quotepath=false',
-      'status',
-      '--porcelain=v1',
-      '--untracked-files=all',
-    ]);
+    final statusOutput = await _git(
+      root,
+      const <String>[
+        '-c',
+        'core.quotepath=false',
+        'status',
+        '--porcelain=v1',
+        '--untracked-files=all',
+      ],
+      trimOutput: false,
+    );
     final changes = _parseStatus(statusOutput);
 
     return RepositoryProvenanceEvidence(
@@ -282,6 +286,7 @@ class RepositoryProvenanceInspector {
     String directory,
     List<String> arguments, {
     bool allowFailure = false,
+    bool trimOutput = true,
   }) async {
     final result = await Process.run(
       'git',
@@ -302,6 +307,7 @@ class RepositoryProvenanceInspector {
       return '';
     }
 
-    return (result.stdout as String).trim();
+    final stdout = result.stdout as String;
+    return trimOutput ? stdout.trim() : stdout;
   }
 }
