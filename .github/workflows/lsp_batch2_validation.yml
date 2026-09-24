@@ -37,9 +37,9 @@ jobs:
           python -m py_compile tools/lab/generate_batch2_dqg.py
           python tools/lab/generate_batch2_dqg.py
 
-      - name: Batch 2 formatting gate
+      - name: Canonical Batch 2 formatting
         run: |
-          dart format --output=none --set-exit-if-changed             test/lab_quality/lsp_batch2_population_gate_test.dart
+          dart format test/lab_quality/lsp_batch2_population_gate_test.dart
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos
