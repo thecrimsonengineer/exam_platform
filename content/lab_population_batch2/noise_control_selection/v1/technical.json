@@ -581,7 +581,7 @@
     {
       "id": "controls_decision",
       "type": "DECISION",
-      "prompt": "Measurements confirm excessive noise near one machine. What is the best next action?",
+      "prompt": "Measurements confirm excessive noise near one machine while employees continue rotating through the area during production. What is the best next action?",
       "options": [
         {
           "id": "controls_decision_o1",
