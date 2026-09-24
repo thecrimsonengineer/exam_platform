@@ -85,11 +85,12 @@ void main() {
       expect(gradle, contains('flutter {'));
       expect(gradle, contains('source = "../.."'));
 
-      // Frozen SM-5 boundary: R4 proves packaging, not Play Store signing.
-      expect(
-        gradle,
-        contains('signingConfig = signingConfigs.getByName("debug")'),
-      );
+      // Release governance supports explicit production signing while
+      // retaining the debug key only as a local-development fallback.
+      expect(gradle, contains('val useExplicitCsp11Signing'));
+      expect(gradle, contains('create("csp11Explicit")'));
+      expect(gradle, contains('signingConfigs.getByName("csp11Explicit")'));
+      expect(gradle, contains('signingConfigs.getByName("debug")'));
     });
 
     test('Web remains wired through the Flutter bootstrap loader', () {

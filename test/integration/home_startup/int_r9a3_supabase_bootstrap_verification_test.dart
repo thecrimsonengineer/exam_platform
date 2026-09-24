@@ -5,15 +5,29 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('INT-R9A3 Supabase bootstrap verification', () {
-    test('release dart-defines resolve the production public client config', () {
-      final config = SupabaseRuntimeConfig.fromEnvironment();
+    test(
+      'release dart-defines resolve production config and absent config fails closed',
+      () {
+        const rawUrl = String.fromEnvironment('SUPABASE_URL');
+        const rawPublishableKey = String.fromEnvironment(
+          'SUPABASE_PUBLISHABLE_KEY',
+        );
+        final config = SupabaseRuntimeConfig.fromEnvironment();
 
-      expect(config, isNotNull);
-      expect(config!.url.scheme, 'https');
-      expect(config.url.host, 'esfycnmfywxczfillioj.supabase.co');
-      expect(config.publishableKey, startsWith('sb_publishable_'));
-      expect(config.publishableKey, isNot(startsWith('sb_secret_')));
-    });
+        if (rawUrl.isEmpty && rawPublishableKey.isEmpty) {
+          expect(config, isNull);
+          return;
+        }
+
+        expect(rawUrl, isNotEmpty);
+        expect(rawPublishableKey, isNotEmpty);
+        expect(config, isNotNull);
+        expect(config!.url.scheme, 'https');
+        expect(config.url.host, 'esfycnmfywxczfillioj.supabase.co');
+        expect(config.publishableKey, startsWith('sb_publishable_'));
+        expect(config.publishableKey, isNot(startsWith('sb_secret_')));
+      },
+    );
 
     test('startup initializes Firebase before Supabase and before runApp', () {
       final source = File('lib/main.dart').readAsStringSync();

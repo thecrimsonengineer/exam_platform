@@ -32,6 +32,21 @@ void main() {
     expect(find.text('Professional safety judgement'), findsNothing);
   });
 
+  testWidgets(
+    'persistent LAB library fails soft when Firebase is unavailable',
+    (tester) async {
+      _useTallViewport(tester);
+
+      await tester.pumpWidget(
+        const MaterialApp(home: LabLibraryScreen.persistent()),
+      );
+      await tester.pump();
+
+      expect(find.text('LAB catalogue is unavailable.'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('L4A How LAB works guidance expands on demand', (tester) async {
     _useTallViewport(tester);
 

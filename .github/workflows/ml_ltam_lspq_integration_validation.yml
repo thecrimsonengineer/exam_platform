@@ -129,6 +129,13 @@ jobs:
       - name: Startup motion and handoff regression
         run: flutter test test/startup/startup_motion_policy_test.dart test/startup/startup_timeline_test.dart test/startup/startup_screen_hardening_test.dart test/startup/startup_release_render_smoke_test.dart
 
+      - name: INT-LQ7 integration repair regressions
+        run: |
+          flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+          flutter test test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
+          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+          flutter test test/screens/lab/lab_library_scenario_test.dart
+
       - name: Full repository regression
         run: flutter test
 
