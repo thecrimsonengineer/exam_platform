@@ -43,7 +43,8 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
 
     try {
       _binding =
-          widget.runtimeBinding ?? LabLearnerRuntimeBinding.firestoreProduction();
+          widget.runtimeBinding ??
+          LabLearnerRuntimeBinding.firestoreProduction();
     } catch (error) {
       _loadError = error.toString();
       return;

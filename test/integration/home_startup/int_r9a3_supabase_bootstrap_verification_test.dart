@@ -47,59 +47,65 @@ void main() {
       expect(runAppIndex, greaterThan(localRepositoryIndex));
     });
 
-    test('bootstrap initializes Supabase from public config and Firebase token', () {
-      final source = File(
-        'lib/services/supabase/supabase_bootstrap_service.dart',
-      ).readAsStringSync();
+    test(
+      'bootstrap initializes Supabase from public config and Firebase token',
+      () {
+        final source = File(
+          'lib/services/supabase/supabase_bootstrap_service.dart',
+        ).readAsStringSync();
 
-      expect(source, contains('SupabaseRuntimeConfig.fromEnvironment()'));
-      expect(source, contains('Supabase.initialize('));
-      expect(source, contains('url: resolvedConfig.url.toString()'));
-      expect(
-        source,
-        contains('publishableKey: resolvedConfig.publishableKey'),
-      );
-      expect(
-        source,
-        contains('accessToken: () async => auth.currentUser?.getIdToken()'),
-      );
-      expect(source, contains('_initialized = true'));
-    });
+        expect(source, contains('SupabaseRuntimeConfig.fromEnvironment()'));
+        expect(source, contains('Supabase.initialize('));
+        expect(source, contains('url: resolvedConfig.url.toString()'));
+        expect(
+          source,
+          contains('publishableKey: resolvedConfig.publishableKey'),
+        );
+        expect(
+          source,
+          contains('accessToken: () async => auth.currentUser?.getIdToken()'),
+        );
+        expect(source, contains('_initialized = true'));
+      },
+    );
 
-    test('learner runtime selects remote probe only after bootstrap succeeds', () {
-      final source = File(
-        'lib/services/online_access/learner_online_access_runtime.dart',
-      ).readAsStringSync();
+    test(
+      'learner runtime selects remote probe only after bootstrap succeeds',
+      () {
+        final source = File(
+          'lib/services/online_access/learner_online_access_runtime.dart',
+        ).readAsStringSync();
 
-      expect(source, contains('SupabaseBootstrapService.isInitialized'));
-      expect(source, contains('SupabaseLearnerRemoteAuthorizationProbe()'));
-      expect(
-        source,
-        contains('_UnavailableLearnerRemoteAuthorizationProbe()'),
-      );
-      expect(
-        source,
-        contains(
-          'Supabase is not configured, so protected learner access remains locked.',
-        ),
-      );
-    });
+        expect(source, contains('SupabaseBootstrapService.isInitialized'));
+        expect(source, contains('SupabaseLearnerRemoteAuthorizationProbe()'));
+        expect(
+          source,
+          contains('_UnavailableLearnerRemoteAuthorizationProbe()'),
+        );
+        expect(
+          source,
+          contains(
+            'Supabase is not configured, so protected learner access remains locked.',
+          ),
+        );
+      },
+    );
 
-    test('remote authorization targets firebase-auth-probe with bearer token', () {
-      final source = File(
-        'lib/services/supabase/supabase_learner_remote_authorization_probe.dart',
-      ).readAsStringSync();
+    test(
+      'remote authorization targets firebase-auth-probe with bearer token',
+      () {
+        final source = File(
+          'lib/services/supabase/supabase_learner_remote_authorization_probe.dart',
+        ).readAsStringSync();
 
-      expect(
-        source,
-        contains("static const String functionName = 'firebase-auth-probe'"),
-      );
-      expect(
-        source,
-        contains(r"'Authorization': 'Bearer $normalizedToken'"),
-      );
-      expect(source, contains("return data['authorized'] == true"));
-    });
+        expect(
+          source,
+          contains("static const String functionName = 'firebase-auth-probe'"),
+        );
+        expect(source, contains(r"'Authorization': 'Bearer $normalizedToken'"));
+        expect(source, contains("return data['authorized'] == true"));
+      },
+    );
 
     test(
       'client bootstrap surface contains no privileged Supabase key contract',

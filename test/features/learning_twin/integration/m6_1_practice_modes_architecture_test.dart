@@ -19,33 +19,30 @@ void main() {
     },
   );
 
-  test(
-    'Home quick-practice shortcuts stay removed after HOME-R',
-    () async {
-      final light = await File(
-        'lib/screens/home/home_screen.dart',
-      ).readAsString();
-      final dark = await File(
-        'lib/screens/home/home_screen_dark.dart',
-      ).readAsString();
+  test('Home quick-practice shortcuts stay removed after HOME-R', () async {
+    final light = await File(
+      'lib/screens/home/home_screen.dart',
+    ).readAsString();
+    final dark = await File(
+      'lib/screens/home/home_screen_dark.dart',
+    ).readAsString();
 
-      for (final source in [light, dark]) {
-        expect(
-          source,
-          isNot(contains('_openQuickPractice(PracticeMode.dailyChallenge)')),
-        );
-        expect(
-          source,
-          isNot(contains('_openQuickPractice(PracticeMode.weakAreas)')),
-        );
-        expect(
-          source,
-          isNot(contains('_openQuickPractice(PracticeMode.randomQuiz)')),
-        );
-        expect(source, isNot(contains('PracticeQuickLaunchScreen')));
-      }
-    },
-  );
+    for (final source in [light, dark]) {
+      expect(
+        source,
+        isNot(contains('_openQuickPractice(PracticeMode.dailyChallenge)')),
+      );
+      expect(
+        source,
+        isNot(contains('_openQuickPractice(PracticeMode.weakAreas)')),
+      );
+      expect(
+        source,
+        isNot(contains('_openQuickPractice(PracticeMode.randomQuiz)')),
+      );
+      expect(source, isNot(contains('PracticeQuickLaunchScreen')));
+    }
+  });
 
   test(
     'Weak Areas is local-progress driven and fail-closed to mixed fallback',

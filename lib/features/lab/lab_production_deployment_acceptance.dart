@@ -6,8 +6,7 @@ import 'package:crypto/crypto.dart';
 import 'lab_production_release_closure.dart';
 import 'lab_production_release_operator.dart';
 
-const String kLspQ16ClosedSha =
-    '04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a';
+const String kLspQ16ClosedSha = '04bfdc9d5c61faeb5a7a30e86cb753947ba8e49a';
 const String kLspQ16ClosureValidationRunId = '35950731991';
 const String kExpectedLabProductionEnvironmentId =
     'firebase_project:csp11-exam-platform';
@@ -23,8 +22,7 @@ class LabProductionDeploymentAcceptanceException implements Exception {
   final String message;
 
   @override
-  String toString() =>
-      'LabProductionDeploymentAcceptanceException: ' + message;
+  String toString() => 'LabProductionDeploymentAcceptanceException: ' + message;
 }
 
 bool _isSha256Fingerprint(String value, String schema) {
@@ -122,9 +120,7 @@ class LabProductionReleaseAcceptance {
     );
   }
 
-  factory LabProductionReleaseAcceptance.fromJson(
-    Map<String, Object?> json,
-  ) {
+  factory LabProductionReleaseAcceptance.fromJson(Map<String, Object?> json) {
     final labCount = json['labCount'];
     final totalDecisionCount = json['totalDecisionCount'];
     if (labCount is! int || totalDecisionCount is! int) {
@@ -250,8 +246,7 @@ class FirestoreLabProductionReleaseAcceptanceRepository
 
     final data = snapshot.data();
     if (data == null ||
-        data['schemaVersion'] !=
-            kLabProductionReleaseAcceptanceSchemaVersion) {
+        data['schemaVersion'] != kLabProductionReleaseAcceptanceSchemaVersion) {
       throw const LabProductionDeploymentAcceptanceException(
         'Unsupported or empty Q17 production acceptance document.',
       );
@@ -357,10 +352,9 @@ class LabProductionDeploymentAcceptanceService
       releaseOperator: LabProductionReleaseOperatorService.firestore(
         firestore: instance,
       ),
-      acceptanceRepository:
-          FirestoreLabProductionReleaseAcceptanceRepository(
-            firestore: instance,
-          ),
+      acceptanceRepository: FirestoreLabProductionReleaseAcceptanceRepository(
+        firestore: instance,
+      ),
     );
   }
 
@@ -492,9 +486,7 @@ class LabProductionDeploymentAcceptanceService
     final evidence = before.evidence;
     if (!before.canAccept || evidence == null) {
       throw LabProductionDeploymentAcceptanceException(
-        'Q17 acceptance is not permitted from state ' +
-            before.stateLabel +
-            '.',
+        'Q17 acceptance is not permitted from state ' + before.stateLabel + '.',
       );
     }
 
