@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2J",
+  "competencyId": "d02_c10",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "documented_information_records_component",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09"
+    },
+    {
+      "semanticSlug": "incident_investigation",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c04"
+    },
+    {
+      "semanticSlug": "management_system_audit",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c08"
+    },
+    {
+      "semanticSlug": "competence_training_awareness",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09"
+    },
+    {
+      "semanticSlug": "preventive_maintenance_completion_indicator",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c07"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
