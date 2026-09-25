@@ -78,10 +78,7 @@ Future<void> main(List<String> args) async {
 
   final publishedAt = DateTime.now().toUtc().toIso8601String();
   for (final package in plan.packages) {
-    await client.publishFlashcardPackage(
-      package,
-      publishedAt: publishedAt,
-    );
+    await client.publishFlashcardPackage(package, publishedAt: publishedAt);
   }
 
   final verifiedRows = await client.fetchAll(
