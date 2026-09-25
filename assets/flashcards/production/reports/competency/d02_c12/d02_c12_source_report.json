@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2L",
+  "competencyId": "d02_c12",
+  "cardCount": 14,
+  "cardsWithProvenance": 14,
+  "cardsWithExactlyOnePrimarySource": 14,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.army.adp_6_22_2019",
+    "csp11.source.ncbi.transformational_leadership",
+    "csp11.source.opm.employee_relations_reference",
+    "csp11.source.opm.executive_core_qualifications_2025",
+    "csp11.source.pmc.leader_autonomy_support",
+    "csp11.source.pmc.management_theory_xy",
+    "csp11.source.pubmed.situational_leadership"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.pmc.management_theory_xy": 3,
+    "csp11.source.ncbi.transformational_leadership": 2,
+    "csp11.source.pubmed.situational_leadership": 1,
+    "csp11.source.pmc.leader_autonomy_support": 3,
+    "csp11.source.opm.employee_relations_reference": 1,
+    "csp11.source.army.adp_6_22_2019": 3,
+    "csp11.source.opm.executive_core_qualifications_2025": 1
+  },
+  "status": "PASS"
+}
