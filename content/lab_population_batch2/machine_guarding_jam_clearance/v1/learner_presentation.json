@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Jam-Clearance Energy Review",
+      "summary": "The machine is stopped locally, but an opened guard exposes the operator to the hazard zone.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Pressing the local stop does not by itself establish an isolated or zero-energy condition.",
+        "The jam is reachable through an opened guard, placing the task inside the machine's danger area.",
+        "Electrical, pneumatic and stored mechanical energy must be considered before hands or tools enter the hazard zone."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Stored-Energy Verification",
+      "summary": "The electrical disconnect is locked, but pneumatic energy remains available to an actuator.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Electrical isolation alone does not control the remaining pneumatic source.",
+        "Residual pressure can still create hazardous movement even with the main electrical disconnect locked.",
+        "The energy-control record is incomplete until stored energy is relieved or restrained and a zero-energy condition is verified."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Guard Interlock Defect Record",
+      "summary": "The guard interlock behaves intermittently during post-clearance testing.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The safeguarding system cannot be relied on to stop or prevent hazardous motion consistently.",
+        "The defect changes the machine condition from a cleared jam to an unresolved safeguarding failure.",
+        "A successful test cycle does not cancel the significance of an intermittent interlock fault."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Unexpected Movement Event Record",
+      "summary": "Residual energy caused unexpected mechanism movement during controlled troubleshooting.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Unexpected movement demonstrates that the hazardous-energy assessment was not complete.",
+        "The newly identified energy source must be incorporated into the isolation and verification process.",
+        "The event is a control failure that requires the hazard zone to remain secured until energy control is re-established."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Machine Return-to-Service Check",
+      "summary": "Repairs are complete and the machine is approaching the point where energy-control devices may be removed.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Guards, interlocks and other protective devices need to be restored and verified before normal operation.",
+        "The work area should be checked for personnel, tools and temporary restraints before re-energization.",
+        "Removal of energy-control devices and restart should follow the authorized return-to-service sequence."
       ]
     }
   },
