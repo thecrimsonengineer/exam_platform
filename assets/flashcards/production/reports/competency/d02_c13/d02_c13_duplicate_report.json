@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2M",
+  "competencyId": "d02_c13",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "performance_baseline",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01"
+    },
+    {
+      "semanticSlug": "action_plan",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "resource_allocation",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "cost_estimate",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c11"
+    },
+    {
+      "semanticSlug": "time_phased_cost_estimate",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c11"
+    },
+    {
+      "semanticSlug": "authority_responsibility_accountability_distinction",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c12"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
