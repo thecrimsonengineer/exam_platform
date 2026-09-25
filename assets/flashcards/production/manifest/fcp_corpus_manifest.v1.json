@@ -80,6 +80,10 @@
     "fcp2k": {
       "name": "FCP2K_D02_C11_GREEN",
       "branch": "phase-fcp2k-d02-c11-closed"
+    },
+    "fcp2l": {
+      "name": "FCP2L_D02_C12_GREEN",
+      "branch": "phase-fcp2l-d02-c12-closed"
     }
   },
   "domains": {
@@ -168,7 +172,7 @@
       },
       "fcp2l": {
         "competencyId": "d02_c12",
-        "status": "validating",
+        "status": "closed",
         "checkpointBranch": "phase-fcp2l-d02-c12-closed"
       },
       "fcp2m": {
