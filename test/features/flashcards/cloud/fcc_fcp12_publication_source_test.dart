@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../tool/fcc_flashcard_publish/fcc_flashcard_publish_core.dart';
+import '../../../../tool/fcc_flashcard_publish/fcc_flashcard_publish_core.dart';
 
 void main() {
   test('FCC frozen FCP1/FCP2 source is exactly 21 packages / 252 cards', () {
