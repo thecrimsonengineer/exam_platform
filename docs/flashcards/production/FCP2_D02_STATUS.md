@@ -14,7 +14,7 @@ FCP-2F  d02_c06  CLOSED            12 cards
 FCP-2G  d02_c07  CLOSED            12 cards
 FCP-2H  d02_c08  CLOSED            12 cards
 FCP-2I  d02_c09  CLOSED            13 cards
-FCP-2J  d02_c10  VALIDATING         15 cards
+FCP-2J  d02_c10  CLOSED            15 cards
 FCP-2K  d02_c11  NOT STARTED
 FCP-2L  d02_c12  NOT STARTED
 FCP-2M  d02_c13  NOT STARTED
@@ -47,6 +47,6 @@ FCP-2I package validation: SHA `581974ade60bbc4920bd3c8e86b475a08c0d4f18`, run `
 
 FCP-2J started strictly from `phase-fcp2i-d02-c09-closed@b386f75c0c4f7a3c420b84229b5dd63920eb4edd`.
 
-C10 candidate package: 15 cards covering records lifecycle, retention schedules, metadata, integrity, retrieval, disposition, incident-investigation records, exposure and medical records, training records, maintenance records, EMS records, audit records, personal-information lifecycle controls, and trade-secret confidentiality.
+FCP-2J package validation: SHA `45475b4560e8bdebfa6266cd6e7af9ca3d74fb96`, run `36097452408`, SUCCESS, 15 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2J remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
+FCP-2K may begin only from `phase-fcp2j-d02-c10-closed`.
