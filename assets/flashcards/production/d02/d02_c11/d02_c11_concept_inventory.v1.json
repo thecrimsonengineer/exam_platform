@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2K",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c11",
+  "competencyStatement": "Apply budgeting, finance, and economic analysis techniques and principles (e.g., timelines, budget development, resourcing, return on investment, cost/benefit analysis, role in procurement process)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c11",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.gao.cost_guide_2020",
+      "locators": [
+        "cost estimating process",
+        "life-cycle cost",
+        "schedule alignment",
+        "sensitivity and risk analysis"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.omb.circular_a94",
+      "locators": [
+        "benefit-cost analysis",
+        "cost-effectiveness analysis",
+        "present value",
+        "discount rates"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.far.acquisition_planning",
+      "locators": [
+        "FAR 7.104",
+        "FAR 7.105",
+        "cost",
+        "schedule",
+        "life-cycle cost",
+        "acquisition alternatives"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.far.contract_pricing",
+      "locators": [
+        "FAR 15.404-1 price analysis",
+        "FAR 15.404-1 cost analysis"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.management_leadership",
+      "locators": [
+        "Allocate resources",
+        "integrate safety and health into planning and budgeting processes"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.business_case_benefits",
+      "locators": [
+        "economic benefits",
+        "cost savings",
+        "return on investment"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.business_case_costs",
+      "locators": [
+        "direct costs",
+        "indirect costs"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "performance_target",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_target",
+      "reason": "Financial analyses may use targets, but the generic Performance Target concept is canonical in D02 C01."
+    },
+    {
+      "semanticSlug": "action_plan",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.action_plan",
+      "reason": "Budgets and schedules support action plans, but the generic Action Plan concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "resource_allocation",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.resource_allocation",
+      "reason": "FCP-2K applies resource needs to budgeting, but the generic Resource Allocation concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "objectives_and_action_planning_component",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09",
+      "intendedConceptId": "csp11.concept.objectives_and_action_planning_component",
+      "reason": "Budgeting supports management-system objectives and action planning, but that generic component is canonical in D02 C09."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "safety_budget_development",
+      "canonicalLabel": "Safety Budget Development",
+      "sourceIds": [
+        "csp11.source.osha.management_leadership"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "cost_estimate",
+      "canonicalLabel": "Cost Estimate",
+      "sourceIds": [
+        "csp11.source.gao.cost_guide_2020"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "life_cycle_cost",
+      "canonicalLabel": "Life-Cycle Cost",
+      "sourceIds": [
+        "csp11.source.gao.cost_guide_2020"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "time_phased_cost_estimate",
+      "canonicalLabel": "Time-Phased Cost Estimate",
+      "sourceIds": [
+        "csp11.source.gao.cost_guide_2020"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "direct_and_indirect_safety_costs",
+      "canonicalLabel": "Direct and Indirect Safety Costs",
+      "sourceIds": [
+        "csp11.source.osha.business_case_costs"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "return_on_investment",
+      "canonicalLabel": "Return on Investment",
+      "sourceIds": [
+        "csp11.source.osha.business_case_benefits"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "benefit_cost_analysis",
+      "canonicalLabel": "Benefit-Cost Analysis",
+      "sourceIds": [
+        "csp11.source.omb.circular_a94"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "benefit_cost_ratio",
+      "canonicalLabel": "Benefit-Cost Ratio",
+      "sourceIds": [
+        "csp11.source.omb.circular_a94"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "net_present_value",
+      "canonicalLabel": "Net Present Value",
+      "sourceIds": [
+        "csp11.source.omb.circular_a94"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "discount_rate",
+      "canonicalLabel": "Discount Rate",
+      "sourceIds": [
+        "csp11.source.omb.circular_a94"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "cost_effectiveness_analysis",
+      "canonicalLabel": "Cost-Effectiveness Analysis",
+      "sourceIds": [
+        "csp11.source.omb.circular_a94"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "economic_sensitivity_analysis",
+      "canonicalLabel": "Economic Sensitivity Analysis",
+      "sourceIds": [
+        "csp11.source.gao.cost_guide_2020"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "acquisition_planning",
+      "canonicalLabel": "Acquisition Planning",
+      "sourceIds": [
+        "csp11.source.far.acquisition_planning"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "price_analysis",
+      "canonicalLabel": "Price Analysis",
+      "sourceIds": [
+        "csp11.source.far.contract_pricing"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "cost_analysis",
+      "canonicalLabel": "Cost Analysis",
+      "sourceIds": [
+        "csp11.source.far.contract_pricing"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c11_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 15,
+    "acceptedCardCount": 15,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
