@@ -1,0 +1,107 @@
+name: LSP LAB Chunk Storage Validation
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-direct-publication
+    paths:
+      - "lib/features/lab/lab_published_payload_chunks.dart"
+      - "lib/features/lab/lab_firestore_repositories.dart"
+      - "test/lab_quality/lab_published_payload_chunks_test.dart"
+      - "test/lab_quality/lsp_batch2_direct_release_bundle_test.dart"
+      - "tools/lab/publish_batch2_direct.py"
+      - "firestore.rules"
+      - ".github/workflows/lsp_lab_chunk_storage_validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lsp-lab-chunk-storage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/lab/lab_published_payload_chunks.dart \
+            lib/features/lab/lab_firestore_repositories.dart \
+            test/lab_quality/lab_published_payload_chunks_test.dart \
+            test/lab_quality/lsp_batch2_direct_release_bundle_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Compile Firestore rules
+        run: |
+          npx --yes firebase-tools@14.17.0 emulators:exec \
+            --only firestore \
+            --project csp11-exam-platform \
+            "echo Firestore rules compiled"
+
+      - name: Chunk codec regression
+        run: flutter test test/lab_quality/lab_published_payload_chunks_test.dart
+
+      - name: Batch 2 release integration regression
+        run: flutter test test/lab_quality/lsp_batch2_release_integration_test.dart
+
+      - name: Generate chunked production bundle
+        run: flutter test test/lab_quality/lsp_batch2_direct_release_bundle_test.dart
+
+      - name: Verify chunked production bundle boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path("build/batch2_direct_release/release_bundle.json")
+          b = json.loads(p.read_text())
+          assert b["schemaVersion"] == "csp11.lab.batch2.direct_release_bundle.v2"
+          assert b["projectId"] == "csp11-exam-platform"
+          assert b["releaseId"] == "phase_l_population_batch2_v1_q16_extension_v1"
+          assert b["labCount"] == 10
+          assert b["totalDecisionCount"] == 50
+          assert len(b["publishedParents"]) == 10
+          assert len(b["staging"]) == 10
+          assert len(b["learnerCatalogue"]) == 10
+          assert len(b["publishedChunks"]) == b["publishedChunkCount"]
+          assert b["publishedChunkCount"] > 0
+
+          by_parent = {}
+          max_doc = 0
+          for item in b["publishedChunks"]:
+              encoded = json.dumps(item["data"], separators=(",", ":")).encode()
+              max_doc = max(max_doc, len(encoded))
+              assert len(encoded) < 800 * 1024
+              by_parent.setdefault(item["parentId"], 0)
+              by_parent[item["parentId"]] += 1
+
+          for parent in b["publishedParents"]:
+              assert by_parent[parent["id"]] == parent["data"]["payloadChunkCount"]
+
+          print("Chunked bundle verified:", b["publishedChunkCount"], "payload chunks.")
+          print("Largest serialized chunk document:", max_doc, "bytes.")
+          PY
+
+      - name: Validate publisher Python
+        run: python -m py_compile tools/lab/publish_batch2_direct.py
+
+      - name: Diff hygiene
+        run: git diff --check
