@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "csp11.lab.batch2.chunked_release_trigger.v1",
+  "releaseId": "phase_l_population_batch2_v1_q16_extension_v1",
+  "action": "publish_batch2_chunked_and_activate",
+  "validationRunId": "36123791235",
+  "validationStatus": "success",
+  "validatedPublishedParentCount": 10,
+  "validatedPayloadChunkCount": 50,
+  "validatedLargestSerializedChunkBytes": 655726,
+  "preReleaseVerificationRunId": "36124419110",
+  "preReleaseState": "PRISTINE",
+  "expectedLearnerCatalogueCount": 10,
+  "legacyFirstTenVisibility": "unchanged_hidden",
+  "authorizedDate": "2026-09-25"
+}
