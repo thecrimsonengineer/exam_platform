@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2K",
+  "competencyId": "d02_c11",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "performance_target",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01"
+    },
+    {
+      "semanticSlug": "action_plan",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "resource_allocation",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02"
+    },
+    {
+      "semanticSlug": "objectives_and_action_planning_component",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
