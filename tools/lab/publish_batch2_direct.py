@@ -4,6 +4,7 @@ import os
 import socket
 import urllib.error
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 PROJECT = "csp11-exam-platform"
@@ -11,7 +12,8 @@ DATABASE = "(default)"
 BASE = f"https://firestore.googleapis.com/v1/projects/{PROJECT}/databases/{DATABASE}/documents"
 COMMIT_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT}/databases/{DATABASE}/documents:commit"
 BUNDLE_PATH = Path("build/batch2_direct_release/release_bundle.json")
-REQUEST_TIMEOUT_SECONDS = 300
+REQUEST_TIMEOUT_SECONDS = 120
+MAX_CHUNKS_PER_COMMIT = 4
 
 
 def token():
@@ -94,54 +96,70 @@ def encode_fields(data):
     return {k: encode_value(v, k) for k, v in data.items()}
 
 
-def doc_name(collection, doc_id):
-    return f"projects/{PROJECT}/databases/{DATABASE}/documents/{collection}/{doc_id}"
+def doc_name(path):
+    return f"projects/{PROJECT}/databases/{DATABASE}/documents/{path}"
 
 
-def doc_url(collection, doc_id):
-    return BASE + "/" + collection + "/" + doc_id
+def doc_url(path):
+    return BASE + "/" + path
 
 
-def load_document(collection, doc_id):
-    status, payload = request("GET", doc_url(collection, doc_id))
+def load_document(path):
+    status, payload = request("GET", doc_url(path))
     if status == 404:
         return None
-    fields = payload.get("fields", {})
-    return {k: decode_value(v) for k, v in fields.items()}
+    return {
+        k: decode_value(v)
+        for k, v in payload.get("fields", {}).items()
+    }
 
 
-def document_matches(collection, doc_id, expected):
-    actual = load_document(collection, doc_id)
+def normalize_timestamp(value):
+    if not isinstance(value, str):
+        return value
+    text = value.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return value
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def values_match(key, actual, expected):
+    if key == "publishedAt":
+        return normalize_timestamp(actual) == normalize_timestamp(expected)
+    return actual == expected
+
+
+def document_matches(path, expected):
+    actual = load_document(path)
+    if actual is None:
+        return False
+    return all(values_match(key, actual.get(key), value) for key, value in expected.items())
+
+
+def require_existing_exact_or_missing(path, expected):
+    actual = load_document(path)
     if actual is None:
         return False
     for key, value in expected.items():
-        if actual.get(key) != value:
-            return False
-    return True
-
-
-def require_existing_exact_or_missing(collection, doc_id, expected):
-    actual = load_document(collection, doc_id)
-    if actual is None:
-        return False
-    for key, value in expected.items():
-        if actual.get(key) != value:
+        if not values_match(key, actual.get(key), value):
             raise SystemExit(
                 "Existing Firestore document does not match the validated Batch 2 payload: "
-                + collection
-                + "/"
-                + doc_id
+                + path
                 + " field="
                 + key
             )
-    print(f"RESUME verified existing {collection}/{doc_id}")
+    print(f"RESUME verified existing {path}")
     return True
 
 
-def write_target(collection, doc_id, data):
+def write_target(path, data):
     return {
         "update": {
-            "name": doc_name(collection, doc_id),
+            "name": doc_name(path),
             "fields": encode_fields(data),
         },
         "currentDocument": {"exists": False},
@@ -150,22 +168,24 @@ def write_target(collection, doc_id, data):
 
 def commit_targets(label, targets):
     missing = []
-    for collection, doc_id, data in targets:
-        if not require_existing_exact_or_missing(collection, doc_id, data):
-            missing.append((collection, doc_id, data))
+    for path, data in targets:
+        if not require_existing_exact_or_missing(path, data):
+            missing.append((path, data))
 
     if not missing:
         print(f"{label}: already complete and verified.")
         return
 
-    writes = [write_target(c, d, data) for c, d, data in missing]
+    writes = [write_target(path, data) for path, data in missing]
+    payload = {"writes": writes}
+    payload_bytes = len(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
     print(
         f"{label}: committing {len(writes)} document(s), "
-        f"payload_bytes={len(json.dumps({'writes': writes}, separators=(',', ':')).encode('utf-8'))}"
+        f"payload_bytes={payload_bytes}"
     )
 
     try:
-        status, response = request("POST", COMMIT_URL, {"writes": writes})
+        status, response = request("POST", COMMIT_URL, payload)
         if status != 200:
             raise RuntimeError(f"{label}: commit failed with status {status}.")
         write_results = response.get("writeResults", [])
@@ -177,25 +197,26 @@ def commit_targets(label, targets):
     except (TimeoutError, socket.timeout, urllib.error.URLError) as exc:
         print(f"{label}: commit response timed out; verifying server state before deciding.")
         mismatches = [
-            (c, d)
-            for c, d, data in missing
-            if not document_matches(c, d, data)
+            path for path, data in missing if not document_matches(path, data)
         ]
         if mismatches:
             raise RuntimeError(
-                f"{label}: timeout verification did not confirm the atomic commit: {mismatches}"
+                f"{label}: timeout verification did not confirm commit: {mismatches}"
             ) from exc
         print(f"{label}: timeout recovered because all target documents were verified.")
         return
 
     mismatches = [
-        (c, d)
-        for c, d, data in missing
-        if not document_matches(c, d, data)
+        path for path, data in missing if not document_matches(path, data)
     ]
     if mismatches:
         raise RuntimeError(f"{label}: post-commit verification failed: {mismatches}")
     print(f"{label}: commit verified.")
+
+
+def batch(items, size):
+    for start in range(0, len(items), size):
+        yield items[start:start + size]
 
 
 def main():
@@ -203,6 +224,8 @@ def main():
         raise SystemExit(f"Missing generated bundle: {BUNDLE_PATH}")
     bundle = json.loads(BUNDLE_PATH.read_text(encoding="utf-8"))
 
+    if bundle.get("schemaVersion") != "csp11.lab.batch2.direct_release_bundle.v2":
+        raise SystemExit("Unexpected direct release bundle schema.")
     if bundle.get("projectId") != PROJECT:
         raise SystemExit("Bundle project mismatch.")
     if bundle.get("labCount") != 10 or bundle.get("totalDecisionCount") != 50:
@@ -212,76 +235,110 @@ def main():
     if release_id != "phase_l_population_batch2_v1_q16_extension_v1":
         raise SystemExit("Unexpected Batch 2 release ID.")
 
-    published = [
-        ("labPublishedVersions", item["id"], item["data"])
-        for item in bundle["published"]
+    parents = bundle.get("publishedParents", [])
+    chunks = bundle.get("publishedChunks", [])
+    staging = bundle.get("staging", [])
+    learners = bundle.get("learnerCatalogue", [])
+
+    if len(parents) != 10 or len(staging) != 10 or len(learners) != 10:
+        raise SystemExit("Batch 2 release requires exactly 10 parents, staging rows and learner rows.")
+    if not chunks or bundle.get("publishedChunkCount") != len(chunks):
+        raise SystemExit("Batch 2 chunk inventory is missing or inconsistent.")
+
+    chunk_targets_by_parent = {}
+    for item in chunks:
+        parent_id = item["parentId"]
+        path = f"labPublishedVersions/{parent_id}/payloadChunks/{item['id']}"
+        data = item["data"]
+        encoded_bytes = len(json.dumps(data, separators=(",", ":")).encode("utf-8"))
+        if encoded_bytes >= 800 * 1024:
+            raise SystemExit(f"Chunk {path} exceeds the frozen 800 KiB safety boundary.")
+        chunk_targets_by_parent.setdefault(parent_id, []).append((path, data))
+
+    parent_targets = []
+    for item in parents:
+        parent_id = item["id"]
+        expected_count = item["data"].get("payloadChunkCount")
+        actual_count = len(chunk_targets_by_parent.get(parent_id, []))
+        if not isinstance(expected_count, int) or expected_count != actual_count or actual_count <= 0:
+            raise SystemExit(f"Chunk inventory mismatch for parent {parent_id}.")
+        parent_targets.append((f"labPublishedVersions/{parent_id}", item["data"]))
+
+    # Publish each heavy payload fail-closed: all immutable chunks first, then its
+    # lightweight parent manifest. A partial chunk upload is invisible to runtime
+    # because the parent version document does not exist until every chunk verifies.
+    for parent_path, parent_data in parent_targets:
+        parent_id = parent_path.split("/", 1)[1]
+        parent_chunks = sorted(
+            chunk_targets_by_parent[parent_id],
+            key=lambda item: item[0],
+        )
+        for group_index, group in enumerate(batch(parent_chunks, MAX_CHUNKS_PER_COMMIT), start=1):
+            commit_targets(
+                f"CHUNKS {parent_id} group {group_index}",
+                group,
+            )
+        commit_targets(f"PUBLISHED PARENT {parent_id}", [(parent_path, parent_data)])
+
+    staging_targets = [
+        (f"labProductionCatalogueStaging/{item['id']}", item["data"])
+        for item in staging
     ]
-    staging = [
-        ("labProductionCatalogueStaging", item["id"], item["data"])
-        for item in bundle["staging"]
-    ]
-    q16 = [
+    for index, target in enumerate(staging_targets, start=1):
+        commit_targets(f"STAGING {index}/10", [target])
+
+    q16_targets = [
         (
-            "labProductionReleaseExtensionEvidence",
-            bundle["q16Evidence"]["id"],
+            f"labProductionReleaseExtensionEvidence/{bundle['q16Evidence']['id']}",
             bundle["q16Evidence"]["data"],
         ),
         (
-            "labProductionReleaseExtensionState",
-            bundle["q16State"]["id"],
+            f"labProductionReleaseExtensionState/{bundle['q16State']['id']}",
             bundle["q16State"]["data"],
         ),
     ]
-    catalogue = [
-        ("labLearnerCatalogue", item["id"], item["data"])
-        for item in bundle["learnerCatalogue"]
+    commit_targets("Q16 CLOSE", q16_targets)
+
+    learner_targets = [
+        (f"labLearnerCatalogue/{item['id']}", item["data"])
+        for item in learners
     ]
-    q17 = [
+    for index, target in enumerate(learner_targets, start=1):
+        commit_targets(f"CATALOGUE {index}/10", [target])
+
+    q17_targets = [
         (
-            "labProductionReleaseExtensionAcceptance",
-            bundle["q17Acceptance"]["id"],
+            f"labProductionReleaseExtensionAcceptance/{bundle['q17Acceptance']['id']}",
             bundle["q17Acceptance"]["data"],
         ),
         (
-            "labLearnerReleaseExtensionState",
-            bundle["q17Visibility"]["id"],
+            f"labLearnerReleaseExtensionState/{bundle['q17Visibility']['id']}",
             bundle["q17Visibility"]["data"],
         ),
     ]
+    commit_targets("Q17 ACCEPT + VISIBILITY", q17_targets)
 
-    total = len(published) + len(staging) + len(q16) + len(catalogue) + len(q17)
-    if total != 34:
-        raise SystemExit(f"Expected exactly 34 Batch 2 production documents, got {total}.")
+    all_targets = []
+    for items in chunk_targets_by_parent.values():
+        all_targets.extend(items)
+    all_targets.extend(parent_targets)
+    all_targets.extend(staging_targets)
+    all_targets.extend(q16_targets)
+    all_targets.extend(learner_targets)
+    all_targets.extend(q17_targets)
 
-    # Match the app's safe release semantics while avoiding one oversized HTTP body.
-    # Published and staged rows are individually immutable and remain learner-hidden.
-    for index, target in enumerate(published, start=1):
-        commit_targets(f"PUBLISHED {index}/10", [target])
-
-    for index, target in enumerate(staging, start=1):
-        commit_targets(f"STAGING {index}/10", [target])
-
-    # Q16 closes only after every published/staged row has been verified.
-    commit_targets("Q16 CLOSE", q16)
-
-    # Catalogue rows still remain hidden because Q17 visibility is not accepted yet.
-    for index, target in enumerate(catalogue, start=1):
-        commit_targets(f"CATALOGUE {index}/10", [target])
-
-    # Q17 acceptance and learner visibility are the final atomic gate.
-    commit_targets("Q17 ACCEPT + VISIBILITY", q17)
-
-    all_targets = published + staging + q16 + catalogue + q17
     mismatches = [
-        (c, d)
-        for c, d, data in all_targets
-        if not document_matches(c, d, data)
+        path for path, data in all_targets if not document_matches(path, data)
     ]
     if mismatches:
-        raise SystemExit(f"Final Batch 2 verification failed: {mismatches}")
+        raise SystemExit(f"Final Batch 2 verification failed: {mismatches[:20]}")
 
-    q16_state = load_document("labProductionReleaseExtensionState", release_id) or {}
-    q17_state = load_document("labLearnerReleaseExtensionState", release_id) or {}
+    q16_state = load_document(
+        f"labProductionReleaseExtensionState/{release_id}"
+    ) or {}
+    q17_state = load_document(
+        f"labLearnerReleaseExtensionState/{release_id}"
+    ) or {}
 
     if q16_state.get("released") is not True:
         raise SystemExit("Q16 release marker did not verify.")
@@ -291,7 +348,8 @@ def main():
     print("BATCH2_DIRECT_RELEASE=SUCCESS")
     print("Q16=CLOSED")
     print("Q17=ACCEPTED")
-    print("PUBLISHED=10/10")
+    print("PUBLISHED_PARENTS=10/10")
+    print(f"PUBLISHED_CHUNKS={len(chunks)}/{len(chunks)}")
     print("STAGED=10/10")
     print("LEARNER_CATALOGUE=10/10")
     print("LEGACY_RELEASE=UNTOUCHED")
