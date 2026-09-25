@@ -110,6 +110,13 @@ jobs:
                               "filters": [
                                   {
                                       "fieldFilter": {
+                                          "field": {"fieldPath": "schemaVersion"},
+                                          "op": "EQUAL",
+                                          "value": {"stringValue": "csp11.lab.learner_catalogue.v1"},
+                                      }
+                                  },
+                                  {
+                                      "fieldFilter": {
                                           "field": {"fieldPath": "available"},
                                           "op": "EQUAL",
                                           "value": {"booleanValue": True},
