@@ -337,7 +337,7 @@ service cloud.firestore {
     }
 
 
-    function labPublishedAllowedKeys() {
+    function labPublishedLegacyAllowedKeys() {
       return [
         'schemaVersion',
         'labId',
@@ -355,9 +355,26 @@ service cloud.firestore {
       ];
     }
 
-    function validLabPublishedVersion(versionKey) {
-      return request.resource.data.keys().hasAll(labPublishedAllowedKeys())
-        && request.resource.data.keys().hasOnly(labPublishedAllowedKeys())
+    function labPublishedChunkedAllowedKeys() {
+      return [
+        'schemaVersion',
+        'labId',
+        'versionId',
+        'lifecycle',
+        'publishedAt',
+        'reviewerId',
+        'validationAuthority',
+        'snapshotFingerprint',
+        'payloadSchemaVersion',
+        'payloadManifest',
+        'payloadChunkCount',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLegacyLabPublishedVersion(versionKey) {
+      return request.resource.data.keys().hasAll(labPublishedLegacyAllowedKeys())
+        && request.resource.data.keys().hasOnly(labPublishedLegacyAllowedKeys())
         && versionKey == request.resource.data.labId + '__' + request.resource.data.versionId
         && request.resource.data.schemaVersion == 'csp11.lab.published_repository.v1'
         && request.resource.data.lifecycle == 'published'
@@ -372,6 +389,105 @@ service cloud.firestore {
         && request.resource.data.publishEvidenceJson is string
         && request.resource.data.snapshotFingerprint is string
         && request.resource.data.serverCreatedAt is timestamp;
+    }
+
+    function validChunkedLabPublishedVersion(versionKey) {
+      return request.resource.data.keys().hasAll(labPublishedChunkedAllowedKeys())
+        && request.resource.data.keys().hasOnly(labPublishedChunkedAllowedKeys())
+        && versionKey == request.resource.data.labId + '__' + request.resource.data.versionId
+        && request.resource.data.schemaVersion
+          == 'csp11.lab.published_repository.chunked.v2'
+        && request.resource.data.lifecycle == 'published'
+        && request.resource.data.labId is string
+        && request.resource.data.versionId is string
+        && request.resource.data.publishedAt is timestamp
+        && request.resource.data.reviewerId == 'LSP-Q11-POPULATION-AUTO'
+        && request.resource.data.validationAuthority == 'LSP-Q11-POPULATION-AUTO'
+        && request.resource.data.snapshotFingerprint is string
+        && request.resource.data.payloadSchemaVersion
+          == 'csp11.lab.published_payload.v1'
+        && request.resource.data.payloadManifest is map
+        && request.resource.data.payloadChunkCount is int
+        && request.resource.data.payloadChunkCount > 0
+        && request.resource.data.payloadChunkCount <= 450
+        && request.resource.data.serverCreatedAt is timestamp;
+    }
+
+    function validLabPublishedVersion(versionKey) {
+      return validLegacyLabPublishedVersion(versionKey)
+        || validChunkedLabPublishedVersion(versionKey);
+    }
+
+    function labPublishedPayloadChunkAllowedKeys() {
+      return [
+        'schemaVersion',
+        'versionKey',
+        'fieldName',
+        'chunkIndex',
+        'chunkCount',
+        'payloadFingerprint',
+        'chunkFingerprint',
+        'dataBase64',
+        'serverCreatedAt'
+      ];
+    }
+
+    function validLabPublishedPayloadChunk(versionKey) {
+      return request.resource.data.keys().hasAll(
+          labPublishedPayloadChunkAllowedKeys()
+        )
+        && request.resource.data.keys().hasOnly(
+          labPublishedPayloadChunkAllowedKeys()
+        )
+        && request.resource.data.schemaVersion
+          == 'csp11.lab.published_payload_chunk.v1'
+        && request.resource.data.versionKey == versionKey
+        && request.resource.data.fieldName in [
+          'publishedJson',
+          'qualityEvidenceJson',
+          'exhaustiveRouteEvidenceJson',
+          'publishEvidenceJson'
+        ]
+        && request.resource.data.chunkIndex is int
+        && request.resource.data.chunkIndex >= 0
+        && request.resource.data.chunkCount is int
+        && request.resource.data.chunkCount > 0
+        && request.resource.data.chunkCount <= 450
+        && request.resource.data.payloadFingerprint is string
+        && request.resource.data.chunkFingerprint is string
+        && request.resource.data.dataBase64 is string
+        && request.resource.data.dataBase64.size() < 700000
+        && request.resource.data.serverCreatedAt is timestamp;
+    }
+
+    function learnerCanReadPublishedLab(versionKey) {
+      return signedIn()
+        && batch2LabPopulationAccepted()
+        && exists(
+          /databases/$(database)/documents/labPublishedVersions/$(versionKey)
+        )
+        && get(
+          /databases/$(database)/documents/labPublishedVersions/$(versionKey)
+        ).data.lifecycle == 'published'
+        && (
+          get(
+            /databases/$(database)/documents/labPublishedVersions/$(versionKey)
+          ).data.schemaVersion == 'csp11.lab.published_repository.v1'
+          || get(
+            /databases/$(database)/documents/labPublishedVersions/$(versionKey)
+          ).data.schemaVersion
+            == 'csp11.lab.published_repository.chunked.v2'
+        )
+        && exists(
+          /databases/$(database)/documents/labLearnerCatalogue/$(versionKey)
+        )
+        && get(
+          /databases/$(database)/documents/labLearnerCatalogue/$(versionKey)
+        ).data.releaseId
+          == 'phase_l_population_batch2_v1_q16_extension_v1'
+        && get(
+          /databases/$(database)/documents/labLearnerCatalogue/$(versionKey)
+        ).data.available == true;
     }
 
     function labCatalogueAllowedKeys() {
@@ -937,29 +1053,22 @@ service cloud.firestore {
 
 
     match /labPublishedVersions/{versionKey} {
-      allow get: if isAdmin()
-        || (
-          signedIn()
-          && batch2LabPopulationAccepted()
-          && resource.data.schemaVersion == 'csp11.lab.published_repository.v1'
-          && resource.data.lifecycle == 'published'
-          && exists(
-            /databases/$(database)/documents/labLearnerCatalogue/$(versionKey)
-          )
-          && get(
-            /databases/$(database)/documents/labLearnerCatalogue/$(versionKey)
-          ).data.releaseId
-            == 'phase_l_population_batch2_v1_q16_extension_v1'
-          && get(
-            /databases/$(database)/documents/labLearnerCatalogue/$(versionKey)
-          ).data.available == true
-        );
+      allow get: if isAdmin() || learnerCanReadPublishedLab(versionKey);
 
       allow list: if isAdmin();
 
       allow create: if isAdmin() && validLabPublishedVersion(versionKey);
 
       allow update, delete: if false;
+
+      match /payloadChunks/{chunkId} {
+        allow get, list: if isAdmin() || learnerCanReadPublishedLab(versionKey);
+
+        allow create: if isAdmin()
+          && validLabPublishedPayloadChunk(versionKey);
+
+        allow update, delete: if false;
+      }
     }
 
     match /labLearnerCatalogue/{versionKey} {
