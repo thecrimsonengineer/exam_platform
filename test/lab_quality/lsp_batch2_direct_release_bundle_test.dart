@@ -9,6 +9,7 @@ import 'package:exam_platform/features/lab/lab_learner_presentation.dart';
 import 'package:exam_platform/features/lab/lab_production_population_seed.dart';
 import 'package:exam_platform/features/lab/lab_production_deployment_acceptance.dart';
 import 'package:exam_platform/features/lab/lab_production_release_operator.dart';
+import 'package:exam_platform/features/lab/lab_published_payload_chunks.dart';
 import 'package:exam_platform/features/lab/lab_scenario_population_manifest.dart';
 import 'package:exam_platform/features/lab/lab_studio.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -120,20 +121,31 @@ Map<String, Object?> _catalogueFields(
       'presentation': _encodePresentation(entry.presentation),
     };
 
-Map<String, Object?> _publishedFields(LabPublishedVersion version) =>
+Map<String, Object?> _publishedParentFields(
+  LabPublishedVersion version,
+  LabPublishedPayloadBundle payload,
+) =>
     <String, Object?>{
-      'schemaVersion': kLabPublishedFirestoreSchemaVersion,
+      'schemaVersion': kLabPublishedChunkedFirestoreSchemaVersion,
       'labId': version.labId,
       'versionId': version.versionId,
       'lifecycle': 'published',
-      'publishedJson': version.publishedJson,
       'publishedAt': version.publishedAt.toUtc().toIso8601String(),
       'reviewerId': version.reviewerId,
       'validationAuthority': version.validationAuthority,
-      'qualityEvidenceJson': version.qualityEvidenceJson,
-      'exhaustiveRouteEvidenceJson': version.exhaustiveRouteEvidenceJson,
-      'publishEvidenceJson': version.publishEvidenceJson,
       'snapshotFingerprint': version.snapshotFingerprint,
+      'payloadSchemaVersion': kLabPublishedPayloadSchemaVersion,
+      'payloadManifest': payload.manifestJson,
+      'payloadChunkCount': payload.chunks.length,
+    };
+
+Map<String, Object?> _publishedChunkFields(
+  String versionKey,
+  LabPublishedPayloadChunk chunk,
+) =>
+    <String, Object?>{
+      ...chunk.toJson(),
+      'versionKey': versionKey,
     };
 
 void main() {
@@ -183,9 +195,11 @@ void main() {
     expect(acceptance.totalDecisionCount, 50);
     expect(await catalogue.listAvailable(), hasLength(10));
 
-    final publishedDocs = <Map<String, Object?>>[];
+    final publishedParents = <Map<String, Object?>>[];
+    final publishedChunks = <Map<String, Object?>>[];
     final stagingDocs = <Map<String, Object?>>[];
     final learnerDocs = <Map<String, Object?>>[];
+    const payloadCodec = LabPublishedPayloadChunkCodec();
 
     for (final entry in manifest.entries) {
       final version = await published.load(entry.labId, entry.versionId);
@@ -200,10 +214,37 @@ void main() {
       expect(staged, isNotNull);
       expect(learner, isNotNull);
 
-      publishedDocs.add(<String, Object?>{
-        'id': entry.labId + '__' + entry.versionId,
-        'data': _publishedFields(version!),
+      final versionKey = entry.labId + '__' + entry.versionId;
+      final payload = payloadCodec.encode(<String, String>{
+        'publishedJson': version!.publishedJson,
+        'qualityEvidenceJson': version.qualityEvidenceJson!,
+        'exhaustiveRouteEvidenceJson': version.exhaustiveRouteEvidenceJson!,
+        'publishEvidenceJson': version.publishEvidenceJson!,
       });
+
+      expect(payload.chunks, isNotEmpty);
+      expect(
+        payload.chunks.length,
+        lessThanOrEqualTo(kLabPublishedPayloadMaxChunksPerVersion),
+      );
+
+      publishedParents.add(<String, Object?>{
+        'id': versionKey,
+        'data': _publishedParentFields(version, payload),
+      });
+      for (final chunk in payload.chunks) {
+        final data = _publishedChunkFields(versionKey, chunk);
+        expect(
+          utf8.encode(jsonEncode(data)).length,
+          lessThan(800 * 1024),
+          reason: 'Chunk document must remain safely below Firestore 1 MiB.',
+        );
+        publishedChunks.add(<String, Object?>{
+          'parentId': versionKey,
+          'id': chunk.documentId,
+          'data': data,
+        });
+      }
 
       stagingDocs.add(<String, Object?>{
         'id':
@@ -229,7 +270,7 @@ void main() {
     }
 
     final bundle = <String, Object?>{
-      'schemaVersion': 'csp11.lab.batch2.direct_release_bundle.v1',
+      'schemaVersion': 'csp11.lab.batch2.direct_release_bundle.v2',
       'projectId': 'csp11-exam-platform',
       'releaseId': kBatch2ReleaseId,
       'environmentId': kExpectedLabProductionEnvironmentId,
@@ -237,7 +278,9 @@ void main() {
       'manifestFingerprint': evidence.manifestFingerprint,
       'labCount': evidence.labCount,
       'totalDecisionCount': evidence.totalDecisionCount,
-      'published': publishedDocs,
+      'publishedParents': publishedParents,
+      'publishedChunks': publishedChunks,
+      'publishedChunkCount': publishedChunks.length,
       'staging': stagingDocs,
       'q16Evidence': <String, Object?>{
         'id': kBatch2ReleaseId,
