@@ -177,7 +177,7 @@
       },
       "fcp2m": {
         "competencyId": "d02_c13",
-        "status": "not_started",
+        "status": "validating",
         "checkpointBranch": "phase-fcp2m-d02-c13-closed"
       },
       "fcp2n": {
