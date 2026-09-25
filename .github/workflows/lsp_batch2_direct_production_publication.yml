@@ -18,7 +18,7 @@ permissions:
 
 concurrency:
   group: lsp-batch2-direct-production-publication
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   FIREBASE_PROJECT_ID: csp11-exam-platform
@@ -29,7 +29,7 @@ env:
 
 jobs:
   publish:
-    if: github.ref == 'refs/heads/phase-lsp-batch2-direct-publication'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/phase-lsp-batch2-direct-publication'
     runs-on: ubuntu-latest
     timeout-minutes: 35
 
