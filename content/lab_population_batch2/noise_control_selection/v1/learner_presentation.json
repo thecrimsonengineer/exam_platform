@@ -44,10 +44,12 @@
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Exposure Duration Change Record",
+      "summary": "Higher production has increased the time workers spend at the loudest station.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The current work pattern differs from the duration used during the earlier assessment.",
+        "Longer time at the loudest station can increase total daily noise exposure.",
+        "The revised staffing and production pattern should be included in the updated assessment."
       ]
     },
     "response_record": {
