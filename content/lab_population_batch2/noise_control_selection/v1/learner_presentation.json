@@ -35,10 +35,12 @@
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Noise Measurement and Control Check",
+      "summary": "Measurements confirm elevated noise near one machine while employees rotate through the area.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Worker exposure depends on both sound level and time spent near the machine.",
+        "Rotation changes exposure duration but does not remove the need to control the noisy source.",
+        "The existing control arrangement should be reviewed against the measured condition before normal work continues."
       ]
     },
     "condition_change_record": {
