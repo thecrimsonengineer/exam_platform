@@ -1514,6 +1514,74 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Peer-reviewed article supporting situational leadership as adapting leader behavior to the needs and development level present in a specific situation. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.gao.schedule_guide_2015",
+      "organization": "U.S. Government Accountability Office",
+      "title": "GAO Schedule Assessment Guide: Best Practices for Project Schedules (GAO-16-89G)",
+      "canonicalUrl": "https://www.gao.gov/products/gao-16-89g",
+      "allowedDomains": [
+        "gao.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "GAO best-practice guide supporting WBS-based schedule development, activity sequencing, resources and durations, milestones, critical path, float, schedule risk analysis, traceability, and baseline control. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.energy.project_management_lexicon",
+      "organization": "U.S. Department of Energy",
+      "title": "Project Management Lexicon of Terms",
+      "canonicalUrl": "https://www.energy.gov/projectmanagement/project-management-lexicon-terms",
+      "allowedDomains": [
+        "energy.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "officialGlossary",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "DOE project-management lexicon supporting Project Charter, Risk Register, Stakeholder Register, project baselines, and related project-management terminology. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.gao.project_management_practices_2022",
+      "organization": "U.S. Government Accountability Office",
+      "title": "Thrifty Food Plan: Better Planning and Accountability Could Help Ensure Quality of Future Reevaluations (GAO-23-105450)",
+      "canonicalUrl": "https://www.gao.gov/products/gao-23-105450",
+      "allowedDomains": [
+        "gao.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "GAO project-management leading-practice evidence supporting project charters, project management plans, measurable objectives, project schedules, stakeholders, roles and responsibilities, risk management, communications, and quality management. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.pmc.raci_team_science",
+      "organization": "National Library of Medicine",
+      "title": "Creating effective academic research teams: Two tools borrowed from business practice",
+      "canonicalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8057410/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "peerReviewedPublication",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Peer-reviewed supporting source defining the RACI matrix and the Responsible, Accountable, Consulted, and Informed roles, including the one-accountable-person principle. Educational paraphrase only."
     }
   ]
 }
