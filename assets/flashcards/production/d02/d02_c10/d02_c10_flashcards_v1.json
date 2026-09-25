@@ -1,0 +1,784 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c10_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c10",
+    "title": "Document Retention and Records Management Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.records_management_lifecycle",
+      "csp11.flashcard.records_retention_schedule",
+      "csp11.flashcard.record_metadata_traceability",
+      "csp11.flashcard.record_integrity_authenticity",
+      "csp11.flashcard.record_retrievability_access",
+      "csp11.flashcard.controlled_record_disposition",
+      "csp11.flashcard.incident_investigation_record_retention",
+      "csp11.flashcard.employee_exposure_record_retention",
+      "csp11.flashcard.employee_medical_record_retention",
+      "csp11.flashcard.training_record_management",
+      "csp11.flashcard.maintenance_record_management",
+      "csp11.flashcard.ems_record_control",
+      "csp11.flashcard.audit_record_retention",
+      "csp11.flashcard.personal_information_lifecycle_control",
+      "csp11.flashcard.trade_secret_confidentiality_control"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.records_management_lifecycle",
+      "canonicalLabel": "Records Management Lifecycle",
+      "flashcardId": "csp11.flashcard.records_management_lifecycle",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "record lifecycle management"
+      ]
+    },
+    {
+      "id": "csp11.concept.records_retention_schedule",
+      "canonicalLabel": "Records Retention Schedule",
+      "flashcardId": "csp11.flashcard.records_retention_schedule",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "retention schedule"
+      ]
+    },
+    {
+      "id": "csp11.concept.record_metadata_traceability",
+      "canonicalLabel": "Record Metadata and Traceability",
+      "flashcardId": "csp11.flashcard.record_metadata_traceability",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "records metadata"
+      ]
+    },
+    {
+      "id": "csp11.concept.record_integrity_authenticity",
+      "canonicalLabel": "Record Integrity and Authenticity",
+      "flashcardId": "csp11.flashcard.record_integrity_authenticity",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "record integrity"
+      ]
+    },
+    {
+      "id": "csp11.concept.record_retrievability_access",
+      "canonicalLabel": "Record Retrievability and Access",
+      "flashcardId": "csp11.flashcard.record_retrievability_access",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "records access and retrieval"
+      ]
+    },
+    {
+      "id": "csp11.concept.controlled_record_disposition",
+      "canonicalLabel": "Controlled Record Disposition",
+      "flashcardId": "csp11.flashcard.controlled_record_disposition",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "authorized records disposal"
+      ]
+    },
+    {
+      "id": "csp11.concept.incident_investigation_record_retention",
+      "canonicalLabel": "Incident Investigation Record Retention",
+      "flashcardId": "csp11.flashcard.incident_investigation_record_retention",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "incident investigation report retention"
+      ]
+    },
+    {
+      "id": "csp11.concept.employee_exposure_record_retention",
+      "canonicalLabel": "Employee Exposure Record Retention",
+      "flashcardId": "csp11.flashcard.employee_exposure_record_retention",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "exposure record retention"
+      ]
+    },
+    {
+      "id": "csp11.concept.employee_medical_record_retention",
+      "canonicalLabel": "Employee Medical Record Retention",
+      "flashcardId": "csp11.flashcard.employee_medical_record_retention",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "occupational medical record retention"
+      ]
+    },
+    {
+      "id": "csp11.concept.training_record_management",
+      "canonicalLabel": "Training Record Management",
+      "flashcardId": "csp11.flashcard.training_record_management",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "training records management"
+      ]
+    },
+    {
+      "id": "csp11.concept.maintenance_record_management",
+      "canonicalLabel": "Maintenance Record Management",
+      "flashcardId": "csp11.flashcard.maintenance_record_management",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "maintenance records management"
+      ]
+    },
+    {
+      "id": "csp11.concept.ems_record_control",
+      "canonicalLabel": "Environmental Management System Record Control",
+      "flashcardId": "csp11.flashcard.ems_record_control",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "EMS documented information control"
+      ]
+    },
+    {
+      "id": "csp11.concept.audit_record_retention",
+      "canonicalLabel": "Audit Record Retention",
+      "flashcardId": "csp11.flashcard.audit_record_retention",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "audit results retention"
+      ]
+    },
+    {
+      "id": "csp11.concept.personal_information_lifecycle_control",
+      "canonicalLabel": "Personal Information Lifecycle Control",
+      "flashcardId": "csp11.flashcard.personal_information_lifecycle_control",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "personal data lifecycle control"
+      ]
+    },
+    {
+      "id": "csp11.concept.trade_secret_confidentiality_control",
+      "canonicalLabel": "Trade Secret Confidentiality Control",
+      "flashcardId": "csp11.flashcard.trade_secret_confidentiality_control",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "aliases": [
+        "trade secret record protection"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.records_management_lifecycle",
+      "conceptId": "csp11.concept.records_management_lifecycle",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Records Management Lifecycle",
+      "backDefinition": "A controlled approach for creating or capturing records, organizing and protecting them, retaining them for the required period, providing appropriate access, and disposing of them when authorized.",
+      "whyItMatters": "Safety, health, and environmental records remain useful only when they can be trusted, found, interpreted, protected, and retained for as long as business or legal requirements demand.",
+      "keyPoint": "Manage records from creation through authorized disposition, not only at the filing stage.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.15489_1_2016",
+          "locator": "ISO 15489-1:2016 abstract - creation, capture, management, records controls, and records processes",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "record-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.records_retention_schedule",
+      "conceptId": "csp11.concept.records_retention_schedule",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Records Retention Schedule",
+      "backDefinition": "A documented rule set that assigns record categories a required retention period and an authorized disposition action based on legal, regulatory, operational, evidentiary, and organizational needs.",
+      "whyItMatters": "Different records can have very different retention requirements. A schedule helps prevent both premature destruction and uncontrolled accumulation of records that no longer need to be kept.",
+      "keyPoint": "Retention periods should be assigned by record category and governing requirement, not by convenience.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.15489_1_2016",
+          "locator": "ISO 15489-1:2016 - identification of records requirements and records controls",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_1020",
+          "locator": "29 CFR 1910.1020(d) - preservation of records for specified periods",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "record-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.record_metadata_traceability",
+      "conceptId": "csp11.concept.record_metadata_traceability",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Record Metadata and Traceability",
+      "backDefinition": "Information associated with a record that helps identify what it is, when and by whom it was created or changed, its context, classification, status, and relationship to relevant activities or requirements.",
+      "whyItMatters": "Metadata makes records easier to interpret, search, verify, and connect to the event, worker, asset, audit, exposure, or decision they document.",
+      "keyPoint": "A record without adequate context may exist physically but still be unusable as reliable evidence.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.15489_1_2016",
+          "locator": "ISO 15489-1:2016 abstract - records, metadata for records, and records systems",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "record-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.record_integrity_authenticity",
+      "conceptId": "csp11.concept.record_integrity_authenticity",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Record Integrity and Authenticity",
+      "backDefinition": "The principle that records should remain trustworthy representations of the activities or information they document, with controls that protect them from unauthorized alteration, substitution, loss, or corruption.",
+      "whyItMatters": "Safety decisions, audits, investigations, and legal demonstrations can be undermined if records cannot be shown to be reliable and protected from unauthorized change.",
+      "keyPoint": "Protect both the content of the record and the evidence of its origin and change history.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.15489_1_2016",
+          "locator": "ISO 15489-1:2016 - records controls and processes for creating, capturing, and managing records",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "record-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.record_retrievability_access",
+      "conceptId": "csp11.concept.record_retrievability_access",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Record Retrievability and Access",
+      "backDefinition": "The ability to locate and provide an authorized record within the required time while preserving its content, context, confidentiality, and access restrictions.",
+      "whyItMatters": "A retained record has little practical value if it cannot be found when needed for employee access, an audit, investigation, medical review, maintenance decision, or regulatory request.",
+      "keyPoint": "Retention must be paired with reliable retrieval and appropriate access control.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_1020",
+          "locator": "29 CFR 1910.1020(d)(2) and (e) - preserved information must be retrievable and access provided as required",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.15489_1_2016",
+          "locator": "ISO 15489-1:2016 - records systems and records controls",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "record-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.controlled_record_disposition",
+      "conceptId": "csp11.concept.controlled_record_disposition",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Controlled Record Disposition",
+      "backDefinition": "The authorized destruction, transfer, archival action, or other final treatment of records after applicable retention requirements, access needs, investigations, holds, and other obligations have been satisfied.",
+      "whyItMatters": "Uncontrolled destruction can erase needed evidence, while indefinite retention can increase cost, privacy exposure, and information-security burden.",
+      "keyPoint": "Dispose of records only through an authorized process after confirming that no requirement still applies.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.privacy_framework_1_0",
+          "locator": "NIST Privacy Framework 1.0 - data lifecycle includes retention and disposal",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.15489_1_2016",
+          "locator": "ISO 15489-1:2016 - records controls and records management processes",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "record-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.incident_investigation_record_retention",
+      "conceptId": "csp11.concept.incident_investigation_record_retention",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Incident Investigation Record Retention",
+      "backDefinition": "Retention of incident-investigation documentation for the period required by the applicable rule or organizational requirement; for OSHA PSM-covered processes, incident investigation reports must be retained for five years.",
+      "whyItMatters": "Investigation records support trend review, corrective-action follow-up, recurrence prevention, audits, and demonstration of compliance long after the immediate event response ends.",
+      "keyPoint": "Use the governing requirement for the specific process; OSHA PSM requires five years for its incident investigation reports.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(m)(7) - incident investigation reports retained for five years",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "incident-records"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.employee_exposure_record_retention",
+      "conceptId": "csp11.concept.employee_exposure_record_retention",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Employee Exposure Record Retention",
+      "backDefinition": "Preservation of covered employee exposure records for the period required by 29 CFR 1910.1020 or a more specific standard; many covered exposure records are retained for at least thirty years, subject to listed exceptions.",
+      "whyItMatters": "Long-term exposure records can be essential because occupational diseases may have long latency periods and later evaluations may depend on historical exposure information.",
+      "keyPoint": "Check the specific standard and exceptions before assigning the retention period.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_1020",
+          "locator": "29 CFR 1910.1020(d)(1)(ii) - employee exposure record retention and exceptions",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "occupational-health-records"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.employee_medical_record_retention",
+      "conceptId": "csp11.concept.employee_medical_record_retention",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Employee Medical Record Retention",
+      "backDefinition": "Preservation of covered employee medical records for the period required by 29 CFR 1910.1020; generally, qualifying records are kept for the duration of employment plus thirty years, subject to the regulation's exceptions.",
+      "whyItMatters": "Long-term preservation protects continuity of occupational-health evidence and supports later evaluation of conditions that may appear years after workplace exposure.",
+      "keyPoint": "Medical-record retention is long-term and must be paired with confidentiality and controlled access.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_1020",
+          "locator": "29 CFR 1910.1020(d)(1)(i) - employee medical record retention",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "occupational-health-records"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.training_record_management",
+      "conceptId": "csp11.concept.training_record_management",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Training Record Management",
+      "backDefinition": "Creation and controlled retention of records that provide evidence of relevant training activities, such as the person trained, subject or requirement, date, provider or verifier, and any required competence or completion evidence.",
+      "whyItMatters": "Well-managed training records help demonstrate that required learning occurred and allow organizations to identify gaps, renewal needs, and the training basis for assigned work.",
+      "keyPoint": "Capture enough context to show who was trained, on what, when, and against which requirement.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.15489_1_2016",
+          "locator": "ISO 15489-1:2016 - records requirements, assigned responsibilities, training, creation and capture of records",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "training-records"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.maintenance_record_management",
+      "conceptId": "csp11.concept.maintenance_record_management",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Maintenance Record Management",
+      "backDefinition": "Creation and retention of records showing inspection, repair, maintenance, defects, corrective work, and relevant dates or asset identification according to the applicable equipment and regulatory requirements.",
+      "whyItMatters": "Maintenance records support asset history, defect follow-up, reliability decisions, inspections, and evidence that required maintenance controls were performed.",
+      "keyPoint": "Retention periods and required fields depend on the asset and governing requirement.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.fmcsa.part396_maintenance",
+          "locator": "FMCSA Part 396 guidance - inspection, repair, maintenance, and maintenance records",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "maintenance-records"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.ems_record_control",
+      "conceptId": "csp11.concept.ems_record_control",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Environmental Management System Record Control",
+      "backDefinition": "Management of environmental management system documented information so required records are created or retained, appropriately controlled, available where needed, and protected throughout their required life.",
+      "whyItMatters": "EMS records provide evidence of environmental controls, monitoring, evaluations, actions, and system performance, and they must remain usable for internal management and external assurance.",
+      "keyPoint": "Control EMS records as part of the management system, not as disconnected files.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 - documented information and management-system evidence",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "environmental-records"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.audit_record_retention",
+      "conceptId": "csp11.concept.audit_record_retention",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Audit Record Retention",
+      "backDefinition": "Retention of audit plans, evidence, findings, responses, and reports for the period needed by the governing standard, audit programme, or regulation; OSHA PSM requires employers to retain the two most recent compliance audit reports.",
+      "whyItMatters": "Audit records show what was examined, what was found, how findings were handled, and whether recurring weaknesses were addressed across audit cycles.",
+      "keyPoint": "The required retention basis may be expressed as time, number of audit cycles, or another defined rule.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(o)(3)-(5) - audit report, response, correction documentation, and retention of two most recent reports",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.19011_2026",
+          "locator": "ISO 19011:2026 - audit programme and audit records context",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "audit-records"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.personal_information_lifecycle_control",
+      "conceptId": "csp11.concept.personal_information_lifecycle_control",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Personal Information Lifecycle Control",
+      "backDefinition": "Managing personal information through its full data lifecycle, including collection, retention, use, disclosure, sharing, transmission, and disposal, using controls appropriate to privacy risk and organizational obligations.",
+      "whyItMatters": "Personal information can create privacy risk at every stage of its lifecycle, not only while stored. Records management therefore needs rules for access, use, sharing, retention, and disposal.",
+      "keyPoint": "Apply privacy controls across the complete information lifecycle.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.privacy_framework_1_0",
+          "locator": "NIST Privacy Framework 1.0 - data processing lifecycle and privacy-risk management",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "record-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.trade_secret_confidentiality_control",
+      "conceptId": "csp11.concept.trade_secret_confidentiality_control",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Trade Secret Confidentiality Control",
+      "backDefinition": "Protection of qualifying confidential business information through controlled disclosure and appropriate confidentiality measures while still providing required safety and health access under applicable regulations.",
+      "whyItMatters": "Trade-secret status can justify confidentiality controls, but it cannot automatically block access to information that workers, representatives, investigators, or safety personnel are legally entitled to receive.",
+      "keyPoint": "Protect confidentiality without using trade-secret status to defeat required safety and health access.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c10"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_1020",
+          "locator": "29 CFR 1910.1020(f) - trade-secret access and confidentiality agreements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(p) - trade secrets, required access, and confidentiality agreements",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "records-management",
+        "confidentiality"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.iso.15489_1_2016",
+      "organization": "ISO",
+      "title": "ISO 15489-1:2016 — Information and documentation — Records management — Part 1: Concepts and principles",
+      "canonicalUrl": "https://www.iso.org/standard/62542.html",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 15489-1 edition, confirmed in 2021, supporting creation, capture, management, metadata, responsibilities, records controls, and records processes. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_1020",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.1020 - Access to employee exposure and medical records",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1020",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for preservation, retention, retrievability, access, confidentiality, and trade-secret handling of covered employee exposure and medical records. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_119",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 - Process safety management of highly hazardous chemicals",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for FCP process-safety cards. FCP uses educational paraphrase and paragraph-level locators."
+    },
+    {
+      "id": "csp11.source.fmcsa.part396_maintenance",
+      "organization": "FMCSA",
+      "title": "Inspection, Repair, and Maintenance - Part 396",
+      "canonicalUrl": "https://www.fmcsa.dot.gov/safety/passenger-safety/inspection-repair-and-maintenance-motor-carriers-passengers-part-396",
+      "allowedDomains": [
+        "fmcsa.dot.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "FMCSA regulatory guidance supporting systematic vehicle inspection, repair, maintenance, and maintenance records."
+    },
+    {
+      "id": "csp11.source.iso.14001_2026",
+      "organization": "ISO",
+      "title": "ISO 14001:2026 — Environmental management systems — Requirements with guidance for use",
+      "canonicalUrl": "https://committee.iso.org/standard/14001",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 14001 edition as of 2026-09-24. Requirements standard for environmental management systems. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.19011_2026",
+      "organization": "ISO",
+      "title": "ISO 19011:2026 — Guidelines for auditing management systems",
+      "canonicalUrl": "https://committee.iso.org/standard/19011",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 19011 edition as of 2026-09-24. Guidance for audit principles, audit programmes, conducting audits, and auditor competence. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.privacy_framework_1_0",
+      "organization": "NIST",
+      "title": "NIST Privacy Framework: A Tool for Improving Privacy through Enterprise Risk Management, Version 1.0",
+      "canonicalUrl": "https://www.nist.gov/privacy-framework/privacy-framework",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Final NIST Privacy Framework Version 1.0 supporting privacy-risk management across the data lifecycle, including collection, retention, use, disclosure, and disposal. Educational paraphrase only."
+    }
+  ]
+}
