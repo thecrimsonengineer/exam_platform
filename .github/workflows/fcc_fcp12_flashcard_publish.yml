@@ -10,6 +10,8 @@ on:
       - 'assets/flashcards/production/d02/**'
       - 'assets/flashcards/production/manifest/**'
       - 'test/features/flashcards/cloud/**'
+      - 'supabase/functions/learner-question-packages/**'
+      - 'supabase/migrations/*fcc_flashcard_publication*'
       - '.github/workflows/fcc_fcp12_flashcard_publish.yml'
       - '.github/fcc_fcp12_publish_trigger'
   workflow_dispatch:
@@ -54,8 +56,16 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Validate frozen FCC source
-        run: flutter test test/features/flashcards/cloud/fcc_fcp12_publication_source_test.dart
+      - name: FCC formatting gate
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            tool/fcc_flashcard_publish \
+            test/features/flashcards/cloud
+
+      - name: Validate frozen FCC source and delivery contract
+        run: |
+          flutter test test/features/flashcards/cloud/fcc_fcp12_publication_source_test.dart
+          flutter test test/features/flashcards/cloud/fcc_delivery_contract_test.dart
 
       - name: Require Supabase server credential
         shell: bash
