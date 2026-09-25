@@ -1,0 +1,130 @@
+name: LSP Batch 2 Direct Production Verification
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-direct-publication
+    paths:
+      - ".github/workflows/lsp_batch2_direct_verify.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  FIREBASE_PROJECT_ID: csp11-exam-platform
+  GCP_WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+  GCP_FIRESTORE_READER_SERVICE_ACCOUNT: ${{ vars.GCP_FIRESTORE_READER_SERVICE_ACCOUNT }}
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/phase-lsp-batch2-direct-publication'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth_wif
+        name: Authenticate read-only Firestore verification
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: csp11-exam-platform
+          workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
+          service_account: ${{ env.GCP_FIRESTORE_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          create_credentials_file: false
+          access_token_lifetime: 900s
+
+      - name: Verify Batch 2 production state
+        env:
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, urllib.error
+          from pathlib import Path
+
+          project = "csp11-exam-platform"
+          db = "(default)"
+          base = f"https://firestore.googleapis.com/v1/projects/{project}/databases/{db}/documents"
+          token = os.environ["GOOGLE_OAUTH_ACCESS_TOKEN"]
+          release_id = "phase_l_population_batch2_v1_q16_extension_v1"
+          manifest = json.loads(Path("content/lab_population_batch2/manifest.json").read_text())
+          entries = manifest["entries"]
+
+          def get(collection, doc_id):
+              url = f"{base}/{collection}/{doc_id}"
+              req = urllib.request.Request(url, headers={"Authorization": "Bearer " + token})
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      return True, json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:
+                  if e.code == 404:
+                      return False, {}
+                  raise
+
+          published = 0
+          staged = 0
+          catalogue = 0
+
+          for e in entries:
+              key = e["labId"] + "__" + e["versionId"]
+              if get("labPublishedVersions", key)[0]:
+                  published += 1
+
+              stage_key = release_id + "__" + e["labId"] + "__" + e["versionId"]
+              if get("labProductionCatalogueStaging", stage_key)[0]:
+                  staged += 1
+
+              exists, doc = get("labLearnerCatalogue", key)
+              if exists:
+                  fields = doc.get("fields", {})
+                  rel = fields.get("releaseId", {}).get("stringValue")
+                  available = fields.get("available", {}).get("booleanValue")
+                  if rel == release_id and available is True:
+                      catalogue += 1
+
+          q16_evidence = get("labProductionReleaseExtensionEvidence", release_id)[0]
+          q16_state_exists, q16_state = get("labProductionReleaseExtensionState", release_id)
+          q17_acceptance = get("labProductionReleaseExtensionAcceptance", release_id)[0]
+          q17_visibility_exists, q17_visibility = get("labLearnerReleaseExtensionState", release_id)
+
+          q16_closed = (
+              q16_state_exists and
+              q16_state.get("fields", {}).get("released", {}).get("booleanValue") is True
+          )
+          q17_accepted = (
+              q17_visibility_exists and
+              q17_visibility.get("fields", {}).get("accepted", {}).get("booleanValue") is True
+          )
+
+          print(f"PUBLISHED={published}/10")
+          print(f"STAGED={staged}/10")
+          print(f"Q16_EVIDENCE={'YES' if q16_evidence else 'NO'}")
+          print(f"Q16_CLOSED={'YES' if q16_closed else 'NO'}")
+          print(f"Q17_ACCEPTANCE={'YES' if q17_acceptance else 'NO'}")
+          print(f"Q17_ACCEPTED={'YES' if q17_accepted else 'NO'}")
+          print(f"LEARNER_CATALOGUE={catalogue}/10")
+
+          if (
+              published == 10 and
+              staged == 10 and
+              q16_evidence and
+              q16_closed and
+              q17_acceptance and
+              q17_accepted and
+              catalogue == 10
+          ):
+              print("BATCH2_PRODUCTION_STATE=FULLY_PUBLISHED")
+          elif (
+              published == 0 and staged == 0 and not q16_evidence and
+              not q16_closed and not q17_acceptance and
+              not q17_accepted and catalogue == 0
+          ):
+              print("BATCH2_PRODUCTION_STATE=PRISTINE")
+          else:
+              print("BATCH2_PRODUCTION_STATE=PARTIAL_OR_AMBIGUOUS")
+              raise SystemExit(2)
+          PY
