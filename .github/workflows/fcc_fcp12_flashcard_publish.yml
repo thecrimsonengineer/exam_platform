@@ -1,5 +1,5 @@
 name: FCC FCP1 FCP2 Flashcard Publication
-# Authorized retry uses server-side Edge Storage publisher.
+# Authorized retry uses list-first server-side Edge Storage publisher.
 
 on:
   push:
