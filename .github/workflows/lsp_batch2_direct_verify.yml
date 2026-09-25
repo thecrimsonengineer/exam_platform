@@ -65,14 +65,60 @@ jobs:
                       return False, {}
                   raise
 
+          def list_docs(relative_collection):
+              docs = []
+              token_value = None
+              while True:
+                  url = f"{base}/{relative_collection}?pageSize=500"
+                  if token_value:
+                      from urllib.parse import quote
+                      url += "&pageToken=" + quote(token_value, safe="")
+                  req = urllib.request.Request(
+                      url,
+                      headers={"Authorization": "Bearer " + token},
+                  )
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      payload = json.loads(r.read().decode())
+                  docs.extend(payload.get("documents", []))
+                  token_value = payload.get("nextPageToken")
+                  if not token_value:
+                      return docs
+
           published = 0
+          published_chunks = 0
+          expected_chunks = 0
+          orphan_chunks = 0
           staged = 0
           catalogue = 0
 
           for e in entries:
               key = e["labId"] + "__" + e["versionId"]
-              if get("labPublishedVersions", key)[0]:
-                  published += 1
+              parent_exists, parent = get("labPublishedVersions", key)
+              chunks = list_docs(f"labPublishedVersions/{key}/payloadChunks")
+              published_chunks += len(chunks)
+
+              if parent_exists:
+                  fields = parent.get("fields", {})
+                  schema = fields.get("schemaVersion", {}).get("stringValue")
+                  lifecycle = fields.get("lifecycle", {}).get("stringValue")
+                  count_raw = fields.get("payloadChunkCount", {}).get("integerValue")
+                  count = int(count_raw) if count_raw is not None else -1
+                  expected_chunks += max(count, 0)
+                  chunks_valid = (
+                      schema == "csp11.lab.published_repository.chunked.v2"
+                      and lifecycle == "published"
+                      and count > 0
+                      and len(chunks) == count
+                      and all(
+                          d.get("fields", {}).get("schemaVersion", {}).get("stringValue")
+                          == "csp11.lab.published_payload_chunk.v1"
+                          for d in chunks
+                      )
+                  )
+                  if chunks_valid:
+                      published += 1
+              elif chunks:
+                  orphan_chunks += len(chunks)
 
               stage_key = release_id + "__" + e["labId"] + "__" + e["versionId"]
               if get("labProductionCatalogueStaging", stage_key)[0]:
@@ -100,7 +146,9 @@ jobs:
               q17_visibility.get("fields", {}).get("accepted", {}).get("booleanValue") is True
           )
 
-          print(f"PUBLISHED={published}/10")
+          print(f"PUBLISHED_CHUNKED_PARENTS={published}/10")
+          print(f"PUBLISHED_CHUNKS={published_chunks}/{expected_chunks}")
+          print(f"ORPHAN_CHUNKS={orphan_chunks}")
           print(f"STAGED={staged}/10")
           print(f"Q16_EVIDENCE={'YES' if q16_evidence else 'NO'}")
           print(f"Q16_CLOSED={'YES' if q16_closed else 'NO'}")
@@ -110,6 +158,8 @@ jobs:
 
           if (
               published == 10 and
+              published_chunks == expected_chunks and
+              orphan_chunks == 0 and
               staged == 10 and
               q16_evidence and
               q16_closed and
@@ -119,7 +169,8 @@ jobs:
           ):
               print("BATCH2_PRODUCTION_STATE=FULLY_PUBLISHED")
           elif (
-              published == 0 and staged == 0 and not q16_evidence and
+              published == 0 and published_chunks == 0 and orphan_chunks == 0 and
+              staged == 0 and not q16_evidence and
               not q16_closed and not q17_acceptance and
               not q17_accepted and catalogue == 0
           ):
@@ -129,4 +180,4 @@ jobs:
               raise SystemExit(2)
           PY
 
-# verification rerun after chunked publisher timeout
+# chunk-aware verification after LAB document restructuring
