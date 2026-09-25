@@ -312,7 +312,16 @@ class LabPublishedPayloadChunkCodec {
             'Published payload chunk metadata mismatch for ' + fieldName + '.',
           );
         }
-        final bytes = base64Decode(chunk.dataBase64);
+        late final List<int> bytes;
+        try {
+          bytes = base64Decode(chunk.dataBase64);
+        } on FormatException {
+          throw LabPublishedPayloadException(
+            'Published payload chunk encoding is invalid for ' +
+                fieldName +
+                '.',
+          );
+        }
         if (sha256.convert(bytes).toString() != chunk.chunkFingerprint) {
           throw LabPublishedPayloadException(
             'Published payload chunk fingerprint mismatch for ' +
