@@ -72,6 +72,29 @@ class _LabBatch2ReleaseScreenState extends State<LabBatch2ReleaseScreen> {
     }
   }
 
+  Future<void> _refreshAfterFailure(Object error) async {
+    try {
+      final release = await _releaseOperator.inspect();
+      final acceptance = await _acceptanceService.inspect();
+      if (!mounted) return;
+      setState(() {
+        _release = release;
+        _acceptance = acceptance;
+        _loading = false;
+        _error =
+            error.toString() +
+            '\nState was refreshed after the failed action. Do not retry Q16 unless the refreshed state is PRISTINE.';
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _error =
+            error.toString() +
+            '\nAutomatic state refresh also failed. Use Refresh before any further release action.';
+      });
+    }
+  }
+
   Future<void> _runReleaseAction() async {
     final release = _release;
     if (release == null || _executing) return;
@@ -97,7 +120,7 @@ class _LabBatch2ReleaseScreenState extends State<LabBatch2ReleaseScreen> {
       await _refresh();
     } catch (error) {
       if (!mounted) return;
-      setState(() => _error = error.toString());
+      await _refreshAfterFailure(error);
     } finally {
       if (mounted) setState(() => _executing = false);
     }
