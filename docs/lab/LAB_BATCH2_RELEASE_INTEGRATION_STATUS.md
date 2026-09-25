@@ -1,6 +1,6 @@
 # Batch 2 LAB Release Integration
 
-Status: REPRODUCIBILITY CANDIDATE
+Status: CLOSED AND RELEASE-READY
 
 ## Release intent
 
@@ -8,7 +8,7 @@ Only the second validated 10-LAB population may become learner-visible.
 
 The original first 10 LABs remain hidden from learners and are retained for further authoring/review work.
 
-## Validated architecture
+## Frozen architecture
 
 - Batch 2 is independent of the original first-10 Q17 acceptance.
 - Batch 2 Q16 publishes immutable technical versions and stages learner catalogue entries.
@@ -21,13 +21,15 @@ The original first 10 LABs remain hidden from learners and are retained for furt
 - Detailed Q16/Q17 evidence remains admin-only.
 - Learners read only the minimal Batch 2 Q17 visibility marker.
 
-## First hardened green run
+## Validated checkpoint
 
-Run: `36057436701`
+Release-ready source SHA: `7535d343340c9e0128324eab454c527fc75d4ef4`
 
-Validated source SHA: `60894bf9ab0846b41816931d0d8b5a06605e997a`
+First hardened green run: `36057436701`
 
-Result:
+Committed-artifact reproducibility run: `36059704566`
+
+Reproducibility result:
 - Firestore rules compile: PASS
 - Batch 2 pre-catalogue regression: PASS
 - Batch 2 release integration: PASS
@@ -37,7 +39,17 @@ Result:
 - Q15 legacy release regression: PASS
 - Full repository regression: 3,243 passed, 1 skipped, 0 failed
 - Diff hygiene: PASS
+- Canonical formatting persistence: PASS
 
-CI canonical-format commit: `27a55a3bbac14e914e8f60634ca00521e1fddab6`
+## Release boundary
 
-A clean reproducibility run on the formatted branch state is required before release closure.
+This closure does not itself deploy Firestore rules, publish Batch 2 to live Firestore, or activate learner visibility.
+
+The live release sequence is:
+
+1. Deploy the validated Firestore rules.
+2. Run Batch 2 Q16 from the admin Batch 2 Release surface.
+3. Verify Q16 CLOSED with 10 published and 10 staged entries.
+4. Run Batch 2 Q17 acceptance.
+5. Verify exactly 10 Batch 2 learner catalogue entries are active.
+6. Verify the original first 10 remain hidden from learner reads.
