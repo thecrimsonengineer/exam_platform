@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Scene Preservation Record",
+      "summary": "A worker has received first aid after unexpected equipment movement and the immediate area is stable.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Production pressure to clear the area can disturb physical evidence before the event sequence is understood.",
+        "Equipment position, controls, materials and environmental conditions may all help explain the unexpected movement.",
+        "The scene should remain controlled long enough to document relevant evidence while keeping people safe."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Witness Evidence Record",
+      "summary": "Witnesses remember the event differently and their accounts do not fully agree.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Differences between witness accounts are information to resolve, not a reason to select the most confident version.",
+        "Separate interviews help preserve independent recollection and distinguish observation from assumption.",
+        "Timelines, physical evidence and records can be used to test where accounts agree or conflict."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Maintenance History Finding",
+      "summary": "Maintenance records reveal a recurring equipment defect that was absent from the initial witness information.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The recurring defect introduces a technical factor that was not part of the first event narrative.",
+        "Historical maintenance information may explain why equipment behaviour differed from what operators expected.",
+        "The investigation scope should now test how the defect, prior responses and operating controls interacted."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Causal Factors Record",
+      "summary": "The investigation identifies operator error, a weak procedure and an unresolved equipment defect.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The evidence supports multiple contributing factors rather than a single-person explanation.",
+        "Corrective action limited to the operator would leave procedural and equipment weaknesses in place.",
+        "Actions should address the human, procedural and technical factors supported by the investigation evidence."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Corrective Action Verification Record",
+      "summary": "Corrective actions are assigned and the equipment repair has been completed.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Action assignment is not the same as verified completion or demonstrated effectiveness.",
+        "Closure should confirm that required procedural, equipment and organizational actions were actually implemented.",
+        "The investigation record should retain the evidence, conclusions and lessons needed to prevent recurrence."
       ]
     }
   },
