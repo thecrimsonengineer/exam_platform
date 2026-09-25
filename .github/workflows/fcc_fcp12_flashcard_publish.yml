@@ -28,7 +28,7 @@ on:
         default: ''
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: fcc-fcp12-flashcard-publication
@@ -56,28 +56,11 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: FCC canonical formatter
-        id: formatter
-        shell: bash
+      - name: FCC formatting gate
         run: |
-          dart format tool/fcc_flashcard_publish test/features/flashcards/cloud
-          if ! git diff --quiet -- tool/fcc_flashcard_publish test/features/flashcards/cloud; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add tool/fcc_flashcard_publish test/features/flashcards/cloud
-            git commit -m "FCC-1: canonical Dart formatting"
-            git push origin HEAD:phase-fcc-fcp12-publication
-            echo "formatted_commit=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "formatted_commit=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Stop superseded formatter run
-        if: steps.formatter.outputs.formatted_commit == 'true'
-        shell: bash
-        run: |
-          echo "Canonical formatting was committed. The new branch-head run is authoritative."
-          exit 1
+          dart format --output=none --set-exit-if-changed \
+            tool/fcc_flashcard_publish \
+            test/features/flashcards/cloud
 
       - name: Validate frozen FCC source and delivery contract
         run: |
