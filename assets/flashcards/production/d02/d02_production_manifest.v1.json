@@ -5,7 +5,7 @@
   "domainNumber": 2,
   "title": "Program Management",
   "weightPercent": 25,
-  "status": "in_progress",
+  "status": "closed",
   "canonicalBlueprint": {
     "path": "docs/source_pipeline/CSP11_canonical_blueprint.json",
     "version": "V.2024.04.24",
@@ -238,12 +238,25 @@
       "competencyId": "d02_c14",
       "number": 14,
       "statement": "Analyze and/or interpret data (e.g., exposure, release concentrations, sampling data, mean, median, mode, confidence intervals, probabilities, Pareto analysis)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c14/d02_c14_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c14/d02_c14_flashcards_v1.json",
       "cardCount": 18,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c14",
+      "checkpoint": {
+        "gate": "FCP2N_D02_C14_GREEN",
+        "branch": "phase-fcp2n-d02-c14-closed",
+        "packageValidationSha": "5a63cd47b9051bdc0ace0bcb6d03c3987c51dd8c",
+        "packageValidationRun": 36125872697
+      }
     }
   ],
-  "runModel": "one_competency_per_run"
+  "runModel": "one_competency_per_run",
+  "checkpoint": {
+    "gate": "FCP2_D02_GREEN",
+    "branch": "phase-fcp2-d02-closed",
+    "validationSha": "5a63cd47b9051bdc0ace0bcb6d03c3987c51dd8c",
+    "workflowRun": 36125872697
+  }
 }

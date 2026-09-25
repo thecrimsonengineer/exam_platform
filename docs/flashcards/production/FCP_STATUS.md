@@ -20,7 +20,7 @@ FCP-2J  d02_c10  CLOSED
 FCP-2K  d02_c11  CLOSED
 FCP-2L  d02_c12  CLOSED
 FCP-2M  d02_c13  CLOSED
-FCP-2N  d02_c14  VALIDATING
+FCP-2N  d02_c14  CLOSED
 ```
 
-FCP-2M package validation passed at `45a541224f31912bcf0bfbdd31a832e2c905be14` in run `36122718558`. The closure metadata state must pass CI before `phase-fcp2m-d02-c13-closed` is created.
+FCP-2N package validation passed at `5a63cd47b9051bdc0ace0bcb6d03c3987c51dd8c` in run `36125872697`. Domain 02 now contains 14 closed competencies and 174 cards. The closure metadata state must pass CI before `phase-fcp2n-d02-c14-closed` and `phase-fcp2-d02-closed` are created.

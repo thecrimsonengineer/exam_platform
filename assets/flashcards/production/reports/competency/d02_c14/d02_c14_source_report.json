@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2N",
+  "competencyId": "d02_c14",
+  "cardCount": 18,
+  "cardsWithProvenance": 18,
+  "cardsWithExactlyOnePrimarySource": 18,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.niosh.nmam_fifth_edition",
+    "csp11.source.nist.engineering_statistics_handbook"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.niosh.nmam_fifth_edition": 4,
+    "csp11.source.nist.engineering_statistics_handbook": 14
+  },
+  "status": "PASS"
+}

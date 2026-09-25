@@ -14,7 +14,7 @@
   "runs": {
     "fcp0": "closed",
     "fcp1": "closed",
-    "fcp2": "in_progress",
+    "fcp2": "closed",
     "fcp3": "not_started",
     "fcp4": "not_started",
     "fcp5": "not_started",
@@ -88,6 +88,14 @@
     "fcp2m": {
       "name": "FCP2M_D02_C13_GREEN",
       "branch": "phase-fcp2m-d02-c13-closed"
+    },
+    "fcp2n": {
+      "name": "FCP2N_D02_C14_GREEN",
+      "branch": "phase-fcp2n-d02-c14-closed"
+    },
+    "fcp2": {
+      "name": "FCP2_D02_GREEN",
+      "branch": "phase-fcp2-d02-closed"
     }
   },
   "domains": {
@@ -103,8 +111,9 @@
       "title": "Program Management",
       "weightPercent": 25,
       "competencyCount": 14,
-      "status": "in_progress",
-      "manifestPath": "assets/flashcards/production/d02/d02_production_manifest.v1.json"
+      "status": "closed",
+      "manifestPath": "assets/flashcards/production/d02/d02_production_manifest.v1.json",
+      "cardCount": 174
     }
   },
   "fcp1RecoveryPoint": {
@@ -186,7 +195,7 @@
       },
       "fcp2n": {
         "competencyId": "d02_c14",
-        "status": "validating",
+        "status": "closed",
         "checkpointBranch": "phase-fcp2n-d02-c14-closed"
       }
     }
