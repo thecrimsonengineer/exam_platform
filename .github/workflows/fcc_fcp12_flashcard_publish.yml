@@ -1,0 +1,131 @@
+name: FCC FCP1 FCP2 Flashcard Publication
+
+on:
+  push:
+    branches:
+      - phase-fcc-fcp12-publication
+    paths:
+      - 'tool/fcc_flashcard_publish/**'
+      - 'assets/flashcards/production/d01/**'
+      - 'assets/flashcards/production/d02/**'
+      - 'assets/flashcards/production/manifest/**'
+      - 'test/features/flashcards/cloud/**'
+      - '.github/workflows/fcc_fcp12_flashcard_publish.yml'
+      - '.github/fcc_fcp12_publish_trigger'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish frozen FCP1/FCP2 Flashcards
+        required: true
+        type: boolean
+        default: false
+      confirmation:
+        description: Type FCC_PUBLISH_FCP12 when publish is true
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fcc-fcp12-flashcard-publication
+  cancel-in-progress: false
+
+env:
+  SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+  SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+
+jobs:
+  validate-and-publish:
+    if: github.ref == 'refs/heads/phase-fcc-fcp12-publication'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Validate frozen FCC source
+        run: flutter test test/features/flashcards/cloud/fcc_fcp12_publication_source_test.dart
+
+      - name: Require Supabase server credential
+        shell: bash
+        run: |
+          test -n "$SUPABASE_SECRET_KEY" || {
+            echo "Missing SUPABASE_SECRET_KEY repository secret."
+            exit 1
+          }
+
+      - name: FCC read-only preflight
+        run: |
+          rm -rf build/fcc-fcp12
+          mkdir -p build/fcc-fcp12
+          dart run tool/fcc_flashcard_publish/fcc_flashcard_publish.dart \
+            --preflight \
+            --evidence=build/fcc-fcp12/preflight.json
+          grep -q '"readyToPublish": true' build/fcc-fcp12/preflight.json
+          grep -q '"packageCount": 21' build/fcc-fcp12/preflight.json
+          grep -q '"cardCount": 252' build/fcc-fcp12/preflight.json
+
+      - name: Require explicit publication confirmation
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.publish == true) ||
+          (github.event_name == 'push' &&
+           github.event.head_commit.message == 'FCC-1: authorized FCP1 FCP2 publication')
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            test -f .github/fcc_fcp12_publish_trigger
+            grep -qx 'FCC_PUBLISH_FCP12' .github/fcc_fcp12_publish_trigger
+          elif [ "${{ inputs.confirmation }}" != "FCC_PUBLISH_FCP12" ]; then
+            echo "Publication requested without exact FCC_PUBLISH_FCP12 confirmation."
+            exit 1
+          fi
+
+      - name: Publish immutable FCP1/FCP2 Flashcards
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.publish == true) ||
+          (github.event_name == 'push' &&
+           github.event.head_commit.message == 'FCC-1: authorized FCP1 FCP2 publication')
+        run: |
+          dart run tool/fcc_flashcard_publish/fcc_flashcard_publish.dart \
+            --publish \
+            --confirm=FCC_PUBLISH_FCP12 \
+            --evidence=build/fcc-fcp12/publication.json
+          grep -q '"completePublication": true' build/fcc-fcp12/publication.json
+
+      - name: Print non-sensitive FCC summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path('build/fcc-fcp12/publication.json')
+          if not p.exists():
+              p = Path('build/fcc-fcp12/preflight.json')
+          report = json.loads(p.read_text())
+          print('FCC packages:', report.get('packageCount'))
+          print('FCC cards:', report.get('cardCount'))
+          print('FCC new packages:', report.get('newPackageCount'))
+          print('FCC reused packages:', report.get('reusedPackageCount'))
+          print('FCC private bucket:', report.get('bucketPrivate'))
+          print('FCC complete publication:', report.get('completePublication', False))
+          PY
+
+      - name: Upload sanitized FCC evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: fcc-fcp12-publication-${{ github.sha }}
+          path: build/fcc-fcp12/*.json
+          if-no-files-found: error
+          retention-days: 30
