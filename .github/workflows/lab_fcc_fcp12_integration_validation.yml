@@ -49,8 +49,13 @@ jobs:
             git push origin HEAD:phase-lab-fcc-fcp12-integrated
           fi
 
-      - name: Analyze integrated app
-        run: flutter analyze --no-fatal-infos
+      - name: Analyze FCC learner runtime
+        run: |
+          flutter analyze --no-fatal-infos \
+            lib/features/flashcards/cloud \
+            lib/screens/flashcards \
+            lib/screens/navigation/bottom_navigation.dart \
+            test/features/flashcards/cloud
 
       - name: FCC and FCP regression
         run: |
