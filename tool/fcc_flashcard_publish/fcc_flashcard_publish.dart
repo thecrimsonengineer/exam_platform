@@ -83,10 +83,7 @@ Future<void> main(List<String> args) async {
 
   final publishedAt = DateTime.now().toUtc().toIso8601String();
   for (final package in plan.packages) {
-    await client.commitFlashcardPublication(
-      package,
-      publishedAt: publishedAt,
-    );
+    await client.commitFlashcardPublication(package, publishedAt: publishedAt);
   }
 
   final verifiedRows = await client.fetchAll(
@@ -128,8 +125,7 @@ Map<String, dynamic> _packageCommitPayload(
     'deckId': package.artifact.deckId,
     'sourceFcp1Sha': fccSourceFcp1Sha,
     'sourceFcp2Sha': fccSourceFcp2Sha,
-    'uncompressedChecksumSha256':
-        package.artifact.uncompressedChecksumSha256,
+    'uncompressedChecksumSha256': package.artifact.uncompressedChecksumSha256,
   },
 };
 
@@ -138,12 +134,13 @@ void _validateNoUnexpectedCurrentRows(
   List<Map<String, dynamic>> packageRows,
 ) {
   final expected = plan.packages.map((item) => item.competencyId).toSet();
-  final unexpected = packageRows
-      .where((row) => row['is_current'] == true)
-      .map((row) => row['package_key']?.toString() ?? '')
-      .where((key) => key.isNotEmpty && !expected.contains(key))
-      .toList()
-    ..sort();
+  final unexpected =
+      packageRows
+          .where((row) => row['is_current'] == true)
+          .map((row) => row['package_key']?.toString() ?? '')
+          .where((key) => key.isNotEmpty && !expected.contains(key))
+          .toList()
+        ..sort();
 
   if (unexpected.isNotEmpty) {
     throw StateError(
@@ -183,8 +180,7 @@ void _verifyDatabaseState(
     final row = current[package.competencyId];
     if (row == null ||
         row['version']?.toString() != package.version.toString() ||
-        row['checksum_sha256']?.toString() !=
-            package.artifact.checksumSha256 ||
+        row['checksum_sha256']?.toString() != package.artifact.checksumSha256 ||
         row['storage_path']?.toString() != package.storagePath ||
         row['item_count']?.toString() !=
             package.artifact.cardCount.toString()) {
@@ -334,9 +330,7 @@ class _SupabaseFccClient {
     );
   }
 
-  Future<void> ensureImmutableObject(
-    FccPlannedFlashcardPackage package,
-  ) async {
+  Future<void> ensureImmutableObject(FccPlannedFlashcardPackage package) async {
     final existing = await downloadObject(fccBucketId, package.storagePath);
 
     if (existing.statusCode == 200) {
@@ -391,18 +385,16 @@ class _SupabaseFccClient {
     }
   }
 
-  Future<_ByteHttpResult> downloadObject(
-    String bucketId,
-    String storagePath,
-  ) => _byteRequest(
-    'GET',
-    _storageUri(<String>[
-      'object',
-      'authenticated',
-      bucketId,
-      ...storagePath.split('/'),
-    ]),
-  );
+  Future<_ByteHttpResult> downloadObject(String bucketId, String storagePath) =>
+      _byteRequest(
+        'GET',
+        _storageUri(<String>[
+          'object',
+          'authenticated',
+          bucketId,
+          ...storagePath.split('/'),
+        ]),
+      );
 
   Future<void> commitFlashcardPublication(
     FccPlannedFlashcardPackage package, {
@@ -491,16 +483,10 @@ class _SupabaseFccClient {
 
       final isStorage = uri.path.contains('/storage/v1/');
       if (legacyJwt || isStorage) {
-        request.headers.set(
-          HttpHeaders.authorizationHeader,
-          'Bearer $apiKey',
-        );
+        request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $apiKey');
       }
 
-      request.headers.set(
-        HttpHeaders.userAgentHeader,
-        'csp11-fcc-publisher/1',
-      );
+      request.headers.set(HttpHeaders.userAgentHeader, 'csp11-fcc-publisher/1');
       request.headers.set(HttpHeaders.acceptHeader, 'application/json');
 
       for (final entry in extraHeaders.entries) {

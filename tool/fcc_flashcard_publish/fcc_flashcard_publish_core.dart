@@ -41,10 +41,7 @@ const Map<String, int> fccExpectedCompetencyCardCounts = <String, int>{
 };
 
 class FccFrozenFlashcardSource {
-  const FccFrozenFlashcardSource({
-    required this.path,
-    required this.payload,
-  });
+  const FccFrozenFlashcardSource({required this.path, required this.payload});
 
   final String path;
   final Map<String, dynamic> payload;
@@ -150,10 +147,8 @@ class FccFlashcardPublicationPlan {
 
   int get packageCount => packages.length;
 
-  int get cardCount => packages.fold<int>(
-    0,
-    (sum, package) => sum + package.artifact.cardCount,
-  );
+  int get cardCount =>
+      packages.fold<int>(0, (sum, package) => sum + package.artifact.cardCount);
 
   int get newPackageCount =>
       packages.where((package) => !package.reusesExistingPackage).length;
@@ -420,9 +415,7 @@ class FccFlashcardPackageBuilder {
         .fold<int>(0, (sum, item) => sum + item.artifact.cardCount);
 
     if (d01 != fccExpectedD01CardCount || d02 != fccExpectedD02CardCount) {
-      throw StateError(
-        'FCC domain totals are invalid: d01=$d01 d02=$d02.',
-      );
+      throw StateError('FCC domain totals are invalid: d01=$d01 d02=$d02.');
     }
   }
 }
@@ -438,12 +431,13 @@ List<FccFrozenFlashcardSource> loadFccFrozenFcp12Sources({
   final matcher = RegExp(
     r'[\\/]d0[12][\\/]d0[12]_c\d{2}[\\/]d0[12]_c\d{2}_flashcards_v1\.json$',
   );
-  final files = root
-      .listSync(recursive: true)
-      .whereType<File>()
-      .where((file) => matcher.hasMatch(file.path))
-      .toList()
-    ..sort((left, right) => left.path.compareTo(right.path));
+  final files =
+      root
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((file) => matcher.hasMatch(file.path))
+          .toList()
+        ..sort((left, right) => left.path.compareTo(right.path));
 
   final sources = <FccFrozenFlashcardSource>[];
   for (final file in files) {
