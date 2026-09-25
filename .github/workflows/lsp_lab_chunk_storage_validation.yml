@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: lsp-lab-chunk-storage-${{ github.ref }}
@@ -38,9 +38,9 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Check formatting
+      - name: Canonical formatting
         run: |
-          dart format --output=none --set-exit-if-changed \
+          dart format \
             lib/features/lab/lab_published_payload_chunks.dart \
             lib/features/lab/lab_firestore_repositories.dart \
             test/lab_quality/lab_published_payload_chunks_test.dart \
@@ -105,3 +105,21 @@ jobs:
 
       - name: Diff hygiene
         run: git diff --check
+
+      - name: Persist canonical formatting after all gates pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add \
+            lib/features/lab/lab_published_payload_chunks.dart \
+            lib/features/lab/lab_firestore_repositories.dart \
+            test/lab_quality/lab_published_payload_chunks_test.dart \
+            test/lab_quality/lsp_batch2_direct_release_bundle_test.dart
+          if git diff --cached --quiet; then
+            echo "Formatting already committed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Apply LAB chunk storage formatting"
+          git push origin HEAD:${GITHUB_REF_NAME}
