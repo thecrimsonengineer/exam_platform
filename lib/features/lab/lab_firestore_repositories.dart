@@ -322,10 +322,12 @@ class FirestoreLabLearnerCatalogueRepository
 
   @override
   Future<List<LabLearnerCatalogueEntry>> listAvailable() async {
-    Query<Map<String, dynamic>> query = _collection.where(
-      'available',
-      isEqualTo: true,
-    );
+    Query<Map<String, dynamic>> query = _collection
+        .where(
+          'schemaVersion',
+          isEqualTo: kLabLearnerCatalogueFirestoreSchemaVersion,
+        )
+        .where('available', isEqualTo: true);
     final visibleReleaseId = _visibleReleaseId;
     if (visibleReleaseId != null) {
       query = query.where('releaseId', isEqualTo: visibleReleaseId);
