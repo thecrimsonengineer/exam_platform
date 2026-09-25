@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2J",
+  "competencyId": "d02_c10",
+  "cardCount": 15,
+  "cardsWithProvenance": 15,
+  "cardsWithExactlyOnePrimarySource": 15,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.fmcsa.part396_maintenance",
+    "csp11.source.iso.14001_2026",
+    "csp11.source.iso.15489_1_2016",
+    "csp11.source.iso.19011_2026",
+    "csp11.source.nist.privacy_framework_1_0",
+    "csp11.source.osha.1910_1020",
+    "csp11.source.osha.1910_119"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.iso.15489_1_2016": 5,
+    "csp11.source.osha.1910_1020": 4,
+    "csp11.source.nist.privacy_framework_1_0": 2,
+    "csp11.source.osha.1910_119": 2,
+    "csp11.source.fmcsa.part396_maintenance": 1,
+    "csp11.source.iso.14001_2026": 1
+  },
+  "status": "PASS"
+}
