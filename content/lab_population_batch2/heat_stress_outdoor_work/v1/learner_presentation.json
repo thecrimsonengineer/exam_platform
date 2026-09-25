@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Heat Work Readiness Review",
+      "summary": "The crew is preparing for strenuous outdoor work during high heat, including one worker who is not recently acclimatized.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The planned task combines environmental heat with significant physical workload.",
+        "A recently unacclimatized worker may have lower tolerance for the same heat exposure than experienced crew members.",
+        "Work-rest planning, hydration, supervision and acclimatization status are relevant before strenuous work begins."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Work-Rest and Hydration Check",
+      "summary": "Schedule pressure has developed while the crew is due for a planned recovery break.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The heat conditions remain elevated even though the job is running behind schedule.",
+        "Recovery time is part of the exposure-control plan rather than unused production time.",
+        "Hydration, shade or cooling and work-rest timing should continue to reflect the actual heat load and workload."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Heat Illness Symptom Record",
+      "summary": "A worker has developed unusual fatigue, dizziness and nausea while remaining conscious and responsive.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The symptoms are consistent with a significant heat-strain warning that requires prompt attention.",
+        "Continuing strenuous work could allow the worker's condition to worsen rapidly.",
+        "The worker's symptoms change the task from routine heat management to an individual health-response situation."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Heat Emergency Response Record",
+      "summary": "A second worker has become confused and collapsed during the hot shift.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Confusion and collapse are emergency warning signs and indicate a potentially life-threatening heat illness.",
+        "Immediate emergency medical response and rapid cooling take priority over production activity.",
+        "The occurrence also signals that conditions for the remaining crew require reassessment."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Heat Work Resumption Review",
+      "summary": "The emergency is controlled, but high heat remains and the crew now has reduced experienced staffing.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Environmental heat conditions have not automatically improved because the emergency response is complete.",
+        "Crew capability, acclimatization and supervision have changed after one experienced worker became unavailable.",
+        "Any restart should be based on a fresh work-rest, staffing and heat-control assessment."
       ]
     }
   },
