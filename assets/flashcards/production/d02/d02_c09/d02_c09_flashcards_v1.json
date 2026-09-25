@@ -1,0 +1,833 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c09_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c09",
+    "title": "Plans, Systems, and Policies Required Components Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.safety_health_environmental_policy",
+      "csp11.flashcard.scope_and_applicability",
+      "csp11.flashcard.applicable_legal_other_requirements",
+      "csp11.flashcard.roles_responsibilities_authorities",
+      "csp11.flashcard.objectives_and_action_planning_component",
+      "csp11.flashcard.hazard_risk_environmental_aspect_assessment",
+      "csp11.flashcard.operational_controls_and_procedures",
+      "csp11.flashcard.competence_training_awareness",
+      "csp11.flashcard.communication_consultation_participation_component",
+      "csp11.flashcard.emergency_preparedness_response_component",
+      "csp11.flashcard.documented_information_records_component",
+      "csp11.flashcard.performance_evaluation_audit_component",
+      "csp11.flashcard.management_review_continual_improvement_component"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.safety_health_environmental_policy",
+      "canonicalLabel": "Safety, Health, and Environmental Policy",
+      "flashcardId": "csp11.flashcard.safety_health_environmental_policy",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "SHE policy",
+        "HSE policy"
+      ]
+    },
+    {
+      "id": "csp11.concept.scope_and_applicability",
+      "canonicalLabel": "Scope and Applicability",
+      "flashcardId": "csp11.flashcard.scope_and_applicability",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "program scope",
+        "system applicability"
+      ]
+    },
+    {
+      "id": "csp11.concept.applicable_legal_other_requirements",
+      "canonicalLabel": "Applicable Legal and Other Requirements",
+      "flashcardId": "csp11.flashcard.applicable_legal_other_requirements",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "compliance obligations",
+        "requirements basis"
+      ]
+    },
+    {
+      "id": "csp11.concept.roles_responsibilities_authorities",
+      "canonicalLabel": "Roles, Responsibilities, and Authorities",
+      "flashcardId": "csp11.flashcard.roles_responsibilities_authorities",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "program responsibilities",
+        "accountability structure"
+      ]
+    },
+    {
+      "id": "csp11.concept.objectives_and_action_planning_component",
+      "canonicalLabel": "Objectives and Action Planning Component",
+      "flashcardId": "csp11.flashcard.objectives_and_action_planning_component",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "program objectives and action planning"
+      ]
+    },
+    {
+      "id": "csp11.concept.hazard_risk_environmental_aspect_assessment",
+      "canonicalLabel": "Hazard, Risk, and Environmental Aspect Assessment",
+      "flashcardId": "csp11.flashcard.hazard_risk_environmental_aspect_assessment",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "hazard and aspect assessment",
+        "risk and environmental aspect identification"
+      ]
+    },
+    {
+      "id": "csp11.concept.operational_controls_and_procedures",
+      "canonicalLabel": "Operational Controls and Procedures",
+      "flashcardId": "csp11.flashcard.operational_controls_and_procedures",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "operational control component",
+        "safe work controls and procedures"
+      ]
+    },
+    {
+      "id": "csp11.concept.competence_training_awareness",
+      "canonicalLabel": "Competence, Training, and Awareness",
+      "flashcardId": "csp11.flashcard.competence_training_awareness",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "training and competence component"
+      ]
+    },
+    {
+      "id": "csp11.concept.communication_consultation_participation_component",
+      "canonicalLabel": "Communication, Consultation, and Participation",
+      "flashcardId": "csp11.flashcard.communication_consultation_participation_component",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "communication and participation component"
+      ]
+    },
+    {
+      "id": "csp11.concept.emergency_preparedness_response_component",
+      "canonicalLabel": "Emergency Preparedness and Response Component",
+      "flashcardId": "csp11.flashcard.emergency_preparedness_response_component",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "emergency arrangements",
+        "emergency response component"
+      ]
+    },
+    {
+      "id": "csp11.concept.documented_information_records_component",
+      "canonicalLabel": "Documented Information and Records",
+      "flashcardId": "csp11.flashcard.documented_information_records_component",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "documentation and records component",
+        "document control component"
+      ]
+    },
+    {
+      "id": "csp11.concept.performance_evaluation_audit_component",
+      "canonicalLabel": "Performance Evaluation and Audit Component",
+      "flashcardId": "csp11.flashcard.performance_evaluation_audit_component",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "monitoring and audit component",
+        "evaluation and audit component"
+      ]
+    },
+    {
+      "id": "csp11.concept.management_review_continual_improvement_component",
+      "canonicalLabel": "Management Review and Continual Improvement",
+      "flashcardId": "csp11.flashcard.management_review_continual_improvement_component",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "aliases": [
+        "management review and improvement component"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.safety_health_environmental_policy",
+      "conceptId": "csp11.concept.safety_health_environmental_policy",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Safety, Health, and Environmental Policy",
+      "backDefinition": "A formal statement of organizational intent and direction for managing safety, health, and environmental responsibilities, establishing commitments that guide objectives, decisions, implementation, and improvement.",
+      "whyItMatters": "A clear policy gives the plan or management system an approved direction and creates a reference point for leadership behavior, resource decisions, objectives, and accountability.",
+      "keyPoint": "The policy should be visible in decisions and actions, not exist only as a signed statement.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.management_leadership",
+          "locator": "Management Leadership > establish a written safety and health policy and communicate it",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > OH&S policy within the management-system framework",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 > environmental policy within the EMS framework",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "policy"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.scope_and_applicability",
+      "conceptId": "csp11.concept.scope_and_applicability",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Scope and Applicability",
+      "backDefinition": "The defined organizational, operational, geographic, activity, worker, or process boundaries to which a plan, system, policy, regulation, or standard applies.",
+      "whyItMatters": "Without a clear scope, responsibilities and controls can fall into gaps, especially across sites, contractors, temporary work, nonroutine activities, and interfaces between organizational units.",
+      "keyPoint": "Define what is covered, where it applies, and who or what is included before assigning controls.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > determining the scope of the OH&S management system",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 > determining the scope of the environmental management system",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "program-structure"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.applicable_legal_other_requirements",
+      "conceptId": "csp11.concept.applicable_legal_other_requirements",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Applicable Legal and Other Requirements",
+      "backDefinition": "The laws, regulations, permits, consensus standards, contractual commitments, organizational rules, and other requirements that apply to the activities and risks covered by a plan or management system.",
+      "whyItMatters": "Plans and policies must be built on the requirements that actually govern the work. Missing an applicable obligation can make otherwise well-designed controls incomplete or noncompliant.",
+      "keyPoint": "Identify applicable requirements, connect them to the covered activities, and keep the basis current.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > legal requirements and other requirements within OH&S planning",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 > compliance obligations within environmental planning",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "requirements"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.roles_responsibilities_authorities",
+      "conceptId": "csp11.concept.roles_responsibilities_authorities",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Roles, Responsibilities, and Authorities",
+      "backDefinition": "The explicit assignment of who is responsible for implementing, maintaining, approving, monitoring, communicating, and improving each part of a plan or management system, together with the authority needed to perform those duties.",
+      "whyItMatters": "A requirement without an owner can remain undone. Clear assignments make accountability visible and help workers know who makes decisions, provides resources, and responds to concerns.",
+      "keyPoint": "Assign both responsibility and sufficient authority; avoid vague ownership.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.management_leadership",
+          "locator": "Management Leadership > assign responsibilities, communicate commitment, and provide resources",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > organizational roles, responsibilities and authorities",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "program-structure"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.objectives_and_action_planning_component",
+      "conceptId": "csp11.concept.objectives_and_action_planning_component",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Objectives and Action Planning Component",
+      "backDefinition": "The part of a plan or management system that translates policy commitments and identified needs into defined improvement objectives, assigned actions, resources, responsibilities, and time frames.",
+      "whyItMatters": "Policy describes direction, while objectives and action planning convert that direction into work that can be implemented and reviewed.",
+      "keyPoint": "Objectives should lead to owned actions rather than remain broad intentions.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.management_leadership",
+          "locator": "Management Leadership > define program goals and allocate resources",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > goals, targets, monitoring, and improvement",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "program-structure"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.hazard_risk_environmental_aspect_assessment",
+      "conceptId": "csp11.concept.hazard_risk_environmental_aspect_assessment",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Hazard, Risk, and Environmental Aspect Assessment",
+      "backDefinition": "A structured process for identifying safety and health hazards, evaluating associated risks, identifying environmental aspects and impacts where relevant, and prioritizing issues that require controls or improvement.",
+      "whyItMatters": "Plans and systems cannot control what they have not identified. Systematic assessment establishes the evidence base for selecting priorities, controls, procedures, and objectives.",
+      "keyPoint": "Identify hazards and environmental aspects proactively, then evaluate their significance or risk before choosing controls.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.hazard_identification",
+          "locator": "Hazard Identification and Assessment > proactive ongoing identification and assessment of workplace hazards",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 > environmental aspects within EMS planning",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "risk-assessment"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.operational_controls_and_procedures",
+      "conceptId": "csp11.concept.operational_controls_and_procedures",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Operational Controls and Procedures",
+      "backDefinition": "The defined engineering, administrative, procedural, maintenance, work-practice, and protective measures used to keep identified hazards and environmental risks within intended limits during normal, nonroutine, and changing operations.",
+      "whyItMatters": "A plan becomes operational only when identified risks are connected to controls that workers can implement, supervisors can verify, and the organization can maintain.",
+      "keyPoint": "Controls should address identified risk and include the procedures or practices needed to use them correctly.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.hazard_prevention",
+          "locator": "Hazard Prevention and Control > select, implement, verify, maintain, and evaluate controls",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > operational planning and control",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "operational-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.competence_training_awareness",
+      "conceptId": "csp11.concept.competence_training_awareness",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Competence, Training, and Awareness",
+      "backDefinition": "The arrangements used to ensure that people understand the plan or system, know their responsibilities and hazards, receive needed education or training, and are able to perform assigned safety, health, and environmental duties.",
+      "whyItMatters": "Written requirements do not protect people if those expected to apply them lack the knowledge or capability to do so.",
+      "keyPoint": "Training should match assigned responsibilities, hazards, procedures, and the learner's language and literacy needs.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.education_training",
+          "locator": "Education and Training > program structure, policies, procedures, responsibilities, hazards, controls, reporting, and emergencies",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > competence and awareness within OH&S management",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "training"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.communication_consultation_participation_component",
+      "conceptId": "csp11.concept.communication_consultation_participation_component",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Communication, Consultation, and Participation",
+      "backDefinition": "The mechanisms by which relevant safety, health, and environmental information is exchanged and affected workers or other parties are given meaningful opportunities to provide input, report concerns, and participate in implementation and improvement.",
+      "whyItMatters": "Plans fail when information stops at organizational boundaries or when the people exposed to risks cannot influence how controls are designed and used.",
+      "keyPoint": "Define what must be communicated, to whom, when, by what route, and how worker input is obtained and acted on.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.worker_participation",
+          "locator": "Worker Participation > worker involvement in establishing, operating, evaluating, and improving the program",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.communication_coordination",
+          "locator": "Communication and Coordination > exchange hazard, control, incident, responsibility, and emergency information",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "worker-participation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.emergency_preparedness_response_component",
+      "conceptId": "csp11.concept.emergency_preparedness_response_component",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Emergency Preparedness and Response Component",
+      "backDefinition": "The part of a plan or management system that identifies credible emergencies and defines reporting, alarm, evacuation or response actions, accountability, assigned duties, contacts, training, and review arrangements appropriate to the workplace.",
+      "whyItMatters": "Normal operating controls may not be enough once an emergency begins. Predefined roles and procedures reduce delay, confusion, and conflicting actions when conditions are time-critical.",
+      "keyPoint": "Emergency arrangements should be specific enough that people know what to report, where to go, what to do, and who is responsible.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_38",
+          "locator": "29 CFR 1910.38(c)-(f) - emergency action plan elements, alarm, training, and review",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > emergency preparedness and response",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "emergency-preparedness"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.documented_information_records_component",
+      "conceptId": "csp11.concept.documented_information_records_component",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Documented Information and Records",
+      "backDefinition": "The controlled documents and retained records needed to communicate current requirements, demonstrate implementation, preserve evidence, support traceability, and keep a plan or management system usable and auditable.",
+      "whyItMatters": "Outdated procedures can direct unsafe work, while missing records can make it impossible to show what was required, completed, reviewed, or changed.",
+      "keyPoint": "Control current documents and retain appropriate evidence of implementation and results.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > documented information within the OH&S management system",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.14001_2026",
+          "locator": "ISO 14001:2026 > documented information within the environmental management system",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "documentation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.performance_evaluation_audit_component",
+      "conceptId": "csp11.concept.performance_evaluation_audit_component",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Performance Evaluation and Audit Component",
+      "backDefinition": "The arrangements for monitoring, measuring, inspecting, auditing, and evaluating whether a plan or management system is being implemented as intended and is achieving the required or planned results.",
+      "whyItMatters": "Implementation cannot be assumed from written requirements. Evaluation identifies weak controls, incomplete implementation, adverse trends, and opportunities for corrective action or improvement.",
+      "keyPoint": "Use evidence to compare actual performance with the plan, requirements, and intended outcomes.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > monitor performance, evaluate the program, and identify improvements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > performance evaluation and internal audit",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "performance-evaluation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.management_review_continual_improvement_component",
+      "conceptId": "csp11.concept.management_review_continual_improvement_component",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Management Review and Continual Improvement",
+      "backDefinition": "The recurring leadership review of system performance, changing conditions, findings, resources, and improvement needs, followed by decisions and actions to keep the plan or management system suitable, effective, and current.",
+      "whyItMatters": "Workplaces, regulations, hazards, technologies, and organizational priorities change. Periodic review prevents a plan from becoming a static document that no longer reflects actual risk or operations.",
+      "keyPoint": "Review results should lead to decisions, corrective action, and controlled improvement where needed.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c09"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > periodic evaluation and continual improvement",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.iso.45001_2018",
+          "locator": "ISO 45001:2018 > management review and improvement",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "plans-systems-policies",
+        "continual-improvement"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.management_leadership",
+      "organization": "OSHA",
+      "title": "Safety Management - Management Leadership",
+      "canonicalUrl": "https://www.osha.gov/safety-management/management-leadership",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports written policy, program goals, responsibilities, resources, and integration of safety and health into organizational decisions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.worker_participation",
+      "organization": "OSHA",
+      "title": "Safety Management - Worker Participation",
+      "canonicalUrl": "https://www.osha.gov/safety-management/worker-participation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports meaningful worker participation, reporting, non-retaliation, information access, participation in program evaluation, feedback, ownership, and improvement."
+    },
+    {
+      "id": "csp11.source.osha.hazard_identification",
+      "organization": "OSHA",
+      "title": "Safety Management - Hazard Identification and Assessment",
+      "canonicalUrl": "https://www.osha.gov/safety-management/hazard-identification",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports immediate investigation, trained management/worker teams, root-cause analysis, communication of results, hazard prioritization, and corrective action."
+    },
+    {
+      "id": "csp11.source.osha.hazard_prevention",
+      "organization": "OSHA",
+      "title": "Safety Management - Hazard Prevention and Control",
+      "canonicalUrl": "https://www.osha.gov/safety-management/hazard-prevention",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports control selection, control implementation, verification, safe work practices, PPE, preventive maintenance, and evaluation of control effectiveness. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.education_training",
+      "organization": "OSHA",
+      "title": "Safety Management - Education and Training",
+      "canonicalUrl": "https://www.osha.gov/safety-management/education-training",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports training on program structure, policies, goals, procedures, responsibilities, hazard controls, reporting, emergency actions, and worker rights. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.communication_coordination",
+      "organization": "OSHA",
+      "title": "Safety Management - Communication and Coordination for Host Employers, Contractors, and Staffing Agencies",
+      "canonicalUrl": "https://www.osha.gov/safety-management/communication",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports procedures for exchanging hazard, control, incident, responsibility, work-planning, and emergency information among employers and workers. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.program_evaluation",
+      "organization": "OSHA",
+      "title": "Safety Management - Program Evaluation and Improvement",
+      "canonicalUrl": "https://www.osha.gov/safety-management/program-evaluation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports goals, targets, indicators, performance monitoring, periodic program evaluation, comparisons to similar facilities, and improvement. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_38",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.38 - Emergency action plans",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.38",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports emergency action plan applicability, written-plan availability, minimum emergency procedures, alarm systems, training, and plan review. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.management_system_standards",
+      "organization": "ISO",
+      "title": "Management system standards",
+      "canonicalUrl": "https://www.iso.org/management-system-standards.html",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official ISO overview of management systems, management system standards, audits, certification, and harmonized structure. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.14001_2026",
+      "organization": "ISO",
+      "title": "ISO 14001:2026 — Environmental management systems — Requirements with guidance for use",
+      "canonicalUrl": "https://committee.iso.org/standard/14001",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 14001 edition as of 2026-09-24. Requirements standard for environmental management systems. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.45001_2018",
+      "organization": "ISO",
+      "title": "ISO 45001:2018 — Occupational health and safety management systems — Requirements with guidance for use",
+      "canonicalUrl": "https://www.iso.org/standard/45001",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 45001 edition as of 2026-09-24. Confirmed current in 2024; replacement draft under development for 2027. Educational paraphrase only."
+    }
+  ]
+}

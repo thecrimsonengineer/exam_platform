@@ -1,0 +1,446 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d01_c04_flashcards_v1",
+    "domainId": "d01",
+    "competencyId": "d01_c04",
+    "title": "Facility Life Safety Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.exit_route",
+      "csp11.flashcard.exit_route_quantity",
+      "csp11.flashcard.exit_route_capacity",
+      "csp11.flashcard.occupant_load",
+      "csp11.flashcard.exit_discharge",
+      "csp11.flashcard.exit_route_fire_separation",
+      "csp11.flashcard.exit_door_swing",
+      "csp11.flashcard.unobstructed_exit_route",
+      "csp11.flashcard.walking_working_surface_load_capacity"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.exit_route",
+      "canonicalLabel": "Exit Route",
+      "flashcardId": "csp11.flashcard.exit_route",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "means of egress"
+      ]
+    },
+    {
+      "id": "csp11.concept.exit_route_quantity",
+      "canonicalLabel": "Exit Route Quantity",
+      "flashcardId": "csp11.flashcard.exit_route_quantity",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "number of exit routes"
+      ]
+    },
+    {
+      "id": "csp11.concept.exit_route_capacity",
+      "canonicalLabel": "Exit Route Capacity",
+      "flashcardId": "csp11.flashcard.exit_route_capacity",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "egress capacity"
+      ]
+    },
+    {
+      "id": "csp11.concept.occupant_load",
+      "canonicalLabel": "Occupant Load",
+      "flashcardId": "csp11.flashcard.occupant_load",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "maximum permitted occupant load"
+      ]
+    },
+    {
+      "id": "csp11.concept.exit_discharge",
+      "canonicalLabel": "Exit Discharge",
+      "flashcardId": "csp11.flashcard.exit_discharge",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "egress discharge"
+      ]
+    },
+    {
+      "id": "csp11.concept.exit_route_fire_separation",
+      "canonicalLabel": "Exit Route Fire Separation",
+      "flashcardId": "csp11.flashcard.exit_route_fire_separation",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "fire-separated exit"
+      ]
+    },
+    {
+      "id": "csp11.concept.exit_door_swing",
+      "canonicalLabel": "Exit Door Swing",
+      "flashcardId": "csp11.flashcard.exit_door_swing",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "egress door swing"
+      ]
+    },
+    {
+      "id": "csp11.concept.unobstructed_exit_route",
+      "canonicalLabel": "Unobstructed Exit Route",
+      "flashcardId": "csp11.flashcard.unobstructed_exit_route",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "clear exit route"
+      ]
+    },
+    {
+      "id": "csp11.concept.walking_working_surface_load_capacity",
+      "canonicalLabel": "Walking-Working Surface Load Capacity",
+      "flashcardId": "csp11.flashcard.walking_working_surface_load_capacity",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "aliases": [
+        "floor load capacity"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.exit_route",
+      "conceptId": "csp11.concept.exit_route",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Exit Route",
+      "backDefinition": "A continuous and unobstructed path of exit travel from any point within a workplace to a place of safety outside or at an approved exit discharge.",
+      "whyItMatters": "A usable exit route gives occupants a predictable path away from workplace hazards during an emergency.",
+      "keyPoint": "Protect the full path from exit access through exit discharge.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_36",
+          "locator": "1910.36(a)-(c) Exit route design and exit discharge",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_37",
+          "locator": "1910.37(a)(3) Exit routes must be free and unobstructed",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "exit-route",
+        "egress"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.exit_route_quantity",
+      "conceptId": "csp11.concept.exit_route_quantity",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Exit Route Quantity",
+      "backDefinition": "The number of independent exit routes provided so occupants have adequate alternatives for leaving a workplace safely during an emergency.",
+      "whyItMatters": "Multiple routes reduce the chance that one blocked or hazardous path will trap occupants and are selected according to building and occupancy conditions.",
+      "keyPoint": "Most workplaces need at least two exit routes, with exceptions and additional routes based on conditions.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_36",
+          "locator": "1910.36(b) The number of exit routes must be adequate",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "exit-route",
+        "egress-capacity"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.exit_route_capacity",
+      "conceptId": "csp11.concept.exit_route_capacity",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Exit Route Capacity",
+      "backDefinition": "The ability of an exit route to accommodate the maximum permitted occupant load served by that route without reducing capacity toward the exit discharge.",
+      "whyItMatters": "Adequate route capacity prevents bottlenecks that could slow or obstruct evacuation when many occupants move at the same time.",
+      "keyPoint": "Exit-route capacity must support the occupant load it serves.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_36",
+          "locator": "1910.36(f) The capacity of an exit route must be adequate",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "exit-capacity",
+        "occupancy"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.occupant_load",
+      "conceptId": "csp11.concept.occupant_load",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Occupant Load",
+      "backDefinition": "The number of occupants a space or exit route is designed or permitted to serve for life-safety and egress-capacity purposes.",
+      "whyItMatters": "Occupant load influences how much exit capacity and how many routes are needed to allow safe emergency movement.",
+      "keyPoint": "Size egress capacity for the occupants the route must serve.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_36",
+          "locator": "1910.36(f)(1) Maximum permitted occupant load",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "occupant-load",
+        "egress-capacity"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.exit_discharge",
+      "conceptId": "csp11.concept.exit_discharge",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Exit Discharge",
+      "backDefinition": "The portion of an exit route that leads directly outside or to a street, walkway, refuge area, public way, or open space with access to the outside.",
+      "whyItMatters": "A protected route is incomplete if it ends where occupants remain exposed or cannot continue to a safe outside location.",
+      "keyPoint": "The discharge must lead occupants toward a safe outside destination.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_36",
+          "locator": "1910.36(c) Each exit discharge must lead directly outside or to a safe area",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "exit-discharge",
+        "egress"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.exit_route_fire_separation",
+      "conceptId": "csp11.concept.exit_route_fire_separation",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Exit Route Fire Separation",
+      "backDefinition": "Fire-resistant construction that separates an exit from other workplace areas so the protected path is less likely to be compromised by fire.",
+      "whyItMatters": "Fire separation helps preserve an escape path long enough for occupants to move toward the exit discharge.",
+      "keyPoint": "Exit separation requirements depend in part on the number of stories connected.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_36",
+          "locator": "1910.36(a)(2) Exit separation by fire-resistant materials",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "fire-separation",
+        "exit-route"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.exit_door_swing",
+      "conceptId": "csp11.concept.exit_door_swing",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Exit Door Swing",
+      "backDefinition": "The required direction of travel for certain exit-route doors, including doors from rooms designed for more than 50 people or high-hazard areas.",
+      "whyItMatters": "Correct door swing reduces interference with a crowd moving toward an exit during an emergency.",
+      "keyPoint": "For specified high-occupancy or high-hazard rooms, the door swings in the direction of exit travel.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_36",
+          "locator": "1910.36(e)(2) Exit door swing direction",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "exit-door",
+        "egress"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.unobstructed_exit_route",
+      "conceptId": "csp11.concept.unobstructed_exit_route",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Unobstructed Exit Route",
+      "backDefinition": "An exit route maintained free of materials, equipment, locked-room dependencies, and other conditions that could block or delay emergency travel.",
+      "whyItMatters": "Even a properly designed exit can fail as a life-safety feature if storage, equipment, or access conditions obstruct the path.",
+      "keyPoint": "Temporary obstructions can be just as dangerous as permanent ones.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_37",
+          "locator": "1910.37(a)(3) Exit routes must be free and unobstructed",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "life-safety",
+        "exit-route",
+        "housekeeping"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.walking_working_surface_load_capacity",
+      "conceptId": "csp11.concept.walking_working_surface_load_capacity",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Walking-Working Surface Load Capacity",
+      "backDefinition": "The ability of a walking-working surface to support the maximum intended load from people, equipment, vehicles, tools, materials, and other expected loads.",
+      "whyItMatters": "Exceeding intended structural load can cause surface failure, collapse, or unsafe deformation and can threaten both occupants and emergency egress.",
+      "keyPoint": "Evaluate the maximum intended load rather than relying on a generic floor rating assumption.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c04"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_22",
+          "locator": "1910.22(b) Loads",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "facility-safety",
+        "floor-loading",
+        "walking-working-surface"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.1910_36",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.36 - Design and construction requirements for exit routes",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.36",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for FCP facility life-safety exit-route concepts. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_37",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.37 - Maintenance, safeguards, and operational features for exit routes",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.37",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for maintaining usable, marked, unobstructed exit routes. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_22",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.22 - General requirements for walking-working surfaces",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.22",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for walking-working-surface load capacity, access/egress, inspection, maintenance, and repair. Educational paraphrase only."
+    }
+  ]
+}

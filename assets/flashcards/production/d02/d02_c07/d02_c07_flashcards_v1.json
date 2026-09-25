@@ -1,0 +1,576 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c07_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c07",
+    "title": "Leading and Lagging Indicators Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.leading_indicator",
+      "csp11.flashcard.lagging_indicator",
+      "csp11.flashcard.balanced_leading_lagging_indicators",
+      "csp11.flashcard.smart_leading_indicator",
+      "csp11.flashcard.hazard_report_response_time",
+      "csp11.flashcard.corrective_action_completion_timeliness",
+      "csp11.flashcard.management_walkthrough_frequency",
+      "csp11.flashcard.preventive_maintenance_completion_indicator",
+      "csp11.flashcard.safety_training_completion_indicator",
+      "csp11.flashcard.injury_illness_outcome_indicator",
+      "csp11.flashcard.exposure_monitoring_lagging_indicator",
+      "csp11.flashcard.workers_compensation_lagging_indicator"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.leading_indicator",
+      "canonicalLabel": "Leading Indicator",
+      "flashcardId": "csp11.flashcard.leading_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "leading safety indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.lagging_indicator",
+      "canonicalLabel": "Lagging Indicator",
+      "flashcardId": "csp11.flashcard.lagging_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "trailing safety indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.balanced_leading_lagging_indicators",
+      "canonicalLabel": "Balanced Leading and Lagging Indicators",
+      "flashcardId": "csp11.flashcard.balanced_leading_lagging_indicators",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "balanced indicator set"
+      ]
+    },
+    {
+      "id": "csp11.concept.smart_leading_indicator",
+      "canonicalLabel": "SMART Leading Indicator",
+      "flashcardId": "csp11.flashcard.smart_leading_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "SMART safety indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.hazard_report_response_time",
+      "canonicalLabel": "Hazard Report Response Time",
+      "flashcardId": "csp11.flashcard.hazard_report_response_time",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "hazard response time indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.corrective_action_completion_timeliness",
+      "canonicalLabel": "Corrective Action Completion Timeliness",
+      "flashcardId": "csp11.flashcard.corrective_action_completion_timeliness",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "corrective action closure timeliness"
+      ]
+    },
+    {
+      "id": "csp11.concept.management_walkthrough_frequency",
+      "canonicalLabel": "Management Walkthrough Frequency",
+      "flashcardId": "csp11.flashcard.management_walkthrough_frequency",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "safety walkthrough frequency"
+      ]
+    },
+    {
+      "id": "csp11.concept.preventive_maintenance_completion_indicator",
+      "canonicalLabel": "Preventive Maintenance Completion Indicator",
+      "flashcardId": "csp11.flashcard.preventive_maintenance_completion_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "planned maintenance completion indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_training_completion_indicator",
+      "canonicalLabel": "Safety Training Completion Indicator",
+      "flashcardId": "csp11.flashcard.safety_training_completion_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "training completion indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.injury_illness_outcome_indicator",
+      "canonicalLabel": "Injury and Illness Outcome Indicator",
+      "flashcardId": "csp11.flashcard.injury_illness_outcome_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "injury and illness lagging indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.exposure_monitoring_lagging_indicator",
+      "canonicalLabel": "Exposure Monitoring Lagging Indicator",
+      "flashcardId": "csp11.flashcard.exposure_monitoring_lagging_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "hazardous exposure result indicator"
+      ]
+    },
+    {
+      "id": "csp11.concept.workers_compensation_lagging_indicator",
+      "canonicalLabel": "Workers' Compensation Lagging Indicator",
+      "flashcardId": "csp11.flashcard.workers_compensation_lagging_indicator",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "aliases": [
+        "workers compensation indicator"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.leading_indicator",
+      "conceptId": "csp11.concept.leading_indicator",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Leading Indicator",
+      "backDefinition": "A proactive, preventive measure that provides information about the effective performance of safety and health activities and can reveal potential problems before an injury, illness, or other incident occurs.",
+      "whyItMatters": "Leading indicators give an organization an opportunity to act before harm occurs rather than learning only from outcomes that have already happened.",
+      "keyPoint": "Use leading indicators to drive preventive action and improvement.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.leading_indicators",
+          "locator": "Leading Indicators > What are leading indicators?",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > Monitor performance and progress",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.lagging_indicator",
+      "conceptId": "csp11.concept.lagging_indicator",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Lagging Indicator",
+      "backDefinition": "A measure of outcomes or events that have already occurred, such as the number, frequency, or severity of injuries, illnesses, exposures, claims, or other adverse results.",
+      "whyItMatters": "Lagging indicators show where harm or program failure has already occurred and are useful for judging historical outcomes, but they cannot provide early warning by themselves.",
+      "keyPoint": "Lagging indicators look backward at results that have already occurred.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.leading_indicators",
+          "locator": "Leading Indicators > contrast with lagging indicators",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > lagging indicator examples",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "lagging-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.balanced_leading_lagging_indicators",
+      "conceptId": "csp11.concept.balanced_leading_lagging_indicators",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Balanced Leading and Lagging Indicators",
+      "backDefinition": "Using leading indicators to monitor preventive activity together with lagging indicators that measure resulting outcomes, so program performance is evaluated from both forward-looking and historical perspectives.",
+      "whyItMatters": "A single indicator type gives an incomplete picture. Combining preventive signals with outcome measures helps show both what the organization is doing and whether those efforts are producing safer results.",
+      "keyPoint": "Leading indicators drive change; lagging indicators help measure effectiveness.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.leading_indicators",
+          "locator": "Leading Indicators > good programs use leading and lagging indicators together",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > both lagging and leading indicators should be used",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.smart_leading_indicator",
+      "conceptId": "csp11.concept.smart_leading_indicator",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "SMART Leading Indicator",
+      "backDefinition": "A leading indicator designed so the measure is specific, measurable, accountable, reasonable, and timely, making it practical to track and useful for directing preventive action.",
+      "whyItMatters": "Poorly defined measures can generate data without guiding decisions. SMART characteristics make an indicator easier to understand, assign, monitor, and act upon.",
+      "keyPoint": "An effective leading indicator should connect a defined preventive action with measurable and timely evidence.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.leading_indicators",
+          "locator": "Using Leading Indicators guidance > Characteristics of Effective Leading Indicators",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.hazard_report_response_time",
+      "conceptId": "csp11.concept.hazard_report_response_time",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Hazard Report Response Time",
+      "backDefinition": "A leading indicator that measures how quickly the organization responds after a worker or another source reports a workplace hazard.",
+      "whyItMatters": "Shorter response time can indicate that reports are being acted on promptly, while increasing delays can signal that hazards may remain uncontrolled and workers may lose confidence in reporting.",
+      "keyPoint": "Track elapsed time from hazard report to organizational response or action.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.leading_indicators",
+          "locator": "Using Leading Indicators guidance > response time to a safety hazard report",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > amount of time taken to respond to reports",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.corrective_action_completion_timeliness",
+      "conceptId": "csp11.concept.corrective_action_completion_timeliness",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Corrective Action Completion Timeliness",
+      "backDefinition": "A leading indicator that tracks whether corrective actions are completed within their planned or required time after a hazard, deficiency, or incident is identified.",
+      "whyItMatters": "Open corrective actions can leave known hazards uncontrolled. Timeliness data shows whether the organization converts identified problems into completed preventive improvements.",
+      "keyPoint": "Measure both completion status and whether completion occurred within the expected time.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > timely completion of corrective actions",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.management_walkthrough_frequency",
+      "conceptId": "csp11.concept.management_walkthrough_frequency",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Management Walkthrough Frequency",
+      "backDefinition": "A leading indicator that tracks how often managers or supervisors conduct planned workplace safety walkthroughs or similar visible safety observations.",
+      "whyItMatters": "Walkthrough frequency can provide evidence of management involvement and opportunities to identify hazards or program weaknesses before they contribute to adverse outcomes.",
+      "keyPoint": "Frequency alone is not enough; findings and follow-up still need to be evaluated.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > number and frequency of management walkthroughs",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.preventive_maintenance_completion_indicator",
+      "conceptId": "csp11.concept.preventive_maintenance_completion_indicator",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Preventive Maintenance Completion Indicator",
+      "backDefinition": "A leading indicator that tracks whether planned preventive maintenance activities are completed when scheduled or within the required time.",
+      "whyItMatters": "Late preventive maintenance can allow equipment degradation or protective-system weakness to develop. Completion performance provides an early signal before a maintenance failure produces an incident.",
+      "keyPoint": "Monitor planned maintenance completion against the required schedule.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > timely completion of planned preventive maintenance activities",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_training_completion_indicator",
+      "conceptId": "csp11.concept.safety_training_completion_indicator",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Safety Training Completion Indicator",
+      "backDefinition": "A leading indicator that tracks the number or proportion of workers who have completed required safety and health training.",
+      "whyItMatters": "Training completion does not prove competence by itself, but it shows whether a basic preventive program requirement is being implemented across the intended workforce.",
+      "keyPoint": "Use completion data as an implementation signal, not as the sole proof of training effectiveness.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > number of workers completing required safety and health training",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "leading-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.injury_illness_outcome_indicator",
+      "conceptId": "csp11.concept.injury_illness_outcome_indicator",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Injury and Illness Outcome Indicator",
+      "backDefinition": "A lagging indicator based on the number, frequency, or severity of work-related injuries and illnesses that have already occurred.",
+      "whyItMatters": "These outcomes help identify historical harm and areas of program failure, but low numbers alone should not be treated as proof that all hazards are controlled or that the safety program is effective.",
+      "keyPoint": "Interpret injury and illness outcomes together with leading indicators and exposure context.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > number and severity of injuries and illnesses",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.leading_indicators",
+          "locator": "Leading Indicators > lagging indicators measure past injuries, illnesses, and fatalities",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "lagging-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.exposure_monitoring_lagging_indicator",
+      "conceptId": "csp11.concept.exposure_monitoring_lagging_indicator",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Exposure Monitoring Lagging Indicator",
+      "backDefinition": "A lagging indicator based on exposure-monitoring results showing that workers have already experienced hazardous exposure conditions.",
+      "whyItMatters": "Exposure data can reveal an existing control failure or unacceptable condition even when an injury or illness has not yet been diagnosed, making it an important outcome signal for program evaluation.",
+      "keyPoint": "A hazardous exposure result reflects an adverse condition that has already occurred.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > exposure monitoring results showing hazardous exposures",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "lagging-indicator"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.workers_compensation_lagging_indicator",
+      "conceptId": "csp11.concept.workers_compensation_lagging_indicator",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Workers' Compensation Lagging Indicator",
+      "backDefinition": "A lagging indicator using workers' compensation claim counts, rates, or costs to evaluate consequences associated with injuries or illnesses that have already occurred.",
+      "whyItMatters": "Claims data can help reveal the organizational impact of past harm and support trend review, but it should be interpreted with other indicators because claim experience alone does not describe preventive-system performance.",
+      "keyPoint": "Workers' compensation data measures consequences, not preventive activity.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c07"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program Evaluation and Improvement > workers' compensation claim counts, rates, and cost",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-indicators",
+        "lagging-indicator"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.leading_indicators",
+      "organization": "OSHA",
+      "title": "Leading Indicators",
+      "canonicalUrl": "https://www.osha.gov/leading-indicators",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports proactive measurement of safety-program effectiveness and culture-related leading indicators. Generic leading-indicator concept remains reserved for D02 C07."
+    },
+    {
+      "id": "csp11.source.osha.program_evaluation",
+      "organization": "OSHA",
+      "title": "Safety Management - Program Evaluation and Improvement",
+      "canonicalUrl": "https://www.osha.gov/safety-management/program-evaluation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports goals, targets, indicators, performance monitoring, periodic program evaluation, comparisons to similar facilities, and improvement. Educational paraphrase only."
+    }
+  ]
+}

@@ -1,0 +1,800 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c14_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c14",
+    "title": "Data Analysis and Interpretation Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.arithmetic_mean",
+      "csp11.flashcard.median",
+      "csp11.flashcard.mode",
+      "csp11.flashcard.range",
+      "csp11.flashcard.variance",
+      "csp11.flashcard.standard_deviation",
+      "csp11.flashcard.geometric_mean",
+      "csp11.flashcard.percentile",
+      "csp11.flashcard.frequency_distribution",
+      "csp11.flashcard.histogram",
+      "csp11.flashcard.outlier",
+      "csp11.flashcard.probability",
+      "csp11.flashcard.confidence_interval",
+      "csp11.flashcard.upper_confidence_limit",
+      "csp11.flashcard.sampling_representativeness",
+      "csp11.flashcard.exposure_data_interpretation",
+      "csp11.flashcard.trend_analysis",
+      "csp11.flashcard.pareto_analysis"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.arithmetic_mean",
+      "canonicalLabel": "Arithmetic Mean",
+      "flashcardId": "csp11.flashcard.arithmetic_mean",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "mean",
+        "sample mean"
+      ]
+    },
+    {
+      "id": "csp11.concept.median",
+      "canonicalLabel": "Median",
+      "flashcardId": "csp11.flashcard.median",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "50th percentile"
+      ]
+    },
+    {
+      "id": "csp11.concept.mode",
+      "canonicalLabel": "Mode",
+      "flashcardId": "csp11.flashcard.mode",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "modal value",
+        "most frequent value"
+      ]
+    },
+    {
+      "id": "csp11.concept.range",
+      "canonicalLabel": "Range",
+      "flashcardId": "csp11.flashcard.range",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "data range"
+      ]
+    },
+    {
+      "id": "csp11.concept.variance",
+      "canonicalLabel": "Variance",
+      "flashcardId": "csp11.flashcard.variance",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "sample variance"
+      ]
+    },
+    {
+      "id": "csp11.concept.standard_deviation",
+      "canonicalLabel": "Standard Deviation",
+      "flashcardId": "csp11.flashcard.standard_deviation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "SD",
+        "sample standard deviation"
+      ]
+    },
+    {
+      "id": "csp11.concept.geometric_mean",
+      "canonicalLabel": "Geometric Mean",
+      "flashcardId": "csp11.flashcard.geometric_mean",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "GM"
+      ]
+    },
+    {
+      "id": "csp11.concept.percentile",
+      "canonicalLabel": "Percentile",
+      "flashcardId": "csp11.flashcard.percentile",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "percentile value"
+      ]
+    },
+    {
+      "id": "csp11.concept.frequency_distribution",
+      "canonicalLabel": "Frequency Distribution",
+      "flashcardId": "csp11.flashcard.frequency_distribution",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "frequency table"
+      ]
+    },
+    {
+      "id": "csp11.concept.histogram",
+      "canonicalLabel": "Histogram",
+      "flashcardId": "csp11.flashcard.histogram",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "frequency histogram"
+      ]
+    },
+    {
+      "id": "csp11.concept.outlier",
+      "canonicalLabel": "Outlier",
+      "flashcardId": "csp11.flashcard.outlier",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "unusual observation"
+      ]
+    },
+    {
+      "id": "csp11.concept.probability",
+      "canonicalLabel": "Probability",
+      "flashcardId": "csp11.flashcard.probability",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "event probability"
+      ]
+    },
+    {
+      "id": "csp11.concept.confidence_interval",
+      "canonicalLabel": "Confidence Interval",
+      "flashcardId": "csp11.flashcard.confidence_interval",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "CI",
+        "interval estimate"
+      ]
+    },
+    {
+      "id": "csp11.concept.upper_confidence_limit",
+      "canonicalLabel": "Upper Confidence Limit",
+      "flashcardId": "csp11.flashcard.upper_confidence_limit",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "UCL",
+        "upper confidence bound"
+      ]
+    },
+    {
+      "id": "csp11.concept.sampling_representativeness",
+      "canonicalLabel": "Sampling Representativeness",
+      "flashcardId": "csp11.flashcard.sampling_representativeness",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "representative sampling"
+      ]
+    },
+    {
+      "id": "csp11.concept.exposure_data_interpretation",
+      "canonicalLabel": "Exposure Data Interpretation",
+      "flashcardId": "csp11.flashcard.exposure_data_interpretation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "sampling data interpretation",
+        "release concentration interpretation"
+      ]
+    },
+    {
+      "id": "csp11.concept.trend_analysis",
+      "canonicalLabel": "Trend Analysis",
+      "flashcardId": "csp11.flashcard.trend_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "time trend analysis",
+        "run sequence interpretation"
+      ]
+    },
+    {
+      "id": "csp11.concept.pareto_analysis",
+      "canonicalLabel": "Pareto Analysis",
+      "flashcardId": "csp11.flashcard.pareto_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "aliases": [
+        "Pareto chart",
+        "Pareto diagram"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.arithmetic_mean",
+      "conceptId": "csp11.concept.arithmetic_mean",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Arithmetic Mean",
+      "backDefinition": "The arithmetic mean is the sum of all observed values divided by the number of observations. It describes the numerical center of a dataset but can be pulled upward or downward by extreme values.",
+      "whyItMatters": "Mean exposure or release concentration can summarize a dataset quickly, but interpreting it without checking spread, skew, and unusual values can hide important variation.",
+      "keyPoint": "Use the mean as a center measure, then examine the distribution and variability before making an EHS decision.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — measures of location and the sample mean",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.median",
+      "conceptId": "csp11.concept.median",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Median",
+      "backDefinition": "The median is the middle ordered observation, or the average of the two middle observations when the sample size is even. Half the observations lie at or below it and half at or above it.",
+      "whyItMatters": "The median is less affected by extreme measurements than the arithmetic mean, so it can better describe the typical value in a strongly skewed dataset.",
+      "keyPoint": "Compare the median with the mean when exposure or release data are skewed or contain extreme values.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — median and measures of location",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.mode",
+      "conceptId": "csp11.concept.mode",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Mode",
+      "backDefinition": "The mode is the value or category occurring most frequently in a dataset. A dataset may have one mode, more than one mode, or no useful mode when frequencies are all similar.",
+      "whyItMatters": "Mode is useful for identifying the most common category or repeated result, especially for discrete event, defect, or incident data where an average may have little meaning.",
+      "keyPoint": "Use the mode for the most frequent value or category, not as a substitute for mean or median in every dataset.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — distribution shape and frequency-based summaries",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.range",
+      "conceptId": "csp11.concept.range",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Range",
+      "backDefinition": "The range is the difference between the largest and smallest observed values in a dataset. It is a simple measure of spread based only on the two extreme observations.",
+      "whyItMatters": "Range gives a fast view of variability in sampling data, but it can change sharply because of one unusual high or low measurement.",
+      "keyPoint": "Use range as a quick spread check, then pair it with a more stable variability measure such as standard deviation.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — measures of scale and spread",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.variance",
+      "conceptId": "csp11.concept.variance",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Variance",
+      "backDefinition": "Variance measures dispersion by averaging squared deviations from the center. Sample variance commonly divides the squared-deviation total by n minus 1 when estimating population variance from a sample.",
+      "whyItMatters": "Variance is the mathematical basis for many statistical procedures, including standard deviation, confidence intervals, and models of measurement uncertainty.",
+      "keyPoint": "Variance describes spread in squared units; standard deviation converts that spread back to the original measurement units.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — variance and standard deviation as measures of scale",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.standard_deviation",
+      "conceptId": "csp11.concept.standard_deviation",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Standard Deviation",
+      "backDefinition": "Standard deviation is the square root of variance and describes the typical spread of observations around their mean in the original measurement units.",
+      "whyItMatters": "Two exposure datasets can have the same mean but very different variability. Standard deviation helps show whether measurements are tightly clustered or widely dispersed.",
+      "keyPoint": "Interpret the mean together with standard deviation when variability matters to the safety or environmental decision.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — standard deviation and measures of scale",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.geometric_mean",
+      "conceptId": "csp11.concept.geometric_mean",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Geometric Mean",
+      "backDefinition": "For positive values, the geometric mean is the exponential of the arithmetic mean of the natural logarithms. It is commonly used to summarize multiplicative or approximately lognormal data.",
+      "whyItMatters": "Occupational exposure measurements are often right-skewed. A geometric mean can describe the center of positive lognormal-type data more appropriately than a simple arithmetic average.",
+      "keyPoint": "Use a geometric mean only for positive data and interpret it according to the distribution and decision objective.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.nmam_fifth_edition",
+          "locator": "General Considerations for Sampling Airborne Contaminants — statistical treatment of log-transformed exposure data",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "exposure-assessment"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.percentile",
+      "conceptId": "csp11.concept.percentile",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Percentile",
+      "backDefinition": "A percentile is a value at or below which a specified percentage of observations fall. The 50th percentile is the median, while higher percentiles describe the upper portion of a distribution.",
+      "whyItMatters": "Percentiles help interpret the distribution of exposures or releases without reducing the dataset to one average, and they can highlight upper-end conditions relevant to risk control.",
+      "keyPoint": "A percentile describes position within a distribution, not the percentage by which a value exceeds a limit.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — quantiles, percent points, and distribution summaries",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.frequency_distribution",
+      "conceptId": "csp11.concept.frequency_distribution",
+      "version": 1,
+      "type": "classification",
+      "frontLabel": "Frequency Distribution",
+      "backDefinition": "A frequency distribution organizes observations into values, categories, or intervals and records how often each occurs. Relative frequency expresses those counts as proportions or percentages.",
+      "whyItMatters": "Frequency distributions reveal concentration, spread, repeated categories, and unusual tails that can disappear when data are summarized only by a mean.",
+      "keyPoint": "Build a frequency distribution before choosing a graph or summary statistic for a mixed or unfamiliar dataset.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — frequency distributions and distributional structure",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.histogram",
+      "conceptId": "csp11.concept.histogram",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Histogram",
+      "backDefinition": "A histogram displays the frequency or relative frequency of numerical observations grouped into adjacent intervals or bins, allowing the shape, center, spread, and unusual features of the distribution to be seen.",
+      "whyItMatters": "A histogram can reveal skewness, multiple groups, long tails, and possible outliers in exposure or release data that a single summary statistic cannot show.",
+      "keyPoint": "Interpret a histogram with attention to binning and sample size; the visual shape can change when bins are chosen poorly.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — histogram as a graphical distribution tool",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.outlier",
+      "conceptId": "csp11.concept.outlier",
+      "version": 1,
+      "type": "classification",
+      "frontLabel": "Outlier",
+      "backDefinition": "An outlier is an observation unusually distant from the main pattern of a dataset. It may reflect a true extreme condition, process change, sampling problem, transcription error, or analytical issue.",
+      "whyItMatters": "An extreme EHS measurement can be the most important observation in the dataset. Deleting it automatically can conceal a real hazardous condition or process excursion.",
+      "keyPoint": "Investigate an outlier and its context before deciding whether it is erroneous, explainable, or representative of a real condition.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — detecting and investigating outliers and anomalies",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.probability",
+      "conceptId": "csp11.concept.probability",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Probability",
+      "backDefinition": "Probability quantifies the likelihood of an event under a stated model or sample space, ranging from 0 for an impossible event to 1 for a certain event.",
+      "whyItMatters": "Probability supports interpretation of uncertain events, exceedances, sampling outcomes, and risk estimates, but the result is meaningful only when the assumptions and event definition are clear.",
+      "keyPoint": "State the event, population, assumptions, and time basis before interpreting a probability.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Probability Distributions — probability concepts and distribution-based inference",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.confidence_interval",
+      "conceptId": "csp11.concept.confidence_interval",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Confidence Interval",
+      "backDefinition": "A confidence interval is a range calculated by a statistical procedure to estimate an unknown population parameter. Its confidence level describes the long-run coverage of the procedure across repeated samples.",
+      "whyItMatters": "A confidence interval communicates uncertainty around an estimate such as a mean exposure. It is more informative than reporting a sample estimate without its precision.",
+      "keyPoint": "A 95% confidence interval is a property of the repeated-sampling method; it is not a 95% probability statement about one already-calculated interval.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Confidence Limits for the Mean — interval estimate, confidence coefficient, and repeated-sampling interpretation",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.upper_confidence_limit",
+      "conceptId": "csp11.concept.upper_confidence_limit",
+      "version": 1,
+      "type": "thresholdName",
+      "frontLabel": "Upper Confidence Limit",
+      "backDefinition": "An upper confidence limit is the upper endpoint of a confidence procedure used to place a statistically supported upper bound on an unknown parameter such as a mean exposure.",
+      "whyItMatters": "For exposure assessment, an upper confidence limit can support conservative decisions by accounting for sampling uncertainty rather than comparing only a point estimate with a criterion.",
+      "keyPoint": "Match the confidence procedure, sidedness, and assumptions to the EHS decision being made.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.nmam_fifth_edition",
+          "locator": "General Considerations for Sampling Airborne Contaminants — upper confidence limits for arithmetic mean exposure",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "exposure-assessment"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.sampling_representativeness",
+      "conceptId": "csp11.concept.sampling_representativeness",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Sampling Representativeness",
+      "backDefinition": "Sampling representativeness is the degree to which collected measurements reflect the workers, tasks, locations, times, operating conditions, or release conditions about which a decision will be made.",
+      "whyItMatters": "Precise calculations cannot repair a biased sampling plan. Unrepresentative samples can produce confident-looking statistics that do not describe the real exposure or release population.",
+      "keyPoint": "Define the target population and sampling strategy before collecting data, then interpret results only within that scope.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.nmam_fifth_edition",
+          "locator": "General Considerations for Sampling Airborne Contaminants — Sampling Strategy",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "exposure-assessment"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.exposure_data_interpretation",
+      "conceptId": "csp11.concept.exposure_data_interpretation",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Exposure Data Interpretation",
+      "backDefinition": "Exposure data interpretation combines the measurement values with units, sampling duration, task and process context, sampling strategy, analytical uncertainty, distribution shape, and the basis of any comparison limit or criterion.",
+      "whyItMatters": "A concentration number by itself does not show whether conditions are adequately characterized. Context determines whether results represent a shift, task, worker group, source, or release scenario.",
+      "keyPoint": "Check units, averaging time, sampling context, uncertainty, and decision criterion before drawing conclusions from exposure or release concentrations.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.nmam_fifth_edition",
+          "locator": "General Considerations for Sampling Airborne Contaminants — sampling strategy, measurement information, and interpretation",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "exposure-assessment"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.trend_analysis",
+      "conceptId": "csp11.concept.trend_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Trend Analysis",
+      "backDefinition": "Trend analysis examines data in their time or sequence order to identify sustained increases, decreases, shifts, cycles, or other patterns that may differ from ordinary random variation.",
+      "whyItMatters": "EHS performance or exposure values that look acceptable individually may show deterioration when viewed over time. Ordered data can reveal emerging changes before a simple average does.",
+      "keyPoint": "Preserve time order and investigate persistent patterns rather than treating every fluctuation as a true trend.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Exploratory Data Analysis — run sequence plots and checking for shifts or trends over time",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.pareto_analysis",
+      "conceptId": "csp11.concept.pareto_analysis",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Pareto Analysis",
+      "backDefinition": "Pareto analysis ranks categories from largest to smallest by a chosen measure such as frequency, cost, time, or impact so the largest contributors are visible and can be prioritized.",
+      "whyItMatters": "Incident types, defect causes, release sources, or corrective-action delays can compete for limited resources. Pareto ranking helps focus attention on the categories contributing most to the selected measure.",
+      "keyPoint": "Choose the measure and categories deliberately; a Pareto chart ranks contributors but does not prove their root causes.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c14"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.engineering_statistics_handbook",
+          "locator": "Process or Product Monitoring and Control — Pareto charts as monitoring and investigating tools",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "data-analysis",
+        "statistics"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.nist.engineering_statistics_handbook",
+      "organization": "NIST",
+      "title": "NIST/SEMATECH Engineering Statistics Handbook",
+      "canonicalUrl": "https://www.itl.nist.gov/div898/handbook/",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NIST engineering-statistics reference supporting descriptive statistics, probability, distributions, confidence intervals, graphical analysis, outlier investigation, process monitoring, and Pareto-style ranking. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.niosh.nmam_fifth_edition",
+      "organization": "NIOSH",
+      "title": "NIOSH Manual of Analytical Methods (NMAM), Fifth Edition",
+      "canonicalUrl": "https://www.cdc.gov/niosh/nmam/pdf/NMAM_5thEd_EBook-508-final.pdf",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NIOSH technical reference supporting occupational exposure sampling strategy, sampling uncertainty, representativeness, interpretation of airborne-contaminant data, and statistical treatment of exposure measurements. Educational paraphrase only."
+    }
+  ]
+}

@@ -1,0 +1,463 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c01_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c01",
+    "title": "Benchmarking and Gap Analysis Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.benchmark",
+      "csp11.flashcard.benchmarking",
+      "csp11.flashcard.performance_measure",
+      "csp11.flashcard.performance_baseline",
+      "csp11.flashcard.performance_target",
+      "csp11.flashcard.performance_gap",
+      "csp11.flashcard.gap_analysis",
+      "csp11.flashcard.comparative_performance_data"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.benchmark",
+      "canonicalLabel": "Benchmark",
+      "flashcardId": "csp11.flashcard.benchmark",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "performance benchmark"
+      ]
+    },
+    {
+      "id": "csp11.concept.benchmarking",
+      "canonicalLabel": "Benchmarking",
+      "flashcardId": "csp11.flashcard.benchmarking",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "performance benchmarking"
+      ]
+    },
+    {
+      "id": "csp11.concept.performance_measure",
+      "canonicalLabel": "Performance Measure",
+      "flashcardId": "csp11.flashcard.performance_measure",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "performance metric"
+      ]
+    },
+    {
+      "id": "csp11.concept.performance_baseline",
+      "canonicalLabel": "Performance Baseline",
+      "flashcardId": "csp11.flashcard.performance_baseline",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "baseline performance"
+      ]
+    },
+    {
+      "id": "csp11.concept.performance_target",
+      "canonicalLabel": "Performance Target",
+      "flashcardId": "csp11.flashcard.performance_target",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "performance goal target"
+      ]
+    },
+    {
+      "id": "csp11.concept.performance_gap",
+      "canonicalLabel": "Performance Gap",
+      "flashcardId": "csp11.flashcard.performance_gap",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "performance shortfall"
+      ]
+    },
+    {
+      "id": "csp11.concept.gap_analysis",
+      "canonicalLabel": "Gap Analysis",
+      "flashcardId": "csp11.flashcard.gap_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "performance gap analysis"
+      ]
+    },
+    {
+      "id": "csp11.concept.comparative_performance_data",
+      "canonicalLabel": "Comparative Performance Data",
+      "flashcardId": "csp11.flashcard.comparative_performance_data",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "aliases": [
+        "comparative data"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.benchmark",
+      "conceptId": "csp11.concept.benchmark",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Benchmark",
+      "backDefinition": "A reference level or comparison point used to judge the relative performance of a process, program, organization, or result.",
+      "whyItMatters": "A benchmark gives performance data context, helping an organization see whether current results are weak, typical, strong, or in need of improvement.",
+      "keyPoint": "A benchmark is the reference point; benchmarking is the comparison process.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_framework",
+          "locator": "Results dimensions > Comparisons",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Action item 1 > compare results to similar facilities or other employers",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "benchmark",
+        "performance"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.benchmarking",
+      "conceptId": "csp11.concept.benchmarking",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Benchmarking",
+      "backDefinition": "A structured process of comparing performance, practices, or results with relevant internal units, competitors, industry references, benchmarks, or leading performers.",
+      "whyItMatters": "Benchmarking can reveal challenge areas and improvement opportunities that are difficult to see when an organization reviews only its own historical results.",
+      "keyPoint": "Choose comparison sources that are relevant enough to support useful decisions.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_commentary",
+          "locator": "The case for comparative data",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.nist.baldrige_framework",
+          "locator": "Results dimensions > Comparisons",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "benchmarking",
+        "comparison"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.performance_measure",
+      "conceptId": "csp11.concept.performance_measure",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Performance Measure",
+      "backDefinition": "A defined quantitative or qualitative measure used to track performance, progress, implementation, or results over time.",
+      "whyItMatters": "Well-chosen measures turn broad goals into observable evidence that can be reviewed, compared, and used for decisions.",
+      "keyPoint": "A useful measure should be relevant, accurate, timely, and decision-oriented.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.performance_measurement",
+          "locator": "Measures should show trends, be accurate and timely, and support decision making",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Action item 1 > define indicators and collect, analyze, and review performance data",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-measure",
+        "measurement"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.performance_baseline",
+      "conceptId": "csp11.concept.performance_baseline",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Performance Baseline",
+      "backDefinition": "An established starting or current performance level used as a reference for evaluating later change, trends, or improvement.",
+      "whyItMatters": "Without a clear starting reference, an organization may know its current result but cannot reliably show how much performance has changed.",
+      "keyPoint": "A baseline anchors future comparison to a known starting level.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_framework",
+          "locator": "Results dimensions > Levels and Trends",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "baseline",
+        "performance"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.performance_target",
+      "conceptId": "csp11.concept.performance_target",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Performance Target",
+      "backDefinition": "A defined desired performance level used to evaluate whether a program, process, or improvement effort is progressing toward its goal.",
+      "whyItMatters": "Targets convert broad intentions into measurable expectations and make it easier to recognize progress, shortfalls, and the need for action.",
+      "keyPoint": "Track progress toward targets using relevant performance indicators.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program evaluation > establishing, reporting, and tracking goals and targets",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-target",
+        "goal"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.performance_gap",
+      "conceptId": "csp11.concept.performance_gap",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Performance Gap",
+      "backDefinition": "The difference between current performance and a desired, benchmark, expected, or required level of performance.",
+      "whyItMatters": "Defining the gap makes the improvement need visible and helps focus attention on the size and nature of the shortfall.",
+      "keyPoint": "A gap describes the difference; gap analysis investigates what that difference means and what should change.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_framework",
+          "locator": "Assessment identifies strengths and gaps and supports cycles of improvement",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-gap",
+        "improvement"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.gap_analysis",
+      "conceptId": "csp11.concept.gap_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Gap Analysis",
+      "backDefinition": "A structured comparison of current performance or practices with a desired benchmark, target, standard, or future state to identify shortcomings and improvement needs.",
+      "whyItMatters": "Gap analysis turns comparison findings into a clearer picture of what is missing, weak, or misaligned before resources are committed to improvement.",
+      "keyPoint": "Define the current state, comparison state, identified gaps, and actions needed to close them.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_tools",
+          "locator": "Safety and Health Program Self-Evaluation and Program Audit Tool",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.nist.baldrige_framework",
+          "locator": "Assessment identifies strengths and gaps",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "gap-analysis",
+        "improvement"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.comparative_performance_data",
+      "conceptId": "csp11.concept.comparative_performance_data",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Comparative Performance Data",
+      "backDefinition": "Performance information from relevant internal units, competitors, industry averages, benchmarks, or leading performers used to place an organization's results in context.",
+      "whyItMatters": "Comparative data helps distinguish genuine strong performance from results that only appear strong when viewed without an external or internal reference.",
+      "keyPoint": "Select comparison data that are relevant to the decision and performance question.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c01"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_commentary",
+          "locator": "Selection and use of comparative data",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.nist.performance_measurement",
+          "locator": "Comparisons relative to competitors, industry averages, and benchmark performance",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "comparative-data",
+        "performance"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.nist.baldrige_framework",
+      "organization": "NIST",
+      "title": "About the Baldrige Excellence Framework",
+      "canonicalUrl": "https://www.nist.gov/baldrige/about-baldrige-excellence-framework",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports performance levels, trends, comparisons to benchmarks or industry leaders, integration, strengths, gaps, and improvement cycles. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.program_evaluation",
+      "organization": "OSHA",
+      "title": "Safety Management - Program Evaluation and Improvement",
+      "canonicalUrl": "https://www.osha.gov/safety-management/program-evaluation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports goals, targets, indicators, performance monitoring, periodic program evaluation, comparisons to similar facilities, and improvement. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.baldrige_commentary",
+      "organization": "NIST",
+      "title": "Baldrige Criteria Commentary",
+      "canonicalUrl": "https://www.nist.gov/baldrige/baldrige-criteria-commentary",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports comparative data, benchmarking, performance comparisons, stretch goals, and performance analysis. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.performance_measurement",
+      "organization": "NIST",
+      "title": "Thinking about Performance Measurement",
+      "canonicalUrl": "https://www.nist.gov/baldrige/thinking-about-performance-measurement",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports trends, comparisons, benchmark performance, accurate and timely measures, and decision-useful performance information. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.program_tools",
+      "organization": "OSHA",
+      "title": "Safety Management - Explore Tools",
+      "canonicalUrl": "https://www.osha.gov/safety-management/explore-tools",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports self-evaluation, audit, identification of weaknesses, and continual improvement. Educational paraphrase only."
+    }
+  ]
+}

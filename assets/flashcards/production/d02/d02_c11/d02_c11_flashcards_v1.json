@@ -1,0 +1,758 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c11_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c11",
+    "title": "Budgeting, Finance, and Economic Analysis Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.safety_budget_development",
+      "csp11.flashcard.cost_estimate",
+      "csp11.flashcard.life_cycle_cost",
+      "csp11.flashcard.time_phased_cost_estimate",
+      "csp11.flashcard.direct_and_indirect_safety_costs",
+      "csp11.flashcard.return_on_investment",
+      "csp11.flashcard.benefit_cost_analysis",
+      "csp11.flashcard.benefit_cost_ratio",
+      "csp11.flashcard.net_present_value",
+      "csp11.flashcard.discount_rate",
+      "csp11.flashcard.cost_effectiveness_analysis",
+      "csp11.flashcard.economic_sensitivity_analysis",
+      "csp11.flashcard.acquisition_planning",
+      "csp11.flashcard.price_analysis",
+      "csp11.flashcard.cost_analysis"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.safety_budget_development",
+      "canonicalLabel": "Safety Budget Development",
+      "flashcardId": "csp11.flashcard.safety_budget_development",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "safety and health budget development"
+      ]
+    },
+    {
+      "id": "csp11.concept.cost_estimate",
+      "canonicalLabel": "Cost Estimate",
+      "flashcardId": "csp11.flashcard.cost_estimate",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "program cost estimate"
+      ]
+    },
+    {
+      "id": "csp11.concept.life_cycle_cost",
+      "canonicalLabel": "Life-Cycle Cost",
+      "flashcardId": "csp11.flashcard.life_cycle_cost",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "LCC",
+        "life cycle cost"
+      ]
+    },
+    {
+      "id": "csp11.concept.time_phased_cost_estimate",
+      "canonicalLabel": "Time-Phased Cost Estimate",
+      "flashcardId": "csp11.flashcard.time_phased_cost_estimate",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "time-phased budget",
+        "cost phasing"
+      ]
+    },
+    {
+      "id": "csp11.concept.direct_and_indirect_safety_costs",
+      "canonicalLabel": "Direct and Indirect Safety Costs",
+      "flashcardId": "csp11.flashcard.direct_and_indirect_safety_costs",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "direct and indirect injury costs"
+      ]
+    },
+    {
+      "id": "csp11.concept.return_on_investment",
+      "canonicalLabel": "Return on Investment",
+      "flashcardId": "csp11.flashcard.return_on_investment",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "ROI"
+      ]
+    },
+    {
+      "id": "csp11.concept.benefit_cost_analysis",
+      "canonicalLabel": "Benefit-Cost Analysis",
+      "flashcardId": "csp11.flashcard.benefit_cost_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "BCA",
+        "cost-benefit analysis"
+      ]
+    },
+    {
+      "id": "csp11.concept.benefit_cost_ratio",
+      "canonicalLabel": "Benefit-Cost Ratio",
+      "flashcardId": "csp11.flashcard.benefit_cost_ratio",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "BCR"
+      ]
+    },
+    {
+      "id": "csp11.concept.net_present_value",
+      "canonicalLabel": "Net Present Value",
+      "flashcardId": "csp11.flashcard.net_present_value",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "NPV",
+        "net present value"
+      ]
+    },
+    {
+      "id": "csp11.concept.discount_rate",
+      "canonicalLabel": "Discount Rate",
+      "flashcardId": "csp11.flashcard.discount_rate",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "economic discount rate"
+      ]
+    },
+    {
+      "id": "csp11.concept.cost_effectiveness_analysis",
+      "canonicalLabel": "Cost-Effectiveness Analysis",
+      "flashcardId": "csp11.flashcard.cost_effectiveness_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "CEA"
+      ]
+    },
+    {
+      "id": "csp11.concept.economic_sensitivity_analysis",
+      "canonicalLabel": "Economic Sensitivity Analysis",
+      "flashcardId": "csp11.flashcard.economic_sensitivity_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "cost sensitivity analysis"
+      ]
+    },
+    {
+      "id": "csp11.concept.acquisition_planning",
+      "canonicalLabel": "Acquisition Planning",
+      "flashcardId": "csp11.flashcard.acquisition_planning",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "procurement planning"
+      ]
+    },
+    {
+      "id": "csp11.concept.price_analysis",
+      "canonicalLabel": "Price Analysis",
+      "flashcardId": "csp11.flashcard.price_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "procurement price analysis"
+      ]
+    },
+    {
+      "id": "csp11.concept.cost_analysis",
+      "canonicalLabel": "Cost Analysis",
+      "flashcardId": "csp11.flashcard.cost_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "aliases": [
+        "procurement cost analysis"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.safety_budget_development",
+      "conceptId": "csp11.concept.safety_budget_development",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Safety Budget Development",
+      "backDefinition": "The process of estimating the money, people, time, equipment, services, and other resources needed to implement safety and health objectives and translating those needs into planned budget amounts.",
+      "whyItMatters": "A safety plan cannot be implemented reliably if the required resources are not identified and funded. Budget development links prevention activities to realistic resource needs and organizational planning.",
+      "keyPoint": "Estimate resource needs early and align the budget with the work required to achieve the safety objective.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.management_leadership",
+          "locator": "Management Leadership > Allocate resources and integrate safety and health into planning and budgeting processes",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "budgeting"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.cost_estimate",
+      "conceptId": "csp11.concept.cost_estimate",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Cost Estimate",
+      "backDefinition": "A structured forecast of the resources and monetary costs required to complete a defined project, program, acquisition, or intervention over an identified scope and period.",
+      "whyItMatters": "Reliable cost estimates support realistic planning, budgeting, affordability decisions, and comparison of alternatives before money is committed.",
+      "keyPoint": "A useful cost estimate is tied to a defined scope, assumptions, schedule, data, and estimating method.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.cost_guide_2020",
+          "locator": "GAO-20-195G > cost estimating process, scope, schedule, assumptions, data, methods, documentation, and updates",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "budgeting"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.life_cycle_cost",
+      "conceptId": "csp11.concept.life_cycle_cost",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Life-Cycle Cost",
+      "backDefinition": "The total cost of an option across its full life, including relevant acquisition, implementation, operation, maintenance, support, and disposal costs rather than only the initial purchase price.",
+      "whyItMatters": "A low purchase price can hide expensive operation, maintenance, or disposal. Life-cycle cost helps compare alternatives on the basis of their full economic burden.",
+      "keyPoint": "Compare alternatives using the full cost over the relevant life cycle, not purchase price alone.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.cost_guide_2020",
+          "locator": "GAO-20-195G > life-cycle cost estimate includes costs across the program life cycle",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "budgeting"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.time_phased_cost_estimate",
+      "conceptId": "csp11.concept.time_phased_cost_estimate",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Time-Phased Cost Estimate",
+      "backDefinition": "A cost estimate distributed across the planned schedule or budget periods so decision-makers can see when funds and resources are expected to be needed.",
+      "whyItMatters": "Total cost alone does not show cash-flow or funding timing. Time phasing connects cost to project milestones, implementation sequence, and budget availability.",
+      "keyPoint": "Link estimated costs to the schedule so funding is available when the work occurs.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.cost_guide_2020",
+          "locator": "GAO-20-195G > cost-estimate scope and schedule, program planning, budgeting, and management",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "budgeting"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.direct_and_indirect_safety_costs",
+      "conceptId": "csp11.concept.direct_and_indirect_safety_costs",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Direct and Indirect Safety Costs",
+      "backDefinition": "A cost view that separates readily attributable expenses, such as medical or workers' compensation costs, from less visible consequences such as replacement training, investigation, lost productivity, repair, absenteeism, and disruption.",
+      "whyItMatters": "Ignoring indirect costs can materially understate the economic impact of incidents and distort comparisons between prevention investments and the cost of doing nothing.",
+      "keyPoint": "Include both visible direct costs and credible indirect costs when building the safety business case.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.business_case_costs",
+          "locator": "Business Case for Safety and Health - Costs > direct and indirect workplace injury and illness costs",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "cost-management"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.return_on_investment",
+      "conceptId": "csp11.concept.return_on_investment",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Return on Investment",
+      "backDefinition": "A financial measure comparing the net economic gain from an investment with the amount invested, commonly expressed as a ratio or percentage to show the return generated relative to cost.",
+      "whyItMatters": "ROI translates a safety or health investment into business terms that can help decision-makers compare competing uses of limited funds.",
+      "keyPoint": "Use credible costs and benefits and state the time period and assumptions behind the ROI result.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.business_case_benefits",
+          "locator": "Business Case for Safety and Health - Benefits > return on investment and economic benefits of safety and health investments",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "economic-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.benefit_cost_analysis",
+      "conceptId": "csp11.concept.benefit_cost_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Benefit-Cost Analysis",
+      "backDefinition": "A structured economic analysis that identifies and values relevant benefits and costs over a defined period, adjusts future values as appropriate, and compares them to determine whether an option's benefits justify its costs.",
+      "whyItMatters": "Benefit-cost analysis makes assumptions explicit and gives decision-makers a consistent basis for comparing prevention alternatives with different cost and benefit profiles.",
+      "keyPoint": "Define the baseline, include material benefits and costs, use a consistent time horizon, and discount future values when required.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.omb.circular_a94",
+          "locator": "OMB Circular A-94 > guidelines for benefit-cost analysis of federal programs",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "economic-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.benefit_cost_ratio",
+      "conceptId": "csp11.concept.benefit_cost_ratio",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Benefit-Cost Ratio",
+      "backDefinition": "The ratio of the present value of quantified benefits to the present value of quantified costs for an option, used as one indicator of whether measured benefits exceed measured costs.",
+      "whyItMatters": "The ratio provides a compact comparison of economic value, but it should be interpreted alongside assumptions, scale, uncertainty, and other decision criteria.",
+      "keyPoint": "A ratio above one means measured benefits exceed measured costs on the stated basis.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.omb.circular_a94",
+          "locator": "OMB Circular A-94 > benefit-cost analysis using discounted benefits and costs",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "economic-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.net_present_value",
+      "conceptId": "csp11.concept.net_present_value",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Net Present Value",
+      "backDefinition": "The present value of benefits minus the present value of costs over the selected analysis period after future amounts are converted to a common present-value basis.",
+      "whyItMatters": "NPV allows alternatives with costs and benefits occurring at different times to be compared on a consistent monetary basis.",
+      "keyPoint": "Positive NPV means discounted benefits exceed discounted costs under the stated assumptions.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.omb.circular_a94",
+          "locator": "OMB Circular A-94 > present-value treatment of benefits and costs",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "economic-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.discount_rate",
+      "conceptId": "csp11.concept.discount_rate",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Discount Rate",
+      "backDefinition": "The rate used to convert future monetary benefits or costs into present values so amounts occurring at different times can be compared on a consistent basis.",
+      "whyItMatters": "The selected discount rate can materially affect long-term economic results, especially when costs occur early and benefits occur many years later.",
+      "keyPoint": "Use the rate required by the governing analysis framework and test material uncertainty when appropriate.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.omb.circular_a94",
+          "locator": "OMB Circular A-94 and Appendix C > discount rates for benefit-cost and related analyses",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "economic-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.cost_effectiveness_analysis",
+      "conceptId": "csp11.concept.cost_effectiveness_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Cost-Effectiveness Analysis",
+      "backDefinition": "An analysis that compares the costs of alternatives that pursue the same or similar objective when important benefits cannot reasonably be expressed in monetary terms.",
+      "whyItMatters": "Cost-effectiveness analysis helps identify which option achieves the required safety or health outcome with the least resource use without forcing every benefit into a monetary value.",
+      "keyPoint": "Use cost-effectiveness when alternatives share a comparable objective but monetizing benefits is not appropriate or practical.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.omb.circular_a94",
+          "locator": "OMB Circular A-94 > cost-effectiveness analysis guidance",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "economic-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.economic_sensitivity_analysis",
+      "conceptId": "csp11.concept.economic_sensitivity_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Economic Sensitivity Analysis",
+      "backDefinition": "Testing how an economic conclusion changes when important assumptions, cost inputs, benefit estimates, schedules, or other uncertain variables are varied within plausible ranges.",
+      "whyItMatters": "A result that changes dramatically under small assumption changes is less robust than one that remains stable across credible scenarios.",
+      "keyPoint": "Identify the assumptions that drive the decision and test how much the result depends on them.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.cost_guide_2020",
+          "locator": "GAO-20-195G > sensitivity and risk analysis in cost estimating",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "economic-analysis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.acquisition_planning",
+      "conceptId": "csp11.concept.acquisition_planning",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Acquisition Planning",
+      "backDefinition": "Early planning for obtaining goods or services that defines the need, involves relevant technical and business disciplines, evaluates alternatives and constraints, and addresses cost, schedule, performance, and life-cycle considerations.",
+      "whyItMatters": "Early cross-functional involvement allows safety requirements to influence specifications, alternatives, timing, and total cost before procurement decisions become difficult or expensive to change.",
+      "keyPoint": "Bring safety requirements into procurement planning before solicitation and award decisions are locked in.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.far.acquisition_planning",
+          "locator": "FAR 7.104 and 7.105 > early acquisition planning, multidisciplinary team, cost, schedule, capability, and life-cycle cost",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "procurement"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.price_analysis",
+      "conceptId": "csp11.concept.price_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Price Analysis",
+      "backDefinition": "Evaluation of a proposed price without examining its separate cost elements and profit, using appropriate comparisons or other techniques to judge whether the overall price is fair and reasonable.",
+      "whyItMatters": "Price analysis helps procurement teams assess the reasonableness of an offered price when detailed cost-element analysis is unnecessary or unavailable.",
+      "keyPoint": "Price analysis evaluates the total proposed price rather than breaking it into individual cost elements.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.far.contract_pricing",
+          "locator": "FAR 15.404-1 > price analysis and techniques for fair and reasonable pricing",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "procurement"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.cost_analysis",
+      "conceptId": "csp11.concept.cost_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Cost Analysis",
+      "backDefinition": "Evaluation of the individual cost elements and profit or fee in a proposal to judge cost reasonableness, cost realism, and what the work should reasonably cost under efficient performance.",
+      "whyItMatters": "Cost analysis helps identify unsupported, excessive, duplicated, or unrealistic elements that may be hidden within an overall proposed price.",
+      "keyPoint": "Cost analysis examines the underlying cost elements; price analysis focuses on the overall price.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c11"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.far.contract_pricing",
+          "locator": "FAR 15.404-1 > cost analysis of separate cost elements and profit or fee",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "finance-economics",
+        "procurement"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.gao.cost_guide_2020",
+      "organization": "U.S. Government Accountability Office",
+      "title": "Cost Estimating and Assessment Guide: Best Practices for Developing and Managing Program Costs (GAO-20-195G)",
+      "canonicalUrl": "https://www.gao.gov/products/gao-20-195g",
+      "allowedDomains": [
+        "gao.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "GAO best-practice guide supporting reliable cost estimates, life-cycle cost, schedule alignment, sensitivity and risk analysis, documentation, updating estimates, and program cost management. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.omb.circular_a94",
+      "organization": "U.S. Office of Management and Budget",
+      "title": "OMB Circular A-94 — Guidelines and Discount Rates for Benefit-Cost Analysis of Federal Programs",
+      "canonicalUrl": "https://www.whitehouse.gov/omb/information-resources/guidance/circulars/",
+      "allowedDomains": [
+        "whitehouse.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official OMB guidance supporting benefit-cost analysis, cost-effectiveness analysis, present-value treatment, and discount-rate use. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.far.acquisition_planning",
+      "organization": "Acquisition.gov",
+      "title": "Federal Acquisition Regulation Subpart 7.1 — Acquisition Plans",
+      "canonicalUrl": "https://www.acquisition.gov/far/subpart-7.1",
+      "allowedDomains": [
+        "acquisition.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal Acquisition Regulation provisions supporting early acquisition planning, multidisciplinary participation, cost and schedule constraints, life-cycle cost, and acquisition alternatives. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.far.contract_pricing",
+      "organization": "Acquisition.gov",
+      "title": "Federal Acquisition Regulation Subpart 15.4 — Contract Pricing",
+      "canonicalUrl": "https://www.acquisition.gov/far/subpart-15.4",
+      "allowedDomains": [
+        "acquisition.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal Acquisition Regulation provisions supporting price analysis, cost analysis, cost realism, historical comparison, market comparison, and fair-and-reasonable pricing. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.management_leadership",
+      "organization": "OSHA",
+      "title": "Safety Management - Management Leadership",
+      "canonicalUrl": "https://www.osha.gov/safety-management/management-leadership",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports written policy, program goals, responsibilities, resources, and integration of safety and health into organizational decisions. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.business_case_benefits",
+      "organization": "OSHA",
+      "title": "Business Case for Safety and Health - Benefits",
+      "canonicalUrl": "https://www.osha.gov/businesscase/benefits",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OSHA business-case guidance supporting economic benefits, cost savings, productivity effects, and return-on-investment framing for safety and health investments. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.business_case_costs",
+      "organization": "OSHA",
+      "title": "Business Case for Safety and Health - Costs",
+      "canonicalUrl": "https://www.osha.gov/businesscase/costs",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OSHA business-case guidance supporting direct and indirect workplace injury and illness cost categories. Educational paraphrase only."
+    }
+  ]
+}

@@ -1,0 +1,618 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c05_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c05",
+    "title": "Management of Change Lifecycle Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.management_of_change",
+      "csp11.flashcard.replacement_in_kind",
+      "csp11.flashcard.moc_change_screening",
+      "csp11.flashcard.technical_basis_for_change",
+      "csp11.flashcard.change_safety_health_impact_review",
+      "csp11.flashcard.moc_operating_procedure_impact_review",
+      "csp11.flashcard.moc_change_authorization",
+      "csp11.flashcard.temporary_change_control",
+      "csp11.flashcard.moc_change_communication_training",
+      "csp11.flashcard.moc_process_safety_information_update",
+      "csp11.flashcard.moc_operating_procedure_update",
+      "csp11.flashcard.moc_change_closeout"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.management_of_change",
+      "canonicalLabel": "Management of Change",
+      "flashcardId": "csp11.flashcard.management_of_change",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "MOC"
+      ]
+    },
+    {
+      "id": "csp11.concept.replacement_in_kind",
+      "canonicalLabel": "Replacement in Kind",
+      "flashcardId": "csp11.flashcard.replacement_in_kind",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "RIK"
+      ]
+    },
+    {
+      "id": "csp11.concept.moc_change_screening",
+      "canonicalLabel": "MOC Change Screening",
+      "flashcardId": "csp11.flashcard.moc_change_screening",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "MOC applicability screening"
+      ]
+    },
+    {
+      "id": "csp11.concept.technical_basis_for_change",
+      "canonicalLabel": "Technical Basis for Change",
+      "flashcardId": "csp11.flashcard.technical_basis_for_change",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "technical justification for change"
+      ]
+    },
+    {
+      "id": "csp11.concept.change_safety_health_impact_review",
+      "canonicalLabel": "Change Safety and Health Impact Review",
+      "flashcardId": "csp11.flashcard.change_safety_health_impact_review",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "MOC safety impact review"
+      ]
+    },
+    {
+      "id": "csp11.concept.moc_operating_procedure_impact_review",
+      "canonicalLabel": "MOC Operating Procedure Impact Review",
+      "flashcardId": "csp11.flashcard.moc_operating_procedure_impact_review",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "procedure impact review"
+      ]
+    },
+    {
+      "id": "csp11.concept.moc_change_authorization",
+      "canonicalLabel": "MOC Change Authorization",
+      "flashcardId": "csp11.flashcard.moc_change_authorization",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "MOC approval"
+      ]
+    },
+    {
+      "id": "csp11.concept.temporary_change_control",
+      "canonicalLabel": "Temporary Change Control",
+      "flashcardId": "csp11.flashcard.temporary_change_control",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "temporary MOC"
+      ]
+    },
+    {
+      "id": "csp11.concept.moc_change_communication_training",
+      "canonicalLabel": "MOC Change Communication and Training",
+      "flashcardId": "csp11.flashcard.moc_change_communication_training",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "pre-startup MOC training"
+      ]
+    },
+    {
+      "id": "csp11.concept.moc_process_safety_information_update",
+      "canonicalLabel": "MOC Process Safety Information Update",
+      "flashcardId": "csp11.flashcard.moc_process_safety_information_update",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "PSI update after change"
+      ]
+    },
+    {
+      "id": "csp11.concept.moc_operating_procedure_update",
+      "canonicalLabel": "MOC Operating Procedure Update",
+      "flashcardId": "csp11.flashcard.moc_operating_procedure_update",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "procedure update after change"
+      ]
+    },
+    {
+      "id": "csp11.concept.moc_change_closeout",
+      "canonicalLabel": "MOC Change Closeout",
+      "flashcardId": "csp11.flashcard.moc_change_closeout",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "aliases": [
+        "MOC closeout"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.management_of_change",
+      "conceptId": "csp11.concept.management_of_change",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Management of Change",
+      "backDefinition": "A formal process for identifying, reviewing, approving, communicating, implementing, and documenting changes that could affect process safety. Under OSHA PSM, covered-process changes other than replacements in kind must be managed through written procedures.",
+      "whyItMatters": "Changes can create new hazards or invalidate existing safeguards. A controlled MOC process makes safety consequences visible before the changed process is placed in service.",
+      "keyPoint": "Treat change as a managed safety process, not only as an engineering or maintenance task.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(1) - Management of change",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - Managing Change",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "change-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.replacement_in_kind",
+      "conceptId": "csp11.concept.replacement_in_kind",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Replacement in Kind",
+      "backDefinition": "Under OSHA PSM, a replacement that satisfies the existing design specification. Replacement in kind is excluded from the paragraph 1910.119(l) MOC requirement.",
+      "whyItMatters": "Correctly distinguishing a true like-for-like replacement from a change prevents unnecessary MOC while avoiding the dangerous practice of bypassing MOC for equipment that differs from the approved design.",
+      "keyPoint": "If the replacement does not satisfy the design specification, treat it as a change rather than assuming it is replacement in kind.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(b) - Replacement in kind definition",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(1) - replacements in kind exception",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "replacement-in-kind"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.moc_change_screening",
+      "conceptId": "csp11.concept.moc_change_screening",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "MOC Change Screening",
+      "backDefinition": "The initial determination of whether a proposed modification is a change that requires the MOC process or a genuine replacement in kind that can follow normal replacement controls.",
+      "whyItMatters": "Early screening establishes the correct control path before work proceeds, reducing the chance that a technical, procedural, chemical, equipment, or facility change escapes formal review.",
+      "keyPoint": "Screen before implementation, not after the modification is already in service.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(1) - changes subject to MOC",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - define change before implementation",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "change-screening"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.technical_basis_for_change",
+      "conceptId": "csp11.concept.technical_basis_for_change",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Technical Basis for Change",
+      "backDefinition": "The engineering or process rationale that explains why a proposed change is needed and the technical assumptions, design information, or operating basis supporting it.",
+      "whyItMatters": "A clear technical basis allows reviewers to test whether the proposed change is compatible with the process design and whether the change creates consequences that need additional controls.",
+      "keyPoint": "OSHA 1910.119(l)(2)(i) requires the technical basis to be addressed before the change.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(2)(i) - technical basis for proposed change",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - typical change form technical basis",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "technical-basis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.change_safety_health_impact_review",
+      "conceptId": "csp11.concept.change_safety_health_impact_review",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Change Safety and Health Impact Review",
+      "backDefinition": "A pre-change evaluation of how a proposed modification could affect hazards, safeguards, exposure, operating conditions, and other safety or health consequences.",
+      "whyItMatters": "A change that improves production or reliability can still weaken protection elsewhere. Reviewing safety and health impact before implementation helps detect those interactions while the design can still be changed.",
+      "keyPoint": "Assess the safety and health impact before authorizing implementation.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(2)(ii) - impact on safety and health",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - safety and health considerations",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "safety-impact"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.moc_operating_procedure_impact_review",
+      "conceptId": "csp11.concept.moc_operating_procedure_impact_review",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "MOC Operating Procedure Impact Review",
+      "backDefinition": "The pre-change check that determines whether the proposed modification will require changes to operating procedures or practices and identifies what must be revised.",
+      "whyItMatters": "Equipment, process, control-system, or operating-condition changes can make existing instructions inaccurate. Identifying procedure impacts before startup prevents operators from relying on obsolete directions.",
+      "keyPoint": "Identify procedure changes during MOC review, then update the affected documents before they are needed.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(2)(iii) - modifications to operating procedures",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 1 - operating procedure changes and MOC",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "operating-procedures"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.moc_change_authorization",
+      "conceptId": "csp11.concept.moc_change_authorization",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "MOC Change Authorization",
+      "backDefinition": "The defined approval requirement that identifies who has authority to accept a proposed change after the required MOC considerations have been addressed.",
+      "whyItMatters": "Formal authorization creates an accountability point between analysis and implementation, helping prevent unreviewed changes from entering the process through informal decisions.",
+      "keyPoint": "Approval should follow the required review, not substitute for it.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(2)(v) - authorization requirements",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - approvals and authorization on a typical change form",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "authorization"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.temporary_change_control",
+      "conceptId": "csp11.concept.temporary_change_control",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Temporary Change Control",
+      "backDefinition": "Management of a nonpermanent change with an identified duration or time limit, monitoring, and a defined path either to restore the original condition or to process a further approved change.",
+      "whyItMatters": "Temporary arrangements can silently become permanent. Time limits and follow-up keep temporary conditions visible and help ensure that the process returns to its approved basis when the temporary need ends.",
+      "keyPoint": "Temporary changes are still changes and remain subject to MOC controls.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - temporary changes, time limits, and return to original conditions",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(2)(iv) - necessary time period for the change",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "temporary-change"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.moc_change_communication_training",
+      "conceptId": "csp11.concept.moc_change_communication_training",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "MOC Change Communication and Training",
+      "backDefinition": "Informing and training operating, maintenance, and contract employees whose job tasks are affected by a change before startup of the process or affected part of the process.",
+      "whyItMatters": "A technically sound change can still fail if people continue to work from the old configuration, limits, or procedures. Pre-startup communication and training align work practices with the approved change.",
+      "keyPoint": "Affected personnel must understand the change before the changed process is started.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(3) - affected employees informed and trained before startup",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 1 - operating personnel oriented to procedure changes before the change",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "training"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.moc_process_safety_information_update",
+      "conceptId": "csp11.concept.moc_process_safety_information_update",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "MOC Process Safety Information Update",
+      "backDefinition": "Updating the affected process safety information when an approved change alters information that OSHA PSM requires the employer to maintain.",
+      "whyItMatters": "MOC is not complete if drawings, design data, chemical information, or other process safety information still describe the old configuration. Current information supports future operation, maintenance, analysis, and review.",
+      "keyPoint": "When the change alters required process safety information, update that information accordingly.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(4) - update affected process safety information",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - documentation and review of changes",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "process-safety-information"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.moc_operating_procedure_update",
+      "conceptId": "csp11.concept.moc_operating_procedure_update",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "MOC Operating Procedure Update",
+      "backDefinition": "Revising affected operating procedures or practices so they accurately reflect the approved changed condition and are available for safe operation.",
+      "whyItMatters": "Outdated procedures can direct workers to use old steps, limits, or equipment arrangements. Updating them converts the approved change into usable operational guidance.",
+      "keyPoint": "OSHA PSM requires affected procedures or practices to be updated when the change alters them.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(5) - update affected operating procedures or practices",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 1 - operating procedures updated before startup after process changes",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "operating-procedures"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.moc_change_closeout",
+      "conceptId": "csp11.concept.moc_change_closeout",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "MOC Change Closeout",
+      "backDefinition": "The controlled completion of an MOC after required implementation, document updates, communication or training, temporary-change disposition, and other assigned actions have been confirmed.",
+      "whyItMatters": "Closeout provides evidence that the approved change was carried through into the operating system rather than leaving open actions, stale documents, or temporary conditions behind.",
+      "keyPoint": "Close the MOC only after the required follow-through has been verified.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c05"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C, Section 11 - documentation, review, temporary-change restoration, and MOC follow-through",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "29 CFR 1910.119(l)(3)-(5) - training and information/procedure updates",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-of-change",
+        "closeout"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.1910_119",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 - Process safety management of highly hazardous chemicals",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for FCP process-safety cards. FCP uses educational paraphrase and paragraph-level locators."
+    },
+    {
+      "id": "csp11.source.osha.1910_119_app_c",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 Appendix C - Compliance Guidelines and Recommendations for Process Safety Management",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119AppC",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Nonmandatory OSHA guidance used as supporting context for process diagrams, MOC, and PSM implementation. Regulatory text remains primary where applicable."
+    }
+  ]
+}

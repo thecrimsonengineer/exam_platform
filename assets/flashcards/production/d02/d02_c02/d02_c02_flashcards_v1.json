@@ -1,0 +1,305 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c02_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c02",
+    "title": "Performance Standards and Action Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.performance_standard",
+      "csp11.flashcard.performance_analysis",
+      "csp11.flashcard.improvement_priority",
+      "csp11.flashcard.action_plan",
+      "csp11.flashcard.resource_allocation"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.performance_standard",
+      "canonicalLabel": "Performance Standard",
+      "flashcardId": "csp11.flashcard.performance_standard",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "aliases": [
+        "performance criterion"
+      ]
+    },
+    {
+      "id": "csp11.concept.performance_analysis",
+      "canonicalLabel": "Performance Analysis",
+      "flashcardId": "csp11.flashcard.performance_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "aliases": [
+        "performance data analysis"
+      ]
+    },
+    {
+      "id": "csp11.concept.improvement_priority",
+      "canonicalLabel": "Improvement Priority",
+      "flashcardId": "csp11.flashcard.improvement_priority",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "aliases": [
+        "priority improvement"
+      ]
+    },
+    {
+      "id": "csp11.concept.action_plan",
+      "canonicalLabel": "Action Plan",
+      "flashcardId": "csp11.flashcard.action_plan",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "aliases": [
+        "improvement action plan"
+      ]
+    },
+    {
+      "id": "csp11.concept.resource_allocation",
+      "canonicalLabel": "Resource Allocation",
+      "flashcardId": "csp11.flashcard.resource_allocation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "aliases": [
+        "allocation of resources"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.performance_standard",
+      "conceptId": "csp11.concept.performance_standard",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Performance Standard",
+      "backDefinition": "A documented expression of the threshold, requirement, or expectation that defines the level of performance to be achieved or judged.",
+      "whyItMatters": "A clear standard creates a defensible reference for comparing actual performance and deciding whether improvement or corrective action is needed.",
+      "keyPoint": "The threshold is part of the standard, not a separate performance system.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.opm.performance_standards",
+          "locator": "Definition",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-standard",
+        "performance"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.performance_analysis",
+      "conceptId": "csp11.concept.performance_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Performance Analysis",
+      "backDefinition": "Systematic examination of performance information to understand results, trends, relationships, causes, implications, and the actions that may be needed.",
+      "whyItMatters": "Measures alone do not determine what to do; analysis converts performance information into evidence for priorities, decisions, and action planning.",
+      "keyPoint": "Analyze results in context before selecting an action.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_commentary",
+          "locator": "Performance analysis and Strategy Implementation",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "performance-analysis",
+        "decision-making"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.improvement_priority",
+      "conceptId": "csp11.concept.improvement_priority",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Improvement Priority",
+      "backDefinition": "An improvement need selected for earlier or greater attention because of its importance, performance gap, risk, strategic relevance, or resource constraints.",
+      "whyItMatters": "Organizations cannot address every weakness at once, so prioritization focuses limited resources on the changes most important to objectives and performance.",
+      "keyPoint": "Prioritize the vital few rather than treating every gap as equally urgent.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.strategy",
+          "locator": "Develop specific objectives and measurable goals > prioritize objectives and focus on the vital few",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "improvement-priority",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.action_plan",
+      "conceptId": "csp11.concept.action_plan",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Action Plan",
+      "backDefinition": "A set of specific actions used to accomplish an objective, including the resources committed and the time horizon for carrying out the planned work.",
+      "whyItMatters": "An action plan translates an identified performance need into concrete work that can be assigned, resourced, monitored, and adjusted.",
+      "keyPoint": "A useful action plan connects actions, resources, timing, responsibility, and progress measures.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_key_terms",
+          "locator": "Action Plan",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.nist.strategy",
+          "locator": "Decide on the actions your organization must take to reach its objectives",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "action-plan",
+        "implementation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.resource_allocation",
+      "conceptId": "csp11.concept.resource_allocation",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Resource Allocation",
+      "backDefinition": "The assignment of financial, workforce, time, facility, technology, or other resources to support selected objectives and action plans.",
+      "whyItMatters": "An action cannot be implemented reliably when the people, money, time, or other required resources are unavailable or committed elsewhere.",
+      "keyPoint": "Resource decisions should support the priorities and actions the organization has chosen.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.nist.baldrige_commentary",
+          "locator": "Strategy Implementation > performing analyses to support resource allocation",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.nist.strategy",
+          "locator": "Make sure you have the resources to carry out these actions",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "resource-allocation",
+        "action-plan"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.opm.performance_standards",
+      "organization": "U.S. Office of Personnel Management",
+      "title": "Developing Performance Standards",
+      "canonicalUrl": "https://www.opm.gov/policy-data-oversight/performance-management/reference-materials/articles/developing-performance-standards/",
+      "allowedDomains": [
+        "opm.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports performance standards, thresholds, requirements, expectations, and quality/quantity/timeliness/cost-effectiveness measures. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.baldrige_commentary",
+      "organization": "NIST",
+      "title": "Baldrige Criteria Commentary",
+      "canonicalUrl": "https://www.nist.gov/baldrige/baldrige-criteria-commentary",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports comparative data, benchmarking, performance comparisons, stretch goals, and performance analysis. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.strategy",
+      "organization": "NIST",
+      "title": "Foundations for a Successful Business - Strategy",
+      "canonicalUrl": "https://www.nist.gov/baldrige/self-assessing/improvement-tools/foundations-successful-business/strategy",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports specific time-limited actions, resource availability, monitoring progress, and adapting actions when needed. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.baldrige_key_terms",
+      "organization": "NIST",
+      "title": "Baldrige Key Terms",
+      "canonicalUrl": "https://www.nist.gov/baldrige/self-assessing/baldrige-key-terms",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports Action Plan and other Baldrige management terms. Educational paraphrase only."
+    }
+  ]
+}
