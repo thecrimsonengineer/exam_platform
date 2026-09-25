@@ -128,3 +128,5 @@ jobs:
               print("BATCH2_PRODUCTION_STATE=PARTIAL_OR_AMBIGUOUS")
               raise SystemExit(2)
           PY
+
+# verification rerun after chunked publisher timeout
