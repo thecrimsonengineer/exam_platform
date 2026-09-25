@@ -1293,6 +1293,74 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Final NIST Privacy Framework Version 1.0 supporting privacy-risk management across the data lifecycle, including collection, retention, use, disclosure, and disposal. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.gao.cost_guide_2020",
+      "organization": "U.S. Government Accountability Office",
+      "title": "Cost Estimating and Assessment Guide: Best Practices for Developing and Managing Program Costs (GAO-20-195G)",
+      "canonicalUrl": "https://www.gao.gov/products/gao-20-195g",
+      "allowedDomains": [
+        "gao.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "GAO best-practice guide supporting reliable cost estimates, life-cycle cost, schedule alignment, sensitivity and risk analysis, documentation, updating estimates, and program cost management. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.omb.circular_a94",
+      "organization": "U.S. Office of Management and Budget",
+      "title": "OMB Circular A-94 — Guidelines and Discount Rates for Benefit-Cost Analysis of Federal Programs",
+      "canonicalUrl": "https://www.whitehouse.gov/omb/information-resources/guidance/circulars/",
+      "allowedDomains": [
+        "whitehouse.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Official OMB guidance supporting benefit-cost analysis, cost-effectiveness analysis, present-value treatment, and discount-rate use. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.far.acquisition_planning",
+      "organization": "Acquisition.gov",
+      "title": "Federal Acquisition Regulation Subpart 7.1 — Acquisition Plans",
+      "canonicalUrl": "https://www.acquisition.gov/far/subpart-7.1",
+      "allowedDomains": [
+        "acquisition.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal Acquisition Regulation provisions supporting early acquisition planning, multidisciplinary participation, cost and schedule constraints, life-cycle cost, and acquisition alternatives. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.far.contract_pricing",
+      "organization": "Acquisition.gov",
+      "title": "Federal Acquisition Regulation Subpart 15.4 — Contract Pricing",
+      "canonicalUrl": "https://www.acquisition.gov/far/subpart-15.4",
+      "allowedDomains": [
+        "acquisition.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Federal Acquisition Regulation provisions supporting price analysis, cost analysis, cost realism, historical comparison, market comparison, and fair-and-reasonable pricing. Educational paraphrase only."
     }
   ]
 }
