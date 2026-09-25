@@ -31,7 +31,7 @@ jobs:
   publish:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/phase-lsp-batch2-direct-publication'
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 60
 
     steps:
       - name: Checkout exact release branch
@@ -53,6 +53,9 @@ jobs:
           set -euo pipefail
           test "$DIRECT_RELEASE_CONFIRMATION" = "RELEASE BATCH 2 LABS AND ACTIVATE LEARNER CATALOGUE"
 
+      - name: Validate chunked LAB payload codec
+        run: flutter test test/lab_quality/lab_published_payload_chunks_test.dart
+
       - name: Validate Batch 2 release integration
         run: flutter test test/lab_quality/lsp_batch2_release_integration_test.dart
 
@@ -72,10 +75,16 @@ jobs:
           assert b["releaseId"] == "phase_l_population_batch2_v1_q16_extension_v1"
           assert b["labCount"] == 10
           assert b["totalDecisionCount"] == 50
-          assert len(b["published"]) == 10
+          assert b["schemaVersion"] == "csp11.lab.batch2.direct_release_bundle.v2"
+          assert len(b["publishedParents"]) == 10
+          assert len(b["publishedChunks"]) == b["publishedChunkCount"]
+          assert b["publishedChunkCount"] > 0
           assert len(b["staging"]) == 10
           assert len(b["learnerCatalogue"]) == 10
-          print("Batch 2 direct release bundle boundary verified.")
+          for item in b["publishedChunks"]:
+              encoded = json.dumps(item["data"], separators=(",", ":")).encode()
+              assert len(encoded) < 800 * 1024
+          print("Batch 2 chunked direct release bundle boundary verified.")
           PY
 
       - id: auth_wif
@@ -87,7 +96,7 @@ jobs:
           workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
           service_account: ${{ env.GCP_FIRESTORE_READER_SERVICE_ACCOUNT }}
           token_format: access_token
-          create_credentials_file: false
+          create_credentials_file: true
           access_token_lifetime: 1800s
 
       - id: auth_json
@@ -98,7 +107,7 @@ jobs:
           project_id: csp11-exam-platform
           credentials_json: ${{ env.FIREBASE_SERVICE_ACCOUNT_JSON }}
           token_format: access_token
-          create_credentials_file: false
+          create_credentials_file: true
           access_token_lifetime: 1800s
 
       - name: Require production publisher credential
@@ -113,7 +122,14 @@ jobs:
             exit 1
           fi
 
-      - name: Atomically publish and activate Batch 2 only
+      - name: Deploy validated Firestore rules for chunked LAB storage
+        run: |
+          npx --yes firebase-tools@14.17.0 deploy \
+            --only firestore:rules \
+            --project csp11-exam-platform \
+            --non-interactive
+
+      - name: Publish and activate chunked Batch 2 only
         env:
           GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
         run: python tools/lab/publish_batch2_direct.py
@@ -122,6 +138,6 @@ jobs:
         if: success()
         run: |
           echo "Batch 2 direct production publication succeeded."
-          echo "Q16 CLOSED: 10/10 published, 10/10 staged."
+          echo "Q16 CLOSED: 10/10 chunked published parents, 10/10 staged."
           echo "Q17 ACCEPTED: 10/10 learner catalogue."
           echo "Original first 10 LABs were not written by this workflow."
