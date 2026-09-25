@@ -7,6 +7,7 @@ import 'package:exam_platform/features/lab/lab_firestore_repositories.dart';
 import 'package:exam_platform/features/lab/lab_learner_catalogue.dart';
 import 'package:exam_platform/features/lab/lab_learner_presentation.dart';
 import 'package:exam_platform/features/lab/lab_production_population_seed.dart';
+import 'package:exam_platform/features/lab/lab_production_deployment_acceptance.dart';
 import 'package:exam_platform/features/lab/lab_production_release_operator.dart';
 import 'package:exam_platform/features/lab/lab_scenario_population_manifest.dart';
 import 'package:exam_platform/features/lab/lab_studio.dart';
