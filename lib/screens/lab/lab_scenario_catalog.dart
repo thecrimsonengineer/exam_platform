@@ -1,4 +1,5 @@
 import '../../features/lab/lab_learner_catalogue.dart' as learner;
+import '../../features/lab/lab_learner_presentation.dart' as presentation;
 
 class LabConsequencePresentation {
   const LabConsequencePresentation({
@@ -66,9 +67,15 @@ class LabScenarioDefinition {
   });
 
   factory LabScenarioDefinition.fromCatalogueEntry(
-    learner.LabLearnerCatalogueEntry entry,
-  ) {
-    final package = entry.presentation;
+    learner.LabLearnerCatalogueEntry entry, {
+    presentation.LabLearnerPresentationPackage? presentationOverride,
+  }) {
+    final package = presentationOverride ?? entry.presentation;
+    if (package.labId != entry.labId || package.versionId != entry.versionId) {
+      throw StateError(
+        'Learner presentation override does not match the catalogue identity.',
+      );
+    }
     final overview = package.presentation;
 
     List<String> details(String value) {
