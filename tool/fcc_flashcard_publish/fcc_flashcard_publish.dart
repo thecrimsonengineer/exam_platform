@@ -76,14 +76,12 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  for (final package in plan.packages) {
-    await client.ensureImmutableObject(package);
-  }
-  await _verifyObjects(client, plan);
-
   final publishedAt = DateTime.now().toUtc().toIso8601String();
   for (final package in plan.packages) {
-    await client.commitFlashcardPublication(package, publishedAt: publishedAt);
+    await client.publishFlashcardPackage(
+      package,
+      publishedAt: publishedAt,
+    );
   }
 
   final verifiedRows = await client.fetchAll(
@@ -91,7 +89,6 @@ Future<void> main(List<String> args) async {
     query: const <String, String>{'package_kind': 'eq.flashcards'},
   );
   _verifyDatabaseState(plan, verifiedRows);
-  await _verifyObjects(client, plan);
 
   await _writeEvidence(options.evidencePath, <String, dynamic>{
     ...plan.toEvidenceJson(),
@@ -330,6 +327,50 @@ class _SupabaseFccClient {
     );
   }
 
+  Future<void> publishFlashcardPackage(
+    FccPlannedFlashcardPackage package, {
+    required String publishedAt,
+  }) async {
+    final response = await _jsonRequest(
+      'POST',
+      _functionUri('fcc-flashcard-publisher'),
+      body: <String, dynamic>{
+        'competencyId': package.competencyId,
+        'domainId': package.artifact.domainId,
+        'deckId': package.artifact.deckId,
+        'version': package.version,
+        'storagePath': package.storagePath,
+        'checksumSha256': package.artifact.checksumSha256,
+        'uncompressedChecksumSha256':
+            package.artifact.uncompressedChecksumSha256,
+        'compressedBytes': package.artifact.compressedByteCount,
+        'itemCount': package.artifact.cardCount,
+        'publishedAt': publishedAt,
+        'payloadBase64': base64Encode(package.artifact.compressedBytes),
+      },
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw StateError(
+        'FCC server-side package publication failed for '
+        '${package.competencyId} (${response.statusCode}): '
+        '${response.body}',
+      );
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map ||
+        decoded['complete'] != true ||
+        decoded['competencyId']?.toString() != package.competencyId ||
+        decoded['checksumSha256']?.toString() !=
+            package.artifact.checksumSha256) {
+      throw StateError(
+        'FCC server-side package verification failed for '
+        '${package.competencyId}.',
+      );
+    }
+  }
+
   Future<void> ensureImmutableObject(FccPlannedFlashcardPackage package) async {
     final existing = await downloadObject(fccBucketId, package.storagePath);
 
@@ -419,6 +460,15 @@ class _SupabaseFccClient {
       );
     }
   }
+
+  Uri _functionUri(String functionName) => baseUri.replace(
+    pathSegments: <String>[
+      ...baseUri.pathSegments.where((segment) => segment.isNotEmpty),
+      'functions',
+      'v1',
+      functionName,
+    ],
+  );
 
   Uri _rpcUri(String functionName) => baseUri.replace(
     pathSegments: <String>[
