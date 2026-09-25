@@ -26,10 +26,12 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Noise Change Assessment",
+      "summary": "The line is louder after modification, while the existing survey describes the earlier equipment condition.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The previous survey was completed before the equipment change.",
+        "Workers now report a noticeable increase in sound during normal production.",
+        "A current assessment should reflect the modified line and actual time spent at each station."
       ]
     },
     "control_verification_record": {
