@@ -71,18 +71,21 @@ void main() {
     }
   });
 
-  test('D02 C13 preserves generic planning, cost, and accountability concepts', () {
-    final inventory = readObject(inventoryPath);
-    final refs = (inventory['crossCompetencyReferences'] as List)
-        .map((item) => Map<String, dynamic>.from(item as Map))
-        .toList();
+  test(
+    'D02 C13 preserves generic planning, cost, and accountability concepts',
+    () {
+      final inventory = readObject(inventoryPath);
+      final refs = (inventory['crossCompetencyReferences'] as List)
+          .map((item) => Map<String, dynamic>.from(item as Map))
+          .toList();
 
-    expect(refs.length, 6);
-    expect(refs.map((item) => item['targetCompetencyId']).toSet(), <String>{
-      'd02_c01',
-      'd02_c02',
-      'd02_c11',
-      'd02_c12',
-    });
-  });
+      expect(refs.length, 6);
+      expect(refs.map((item) => item['targetCompetencyId']).toSet(), <String>{
+        'd02_c01',
+        'd02_c02',
+        'd02_c11',
+        'd02_c12',
+      });
+    },
+  );
 }
