@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2M",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c13",
+  "competencyStatement": "Apply project management principles and techniques (e.g., RACI charts, project timelines)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c13",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.gao.schedule_guide_2015",
+      "locators": [
+        "WBS",
+        "activity sequencing",
+        "milestones",
+        "critical path",
+        "total float",
+        "schedule risk analysis",
+        "baseline schedule"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.energy.project_management_lexicon",
+      "locators": [
+        "Project Charter",
+        "Risk or Opportunity Register",
+        "Stakeholder Register"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.gao.project_management_practices_2022",
+      "locators": [
+        "project charter",
+        "project management plan",
+        "schedule",
+        "stakeholders",
+        "roles and responsibilities",
+        "risk",
+        "communications",
+        "quality"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.pmc.raci_team_science",
+      "locators": [
+        "RACI matrix",
+        "Responsible",
+        "Accountable",
+        "Consulted",
+        "Informed"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "performance_baseline",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c01",
+      "intendedConceptId": "csp11.concept.performance_baseline",
+      "reason": "Project schedules use baselines, but the generic Performance Baseline concept is canonical in D02 C01."
+    },
+    {
+      "semanticSlug": "action_plan",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.action_plan",
+      "reason": "Project plans may contain action plans, but the generic Action Plan concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "resource_allocation",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c02",
+      "intendedConceptId": "csp11.concept.resource_allocation",
+      "reason": "Schedules assign resources, but the generic Resource Allocation concept is canonical in D02 C02."
+    },
+    {
+      "semanticSlug": "cost_estimate",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c11",
+      "intendedConceptId": "csp11.concept.cost_estimate",
+      "reason": "Projects integrate cost and schedule, but the generic Cost Estimate concept is canonical in D02 C11."
+    },
+    {
+      "semanticSlug": "time_phased_cost_estimate",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c11",
+      "intendedConceptId": "csp11.concept.time_phased_cost_estimate",
+      "reason": "Project timelines may phase funding needs, but the generic Time-Phased Cost Estimate concept is canonical in D02 C11."
+    },
+    {
+      "semanticSlug": "authority_responsibility_accountability_distinction",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c12",
+      "intendedConceptId": "csp11.concept.authority_responsibility_accountability_distinction",
+      "reason": "RACI applies responsibility and accountability to tasks, while the generic authority-responsibility-accountability distinction is canonical in D02 C12."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "project_charter",
+      "canonicalLabel": "Project Charter",
+      "sourceIds": [
+        "csp11.source.energy.project_management_lexicon",
+        "csp11.source.gao.project_management_practices_2022"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "project_management_plan",
+      "canonicalLabel": "Project Management Plan",
+      "sourceIds": [
+        "csp11.source.gao.project_management_practices_2022"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "work_breakdown_structure",
+      "canonicalLabel": "Work Breakdown Structure",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "integrated_project_schedule",
+      "canonicalLabel": "Integrated Project Schedule",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "project_milestone",
+      "canonicalLabel": "Project Milestone",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "activity_dependency",
+      "canonicalLabel": "Activity Dependency",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "critical_path",
+      "canonicalLabel": "Critical Path",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "total_float",
+      "canonicalLabel": "Total Float",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "schedule_baseline",
+      "canonicalLabel": "Schedule Baseline",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "schedule_risk_analysis",
+      "canonicalLabel": "Schedule Risk Analysis",
+      "sourceIds": [
+        "csp11.source.gao.schedule_guide_2015"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "raci_matrix",
+      "canonicalLabel": "RACI Matrix",
+      "sourceIds": [
+        "csp11.source.pmc.raci_team_science"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "raci_responsible",
+      "canonicalLabel": "RACI Responsible",
+      "sourceIds": [
+        "csp11.source.pmc.raci_team_science"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "raci_accountable",
+      "canonicalLabel": "RACI Accountable",
+      "sourceIds": [
+        "csp11.source.pmc.raci_team_science"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "raci_consulted_informed",
+      "canonicalLabel": "RACI Consulted and Informed Roles",
+      "sourceIds": [
+        "csp11.source.pmc.raci_team_science"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "project_risk_register",
+      "canonicalLabel": "Project Risk Register",
+      "sourceIds": [
+        "csp11.source.energy.project_management_lexicon"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "stakeholder_register",
+      "canonicalLabel": "Stakeholder Register",
+      "sourceIds": [
+        "csp11.source.energy.project_management_lexicon"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c13_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 16,
+    "acceptedCardCount": 16,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
