@@ -187,7 +187,11 @@
       "competencyId": "d02_c11",
       "number": 11,
       "statement": "Apply budgeting, finance, and economic analysis techniques and principles (e.g., timelines, budget development, resourcing, return on investment, cost/benefit analysis, role in procurement process)",
-      "status": "not_started"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c11/d02_c11_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d02/d02_c11/d02_c11_flashcards_v1.json",
+      "cardCount": 15,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d02_c12",
