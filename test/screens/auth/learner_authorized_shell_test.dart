@@ -72,7 +72,8 @@ void main() {
 
     await tester.pump();
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pump();
 
     expect(find.byKey(const ValueKey('protected-learner-ui')), findsNothing);
     expect(
@@ -83,7 +84,9 @@ void main() {
   testWidgets('FR8E offline launch never renders protected learner UI', (
     tester,
   ) async {
-    final validator = _CountingValidator();
+    final validator = _CountingValidator(
+      LearnerOnlineAccessStatus.backendUnavailable,
+    );
     final controller = LearnerOnlineAccessSessionController(
       validator: validator,
       currentUserId: () => 'student-1',
@@ -115,10 +118,47 @@ void main() {
     expect(controller.snapshot.status, LearnerOnlineSessionStatus.locked);
     expect(
       controller.snapshot.lockReason,
-      LearnerOnlineLockReason.connectivityLost,
+      LearnerOnlineLockReason.backendUnavailable,
     );
-    expect(validator.calls, 0);
+    expect(validator.calls, 2);
   });
+
+  testWidgets(
+    'FR8E stale offline transport hint does not suppress remote authorization',
+    (tester) async {
+      final validator = _CountingValidator(
+        LearnerOnlineAccessStatus.authorized,
+      );
+      final controller = LearnerOnlineAccessSessionController(
+        validator: validator,
+        currentUserId: () => 'student-1',
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: LearnerAuthorizedShell(
+            userId: 'student-1',
+            controller: controller,
+            connectivitySignalSource: _AlwaysOfflineConnectivitySource(),
+            authorizedChild: const Text(
+              'Protected learner UI',
+              key: ValueKey('protected-learner-ui'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(
+        find.byKey(const ValueKey('protected-learner-ui')),
+        findsOneWidget,
+      );
+      expect(validator.calls, 1);
+    },
+  );
 
   testWidgets('FR8E app resume locks protected UI until reauthorization', (
     tester,
@@ -199,6 +239,9 @@ class _ImmediateValidator implements LearnerOnlineAccessValidator {
 }
 
 class _CountingValidator implements LearnerOnlineAccessValidator {
+  _CountingValidator(this.status);
+
+  final LearnerOnlineAccessStatus status;
   int calls = 0;
 
   @override
@@ -207,7 +250,7 @@ class _CountingValidator implements LearnerOnlineAccessValidator {
   }) async {
     calls++;
     return LearnerOnlineAccessResult(
-      status: LearnerOnlineAccessStatus.authorized,
+      status: status,
       checkedAt: DateTime.utc(2026, 9, 22),
     );
   }
