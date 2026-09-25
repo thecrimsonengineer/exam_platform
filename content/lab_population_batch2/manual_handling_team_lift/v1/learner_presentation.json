@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Load and Route Assessment Record",
+      "summary": "The team must move a heavy, awkward package through a narrow route with an uncertain center of gravity.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The load shape and unclear center of gravity can make grip forces and load movement difficult to predict.",
+        "The narrow travel path limits body position, turning space and opportunities to recover from an unstable load.",
+        "Weight, grip points, route constraints and mechanical-aid options should be understood before the lift begins."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Mechanical Aid and Transfer Plan",
+      "summary": "A suitable lifting aid can handle most of the move, but the final placement still requires a short manual transfer.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The mechanical aid reduces the amount of manual handling but does not eliminate the final handling exposure.",
+        "The transfer point needs adequate space, coordinated grip positions and a clear destination for the load.",
+        "Team roles and communication are important because several people may need to move together during the final placement."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Route Obstruction Change Record",
+      "summary": "Newly placed material has tightened the turn on the route that was originally assessed.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The planned movement path no longer provides the same turning clearance available during the initial assessment.",
+        "A tighter turn can increase twisting, reach and the chance of the load contacting an obstruction.",
+        "The route change invalidates the assumption that the original handling plan still fits the actual path."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Load Shift Event Record",
+      "summary": "One worker lost grip and the package shifted unexpectedly during the transfer.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The unexpected shift shows that the load was not fully stable under the current grip and team arrangement.",
+        "Continuing immediately could expose workers to crush, strain or sudden-load hazards.",
+        "The event provides new information about grip, balance and coordination that should be addressed before another movement."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Post-Lift Handling Review",
+      "summary": "The package is at the workbench and the team expects similar moves to occur again.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The completed move provides practical information about the load, route, transfer point and mechanical aid.",
+        "Any grip problem, obstruction or coordination difficulty should be captured before the task becomes routine.",
+        "Future moves should use the improved handling method rather than automatically repeat the first attempt."
       ]
     }
   },
