@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
-import sys
+import socket
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -9,7 +9,9 @@ from pathlib import Path
 PROJECT = "csp11-exam-platform"
 DATABASE = "(default)"
 BASE = f"https://firestore.googleapis.com/v1/projects/{PROJECT}/databases/{DATABASE}/documents"
+COMMIT_URL = f"https://firestore.googleapis.com/v1/projects/{PROJECT}/databases/{DATABASE}/documents:commit"
 BUNDLE_PATH = Path("build/batch2_direct_release/release_bundle.json")
+REQUEST_TIMEOUT_SECONDS = 300
 
 
 def token():
@@ -20,7 +22,7 @@ def token():
 
 
 def request(method, url, payload=None):
-    data = None if payload is None else json.dumps(payload).encode("utf-8")
+    data = None if payload is None else json.dumps(payload, separators=(",", ":")).encode("utf-8")
     req = urllib.request.Request(
         url,
         data=data,
@@ -31,7 +33,7 @@ def request(method, url, payload=None):
         },
     )
     try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
+        with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT_SECONDS) as resp:
             raw = resp.read().decode("utf-8")
             return resp.status, json.loads(raw) if raw else {}
     except urllib.error.HTTPError as exc:
@@ -65,6 +67,29 @@ def encode_value(value, key=None):
     raise TypeError(f"Unsupported value type for {key}: {type(value)}")
 
 
+def decode_value(value):
+    if "nullValue" in value:
+        return None
+    if "booleanValue" in value:
+        return value["booleanValue"]
+    if "integerValue" in value:
+        return int(value["integerValue"])
+    if "doubleValue" in value:
+        return value["doubleValue"]
+    if "timestampValue" in value:
+        return value["timestampValue"]
+    if "stringValue" in value:
+        return value["stringValue"]
+    if "arrayValue" in value:
+        return [decode_value(v) for v in value["arrayValue"].get("values", [])]
+    if "mapValue" in value:
+        return {
+            k: decode_value(v)
+            for k, v in value["mapValue"].get("fields", {}).items()
+        }
+    raise RuntimeError(f"Unsupported Firestore value: {value}")
+
+
 def encode_fields(data):
     return {k: encode_value(v, k) for k, v in data.items()}
 
@@ -77,40 +102,100 @@ def doc_url(collection, doc_id):
     return BASE + "/" + collection + "/" + doc_id
 
 
-def exists(collection, doc_id):
-    status, _ = request("GET", doc_url(collection, doc_id))
-    return status == 200
+def load_document(collection, doc_id):
+    status, payload = request("GET", doc_url(collection, doc_id))
+    if status == 404:
+        return None
+    fields = payload.get("fields", {})
+    return {k: decode_value(v) for k, v in fields.items()}
 
 
-def build_targets(bundle):
-    targets = []
-    for item in bundle["published"]:
-        targets.append(("labPublishedVersions", item["id"], item["data"]))
-    for item in bundle["staging"]:
-        targets.append(("labProductionCatalogueStaging", item["id"], item["data"]))
-    targets.append((
-        "labProductionReleaseExtensionEvidence",
-        bundle["q16Evidence"]["id"],
-        bundle["q16Evidence"]["data"],
-    ))
-    targets.append((
-        "labProductionReleaseExtensionState",
-        bundle["q16State"]["id"],
-        bundle["q16State"]["data"],
-    ))
-    targets.append((
-        "labProductionReleaseExtensionAcceptance",
-        bundle["q17Acceptance"]["id"],
-        bundle["q17Acceptance"]["data"],
-    ))
-    targets.append((
-        "labLearnerReleaseExtensionState",
-        bundle["q17Visibility"]["id"],
-        bundle["q17Visibility"]["data"],
-    ))
-    for item in bundle["learnerCatalogue"]:
-        targets.append(("labLearnerCatalogue", item["id"], item["data"]))
-    return targets
+def document_matches(collection, doc_id, expected):
+    actual = load_document(collection, doc_id)
+    if actual is None:
+        return False
+    for key, value in expected.items():
+        if actual.get(key) != value:
+            return False
+    return True
+
+
+def require_existing_exact_or_missing(collection, doc_id, expected):
+    actual = load_document(collection, doc_id)
+    if actual is None:
+        return False
+    for key, value in expected.items():
+        if actual.get(key) != value:
+            raise SystemExit(
+                "Existing Firestore document does not match the validated Batch 2 payload: "
+                + collection
+                + "/"
+                + doc_id
+                + " field="
+                + key
+            )
+    print(f"RESUME verified existing {collection}/{doc_id}")
+    return True
+
+
+def write_target(collection, doc_id, data):
+    return {
+        "update": {
+            "name": doc_name(collection, doc_id),
+            "fields": encode_fields(data),
+        },
+        "currentDocument": {"exists": False},
+    }
+
+
+def commit_targets(label, targets):
+    missing = []
+    for collection, doc_id, data in targets:
+        if not require_existing_exact_or_missing(collection, doc_id, data):
+            missing.append((collection, doc_id, data))
+
+    if not missing:
+        print(f"{label}: already complete and verified.")
+        return
+
+    writes = [write_target(c, d, data) for c, d, data in missing]
+    print(
+        f"{label}: committing {len(writes)} document(s), "
+        f"payload_bytes={len(json.dumps({'writes': writes}, separators=(',', ':')).encode('utf-8'))}"
+    )
+
+    try:
+        status, response = request("POST", COMMIT_URL, {"writes": writes})
+        if status != 200:
+            raise RuntimeError(f"{label}: commit failed with status {status}.")
+        write_results = response.get("writeResults", [])
+        if len(write_results) != len(writes):
+            raise RuntimeError(
+                f"{label}: Firestore returned {len(write_results)} write results "
+                f"for {len(writes)} writes."
+            )
+    except (TimeoutError, socket.timeout, urllib.error.URLError) as exc:
+        print(f"{label}: commit response timed out; verifying server state before deciding.")
+        mismatches = [
+            (c, d)
+            for c, d, data in missing
+            if not document_matches(c, d, data)
+        ]
+        if mismatches:
+            raise RuntimeError(
+                f"{label}: timeout verification did not confirm the atomic commit: {mismatches}"
+            ) from exc
+        print(f"{label}: timeout recovered because all target documents were verified.")
+        return
+
+    mismatches = [
+        (c, d)
+        for c, d, data in missing
+        if not document_matches(c, d, data)
+    ]
+    if mismatches:
+        raise RuntimeError(f"{label}: post-commit verification failed: {mismatches}")
+    print(f"{label}: commit verified.")
 
 
 def main():
@@ -122,68 +207,86 @@ def main():
         raise SystemExit("Bundle project mismatch.")
     if bundle.get("labCount") != 10 or bundle.get("totalDecisionCount") != 50:
         raise SystemExit("Bundle count boundary mismatch.")
+
     release_id = bundle.get("releaseId")
     if release_id != "phase_l_population_batch2_v1_q16_extension_v1":
         raise SystemExit("Unexpected Batch 2 release ID.")
 
-    targets = build_targets(bundle)
-    if len(targets) != 34:
-        raise SystemExit(f"Expected exactly 34 Batch 2 production documents, got {len(targets)}.")
+    published = [
+        ("labPublishedVersions", item["id"], item["data"])
+        for item in bundle["published"]
+    ]
+    staging = [
+        ("labProductionCatalogueStaging", item["id"], item["data"])
+        for item in bundle["staging"]
+    ]
+    q16 = [
+        (
+            "labProductionReleaseExtensionEvidence",
+            bundle["q16Evidence"]["id"],
+            bundle["q16Evidence"]["data"],
+        ),
+        (
+            "labProductionReleaseExtensionState",
+            bundle["q16State"]["id"],
+            bundle["q16State"]["data"],
+        ),
+    ]
+    catalogue = [
+        ("labLearnerCatalogue", item["id"], item["data"])
+        for item in bundle["learnerCatalogue"]
+    ]
+    q17 = [
+        (
+            "labProductionReleaseExtensionAcceptance",
+            bundle["q17Acceptance"]["id"],
+            bundle["q17Acceptance"]["data"],
+        ),
+        (
+            "labLearnerReleaseExtensionState",
+            bundle["q17Visibility"]["id"],
+            bundle["q17Visibility"]["data"],
+        ),
+    ]
 
-    present = [(c, d) for c, d, _ in targets if exists(c, d)]
-    if present:
-        print("Direct release refused because target documents already exist:")
-        for collection, doc_id in present:
-            print(f"  {collection}/{doc_id}")
-        raise SystemExit(2)
+    total = len(published) + len(staging) + len(q16) + len(catalogue) + len(q17)
+    if total != 34:
+        raise SystemExit(f"Expected exactly 34 Batch 2 production documents, got {total}.")
 
-    writes = []
-    for collection, doc_id, data in targets:
-        writes.append({
-            "update": {
-                "name": doc_name(collection, doc_id),
-                "fields": encode_fields(data),
-            },
-            "currentDocument": {"exists": False},
-        })
+    # Match the app's safe release semantics while avoiding one oversized HTTP body.
+    # Published and staged rows are individually immutable and remain learner-hidden.
+    for index, target in enumerate(published, start=1):
+        commit_targets(f"PUBLISHED {index}/10", [target])
 
-    print(f"Committing {len(writes)} Batch 2 documents atomically...")
-    status, response = request(
-        "POST",
-        f"https://firestore.googleapis.com/v1/projects/{PROJECT}/databases/{DATABASE}/documents:commit",
-        {"writes": writes},
-    )
-    if status != 200:
-        raise SystemExit(f"Commit failed with status {status}.")
-    write_results = response.get("writeResults", [])
-    if len(write_results) != len(writes):
-        raise SystemExit(
-            f"Firestore returned {len(write_results)} write results for {len(writes)} writes."
-        )
+    for index, target in enumerate(staging, start=1):
+        commit_targets(f"STAGING {index}/10", [target])
 
-    missing = [(c, d) for c, d, _ in targets if not exists(c, d)]
-    if missing:
-        print("Post-commit verification found missing documents:")
-        for collection, doc_id in missing:
-            print(f"  {collection}/{doc_id}")
-        raise SystemExit(3)
+    # Q16 closes only after every published/staged row has been verified.
+    commit_targets("Q16 CLOSE", q16)
 
-    _, q16 = request(
-        "GET",
-        doc_url("labProductionReleaseExtensionState", release_id),
-    )
-    _, q17 = request(
-        "GET",
-        doc_url("labLearnerReleaseExtensionState", release_id),
-    )
-    q16_released = (
-        q16.get("fields", {}).get("released", {}).get("booleanValue") is True
-    )
-    q17_accepted = (
-        q17.get("fields", {}).get("accepted", {}).get("booleanValue") is True
-    )
-    if not q16_released or not q17_accepted:
-        raise SystemExit("Post-commit release markers did not verify.")
+    # Catalogue rows still remain hidden because Q17 visibility is not accepted yet.
+    for index, target in enumerate(catalogue, start=1):
+        commit_targets(f"CATALOGUE {index}/10", [target])
+
+    # Q17 acceptance and learner visibility are the final atomic gate.
+    commit_targets("Q17 ACCEPT + VISIBILITY", q17)
+
+    all_targets = published + staging + q16 + catalogue + q17
+    mismatches = [
+        (c, d)
+        for c, d, data in all_targets
+        if not document_matches(c, d, data)
+    ]
+    if mismatches:
+        raise SystemExit(f"Final Batch 2 verification failed: {mismatches}")
+
+    q16_state = load_document("labProductionReleaseExtensionState", release_id) or {}
+    q17_state = load_document("labLearnerReleaseExtensionState", release_id) or {}
+
+    if q16_state.get("released") is not True:
+        raise SystemExit("Q16 release marker did not verify.")
+    if q17_state.get("accepted") is not True:
+        raise SystemExit("Q17 learner visibility marker did not verify.")
 
     print("BATCH2_DIRECT_RELEASE=SUCCESS")
     print("Q16=CLOSED")
