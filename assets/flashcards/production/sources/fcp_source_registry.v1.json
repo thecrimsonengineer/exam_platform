@@ -1395,6 +1395,125 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "OSHA business-case guidance supporting direct and indirect workplace injury and illness cost categories. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.opm.executive_core_qualifications_2025",
+      "organization": "U.S. Office of Personnel Management",
+      "title": "Executive Core Qualifications",
+      "canonicalUrl": "https://www.opm.gov/policy-data-oversight/senior-executive-service/executive-core-qualifications/",
+      "allowedDomains": [
+        "opm.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current OPM Executive Core Qualifications, updated October 1, 2025, supporting Leading People, accountability, developing others, judgment, communication, resource management, and results. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.opm.employee_relations_reference",
+      "organization": "U.S. Office of Personnel Management",
+      "title": "Employee Relations Reference Materials",
+      "canonicalUrl": "https://www.opm.gov/policy-data-oversight/employee-relations/reference-materials/",
+      "allowedDomains": [
+        "opm.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OPM employee-relations guidance supporting progressive discipline, performance improvement, conduct management, and supervisory accountability. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.army.adp_6_22_2019",
+      "organization": "U.S. Army",
+      "title": "ADP 6-22 — Army Leadership and the Profession",
+      "canonicalUrl": "https://rdl.train.army.mil/catalog-ws/view/100.ATSC/72D4C9DC-B1F1-45F7-8BB0-148CBA9AF247-1428690957971/adp6_22.pdf",
+      "allowedDomains": [
+        "army.mil"
+      ],
+      "authorityTier": "otherSupporting",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Army leadership doctrine supporting formal and informal authority, leadership responsibilities, discipline, influence, active listening, shared understanding, and communication. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.pmc.management_theory_xy",
+      "organization": "National Library of Medicine",
+      "title": "Planning and Managing Health Systems — Theory X and Theory Y",
+      "canonicalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7171900/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Scholarly supporting source describing McGregor Theory X and Theory Y management assumptions and contrasting control versus self-direction. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.ncbi.transformational_leadership",
+      "organization": "National Library of Medicine",
+      "title": "Transformational Leadership and Evidence-Based Management",
+      "canonicalUrl": "https://www.ncbi.nlm.nih.gov/books/NBK216194/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Scholarly supporting source differentiating transactional and transformational leadership and their relationship to collective purpose, followers, and organizational change. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.pmc.leader_autonomy_support",
+      "organization": "National Library of Medicine",
+      "title": "Leader autonomy support in the workplace: A meta-analytic review",
+      "canonicalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6133074/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "peerReviewedPublication",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Peer-reviewed meta-analysis supporting intrinsic versus externally controlled motivation and consultative/autonomy-supportive leadership. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.pubmed.situational_leadership",
+      "organization": "National Library of Medicine",
+      "title": "Theory X, Theory Y, and situational leadership applied to dental education",
+      "canonicalUrl": "https://pubmed.ncbi.nlm.nih.gov/17687079/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "peerReviewedPublication",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Peer-reviewed article supporting situational leadership as adapting leader behavior to the needs and development level present in a specific situation. Educational paraphrase only."
     }
   ]
 }
