@@ -57,6 +57,23 @@ type ContentCatalogDescriptor = {
   contentSizeBytes: number;
 };
 
+type FlashcardPackageRow = {
+  package_key: string;
+  version: number;
+  checksum_sha256: string;
+  storage_path: string;
+  compressed_bytes: number;
+  item_count: number;
+};
+
+type FlashcardCatalogDescriptor = {
+  competencyId: string;
+  flashcardVersion: number;
+  flashcardChecksumSha256: string;
+  flashcardSizeBytes: number;
+  flashcardCount: number;
+};
+
 function jsonResponse(status: number, body: Record<string, unknown>) {
   return new Response(JSON.stringify(body), {
     status,
@@ -205,6 +222,35 @@ function parseKnownContentPackage(body: Record<string, unknown>) {
   };
 }
 
+function parseKnownFlashcardPackage(body: Record<string, unknown>) {
+  const rawVersion = body.knownFlashcardVersion;
+  const rawChecksum = body.knownFlashcardChecksumSha256;
+
+  if (rawVersion == null && rawChecksum == null) {
+    return null;
+  }
+
+  if (
+    typeof rawVersion !== "number" ||
+    !Number.isInteger(rawVersion) ||
+    rawVersion <= 0 ||
+    typeof rawChecksum !== "string"
+  ) {
+    throw new Error("invalid_known_flashcard_package");
+  }
+
+  const checksum = rawChecksum.trim().toLowerCase();
+
+  if (!checksumPattern.test(checksum)) {
+    throw new Error("invalid_known_flashcard_package");
+  }
+
+  return {
+    version: rawVersion,
+    checksum,
+  };
+}
+
 function descriptorFromRow(row: CatalogRow): CatalogDescriptor {
   const competencyId = parseCompetencyId(row.competency_id);
   const version = Number(row.question_version);
@@ -272,6 +318,44 @@ function contentDescriptorFromRow(
     contentVersion: version,
     contentChecksumSha256: checksum,
     contentSizeBytes: sizeBytes,
+  };
+}
+
+function flashcardDescriptorFromRow(
+  row: FlashcardPackageRow,
+): FlashcardCatalogDescriptor {
+  const competencyId = parseCompetencyId(row.package_key);
+  const version = Number(row.version);
+  const checksum = row.checksum_sha256?.trim().toLowerCase();
+  const sizeBytes = Number(row.compressed_bytes);
+  const count = Number(row.item_count);
+
+  if (
+    competencyId == null ||
+    !Number.isInteger(version) ||
+    version <= 0 ||
+    !checksumPattern.test(checksum) ||
+    !Number.isInteger(sizeBytes) ||
+    sizeBytes < 0 ||
+    !Number.isInteger(count) ||
+    count <= 0
+  ) {
+    throw new Error("flashcard_catalog_integrity_error");
+  }
+
+  const expectedPath =
+    `flashcards/${competencyId}/v${version}.json.gz`;
+
+  if (row.storage_path !== expectedPath) {
+    throw new Error("flashcard_catalog_integrity_error");
+  }
+
+  return {
+    competencyId,
+    flashcardVersion: version,
+    flashcardChecksumSha256: checksum,
+    flashcardSizeBytes: sizeBytes,
+    flashcardCount: count,
   };
 }
 
@@ -531,6 +615,114 @@ async function handleContentCatalog(
   }
 }
 
+async function handleFlashcardCompetency(
+  supabase: ReturnType<typeof createClient>,
+  body: Record<string, unknown>,
+) {
+  const competencyId = parseCompetencyId(body.competencyId);
+
+  if (competencyId == null) {
+    return jsonResponse(400, { error: "invalid_competency_id" });
+  }
+
+  let knownPackage: { version: number; checksum: string } | null;
+
+  try {
+    knownPackage = parseKnownFlashcardPackage(body);
+  } catch {
+    return jsonResponse(400, { error: "invalid_known_flashcard_package" });
+  }
+
+  const { data, error } = await supabase
+    .from("published_packages")
+    .select(
+      "package_key,version,checksum_sha256,storage_path,compressed_bytes,item_count",
+    )
+    .eq("package_kind", "flashcards")
+    .eq("package_key", competencyId)
+    .eq("is_current", true)
+    .maybeSingle();
+
+  if (error) {
+    console.warn("Flashcard package lookup failed:", error.code);
+    return jsonResponse(503, { error: "flashcard_catalog_unavailable" });
+  }
+
+  if (data == null) {
+    return jsonResponse(404, { error: "flashcard_package_not_found" });
+  }
+
+  let descriptor: FlashcardCatalogDescriptor;
+
+  try {
+    descriptor = flashcardDescriptorFromRow(data as FlashcardPackageRow);
+  } catch {
+    return jsonResponse(503, { error: "flashcard_catalog_integrity_error" });
+  }
+
+  const current =
+    knownPackage != null &&
+    knownPackage.version === descriptor.flashcardVersion &&
+    knownPackage.checksum === descriptor.flashcardChecksumSha256;
+
+  if (current) {
+    return jsonResponse(200, {
+      ...descriptor,
+      current: true,
+    });
+  }
+
+  const { data: signed, error: signedError } = await supabase.storage
+    .from(packageBucket)
+    .createSignedUrl(
+      `flashcards/${descriptor.competencyId}/v${descriptor.flashcardVersion}.json.gz`,
+      signedUrlTtlSeconds,
+    );
+
+  if (signedError || !signed?.signedUrl) {
+    console.warn(
+      "Flashcard package signed URL creation failed:",
+      signedError?.name ?? "unknown_error",
+    );
+    return jsonResponse(503, { error: "flashcard_package_url_unavailable" });
+  }
+
+  return jsonResponse(200, {
+    ...descriptor,
+    current: false,
+    signedUrl: signed.signedUrl,
+    signedUrlTtlSeconds,
+  });
+}
+
+async function handleFlashcardCatalog(
+  supabase: ReturnType<typeof createClient>,
+) {
+  const { data: rows, error } = await supabase
+    .from("published_packages")
+    .select(
+      "package_key,version,checksum_sha256,storage_path,compressed_bytes,item_count",
+    )
+    .eq("package_kind", "flashcards")
+    .eq("is_current", true)
+    .order("package_key");
+
+  if (error) {
+    console.warn("Flashcard catalogue list failed:", error.code);
+    return jsonResponse(503, { error: "flashcard_catalog_unavailable" });
+  }
+
+  try {
+    const catalog = (rows ?? []).map((row) =>
+      flashcardDescriptorFromRow(row as FlashcardPackageRow)
+    );
+
+    return jsonResponse(200, { catalog });
+  } catch {
+    return jsonResponse(503, { error: "flashcard_catalog_integrity_error" });
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -582,6 +774,14 @@ Deno.serve(async (req: Request) => {
 
   if (operation === "content_catalog") {
     return await handleContentCatalog(supabase);
+  }
+
+  if (operation === "flashcard_competency") {
+    return await handleFlashcardCompetency(supabase, body);
+  }
+
+  if (operation === "flashcard_catalog") {
+    return await handleFlashcardCatalog(supabase);
   }
 
   return jsonResponse(400, { error: "invalid_operation" });
