@@ -1,6 +1,6 @@
 {
   "schemaVersion": "csp11.flashcard-sources.v1",
-  "verifiedOn": "2026-09-24",
+  "verifiedOn": "2026-09-25",
   "sources": [
     {
       "id": "csp11.source.niosh.prevention_through_design",
@@ -1582,6 +1582,40 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Peer-reviewed supporting source defining the RACI matrix and the Responsible, Accountable, Consulted, and Informed roles, including the one-accountable-person principle. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.engineering_statistics_handbook",
+      "organization": "NIST",
+      "title": "NIST/SEMATECH Engineering Statistics Handbook",
+      "canonicalUrl": "https://www.itl.nist.gov/div898/handbook/",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NIST engineering-statistics reference supporting descriptive statistics, probability, distributions, confidence intervals, graphical analysis, outlier investigation, process monitoring, and Pareto-style ranking. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.niosh.nmam_fifth_edition",
+      "organization": "NIOSH",
+      "title": "NIOSH Manual of Analytical Methods (NMAM), Fifth Edition",
+      "canonicalUrl": "https://www.cdc.gov/niosh/nmam/pdf/NMAM_5thEd_EBook-508-final.pdf",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "NIOSH technical reference supporting occupational exposure sampling strategy, sampling uncertainty, representativeness, interpretation of airborne-contaminant data, and statistical treatment of exposure measurements. Educational paraphrase only."
     }
   ]
 }

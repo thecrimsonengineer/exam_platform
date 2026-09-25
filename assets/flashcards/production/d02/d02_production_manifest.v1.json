@@ -238,7 +238,11 @@
       "competencyId": "d02_c14",
       "number": 14,
       "statement": "Analyze and/or interpret data (e.g., exposure, release concentrations, sampling data, mean, median, mode, confidence intervals, probabilities, Pareto analysis)",
-      "status": "not_started"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c14/d02_c14_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d02/d02_c14/d02_c14_flashcards_v1.json",
+      "cardCount": 18,
+      "conceptInventoryStatus": "resolved_inventory"
     }
   ],
   "runModel": "one_competency_per_run"

@@ -18,7 +18,7 @@ FCP-2J  d02_c10  CLOSED            15 cards
 FCP-2K  d02_c11  CLOSED            15 cards
 FCP-2L  d02_c12  CLOSED            14 cards
 FCP-2M  d02_c13  CLOSED            16 cards
-FCP-2N  d02_c14  NOT STARTED
+FCP-2N  d02_c14  VALIDATING         18 cards
 ```
 
 FCP-2D started strictly from `phase-fcp2c-d02-c03-closed@b5c83522f123c51e086e3f059cc1f97926c99607`.
@@ -61,4 +61,8 @@ FCP-2M started strictly from `phase-fcp2l-d02-c12-closed@7789ef404df8911d71ea528
 
 FCP-2M package validation: SHA `45a541224f31912bcf0bfbdd31a832e2c905be14`, run `36122718558`, SUCCESS, 16 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2N may begin only from `phase-fcp2m-d02-c13-closed`.
+FCP-2N started strictly from `phase-fcp2m-d02-c13-closed@6aca93ddbb640ab8b438e4a57cfe0f86d6b9b4f5`.
+
+C14 candidate package: 18 cards covering descriptive statistics, variability, probability, confidence intervals, occupational sampling interpretation, trends, and Pareto analysis.
+
+FCP-2N remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.

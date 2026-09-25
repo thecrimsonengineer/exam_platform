@@ -186,7 +186,7 @@
       },
       "fcp2n": {
         "competencyId": "d02_c14",
-        "status": "not_started",
+        "status": "validating",
         "checkpointBranch": "phase-fcp2n-d02-c14-closed"
       }
     }
