@@ -62,10 +62,12 @@
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Noise Control Effectiveness Check",
+      "summary": "The enclosure has been repaired and staffing has returned to its normal pattern.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Repair completion should be followed by a check that the enclosure provides the expected reduction.",
+        "Post-repair measurements should represent the normal staffing and operating pattern.",
+        "The updated findings should support any continuing hearing-protection, training and monitoring requirements."
       ]
     }
   },
