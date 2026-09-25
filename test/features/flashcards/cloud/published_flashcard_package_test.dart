@@ -69,7 +69,7 @@ void main() {
     final descriptor = PublishedFlashcardPackageDescriptor(
       competencyId: 'd01_c01',
       version: 1,
-      checksumSha256: '0' * 64,
+      checksumSha256: List<String>.filled(64, '0').join(),
       compressedBytes: 3,
       flashcardCount: 1,
     );
@@ -88,7 +88,7 @@ void main() {
       <String, dynamic>{
         'competencyId': 'd02_c14',
         'flashcardVersion': 1,
-        'flashcardChecksumSha256': 'a' * 64,
+        'flashcardChecksumSha256': List<String>.filled(64, 'a').join(),
         'flashcardSizeBytes': 1200,
         'flashcardCount': 18,
       },
@@ -101,7 +101,7 @@ void main() {
       <String, dynamic>{
         'competencyId': 'd02_c14',
         'knownFlashcardVersion': 1,
-        'knownFlashcardChecksumSha256': 'a' * 64,
+        'knownFlashcardChecksumSha256': List<String>.filled(64, 'a').join(),
       },
     );
   });
