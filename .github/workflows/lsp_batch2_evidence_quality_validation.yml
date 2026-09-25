@@ -1,0 +1,97 @@
+name: LSP Batch 2 Evidence Quality Validation
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-evidence-quality-pass
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/lab/lab_learner_presentation.dart \
+            lib/screens/lab/lab_scenario_catalog.dart \
+            lib/screens/lab/lab_library_screen.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Learner presentation regression
+        run: flutter test test/lab_quality/lsp_q8_learner_presentation_validation_test.dart
+
+      - name: LAB library regression
+        run: flutter test test/screens/lab/lab_library_scenario_test.dart
+
+      - name: Persistent runtime regression
+        run: flutter test test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
+
+      - name: Verify 50 contextual evidence records
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("content/lab_population_batch2")
+          files = sorted(root.glob("*/v1/learner_presentation.json"))
+          assert len(files) == 10, len(files)
+
+          generic_summary = "Review the verified record before making the next decision."
+          generic_detail = "Use the record to confirm the current work boundary and control status."
+          required = {
+              "work_authorization_record",
+              "control_verification_record",
+              "condition_change_record",
+              "response_record",
+              "closeout_record",
+          }
+
+          total = 0
+          for path in files:
+              data = json.loads(path.read_text(encoding="utf-8"))
+              evidence = data["evidencePresentation"]
+              assert set(evidence) == required, path
+              fingerprints = set()
+
+              for record in evidence.values():
+                  assert record["summary"] != generic_summary, path
+                  details = record["details"]
+                  assert isinstance(details, list) and len(details) >= 3, path
+                  assert generic_detail not in details, path
+                  fp = (
+                      record["title"],
+                      record["summary"],
+                      tuple(details),
+                  )
+                  assert fp not in fingerprints, path
+                  fingerprints.add(fp)
+                  total += 1
+
+          assert total == 50, total
+          print("BATCH2_EVIDENCE_RECORDS=50/50")
+          print("GENERIC_EVIDENCE_TEXT=0")
+          print("CONTEXTUAL_DETAILS=PASS")
+          PY
+
+      - name: Diff hygiene
+        run: git diff --check
