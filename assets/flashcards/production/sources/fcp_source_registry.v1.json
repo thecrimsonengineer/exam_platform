@@ -1242,6 +1242,57 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Supports emergency action plan applicability, written-plan availability, minimum emergency procedures, alarm systems, training, and plan review. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.1910_1020",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.1020 - Access to employee exposure and medical records",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1020",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for preservation, retention, retrievability, access, confidentiality, and trade-secret handling of covered employee exposure and medical records. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.iso.15489_1_2016",
+      "organization": "ISO",
+      "title": "ISO 15489-1:2016 — Information and documentation — Records management — Part 1: Concepts and principles",
+      "canonicalUrl": "https://www.iso.org/standard/62542.html",
+      "allowedDomains": [
+        "iso.org"
+      ],
+      "authorityTier": "nationalConsensus",
+      "sourceType": "consensusStandard",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current published ISO 15489-1 edition, confirmed in 2021, supporting creation, capture, management, metadata, responsibilities, records controls, and records processes. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.nist.privacy_framework_1_0",
+      "organization": "NIST",
+      "title": "NIST Privacy Framework: A Tool for Improving Privacy through Enterprise Risk Management, Version 1.0",
+      "canonicalUrl": "https://www.nist.gov/privacy-framework/privacy-framework",
+      "allowedDomains": [
+        "nist.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Final NIST Privacy Framework Version 1.0 supporting privacy-risk management across the data lifecycle, including collection, retention, use, disclosure, and disposal. Educational paraphrase only."
     }
   ]
 }
