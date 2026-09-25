@@ -221,11 +221,18 @@
       "competencyId": "d02_c13",
       "number": 13,
       "statement": "Apply project management principles and techniques (e.g., RACI charts, project timelines)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c13/d02_c13_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c13/d02_c13_flashcards_v1.json",
       "cardCount": 16,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c13",
+      "checkpoint": {
+        "gate": "FCP2M_D02_C13_GREEN",
+        "branch": "phase-fcp2m-d02-c13-closed",
+        "packageValidationSha": "45a541224f31912bcf0bfbdd31a832e2c905be14",
+        "packageValidationRun": 36122718558
+      }
     },
     {
       "competencyId": "d02_c14",
