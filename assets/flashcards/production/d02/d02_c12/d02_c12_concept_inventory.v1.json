@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2L",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c12",
+  "competencyStatement": "Differentiate management leadership techniques (e.g., management theories, leadership theories, motivation, discipline, authority, responsibility, accountability, communication styles)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c12",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.pmc.management_theory_xy",
+      "locators": [
+        "Theory X–Theory Y section"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.ncbi.transformational_leadership",
+      "locators": [
+        "Transactional versus transformational leadership",
+        "collective purpose",
+        "followers and change"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.pubmed.situational_leadership",
+      "locators": [
+        "Abstract - situational leadership and appropriate leader behavior"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.pmc.leader_autonomy_support",
+      "locators": [
+        "leader autonomy support",
+        "consultative leadership",
+        "intrinsic and extrinsic motivation"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.opm.employee_relations_reference",
+      "locators": [
+        "Glossary - Progressive Discipline"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.opm.executive_core_qualifications_2025",
+      "locators": [
+        "ECQ 4 Leading People",
+        "Accountability"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.army.adp_6_22_2019",
+      "locators": [
+        "paragraphs 1-34 to 1-35",
+        "formal and informal authority",
+        "leadership communication and active listening"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "management_commitment_to_safety",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.management_commitment_to_safety",
+      "reason": "FCP-2L addresses leadership techniques, while generic Management Commitment to Safety is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "safety_accountability",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.safety_accountability",
+      "reason": "FCP-2L differentiates authority, responsibility, and accountability, while generic Safety Accountability is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "safety_communication",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03",
+      "intendedConceptId": "csp11.concept.safety_communication",
+      "reason": "FCP-2L covers leadership communication technique, while generic Safety Communication is canonical in D02 C03."
+    },
+    {
+      "semanticSlug": "roles_responsibilities_authorities",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09",
+      "intendedConceptId": "csp11.concept.roles_responsibilities_authorities",
+      "reason": "FCP-2L teaches the authority-responsibility-accountability distinction, while the management-system roles component is canonical in D02 C09."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "theory_x_management",
+      "canonicalLabel": "Theory X Management",
+      "sourceIds": [
+        "csp11.source.pmc.management_theory_xy"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "theory_y_management",
+      "canonicalLabel": "Theory Y Management",
+      "sourceIds": [
+        "csp11.source.pmc.management_theory_xy"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "transactional_leadership",
+      "canonicalLabel": "Transactional Leadership",
+      "sourceIds": [
+        "csp11.source.ncbi.transformational_leadership"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "transformational_leadership",
+      "canonicalLabel": "Transformational Leadership",
+      "sourceIds": [
+        "csp11.source.ncbi.transformational_leadership"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "situational_leadership",
+      "canonicalLabel": "Situational Leadership",
+      "sourceIds": [
+        "csp11.source.pubmed.situational_leadership"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "directive_leadership",
+      "canonicalLabel": "Directive Leadership",
+      "sourceIds": [
+        "csp11.source.pmc.management_theory_xy"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "participative_leadership",
+      "canonicalLabel": "Participative Leadership",
+      "sourceIds": [
+        "csp11.source.pmc.leader_autonomy_support"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "intrinsic_motivation",
+      "canonicalLabel": "Intrinsic Motivation",
+      "sourceIds": [
+        "csp11.source.pmc.leader_autonomy_support"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "extrinsic_motivation",
+      "canonicalLabel": "Extrinsic Motivation",
+      "sourceIds": [
+        "csp11.source.pmc.leader_autonomy_support"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "progressive_discipline",
+      "canonicalLabel": "Progressive Discipline",
+      "sourceIds": [
+        "csp11.source.opm.employee_relations_reference"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "formal_authority",
+      "canonicalLabel": "Formal Authority",
+      "sourceIds": [
+        "csp11.source.army.adp_6_22_2019"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "informal_authority",
+      "canonicalLabel": "Informal Authority",
+      "sourceIds": [
+        "csp11.source.army.adp_6_22_2019"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "authority_responsibility_accountability_distinction",
+      "canonicalLabel": "Authority, Responsibility, and Accountability Distinction",
+      "sourceIds": [
+        "csp11.source.opm.executive_core_qualifications_2025",
+        "csp11.source.army.adp_6_22_2019"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "two_way_leadership_communication",
+      "canonicalLabel": "Two-Way Leadership Communication",
+      "sourceIds": [
+        "csp11.source.army.adp_6_22_2019"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c12_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 14,
+    "acceptedCardCount": 14,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
