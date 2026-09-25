@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2K",
+  "competencyId": "d02_c11",
+  "cardCount": 15,
+  "cardsWithProvenance": 15,
+  "cardsWithExactlyOnePrimarySource": 15,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.far.acquisition_planning",
+    "csp11.source.far.contract_pricing",
+    "csp11.source.gao.cost_guide_2020",
+    "csp11.source.omb.circular_a94",
+    "csp11.source.osha.business_case_benefits",
+    "csp11.source.osha.business_case_costs",
+    "csp11.source.osha.management_leadership"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.osha.management_leadership": 1,
+    "csp11.source.gao.cost_guide_2020": 4,
+    "csp11.source.osha.business_case_costs": 1,
+    "csp11.source.osha.business_case_benefits": 1,
+    "csp11.source.omb.circular_a94": 5,
+    "csp11.source.far.acquisition_planning": 1,
+    "csp11.source.far.contract_pricing": 2
+  },
+  "status": "PASS"
+}
