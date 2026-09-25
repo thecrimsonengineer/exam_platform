@@ -204,7 +204,11 @@
       "competencyId": "d02_c12",
       "number": 12,
       "statement": "Differentiate management leadership techniques (e.g., management theories, leadership theories, motivation, discipline, authority, responsibility, accountability, communication styles)",
-      "status": "not_started"
+      "status": "validating",
+      "conceptInventoryPath": "assets/flashcards/production/d02/d02_c12/d02_c12_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d02/d02_c12/d02_c12_flashcards_v1.json",
+      "cardCount": 14,
+      "conceptInventoryStatus": "resolved_inventory"
     },
     {
       "competencyId": "d02_c13",
