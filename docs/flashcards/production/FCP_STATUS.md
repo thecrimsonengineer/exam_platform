@@ -16,13 +16,11 @@ FCP-2F  d02_c06  CLOSED
 FCP-2G  d02_c07  CLOSED
 FCP-2H  d02_c08  CLOSED
 FCP-2I  d02_c09  CLOSED
-FCP-2J  d02_c10  VALIDATING
+FCP-2J  d02_c10  CLOSED
 FCP-2K  d02_c11  NOT STARTED
 FCP-2L  d02_c12  NOT STARTED
 FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2I closed at `phase-fcp2i-d02-c09-closed@b386f75c0c4f7a3c420b84229b5dd63920eb4edd`.
-
-FCP-2J started strictly from that closed checkpoint. Candidate package: 15 document-retention and records-management cards.
+FCP-2J package validation passed at `45475b4560e8bdebfa6266cd6e7af9ca3d74fb96` in run `36097452408`. The closure metadata state must pass CI before `phase-fcp2j-d02-c10-closed` is created.
