@@ -215,7 +215,7 @@ jobs:
                       decoded_payloads[field_name] = raw.decode("utf-8")
 
                   published = json.loads(decoded_payloads["publishedJson"])
-                  metadata = published.get("metadata", {})
+                  metadata = published.get("lab", {})
                   lab_id, version_id = version_key.rsplit("__", 1)
                   if metadata.get("id") != lab_id or metadata.get("versionId") != version_id:
                       raise RuntimeError(f"{version_key}: reconstructed LAB identity mismatch.")
