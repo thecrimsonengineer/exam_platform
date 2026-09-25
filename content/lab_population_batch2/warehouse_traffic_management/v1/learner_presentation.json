@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Crossing Visibility Check",
+      "summary": "Temporary pallet staging has reduced sight lines at a marked forklift and pedestrian crossing.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Forklift and pedestrian traffic are both active during a busy loading period.",
+        "Stored pallets obstruct the normal line of sight between approaching drivers and pedestrians.",
+        "The marked crossing remains physically present, but its original visibility assumptions no longer hold."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Trailer Restraint Verification",
+      "summary": "A forklift is ready to enter a trailer while the trailer's securement status remains uncertain.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The loading interface cannot be treated as verified while trailer restraint status is unknown.",
+        "A stable dock arrangement requires positive confirmation that unintended trailer movement is controlled.",
+        "Forklift entry adds load and motion to the trailer, so the securement condition is a critical pre-entry check."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Pedestrian Diversion Change Record",
+      "summary": "A spill has displaced pedestrians toward the edge of an active forklift lane.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The normal pedestrian path is no longer available in its planned condition.",
+        "The temporary diversion reduces separation between people and powered industrial truck traffic.",
+        "The traffic plan now contains a new conflict that was not present when the route was originally established."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Forklift Near-Miss Record",
+      "summary": "A reversing forklift narrowly missed a pedestrian emerging from behind stored material.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The event confirms that the visibility and route controls did not prevent a vehicle-pedestrian conflict.",
+        "Stored material restricted the opportunity for the driver and pedestrian to see one another early.",
+        "No contact occurred, but the near miss provides direct evidence that the current traffic controls are inadequate."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Traffic Route Reopening Check",
+      "summary": "The spill and obstructions have been removed and the warehouse route is being prepared for normal traffic.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Sight lines at the crossing can now be checked without the temporary pallet obstruction.",
+        "Pedestrian separation and the intended vehicle route should be restored before temporary controls are removed.",
+        "Dock and traffic controls should be confirmed in their normal operating condition before full flow resumes."
       ]
     }
   },
