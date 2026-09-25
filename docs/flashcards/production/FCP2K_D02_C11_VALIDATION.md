@@ -1,6 +1,7 @@
-# FCP-2K — d02_c11 Validation Candidate
+# FCP-2K — d02_c11 Validation Record
 
-Status: VALIDATING
+Status: VALIDATION COMPLETE  
+Gate: `FCP2K_D02_C11_GREEN`
 
 Recovery base:
 
@@ -9,17 +10,26 @@ phase-fcp2j-d02-c10-closed
 d17458de529b1e75618c4d7855d50192411e6bdf
 ```
 
-Candidate scope:
+Successful package validation:
 
-- Competency: `d02_c11`
-- Statement: Apply budgeting, finance, and economic analysis techniques and principles
+```text
+SHA: 092ba47c0b30d0c276c110e51ee72f7a8333d079
+Run: 36117137743
+Result: SUCCESS
+```
+
+Validated scope:
+
 - 15 resolved concepts
 - 15 learner-ready flashcards
 - 4 cross-competency canonical references
 - 0 HOLD
-- Generic Performance Target remains canonical in D02 C01
-- Generic Action Plan and Resource Allocation remain canonical in D02 C02
-- Generic Objectives and Action Planning Component remains canonical in D02 C09
-- New finance/procurement authorities are GAO-20-195G, OMB Circular A-94, FAR 7.1, and FAR 15.4
+- FCQ100 100/100
+- deterministic JSON round trip PASS
+- provenance PASS
+- frozen Flashcard Core regression PASS
+- full repository regression PASS
 
-Closure requires the dedicated Phase FCP workflow, frozen Flashcard Core regression, and full repository regression to pass.
+The package passed its authoritative validation candidate without a content or provenance correction after validation began.
+
+The closure metadata state must pass the dedicated FCP workflow before `phase-fcp2k-d02-c11-closed` is created.
