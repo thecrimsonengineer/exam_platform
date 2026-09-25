@@ -170,11 +170,18 @@
       "competencyId": "d02_c10",
       "number": 10,
       "statement": "Utilize document retention or management principles (e.g., incident investigation, training records, exposure records, maintenance records, environmental management system, audit results, privacy, trade secrets, personal information)",
-      "status": "validating",
+      "status": "closed",
       "conceptInventoryPath": "assets/flashcards/production/d02/d02_c10/d02_c10_concept_inventory.v1.json",
       "packagePath": "assets/flashcards/production/d02/d02_c10/d02_c10_flashcards_v1.json",
       "cardCount": 15,
-      "conceptInventoryStatus": "resolved_inventory"
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d02_c10",
+      "checkpoint": {
+        "gate": "FCP2J_D02_C10_GREEN",
+        "branch": "phase-fcp2j-d02-c10-closed",
+        "packageValidationSha": "45475b4560e8bdebfa6266cd6e7af9ca3d74fb96",
+        "packageValidationRun": 36097452408
+      }
     },
     {
       "competencyId": "d02_c11",
