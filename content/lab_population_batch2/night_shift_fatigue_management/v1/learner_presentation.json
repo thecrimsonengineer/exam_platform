@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Extended-Shift Fatigue Review",
+      "summary": "The night shift will run beyond its planned finish while a critical task is still outstanding.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Several crew members have already completed demanding work during the shift.",
+        "Extending the shift increases time awake and may reduce alertness, attention and decision quality.",
+        "The criticality of the remaining task should be considered together with hours worked, rest opportunity and available staffing."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Individual Fatigue Fitness Record",
+      "summary": "The most experienced worker for the next task has been awake considerably longer than the rest of the crew.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Experience with the task does not remove the performance effects associated with extended wakefulness.",
+        "Fatigue risk is individual and can differ even when workers are on the same shift.",
+        "Task assignment should account for alertness, backup, supervision and whether the work can be delayed or redistributed."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Workload Escalation Record",
+      "summary": "A second urgent task has arrived while the crew is already behind schedule on an extended night shift.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The new request increases workload and time pressure without increasing the crew's available recovery.",
+        "The original shift plan did not include two simultaneous urgent demands at this late stage.",
+        "Priorities, staffing and task deferral options need to be reconsidered against the crew's current fatigue exposure."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Performance Deviation Record",
+      "summary": "A worker has made two unusual procedural errors within a short period.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Repeated atypical errors can be an operational sign that attention or performance is degrading.",
+        "The errors occurred during an extended night shift where fatigue is already a credible contributing factor.",
+        "The worker's current task demands and fitness for continued safety-critical work require immediate review."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Fatigue-Sensitive Handover Record",
+      "summary": "The extended shift is ending with several tasks still partially complete.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Incomplete work can create hidden hazards if isolation, equipment status or remaining steps are not transferred clearly.",
+        "The incoming shift needs an accurate account of what is complete, what remains open and which controls are still in force.",
+        "A structured handover reduces the need for fatigued workers to continue solely to achieve task completion."
       ]
     }
   },
