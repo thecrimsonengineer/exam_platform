@@ -17,7 +17,7 @@ FCP-2I  d02_c09  CLOSED            13 cards
 FCP-2J  d02_c10  CLOSED            15 cards
 FCP-2K  d02_c11  CLOSED            15 cards
 FCP-2L  d02_c12  CLOSED            14 cards
-FCP-2M  d02_c13  NOT STARTED
+FCP-2M  d02_c13  VALIDATING         16 cards
 FCP-2N  d02_c14  NOT STARTED
 ```
 
@@ -57,4 +57,8 @@ FCP-2L started strictly from `phase-fcp2k-d02-c11-closed@6a36ab52462f19e6bb2bf53
 
 FCP-2L package validation: SHA `d7f2205c7e5d90711442a6021bfd2d0f72733175`, run `36119388886`, SUCCESS, 14 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2M may begin only from `phase-fcp2l-d02-c12-closed`.
+FCP-2M started strictly from `phase-fcp2l-d02-c12-closed@7789ef404df8911d71ea5284aa5c5f82909a6bff`.
+
+C13 candidate package: 16 cards covering project charter, project management plan, WBS, integrated project schedule, milestones, dependencies, critical path, total float, schedule baseline, schedule risk analysis, RACI matrix and roles, project risk register, and stakeholder register.
+
+FCP-2M remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
