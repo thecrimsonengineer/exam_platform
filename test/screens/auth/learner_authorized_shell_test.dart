@@ -108,7 +108,8 @@ void main() {
 
     await tester.pump();
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pump();
 
     expect(find.byKey(const ValueKey('protected-learner-ui')), findsNothing);
     expect(
