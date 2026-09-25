@@ -23,6 +23,9 @@ concurrency:
 env:
   FIREBASE_PROJECT_ID: csp11-exam-platform
   DIRECT_RELEASE_CONFIRMATION: RELEASE BATCH 2 LABS AND ACTIVATE LEARNER CATALOGUE
+  FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+  GCP_WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}
+  GCP_FIRESTORE_READER_SERVICE_ACCOUNT: ${{ vars.GCP_FIRESTORE_READER_SERVICE_ACCOUNT }}
 
 jobs:
   publish:
@@ -75,30 +78,44 @@ jobs:
           print("Batch 2 direct release bundle boundary verified.")
           PY
 
-      - id: auth_json
-        name: Authenticate production Firestore publisher
+      - id: auth_wif
+        name: Authenticate production Firestore publisher with workload identity
+        if: env.GCP_WIF_PROVIDER != '' && env.GCP_FIRESTORE_READER_SERVICE_ACCOUNT != ''
         uses: google-github-actions/auth@v3
         with:
           project_id: csp11-exam-platform
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
+          service_account: ${{ env.GCP_FIRESTORE_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          create_credentials_file: false
+          access_token_lifetime: 1800s
+
+      - id: auth_json
+        name: Authenticate production Firestore publisher with service account fallback
+        if: env.GCP_WIF_PROVIDER == '' && env.FIREBASE_SERVICE_ACCOUNT_JSON != ''
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: csp11-exam-platform
+          credentials_json: ${{ env.FIREBASE_SERVICE_ACCOUNT_JSON }}
           token_format: access_token
           create_credentials_file: false
           access_token_lifetime: 1800s
 
       - name: Require production publisher credential
         env:
-          ACCESS_TOKEN: ${{ steps.auth_json.outputs.access_token }}
+          WIF_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token }}
+          JSON_ACCESS_TOKEN: ${{ steps.auth_json.outputs.access_token }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "$ACCESS_TOKEN" ]; then
-            echo "FIREBASE_SERVICE_ACCOUNT_JSON did not yield an access token."
+          if [ -z "$WIF_ACCESS_TOKEN$JSON_ACCESS_TOKEN" ]; then
+            echo "No authenticated Google Cloud production credential is available."
             exit 1
           fi
 
       - name: Atomically publish and activate Batch 2 only
         env:
-          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_json.outputs.access_token }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_wif.outputs.access_token || steps.auth_json.outputs.access_token }}
         run: python tools/lab/publish_batch2_direct.py
 
       - name: Record publication summary
