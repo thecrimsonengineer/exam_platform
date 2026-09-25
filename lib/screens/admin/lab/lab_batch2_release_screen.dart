@@ -83,7 +83,7 @@ class _LabBatch2ReleaseScreenState extends State<LabBatch2ReleaseScreen> {
         _loading = false;
         _error =
             error.toString() +
-            '\nState was refreshed after the failed action. Do not retry Q16 unless the refreshed state is PRISTINE.';
+            '\nState was refreshed after the failed action. Retry Q16 only if the refreshed state is PRISTINE or RECOVERABLE_PARTIAL.';
       });
     } catch (_) {
       if (!mounted) return;
