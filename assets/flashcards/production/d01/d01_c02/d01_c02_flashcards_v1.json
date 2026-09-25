@@ -1,0 +1,531 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d01_c02_flashcards_v1",
+    "domainId": "d01",
+    "competencyId": "d01_c02",
+    "title": "Process Safety Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.process_safety_management",
+      "csp11.flashcard.process_safety_information",
+      "csp11.flashcard.chemical_compatibility_process_safety",
+      "csp11.flashcard.process_flow_diagram",
+      "csp11.flashcard.piping_and_instrumentation_diagram",
+      "csp11.flashcard.process_operating_limits",
+      "csp11.flashcard.materials_of_construction",
+      "csp11.flashcard.pressure_relief_system",
+      "csp11.flashcard.relief_system_design_basis",
+      "csp11.flashcard.recognized_good_engineering_practices",
+      "csp11.flashcard.pre_startup_safety_review"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.process_safety_management",
+      "canonicalLabel": "Process Safety Management",
+      "flashcardId": "csp11.flashcard.process_safety_management",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "psm"
+      ]
+    },
+    {
+      "id": "csp11.concept.process_safety_information",
+      "canonicalLabel": "Process Safety Information",
+      "flashcardId": "csp11.flashcard.process_safety_information",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "psi"
+      ]
+    },
+    {
+      "id": "csp11.concept.chemical_compatibility_process_safety",
+      "canonicalLabel": "Chemical Compatibility in Process Safety",
+      "flashcardId": "csp11.flashcard.chemical_compatibility_process_safety",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "process chemical compatibility"
+      ]
+    },
+    {
+      "id": "csp11.concept.process_flow_diagram",
+      "canonicalLabel": "Process Flow Diagram",
+      "flashcardId": "csp11.flashcard.process_flow_diagram",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "pfd"
+      ]
+    },
+    {
+      "id": "csp11.concept.piping_and_instrumentation_diagram",
+      "canonicalLabel": "Piping and Instrumentation Diagram",
+      "flashcardId": "csp11.flashcard.piping_and_instrumentation_diagram",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "p&id",
+        "piping and instrument diagram"
+      ]
+    },
+    {
+      "id": "csp11.concept.process_operating_limits",
+      "canonicalLabel": "Process Operating Limits",
+      "flashcardId": "csp11.flashcard.process_operating_limits",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "safe operating limits"
+      ]
+    },
+    {
+      "id": "csp11.concept.materials_of_construction",
+      "canonicalLabel": "Materials of Construction",
+      "flashcardId": "csp11.flashcard.materials_of_construction",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "moc materials"
+      ]
+    },
+    {
+      "id": "csp11.concept.pressure_relief_system",
+      "canonicalLabel": "Pressure Relief System",
+      "flashcardId": "csp11.flashcard.pressure_relief_system",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "relief and vent system"
+      ]
+    },
+    {
+      "id": "csp11.concept.relief_system_design_basis",
+      "canonicalLabel": "Relief System Design Basis",
+      "flashcardId": "csp11.flashcard.relief_system_design_basis",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "relief design basis"
+      ]
+    },
+    {
+      "id": "csp11.concept.recognized_good_engineering_practices",
+      "canonicalLabel": "Recognized Good Engineering Practices",
+      "flashcardId": "csp11.flashcard.recognized_good_engineering_practices",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "ragagep",
+        "recognized and generally accepted good engineering practices"
+      ]
+    },
+    {
+      "id": "csp11.concept.pre_startup_safety_review",
+      "canonicalLabel": "Pre-Startup Safety Review",
+      "flashcardId": "csp11.flashcard.pre_startup_safety_review",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "aliases": [
+        "pssr"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.process_safety_management",
+      "conceptId": "csp11.concept.process_safety_management",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Process Safety Management",
+      "backDefinition": "A systematic approach for managing highly hazardous chemical processes to prevent or minimize catastrophic releases and their consequences.",
+      "whyItMatters": "It integrates process design, technology, procedures, maintenance, training, and change control instead of treating major hazards as isolated tasks.",
+      "keyPoint": "Process safety manages the whole process, not only individual worker exposure.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119 Purpose",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "psm",
+        "major-hazards"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.process_safety_information",
+      "conceptId": "csp11.concept.process_safety_information",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Process Safety Information",
+      "backDefinition": "Written information describing process chemical hazards, process technology, and process equipment before the process hazard analysis is performed.",
+      "whyItMatters": "Accurate process information gives hazard-analysis, operating, maintenance, and emergency teams a common technical basis for safe decisions.",
+      "keyPoint": "PSI covers chemicals, process technology, and process equipment.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d) Process safety information",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C > 3. Process Safety Information",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "process-information",
+        "psm"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.chemical_compatibility_process_safety",
+      "conceptId": "csp11.concept.chemical_compatibility_process_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Chemical Compatibility in Process Safety",
+      "backDefinition": "Evaluation of whether process chemicals, materials, and foreseeable mixtures can coexist without dangerous reactivity, instability, corrosion, or other hazardous effects.",
+      "whyItMatters": "Compatibility information helps prevent unintended reactions, equipment damage, overpressure, releases, and unsafe material selection.",
+      "keyPoint": "Consider foreseeable inadvertent mixing, not only intended chemistry.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d)(1)(iv)-(vii)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "chemical-compatibility",
+        "reactivity"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.process_flow_diagram",
+      "conceptId": "csp11.concept.process_flow_diagram",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Process Flow Diagram",
+      "backDefinition": "A process diagram showing major equipment and principal flow streams so the process sequence, conditions, and technology can be understood.",
+      "whyItMatters": "A clear process flow view supports hazard analysis by showing how major equipment and material streams interact.",
+      "keyPoint": "A PFD is less detailed than a P&ID.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d)(2)(i)(A)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C > 3. Process Safety Information > process flow diagrams",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "process-diagram",
+        "pfd"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.piping_and_instrumentation_diagram",
+      "conceptId": "csp11.concept.piping_and_instrumentation_diagram",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Piping and Instrumentation Diagram",
+      "backDefinition": "A detailed process drawing that represents piping, equipment, instrumentation, and control relationships used to understand the process configuration.",
+      "whyItMatters": "P&IDs support safe operation, hazard review, maintenance, and change control by documenting how process equipment and controls are connected.",
+      "keyPoint": "P&IDs are required process equipment information under OSHA PSM.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d)(3)(i)(B)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C > 8. Pre-Startup Safety",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "process-diagram",
+        "p-id"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.process_operating_limits",
+      "conceptId": "csp11.concept.process_operating_limits",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Process Operating Limits",
+      "backDefinition": "Established safe upper and lower process limits for variables such as temperature, pressure, flow, or composition, together with consequences of deviation.",
+      "whyItMatters": "Defined limits help operators recognize unsafe conditions and support procedures for correcting or avoiding process deviations.",
+      "keyPoint": "Limits are meaningful only when consequences of deviation are understood.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d)(2)(i)(D)-(E)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "operating-limits",
+        "process-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.materials_of_construction",
+      "conceptId": "csp11.concept.materials_of_construction",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Materials of Construction",
+      "backDefinition": "The materials selected for process equipment and piping to provide suitable integrity and compatibility for the intended process service.",
+      "whyItMatters": "Unsuitable construction materials can contribute to corrosion, degradation, leakage, loss of containment, or failure under process conditions.",
+      "keyPoint": "Material selection must fit the chemical and physical process conditions.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d)(3)(i)(A)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "materials-of-construction",
+        "equipment-integrity"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.pressure_relief_system",
+      "conceptId": "csp11.concept.pressure_relief_system",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Pressure Relief System",
+      "backDefinition": "Protective process equipment that provides a controlled means to relieve excessive pressure and reduce the risk of pressure-related equipment failure.",
+      "whyItMatters": "Relief and vent systems are critical safeguards when process deviations can create pressures beyond equipment design conditions.",
+      "keyPoint": "Relief protection is part of process equipment integrity.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(j)(1)(iii) Relief and vent systems and devices",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "pressure-relief",
+        "engineering-control"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.relief_system_design_basis",
+      "conceptId": "csp11.concept.relief_system_design_basis",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Relief System Design Basis",
+      "backDefinition": "The documented engineering basis that explains the design assumptions and protective requirements used for a process relief system.",
+      "whyItMatters": "A defined design basis allows reviewers to determine whether relief protection is appropriate for the process hazards and equipment.",
+      "keyPoint": "OSHA PSM requires relief system design and its design basis in process safety information.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d)(3)(i)(D)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "pressure-relief",
+        "design-basis"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.recognized_good_engineering_practices",
+      "conceptId": "csp11.concept.recognized_good_engineering_practices",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Recognized Good Engineering Practices",
+      "backDefinition": "Established engineering practices used to design, maintain, inspect, test, and operate process equipment so its integrity remains suitable for service.",
+      "whyItMatters": "Using recognized engineering practices provides a technical benchmark for demonstrating that covered process equipment is appropriately managed.",
+      "keyPoint": "OSHA PSM requires documented compliance with recognized and generally accepted good engineering practices.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(d)(3)(ii)-(iii)",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "engineering-practice",
+        "equipment-integrity"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.pre_startup_safety_review",
+      "conceptId": "csp11.concept.pre_startup_safety_review",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Pre-Startup Safety Review",
+      "backDefinition": "A review before introducing highly hazardous chemicals to a new or significantly modified process to confirm readiness for safe startup.",
+      "whyItMatters": "It verifies design conformity, procedures, hazard-analysis or MOC obligations, and training before process hazards are introduced.",
+      "keyPoint": "Startup should follow confirmation that required safety elements are ready.",
+      "primaryPlacement": {
+        "domainId": "d01",
+        "competencyId": "d01_c02"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.1910_119",
+          "locator": "1910.119(i) Pre-startup safety review",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.1910_119_app_c",
+          "locator": "Appendix C > 8. Pre-Startup Safety",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "process-safety",
+        "pre-startup-review",
+        "psm"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.osha.1910_119",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 - Process safety management of highly hazardous chemicals",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalLawRegulation",
+      "sourceType": "regulation",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Primary regulatory source for FCP process-safety cards. FCP uses educational paraphrase and paragraph-level locators."
+    },
+    {
+      "id": "csp11.source.osha.1910_119_app_c",
+      "organization": "OSHA",
+      "title": "29 CFR 1910.119 Appendix C - Compliance Guidelines and Recommendations for Process Safety Management",
+      "canonicalUrl": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.119AppC",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Nonmandatory OSHA guidance used as supporting context for process diagrams, MOC, and PSM implementation. Regulatory text remains primary where applicable."
+    }
+  ]
+}

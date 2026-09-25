@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-1",
+  "domainId": "d01",
+  "domainNumber": 1,
+  "title": "Advanced Application of Safety Principles",
+  "weightPercent": 25,
+  "status": "closed",
+  "canonicalBlueprint": {
+    "path": "docs/source_pipeline/CSP11_canonical_blueprint.json",
+    "version": "V.2024.04.24",
+    "effectiveDate": "2025-08-01"
+  },
+  "competencyCount": 7,
+  "competencies": [
+    {
+      "competencyId": "d01_c01",
+      "number": 1,
+      "statement": "Describe the principles of minimizing hazards using Prevention-Through-Design (e.g., avoidance, elimination, substitution, safety design criteria for workplace facilities, machines, and practices)",
+      "status": "closed",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c01/d01_c01_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c01/d01_c01_flashcards_v1.json",
+      "cardCount": 8,
+      "conceptInventoryStatus": "resolved_inventory",
+      "checkpoint": {
+        "gate": "FCP1A_D01_C01_GREEN",
+        "validationSha": "bb75c0c98c4236b97dda3c004a65e62e0fe39e8d",
+        "workflowRun": 35955655296
+      },
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c01"
+    },
+    {
+      "competencyId": "d01_c02",
+      "number": 2,
+      "statement": "Apply the principles of process safety (e.g., pressure relief systems, chemical compatibility, management of change, materials of construction, process flow diagrams)",
+      "status": "closed",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c02/d01_c02_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c02/d01_c02_flashcards_v1.json",
+      "cardCount": 11,
+      "conceptInventoryStatus": "resolved_inventory",
+      "checkpoint": {
+        "gate": "FCP1B_D01_C02_GREEN",
+        "validationSha": "442c2b984e02145bdbb46169ffea3419ea0f0ff3",
+        "workflowRun": 35956562360
+      },
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c02"
+    },
+    {
+      "competencyId": "d01_c03",
+      "number": 3,
+      "statement": "Evaluate common workplace hazards (e.g., electrical, falls, confined spaces, lockout/tagout, working around water, caught in, struck by, excavation)",
+      "status": "closed",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c03/d01_c03_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c03/d01_c03_flashcards_v1.json",
+      "cardCount": 14,
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c03",
+      "checkpoint": {
+        "gate": "FCP1C_D01_D01_C03_GREEN",
+        "validationSha": "b34ce34f10ded57769f7697a39b9be38e8805ce7",
+        "workflowRun": 35958681343
+      }
+    },
+    {
+      "competencyId": "d01_c04",
+      "number": 4,
+      "statement": "Evaluate facility life safety features (e.g., public space safety, floor loading, occupancy loads)",
+      "status": "closed",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c04/d01_c04_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c04/d01_c04_flashcards_v1.json",
+      "cardCount": 9,
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c04",
+      "checkpoint": {
+        "gate": "FCP1D_D01_D01_C04_GREEN",
+        "validationSha": "b34ce34f10ded57769f7697a39b9be38e8805ce7",
+        "workflowRun": 35958681343
+      }
+    },
+    {
+      "competencyId": "d01_c05",
+      "number": 5,
+      "statement": "Describe fleet safety principles (e.g., driver and equipment safety, maintenance, surveillance equipment, GPS monitoring, telematics, hybrid vehicles, fuel systems, driving under the influence, fatigue)",
+      "status": "closed",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c05/d01_c05_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c05/d01_c05_flashcards_v1.json",
+      "cardCount": 9,
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c05",
+      "checkpoint": {
+        "gate": "FCP1E_D01_D01_C05_GREEN",
+        "validationSha": "b34ce34f10ded57769f7697a39b9be38e8805ce7",
+        "workflowRun": 35958681343
+      }
+    },
+    {
+      "competencyId": "d01_c06",
+      "number": 6,
+      "statement": "Evaluate materials handling methods and controls (e.g., forklifts, aerial lifts, and other powered industrial trucks; cranes, hand trucks, hoists, rigging, manual handling, drones)",
+      "status": "closed",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c06/d01_c06_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c06/d01_c06_flashcards_v1.json",
+      "cardCount": 14,
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c06",
+      "checkpoint": {
+        "gate": "FCP1F_D01_D01_C06_GREEN",
+        "validationSha": "b34ce34f10ded57769f7697a39b9be38e8805ce7",
+        "workflowRun": 35958681343
+      }
+    },
+    {
+      "competencyId": "d01_c07",
+      "number": 7,
+      "statement": "Evaluate the use of tools, machines, and equipment (e.g., hand tools, power tools, ladders, grinders, hydraulics, robotics)",
+      "status": "closed",
+      "conceptInventoryPath": "assets/flashcards/production/d01/d01_c07/d01_c07_concept_inventory.v1.json",
+      "packagePath": "assets/flashcards/production/d01/d01_c07/d01_c07_flashcards_v1.json",
+      "cardCount": 13,
+      "conceptInventoryStatus": "resolved_inventory",
+      "reportsPath": "assets/flashcards/production/reports/competency/d01_c07",
+      "checkpoint": {
+        "gate": "FCP1G_D01_D01_C07_GREEN",
+        "validationSha": "b34ce34f10ded57769f7697a39b9be38e8805ce7",
+        "workflowRun": 35958681343
+      }
+    }
+  ],
+  "checkpoint": {
+    "gate": "FCP1_D01_GREEN",
+    "branch": "phase-fcp1-d01-closed",
+    "validationSha": "b34ce34f10ded57769f7697a39b9be38e8805ce7",
+    "workflowRun": 35958681343
+  }
+}

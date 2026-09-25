@@ -1,0 +1,755 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c13_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c13",
+    "title": "Project Management Principles and Techniques Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.project_charter",
+      "csp11.flashcard.project_management_plan",
+      "csp11.flashcard.work_breakdown_structure",
+      "csp11.flashcard.integrated_project_schedule",
+      "csp11.flashcard.project_milestone",
+      "csp11.flashcard.activity_dependency",
+      "csp11.flashcard.critical_path",
+      "csp11.flashcard.total_float",
+      "csp11.flashcard.schedule_baseline",
+      "csp11.flashcard.schedule_risk_analysis",
+      "csp11.flashcard.raci_matrix",
+      "csp11.flashcard.raci_responsible",
+      "csp11.flashcard.raci_accountable",
+      "csp11.flashcard.raci_consulted_informed",
+      "csp11.flashcard.project_risk_register",
+      "csp11.flashcard.stakeholder_register"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.project_charter",
+      "canonicalLabel": "Project Charter",
+      "flashcardId": "csp11.flashcard.project_charter",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "project authorization charter"
+      ]
+    },
+    {
+      "id": "csp11.concept.project_management_plan",
+      "canonicalLabel": "Project Management Plan",
+      "flashcardId": "csp11.flashcard.project_management_plan",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "integrated project management plan"
+      ]
+    },
+    {
+      "id": "csp11.concept.work_breakdown_structure",
+      "canonicalLabel": "Work Breakdown Structure",
+      "flashcardId": "csp11.flashcard.work_breakdown_structure",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "WBS"
+      ]
+    },
+    {
+      "id": "csp11.concept.integrated_project_schedule",
+      "canonicalLabel": "Integrated Project Schedule",
+      "flashcardId": "csp11.flashcard.integrated_project_schedule",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "project timeline",
+        "integrated master schedule",
+        "IMS"
+      ]
+    },
+    {
+      "id": "csp11.concept.project_milestone",
+      "canonicalLabel": "Project Milestone",
+      "flashcardId": "csp11.flashcard.project_milestone",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "milestone"
+      ]
+    },
+    {
+      "id": "csp11.concept.activity_dependency",
+      "canonicalLabel": "Activity Dependency",
+      "flashcardId": "csp11.flashcard.activity_dependency",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "schedule dependency",
+        "predecessor successor relationship"
+      ]
+    },
+    {
+      "id": "csp11.concept.critical_path",
+      "canonicalLabel": "Critical Path",
+      "flashcardId": "csp11.flashcard.critical_path",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "project critical path"
+      ]
+    },
+    {
+      "id": "csp11.concept.total_float",
+      "canonicalLabel": "Total Float",
+      "flashcardId": "csp11.flashcard.total_float",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "schedule float",
+        "slack"
+      ]
+    },
+    {
+      "id": "csp11.concept.schedule_baseline",
+      "canonicalLabel": "Schedule Baseline",
+      "flashcardId": "csp11.flashcard.schedule_baseline",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "baseline schedule"
+      ]
+    },
+    {
+      "id": "csp11.concept.schedule_risk_analysis",
+      "canonicalLabel": "Schedule Risk Analysis",
+      "flashcardId": "csp11.flashcard.schedule_risk_analysis",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "SRA"
+      ]
+    },
+    {
+      "id": "csp11.concept.raci_matrix",
+      "canonicalLabel": "RACI Matrix",
+      "flashcardId": "csp11.flashcard.raci_matrix",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "RACI chart",
+        "responsibility assignment matrix"
+      ]
+    },
+    {
+      "id": "csp11.concept.raci_responsible",
+      "canonicalLabel": "RACI Responsible",
+      "flashcardId": "csp11.flashcard.raci_responsible",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "RACI R role"
+      ]
+    },
+    {
+      "id": "csp11.concept.raci_accountable",
+      "canonicalLabel": "RACI Accountable",
+      "flashcardId": "csp11.flashcard.raci_accountable",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "RACI A role"
+      ]
+    },
+    {
+      "id": "csp11.concept.raci_consulted_informed",
+      "canonicalLabel": "RACI Consulted and Informed Roles",
+      "flashcardId": "csp11.flashcard.raci_consulted_informed",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "RACI C and I roles"
+      ]
+    },
+    {
+      "id": "csp11.concept.project_risk_register",
+      "canonicalLabel": "Project Risk Register",
+      "flashcardId": "csp11.flashcard.project_risk_register",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "risk register"
+      ]
+    },
+    {
+      "id": "csp11.concept.stakeholder_register",
+      "canonicalLabel": "Stakeholder Register",
+      "flashcardId": "csp11.flashcard.stakeholder_register",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "aliases": [
+        "project stakeholder register"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.project_charter",
+      "conceptId": "csp11.concept.project_charter",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Project Charter",
+      "backDefinition": "A document that formally authorizes a project, identifies its purpose and high-level expectations, and gives the project manager authority to use organizational resources for project activities.",
+      "whyItMatters": "A clear charter aligns stakeholders on why the project exists, who leads it, what success means, and the boundaries within which the project will operate.",
+      "keyPoint": "Use the charter to authorize the project and establish high-level purpose, authority, objectives, and success criteria.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.energy.project_management_lexicon",
+          "locator": "Project Charter - formal project authorization and project-manager authority",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.gao.project_management_practices_2022",
+          "locator": "Project charter leading practice - purpose, requirements, risks, objectives, success criteria, sponsor and project manager",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "project-governance"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.project_management_plan",
+      "conceptId": "csp11.concept.project_management_plan",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Project Management Plan",
+      "backDefinition": "An integrated plan describing how a project will be executed, monitored, controlled, and closed, including the major requirements, schedule, cost, stakeholders, responsibilities, risks, communications, and quality arrangements.",
+      "whyItMatters": "A project plan coordinates the separate management elements so the team works from one coherent operating model rather than disconnected schedules and documents.",
+      "keyPoint": "The project management plan integrates how the work will be performed, monitored, controlled, and closed.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.project_management_practices_2022",
+          "locator": "Recommendation 3 and project-management-plan discussion - execution, monitoring, control, closure, cost, schedule, stakeholders, roles, risk, communication, quality",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "project-governance"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.work_breakdown_structure",
+      "conceptId": "csp11.concept.work_breakdown_structure",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Work Breakdown Structure",
+      "backDefinition": "A hierarchical decomposition of the project scope into progressively smaller deliverables and work elements that define what must be accomplished and provide a basis for planning activities and resources.",
+      "whyItMatters": "A WBS helps ensure the complete project scope is represented before detailed scheduling and makes responsibility, resource planning, progress tracking, and communication more manageable.",
+      "keyPoint": "Break the project scope into manageable deliverables before building the detailed schedule.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G Best Practice 1 - WBS as the basis for identifying all work and schedule activities",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scope-planning"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.integrated_project_schedule",
+      "conceptId": "csp11.concept.integrated_project_schedule",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Integrated Project Schedule",
+      "backDefinition": "A time-based model that integrates the project's activities, durations, dependencies, milestones, resources, and planned completion dates so progress and forecasted outcomes can be evaluated against the approved plan.",
+      "whyItMatters": "A reliable project timeline shows when work should occur, how activities interact, and whether planned completion dates are realistic and achievable.",
+      "keyPoint": "A useful schedule integrates all required work and the logic connecting it.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G - integrated schedule as a model of time showing activities, major events, and completion dates",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.project_milestone",
+      "conceptId": "csp11.concept.project_milestone",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Project Milestone",
+      "backDefinition": "A zero-duration schedule point used to mark a significant event, decision, deliverable, approval, phase boundary, or other important project achievement.",
+      "whyItMatters": "Milestones make important commitments and decision points visible and allow teams to compare planned achievement dates with actual progress.",
+      "keyPoint": "Use milestones for significant project events, not as substitutes for the activities required to reach them.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G - schedule milestones and warnings against excessive milestone use",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.activity_dependency",
+      "conceptId": "csp11.concept.activity_dependency",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Activity Dependency",
+      "backDefinition": "A logical relationship in which the timing of one project activity depends on the start or completion of another activity, creating predecessor and successor links within the schedule network.",
+      "whyItMatters": "Dependencies determine the logical flow of work. Missing or incorrect links can create unrealistic dates, conceal schedule risk, and distort the critical path.",
+      "keyPoint": "Sequence activities using explicit logical relationships rather than arbitrary dates whenever possible.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G Best Practice 2 - sequence all activities using predecessor and successor logic",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.critical_path",
+      "conceptId": "csp11.concept.critical_path",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Critical Path",
+      "backDefinition": "The longest logically connected path of activities through a project schedule that determines the earliest possible completion date under the current schedule logic and durations.",
+      "whyItMatters": "Delay to critical-path work can directly delay the project unless the delay is recovered through schedule or resource changes.",
+      "keyPoint": "Validate the critical path and monitor the activities that govern the project's completion date.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G Best Practice 6 - confirm that the critical path is valid",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.total_float",
+      "conceptId": "csp11.concept.total_float",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Total Float",
+      "backDefinition": "The amount of time an activity can be delayed, within the current schedule logic, before it delays a key completion point or the overall project finish date.",
+      "whyItMatters": "Float helps managers understand schedule flexibility and prioritize attention, but unrealistic float values can indicate broken logic or excessive date constraints.",
+      "keyPoint": "Interpret float together with validated schedule logic and the critical path.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G Best Practice 7 - ensure reasonable total float",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.schedule_baseline",
+      "conceptId": "csp11.concept.schedule_baseline",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Schedule Baseline",
+      "backDefinition": "The approved target version of the project schedule used as the reference for measuring progress, identifying variance, and controlling authorized schedule changes.",
+      "whyItMatters": "Without a controlled baseline, the team cannot reliably distinguish genuine progress or delay from changes to the plan itself.",
+      "keyPoint": "Freeze the approved target schedule under change control and measure current performance against it.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G Best Practice 10 - maintain a baseline schedule under configuration management control",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.schedule_risk_analysis",
+      "conceptId": "csp11.concept.schedule_risk_analysis",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Schedule Risk Analysis",
+      "backDefinition": "An analysis that models uncertainty in activity durations and schedule risks to estimate confidence in completion dates, identify schedule-sensitive risks, and determine appropriate time contingency or reserve.",
+      "whyItMatters": "A deterministic finish date can hide uncertainty. Schedule risk analysis shows how likely the planned date is and which risks most threaten the schedule.",
+      "keyPoint": "Use schedule risk analysis before baselining and periodically as the schedule changes.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.gao.schedule_guide_2015",
+          "locator": "GAO-16-89G Best Practice 8 - conduct schedule risk analysis and assess confidence in completion dates",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.raci_matrix",
+      "conceptId": "csp11.concept.raci_matrix",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "RACI Matrix",
+      "backDefinition": "A task-by-role matrix that clarifies who is Responsible, Accountable, Consulted, and Informed for specific project activities or deliverables.",
+      "whyItMatters": "RACI reduces ambiguity by making task ownership, decision accountability, consultation, and communication expectations visible to the project team.",
+      "keyPoint": "Build the RACI around specific project tasks and assign clear role expectations for each task.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.raci_team_science",
+          "locator": "RACI matrix section - project-management tool for clarifying tasks and accountability",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "raci"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.raci_responsible",
+      "conceptId": "csp11.concept.raci_responsible",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "RACI Responsible",
+      "backDefinition": "The RACI role assigned to the person or people who perform or help perform the work required to complete the task.",
+      "whyItMatters": "Identifying who actually performs the work prevents tasks from being left without an operational owner.",
+      "keyPoint": "Responsible means doing the work; more than one person may contribute when the task requires it.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.raci_team_science",
+          "locator": "RACI matrix section - Responsible role performs or helps do the work",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "raci"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.raci_accountable",
+      "conceptId": "csp11.concept.raci_accountable",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "RACI Accountable",
+      "backDefinition": "The RACI role assigned to the individual ultimately answerable for ensuring that a task is completed and its required result is achieved.",
+      "whyItMatters": "A single clear accountable role reduces confusion about who owns the final outcome or decision when several people contribute to the work.",
+      "keyPoint": "Assign one accountable person for each task where practical to avoid divided ownership.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.raci_team_science",
+          "locator": "RACI matrix section - Accountable is ultimately responsible for completion; one accountable person per task",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "raci"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.raci_consulted_informed",
+      "conceptId": "csp11.concept.raci_consulted_informed",
+      "version": 1,
+      "type": "classification",
+      "frontLabel": "RACI Consulted and Informed Roles",
+      "backDefinition": "In a RACI matrix, Consulted identifies people whose input or expertise should be obtained before or during the work, while Informed identifies people who should receive status or outcome information without being assigned the task itself.",
+      "whyItMatters": "Separating consultation from notification prevents every stakeholder from being treated as a decision-maker while still ensuring important expertise and communication needs are addressed.",
+      "keyPoint": "Consulted provides input; Informed receives updates.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.raci_team_science",
+          "locator": "RACI matrix section - Consulted provides input or key information; Informed is notified of progress",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "raci"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.project_risk_register",
+      "conceptId": "csp11.concept.project_risk_register",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Project Risk Register",
+      "backDefinition": "A controlled project record listing identified risks and typically documenting their causes, likelihood, impacts, planned responses, assigned owners, and current status.",
+      "whyItMatters": "A risk register turns risk management into a visible, trackable process and helps teams prioritize mitigation, ownership, and follow-up throughout the project.",
+      "keyPoint": "Keep risks, owners, response actions, and status current throughout the project.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.energy.project_management_lexicon",
+          "locator": "Risk or Opportunity Register - description, cause, probability, impacts, responses, owners, and status",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "project-risk"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.stakeholder_register",
+      "conceptId": "csp11.concept.stakeholder_register",
+      "version": 1,
+      "type": "control",
+      "frontLabel": "Stakeholder Register",
+      "backDefinition": "A project record identifying internal and external stakeholders and documenting relevant information such as interests, influence, requirements, expected involvement, and communication needs.",
+      "whyItMatters": "Stakeholder needs and influence can change project decisions, acceptance, communication, and implementation. A structured register helps the team plan engagement deliberately.",
+      "keyPoint": "Identify stakeholders early and keep engagement and communication information current as the project evolves.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c13"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.energy.project_management_lexicon",
+          "locator": "Stakeholder Register - stakeholders, interests, influence, requirements, communication frequency and method",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "project-management",
+        "stakeholder-management"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.gao.schedule_guide_2015",
+      "organization": "U.S. Government Accountability Office",
+      "title": "GAO Schedule Assessment Guide: Best Practices for Project Schedules (GAO-16-89G)",
+      "canonicalUrl": "https://www.gao.gov/products/gao-16-89g",
+      "allowedDomains": [
+        "gao.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "GAO best-practice guide supporting WBS-based schedule development, activity sequencing, resources and durations, milestones, critical path, float, schedule risk analysis, traceability, and baseline control. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.energy.project_management_lexicon",
+      "organization": "U.S. Department of Energy",
+      "title": "Project Management Lexicon of Terms",
+      "canonicalUrl": "https://www.energy.gov/projectmanagement/project-management-lexicon-terms",
+      "allowedDomains": [
+        "energy.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "officialGlossary",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "DOE project-management lexicon supporting Project Charter, Risk Register, Stakeholder Register, project baselines, and related project-management terminology. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.gao.project_management_practices_2022",
+      "organization": "U.S. Government Accountability Office",
+      "title": "Thrifty Food Plan: Better Planning and Accountability Could Help Ensure Quality of Future Reevaluations (GAO-23-105450)",
+      "canonicalUrl": "https://www.gao.gov/products/gao-23-105450",
+      "allowedDomains": [
+        "gao.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "GAO project-management leading-practice evidence supporting project charters, project management plans, measurable objectives, project schedules, stakeholders, roles and responsibilities, risk management, communications, and quality management. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.pmc.raci_team_science",
+      "organization": "National Library of Medicine",
+      "title": "Creating effective academic research teams: Two tools borrowed from business practice",
+      "canonicalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8057410/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "peerReviewedPublication",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Peer-reviewed supporting source defining the RACI matrix and the Responsible, Accountable, Consulted, and Informed roles, including the one-accountable-person principle. Educational paraphrase only."
+    }
+  ]
+}

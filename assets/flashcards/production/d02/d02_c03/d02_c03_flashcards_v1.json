@@ -1,0 +1,557 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c03_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c03",
+    "title": "EHS Culture Measurement and Improvement Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.safety_culture",
+      "csp11.flashcard.safety_climate",
+      "csp11.flashcard.safety_climate_assessment",
+      "csp11.flashcard.management_commitment_to_safety",
+      "csp11.flashcard.safety_as_a_core_value",
+      "csp11.flashcard.safety_accountability",
+      "csp11.flashcard.worker_safety_participation",
+      "csp11.flashcard.safety_communication",
+      "csp11.flashcard.organizational_learning_for_safety",
+      "csp11.flashcard.safety_culture_improvement_cycle"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.safety_culture",
+      "canonicalLabel": "Safety Culture",
+      "flashcardId": "csp11.flashcard.safety_culture",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "organizational safety culture"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_climate",
+      "canonicalLabel": "Safety Climate",
+      "flashcardId": "csp11.flashcard.safety_climate",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "organizational safety climate"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_climate_assessment",
+      "canonicalLabel": "Safety Climate Assessment",
+      "flashcardId": "csp11.flashcard.safety_climate_assessment",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "safety climate survey assessment"
+      ]
+    },
+    {
+      "id": "csp11.concept.management_commitment_to_safety",
+      "canonicalLabel": "Management Commitment to Safety",
+      "flashcardId": "csp11.flashcard.management_commitment_to_safety",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "management safety commitment"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_as_a_core_value",
+      "canonicalLabel": "Safety as a Core Value",
+      "flashcardId": "csp11.flashcard.safety_as_a_core_value",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "integrating safety as a value"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_accountability",
+      "canonicalLabel": "Safety Accountability",
+      "flashcardId": "csp11.flashcard.safety_accountability",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "accountability for safety"
+      ]
+    },
+    {
+      "id": "csp11.concept.worker_safety_participation",
+      "canonicalLabel": "Worker Safety Participation",
+      "flashcardId": "csp11.flashcard.worker_safety_participation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "worker participation in safety"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_communication",
+      "canonicalLabel": "Safety Communication",
+      "flashcardId": "csp11.flashcard.safety_communication",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "two-way safety communication"
+      ]
+    },
+    {
+      "id": "csp11.concept.organizational_learning_for_safety",
+      "canonicalLabel": "Organizational Learning for Safety",
+      "flashcardId": "csp11.flashcard.organizational_learning_for_safety",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "safety organizational learning"
+      ]
+    },
+    {
+      "id": "csp11.concept.safety_culture_improvement_cycle",
+      "canonicalLabel": "Safety Culture Improvement Cycle",
+      "flashcardId": "csp11.flashcard.safety_culture_improvement_cycle",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "aliases": [
+        "safety climate improvement cycle"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.safety_culture",
+      "conceptId": "csp11.concept.safety_culture",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Safety Culture",
+      "backDefinition": "The shared organizational values, priorities, expectations, and practices that shape how people understand and act on safety over time.",
+      "whyItMatters": "Culture influences what people treat as important when production pressure, uncertainty, or competing priorities make safety decisions less obvious.",
+      "keyPoint": "Culture is broader and more enduring than a single climate survey result.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.construction_safety_culture",
+          "locator": "Safety climate and safety culture",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.safe_sound_management_leadership",
+          "locator": "Management Leadership > commitment from the top and continuous improvement",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "safety-culture",
+        "organizational-culture"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_climate",
+      "conceptId": "csp11.concept.safety_climate",
+      "version": 1,
+      "type": "concept",
+      "frontLabel": "Safety Climate",
+      "backDefinition": "Employees' shared perceptions of what the organization rewards, expects, values, and reinforces in the workplace with respect to safety.",
+      "whyItMatters": "Safety climate provides a measurable view of how workers currently experience safety priorities and can reveal weak signals before adverse outcomes occur.",
+      "keyPoint": "Climate is a measurable snapshot of shared safety perceptions.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "Summary > organizational safety climate definition",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "safety-climate",
+        "culture-measurement"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_climate_assessment",
+      "conceptId": "csp11.concept.safety_climate_assessment",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Safety Climate Assessment",
+      "backDefinition": "A structured evaluation of safety-climate factors using worker responses or other defined measures to identify strengths, maturity, and areas needing improvement.",
+      "whyItMatters": "Assessment converts perceptions into organized evidence that can be compared, discussed, prioritized, and revisited after interventions.",
+      "keyPoint": "Measure the same defined factors again after improvement actions to judge change.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "S-CAT self-assessment, 37 items, 8 safety climate factors, tailored report",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "safety-climate",
+        "assessment"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.management_commitment_to_safety",
+      "conceptId": "csp11.concept.management_commitment_to_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Management Commitment to Safety",
+      "backDefinition": "Visible and sustained leadership action showing that safety and health are organizational priorities through decisions, resources, communication, and personal example.",
+      "whyItMatters": "Workers judge priorities from what leaders consistently do, so visible commitment strongly shapes whether safety expectations are trusted and followed.",
+      "keyPoint": "Commitment is demonstrated through actions, not policy statements alone.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.safe_sound_management_leadership",
+          "locator": "Management Leadership > top management can demonstrate its commitment",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "Safety Climate Factors > Demonstrating management commitment",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "management-commitment",
+        "safety-leadership"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_as_a_core_value",
+      "conceptId": "csp11.concept.safety_as_a_core_value",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Safety as a Core Value",
+      "backDefinition": "The integration of safety into routine organizational priorities and decisions so it is treated as a persistent value rather than a temporary program objective.",
+      "whyItMatters": "When safety is integrated into planning and operational choices, workers receive a more consistent signal about how competing priorities should be resolved.",
+      "keyPoint": "A core value influences decisions even when no specific safety campaign is underway.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "Safety Climate Factors > Aligning and integrating safety as a value",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.safe_sound_management_leadership",
+          "locator": "Management Leadership > factoring safety and health into operational planning and decisions",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "safety-value",
+        "organizational-culture"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_accountability",
+      "conceptId": "csp11.concept.safety_accountability",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Safety Accountability",
+      "backDefinition": "Clear responsibility for safety expectations, decisions, actions, and follow-through at appropriate levels of the organization.",
+      "whyItMatters": "Accountability helps turn stated safety values into dependable behavior by making expectations and ownership visible instead of diffuse.",
+      "keyPoint": "Accountability should apply across organizational levels rather than being assigned only to safety staff.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "Safety Climate Factors > Ensuring accountability at all levels",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "accountability",
+        "safety-culture"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.worker_safety_participation",
+      "conceptId": "csp11.concept.worker_safety_participation",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Worker Safety Participation",
+      "backDefinition": "Meaningful worker involvement in establishing, operating, evaluating, and improving safety and health activities, including reporting hazards and developing solutions.",
+      "whyItMatters": "Workers often have direct knowledge of task hazards and system weaknesses, and their involvement improves hazard recognition, ownership, trust, and program sustainability.",
+      "keyPoint": "Participation requires genuine opportunities, information, resources, and protection from retaliation.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.worker_participation",
+          "locator": "Worker Participation > workers involved in establishing, operating, evaluating, and improving the program",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "Safety Climate Factors > Empowering and involving workers",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "worker-participation",
+        "safety-culture"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_communication",
+      "conceptId": "csp11.concept.safety_communication",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Safety Communication",
+      "backDefinition": "The timely two-way exchange of safety information, concerns, expectations, feedback, and management responses across levels of the organization.",
+      "whyItMatters": "Open communication helps workers raise hazards and learn what action followed, while leaders gain information needed to correct weak conditions and build trust.",
+      "keyPoint": "Communication is strongest when reporting is followed by visible feedback and action.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.worker_participation",
+          "locator": "Action item 2 > report concerns and report back to workers about action taken",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "Safety Climate Factors > Improving communication",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "safety-communication",
+        "worker-participation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.organizational_learning_for_safety",
+      "conceptId": "csp11.concept.organizational_learning_for_safety",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Organizational Learning for Safety",
+      "backDefinition": "The use of reports, evaluations, worker knowledge, and feedback to change organizational systems, practices, or controls and improve future safety performance.",
+      "whyItMatters": "Learning prevents the organization from repeatedly collecting safety information without converting it into better decisions, controls, and work practices.",
+      "keyPoint": "Information becomes organizational learning only when it drives effective change and is retained in practice.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Correct program shortcomings and identify opportunities to improve",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.worker_participation",
+          "locator": "Action item 4 > evaluate program performance and identify ways to improve it",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "organizational-learning",
+        "continuous-improvement"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.safety_culture_improvement_cycle",
+      "conceptId": "csp11.concept.safety_culture_improvement_cycle",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Safety Culture Improvement Cycle",
+      "backDefinition": "A repeatable process of assessing culture or climate, identifying weak factors, selecting interventions, implementing changes, and reassessing to evaluate improvement.",
+      "whyItMatters": "A cycle prevents culture work from ending with a survey score and links measurement to prioritized interventions and evidence of whether those interventions worked.",
+      "keyPoint": "Assess, prioritize, intervene, reassess, and refine.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c03"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.niosh.safety_climate_scat",
+          "locator": "Tailored report, intervention ideas, and retake S-CAT to evaluate effectiveness",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.osha.program_evaluation",
+          "locator": "Program evaluation and improvement > correct shortcomings and identify opportunities to improve",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "culture-improvement",
+        "continuous-improvement"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.niosh.construction_safety_culture",
+      "organization": "NIOSH",
+      "title": "Construction - Safety climate and safety culture",
+      "canonicalUrl": "https://www.cdc.gov/niosh/construction/about/",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports the importance of safety climate and safety culture, worker input, participatory approaches, and prevention. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.safe_sound_management_leadership",
+      "organization": "OSHA",
+      "title": "Safe + Sound - Management Leadership",
+      "canonicalUrl": "https://www.osha.gov/safeandsound/safety-and-health-programs/management-leadership",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports visible management commitment, resources, safety integration into decisions, recognition, leading by example, communication, and continuous improvement."
+    },
+    {
+      "id": "csp11.source.niosh.safety_climate_scat",
+      "organization": "NIOSH",
+      "title": "The Safety Climate Assessment Tool (S-CAT) for Construction",
+      "canonicalUrl": "https://www.cdc.gov/niosh/bulletin/2019/scat.html",
+      "allowedDomains": [
+        "cdc.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports organizational safety climate, safety-climate assessment, management commitment, safety as a value, accountability, worker involvement, communication, training, intervention, and reassessment. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.worker_participation",
+      "organization": "OSHA",
+      "title": "Safety Management - Worker Participation",
+      "canonicalUrl": "https://www.osha.gov/safety-management/worker-participation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports meaningful worker participation, reporting, non-retaliation, information access, participation in program evaluation, feedback, ownership, and improvement."
+    },
+    {
+      "id": "csp11.source.osha.program_evaluation",
+      "organization": "OSHA",
+      "title": "Safety Management - Program Evaluation and Improvement",
+      "canonicalUrl": "https://www.osha.gov/safety-management/program-evaluation",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-24",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Supports goals, targets, indicators, performance monitoring, periodic program evaluation, comparisons to similar facilities, and improvement. Educational paraphrase only."
+    }
+  ]
+}
