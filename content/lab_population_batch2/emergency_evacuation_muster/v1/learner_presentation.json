@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Evacuation Readiness Record",
+      "summary": "A facility alarm is active while one normal exit is unavailable and contractors and visitors are on site.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The usual evacuation pattern is changed because a familiar exit route is closed for maintenance.",
+        "Accountability must include employees, contractors and visitors rather than the regular workforce alone.",
+        "Available safe exits, muster arrangements and current personnel information are central to the initial response."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Exit Diversion Control Record",
+      "summary": "Evacuating occupants are approaching the closed exit and need to be redirected.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "People are moving toward a route that cannot be used safely in its current maintenance condition.",
+        "Clear direction from wardens or equivalent communication is needed before congestion or counterflow develops.",
+        "The closed route should remain controlled while occupants are directed toward available safe exits."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Muster Accountability Record",
+      "summary": "One contractor cannot be accounted for immediately at the muster point.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The contractor's status is unresolved until attendance information and last-known location are checked.",
+        "A missing-person status must be communicated to incident command rather than resolved by assumption.",
+        "Unprotected personnel should not re-enter the facility simply to search for the individual."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Accountability Verification Record",
+      "summary": "A coworker believes the missing contractor may have left site earlier, but the sign-out record is incomplete.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The coworker's recollection is useful information but does not independently confirm that the contractor left the site.",
+        "The incomplete sign-out record leaves a gap in the accountability evidence.",
+        "The person should remain classified according to verified information until location or departure is confirmed."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Re-entry Authorization Record",
+      "summary": "The alarm source is controlled and operations is requesting re-entry.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Control of the alarm source does not by itself confirm that every affected area and route is safe for occupancy.",
+        "Formal all-clear authority should establish when re-entry is permitted and what restrictions remain.",
+        "Re-entry instructions should be communicated and managed so people return in an orderly, controlled way."
       ]
     }
   },
