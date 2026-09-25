@@ -25,6 +25,7 @@ const String kBatch2PreCatalogueValidationRunId = '36015831093';
 const String kBatch2ReleaseId = kLearnerVisibleLabReleaseId;
 const String kBatch2ReleaseConfirmationPhrase = 'RELEASE BATCH 2 LABS';
 const String kBatch2CloseConfirmationPhrase = 'CLOSE BATCH 2 RELEASE';
+const String kBatch2ResumeConfirmationPhrase = 'RESUME BATCH 2 RELEASE';
 const String kBatch2AcceptanceConfirmationPhrase =
     'ACCEPT BATCH 2 LIVE RELEASE';
 const String kBatch2StagingSchemaVersion =
@@ -675,7 +676,13 @@ class FirestoreLabBatch2ReleaseEvidenceRepository
   }
 }
 
-enum LabBatch2ReleaseState { blocked, pristine, completeUnclosed, closed }
+enum LabBatch2ReleaseState {
+  blocked,
+  pristine,
+  recoverablePartial,
+  completeUnclosed,
+  closed,
+}
 
 class LabBatch2ReleaseInspection {
   const LabBatch2ReleaseInspection({
@@ -700,7 +707,9 @@ class LabBatch2ReleaseInspection {
   final LabBatch2ReleaseEvidence? evidence;
   final String? blockingReason;
 
-  bool get canRelease => state == LabBatch2ReleaseState.pristine;
+  bool get canRelease =>
+      state == LabBatch2ReleaseState.pristine ||
+      state == LabBatch2ReleaseState.recoverablePartial;
   bool get canClose => state == LabBatch2ReleaseState.completeUnclosed;
   bool get isClosed => state == LabBatch2ReleaseState.closed;
 
@@ -710,6 +719,8 @@ class LabBatch2ReleaseInspection {
         return 'BLOCKED';
       case LabBatch2ReleaseState.pristine:
         return 'PRISTINE';
+      case LabBatch2ReleaseState.recoverablePartial:
+        return 'RECOVERABLE_PARTIAL';
       case LabBatch2ReleaseState.completeUnclosed:
         return 'COMPLETE_UNCLOSED';
       case LabBatch2ReleaseState.closed:
@@ -718,7 +729,12 @@ class LabBatch2ReleaseInspection {
   }
 
   String? get requiredConfirmationPhrase {
-    if (canRelease) return kBatch2ReleaseConfirmationPhrase;
+    if (state == LabBatch2ReleaseState.pristine) {
+      return kBatch2ReleaseConfirmationPhrase;
+    }
+    if (state == LabBatch2ReleaseState.recoverablePartial) {
+      return kBatch2ResumeConfirmationPhrase;
+    }
     if (canClose) return kBatch2CloseConfirmationPhrase;
     return null;
   }
@@ -883,8 +899,28 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
         );
       }
 
+      final stagedSubsetIsExpected =
+          stagedKeys.length == stagedCount &&
+          stagedKeys.every(expectedKeys.contains);
+      if ((publishedCount > 0 || stagedCount > 0) &&
+          publishedCount <= manifest.entries.length &&
+          stagedCount <= manifest.entries.length &&
+          stagedSubsetIsExpected) {
+        return LabBatch2ReleaseInspection(
+          state: LabBatch2ReleaseState.recoverablePartial,
+          environmentId: environmentId,
+          manifestId: manifest.manifestId,
+          manifestFingerprint: fingerprint,
+          expectedLabCount: manifest.entries.length,
+          publishedCount: publishedCount,
+          stagedCount: stagedCount,
+          blockingReason:
+              'A previous Batch 2 release attempt stopped mid-write. Resume is allowed only after every existing artifact is verified against the validated candidate.',
+        );
+      }
+
       return blocked(
-        'Batch 2 production repositories contain a partial extension. Automatic repair is forbidden.',
+        'Batch 2 production repositories contain an inconsistent extension. Automatic repair is forbidden.',
       );
     } catch (error) {
       return blocked(error.toString());
@@ -1036,10 +1072,9 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
     required String confirmationPhrase,
     DateTime? executedAt,
   }) async {
-    if (executedBy.trim().isEmpty ||
-        confirmationPhrase != kBatch2ReleaseConfirmationPhrase) {
+    if (executedBy.trim().isEmpty) {
       throw const LabBatch2ReleaseException(
-        'Batch 2 Q16 requires an admin actor and the exact release phrase.',
+        'Batch 2 Q16 requires an admin actor.',
       );
     }
     final before = await inspect();
@@ -1048,14 +1083,74 @@ class LabBatch2ReleaseOperatorService implements LabBatch2ReleaseOperator {
         'Batch 2 Q16 release is not permitted from ' + before.stateLabel + '.',
       );
     }
+    final requiredPhrase = before.requiredConfirmationPhrase;
+    if (requiredPhrase == null || confirmationPhrase != requiredPhrase) {
+      throw LabBatch2ReleaseException(
+        'Batch 2 Q16 requires the exact confirmation phrase: ' +
+            (requiredPhrase ?? 'unavailable') +
+            '.',
+      );
+    }
 
     final preflight = await _preflight();
-    for (var index = 0; index < preflight.publishedVersions.length; index++) {
-      await publishedRepository.saveImmutable(
-        preflight.publishedVersions[index],
+
+    Future<void> persistCandidate(int index) async {
+      final targetVersion = preflight.publishedVersions[index];
+      final existingVersion = await publishedRepository.load(
+        targetVersion.labId,
+        targetVersion.versionId,
       );
-      await stagingRepository.saveImmutable(preflight.stagedCatalogue[index]);
+      if (existingVersion == null) {
+        await publishedRepository.saveImmutable(targetVersion);
+      } else if (existingVersion.snapshotFingerprint !=
+          targetVersion.snapshotFingerprint) {
+        throw LabBatch2ReleaseException(
+          'Existing published Batch 2 artifact does not match validated candidate ' +
+              targetVersion.labId +
+              '@' +
+              targetVersion.versionId +
+              '.',
+        );
+      }
+
+      final targetStage = preflight.stagedCatalogue[index];
+      final existingStage = await stagingRepository.load(
+        targetStage.releaseId,
+        targetStage.entry.labId,
+        targetStage.entry.versionId,
+      );
+      if (existingStage == null) {
+        await stagingRepository.saveImmutable(targetStage);
+      } else {
+        final existingPayload = jsonEncode(
+          _batch2CatalogueFields(
+            existingStage.entry,
+            releaseId: existingStage.releaseId,
+          ),
+        );
+        final targetPayload = jsonEncode(
+          _batch2CatalogueFields(
+            targetStage.entry,
+            releaseId: targetStage.releaseId,
+          ),
+        );
+        if (existingPayload != targetPayload) {
+          throw LabBatch2ReleaseException(
+            'Existing staged Batch 2 catalogue artifact does not match validated candidate ' +
+                targetStage.identityKey +
+                '.',
+          );
+        }
+      }
     }
+
+    await Future.wait(
+      List<Future<void>>.generate(
+        preflight.publishedVersions.length,
+        persistCandidate,
+        growable: false,
+      ),
+    );
 
     return _close(
       executedBy: executedBy.trim(),
