@@ -1,0 +1,724 @@
+{
+  "schemaVersion": "csp11.flashcards.package.v1",
+  "deck": {
+    "id": "d02_c12_flashcards_v1",
+    "domainId": "d02",
+    "competencyId": "d02_c12",
+    "title": "Management and Leadership Techniques Concept Cards",
+    "version": 1,
+    "lifecycle": "validated",
+    "cardIds": [
+      "csp11.flashcard.theory_x_management",
+      "csp11.flashcard.theory_y_management",
+      "csp11.flashcard.transactional_leadership",
+      "csp11.flashcard.transformational_leadership",
+      "csp11.flashcard.situational_leadership",
+      "csp11.flashcard.directive_leadership",
+      "csp11.flashcard.participative_leadership",
+      "csp11.flashcard.intrinsic_motivation",
+      "csp11.flashcard.extrinsic_motivation",
+      "csp11.flashcard.progressive_discipline",
+      "csp11.flashcard.formal_authority",
+      "csp11.flashcard.informal_authority",
+      "csp11.flashcard.authority_responsibility_accountability_distinction",
+      "csp11.flashcard.two_way_leadership_communication"
+    ]
+  },
+  "concepts": [
+    {
+      "id": "csp11.concept.theory_x_management",
+      "canonicalLabel": "Theory X Management",
+      "flashcardId": "csp11.flashcard.theory_x_management",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "McGregor Theory X",
+        "Theory X"
+      ]
+    },
+    {
+      "id": "csp11.concept.theory_y_management",
+      "canonicalLabel": "Theory Y Management",
+      "flashcardId": "csp11.flashcard.theory_y_management",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "McGregor Theory Y",
+        "Theory Y"
+      ]
+    },
+    {
+      "id": "csp11.concept.transactional_leadership",
+      "canonicalLabel": "Transactional Leadership",
+      "flashcardId": "csp11.flashcard.transactional_leadership",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "transactional leader"
+      ]
+    },
+    {
+      "id": "csp11.concept.transformational_leadership",
+      "canonicalLabel": "Transformational Leadership",
+      "flashcardId": "csp11.flashcard.transformational_leadership",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "transformational leader"
+      ]
+    },
+    {
+      "id": "csp11.concept.situational_leadership",
+      "canonicalLabel": "Situational Leadership",
+      "flashcardId": "csp11.flashcard.situational_leadership",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "situational leadership approach"
+      ]
+    },
+    {
+      "id": "csp11.concept.directive_leadership",
+      "canonicalLabel": "Directive Leadership",
+      "flashcardId": "csp11.flashcard.directive_leadership",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "directive leadership style"
+      ]
+    },
+    {
+      "id": "csp11.concept.participative_leadership",
+      "canonicalLabel": "Participative Leadership",
+      "flashcardId": "csp11.flashcard.participative_leadership",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "consultative leadership",
+        "participative leadership style"
+      ]
+    },
+    {
+      "id": "csp11.concept.intrinsic_motivation",
+      "canonicalLabel": "Intrinsic Motivation",
+      "flashcardId": "csp11.flashcard.intrinsic_motivation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "intrinsic work motivation"
+      ]
+    },
+    {
+      "id": "csp11.concept.extrinsic_motivation",
+      "canonicalLabel": "Extrinsic Motivation",
+      "flashcardId": "csp11.flashcard.extrinsic_motivation",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "external work motivation"
+      ]
+    },
+    {
+      "id": "csp11.concept.progressive_discipline",
+      "canonicalLabel": "Progressive Discipline",
+      "flashcardId": "csp11.flashcard.progressive_discipline",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "progressive disciplinary approach"
+      ]
+    },
+    {
+      "id": "csp11.concept.formal_authority",
+      "canonicalLabel": "Formal Authority",
+      "flashcardId": "csp11.flashcard.formal_authority",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "position authority"
+      ]
+    },
+    {
+      "id": "csp11.concept.informal_authority",
+      "canonicalLabel": "Informal Authority",
+      "flashcardId": "csp11.flashcard.informal_authority",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "informal leadership authority"
+      ]
+    },
+    {
+      "id": "csp11.concept.authority_responsibility_accountability_distinction",
+      "canonicalLabel": "Authority, Responsibility, and Accountability Distinction",
+      "flashcardId": "csp11.flashcard.authority_responsibility_accountability_distinction",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "authority responsibility accountability",
+        "ARA distinction"
+      ]
+    },
+    {
+      "id": "csp11.concept.two_way_leadership_communication",
+      "canonicalLabel": "Two-Way Leadership Communication",
+      "flashcardId": "csp11.flashcard.two_way_leadership_communication",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "aliases": [
+        "two-way communication",
+        "leadership feedback loop"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "csp11.flashcard.theory_x_management",
+      "conceptId": "csp11.concept.theory_x_management",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Theory X Management",
+      "backDefinition": "A management assumption set in which workers are viewed as generally disliking work, avoiding responsibility, and requiring close direction, control, or external pressure to achieve organizational objectives.",
+      "whyItMatters": "A manager's assumptions about workers can shape supervision, participation, control, and communication. Theory X tends to support more centralized and directive management practices.",
+      "keyPoint": "Theory X emphasizes external control, close direction, and limited reliance on employee self-direction.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.management_theory_xy",
+          "locator": "Theory X–Theory Y section - Theory X assumptions and external control",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "management-theory"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.theory_y_management",
+      "conceptId": "csp11.concept.theory_y_management",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Theory Y Management",
+      "backDefinition": "A management assumption set in which workers are viewed as capable of self-direction, accepting responsibility, and contributing creativity when organizational conditions support commitment and meaningful participation.",
+      "whyItMatters": "Theory Y encourages managers to create conditions that support involvement, development, responsibility, and employee contribution rather than relying mainly on external control.",
+      "keyPoint": "Theory Y emphasizes self-direction, responsibility, participation, and conditions that enable people to contribute.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.management_theory_xy",
+          "locator": "Theory X–Theory Y section - Theory Y assumptions and self-direction",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "management-theory"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.transactional_leadership",
+      "conceptId": "csp11.concept.transactional_leadership",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Transactional Leadership",
+      "backDefinition": "A leadership approach centered on exchanges between leader and follower, using clear expectations, monitoring, rewards, or corrective consequences to obtain agreed performance and maintain established operations.",
+      "whyItMatters": "Transactional leadership can provide clarity and dependable performance where standards, roles, and consequences must be explicit, but it is primarily oriented toward exchange and performance within the existing system.",
+      "keyPoint": "Transactional leadership manages performance through explicit exchanges, expectations, rewards, and correction.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.ncbi.transformational_leadership",
+          "locator": "Transformational Leadership section - distinction between transactional and transformational leadership",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "leadership-style"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.transformational_leadership",
+      "conceptId": "csp11.concept.transformational_leadership",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Transformational Leadership",
+      "backDefinition": "A leadership approach that seeks to elevate shared purpose and motivate followers to achieve significant change through vision, inspiration, intellectual engagement, and attention to follower development.",
+      "whyItMatters": "Transformational leadership is useful when an organization must change attitudes, systems, or culture rather than merely maintain existing performance through transactions.",
+      "keyPoint": "Transformational leadership focuses on shared purpose, follower development, and meaningful organizational change.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.ncbi.transformational_leadership",
+          "locator": "Transformational Leadership section - collective purpose, follower needs, and organizational change",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "leadership-style"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.situational_leadership",
+      "conceptId": "csp11.concept.situational_leadership",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Situational Leadership",
+      "backDefinition": "A leadership approach in which the leader adjusts direction, support, or involvement to fit the needs, capability, development, and circumstances present in a particular situation rather than relying on one fixed style.",
+      "whyItMatters": "Different teams, tasks, hazards, and levels of experience may require different leadership behavior. Situational leadership emphasizes matching the approach to current conditions.",
+      "keyPoint": "There is no single leadership style that is optimal for every situation.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pubmed.situational_leadership",
+          "locator": "Abstract - situational leadership identifies behaviors appropriate to the situation and development level",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "leadership-style"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.directive_leadership",
+      "conceptId": "csp11.concept.directive_leadership",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Directive Leadership",
+      "backDefinition": "A leadership style in which the leader provides explicit instructions, clarifies roles and standards, structures the work, and retains substantial control over how tasks are carried out.",
+      "whyItMatters": "Directive leadership can be valuable when work is unfamiliar, tightly controlled, urgent, or highly consequential, but excessive use can restrict participation and self-direction.",
+      "keyPoint": "Directive leadership increases leader-provided structure and control.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.management_theory_xy",
+          "locator": "Theory X–Theory Y section - directive and externally controlled management assumptions",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "leadership-style"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.participative_leadership",
+      "conceptId": "csp11.concept.participative_leadership",
+      "version": 1,
+      "type": "model",
+      "frontLabel": "Participative Leadership",
+      "backDefinition": "A leadership style in which the leader actively seeks worker input, involves people in relevant decisions, supports autonomy, and encourages shared problem solving while retaining responsibility for the final leadership role.",
+      "whyItMatters": "Participation can improve information flow, ownership, and commitment, particularly when workers possess important task knowledge or when implementation depends on their engagement.",
+      "keyPoint": "Participative leadership increases meaningful involvement and voice without eliminating leadership responsibility.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.leader_autonomy_support",
+          "locator": "Leader autonomy support - consultative, autonomy-supportive leadership and employee involvement",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "leadership-style"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.intrinsic_motivation",
+      "conceptId": "csp11.concept.intrinsic_motivation",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Intrinsic Motivation",
+      "backDefinition": "Motivation to perform an activity because the work itself is interesting, meaningful, satisfying, or personally valued rather than because of an external reward or penalty.",
+      "whyItMatters": "Intrinsic motivation can support persistence, ownership, learning, and discretionary effort when work and leadership practices provide meaningful opportunities for autonomy, competence, and contribution.",
+      "keyPoint": "Intrinsic motivation comes primarily from the value or satisfaction experienced in doing the work itself.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.leader_autonomy_support",
+          "locator": "Autonomous motivation section - intrinsic motivation and self-determined work behavior",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "motivation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.extrinsic_motivation",
+      "conceptId": "csp11.concept.extrinsic_motivation",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Extrinsic Motivation",
+      "backDefinition": "Motivation to perform an activity in order to obtain an external outcome or avoid an external consequence, such as pay, recognition, promotion, penalty, or another externally controlled result.",
+      "whyItMatters": "External incentives and consequences can influence behavior, especially where work is routine or compliance is essential, but they should not be confused with motivation arising from the work itself.",
+      "keyPoint": "Extrinsic motivation is driven by an outcome that is separate from the activity itself.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.pmc.leader_autonomy_support",
+          "locator": "Autonomous versus controlled motivation - external regulation, pay, and incentives",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "motivation"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.progressive_discipline",
+      "conceptId": "csp11.concept.progressive_discipline",
+      "version": 1,
+      "type": "processName",
+      "frontLabel": "Progressive Discipline",
+      "backDefinition": "A disciplinary approach that generally begins with the least serious action appropriate to correct misconduct and may escalate to more serious action for later or continuing offenses, subject to applicable rules and circumstances.",
+      "whyItMatters": "Progressive discipline emphasizes correction and proportionality rather than automatically beginning with the most severe response, while still allowing action appropriate to serious misconduct.",
+      "keyPoint": "The purpose is corrective accountability, with escalation when warranted by repeated or serious conduct.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.opm.employee_relations_reference",
+          "locator": "Glossary of Terms and Concepts - Progressive Discipline",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "discipline"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.formal_authority",
+      "conceptId": "csp11.concept.formal_authority",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Formal Authority",
+      "backDefinition": "Authority granted by an assigned organizational position, role, rank, or other recognized delegation that gives a leader legitimate power to direct specified work and make decisions within defined limits.",
+      "whyItMatters": "Formal authority establishes who may direct work and make certain decisions, but effective leadership still depends on judgment, communication, credibility, and responsible use of that authority.",
+      "keyPoint": "Formal authority comes from the position or delegated role, not merely from personal influence.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.army.adp_6_22_2019",
+          "locator": "ADP 6-22 paragraphs 1-34 to 1-35 - responsibilities, authorities, and formal leadership authority",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "authority-accountability"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.informal_authority",
+      "conceptId": "csp11.concept.informal_authority",
+      "version": 1,
+      "type": "term",
+      "frontLabel": "Informal Authority",
+      "backDefinition": "Influence exercised without relying primarily on formal position power, often arising from expertise, credibility, relationships, experience, trust, or the ability to gain voluntary commitment from others.",
+      "whyItMatters": "Safety professionals often need to influence peers, contractors, specialists, and senior leaders who are outside their direct reporting line, making informal authority a critical leadership tool.",
+      "keyPoint": "Informal authority depends on influence and commitment rather than positional command.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.army.adp_6_22_2019",
+          "locator": "ADP 6-22 paragraph 1-34 - formal and informal authority and influence",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "authority-accountability"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.authority_responsibility_accountability_distinction",
+      "conceptId": "csp11.concept.authority_responsibility_accountability_distinction",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Authority, Responsibility, and Accountability Distinction",
+      "backDefinition": "Authority is the legitimate power to make decisions or direct work; responsibility is the assigned duty to perform or ensure work is performed; accountability is the obligation to answer for results, conduct, and fulfillment of those responsibilities.",
+      "whyItMatters": "Confusing these concepts creates gaps in control. A person can be responsible for an outcome without having adequate authority, while leaders remain accountable for how delegated work is managed.",
+      "keyPoint": "Align enough authority with assigned responsibility, and make accountability for results explicit.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.opm.executive_core_qualifications_2025",
+          "locator": "ECQ 4 Leading People - Accountability and responsibility for high-quality, timely results",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        },
+        {
+          "sourceId": "csp11.source.army.adp_6_22_2019",
+          "locator": "ADP 6-22 paragraphs 1-34 to 1-35 - responsibilities and authorities",
+          "primary": false,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "authority-accountability"
+      ]
+    },
+    {
+      "id": "csp11.flashcard.two_way_leadership_communication",
+      "conceptId": "csp11.concept.two_way_leadership_communication",
+      "version": 1,
+      "type": "principle",
+      "frontLabel": "Two-Way Leadership Communication",
+      "backDefinition": "A communication approach in which leaders not only transmit intent, expectations, or information but also actively receive questions, feedback, observations, and understanding from others before deciding or adjusting action.",
+      "whyItMatters": "Two-way communication helps expose misunderstanding, missing information, weak assumptions, and emerging concerns that one-way broadcasting can conceal.",
+      "keyPoint": "Effective leadership communication includes listening and feedback, not only message delivery.",
+      "primaryPlacement": {
+        "domainId": "d02",
+        "competencyId": "d02_c12"
+      },
+      "sourceRefs": [
+        {
+          "sourceId": "csp11.source.army.adp_6_22_2019",
+          "locator": "ADP 6-22 leadership communication - active listening, shared understanding, and engaging communication",
+          "primary": true,
+          "definitionMode": "educationalParaphrase"
+        }
+      ],
+      "lifecycle": "validated",
+      "tags": [
+        "program-management",
+        "leadership-management",
+        "leadership-style"
+      ]
+    }
+  ],
+  "questionMappings": [],
+  "sources": [
+    {
+      "id": "csp11.source.pmc.management_theory_xy",
+      "organization": "National Library of Medicine",
+      "title": "Planning and Managing Health Systems — Theory X and Theory Y",
+      "canonicalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7171900/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Scholarly supporting source describing McGregor Theory X and Theory Y management assumptions and contrasting control versus self-direction. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.ncbi.transformational_leadership",
+      "organization": "National Library of Medicine",
+      "title": "Transformational Leadership and Evidence-Based Management",
+      "canonicalUrl": "https://www.ncbi.nlm.nih.gov/books/NBK216194/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "other",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Scholarly supporting source differentiating transactional and transformational leadership and their relationship to collective purpose, followers, and organizational change. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.pubmed.situational_leadership",
+      "organization": "National Library of Medicine",
+      "title": "Theory X, Theory Y, and situational leadership applied to dental education",
+      "canonicalUrl": "https://pubmed.ncbi.nlm.nih.gov/17687079/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "peerReviewedPublication",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Peer-reviewed article supporting situational leadership as adapting leader behavior to the needs and development level present in a specific situation. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.pmc.leader_autonomy_support",
+      "organization": "National Library of Medicine",
+      "title": "Leader autonomy support in the workplace: A meta-analytic review",
+      "canonicalUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6133074/",
+      "allowedDomains": [
+        "ncbi.nlm.nih.gov"
+      ],
+      "authorityTier": "scholarlySupporting",
+      "sourceType": "peerReviewedPublication",
+      "copyrightMode": "proprietaryParaphraseOnly",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Peer-reviewed meta-analysis supporting intrinsic versus externally controlled motivation and consultative/autonomy-supportive leadership. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.opm.employee_relations_reference",
+      "organization": "U.S. Office of Personnel Management",
+      "title": "Employee Relations Reference Materials",
+      "canonicalUrl": "https://www.opm.gov/policy-data-oversight/employee-relations/reference-materials/",
+      "allowedDomains": [
+        "opm.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OPM employee-relations guidance supporting progressive discipline, performance improvement, conduct management, and supervisory accountability. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.opm.executive_core_qualifications_2025",
+      "organization": "U.S. Office of Personnel Management",
+      "title": "Executive Core Qualifications",
+      "canonicalUrl": "https://www.opm.gov/policy-data-oversight/senior-executive-service/executive-core-qualifications/",
+      "allowedDomains": [
+        "opm.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Current OPM Executive Core Qualifications, updated October 1, 2025, supporting Leading People, accountability, developing others, judgment, communication, resource management, and results. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.army.adp_6_22_2019",
+      "organization": "U.S. Army",
+      "title": "ADP 6-22 — Army Leadership and the Profession",
+      "canonicalUrl": "https://rdl.train.army.mil/catalog-ws/view/100.ATSC/72D4C9DC-B1F1-45F7-8BB0-148CBA9AF247-1428690957971/adp6_22.pdf",
+      "allowedDomains": [
+        "army.mil"
+      ],
+      "authorityTier": "otherSupporting",
+      "sourceType": "technicalPublication",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "Army leadership doctrine supporting formal and informal authority, leadership responsibilities, discipline, influence, active listening, shared understanding, and communication. Educational paraphrase only."
+    }
+  ]
+}
