@@ -15,7 +15,7 @@ FCP-2G  d02_c07  CLOSED            12 cards
 FCP-2H  d02_c08  CLOSED            12 cards
 FCP-2I  d02_c09  CLOSED            13 cards
 FCP-2J  d02_c10  CLOSED            15 cards
-FCP-2K  d02_c11  VALIDATING         15 cards
+FCP-2K  d02_c11  CLOSED            15 cards
 FCP-2L  d02_c12  NOT STARTED
 FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
@@ -51,6 +51,6 @@ FCP-2J package validation: SHA `45475b4560e8bdebfa6266cd6e7af9ca3d74fb96`, run `
 
 FCP-2K started strictly from `phase-fcp2j-d02-c10-closed@d17458de529b1e75618c4d7855d50192411e6bdf`.
 
-C11 candidate package: 15 cards covering safety budget development, cost estimates, life-cycle cost, time-phased estimates, direct/indirect safety costs, ROI, benefit-cost analysis and ratio, NPV, discount rate, cost-effectiveness analysis, sensitivity analysis, acquisition planning, price analysis, and cost analysis.
+FCP-2K package validation: SHA `092ba47c0b30d0c276c110e51ee72f7a8333d079`, run `36117137743`, SUCCESS, 15 cards, FCQ100 100/100, HOLD 0.
 
-FCP-2K remains VALIDATING until package validation, evidence, frozen Flashcard Core regression, and full repository regression are green.
+FCP-2L may begin only from `phase-fcp2k-d02-c11-closed`.
