@@ -1,6 +1,7 @@
-# FCP-2M — d02_c13 Validation Candidate
+# FCP-2M — d02_c13 Validation Record
 
-Status: VALIDATING
+Status: VALIDATION COMPLETE  
+Gate: `FCP2M_D02_C13_GREEN`
 
 Recovery base:
 
@@ -9,18 +10,37 @@ phase-fcp2l-d02-c12-closed
 7789ef404df8911d71ea5284aa5c5f82909a6bff
 ```
 
-Candidate scope:
+Initial validation:
 
-- Competency: `d02_c13`
-- Statement: Apply project management principles and techniques
+```text
+SHA: c807ebc52a1e1f9ef7a2d3cf75b04db42435326d
+Run: 36122543210
+Result: FAILURE
+Gate: Dart formatting
+```
+
+Resolution:
+
+The formatter-required wrapping was applied to the D02 C13 inventory test only. Learner-facing content and provenance were unchanged.
+
+Successful package validation:
+
+```text
+SHA: 45a541224f31912bcf0bfbdd31a832e2c905be14
+Run: 36122718558
+Result: SUCCESS
+```
+
+Validated scope:
+
 - 16 resolved concepts
 - 16 learner-ready flashcards
 - 6 cross-competency canonical references
 - 0 HOLD
-- Generic Performance Baseline remains canonical in D02 C01
-- Generic Action Plan and Resource Allocation remain canonical in D02 C02
-- Generic Cost Estimate and Time-Phased Cost Estimate remain canonical in D02 C11
-- Generic Authority, Responsibility, and Accountability Distinction remains canonical in D02 C12
-- Project-specific sources are GAO-16-89G, DOE Project Management Lexicon, GAO-23-105450, and a peer-reviewed RACI source
+- FCQ100 100/100
+- deterministic JSON round trip PASS
+- provenance PASS
+- frozen Flashcard Core regression PASS
+- full repository regression PASS
 
-Closure requires the dedicated Phase FCP workflow, frozen Flashcard Core regression, and full repository regression to pass.
+The closure metadata state must pass the dedicated FCP workflow before `phase-fcp2m-d02-c13-closed` is created.
