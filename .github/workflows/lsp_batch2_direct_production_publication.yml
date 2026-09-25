@@ -1,0 +1,110 @@
+name: LSP Batch 2 Direct Production Publication
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-direct-publication
+    paths:
+      - ".github/workflows/lsp_batch2_direct_production_publication.yml"
+      - "test/lab_quality/lsp_batch2_direct_release_bundle_test.dart"
+      - "tools/lab/publish_batch2_direct.py"
+      - "content/lab_population_batch2/**"
+      - "lib/features/lab/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: lsp-batch2-direct-production-publication
+  cancel-in-progress: false
+
+env:
+  FIREBASE_PROJECT_ID: csp11-exam-platform
+  DIRECT_RELEASE_CONFIRMATION: RELEASE BATCH 2 LABS AND ACTIVATE LEARNER CATALOGUE
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/phase-lsp-batch2-direct-publication'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout exact release branch
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Require explicit direct-release authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$DIRECT_RELEASE_CONFIRMATION" = "RELEASE BATCH 2 LABS AND ACTIVATE LEARNER CATALOGUE"
+
+      - name: Validate Batch 2 release integration
+        run: flutter test test/lab_quality/lsp_batch2_release_integration_test.dart
+
+      - name: Generate exact production bundle through the frozen release services
+        run: flutter test test/lab_quality/lsp_batch2_direct_release_bundle_test.dart
+
+      - name: Verify generated release boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("build/batch2_direct_release/release_bundle.json")
+          b = json.loads(p.read_text())
+          assert b["projectId"] == "csp11-exam-platform"
+          assert b["releaseId"] == "phase_l_population_batch2_v1_q16_extension_v1"
+          assert b["labCount"] == 10
+          assert b["totalDecisionCount"] == 50
+          assert len(b["published"]) == 10
+          assert len(b["staging"]) == 10
+          assert len(b["learnerCatalogue"]) == 10
+          print("Batch 2 direct release bundle boundary verified.")
+          PY
+
+      - id: auth_json
+        name: Authenticate production Firestore publisher
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: csp11-exam-platform
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          token_format: access_token
+          create_credentials_file: false
+          access_token_lifetime: 1800s
+
+      - name: Require production publisher credential
+        env:
+          ACCESS_TOKEN: ${{ steps.auth_json.outputs.access_token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$ACCESS_TOKEN" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT_JSON did not yield an access token."
+            exit 1
+          fi
+
+      - name: Atomically publish and activate Batch 2 only
+        env:
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth_json.outputs.access_token }}
+        run: python tools/lab/publish_batch2_direct.py
+
+      - name: Record publication summary
+        if: success()
+        run: |
+          echo "Batch 2 direct production publication succeeded."
+          echo "Q16 CLOSED: 10/10 published, 10/10 staged."
+          echo "Q17 ACCEPTED: 10/10 learner catalogue."
+          echo "Original first 10 LABs were not written by this workflow."
