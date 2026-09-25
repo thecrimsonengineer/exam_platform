@@ -1361,6 +1361,40 @@
       "primaryEligible": true,
       "verbatimEligible": false,
       "notes": "Federal Acquisition Regulation provisions supporting price analysis, cost analysis, cost realism, historical comparison, market comparison, and fair-and-reasonable pricing. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.business_case_benefits",
+      "organization": "OSHA",
+      "title": "Business Case for Safety and Health - Benefits",
+      "canonicalUrl": "https://www.osha.gov/businesscase/benefits",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OSHA business-case guidance supporting economic benefits, cost savings, productivity effects, and return-on-investment framing for safety and health investments. Educational paraphrase only."
+    },
+    {
+      "id": "csp11.source.osha.business_case_costs",
+      "organization": "OSHA",
+      "title": "Business Case for Safety and Health - Costs",
+      "canonicalUrl": "https://www.osha.gov/businesscase/costs",
+      "allowedDomains": [
+        "osha.gov"
+      ],
+      "authorityTier": "federalTechnical",
+      "sourceType": "agencyGuidance",
+      "copyrightMode": "federalGovernmentWork",
+      "verificationStatus": "verified",
+      "verifiedOn": "2026-09-25",
+      "primaryEligible": true,
+      "verbatimEligible": false,
+      "notes": "OSHA business-case guidance supporting direct and indirect workplace injury and illness cost categories. Educational paraphrase only."
     }
   ]
 }
