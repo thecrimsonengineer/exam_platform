@@ -12,6 +12,7 @@ on:
       - 'assets/flashcards/production/manifest/**'
       - 'test/features/flashcards/cloud/**'
       - 'supabase/functions/learner-question-packages/**'
+      - 'supabase/functions/fcc-flashcard-publisher/**'
       - 'supabase/migrations/*fcc_flashcard_publication*'
       - '.github/workflows/fcc_fcp12_flashcard_publish.yml'
       - '.github/fcc_fcp12_publish_trigger'

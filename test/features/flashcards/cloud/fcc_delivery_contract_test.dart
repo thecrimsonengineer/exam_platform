@@ -31,4 +31,17 @@ void main() {
     expect(source, contains('to service_role'));
     expect(source.toLowerCase(), isNot(contains('security definer')));
   });
+
+  test('FCC server publisher uses list-first immutable Storage preflight', () {
+    final source = File(
+      'supabase/functions/fcc-flashcard-publisher/index.ts',
+    ).readAsStringSync();
+
+    expect(source, contains('storage.list(folder'));
+    expect(source, contains('item.name === filename'));
+    expect(source, contains('upsert: false'));
+    expect(source, contains('immutable_object_collision'));
+    expect(source, contains('sha256Hex(verifiedBytes)'));
+    expect(source, contains('fcc_commit_flashcard_publication'));
+  });
 }
