@@ -168,28 +168,49 @@ Deno.serve(async (req: Request) => {
   const supabase = serverClient(secretKey);
   const storage = supabase.storage.from(bucket);
 
-  const existing = await storage.download(storagePath);
-  if (existing.data != null) {
+  const separator = storagePath.lastIndexOf("/");
+  if (separator <= 0 || separator >= storagePath.length - 1) {
+    return jsonResponse(400, { error: "invalid_storage_path" });
+  }
+
+  const folder = storagePath.substring(0, separator);
+  const filename = storagePath.substring(separator + 1);
+  const listed = await storage.list(folder, {
+    limit: 100,
+    search: filename,
+  });
+
+  if (listed.error != null) {
+    console.warn("FCC object list preflight failed:", listed.error.name);
+    return jsonResponse(503, { error: "storage_preflight_failed" });
+  }
+
+  const exactMatches = (listed.data ?? []).filter(
+    (item) => item.name === filename,
+  );
+
+  if (exactMatches.length > 1) {
+    return jsonResponse(503, { error: "storage_identity_ambiguous" });
+  }
+
+  if (exactMatches.length === 1) {
+    const existing = await storage.download(storagePath);
+    if (existing.data == null || existing.error != null) {
+      console.warn(
+        "FCC existing object download failed:",
+        existing.error?.name ?? "unknown_error",
+      );
+      return jsonResponse(503, { error: "storage_existing_read_failed" });
+    }
+
     const existingBytes = new Uint8Array(await existing.data.arrayBuffer());
-    if (await sha256Hex(existingBytes) !== checksum) {
+    if (
+      existingBytes.length !== compressedBytes ||
+      await sha256Hex(existingBytes) !== checksum
+    ) {
       return jsonResponse(409, { error: "immutable_object_collision" });
     }
   } else {
-    const message = existing.error?.message?.toLowerCase() ?? "";
-    const missing =
-      existing.error == null ||
-      message.includes("not found") ||
-      message.includes("does not exist") ||
-      message.includes("object not found");
-
-    if (!missing) {
-      console.warn(
-        "FCC object preflight failed:",
-        existing.error?.name ?? "unknown_error",
-      );
-      return jsonResponse(503, { error: "storage_preflight_failed" });
-    }
-
     const uploaded = await storage.upload(storagePath, bytes, {
       contentType: "application/gzip",
       upsert: false,
