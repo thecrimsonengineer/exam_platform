@@ -4,6 +4,7 @@ import 'lab_contracts.dart';
 import 'lab_learner_catalogue.dart';
 import 'lab_learner_presentation.dart';
 import 'lab_production_release_closure.dart';
+import 'lab_published_payload_chunks.dart';
 import 'lab_studio.dart';
 
 const String kLabPublishedFirestoreSchemaVersion =
@@ -16,10 +17,13 @@ const String kLabLearnerReleaseStateFirestoreSchemaVersion =
     'csp11.lab.learner_release_state.v1';
 
 class FirestoreLabPublishedRepository implements LabPublishedRepository {
-  FirestoreLabPublishedRepository({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirestoreLabPublishedRepository({
+    FirebaseFirestore? firestore,
+    this.payloadCodec = const LabPublishedPayloadChunkCodec(),
+  }) : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
+  final LabPublishedPayloadChunkCodec payloadCodec;
 
   CollectionReference<Map<String, dynamic>> get _collection =>
       _firestore.collection('labPublishedVersions');
@@ -31,9 +35,14 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
   Future<void> saveImmutable(LabPublishedVersion version) async {
     await _validatePublishedVersion(version);
 
-    final reference = _collection.doc(
-      _documentId(version.labId, version.versionId),
-    );
+    final versionKey = _documentId(version.labId, version.versionId);
+    final reference = _collection.doc(versionKey);
+    final payload = payloadCodec.encode(<String, String>{
+      'publishedJson': version.publishedJson,
+      'qualityEvidenceJson': version.qualityEvidenceJson!,
+      'exhaustiveRouteEvidenceJson': version.exhaustiveRouteEvidenceJson!,
+      'publishEvidenceJson': version.publishEvidenceJson!,
+    });
 
     await _firestore.runTransaction((transaction) async {
       final existing = await transaction.get(reference);
@@ -43,19 +52,29 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
         );
       }
 
+      for (final chunk in payload.chunks) {
+        transaction.set(
+          reference.collection('payloadChunks').doc(chunk.documentId),
+          <String, dynamic>{
+            ...chunk.toJson(),
+            'versionKey': versionKey,
+            'serverCreatedAt': FieldValue.serverTimestamp(),
+          },
+        );
+      }
+
       transaction.set(reference, <String, dynamic>{
-        'schemaVersion': kLabPublishedFirestoreSchemaVersion,
+        'schemaVersion': kLabPublishedChunkedFirestoreSchemaVersion,
         'labId': version.labId,
         'versionId': version.versionId,
         'lifecycle': 'published',
-        'publishedJson': version.publishedJson,
         'publishedAt': Timestamp.fromDate(version.publishedAt.toUtc()),
         'reviewerId': version.reviewerId,
         'validationAuthority': version.validationAuthority,
-        'qualityEvidenceJson': version.qualityEvidenceJson,
-        'exhaustiveRouteEvidenceJson': version.exhaustiveRouteEvidenceJson,
-        'publishEvidenceJson': version.publishEvidenceJson,
         'snapshotFingerprint': version.snapshotFingerprint,
+        'payloadSchemaVersion': kLabPublishedPayloadSchemaVersion,
+        'payloadManifest': payload.manifestJson,
+        'payloadChunkCount': payload.chunks.length,
         'serverCreatedAt': FieldValue.serverTimestamp(),
       });
     });
@@ -63,7 +82,9 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
 
   @override
   Future<LabPublishedVersion?> load(String labId, String versionId) async {
-    final snapshot = await _collection.doc(_documentId(labId, versionId)).get();
+    final versionKey = _documentId(labId, versionId);
+    final reference = _collection.doc(versionKey);
+    final snapshot = await reference.get();
     if (!snapshot.exists) return null;
 
     final data = snapshot.data();
@@ -73,7 +94,42 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
       );
     }
 
-    final version = _decodePublishedVersion(data);
+    late final LabPublishedVersion version;
+    if (data['schemaVersion'] == kLabPublishedFirestoreSchemaVersion) {
+      version = _decodeLegacyPublishedVersion(data);
+    } else if (data['schemaVersion'] ==
+        kLabPublishedChunkedFirestoreSchemaVersion) {
+      final rawManifest = data['payloadManifest'];
+      final expectedChunkCount = data['payloadChunkCount'];
+      if (data['payloadSchemaVersion'] != kLabPublishedPayloadSchemaVersion ||
+          rawManifest is! Map ||
+          expectedChunkCount is! int ||
+          expectedChunkCount <= 0 ||
+          expectedChunkCount > kLabPublishedPayloadMaxChunksPerVersion) {
+        throw const LabStudioException(
+          'Chunked published LAB manifest is invalid.',
+        );
+      }
+
+      final chunkSnapshot = await reference.collection('payloadChunks').get();
+      if (chunkSnapshot.docs.length != expectedChunkCount) {
+        throw const LabStudioException(
+          'Chunked published LAB payload is incomplete.',
+        );
+      }
+      final payload = payloadCodec.decode(
+        manifestJson: rawManifest.cast<String, Object?>(),
+        chunkJson: chunkSnapshot.docs.map(
+          (document) => Map<String, Object?>.from(document.data()),
+        ),
+      );
+      version = _decodeChunkedPublishedVersion(data, payload);
+    } else {
+      throw const LabStudioException(
+        'Unsupported published LAB Firestore schema.',
+      );
+    }
+
     if (version.labId != labId || version.versionId != versionId) {
       throw const LabStudioException(
         'Published LAB Firestore identity does not match its document key.',
@@ -98,7 +154,9 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
     await InMemoryLabPublishedRepository().saveImmutable(version);
   }
 
-  LabPublishedVersion _decodePublishedVersion(Map<String, dynamic> data) {
+  LabPublishedVersion _decodeLegacyPublishedVersion(
+    Map<String, dynamic> data,
+  ) {
     if (data['schemaVersion'] != kLabPublishedFirestoreSchemaVersion ||
         data['lifecycle'] != 'published') {
       throw const LabStudioException(
@@ -133,6 +191,58 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
       qualityEvidenceJson: requiredText('qualityEvidenceJson'),
       exhaustiveRouteEvidenceJson: requiredText('exhaustiveRouteEvidenceJson'),
       publishEvidenceJson: requiredText('publishEvidenceJson'),
+      snapshotFingerprint: requiredText('snapshotFingerprint'),
+    );
+  }
+
+  LabPublishedVersion _decodeChunkedPublishedVersion(
+    Map<String, dynamic> data,
+    Map<String, String> payload,
+  ) {
+    if (data['schemaVersion'] != kLabPublishedChunkedFirestoreSchemaVersion ||
+        data['lifecycle'] != 'published') {
+      throw const LabStudioException(
+        'Unsupported or non-published chunked LAB Firestore document.',
+      );
+    }
+
+    final publishedAt = data['publishedAt'];
+    if (publishedAt is! Timestamp) {
+      throw const LabStudioException(
+        'Chunked published LAB Firestore document requires a timestamp.',
+      );
+    }
+
+    String requiredText(String key) {
+      final value = data[key]?.toString().trim() ?? '';
+      if (value.isEmpty) {
+        throw LabStudioException(
+          'Chunked published LAB Firestore document requires ' + key + '.',
+        );
+      }
+      return value;
+    }
+
+    String payloadText(String key) {
+      final value = payload[key]?.trim() ?? '';
+      if (value.isEmpty) {
+        throw LabStudioException(
+          'Chunked published LAB payload requires ' + key + '.',
+        );
+      }
+      return value;
+    }
+
+    return LabPublishedVersion(
+      labId: requiredText('labId'),
+      versionId: requiredText('versionId'),
+      publishedJson: payloadText('publishedJson'),
+      publishedAt: publishedAt.toDate().toUtc(),
+      reviewerId: requiredText('reviewerId'),
+      validationAuthority: requiredText('validationAuthority'),
+      qualityEvidenceJson: payloadText('qualityEvidenceJson'),
+      exhaustiveRouteEvidenceJson: payloadText('exhaustiveRouteEvidenceJson'),
+      publishEvidenceJson: payloadText('publishEvidenceJson'),
       snapshotFingerprint: requiredText('snapshotFingerprint'),
     );
   }
