@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Permit Interface Review",
+      "summary": "The permit review confirms that two separately authorized jobs now occupy overlapping work areas.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Both permits were issued for different maintenance tasks before the overlap developed.",
+        "The work boundaries intersect and the crews share access through the same operating area.",
+        "Any continuation depends on the permit scopes, responsible persons and interfaces remaining coordinated."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Shared Isolation and Access Check",
+      "summary": "The interface review identifies a shared access route and a common isolation boundary affecting both crews.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Both contractor teams depend on the same access route to reach their work locations.",
+        "A common isolation boundary means one crew's actions can affect the protection relied on by the other.",
+        "The record identifies the interface responsibilities that must remain understood by both supervisors and crews."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Additional Activity Change Record",
+      "summary": "A third maintenance activity has been introduced after the original two jobs were already underway.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The new activity adds another crew, work scope and set of interactions to the operating area.",
+        "The original permit-interface review did not include this third activity.",
+        "The combined work picture must now account for changed access, isolation and simultaneous-operation conflicts."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Boundary Deviation Record",
+      "summary": "A contractor has moved outside the agreed work boundary and obstructed the shared access route.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The deviation places work outside the coordinated area that was reviewed with both crews.",
+        "The shared access route is no longer available as planned, affecting the other contractor activity.",
+        "The record captures the deviation so the failed control and conditions for safe restart can be addressed."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Permit Handover and Closeout Record",
+      "summary": "Both contractor tasks are physically complete, but the operating area still requires formal handback.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Permit status, isolations and temporary controls must be reconciled against the completed work.",
+        "The final area condition must confirm that tools, barriers and temporary arrangements no longer affect operations.",
+        "Normal operation should rely on a documented handback rather than physical work completion alone."
       ]
     }
   },
