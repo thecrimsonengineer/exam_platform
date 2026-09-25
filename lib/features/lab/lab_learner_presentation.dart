@@ -35,6 +35,29 @@ String _requiredText(Map<String, Object?> json, String field, String label) {
   return value;
 }
 
+String _requiredEvidenceDetails(Object? value) {
+  if (value is Iterable) {
+    final lines = value
+        .map((item) => item.toString().trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
+    if (lines.isEmpty) {
+      throw const LabLearnerPresentationContractException(
+        'evidence presentation requires non-empty details.',
+      );
+    }
+    return lines.join('\n');
+  }
+
+  final text = value?.toString().trim() ?? '';
+  if (text.isEmpty) {
+    throw const LabLearnerPresentationContractException(
+      'evidence presentation requires non-empty details.',
+    );
+  }
+  return text;
+}
+
 List<String> _stringList(
   Object? value,
   String label, {
@@ -104,7 +127,7 @@ class LabEvidencePresentation {
   LabEvidencePresentation.fromJson(Map<String, Object?> json)
     : title = _requiredText(json, 'title', 'evidence presentation'),
       summary = _requiredText(json, 'summary', 'evidence presentation'),
-      details = _requiredText(json, 'details', 'evidence presentation') {
+      details = _requiredEvidenceDetails(json['details']) {
     _requireOnlyKeys(json, const <String>{
       'title',
       'summary',
