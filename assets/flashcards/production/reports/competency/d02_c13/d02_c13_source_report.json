@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2M",
+  "competencyId": "d02_c13",
+  "cardCount": 16,
+  "cardsWithProvenance": 16,
+  "cardsWithExactlyOnePrimarySource": 16,
+  "missingLocators": 0,
+  "unverifiedSourceReferences": 0,
+  "uniqueSourceIds": [
+    "csp11.source.energy.project_management_lexicon",
+    "csp11.source.gao.project_management_practices_2022",
+    "csp11.source.gao.schedule_guide_2015",
+    "csp11.source.pmc.raci_team_science"
+  ],
+  "primaryUseCounts": {
+    "csp11.source.energy.project_management_lexicon": 3,
+    "csp11.source.gao.project_management_practices_2022": 1,
+    "csp11.source.gao.schedule_guide_2015": 8,
+    "csp11.source.pmc.raci_team_science": 4
+  },
+  "status": "PASS"
+}
