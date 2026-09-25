@@ -17,10 +17,12 @@ FCP-2G  d02_c07  CLOSED
 FCP-2H  d02_c08  CLOSED
 FCP-2I  d02_c09  CLOSED
 FCP-2J  d02_c10  CLOSED
-FCP-2K  d02_c11  NOT STARTED
+FCP-2K  d02_c11  VALIDATING
 FCP-2L  d02_c12  NOT STARTED
 FCP-2M  d02_c13  NOT STARTED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2J package validation passed at `45475b4560e8bdebfa6266cd6e7af9ca3d74fb96` in run `36097452408`. The closure metadata state must pass CI before `phase-fcp2j-d02-c10-closed` is created.
+FCP-2J closed at `phase-fcp2j-d02-c10-closed@d17458de529b1e75618c4d7855d50192411e6bdf`.
+
+FCP-2K started strictly from that closed checkpoint. Candidate package: 15 budgeting, finance, economic-analysis, and procurement cards.
