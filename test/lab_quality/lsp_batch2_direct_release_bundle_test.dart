@@ -103,50 +103,44 @@ Map<String, Object?> _encodePresentation(
 Map<String, Object?> _catalogueFields(
   LabLearnerCatalogueEntry entry, {
   required String releaseId,
-}) =>
-    <String, Object?>{
-      'releaseId': releaseId,
-      'manifestEntryId': entry.manifestEntryId,
-      'labId': entry.labId,
-      'versionId': entry.versionId,
-      'title': entry.title,
-      'summary': entry.summary,
-      'focusTags': entry.focusTags,
-      'estimatedTime': entry.estimatedTime,
-      'decisionCountLabel': entry.decisionCountLabel,
-      'decisionCount': entry.decisionCount,
-      'supportedModes': entry.supportedModes
-          .map((mode) => mode.name.toUpperCase())
-          .toList(growable: false),
-      'presentation': _encodePresentation(entry.presentation),
-    };
+}) => <String, Object?>{
+  'releaseId': releaseId,
+  'manifestEntryId': entry.manifestEntryId,
+  'labId': entry.labId,
+  'versionId': entry.versionId,
+  'title': entry.title,
+  'summary': entry.summary,
+  'focusTags': entry.focusTags,
+  'estimatedTime': entry.estimatedTime,
+  'decisionCountLabel': entry.decisionCountLabel,
+  'decisionCount': entry.decisionCount,
+  'supportedModes': entry.supportedModes
+      .map((mode) => mode.name.toUpperCase())
+      .toList(growable: false),
+  'presentation': _encodePresentation(entry.presentation),
+};
 
 Map<String, Object?> _publishedParentFields(
   LabPublishedVersion version,
   LabPublishedPayloadBundle payload,
-) =>
-    <String, Object?>{
-      'schemaVersion': kLabPublishedChunkedFirestoreSchemaVersion,
-      'labId': version.labId,
-      'versionId': version.versionId,
-      'lifecycle': 'published',
-      'publishedAt': version.publishedAt.toUtc().toIso8601String(),
-      'reviewerId': version.reviewerId,
-      'validationAuthority': version.validationAuthority,
-      'snapshotFingerprint': version.snapshotFingerprint,
-      'payloadSchemaVersion': kLabPublishedPayloadSchemaVersion,
-      'payloadManifest': payload.manifestJson,
-      'payloadChunkCount': payload.chunks.length,
-    };
+) => <String, Object?>{
+  'schemaVersion': kLabPublishedChunkedFirestoreSchemaVersion,
+  'labId': version.labId,
+  'versionId': version.versionId,
+  'lifecycle': 'published',
+  'publishedAt': version.publishedAt.toUtc().toIso8601String(),
+  'reviewerId': version.reviewerId,
+  'validationAuthority': version.validationAuthority,
+  'snapshotFingerprint': version.snapshotFingerprint,
+  'payloadSchemaVersion': kLabPublishedPayloadSchemaVersion,
+  'payloadManifest': payload.manifestJson,
+  'payloadChunkCount': payload.chunks.length,
+};
 
 Map<String, Object?> _publishedChunkFields(
   String versionKey,
   LabPublishedPayloadChunk chunk,
-) =>
-    <String, Object?>{
-      ...chunk.toJson(),
-      'versionKey': versionKey,
-    };
+) => <String, Object?>{...chunk.toJson(), 'versionKey': versionKey};
 
 void main() {
   test('generate exact Batch 2 production release bundle', () async {
@@ -247,12 +241,7 @@ void main() {
       }
 
       stagingDocs.add(<String, Object?>{
-        'id':
-            kBatch2ReleaseId +
-            '__' +
-            entry.labId +
-            '__' +
-            entry.versionId,
+        'id': kBatch2ReleaseId + '__' + entry.labId + '__' + entry.versionId,
         'data': <String, Object?>{
           'schemaVersion': kBatch2StagingSchemaVersion,
           ..._catalogueFields(staged!.entry, releaseId: kBatch2ReleaseId),

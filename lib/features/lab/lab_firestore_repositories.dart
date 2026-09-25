@@ -154,9 +154,7 @@ class FirestoreLabPublishedRepository implements LabPublishedRepository {
     await InMemoryLabPublishedRepository().saveImmutable(version);
   }
 
-  LabPublishedVersion _decodeLegacyPublishedVersion(
-    Map<String, dynamic> data,
-  ) {
+  LabPublishedVersion _decodeLegacyPublishedVersion(Map<String, dynamic> data) {
     if (data['schemaVersion'] != kLabPublishedFirestoreSchemaVersion ||
         data['lifecycle'] != 'published') {
       throw const LabStudioException(

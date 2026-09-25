@@ -39,9 +39,7 @@ class LabPublishedPayloadFieldManifest {
     required this.payloadFingerprint,
   });
 
-  factory LabPublishedPayloadFieldManifest.fromJson(
-    Map<String, Object?> json,
-  ) {
+  factory LabPublishedPayloadFieldManifest.fromJson(Map<String, Object?> json) {
     final chunkCount = json['chunkCount'];
     final uncompressedByteLength = json['uncompressedByteLength'];
     final compressedByteLength = json['compressedByteLength'];
@@ -153,9 +151,10 @@ class LabPublishedPayloadChunkCodec {
   const LabPublishedPayloadChunkCodec();
 
   LabPublishedPayloadBundle encode(Map<String, String> payloadFields) {
-    if (payloadFields.keys.toSet().difference(
-          kLabPublishedPayloadFieldNames.toSet(),
-        ).isNotEmpty ||
+    if (payloadFields.keys
+            .toSet()
+            .difference(kLabPublishedPayloadFieldNames.toSet())
+            .isNotEmpty ||
         kLabPublishedPayloadFieldNames.any(
           (field) => !payloadFields.containsKey(field),
         )) {
@@ -179,11 +178,12 @@ class LabPublishedPayloadChunkCodec {
 
       final payloadFingerprint = sha256.convert(raw).toString();
       final parts = <List<int>>[];
-      for (var offset = 0;
-          offset < compressed.length;
-          offset += kLabPublishedPayloadChunkBytes) {
-        final end =
-            offset + kLabPublishedPayloadChunkBytes < compressed.length
+      for (
+        var offset = 0;
+        offset < compressed.length;
+        offset += kLabPublishedPayloadChunkBytes
+      ) {
+        final end = offset + kLabPublishedPayloadChunkBytes < compressed.length
             ? offset + kLabPublishedPayloadChunkBytes
             : compressed.length;
         parts.add(compressed.sublist(offset, end));
