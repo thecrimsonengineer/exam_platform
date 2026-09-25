@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2J",
+  "status": "resolved_inventory",
+  "domainId": "d02",
+  "competencyId": "d02_c10",
+  "competencyStatement": "Utilize document retention or management principles (e.g., incident investigation, training records, exposure records, maintenance records, environmental management system, audit results, privacy, trade secrets, personal information)",
+  "placement": {
+    "domainId": "d02",
+    "competencyId": "d02_c10",
+    "topicId": null,
+    "subtopicId": null
+  },
+  "placementNote": "No authoritative D02 topic/subtopic StudyContent tree is admitted into FCP. Topic and subtopic placement remain unset.",
+  "sourceBasis": [
+    {
+      "sourceId": "csp11.source.iso.15489_1_2016",
+      "locators": [
+        "records and metadata",
+        "records systems",
+        "records requirements",
+        "records controls",
+        "creating, capturing, and managing records"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_1020",
+      "locators": [
+        "29 CFR 1910.1020(d) preservation",
+        "29 CFR 1910.1020(e) access",
+        "29 CFR 1910.1020(f) trade secrets"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.osha.1910_119",
+      "locators": [
+        "29 CFR 1910.119(m)(7) incident investigation retention",
+        "29 CFR 1910.119(o)(3)-(5) audit records",
+        "29 CFR 1910.119(p) trade secrets"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.fmcsa.part396_maintenance",
+      "locators": [
+        "inspection, repair, maintenance, and maintenance records"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.14001_2026",
+      "locators": [
+        "environmental management system documented information"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.iso.19011_2026",
+      "locators": [
+        "audit programme and audit records context"
+      ]
+    },
+    {
+      "sourceId": "csp11.source.nist.privacy_framework_1_0",
+      "locators": [
+        "data processing lifecycle",
+        "retention",
+        "disclosure",
+        "disposal",
+        "privacy risk management"
+      ]
+    }
+  ],
+  "crossCompetencyReferences": [
+    {
+      "semanticSlug": "documented_information_records_component",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09",
+      "intendedConceptId": "csp11.concept.documented_information_records_component",
+      "reason": "FCP-2J applies record-management principles, but the generic Documented Information and Records management-system component is canonical in D02 C09."
+    },
+    {
+      "semanticSlug": "incident_investigation",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c04",
+      "intendedConceptId": "csp11.concept.incident_investigation",
+      "reason": "FCP-2J addresses retention of investigation records, while the generic Incident Investigation process is canonical in D02 C04."
+    },
+    {
+      "semanticSlug": "management_system_audit",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c08",
+      "intendedConceptId": "csp11.concept.management_system_audit",
+      "reason": "FCP-2J addresses retention of audit records, while the generic Management System Audit concept is canonical in D02 C08."
+    },
+    {
+      "semanticSlug": "competence_training_awareness",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09",
+      "intendedConceptId": "csp11.concept.competence_training_awareness",
+      "reason": "FCP-2J addresses training records, while the generic Competence, Training, and Awareness component is canonical in D02 C09."
+    },
+    {
+      "semanticSlug": "preventive_maintenance_completion_indicator",
+      "decision": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c07",
+      "intendedConceptId": "csp11.concept.preventive_maintenance_completion_indicator",
+      "reason": "FCP-2J addresses maintenance records, while maintenance completion as a leading indicator is canonical in D02 C07."
+    }
+  ],
+  "acceptedConcepts": [
+    {
+      "semanticSlug": "records_management_lifecycle",
+      "canonicalLabel": "Records Management Lifecycle",
+      "sourceIds": [
+        "csp11.source.iso.15489_1_2016"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "records_retention_schedule",
+      "canonicalLabel": "Records Retention Schedule",
+      "sourceIds": [
+        "csp11.source.iso.15489_1_2016",
+        "csp11.source.osha.1910_1020"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "record_metadata_traceability",
+      "canonicalLabel": "Record Metadata and Traceability",
+      "sourceIds": [
+        "csp11.source.iso.15489_1_2016"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "record_integrity_authenticity",
+      "canonicalLabel": "Record Integrity and Authenticity",
+      "sourceIds": [
+        "csp11.source.iso.15489_1_2016"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "record_retrievability_access",
+      "canonicalLabel": "Record Retrievability and Access",
+      "sourceIds": [
+        "csp11.source.osha.1910_1020",
+        "csp11.source.iso.15489_1_2016"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "controlled_record_disposition",
+      "canonicalLabel": "Controlled Record Disposition",
+      "sourceIds": [
+        "csp11.source.nist.privacy_framework_1_0",
+        "csp11.source.iso.15489_1_2016"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "incident_investigation_record_retention",
+      "canonicalLabel": "Incident Investigation Record Retention",
+      "sourceIds": [
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "employee_exposure_record_retention",
+      "canonicalLabel": "Employee Exposure Record Retention",
+      "sourceIds": [
+        "csp11.source.osha.1910_1020"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "employee_medical_record_retention",
+      "canonicalLabel": "Employee Medical Record Retention",
+      "sourceIds": [
+        "csp11.source.osha.1910_1020"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "training_record_management",
+      "canonicalLabel": "Training Record Management",
+      "sourceIds": [
+        "csp11.source.iso.15489_1_2016"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "maintenance_record_management",
+      "canonicalLabel": "Maintenance Record Management",
+      "sourceIds": [
+        "csp11.source.fmcsa.part396_maintenance"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "ems_record_control",
+      "canonicalLabel": "Environmental Management System Record Control",
+      "sourceIds": [
+        "csp11.source.iso.14001_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "audit_record_retention",
+      "canonicalLabel": "Audit Record Retention",
+      "sourceIds": [
+        "csp11.source.osha.1910_119",
+        "csp11.source.iso.19011_2026"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "personal_information_lifecycle_control",
+      "canonicalLabel": "Personal Information Lifecycle Control",
+      "sourceIds": [
+        "csp11.source.nist.privacy_framework_1_0"
+      ],
+      "decision": "CARD"
+    },
+    {
+      "semanticSlug": "trade_secret_confidentiality_control",
+      "canonicalLabel": "Trade Secret Confidentiality Control",
+      "sourceIds": [
+        "csp11.source.osha.1910_1020",
+        "csp11.source.osha.1910_119"
+      ],
+      "decision": "CARD"
+    }
+  ],
+  "mergedConcepts": [],
+  "rejectedConcepts": [],
+  "notFlashcardWorthy": [],
+  "holds": [],
+  "nextGate": "Validate d02_c10_flashcards_v1.json through FCQ100, provenance, deterministic round-trip, duplicate checks, and full competency-run regression.",
+  "resolutionSummary": {
+    "candidateCount": 15,
+    "acceptedCardCount": 15,
+    "mergedCount": 0,
+    "rejectedCount": 0,
+    "notFlashcardWorthyCount": 0,
+    "holdCount": 0
+  }
+}
