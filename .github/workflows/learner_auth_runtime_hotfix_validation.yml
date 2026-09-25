@@ -1,0 +1,54 @@
+name: Learner Auth Runtime Hotfix Validation
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-direct-publication
+    paths:
+      - "lib/screens/auth/learner_authorized_shell.dart"
+      - "test/screens/auth/learner_authorized_shell_test.dart"
+      - ".github/workflows/learner_auth_runtime_hotfix_validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Format check
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/screens/auth/learner_authorized_shell.dart \
+            test/screens/auth/learner_authorized_shell_test.dart
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Learner shell regression
+        run: flutter test test/screens/auth/learner_authorized_shell_test.dart
+
+      - name: Online access gate regression
+        run: flutter test test/services/online_access/learner_online_access_gate_test.dart
+
+      - name: Session controller regression
+        run: flutter test test/services/online_access/learner_online_access_session_controller_test.dart
+
+      - name: Connectivity coordinator regression
+        run: flutter test test/services/online_access/learner_online_connectivity_coordinator_test.dart
+
+      - name: Diff hygiene
+        run: git diff --check
