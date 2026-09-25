@@ -150,7 +150,7 @@
       },
       "fcp2j": {
         "competencyId": "d02_c10",
-        "status": "not_started",
+        "status": "validating",
         "checkpointBranch": "phase-fcp2j-d02-c10-closed"
       },
       "fcp2k": {
