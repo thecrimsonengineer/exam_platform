@@ -105,6 +105,10 @@ void main() {
     expect(await catalogue.listAvailable(), hasLength(10));
   });
 
+  test('Batch 2 release exposes a distinct resume confirmation phrase', () {
+    expect(kBatch2ResumeConfirmationPhrase, 'RESUME BATCH 2 RELEASE');
+  });
+
   test('Batch 2 exact confirmation phrases remain fail closed', () async {
     final source = _FileBatch2PopulationSource();
     final operator = LabBatch2ReleaseOperatorService(
