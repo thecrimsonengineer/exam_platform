@@ -48,7 +48,7 @@ void main() {
     ]);
     expect(runs['fcp0'], 'closed');
     expect(runs['fcp1'], 'closed');
-    expect(runs['fcp2'], 'in_progress');
+    expect(runs['fcp2'], 'closed');
     expect(
       runs.entries.skip(3).every((entry) => entry.value == 'not_started'),
       isTrue,
@@ -115,6 +115,7 @@ void main() {
 
     final d02 = Map<String, dynamic>.from(domains['d02'] as Map);
     expect(d02['competencyCount'], 14);
-    expect(d02['status'], 'in_progress');
+    expect(d02['status'], 'closed');
+    expect(d02['cardCount'], 174);
   });
 }
