@@ -31,7 +31,12 @@ class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
   late final LearnerOnlineAccessSessionController _controller;
   late final LearnerOnlineConnectivityCoordinator _connectivityCoordinator;
   late final bool _ownsController;
+  static const Duration _startupAuthorizationRetryDelay = Duration(
+    milliseconds: 750,
+  );
+
   StreamSubscription<LearnerOnlineAccessSessionSnapshot>? _subscription;
+  bool _hasLeftForeground = false;
 
   @override
   void initState() {
@@ -69,15 +74,32 @@ class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
   }
 
   Future<void> _startOnlineSession() async {
-    final hasConnectivity = await _connectivityCoordinator.start();
-    if (!hasConnectivity) {
-      if (mounted) {
-        setState(() {});
-      }
+    // Connectivity is a transport hint only. The remote Firebase-token probe is
+    // the authority for protected learner access, so always attempt it even if
+    // the platform connectivity signal is briefly stale during Android startup.
+    await _connectivityCoordinator.start();
+    await _authorize();
+
+    if (!mounted || _controller.isAuthorizedFor(widget.userId)) {
       return;
     }
 
-    await _authorize();
+    final lockReason = _controller.snapshot.lockReason;
+    final retryableStartupFailure =
+        lockReason == LearnerOnlineLockReason.backendUnavailable ||
+        lockReason == LearnerOnlineLockReason.noAuthenticatedUser ||
+        lockReason == LearnerOnlineLockReason.connectivityLost;
+
+    if (!retryableStartupFailure) {
+      return;
+    }
+
+    await Future<void>.delayed(_startupAuthorizationRetryDelay);
+    if (!mounted || _controller.isAuthorizedFor(widget.userId)) {
+      return;
+    }
+
+    await _authorize(forceRefreshToken: true);
   }
 
   Future<void> _authorize({bool forceRefreshToken = false}) async {
@@ -101,7 +123,15 @@ class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      _hasLeftForeground = true;
+      return;
+    }
+
+    if (state == AppLifecycleState.resumed && _hasLeftForeground) {
+      _hasLeftForeground = false;
       unawaited(_revalidateAfterResume());
     }
   }
