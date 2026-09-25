@@ -53,10 +53,12 @@
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Enclosure Defect Record",
+      "summary": "A noise-control enclosure door is open and damaged during production.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The damaged door reduces the effectiveness of the enclosure as an engineering control.",
+        "Noise levels with the enclosure impaired may differ from the previously verified condition.",
+        "The defect remains a control failure until the enclosure is repaired and its performance checked."
       ]
     },
     "closeout_record": {
