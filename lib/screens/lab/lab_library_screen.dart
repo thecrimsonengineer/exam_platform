@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
+import '../../features/lab/lab_learner_catalogue.dart';
+import '../../features/lab/lab_learner_presentation.dart';
 import '../../features/lab/lab_runtime_binding.dart';
 import 'lab_scenario_briefing_screen.dart';
 import 'lab_scenario_catalog.dart';
@@ -64,9 +69,9 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
 
     try {
       final entries = await binding.listAvailable();
-      final scenarios = entries
-          .map(LabScenarioDefinition.fromCatalogueEntry)
-          .toList(growable: false);
+      final scenarios = await Future.wait(
+        entries.map(_scenarioFromCatalogueEntry),
+      );
 
       if (!mounted) return;
       setState(() {
@@ -80,6 +85,55 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
         _loadError = error.toString();
       });
     }
+  }
+
+  Future<LabScenarioDefinition> _scenarioFromCatalogueEntry(
+    LabLearnerCatalogueEntry entry,
+  ) async {
+    final presentation = await _loadBundledPresentation(
+      labId: entry.labId,
+      versionId: entry.versionId,
+    );
+
+    return LabScenarioDefinition.fromCatalogueEntry(
+      entry,
+      presentationOverride: presentation,
+    );
+  }
+
+  Future<LabLearnerPresentationPackage?> _loadBundledPresentation({
+    required String labId,
+    required String versionId,
+  }) async {
+    final path =
+        'content/lab_population_batch2/' +
+        labId +
+        '/' +
+        versionId +
+        '/learner_presentation.json';
+
+    late final String source;
+    try {
+      source = await rootBundle.loadString(path);
+    } on FlutterError {
+      return null;
+    }
+
+    final decoded = jsonDecode(source);
+    if (decoded is! Map) {
+      throw StateError('Bundled learner presentation must be a JSON object.');
+    }
+
+    final presentation = LabLearnerPresentationPackage.fromJson(
+      decoded.cast<String, Object?>(),
+    );
+    if (presentation.labId != labId || presentation.versionId != versionId) {
+      throw StateError(
+        'Bundled learner presentation identity does not match the catalogue.',
+      );
+    }
+
+    return presentation;
   }
 
   Future<void> _openScenario(LabScenarioDefinition scenario) async {
@@ -103,6 +157,21 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
         labId: scenario.id,
         versionId: versionId,
       );
+      final bundledPresentation = await _loadBundledPresentation(
+        labId: scenario.id,
+        versionId: versionId,
+      );
+      if (bundledPresentation != null) {
+        final report = const LabLearnerPresentationValidator().validate(
+          technicalPackage: delivery.package,
+          presentationPackage: bundledPresentation,
+        );
+        if (!report.isValid) {
+          throw StateError(
+            'Bundled learner presentation does not match the published LAB.',
+          );
+        }
+      }
       if (!mounted) return;
 
       await Navigator.of(context).push(
