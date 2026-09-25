@@ -26,38 +26,48 @@
   },
   "evidencePresentation": {
     "work_authorization_record": {
-      "title": "Work Authorization Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Walkway Hazard Record",
+      "summary": "A main pedestrian route is partially obstructed by deliveries while a nearby cleaned surface remains wet.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "Pedestrians are exposed to both restricted walking space and a slip hazard in the same area.",
+        "The delivered materials reduce the usable route width and can encourage people toward the wet surface.",
+        "The combined conditions mean the normal walkway cannot be treated as fully available."
       ]
     },
     "control_verification_record": {
-      "title": "Control Verification Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Temporary Pedestrian Route Check",
+      "summary": "The delivered material cannot be moved immediately, so pedestrian access depends on a temporary route.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The temporary path must provide usable width and visibility for the expected pedestrian flow.",
+        "People should not have to squeeze past the obstruction or enter another hazard area to continue through the facility.",
+        "The route needs clear separation and should remain maintained until the normal walkway is restored."
       ]
     },
     "condition_change_record": {
-      "title": "Condition Change Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Cable Route Change Record",
+      "summary": "A maintenance cable now crosses the temporary pedestrian path.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The cable introduces a new trip hazard into the route selected to avoid the original obstruction.",
+        "The temporary path no longer matches the condition that was previously checked for pedestrian use.",
+        "Cable routing or protection must be considered before the path can be regarded as safely restored."
       ]
     },
     "response_record": {
-      "title": "Response Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Slip Near-Miss Record",
+      "summary": "A worker slipped at the edge of the cleaned area but recovered balance without injury.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The event demonstrates that the remaining surface and route controls did not fully prevent loss of footing.",
+        "The absence of injury does not remove the evidence that the hazard was still active.",
+        "Surface condition, pedestrian routing and temporary warnings should be reviewed before continued use."
       ]
     },
     "closeout_record": {
-      "title": "Closeout Record",
-      "summary": "Review the verified record before making the next decision.",
+      "title": "Walkway Restoration Record",
+      "summary": "The floor is dry and temporary deliveries and cables have been removed.",
       "details": [
-        "Use the record to confirm the current work boundary and control status."
+        "The original pedestrian route can now be inspected for clear width, surface condition and normal access.",
+        "Temporary barriers and signs should remain until the route has been confirmed ready for ordinary use.",
+        "Reopening should restore the intended layout rather than simply remove the temporary controls."
       ]
     }
   },
