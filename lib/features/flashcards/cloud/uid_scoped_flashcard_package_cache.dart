@@ -99,15 +99,16 @@ class UidScopedFlashcardPackageCache {
     );
 
     while (_totalBytes(state) > maxCompressedBytes) {
-      final candidates = state.entries
-          .where((entry) => entry.key != descriptor.competencyId)
-          .toList()
-        ..sort((left, right) {
-          final byTime = left.value.lastAccessEpochMs.compareTo(
-            right.value.lastAccessEpochMs,
-          );
-          return byTime != 0 ? byTime : left.key.compareTo(right.key);
-        });
+      final candidates =
+          state.entries
+              .where((entry) => entry.key != descriptor.competencyId)
+              .toList()
+            ..sort((left, right) {
+              final byTime = left.value.lastAccessEpochMs.compareTo(
+                right.value.lastAccessEpochMs,
+              );
+              return byTime != 0 ? byTime : left.key.compareTo(right.key);
+            });
 
       if (candidates.isEmpty) {
         throw StateError(
@@ -196,11 +197,8 @@ class UidScopedFlashcardPackageCache {
     }
   }
 
-  int _totalBytes(Map<String, _FlashcardCacheEntry> state) =>
-      state.values.fold<int>(
-        0,
-        (sum, item) => sum + item.compressedBytes.length,
-      );
+  int _totalBytes(Map<String, _FlashcardCacheEntry> state) => state.values
+      .fold<int>(0, (sum, item) => sum + item.compressedBytes.length);
 
   void _requireAuthorized() {
     if (!_accessBoundary.isAuthorizedFor(_userId)) {

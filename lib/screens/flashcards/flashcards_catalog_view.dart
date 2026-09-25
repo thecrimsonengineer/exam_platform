@@ -39,9 +39,7 @@ class _FlashcardsCatalogViewState extends State<FlashcardsCatalogView> {
     });
   }
 
-  Future<void> _openDeck(
-    PublishedFlashcardPackageDescriptor descriptor,
-  ) async {
+  Future<void> _openDeck(PublishedFlashcardPackageDescriptor descriptor) async {
     if (_openingCompetencyId != null) return;
 
     setState(() => _openingCompetencyId = descriptor.competencyId);
@@ -52,18 +50,14 @@ class _FlashcardsCatalogViewState extends State<FlashcardsCatalogView> {
 
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => FlashcardDeckScreen(
-            deck: deck,
-            isDarkMode: widget.isDarkMode,
-          ),
+          builder: (_) =>
+              FlashcardDeckScreen(deck: deck, isDarkMode: widget.isDarkMode),
         ),
       );
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to open flashcards. $error'),
-        ),
+        SnackBar(content: Text('Unable to open flashcards. $error')),
       );
     } finally {
       if (mounted) {
@@ -75,8 +69,7 @@ class _FlashcardsCatalogViewState extends State<FlashcardsCatalogView> {
   @override
   Widget build(BuildContext context) {
     final dark = widget.isDarkMode;
-    final background =
-        dark ? const Color(0xFF0A111D) : const Color(0xFFF4F7FB);
+    final background = dark ? const Color(0xFF0A111D) : const Color(0xFFF4F7FB);
     final text = dark ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
     final muted = dark ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
 
@@ -96,9 +89,7 @@ class _FlashcardsCatalogViewState extends State<FlashcardsCatalogView> {
           future: _catalogFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasError) {
@@ -110,14 +101,10 @@ class _FlashcardsCatalogViewState extends State<FlashcardsCatalogView> {
             }
 
             final catalog =
-                snapshot.data ??
-                const <PublishedFlashcardPackageDescriptor>[];
+                snapshot.data ?? const <PublishedFlashcardPackageDescriptor>[];
 
             if (catalog.isEmpty) {
-              return _FlashcardEmptyState(
-                isDarkMode: dark,
-                onRetry: _retry,
-              );
+              return _FlashcardEmptyState(isDarkMode: dark, onRetry: _retry);
             }
 
             final byDomain =
@@ -243,10 +230,10 @@ class _DomainFlashcardSection extends StatelessWidget {
     final domain = domainForId(domainId);
     if (domain == null) return const SizedBox.shrink();
 
-    final text =
-        isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
-    final muted =
-        isDarkMode ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
+    final text = isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
+    final muted = isDarkMode
+        ? const Color(0xFFA5B1C4)
+        : const Color(0xFF667083);
 
     final available = <String, PublishedFlashcardPackageDescriptor>{
       for (final item in descriptors) item.competencyId: item,
@@ -318,10 +305,10 @@ class _CompetencyDeckTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text =
-        isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
-    final muted =
-        isDarkMode ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
+    final text = isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
+    final muted = isDarkMode
+        ? const Color(0xFFA5B1C4)
+        : const Color(0xFF667083);
 
     return Material(
       color: Colors.transparent,
@@ -434,8 +421,7 @@ class _FlashcardDeckScreenState extends State<FlashcardDeckScreen> {
   @override
   Widget build(BuildContext context) {
     final dark = widget.isDarkMode;
-    final background =
-        dark ? const Color(0xFF0A111D) : const Color(0xFFF4F7FB);
+    final background = dark ? const Color(0xFF0A111D) : const Color(0xFFF4F7FB);
     final text = dark ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
     final muted = dark ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
 
@@ -458,10 +444,7 @@ class _FlashcardDeckScreenState extends State<FlashcardDeckScreen> {
               children: [
                 Text(
                   'Card ${_index + 1} of ${widget.deck.cards.length}',
-                  style: TextStyle(
-                    color: muted,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: TextStyle(color: muted, fontWeight: FontWeight.w800),
                 ),
                 const Spacer(),
                 Text(
@@ -632,10 +615,10 @@ class _FlashcardErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text =
-        isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
-    final muted =
-        isDarkMode ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
+    final text = isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
+    final muted = isDarkMode
+        ? const Color(0xFFA5B1C4)
+        : const Color(0xFF667083);
 
     return Center(
       child: Padding(
@@ -678,20 +661,17 @@ class _FlashcardErrorState extends StatelessWidget {
 }
 
 class _FlashcardEmptyState extends StatelessWidget {
-  const _FlashcardEmptyState({
-    required this.isDarkMode,
-    required this.onRetry,
-  });
+  const _FlashcardEmptyState({required this.isDarkMode, required this.onRetry});
 
   final bool isDarkMode;
   final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    final text =
-        isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
-    final muted =
-        isDarkMode ? const Color(0xFFA5B1C4) : const Color(0xFF667083);
+    final text = isDarkMode ? const Color(0xFFF4F7FB) : const Color(0xFF172033);
+    final muted = isDarkMode
+        ? const Color(0xFFA5B1C4)
+        : const Color(0xFF667083);
 
     return Center(
       child: Padding(

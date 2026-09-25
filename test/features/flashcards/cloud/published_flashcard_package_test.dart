@@ -84,25 +84,21 @@ void main() {
   });
 
   test('FCC-2 delivery descriptor uses exact protected response fields', () {
-    final descriptor = PublishedFlashcardPackageDescriptor.fromJson(
-      <String, dynamic>{
-        'competencyId': 'd02_c14',
-        'flashcardVersion': 1,
-        'flashcardChecksumSha256': List<String>.filled(64, 'a').join(),
-        'flashcardSizeBytes': 1200,
-        'flashcardCount': 18,
-      },
-    );
+    final descriptor =
+        PublishedFlashcardPackageDescriptor.fromJson(<String, dynamic>{
+          'competencyId': 'd02_c14',
+          'flashcardVersion': 1,
+          'flashcardChecksumSha256': List<String>.filled(64, 'a').join(),
+          'flashcardSizeBytes': 1200,
+          'flashcardCount': 18,
+        });
 
     expect(descriptor.competencyId, 'd02_c14');
     expect(descriptor.flashcardCount, 18);
-    expect(
-      descriptor.toKnownRequestJson(),
-      <String, dynamic>{
-        'competencyId': 'd02_c14',
-        'knownFlashcardVersion': 1,
-        'knownFlashcardChecksumSha256': List<String>.filled(64, 'a').join(),
-      },
-    );
+    expect(descriptor.toKnownRequestJson(), <String, dynamic>{
+      'competencyId': 'd02_c14',
+      'knownFlashcardVersion': 1,
+      'knownFlashcardChecksumSha256': List<String>.filled(64, 'a').join(),
+    });
   });
 }

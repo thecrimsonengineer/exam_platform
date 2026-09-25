@@ -27,8 +27,10 @@ class PublishedFlashcardPackageDescriptor {
       throw const FormatException('Invalid flashcard competency ID.');
     }
 
-    final checksum =
-        _requiredString(json, 'flashcardChecksumSha256').toLowerCase();
+    final checksum = _requiredString(
+      json,
+      'flashcardChecksumSha256',
+    ).toLowerCase();
     if (!_sha256Pattern.hasMatch(checksum)) {
       throw const FormatException('Invalid flashcard package SHA-256.');
     }
@@ -70,8 +72,9 @@ class FlashcardPackageResolution {
     }
 
     final rawUrl = json['signedUrl']?.toString().trim();
-    final signedUrl =
-        rawUrl == null || rawUrl.isEmpty ? null : Uri.tryParse(rawUrl);
+    final signedUrl = rawUrl == null || rawUrl.isEmpty
+        ? null
+        : Uri.tryParse(rawUrl);
 
     if (current && signedUrl != null) {
       throw const FormatException(
@@ -125,7 +128,9 @@ class FlashcardCard {
       whyItMatters: _requiredString(json, 'whyItMatters'),
       keyPoint: _requiredString(json, 'keyPoint'),
       tags: List<String>.unmodifiable(
-        tags.map((item) => item.toString().trim()).where((item) => item.isNotEmpty),
+        tags
+            .map((item) => item.toString().trim())
+            .where((item) => item.isNotEmpty),
       ),
     );
   }
@@ -206,8 +211,7 @@ class FlashcardPackageDecoder {
     }
 
     final deck = Map<String, dynamic>.from(rawDeck);
-    final competencyId =
-        _requiredString(deck, 'competencyId').toLowerCase();
+    final competencyId = _requiredString(deck, 'competencyId').toLowerCase();
     final domainId = _requiredString(deck, 'domainId').toLowerCase();
 
     if (competencyId != descriptor.competencyId ||

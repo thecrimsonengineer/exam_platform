@@ -216,9 +216,7 @@ class CloudFlashcardPackageRepository implements FlashcardPackageRepository {
             .package;
       }
 
-      resolution = await gateway.resolveCompetency(
-        competencyId: normalized,
-      );
+      resolution = await gateway.resolveCompetency(competencyId: normalized);
     }
 
     final signedUrl = resolution.signedUrl;
