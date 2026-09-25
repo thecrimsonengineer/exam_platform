@@ -1,0 +1,235 @@
+name: LSP Batch 2 Learner Production Smoke
+
+on:
+  push:
+    branches:
+      - phase-lsp-batch2-direct-publication
+    paths:
+      - ".github/workflows/lsp_batch2_learner_production_smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  learner-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Exercise production as a signed-in learner
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64
+          import gzip
+          import hashlib
+          import json
+          import re
+          import secrets
+          import string
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          PROJECT = "csp11-exam-platform"
+          DB = "(default)"
+          RELEASE = "phase_l_population_batch2_v1_q16_extension_v1"
+          FIRESTORE = f"https://firestore.googleapis.com/v1/projects/{PROJECT}/databases/{DB}/documents"
+
+          source = Path("lib/firebase_options.dart").read_text(encoding="utf-8")
+          match = re.search(r"static const FirebaseOptions web = FirebaseOptions\(\s*apiKey: '([^']+)'", source)
+          if not match:
+              raise SystemExit("Could not resolve Firebase Web API key from firebase_options.dart.")
+          api_key = match.group(1)
+
+          def http_json(method, url, payload=None, token=None, timeout=60):
+              data = None if payload is None else json.dumps(payload, separators=(",", ":")).encode()
+              headers = {"Content-Type": "application/json"}
+              if token:
+                  headers["Authorization"] = "Bearer " + token
+              req = urllib.request.Request(url, data=data, method=method, headers=headers)
+              try:
+                  with urllib.request.urlopen(req, timeout=timeout) as resp:
+                      raw = resp.read().decode()
+                      return resp.status, json.loads(raw) if raw else {}
+              except urllib.error.HTTPError as exc:
+                  raw = exc.read().decode("utf-8", "replace")
+                  raise RuntimeError(f"HTTP {exc.code} for {url}: {raw}") from exc
+
+          def decode_value(v):
+              if "nullValue" in v: return None
+              if "booleanValue" in v: return v["booleanValue"]
+              if "integerValue" in v: return int(v["integerValue"])
+              if "doubleValue" in v: return v["doubleValue"]
+              if "timestampValue" in v: return v["timestampValue"]
+              if "stringValue" in v: return v["stringValue"]
+              if "arrayValue" in v:
+                  return [decode_value(x) for x in v["arrayValue"].get("values", [])]
+              if "mapValue" in v:
+                  return {k: decode_value(x) for k, x in v["mapValue"].get("fields", {}).items()}
+              raise RuntimeError(f"Unsupported Firestore value: {v}")
+
+          def decode_fields(doc):
+              return {k: decode_value(v) for k, v in doc.get("fields", {}).items()}
+
+          alphabet = string.ascii_letters + string.digits
+          password = "Csp11!" + "".join(secrets.choice(alphabet) for _ in range(24))
+          email = "csp11-lab-smoke-" + secrets.token_hex(8) + "@example.com"
+          signup_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={urllib.parse.quote(api_key)}"
+          delete_url = f"https://identitytoolkit.googleapis.com/v1/accounts:delete?key={urllib.parse.quote(api_key)}"
+
+          id_token = None
+          try:
+              _, auth = http_json("POST", signup_url, {
+                  "email": email,
+                  "password": password,
+                  "returnSecureToken": True,
+              })
+              id_token = auth.get("idToken")
+              if not id_token:
+                  raise RuntimeError("Firebase learner sign-up returned no ID token.")
+              print("LEARNER_AUTH=PASS")
+
+              visibility_url = FIRESTORE + "/labLearnerReleaseExtensionState/" + RELEASE
+              _, visibility_doc = http_json("GET", visibility_url, token=id_token)
+              visibility = decode_fields(visibility_doc)
+              if visibility.get("accepted") is not True or visibility.get("releaseId") != RELEASE:
+                  raise RuntimeError("Learner cannot verify accepted Batch 2 visibility state.")
+              print("Q17_VISIBILITY=PASS")
+
+              query = {
+                  "structuredQuery": {
+                      "from": [{"collectionId": "labLearnerCatalogue"}],
+                      "where": {
+                          "compositeFilter": {
+                              "op": "AND",
+                              "filters": [
+                                  {
+                                      "fieldFilter": {
+                                          "field": {"fieldPath": "available"},
+                                          "op": "EQUAL",
+                                          "value": {"booleanValue": True},
+                                      }
+                                  },
+                                  {
+                                      "fieldFilter": {
+                                          "field": {"fieldPath": "releaseId"},
+                                          "op": "EQUAL",
+                                          "value": {"stringValue": RELEASE},
+                                      }
+                                  },
+                              ],
+                          }
+                      },
+                  }
+              }
+              _, rows = http_json(
+                  "POST",
+                  f"https://firestore.googleapis.com/v1/projects/{PROJECT}/databases/{DB}/documents:runQuery",
+                  query,
+                  token=id_token,
+              )
+              docs = [row["document"] for row in rows if "document" in row]
+              if len(docs) != 10:
+                  raise RuntimeError(f"Expected 10 learner-visible Batch 2 LABs, got {len(docs)}.")
+
+              catalogue = [decode_fields(doc) for doc in docs]
+              identities = set()
+              for item in catalogue:
+                  if item.get("available") is not True or item.get("releaseId") != RELEASE:
+                      raise RuntimeError("Learner catalogue returned an invalid release entry.")
+                  identities.add(item["labId"] + "__" + item["versionId"])
+              if len(identities) != 10:
+                  raise RuntimeError("Learner catalogue identities are not unique.")
+              print("LEARNER_CATALOGUE=10/10")
+
+              loaded = 0
+              total_chunks = 0
+              for version_key in sorted(identities):
+                  parent_url = FIRESTORE + "/labPublishedVersions/" + urllib.parse.quote(version_key)
+                  _, parent_doc = http_json("GET", parent_url, token=id_token)
+                  parent = decode_fields(parent_doc)
+                  if parent.get("schemaVersion") != "csp11.lab.published_repository.chunked.v2":
+                      raise RuntimeError(f"{version_key}: unexpected published schema.")
+                  if parent.get("lifecycle") != "published":
+                      raise RuntimeError(f"{version_key}: published lifecycle missing.")
+
+                  expected_count = parent.get("payloadChunkCount")
+                  manifest = parent.get("payloadManifest")
+                  if not isinstance(expected_count, int) or not isinstance(manifest, dict):
+                      raise RuntimeError(f"{version_key}: invalid chunk manifest metadata.")
+
+                  chunk_url = parent_url + "/payloadChunks?pageSize=450"
+                  _, chunk_response = http_json("GET", chunk_url, token=id_token, timeout=120)
+                  chunk_docs = chunk_response.get("documents", [])
+                  if len(chunk_docs) != expected_count:
+                      raise RuntimeError(
+                          f"{version_key}: expected {expected_count} chunks, got {len(chunk_docs)}."
+                      )
+                  total_chunks += len(chunk_docs)
+                  chunks = [decode_fields(doc) for doc in chunk_docs]
+
+                  decoded_payloads = {}
+                  fields_manifest = manifest.get("fields", {})
+                  for field_name in (
+                      "publishedJson",
+                      "qualityEvidenceJson",
+                      "exhaustiveRouteEvidenceJson",
+                      "publishEvidenceJson",
+                  ):
+                      fm = fields_manifest.get(field_name)
+                      if not isinstance(fm, dict):
+                          raise RuntimeError(f"{version_key}: missing manifest for {field_name}.")
+                      field_chunks = sorted(
+                          [c for c in chunks if c.get("fieldName") == field_name],
+                          key=lambda c: c["chunkIndex"],
+                      )
+                      if len(field_chunks) != fm.get("chunkCount"):
+                          raise RuntimeError(f"{version_key}: chunk count mismatch for {field_name}.")
+                      compressed = bytearray()
+                      for index, chunk in enumerate(field_chunks):
+                          if chunk.get("chunkIndex") != index:
+                              raise RuntimeError(f"{version_key}: chunk index gap for {field_name}.")
+                          part = base64.b64decode(chunk["dataBase64"])
+                          if hashlib.sha256(part).hexdigest() != chunk.get("chunkFingerprint"):
+                              raise RuntimeError(f"{version_key}: chunk fingerprint mismatch.")
+                          compressed.extend(part)
+                      if len(compressed) != fm.get("compressedByteLength"):
+                          raise RuntimeError(f"{version_key}: compressed byte count mismatch.")
+                      raw = gzip.decompress(bytes(compressed))
+                      if len(raw) != fm.get("uncompressedByteLength"):
+                          raise RuntimeError(f"{version_key}: uncompressed byte count mismatch.")
+                      if hashlib.sha256(raw).hexdigest() != fm.get("payloadFingerprint"):
+                          raise RuntimeError(f"{version_key}: payload fingerprint mismatch.")
+                      decoded_payloads[field_name] = raw.decode("utf-8")
+
+                  published = json.loads(decoded_payloads["publishedJson"])
+                  metadata = published.get("metadata", {})
+                  lab_id, version_id = version_key.rsplit("__", 1)
+                  if metadata.get("id") != lab_id or metadata.get("versionId") != version_id:
+                      raise RuntimeError(f"{version_key}: reconstructed LAB identity mismatch.")
+                  if str(metadata.get("lifecycle", "")).lower() != "published":
+                      raise RuntimeError(f"{version_key}: reconstructed LAB is not published.")
+
+                  loaded += 1
+                  print(f"LEARNER_LOAD_PASS={version_key} chunks={expected_count}")
+
+              if loaded != 10:
+                  raise RuntimeError(f"Expected 10 learner LAB loads, got {loaded}.")
+              print(f"LEARNER_LAB_LOADS={loaded}/10")
+              print(f"LEARNER_CHUNKS_READ={total_chunks}")
+              print("LEARNER_SIDE_PRODUCTION_SMOKE=SUCCESS")
+
+          finally:
+              if id_token:
+                  try:
+                      http_json("POST", delete_url, {"idToken": id_token})
+                      print("TEMP_LEARNER_CLEANUP=PASS")
+                  except Exception as exc:
+                      print("TEMP_LEARNER_CLEANUP=WARNING")
+                      print(type(exc).__name__)
+          PY
