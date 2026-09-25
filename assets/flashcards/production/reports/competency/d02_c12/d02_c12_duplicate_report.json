@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "phase": "FCP-2L",
+  "competencyId": "d02_c12",
+  "exactPackageDuplicateFindings": 0,
+  "blockingPackageDuplicates": 0,
+  "crossCompetencyResolution": [
+    {
+      "semanticSlug": "management_commitment_to_safety",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03"
+    },
+    {
+      "semanticSlug": "safety_accountability",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03"
+    },
+    {
+      "semanticSlug": "safety_communication",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c03"
+    },
+    {
+      "semanticSlug": "roles_responsibilities_authorities",
+      "resolution": "DEFER_TO_CANONICAL_COMPETENCY",
+      "targetCompetencyId": "d02_c09"
+    }
+  ],
+  "withinCompetencyMerges": [],
+  "unresolvedCompetencySemanticCollisions": 0,
+  "note": "Whole-corpus semantic comparison is repeated at FCP-8."
+}
