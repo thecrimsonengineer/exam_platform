@@ -19,10 +19,8 @@ FCP-2I  d02_c09  CLOSED
 FCP-2J  d02_c10  CLOSED
 FCP-2K  d02_c11  CLOSED
 FCP-2L  d02_c12  CLOSED
-FCP-2M  d02_c13  VALIDATING
+FCP-2M  d02_c13  CLOSED
 FCP-2N  d02_c14  NOT STARTED
 ```
 
-FCP-2L closed at `phase-fcp2l-d02-c12-closed@7789ef404df8911d71ea5284aa5c5f82909a6bff`.
-
-FCP-2M started strictly from that closed checkpoint. Candidate package: 16 project-management principles and techniques cards.
+FCP-2M package validation passed at `45a541224f31912bcf0bfbdd31a832e2c905be14` in run `36122718558`. The closure metadata state must pass CI before `phase-fcp2m-d02-c13-closed` is created.
