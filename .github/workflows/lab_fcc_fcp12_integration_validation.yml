@@ -1,0 +1,223 @@
+name: LAB FCC FCP12 Integration Validation
+
+on:
+  push:
+    branches:
+      - phase-lab-fcc-fcp12-integrated
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+  SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/flashcards/cloud \
+            lib/screens/flashcards \
+            test/features/flashcards/cloud
+
+      - name: Analyze integrated app
+        run: flutter analyze --no-fatal-infos
+
+      - name: FCC and FCP regression
+        run: |
+          flutter test test/features/flashcards/cloud/fcc_fcp12_publication_source_test.dart
+          flutter test test/features/flashcards/cloud/fcc_delivery_contract_test.dart
+          flutter test test/features/flashcards/cloud/published_flashcard_package_test.dart
+
+      - name: Preserve LAB checkpoint regressions
+        run: |
+          flutter test test/lab_quality/lsp_q13_persistent_runtime_binding_test.dart
+          flutter test test/screens/lab/lab_library_scenario_test.dart
+
+      - name: Verify frozen D01 D02 corpus
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("assets/flashcards/production")
+          packages = sorted(root.glob("d0[12]/d0[12]_c*/d0[12]_c*_flashcards_v1.json"))
+          assert len(packages) == 21, len(packages)
+
+          totals = {"d01": 0, "d02": 0}
+          competency_counts = {"d01": 0, "d02": 0}
+          ids = set()
+
+          for path in packages:
+              data = json.loads(path.read_text(encoding="utf-8"))
+              assert data["schemaVersion"] == "csp11.flashcards.package.v1"
+              deck = data["deck"]
+              competency = deck["competencyId"]
+              domain = deck["domainId"]
+              cards = data["cards"]
+              assert competency not in ids
+              ids.add(competency)
+              assert domain in totals
+              assert len(cards) == len(deck["cardIds"])
+              totals[domain] += len(cards)
+              competency_counts[domain] += 1
+
+          assert competency_counts == {"d01": 7, "d02": 14}, competency_counts
+          assert totals == {"d01": 78, "d02": 174}, totals
+          assert sum(totals.values()) == 252
+          print("FCP_D01_PACKAGES=7")
+          print("FCP_D01_CARDS=78")
+          print("FCP_D02_PACKAGES=14")
+          print("FCP_D02_CARDS=174")
+          print("FCP_TOTAL=21_PACKAGES_252_CARDS")
+          PY
+
+      - name: Require learner public configuration
+        shell: bash
+        run: |
+          test -n "${SUPABASE_PUBLISHABLE_KEY:-}"
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "Invalid Supabase publishable key."; exit 1 ;;
+          esac
+
+      - name: Live learner flashcard production smoke
+        shell: bash
+        run: |
+          python - <<'PY'
+          import gzip
+          import hashlib
+          import json
+          import re
+          import secrets
+          import string
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+          import os
+
+          supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
+          supabase_key = os.environ["SUPABASE_PUBLISHABLE_KEY"]
+          firebase_source = Path("lib/firebase_options.dart").read_text(encoding="utf-8")
+          match = re.search(
+              r"static const FirebaseOptions web = FirebaseOptions\(\s*apiKey: '([^']+)'",
+              firebase_source,
+          )
+          assert match, "Firebase web API key not found"
+          firebase_key = match.group(1)
+
+          def request_json(method, url, payload=None, headers=None):
+              data = None if payload is None else json.dumps(payload).encode()
+              merged = {"Content-Type": "application/json"}
+              if headers:
+                  merged.update(headers)
+              req = urllib.request.Request(url, data=data, method=method, headers=merged)
+              with urllib.request.urlopen(req, timeout=90) as response:
+                  raw = response.read()
+                  return response.status, json.loads(raw.decode()) if raw else {}
+
+          alphabet = string.ascii_letters + string.digits
+          email = "fcc-smoke-" + secrets.token_hex(8) + "@example.com"
+          password = "Csp11!" + "".join(secrets.choice(alphabet) for _ in range(24))
+          signup = (
+              "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="
+              + urllib.parse.quote(firebase_key)
+          )
+          delete = (
+              "https://identitytoolkit.googleapis.com/v1/accounts:delete?key="
+              + urllib.parse.quote(firebase_key)
+          )
+
+          token = None
+          try:
+              _, auth = request_json(
+                  "POST",
+                  signup,
+                  {"email": email, "password": password, "returnSecureToken": True},
+              )
+              token = auth["idToken"]
+
+              headers = {
+                  "Authorization": "Bearer " + token,
+                  "apikey": supabase_key,
+              }
+              endpoint = supabase_url + "/functions/v1/learner-question-packages"
+
+              _, catalog_response = request_json(
+                  "POST",
+                  endpoint,
+                  {"operation": "flashcard_catalog"},
+                  headers,
+              )
+              catalog = catalog_response["catalog"]
+              assert len(catalog) == 21, len(catalog)
+
+              d01 = [x for x in catalog if x["competencyId"].startswith("d01_")]
+              d02 = [x for x in catalog if x["competencyId"].startswith("d02_")]
+              assert len(d01) == 7, len(d01)
+              assert len(d02) == 14, len(d02)
+              assert sum(x["flashcardCount"] for x in d01) == 78
+              assert sum(x["flashcardCount"] for x in d02) == 174
+
+              _, package_response = request_json(
+                  "POST",
+                  endpoint,
+                  {
+                      "operation": "flashcard_competency",
+                      "competencyId": "d01_c01",
+                  },
+                  headers,
+              )
+              assert package_response["current"] is False
+              signed_url = package_response["signedUrl"]
+
+              with urllib.request.urlopen(signed_url, timeout=90) as response:
+                  compressed = response.read()
+
+              assert len(compressed) == package_response["flashcardSizeBytes"]
+              assert (
+                  hashlib.sha256(compressed).hexdigest()
+                  == package_response["flashcardChecksumSha256"]
+              )
+
+              package = json.loads(gzip.decompress(compressed).decode())
+              assert package["schemaVersion"] == "csp11.flashcards.package.v1"
+              assert package["deck"]["competencyId"] == "d01_c01"
+              assert len(package["cards"]) == 8
+
+              print("FCC_LEARNER_AUTH=PASS")
+              print("FCC_FLASHCARD_CATALOG=21/21")
+              print("FCC_DOMAIN01=7_PACKAGES_78_CARDS")
+              print("FCC_DOMAIN02=14_PACKAGES_174_CARDS")
+              print("FCC_SIGNED_PACKAGE_DOWNLOAD=PASS")
+              print("FCC_CHECKSUM=PASS")
+              print("FCC_RUNTIME_SMOKE=SUCCESS")
+          finally:
+              if token:
+                  try:
+                      request_json("POST", delete, {"idToken": token})
+                      print("FCC_TEMP_LEARNER_CLEANUP=PASS")
+                  except Exception:
+                      print("FCC_TEMP_LEARNER_CLEANUP=WARNING")
+          PY
+
+      - name: Diff hygiene
+        run: git diff --check
