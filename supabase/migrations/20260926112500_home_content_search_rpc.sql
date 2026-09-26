@@ -1,4 +1,4 @@
-create or replace function public.csp11_search_normalize(value text)
+create or replace function public.csp11_search_normalize(input_text text)
 returns text
 language sql
 immutable
@@ -10,7 +10,7 @@ as $$
       regexp_replace(
         lower(
           translate(
-            replace(value, '&', ' and '),
+            replace(input_text, '&', ' and '),
             '₀₁₂₃₄₅₆₇₈₉',
             '0123456789'
           )
@@ -50,7 +50,7 @@ set search_path = public
 as $$
 with params as (
   select
-    public.csp11_search_normalize(coalesce(p_query, '')) as query,
+    public.csp11_search_normalize(coalesce(p_query, '')) as query_text,
     greatest(1, least(coalesce(p_limit, 8), 20)) as result_limit
 ), published_sources as (
   select
@@ -80,37 +80,37 @@ with params as (
       'content/' || pp.package_key || '/v' || pp.version::text || '.json.gz'
 ), subtopics as (
   select
-    source.domain_id,
-    source.domain_title,
-    source.competency_id,
-    source.competency_title,
-    topic->>'id' as topic_id,
-    topic->>'title' as topic_title,
-    subtopic->>'id' as subtopic_id,
-    subtopic->>'title' as subtopic_title,
-    subtopic
-  from published_sources source
+    src.domain_id,
+    src.domain_title,
+    src.competency_id,
+    src.competency_title,
+    topic_item->>'id' as topic_id,
+    topic_item->>'title' as topic_title,
+    subtopic_item->>'id' as subtopic_id,
+    subtopic_item->>'title' as subtopic_title,
+    subtopic_item as subtopic_json
+  from published_sources src
   cross join lateral jsonb_array_elements(
     case
-      when jsonb_typeof(source.content_payload->'topics') = 'array'
-        then source.content_payload->'topics'
+      when jsonb_typeof(src.content_payload->'topics') = 'array'
+        then src.content_payload->'topics'
       else '[]'::jsonb
     end
-  ) topic
+  ) as topic_row(topic_item)
   cross join lateral jsonb_array_elements(
     case
-      when jsonb_typeof(topic->'subtopics') = 'array'
-        then topic->'subtopics'
+      when jsonb_typeof(topic_item->'subtopics') = 'array'
+        then topic_item->'subtopics'
       else '[]'::jsonb
     end
-  ) subtopic
-  where coalesce(topic->>'id', '') <> ''
-    and coalesce(subtopic->>'id', '') <> ''
+  ) as subtopic_row(subtopic_item)
+  where coalesce(topic_item->>'id', '') <> ''
+    and coalesce(subtopic_item->>'id', '') <> ''
 ), fields as (
   select
     domain_id, domain_title, competency_id, competency_title,
     topic_id, topic_title, subtopic_id, subtopic_title,
-    'Subtopic'::text as section,
+    'Subtopic'::text as section_name,
     subtopic_title as field_text,
     1100 as weight,
     false as contextual
@@ -121,37 +121,31 @@ with params as (
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Learning objective', value, 940, false
+    'Learning objective', objective_text, 940, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case
-      when jsonb_typeof(s.subtopic->'learningObjectives') = 'array'
-        then s.subtopic->'learningObjectives'
-      else '[]'::jsonb
-    end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'learningObjectives') = 'array'
+      then s.subtopic_json->'learningObjectives' else '[]'::jsonb end
+  ) as objective_row(objective_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Main content', value #>> '{}', 840, false
+    'Main content', content_value #>> '{}', 840, false
   from subtopics s
   cross join lateral jsonb_array_elements(
-    case
-      when jsonb_typeof(s.subtopic->'blocks') = 'array'
-        then s.subtopic->'blocks'
-      else '[]'::jsonb
-    end
-  ) block
+    case when jsonb_typeof(s.subtopic_json->'blocks') = 'array'
+      then s.subtopic_json->'blocks' else '[]'::jsonb end
+  ) as block_row(block_json)
   cross join lateral jsonb_path_query(
-    coalesce(block->'data', '{}'::jsonb),
+    coalesce(block_json->'data', '{}'::jsonb),
     '$.** ? (@.type() == "string")'
-  ) value
+  ) as content_row(content_value)
   where not (
-    lower(coalesce(block->>'type', '')) = 'reference'
-    and public.csp11_search_normalize(coalesce(block->'data'->>'title', '')) =
+    lower(coalesce(block_json->>'type', '')) = 'reference'
+    and public.csp11_search_normalize(coalesce(block_json->'data'->>'title', '')) =
       'csp source traceability'
   )
 
@@ -160,221 +154,202 @@ with params as (
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Key point', value, 820, false
+    'Key point', item_text, 820, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'keyPoints') = 'array'
-      then s.subtopic->'keyPoints' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'keyPoints') = 'array'
+      then s.subtopic_json->'keyPoints' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Key takeaway', value, 810, false
+    'Key takeaway', item_text, 810, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'keyTakeaways') = 'array'
-      then s.subtopic->'keyTakeaways' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'keyTakeaways') = 'array'
+      then s.subtopic_json->'keyTakeaways' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Exam tip', value, 790, false
+    'Exam tip', item_text, 790, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'examTips') = 'array'
-      then s.subtopic->'examTips' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'examTips') = 'array'
+      then s.subtopic_json->'examTips' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Workplace example', value, 770, false
+    'Workplace example', item_text, 770, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'examples') = 'array'
-      then s.subtopic->'examples' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'examples') = 'array'
+      then s.subtopic_json->'examples' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Common mistake', value, 750, false
+    'Common mistake', item_text, 750, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'commonMistakes') = 'array'
-      then s.subtopic->'commonMistakes' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'commonMistakes') = 'array'
+      then s.subtopic_json->'commonMistakes' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Case study', value, 740, false
+    'Case study', item_text, 740, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'caseStudies') = 'array'
-      then s.subtopic->'caseStudies' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'caseStudies') = 'array'
+      then s.subtopic_json->'caseStudies' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Formula', value, 720, false
+    'Formula', item_text, 720, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'formulas') = 'array'
-      then s.subtopic->'formulas' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'formulas') = 'array'
+      then s.subtopic_json->'formulas' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
   select
     s.domain_id, s.domain_title, s.competency_id, s.competency_title,
     s.topic_id, s.topic_title, s.subtopic_id, s.subtopic_title,
-    'Reference', value, 650, false
+    'Reference', item_text, 650, false
   from subtopics s
   cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(s.subtopic->'references') = 'array'
-      then s.subtopic->'references' else '[]'::jsonb end
-  ) value
+    case when jsonb_typeof(s.subtopic_json->'references') = 'array'
+      then s.subtopic_json->'references' else '[]'::jsonb end
+  ) as item_row(item_text)
 
   union all
 
-  select
-    domain_id, domain_title, competency_id, competency_title,
+  select domain_id, domain_title, competency_id, competency_title,
     topic_id, topic_title, subtopic_id, subtopic_title,
     'Topic', topic_title, 700, true
   from subtopics
 
   union all
 
-  select
-    domain_id, domain_title, competency_id, competency_title,
+  select domain_id, domain_title, competency_id, competency_title,
     topic_id, topic_title, subtopic_id, subtopic_title,
     'Competency', competency_title, 640, true
   from subtopics
 
   union all
 
-  select
-    domain_id, domain_title, competency_id, competency_title,
+  select domain_id, domain_title, competency_id, competency_title,
     topic_id, topic_title, subtopic_id, subtopic_title,
     'Competency', competency_id, 620, true
   from subtopics
 
   union all
 
-  select
-    domain_id, domain_title, competency_id, competency_title,
+  select domain_id, domain_title, competency_id, competency_title,
     topic_id, topic_title, subtopic_id, subtopic_title,
     'Domain', domain_title, 580, true
   from subtopics
 
   union all
 
-  select
-    domain_id, domain_title, competency_id, competency_title,
+  select domain_id, domain_title, competency_id, competency_title,
     topic_id, topic_title, subtopic_id, subtopic_title,
     'Domain', upper(domain_id), 560, true
   from subtopics
 ), normalized_fields as (
-  select
-    fields.*,
-    public.csp11_search_normalize(field_text) as normalized_text
-  from fields
-  where coalesce(trim(field_text), '') <> ''
+  select f.*, public.csp11_search_normalize(f.field_text) as normalized_text
+  from fields f
+  where coalesce(trim(f.field_text), '') <> ''
 ), scored as (
   select
-    field.*,
+    f.*,
     case
-      when field.normalized_text = params.query
-        then field.weight + 500
-      when field.normalized_text like params.query || ' %'
-        then field.weight + 420
-      when (' ' || field.normalized_text || ' ')
-        like ('% ' || params.query || ' %')
-        then field.weight + 340
-      when params.query <> ''
-        and not exists (
-          select 1
-          from regexp_split_to_table(params.query, ' ') query_token
-          where length(query_token) >= 2
-            and not exists (
-              select 1
-              from regexp_split_to_table(field.normalized_text, ' ') value_token
-              where value_token like query_token || '%'
-            )
-        )
-        then field.weight + 220
-      when length(replace(params.query, ' ', '')) >= 4
-        and replace(field.normalized_text, ' ', '')
-          like '%' || replace(params.query, ' ', '') || '%'
-        then field.weight + 180
+      when f.normalized_text = p.query_text then f.weight + 500
+      when f.normalized_text like p.query_text || ' %' then f.weight + 420
+      when (' ' || f.normalized_text || ' ')
+        like ('% ' || p.query_text || ' %') then f.weight + 340
+      when p.query_text <> '' and not exists (
+        select 1
+        from regexp_split_to_table(p.query_text, ' ') as qt(token)
+        where length(qt.token) >= 2
+          and not exists (
+            select 1
+            from regexp_split_to_table(f.normalized_text, ' ') as vt(token)
+            where vt.token like qt.token || '%'
+          )
+      ) then f.weight + 220
+      when length(replace(p.query_text, ' ', '')) >= 4
+        and replace(f.normalized_text, ' ', '')
+          like '%' || replace(p.query_text, ' ', '') || '%'
+        then f.weight + 180
       else -1
     end as computed_score
-  from normalized_fields field
-  cross join params
-  where length(params.query) >= 2
+  from normalized_fields f
+  cross join params p
+  where length(p.query_text) >= 2
 ), best_per_subtopic as (
-  select
-    scored.*,
+  select s.*,
     row_number() over (
-      partition by competency_id, subtopic_id
-      order by computed_score desc, weight desc, section, field_text
+      partition by s.competency_id, s.subtopic_id
+      order by s.computed_score desc, s.weight desc, s.section_name, s.field_text
     ) as best_rank
-  from scored
-  where computed_score >= 0
+  from scored s
+  where s.computed_score >= 0
 ), best_matches as (
-  select *
-  from best_per_subtopic
-  where best_rank = 1
+  select * from best_per_subtopic where best_rank = 1
 ), diversity_ranked as (
-  select
-    best_matches.*,
-    case
-      when contextual then row_number() over (
-        partition by competency_id, contextual
-        order by computed_score desc, topic_id, subtopic_id
-      )
-      else 1
-    end as context_rank
-  from best_matches
+  select b.*,
+    case when b.contextual then row_number() over (
+      partition by b.competency_id, b.contextual
+      order by b.computed_score desc, b.topic_id, b.subtopic_id
+    ) else 1 end as context_rank
+  from best_matches b
 )
 select
-  domain_id,
-  domain_title,
-  competency_id,
-  competency_title,
-  topic_id,
-  topic_title,
-  subtopic_id,
-  subtopic_title,
-  section as match_section,
-  field_text as matched_text,
-  computed_score::integer as score
-from diversity_ranked
-cross join params
-where (not contextual or context_rank <= 2)
+  d.domain_id,
+  d.domain_title,
+  d.competency_id,
+  d.competency_title,
+  d.topic_id,
+  d.topic_title,
+  d.subtopic_id,
+  d.subtopic_title,
+  d.section_name as match_section,
+  d.field_text as matched_text,
+  d.computed_score::integer as score
+from diversity_ranked d
+cross join params p
+where (not d.contextual or d.context_rank <= 2)
 order by
-  computed_score desc,
-  domain_id,
-  competency_id,
-  topic_id,
-  lower(subtopic_title),
-  subtopic_id
+  d.computed_score desc,
+  d.domain_id,
+  d.competency_id,
+  d.topic_id,
+  lower(d.subtopic_title),
+  d.subtopic_id
 limit (select result_limit from params);
 $$;
 
