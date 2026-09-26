@@ -244,4 +244,33 @@ revoke all on function public.search_published_study_content(text, integer) from
 revoke all on function public.search_published_study_content(text, integer) from authenticated;
 grant execute on function public.search_published_study_content(text, integer) to service_role;
 
+create or replace function public.csp11_refresh_study_search_index_from_catalog()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+begin
+  perform public.refresh_published_study_search_index_refined();
+  return new;
+end;
+$$;
+
+revoke all on function public.csp11_refresh_study_search_index_from_catalog() from public;
+revoke all on function public.csp11_refresh_study_search_index_from_catalog() from anon;
+revoke all on function public.csp11_refresh_study_search_index_from_catalog() from authenticated;
+
+drop trigger if exists published_catalog_search_index_insert on public.published_catalog;
+create trigger published_catalog_search_index_insert
+after insert on public.published_catalog
+for each row
+execute function public.csp11_refresh_study_search_index_from_catalog();
+
+drop trigger if exists published_catalog_search_index_content_update on public.published_catalog;
+create trigger published_catalog_search_index_content_update
+after update of content_version on public.published_catalog
+for each row
+when (old.content_version is distinct from new.content_version)
+execute function public.csp11_refresh_study_search_index_from_catalog();
+
 select public.refresh_published_study_search_index_refined();
