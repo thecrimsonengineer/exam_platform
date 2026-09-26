@@ -217,5 +217,157 @@ void main() {
       expect(results.first.subtopicId, 'd03_c02_t01_s01');
       expect(results.first.matchSection, 'Subtopic');
     });
+
+    test('searches topic and competency context without flooding results', () async {
+      final content = StudyContent(
+        id: 'd03_c02-v1',
+        domainId: 'd03',
+        competencyId: 'd03_c02',
+        competencyNumber: 2,
+        title: 'Risk Management Strategies',
+        status: 'Published',
+        version: 1,
+        topics: <StudyTopic>[
+          StudyTopic(
+            id: 'd03_c02_t01',
+            title: 'Risk Analysis',
+            subtopics: List<StudySubtopic>.generate(
+              5,
+              (index) => StudySubtopic(
+                id: 'd03_c02_t01_s0${index + 1}',
+                title: 'Method ${index + 1}',
+              ),
+            ),
+          ),
+        ],
+      );
+      final service = StudyContentSearchService(
+        loadPublishedContent: () async => <StudyContent>[content],
+      );
+
+      final topicResults = await service.search('risk analysis');
+      final competencyResults = await service.search('risk management');
+
+      expect(topicResults, hasLength(2));
+      expect(topicResults.every((item) => item.matchSection == 'Topic'), isTrue);
+      expect(competencyResults, hasLength(2));
+      expect(
+        competencyResults.every((item) => item.matchSection == 'Competency'),
+        isTrue,
+      );
+    });
+
+    test('supports multi-token prefixes for fast learner typing', () async {
+      final service = StudyContentSearchService(
+        loadPublishedContent: () async => <StudyContent>[_content()],
+      );
+
+      final results = await service.search('hier con');
+
+      expect(results, isNotEmpty);
+      expect(results.first.subtopicId, 'd03_c02_t01_s01');
+      expect(results.first.matchSection, 'Subtopic');
+    });
+
+    test('matches compound terms across punctuation differences', () async {
+      final content = StudyContent(
+        id: 'd03_c02-v1',
+        domainId: 'd03',
+        competencyId: 'd03_c02',
+        competencyNumber: 2,
+        title: 'Risk Management Strategies',
+        status: 'Published',
+        version: 1,
+        topics: const <StudyTopic>[
+          StudyTopic(
+            id: 'd03_c02_t01',
+            title: 'Energy Control',
+            subtopics: <StudySubtopic>[
+              StudySubtopic(
+                id: 'd03_c02_t01_s01',
+                title: 'Lock-out/Tag-out',
+              ),
+            ],
+          ),
+        ],
+      );
+      final service = StudyContentSearchService(
+        loadPublishedContent: () async => <StudyContent>[content],
+      );
+
+      final results = await service.search('lockout');
+
+      expect(results, hasLength(1));
+      expect(results.single.subtopicTitle, 'Lock-out/Tag-out');
+    });
+
+    test('does not return arbitrary infix-only matches for short terms', () async {
+      final content = StudyContent(
+        id: 'd03_c02-v1',
+        domainId: 'd03',
+        competencyId: 'd03_c02',
+        competencyNumber: 2,
+        title: 'Risk Management Strategies',
+        status: 'Published',
+        version: 1,
+        topics: const <StudyTopic>[
+          StudyTopic(
+            id: 'd03_c02_t01',
+            title: 'General',
+            subtopics: <StudySubtopic>[
+              StudySubtopic(
+                id: 'd03_c02_t01_s01',
+                title: 'The Control Process',
+              ),
+            ],
+          ),
+        ],
+      );
+      final service = StudyContentSearchService(
+        loadPublishedContent: () async => <StudyContent>[content],
+      );
+
+      expect(await service.search('he'), isEmpty);
+    });
+
+    test('honors the requested result limit deterministically', () async {
+      final content = StudyContent(
+        id: 'd03_c02-v1',
+        domainId: 'd03',
+        competencyId: 'd03_c02',
+        competencyNumber: 2,
+        title: 'Risk Management Strategies',
+        status: 'Published',
+        version: 1,
+        topics: <StudyTopic>[
+          StudyTopic(
+            id: 'd03_c02_t01',
+            title: 'Controls',
+            subtopics: List<StudySubtopic>.generate(
+              6,
+              (index) => StudySubtopic(
+                id: 'd03_c02_t01_s0${index + 1}',
+                title: 'Control method ${index + 1}',
+              ),
+            ),
+          ),
+        ],
+      );
+      final service = StudyContentSearchService(
+        loadPublishedContent: () async => <StudyContent>[content],
+      );
+
+      final results = await service.search('control', limit: 3);
+
+      expect(results, hasLength(3));
+      expect(
+        results.map((item) => item.subtopicId),
+        <String>[
+          'd03_c02_t01_s01',
+          'd03_c02_t01_s02',
+          'd03_c02_t01_s03',
+        ],
+      );
+    });
   });
 }
