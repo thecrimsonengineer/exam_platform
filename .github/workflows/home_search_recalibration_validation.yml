@@ -1,0 +1,85 @@
+name: Home Search Recalibration Validation
+
+on:
+  push:
+    branches:
+      - phase-home-search-recalibration
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Canonical formatting
+        shell: bash
+        run: |
+          dart format \
+            lib/services/study_content_search_service.dart \
+            lib/widgets/csp/home/study_content_search_panel.dart \
+            lib/screens/home/home_screen.dart \
+            lib/screens/home/home_screen_dark.dart \
+            test/services/study_content_search_service_test.dart \
+            test/widgets/csp/home/study_content_search_panel_test.dart \
+            test/screens/home/home_search_recalibration_contract_test.dart
+
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add \
+              lib/services/study_content_search_service.dart \
+              lib/widgets/csp/home/study_content_search_panel.dart \
+              lib/screens/home/home_screen.dart \
+              lib/screens/home/home_screen_dark.dart \
+              test/services/study_content_search_service_test.dart \
+              test/widgets/csp/home/study_content_search_panel_test.dart \
+              test/screens/home/home_search_recalibration_contract_test.dart
+            git commit -m "HOME-SEARCH canonical formatting"
+            git push origin HEAD:phase-home-search-recalibration
+          fi
+
+      - name: Analyze Home search scope
+        run: |
+          flutter analyze --no-fatal-infos \
+            lib/services/study_content_search_service.dart \
+            lib/widgets/csp/home/study_content_search_panel.dart \
+            lib/screens/home/home_screen.dart \
+            lib/screens/home/home_screen_dark.dart \
+            test/services/study_content_search_service_test.dart \
+            test/widgets/csp/home/study_content_search_panel_test.dart \
+            test/screens/home/home_search_recalibration_contract_test.dart
+
+      - name: Search service regression
+        run: flutter test test/services/study_content_search_service_test.dart
+
+      - name: Search interaction regression
+        run: flutter test test/widgets/csp/home/study_content_search_panel_test.dart
+
+      - name: Home search light dark parity
+        run: flutter test test/screens/home/home_search_recalibration_contract_test.dart
+
+      - name: Preserve frozen Home information architecture
+        run: flutter test test/screens/home/home_r9_closure_contract_test.dart
+
+      - name: Study content navigation regression
+        run: flutter test test/services/study_content_loader_test.dart
+
+      - name: Diff hygiene
+        run: git diff --check
