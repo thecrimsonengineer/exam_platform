@@ -248,7 +248,7 @@ void main() {
         );
 
         final topicResults = await service.search('risk analysis');
-        final competencyResults = await service.search('risk management');
+        final competencyResults = await service.search('management strategies');
 
         expect(topicResults, hasLength(2));
         expect(
@@ -328,6 +328,7 @@ void main() {
             ),
           ],
         );
+
         final service = StudyContentSearchService(
           loadPublishedContent: () async => <StudyContent>[content],
         );
