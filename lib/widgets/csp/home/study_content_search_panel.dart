@@ -33,6 +33,7 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
   List<StudyContentSearchResult> _results = const [];
   String _query = '';
   String? _error;
+  String? _openingSubtopicId;
   bool _loading = false;
   int _requestSerial = 0;
 
@@ -130,7 +131,7 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
         _results = results;
         _loading = false;
       });
-    } catch (_) {
+    } catch (error) {
       if (!mounted || request != _requestSerial || query != _query) {
         return;
       }
@@ -138,15 +139,26 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
       setState(() {
         _results = const [];
         _loading = false;
-        _error =
-            'Search content is unavailable. Check your connection and try again.';
+        _error = _messageForSearchError(error);
       });
     }
   }
 
   Future<void> _selectResult(StudyContentSearchResult result) async {
+    if (_openingSubtopicId != null) {
+      return;
+    }
+
+    setState(() => _openingSubtopicId = result.subtopicId);
     _focusNode.unfocus();
-    await widget.onSelected(result);
+
+    try {
+      await widget.onSelected(result);
+    } finally {
+      if (mounted) {
+        setState(() => _openingSubtopicId = null);
+      }
+    }
   }
 
   void _clear() {
@@ -166,6 +178,22 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
 
   void _retry() {
     _submit(_controller.text);
+  }
+
+  String _messageForSearchError(Object error) {
+    if (error is TimeoutException) {
+      return 'Search is taking longer than expected. Try again.';
+    }
+
+    final message = error.toString().toLowerCase();
+    if (message.contains('authorization') ||
+        message.contains('secure online access') ||
+        message.contains('identity changed') ||
+        message.contains('protected learner search is locked')) {
+      return 'Search is locked until secure online access is restored.';
+    }
+
+    return 'Search content is unavailable. Check your connection and try again.';
   }
 
   @override
@@ -353,12 +381,14 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
             Divider(height: 1, indent: 16, endIndent: 16, color: _border),
         itemBuilder: (context, index) {
           final result = _results[index];
+          final isOpening = _openingSubtopicId == result.subtopicId;
+          final isNavigationBusy = _openingSubtopicId != null;
 
           return Material(
             color: Colors.transparent,
             child: InkWell(
               key: ValueKey('home-study-search-result-${result.subtopicId}'),
-              onTap: () => _selectResult(result),
+              onTap: isNavigationBusy ? null : () => _selectResult(result),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
                 child: Row(
@@ -423,11 +453,20 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
                     const SizedBox(width: 8),
                     Padding(
                       padding: const EdgeInsets.only(top: 7),
-                      child: Icon(
-                        Icons.arrow_forward_rounded,
-                        color: _primary,
-                        size: 18,
-                      ),
+                      child: isOpening
+                          ? SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: _primary,
+                              ),
+                            )
+                          : Icon(
+                              Icons.arrow_forward_rounded,
+                              color: _primary,
+                              size: 18,
+                            ),
                     ),
                   ],
                 ),
