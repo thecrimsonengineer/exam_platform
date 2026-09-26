@@ -47,8 +47,11 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
       return const <StudyContentSearchResult>[];
     }
 
+    final userId = LearnerLocalIdentity.requireCurrentUserId();
+    _requireAuthorizedUser(userId);
+
     final effectiveLimit = limit.clamp(1, 20).toInt();
-    final cacheKey = '${query.toLowerCase()}|$effectiveLimit';
+    final cacheKey = '$userId|${query.toLowerCase()}|$effectiveLimit';
     final now = DateTime.now();
     final cached = _cache[cacheKey];
 
@@ -68,7 +71,11 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
       return existingRequest;
     }
 
-    final request = _performSearch(query, limit: effectiveLimit).timeout(
+    final request = _performSearch(
+      query,
+      userId: userId,
+      limit: effectiveLimit,
+    ).timeout(
       _requestTimeout,
       onTimeout: () => throw TimeoutException(
         'Protected learner content search timed out.',
@@ -80,6 +87,7 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
 
     try {
       final results = await request;
+      _requireSameAuthorizedUser(userId);
       _cache[cacheKey] = _CachedRemoteSearch(
         createdAt: DateTime.now(),
         results: results,
@@ -95,15 +103,10 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
 
   Future<List<StudyContentSearchResult>> _performSearch(
     String query, {
+    required String userId,
     required int limit,
   }) async {
-    final userId = LearnerLocalIdentity.requireCurrentUserId();
-    final boundary = LearnerOnlineAccessRuntime.requireBoundaryFor(userId);
-    if (!boundary.isAuthorizedFor(userId)) {
-      throw StateError(
-        'Protected learner search is locked until online authorization succeeds.',
-      );
-    }
+    _requireSameAuthorizedUser(userId);
 
     final token = await _tokenProvider.currentToken();
     if (token == null || token.trim().isEmpty) {
@@ -112,11 +115,15 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
       );
     }
 
+    _requireSameAuthorizedUser(userId);
+
     final response = await _resolvedClient.functions.invoke(
       'learner-content-search',
       body: <String, dynamic>{'query': query, 'limit': limit},
       headers: <String, String>{'Authorization': 'Bearer ${token.trim()}'},
     );
+
+    _requireSameAuthorizedUser(userId);
 
     final data = _responseMap(response.data);
     final rawResults = data['results'];
@@ -177,6 +184,23 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
     }
 
     return List<StudyContentSearchResult>.unmodifiable(results);
+  }
+
+  void _requireAuthorizedUser(String userId) {
+    final boundary = LearnerOnlineAccessRuntime.requireBoundaryFor(userId);
+    if (!boundary.isAuthorizedFor(userId)) {
+      throw StateError(
+        'Protected learner search is locked until online authorization succeeds.',
+      );
+    }
+  }
+
+  void _requireSameAuthorizedUser(String expectedUserId) {
+    final currentUserId = LearnerLocalIdentity.requireCurrentUserId();
+    if (currentUserId != expectedUserId) {
+      throw StateError('Learner identity changed during protected search.');
+    }
+    _requireAuthorizedUser(expectedUserId);
   }
 
   static String _normalizeQuery(String value) {
