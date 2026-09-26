@@ -5,10 +5,8 @@ import 'package:exam_platform/widgets/csp/home/study_content_search_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-typedef _SearchHandler = Future<List<StudyContentSearchResult>> Function(
-  String query,
-  int limit,
-);
+typedef _SearchHandler =
+    Future<List<StudyContentSearchResult>> Function(String query, int limit);
 
 class _FakeSearchService extends StudyContentSearchService {
   _FakeSearchService(this.handler)
@@ -25,10 +23,7 @@ class _FakeSearchService extends StudyContentSearchService {
   }
 }
 
-StudyContentSearchResult _result({
-  required String id,
-  required String title,
-}) {
+StudyContentSearchResult _result({required String id, required String title}) {
   return StudyContentSearchResult(
     domainId: 'd03',
     domainLabel: 'D03',
@@ -118,7 +113,10 @@ void main() {
     await tester.enterText(field, 'hazard');
     await tester.pump(const Duration(milliseconds: 250));
 
-    expect(find.byKey(const ValueKey('home-study-search-clear')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('home-study-search-clear')),
+      findsOneWidget,
+    );
     expect(find.text('Searching published study content…'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('home-study-search-clear')));
@@ -160,14 +158,15 @@ void main() {
     await tester.pump();
 
     await tester.tap(
-      find.byKey(
-        const ValueKey('home-study-search-result-d03_c02_t01_s01'),
-      ),
+      find.byKey(const ValueKey('home-study-search-result-d03_c02_t01_s01')),
     );
     await tester.pump();
 
     expect(selected, 1);
-    expect(find.byKey(const ValueKey('home-study-search-dropdown')), findsNothing);
+    expect(
+      find.byKey(const ValueKey('home-study-search-dropdown')),
+      findsNothing,
+    );
 
     await tester.tap(field);
     await tester.pump();
@@ -195,7 +194,10 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
 
-    expect(find.byKey(const ValueKey('home-study-search-retry')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('home-study-search-retry')),
+      findsOneWidget,
+    );
 
     await tester.tap(find.byKey(const ValueKey('home-study-search-retry')));
     await tester.pump();

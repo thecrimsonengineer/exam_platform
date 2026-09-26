@@ -299,11 +299,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
               : 'You are ${_progressPercent(data.position)} through '
                     '${data.position!.competencyId.toUpperCase()} • '
                     '${data.position!.subtopicTitle}.',
-          style: TextStyle(
-            color: _textMuted,
-            fontSize: 14,
-            height: 1.45,
-          ),
+          style: TextStyle(color: _textMuted, fontSize: 14, height: 1.45),
         ),
       ],
     );
@@ -478,7 +474,9 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     AsyncSnapshot<_HomeData> snapshot,
     _HomeData data,
   ) {
-    final completed = data.progress.values.where((item) => item.completed).length;
+    final completed = data.progress.values
+        .where((item) => item.completed)
+        .length;
     final total = data.progress.length;
     final remaining = total > completed ? total - completed : 0;
 
@@ -559,9 +557,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
                     label: const Text('VIEW EXAM READINESS'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: _violet,
-                      side: BorderSide(
-                        color: _violet.withValues(alpha: 0.60),
-                      ),
+                      side: BorderSide(color: _violet.withValues(alpha: 0.60)),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

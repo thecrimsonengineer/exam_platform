@@ -54,8 +54,7 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
   @override
   void initState() {
     super.initState();
-    _searchService =
-        widget.searchService ?? RemoteStudyContentSearchService();
+    _searchService = widget.searchService ?? RemoteStudyContentSearchService();
     _focusNode.addListener(_handleFocusChange);
   }
 

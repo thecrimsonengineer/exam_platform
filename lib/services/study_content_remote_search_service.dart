@@ -56,13 +56,8 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
 
     final response = await _resolvedClient.functions.invoke(
       'learner-content-search',
-      body: <String, dynamic>{
-        'query': query,
-        'limit': limit.clamp(1, 20),
-      },
-      headers: <String, String>{
-        'Authorization': 'Bearer ${token.trim()}',
-      },
+      body: <String, dynamic>{'query': query, 'limit': limit.clamp(1, 20)},
+      headers: <String, String>{'Authorization': 'Bearer ${token.trim()}'},
     );
 
     final data = _responseMap(response.data);
@@ -73,45 +68,47 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
       );
     }
 
-    final results = rawResults.map((raw) {
-      if (raw is! Map) {
-        throw const FormatException(
-          'Learner content search result must be an object.',
-        );
-      }
-      final json = Map<String, dynamic>.from(raw);
-      final domainId = _requiredString(json, 'domainId').toLowerCase();
-      final competencyId = _requiredString(
-        json,
-        'competencyId',
-      ).toLowerCase();
-      final topicId = _requiredString(json, 'topicId');
-      final subtopicId = _requiredString(json, 'subtopicId');
+    final results = rawResults
+        .map((raw) {
+          if (raw is! Map) {
+            throw const FormatException(
+              'Learner content search result must be an object.',
+            );
+          }
+          final json = Map<String, dynamic>.from(raw);
+          final domainId = _requiredString(json, 'domainId').toLowerCase();
+          final competencyId = _requiredString(
+            json,
+            'competencyId',
+          ).toLowerCase();
+          final topicId = _requiredString(json, 'topicId');
+          final subtopicId = _requiredString(json, 'subtopicId');
 
-      if (!RegExp(r'^d\d{2}$').hasMatch(domainId) ||
-          !RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId) ||
-          !topicId.startsWith('${competencyId}_t') ||
-          !subtopicId.startsWith('${topicId}_s')) {
-        throw const FormatException(
-          'Learner content search result contains invalid route identity.',
-        );
-      }
+          if (!RegExp(r'^d\d{2}$').hasMatch(domainId) ||
+              !RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId) ||
+              !topicId.startsWith('${competencyId}_t') ||
+              !subtopicId.startsWith('${topicId}_s')) {
+            throw const FormatException(
+              'Learner content search result contains invalid route identity.',
+            );
+          }
 
-      return StudyContentSearchResult(
-        domainId: domainId,
-        domainLabel: domainId.toUpperCase(),
-        domainTitle: _requiredString(json, 'domainTitle'),
-        competencyId: competencyId,
-        competencyTitle: _requiredString(json, 'competencyTitle'),
-        topicId: topicId,
-        topicTitle: _requiredString(json, 'topicTitle'),
-        subtopicId: subtopicId,
-        subtopicTitle: _requiredString(json, 'subtopicTitle'),
-        matchSection: _requiredString(json, 'matchSection'),
-        snippet: _requiredString(json, 'snippet'),
-        score: _requiredInt(json, 'score'),
-      );
-    }).toList(growable: false);
+          return StudyContentSearchResult(
+            domainId: domainId,
+            domainLabel: domainId.toUpperCase(),
+            domainTitle: _requiredString(json, 'domainTitle'),
+            competencyId: competencyId,
+            competencyTitle: _requiredString(json, 'competencyTitle'),
+            topicId: topicId,
+            topicTitle: _requiredString(json, 'topicTitle'),
+            subtopicId: subtopicId,
+            subtopicTitle: _requiredString(json, 'subtopicTitle'),
+            matchSection: _requiredString(json, 'matchSection'),
+            snippet: _requiredString(json, 'snippet'),
+            score: _requiredInt(json, 'score'),
+          );
+        })
+        .toList(growable: false);
 
     if (results.length > limit.clamp(1, 20)) {
       throw const FormatException(

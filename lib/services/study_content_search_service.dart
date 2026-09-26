@@ -466,10 +466,7 @@ class _StudyContentSearchEntry {
     return ' $value '.contains(' $query ');
   }
 
-  static bool _allTokensMatchPrefix(
-    String value,
-    List<String> queryTokens,
-  ) {
+  static bool _allTokensMatchPrefix(String value, List<String> queryTokens) {
     final valueTokens = value.split(' ').where((token) => token.isNotEmpty);
     final tokens = valueTokens.toList(growable: false);
 
