@@ -47,6 +47,19 @@ void main() {
     expect(source, contains('request != _requestSerial || query != _query'));
     expect(source, contains("ValueKey('home-study-search-clear')"));
     expect(source, contains("ValueKey('home-study-search-retry')"));
-    expect(source, isNot(contains('_results = const [];\n    });\n\n    await widget.onSelected(result);'));
+    expect(source, contains('_focusNode.unfocus();'));
+    expect(source, contains('await widget.onSelected(result);'));
+  });
+
+  test('Home search defaults to protected remote learner delivery', () {
+    final source = read(
+      'lib/widgets/csp/home/study_content_search_panel.dart',
+    );
+
+    expect(source, contains('RemoteStudyContentSearchService()'));
+    expect(
+      source,
+      isNot(contains('widget.searchService ?? StudyContentSearchService()')),
+    );
   });
 }
