@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
+import '../../../services/study_content_remote_search_service.dart';
 import '../../../services/study_content_search_service.dart';
 
 class StudyContentSearchPanel extends StatefulWidget {
@@ -53,7 +54,8 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
   @override
   void initState() {
     super.initState();
-    _searchService = widget.searchService ?? StudyContentSearchService();
+    _searchService =
+        widget.searchService ?? RemoteStudyContentSearchService();
     _focusNode.addListener(_handleFocusChange);
   }
 
