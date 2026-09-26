@@ -1,0 +1,52 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  String read(String path) => File(path)
+      .readAsStringSync()
+      .replaceAll('\r\n', '\n')
+      .replaceAll('\r', '\n');
+
+  test('Home search remains present in the frozen information architecture', () {
+    for (final path in <String>[
+      'lib/screens/home/home_screen.dart',
+      'lib/screens/home/home_screen_dark.dart',
+    ]) {
+      final source = read(path);
+      expect(source, contains('StudyContentSearchPanel('));
+      expect(source, contains('onSelected: _openSearchResult'));
+    }
+  });
+
+  test('light and dark search results target exact topic and subtopic', () {
+    for (final path in <String>[
+      'lib/screens/home/home_screen.dart',
+      'lib/screens/home/home_screen_dark.dart',
+    ]) {
+      final source = read(path);
+      final searchHandler = source.substring(
+        source.indexOf('Future<void> _openSearchResult'),
+        source.indexOf('void _openExamReadiness'),
+      );
+
+      expect(searchHandler, contains('domainId: result.domainId'));
+      expect(searchHandler, contains('competencyId: result.competencyId'));
+      expect(searchHandler, contains('initialTopicId: result.topicId'));
+      expect(searchHandler, contains('initialSubtopicId: result.subtopicId'));
+      expect(searchHandler, contains('await _refreshHome()'));
+    }
+  });
+
+  test('search panel guards stale requests clear retry and preserved results', () {
+    final source = read(
+      'lib/widgets/csp/home/study_content_search_panel.dart',
+    );
+
+    expect(source, contains('final request = ++_requestSerial;'));
+    expect(source, contains('request != _requestSerial || query != _query'));
+    expect(source, contains("ValueKey('home-study-search-clear')"));
+    expect(source, contains("ValueKey('home-study-search-retry')"));
+    expect(source, isNot(contains('_results = const [];\n    });\n\n    await widget.onSelected(result);'));
+  });
+}
