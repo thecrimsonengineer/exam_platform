@@ -164,6 +164,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
           competencyId: result.competencyId,
           domainTitle: result.domainTitle,
           loadingTitle: result.competencyTitle,
+          initialTopicId: result.topicId,
           initialSubtopicId: result.subtopicId,
         ),
       ),
@@ -240,7 +241,7 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
                                     );
                                   },
                                 ),
-                                const SizedBox(height: 30),
+                                const SizedBox(height: 28),
                                 _buildProgressIntelligence(snapshot, data),
                               ],
                             );
@@ -258,369 +259,126 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     );
   }
 
-  double _pageHorizontal(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    if (width >= 1200) return 28;
-    if (width >= 700) return 22;
-    return 16;
-  }
-
-  Widget _buildAppBar() {
-    return SliverAppBar(
-      pinned: true,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      backgroundColor: _background.withValues(alpha: 0.72),
-      surfaceTintColor: Colors.transparent,
-      automaticallyImplyLeading: false,
-      titleSpacing: 18,
-      title: Row(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.09),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.10),
-              ),
-            ),
-            child: const Icon(
-              Icons.shield_rounded,
-              color: AppColors.primary,
-              size: 17,
-            ),
-          ),
-          const SizedBox(width: 10),
-          const Text(
-            'CSP11',
-            style: TextStyle(
-              color: _textPrimary,
-              fontSize: 17,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -0.25,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            width: 4,
-            height: 4,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.45),
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            'Learning Hub',
-            style: TextStyle(
-              color: _textMuted,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 12),
-          child: IconButton(
-            key: const ValueKey('home-settings'),
-            tooltip: 'Settings',
-            onPressed: widget.onOpenSettings,
-            icon: Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: _surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _border),
-              ),
-              child: const Icon(
-                Icons.person_outline_rounded,
-                color: _textPrimary,
-                size: 19,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildHero(
     BuildContext context,
     AsyncSnapshot<_HomeData> snapshot,
     _HomeData data,
   ) {
-    final compact = MediaQuery.sizeOf(context).width < 650;
-    final completed = data.completedCount;
-    final inProgress = data.inProgressCount;
+    final width = MediaQuery.sizeOf(context).width;
+    final isWide = width >= 760;
+    final completion = _completionRate(data.progress);
 
-    return StudentGlassSurface(
-      key: const ValueKey('home-hero'),
-      constraints: BoxConstraints(minHeight: compact ? 360 : 330),
-      padding: EdgeInsets.all(compact ? 22 : 28),
-      borderRadius: BorderRadius.circular(26),
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          const Color(0xFF102A56).withValues(alpha: 0.82),
-          const Color(0xFF1E4C91).withValues(alpha: 0.76),
-          const Color(0xFF5B36A8).withValues(alpha: 0.72),
-        ],
-        stops: const [0.0, 0.58, 1.0],
-      ),
-      borderColor: Colors.white.withValues(alpha: 0.12),
-      shadowColor: AppColors.primary.withValues(alpha: 0.20),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            top: -74,
-            right: -42,
-            child: IgnorePointer(
-              child: Container(
-                width: 220,
-                height: 220,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.065),
-                    width: 24,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 86,
-            bottom: -105,
-            child: IgnorePointer(
-              child: Container(
-                width: 210,
-                height: 210,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.025),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            right: compact ? 10 : 26,
-            top: compact ? 130 : 76,
-            child: IgnorePointer(
-              child: Transform.rotate(
-                angle: -0.12,
-                child: Icon(
-                  Icons.workspace_premium_rounded,
-                  size: compact ? 105 : 150,
-                  color: Colors.white.withValues(alpha: 0.045),
-                ),
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _heroPill(
-                    icon: Icons.verified_rounded,
-                    text: 'CSP11 LEARNING HUB',
-                  ),
-                  _heroPill(
-                    icon: Icons.hub_rounded,
-                    text: '7 DOMAINS',
-                    accent: Colors.amber.shade300,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 26),
-              const Text(
-                'Your CSP command center.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 34,
-                  height: 1.06,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.9,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 690),
-                child: Text(
-                  'Move from focused study to deliberate practice and rapid recall without leaving your learning flow.',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.82),
-                    fontSize: 14.5,
-                    height: 1.55,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 28),
-              if (snapshot.connectionState == ConnectionState.waiting)
-                _buildHeroLoadingMetrics()
-              else
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final metrics = [
-                      _HeroMetricData(
-                        icon: Icons.check_circle_rounded,
-                        value: '$completed',
-                        label: 'Completed',
-                      ),
-                      _HeroMetricData(
-                        icon: Icons.timelapse_rounded,
-                        value: '$inProgress',
-                        label: 'In Progress',
-                      ),
-                      const _HeroMetricData(
-                        icon: Icons.layers_rounded,
-                        value: '7',
-                        label: 'Domains',
-                      ),
-                    ];
-
-                    if (constraints.maxWidth < 560) {
-                      return Wrap(
-                        spacing: 22,
-                        runSpacing: 15,
-                        children: metrics.map(_heroMetric).toList(),
-                      );
-                    }
-
-                    return Row(
-                      children: [
-                        _heroMetric(metrics[0]),
-                        _heroDivider(),
-                        _heroMetric(metrics[1]),
-                        _heroDivider(),
-                        _heroMetric(metrics[2]),
-                      ],
-                    );
-                  },
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _heroPill({
-    required IconData icon,
-    required String text,
-    Color? accent,
-  }) {
-    final foreground = accent ?? Colors.white.withValues(alpha: 0.94);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: foreground, size: 14),
-          const SizedBox(width: 5),
-          Text(
-            text,
-            style: TextStyle(
-              color: foreground,
-              fontSize: 10.5,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0.9,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _heroMetric(_HeroMetricData metric) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 116),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.09),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.10)),
-            ),
-            child: Icon(
-              metric.icon,
-              color: Colors.white.withValues(alpha: 0.90),
-              size: 19,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                metric.value,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  height: 1,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                metric.label,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.62),
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _heroDivider() {
-    return Container(
-      height: 42,
-      width: 1,
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      color: Colors.white.withValues(alpha: 0.13),
-    );
-  }
-
-  Widget _buildHeroLoadingMetrics() {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 10,
-      children: List.generate(
-        3,
-        (_) => Container(
-          width: 122,
-          height: 42,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(12),
+    final copy = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'CSP11 LEARNING OS',
+          style: TextStyle(
+            color: _violet,
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.2,
           ),
         ),
-      ),
+        const SizedBox(height: 8),
+        Text(
+          'Good to see you.',
+          style: TextStyle(
+            color: _textPrimary,
+            fontSize: isWide ? 30 : 26,
+            fontWeight: FontWeight.w800,
+            height: 1.08,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          snapshot.connectionState == ConnectionState.waiting
+              ? 'Loading your current learning position…'
+              : data.position == null
+              ? 'Choose a domain, start learning, and CSP11 will keep your place.'
+              : 'You are ${_progressPercent(data.position)} through '
+                    '${data.position!.competencyId.toUpperCase()} • '
+                    '${data.position!.subtopicTitle}.',
+          style: TextStyle(
+            color: _textMuted,
+            fontSize: 14,
+            height: 1.45,
+          ),
+        ),
+      ],
+    );
+
+    final progress = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'OVERALL PROGRESS',
+          style: TextStyle(
+            color: _textMuted,
+            fontSize: 10,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0.8,
+          ),
+        ),
+        const SizedBox(height: 7),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              '$completion%',
+              style: TextStyle(
+                color: _textPrimary,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text(
+                'completed',
+                style: TextStyle(
+                  color: _textMuted,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 9),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            minHeight: 7,
+            value: completion / 100,
+            backgroundColor: const Color(0xFF22314A),
+            valueColor: const AlwaysStoppedAnimation<Color>(_violet),
+          ),
+        ),
+      ],
+    );
+
+    return StudentGlassSurface(
+      width: double.infinity,
+      padding: EdgeInsets.all(isWide ? 24 : 20),
+      borderRadius: BorderRadius.circular(22),
+      tint: _surface,
+      borderColor: _border,
+      shadowColor: Colors.black.withValues(alpha: 0.20),
+      child: isWide
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(flex: 3, child: copy),
+                const SizedBox(width: 24),
+                SizedBox(width: 210, child: progress),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [copy, const SizedBox(height: 20), progress],
+            ),
     );
   }
 
@@ -628,204 +386,91 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     AsyncSnapshot<_HomeData> snapshot,
     _HomeData data,
   ) {
+    final isLoading = snapshot.connectionState == ConnectionState.waiting;
     final position = data.position;
 
-    return StudentGlassSurface(
-      key: const ValueKey('home-continue-card'),
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      borderRadius: BorderRadius.circular(22),
-      tint: _surface.withValues(alpha: 0.58),
-      borderColor: _border.withValues(alpha: 0.74),
-      shadowColor: _navy.withValues(alpha: 0.16),
-      child: snapshot.connectionState == ConnectionState.waiting
-          ? const _HomeInlineLoading()
-          : snapshot.hasError
-          ? _buildContinueError()
-          : position == null
-          ? _buildFreshStart()
-          : _buildResume(position),
-    );
-  }
-
-  Widget _buildContinueError() {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _featureIcon(
-          icon: Icons.cloud_off_rounded,
-          background: const Color(0xFF1D1934),
-          foreground: _violet,
-        ),
-        const SizedBox(width: 14),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        _sectionTitle('CONTINUE CSP'),
+        const SizedBox(height: 12),
+        StudentGlassSurface(
+          width: double.infinity,
+          padding: const EdgeInsets.all(18),
+          borderRadius: BorderRadius.circular(18),
+          tint: _surface,
+          borderColor: _border,
+          shadowColor: Colors.black.withValues(alpha: 0.16),
+          child: Row(
             children: [
-              _Eyebrow('CONTINUE LEARNING'),
-              SizedBox(height: 5),
-              Text(
-                'Your saved position is unavailable right now.',
-                style: TextStyle(
-                  color: _textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A2941),
+                  borderRadius: BorderRadius.circular(13),
                 ),
+                child: Icon(
+                  position == null
+                      ? Icons.menu_book_outlined
+                      : Icons.play_arrow_rounded,
+                  color: _blue,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isLoading
+                          ? 'Finding your place…'
+                          : position == null
+                          ? 'Start Domain 1'
+                          : position.subtopicTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: _textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isLoading
+                          ? 'Loading your latest learning state'
+                          : position == null
+                          ? 'Begin your CSP11 learning path'
+                          : '${position.competencyId.toUpperCase()} • '
+                                '${position.topicTitle}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: _textMuted, fontSize: 11.5),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              FilledButton(
+                onPressed: isLoading ? null : () => _continueLearning(position),
+                style: FilledButton.styleFrom(
+                  backgroundColor: _violet,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(position == null ? 'START' : 'CONTINUE'),
               ),
             ],
           ),
         ),
-        const SizedBox(width: 10),
-        _ArrowButton(tooltip: 'Retry', onTap: () => _refreshHome()),
       ],
-    );
-  }
-
-  Widget _buildFreshStart() {
-    return Row(
-      children: [
-        _featureIcon(
-          icon: Icons.route_rounded,
-          background: const Color(0xFF14243B),
-          foreground: _blue,
-        ),
-        const SizedBox(width: 14),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Eyebrow('START YOUR PATH'),
-              SizedBox(height: 5),
-              Text(
-                'Begin with the CSP11 domain map.',
-                style: TextStyle(
-                  color: _textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'Your latest learning position will appear here automatically.',
-                style: TextStyle(color: _textMuted, fontSize: 11, height: 1.4),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 10),
-        _ArrowButton(
-          key: const ValueKey('home-continue'),
-          tooltip: 'Start Learning',
-          onTap: () => _continueLearning(null),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildResume(StudentLearningPosition position) {
-    final subtopic = position.subtopicTitle?.trim();
-    final detail = subtopic == null || subtopic.isEmpty
-        ? position.domainTitle
-        : subtopic;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final compact = constraints.maxWidth < 600;
-
-        final copy = Row(
-          children: [
-            _featureIcon(
-              icon: Icons.play_arrow_rounded,
-              background: const Color(0xFF13271D),
-              foreground: const Color(0xFF1F8A4C),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _Eyebrow('CONTINUE LEARNING'),
-                  const SizedBox(height: 5),
-                  Text(
-                    position.competencyTitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: _textPrimary,
-                      fontSize: 16,
-                      height: 1.25,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Domain ${position.domainNumber}  •  $detail',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: _textMuted,
-                      fontSize: 11,
-                      height: 1.4,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-
-        final button = FilledButton.icon(
-          key: const ValueKey('home-continue'),
-          onPressed: () => _continueLearning(position),
-          style: FilledButton.styleFrom(
-            backgroundColor: _navy,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-          ),
-          icon: const Icon(Icons.arrow_forward_rounded, size: 17),
-          label: const Text(
-            'CONTINUE',
-            style: TextStyle(
-              fontSize: 10.5,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0.6,
-            ),
-          ),
-        );
-
-        if (compact) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [copy, const SizedBox(height: 16), button],
-          );
-        }
-
-        return Row(
-          children: [
-            Expanded(child: copy),
-            const SizedBox(width: 18),
-            button,
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _featureIcon({
-    required IconData icon,
-    required Color background,
-    required Color foreground,
-  }) {
-    return Container(
-      width: 52,
-      height: 52,
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Icon(icon, color: foreground, size: 24),
     );
   }
 
@@ -833,162 +478,196 @@ class _DarkHomeScreenState extends State<DarkHomeScreen> {
     AsyncSnapshot<_HomeData> snapshot,
     _HomeData data,
   ) {
-    final completed = data.completedCount;
-    final inProgress = data.inProgressCount;
-    final tracked = data.trackedCount;
+    final completed = data.progress.values.where((item) => item.completed).length;
+    final total = data.progress.length;
+    final remaining = total > completed ? total - completed : 0;
 
     return StudentGlassSurface(
-      key: const ValueKey('home-progress-panel'),
       width: double.infinity,
-      padding: const EdgeInsets.all(21),
-      borderRadius: BorderRadius.circular(22),
-      tint: _surface.withValues(alpha: 0.58),
-      borderColor: _border.withValues(alpha: 0.74),
-      shadowColor: _navy.withValues(alpha: 0.16),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final compact = constraints.maxWidth < 680;
-
-          final intro = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(18),
+      borderRadius: BorderRadius.circular(18),
+      tint: _surface,
+      borderColor: _border,
+      shadowColor: Colors.black.withValues(alpha: 0.16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              const _Eyebrow('PROGRESS INTELLIGENCE'),
-              const SizedBox(height: 6),
-              const Text(
-                'Your learning footprint',
+              Icon(Icons.insights_rounded, color: _violet, size: 21),
+              const SizedBox(width: 9),
+              Text(
+                'PROGRESS INTELLIGENCE',
                 style: TextStyle(
                   color: _textPrimary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -0.35,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.7,
                 ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                'These are real learner records stored for your signed-in account on this device.',
-                style: TextStyle(color: _textMuted, fontSize: 11, height: 1.45),
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 9,
-                runSpacing: 9,
-                children: [
-                  _progressChip(
-                    icon: Icons.check_circle_outline_rounded,
-                    label: '$completed completed',
-                  ),
-                  _progressChip(
-                    icon: Icons.timelapse_rounded,
-                    label: '$inProgress in progress',
-                  ),
-                  _progressChip(
-                    icon: Icons.track_changes_rounded,
-                    label: '$tracked tracked',
-                  ),
-                ],
               ),
             ],
-          );
-
-          final action = Material(
-            color: const Color(0xFF101A2A),
-            borderRadius: BorderRadius.circular(18),
-            child: InkWell(
-              key: const ValueKey('home-exam-readiness'),
-              onTap: _openExamReadiness,
-              borderRadius: BorderRadius.circular(18),
-              child: Container(
-                width: compact ? double.infinity : 240,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: _border),
+          ),
+          const SizedBox(height: 14),
+          if (snapshot.connectionState == ConnectionState.waiting)
+            _progressMessage(
+              title: 'Reading your learning history',
+              body: 'CSP11 is building your current progress snapshot.',
+            )
+          else if (snapshot.hasError)
+            _progressMessage(
+              title: 'Progress temporarily unavailable',
+              body: 'Your learning data was not changed. Pull down to retry.',
+            )
+          else if (total == 0)
+            _progressMessage(
+              title: 'Your learning signal starts here',
+              body:
+                  'Complete your first subtopic and CSP11 will begin building '
+                  'your progress picture.',
+            )
+          else
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$completed of $total tracked subtopics complete',
+                  style: TextStyle(
+                    color: _textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
-                child: const Row(
-                  children: [
-                    _ReadinessOrb(),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'EXAM READINESS',
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0.8,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Plan, measure and adapt for exam day',
-                            style: TextStyle(
-                              color: _textPrimary,
-                              fontSize: 11.5,
-                              height: 1.3,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
+                const SizedBox(height: 5),
+                Text(
+                  remaining == 0
+                      ? 'Everything currently tracked is complete. Open your '
+                            'readiness plan for the next priority.'
+                      : '$remaining tracked subtopics remain. Use your plan to '
+                            'balance learning, practice, and recall.',
+                  style: TextStyle(
+                    color: _textMuted,
+                    fontSize: 12.5,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: OutlinedButton.icon(
+                    onPressed: _openExamReadiness,
+                    icon: const Icon(Icons.arrow_forward_rounded, size: 17),
+                    label: const Text('VIEW EXAM READINESS'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: _violet,
+                      side: BorderSide(
+                        color: _violet.withValues(alpha: 0.60),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      color: AppColors.primary,
-                      size: 18,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          );
-
-          if (compact) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [intro, const SizedBox(height: 18), action],
-            );
-          }
-
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(child: intro),
-              const SizedBox(width: 24),
-              action,
-            ],
-          );
-        },
+        ],
       ),
     );
   }
 
-  Widget _progressChip({required IconData icon, required String label}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFF101A2A),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: _border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+  Widget _progressMessage({required String title, required String body}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: _textPrimary,
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          body,
+          style: TextStyle(color: _textMuted, fontSize: 12.5, height: 1.4),
+        ),
+      ],
+    );
+  }
+
+  SliverAppBar _buildAppBar() {
+    return SliverAppBar(
+      pinned: true,
+      floating: false,
+      backgroundColor: _background.withValues(alpha: 0.94),
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      toolbarHeight: 62,
+      title: Row(
         children: [
-          Icon(icon, color: AppColors.primary, size: 14),
-          const SizedBox(width: 6),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: const Color(0xFF15223A),
+              borderRadius: BorderRadius.circular(11),
+            ),
+            child: Icon(Icons.shield_outlined, color: _violet, size: 20),
+          ),
+          const SizedBox(width: 10),
           Text(
-            label,
-            style: const TextStyle(
+            'CSP11',
+            style: TextStyle(
               color: _textPrimary,
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.4,
             ),
           ),
         ],
       ),
+      actions: [
+        IconButton(
+          tooltip: 'Settings',
+          onPressed: widget.onOpenSettings,
+          icon: Icon(Icons.settings_outlined, color: _textPrimary),
+        ),
+        const SizedBox(width: 4),
+      ],
     );
+  }
+
+  Widget _sectionTitle(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: _textMuted,
+        fontSize: 10.5,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.9,
+      ),
+    );
+  }
+
+  double _pageHorizontal(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    if (width >= 1200) return 42;
+    if (width >= 760) return 28;
+    return 18;
+  }
+
+  int _completionRate(Map<String, StudentSubtopicProgress> progress) {
+    if (progress.isEmpty) return 0;
+    final completed = progress.values.where((item) => item.completed).length;
+    return ((completed / progress.length) * 100).round().clamp(0, 100);
+  }
+
+  int _progressPercent(StudentLearningPosition? position) {
+    if (position == null || position.subtopicCount <= 0) return 0;
+    return (((position.subtopicIndex + 1) / position.subtopicCount) * 100)
+        .round()
+        .clamp(0, 100);
   }
 }
 
@@ -997,142 +676,5 @@ class _HomeData {
   final Map<String, StudentSubtopicProgress> progress;
 
   const _HomeData({required this.position, required this.progress});
-
-  const _HomeData.empty()
-    : position = null,
-      progress = const <String, StudentSubtopicProgress>{};
-
-  int get completedCount => progress.values
-      .where((item) => item.state == StudentLearningState.completed)
-      .length;
-
-  int get inProgressCount => progress.values
-      .where((item) => item.state == StudentLearningState.inProgress)
-      .length;
-
-  int get trackedCount => progress.length;
-}
-
-class _HeroMetricData {
-  final IconData icon;
-  final String value;
-  final String label;
-
-  const _HeroMetricData({
-    required this.icon,
-    required this.value,
-    required this.label,
-  });
-}
-
-class _Eyebrow extends StatelessWidget {
-  final String text;
-
-  const _Eyebrow(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: AppColors.primary,
-        fontSize: 9.5,
-        fontWeight: FontWeight.w900,
-        letterSpacing: 1.05,
-      ),
-    );
-  }
-}
-
-class _ArrowButton extends StatelessWidget {
-  final String tooltip;
-  final VoidCallback? onTap;
-
-  const _ArrowButton({super.key, required this.tooltip, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: _DarkHomeScreenState._navy,
-        borderRadius: BorderRadius.circular(13),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(13),
-          child: const SizedBox(
-            width: 44,
-            height: 44,
-            child: Icon(
-              Icons.arrow_forward_rounded,
-              color: Colors.white,
-              size: 19,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _HomeInlineLoading extends StatelessWidget {
-  const _HomeInlineLoading();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            'Preparing your learning position…',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: _DarkHomeScreenState._textMuted,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReadinessOrb extends StatelessWidget {
-  const _ReadinessOrb();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [_DarkHomeScreenState._navy, _DarkHomeScreenState._violet],
-        ),
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: _DarkHomeScreenState._navy.withValues(alpha: 0.13),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: const Icon(
-        Icons.event_available_rounded,
-        color: Colors.white,
-        size: 22,
-      ),
-    );
-  }
+  const _HomeData.empty() : position = null, progress = const {};
 }
