@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,8 +18,14 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
        _tokenProvider = tokenProvider ?? FirebaseLearnerAccessTokenProvider(),
        super(loadPublishedContent: () async => const []);
 
+  static const _requestTimeout = Duration(seconds: 8);
+  static const _cacheTtl = Duration(minutes: 2);
+  static const _maxCacheEntries = 24;
+
   final SupabaseClient? _client;
   final FirebaseLearnerAccessTokenProvider _tokenProvider;
+  final LinkedHashMap<String, _CachedRemoteSearch> _cache = LinkedHashMap();
+  final Map<String, Future<List<StudyContentSearchResult>>> _inFlight = {};
 
   SupabaseClient get _resolvedClient {
     if (!SupabaseBootstrapService.isInitialized) {
@@ -34,11 +42,61 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
     String rawQuery, {
     int limit = 8,
   }) async {
-    final query = rawQuery.trim();
+    final query = _normalizeQuery(rawQuery);
     if (query.length < 2 || limit <= 0) {
       return const <StudyContentSearchResult>[];
     }
 
+    final effectiveLimit = limit.clamp(1, 20).toInt();
+    final cacheKey = '${query.toLowerCase()}|$effectiveLimit';
+    final now = DateTime.now();
+    final cached = _cache[cacheKey];
+
+    if (cached != null && now.difference(cached.createdAt) <= _cacheTtl) {
+      _cache
+        ..remove(cacheKey)
+        ..[cacheKey] = cached;
+      return cached.results;
+    }
+
+    if (cached != null) {
+      _cache.remove(cacheKey);
+    }
+
+    final existingRequest = _inFlight[cacheKey];
+    if (existingRequest != null) {
+      return existingRequest;
+    }
+
+    final request = _performSearch(query, limit: effectiveLimit).timeout(
+      _requestTimeout,
+      onTimeout: () => throw TimeoutException(
+        'Protected learner content search timed out.',
+        _requestTimeout,
+      ),
+    );
+
+    _inFlight[cacheKey] = request;
+
+    try {
+      final results = await request;
+      _cache[cacheKey] = _CachedRemoteSearch(
+        createdAt: DateTime.now(),
+        results: results,
+      );
+      while (_cache.length > _maxCacheEntries) {
+        _cache.remove(_cache.keys.first);
+      }
+      return results;
+    } finally {
+      _inFlight.remove(cacheKey);
+    }
+  }
+
+  Future<List<StudyContentSearchResult>> _performSearch(
+    String query, {
+    required int limit,
+  }) async {
     final userId = LearnerLocalIdentity.requireCurrentUserId();
     final boundary = LearnerOnlineAccessRuntime.requireBoundaryFor(userId);
     if (!boundary.isAuthorizedFor(userId)) {
@@ -56,7 +114,7 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
 
     final response = await _resolvedClient.functions.invoke(
       'learner-content-search',
-      body: <String, dynamic>{'query': query, 'limit': limit.clamp(1, 20)},
+      body: <String, dynamic>{'query': query, 'limit': limit},
       headers: <String, String>{'Authorization': 'Bearer ${token.trim()}'},
     );
 
@@ -81,11 +139,13 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
             json,
             'competencyId',
           ).toLowerCase();
-          final topicId = _requiredString(json, 'topicId');
-          final subtopicId = _requiredString(json, 'subtopicId');
+          final topicId = _requiredString(json, 'topicId').toLowerCase();
+          final subtopicId = _requiredString(json, 'subtopicId').toLowerCase();
 
           if (!RegExp(r'^d\d{2}$').hasMatch(domainId) ||
               !RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId) ||
+              !RegExp(r'^d\d{2}_c\d{2}_t\d{2}$').hasMatch(topicId) ||
+              !RegExp(r'^d\d{2}_c\d{2}_t\d{2}_s\d{2}$').hasMatch(subtopicId) ||
               !topicId.startsWith('${competencyId}_t') ||
               !subtopicId.startsWith('${topicId}_s')) {
             throw const FormatException(
@@ -110,13 +170,17 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
         })
         .toList(growable: false);
 
-    if (results.length > limit.clamp(1, 20)) {
+    if (results.length > limit) {
       throw const FormatException(
         'Learner content search returned more results than requested.',
       );
     }
 
     return List<StudyContentSearchResult>.unmodifiable(results);
+  }
+
+  static String _normalizeQuery(String value) {
+    return value.replaceAll(RegExp(r'\s+'), ' ').trim();
   }
 
   Map<String, dynamic> _responseMap(Object? data) {
@@ -159,4 +223,11 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
     }
     return parsed;
   }
+}
+
+class _CachedRemoteSearch {
+  const _CachedRemoteSearch({required this.createdAt, required this.results});
+
+  final DateTime createdAt;
+  final List<StudyContentSearchResult> results;
 }
