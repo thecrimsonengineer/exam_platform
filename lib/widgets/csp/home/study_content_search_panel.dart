@@ -77,25 +77,22 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
     _debounce?.cancel();
 
     final query = value.trim();
+    final request = ++_requestSerial;
 
     setState(() {
       _query = query;
       _error = null;
-
-      if (query.length < 2) {
-        _results = const [];
-        _loading = false;
-      }
+      _results = const [];
+      _loading = query.length >= 2;
     });
 
     if (query.length < 2) {
-      _requestSerial++;
       return;
     }
 
     _debounce = Timer(
-      const Duration(milliseconds: 260),
-      () => _runSearch(query),
+      const Duration(milliseconds: 240),
+      () => _runSearch(query, request: request),
     );
   }
 
@@ -108,23 +105,23 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
       return;
     }
 
-    _runSearch(query);
-  }
-
-  Future<void> _runSearch(String query) async {
     final request = ++_requestSerial;
 
-    if (mounted) {
-      setState(() {
-        _loading = true;
-        _error = null;
-      });
-    }
+    setState(() {
+      _query = query;
+      _results = const [];
+      _loading = true;
+      _error = null;
+    });
 
+    _runSearch(query, request: request);
+  }
+
+  Future<void> _runSearch(String query, {required int request}) async {
     try {
       final results = await _searchService.search(query, limit: 8);
 
-      if (!mounted || request != _requestSerial) {
+      if (!mounted || request != _requestSerial || query != _query) {
         return;
       }
 
@@ -133,7 +130,7 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
         _loading = false;
       });
     } catch (_) {
-      if (!mounted || request != _requestSerial) {
+      if (!mounted || request != _requestSerial || query != _query) {
         return;
       }
 
@@ -148,11 +145,6 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
 
   Future<void> _selectResult(StudyContentSearchResult result) async {
     _focusNode.unfocus();
-
-    setState(() {
-      _results = const [];
-    });
-
     await widget.onSelected(result);
   }
 
@@ -171,12 +163,13 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
     _focusNode.requestFocus();
   }
 
+  void _retry() {
+    _submit(_controller.text);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final showDropdown =
-        _focusNode.hasFocus &&
-        _query.length >= 2 &&
-        (_loading || _error != null || _results.isNotEmpty || !_loading);
+    final showDropdown = _focusNode.hasFocus && _query.length >= 2;
 
     return StudentGlassSurface(
       key: const ValueKey('home-study-content-search'),
@@ -255,25 +248,33 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: Icon(Icons.search_rounded, color: _primary),
-              suffixIcon: _loading
-                  ? Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: _primary,
-                        ),
-                      ),
-                    )
-                  : _query.isNotEmpty
-                  ? IconButton(
-                      tooltip: 'Clear search',
-                      onPressed: _clear,
-                      icon: Icon(Icons.close_rounded, color: _textMuted),
+              suffixIcon: _loading || _query.isNotEmpty
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (_loading)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: SizedBox(
+                              width: 17,
+                              height: 17,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: _primary,
+                              ),
+                            ),
+                          ),
+                        if (_query.isNotEmpty)
+                          IconButton(
+                            key: const ValueKey('home-study-search-clear'),
+                            tooltip: 'Clear search',
+                            onPressed: _clear,
+                            icon: Icon(Icons.close_rounded, color: _textMuted),
+                          ),
+                      ],
                     )
                   : null,
+              suffixIconConstraints: const BoxConstraints(minHeight: 48),
               filled: true,
               fillColor: _surfaceAlt,
               contentPadding: const EdgeInsets.symmetric(
@@ -320,7 +321,12 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
     }
 
     if (_error != null) {
-      return _messageRow(icon: Icons.cloud_off_rounded, text: _error!);
+      return _messageRow(
+        icon: Icons.cloud_off_rounded,
+        text: _error!,
+        actionLabel: 'Retry',
+        onAction: _retry,
+      );
     }
 
     if (_results.isEmpty) {
@@ -432,7 +438,12 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
     );
   }
 
-  Widget _messageRow({required IconData icon, required String text}) {
+  Widget _messageRow({
+    required IconData icon,
+    required String text,
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
@@ -455,6 +466,14 @@ class _StudyContentSearchPanelState extends State<StudyContentSearchPanel> {
               ),
             ),
           ),
+          if (actionLabel != null && onAction != null) ...[
+            const SizedBox(width: 8),
+            TextButton(
+              key: const ValueKey('home-study-search-retry'),
+              onPressed: onAction,
+              child: Text(actionLabel),
+            ),
+          ],
         ],
       ),
     );
