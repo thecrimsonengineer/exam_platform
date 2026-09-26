@@ -33,7 +33,9 @@ jobs:
       - name: Format check
         run: |
           dart format --output=none --set-exit-if-changed \
-            lib/services/study_content_remote_search_service.dart
+            lib/services/study_content_remote_search_service.dart \
+            lib/widgets/csp/home/study_content_search_panel.dart \
+            test/widgets/csp/home/study_content_search_panel_test.dart
 
       - name: Analyze refined search client
         run: |
@@ -42,7 +44,8 @@ jobs:
             lib/services/study_content_search_service.dart \
             lib/widgets/csp/home/study_content_search_panel.dart \
             lib/screens/home/home_screen.dart \
-            lib/screens/home/home_screen_dark.dart
+            lib/screens/home/home_screen_dark.dart \
+            test/widgets/csp/home/study_content_search_panel_test.dart
 
       - name: Search service regression
         run: flutter test test/services/study_content_search_service_test.dart
