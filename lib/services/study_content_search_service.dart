@@ -35,6 +35,11 @@ class StudyContentSearchResult {
 
   String get breadcrumb =>
       '$domainLabel • ${competencyId.toUpperCase()} • $topicTitle';
+
+  bool get isContextMatch => switch (matchSection) {
+    'Domain' || 'Competency' || 'Topic' => true,
+    _ => false,
+  };
 }
 
 class StudyContentSearchService {
@@ -80,6 +85,21 @@ class StudyContentSearchService {
         return scoreOrder;
       }
 
+      final domainOrder = left.domainId.compareTo(right.domainId);
+      if (domainOrder != 0) {
+        return domainOrder;
+      }
+
+      final competencyOrder = left.competencyId.compareTo(right.competencyId);
+      if (competencyOrder != 0) {
+        return competencyOrder;
+      }
+
+      final topicOrder = left.topicId.compareTo(right.topicId);
+      if (topicOrder != 0) {
+        return topicOrder;
+      }
+
       final titleOrder = left.subtopicTitle.toLowerCase().compareTo(
         right.subtopicTitle.toLowerCase(),
       );
@@ -91,13 +111,7 @@ class StudyContentSearchService {
       return left.subtopicId.compareTo(right.subtopicId);
     });
 
-    if (matches.length <= limit) {
-      return List<StudyContentSearchResult>.unmodifiable(matches);
-    }
-
-    return List<StudyContentSearchResult>.unmodifiable(
-      matches.take(limit).toList(),
-    );
+    return _applyResultDiversity(matches, limit: limit);
   }
 
   void clearMemoryIndex() {
@@ -123,62 +137,92 @@ class StudyContentSearchService {
             _SearchField(
               section: 'Subtopic',
               text: subtopic.title,
-              weight: 1000,
+              weight: 1100,
             ),
             ...subtopic.learningObjectives.map(
               (value) => _SearchField(
                 section: 'Learning objective',
                 text: value,
-                weight: 860,
+                weight: 940,
               ),
             ),
             ..._visibleBlockStrings(subtopic.blocks).map(
               (value) => _SearchField(
                 section: 'Main content',
                 text: value,
-                weight: 820,
+                weight: 840,
               ),
             ),
             ...subtopic.keyPoints.map(
               (value) =>
-                  _SearchField(section: 'Key point', text: value, weight: 780),
-            ),
-            ...subtopic.examples.map(
-              (value) => _SearchField(
-                section: 'Workplace example',
-                text: value,
-                weight: 740,
-              ),
-            ),
-            ...subtopic.caseStudies.map(
-              (value) =>
-                  _SearchField(section: 'Case study', text: value, weight: 720),
-            ),
-            ...subtopic.formulas.map(
-              (value) =>
-                  _SearchField(section: 'Formula', text: value, weight: 700),
-            ),
-            ...subtopic.references.map(
-              (value) =>
-                  _SearchField(section: 'Reference', text: value, weight: 620),
-            ),
-            ...subtopic.examTips.map(
-              (value) =>
-                  _SearchField(section: 'Exam tip', text: value, weight: 760),
-            ),
-            ...subtopic.commonMistakes.map(
-              (value) => _SearchField(
-                section: 'Common mistake',
-                text: value,
-                weight: 730,
-              ),
+                  _SearchField(section: 'Key point', text: value, weight: 820),
             ),
             ...subtopic.keyTakeaways.map(
               (value) => _SearchField(
                 section: 'Key takeaway',
                 text: value,
-                weight: 790,
+                weight: 810,
               ),
+            ),
+            ...subtopic.examTips.map(
+              (value) =>
+                  _SearchField(section: 'Exam tip', text: value, weight: 790),
+            ),
+            ...subtopic.examples.map(
+              (value) => _SearchField(
+                section: 'Workplace example',
+                text: value,
+                weight: 770,
+              ),
+            ),
+            ...subtopic.commonMistakes.map(
+              (value) => _SearchField(
+                section: 'Common mistake',
+                text: value,
+                weight: 750,
+              ),
+            ),
+            ...subtopic.caseStudies.map(
+              (value) =>
+                  _SearchField(section: 'Case study', text: value, weight: 740),
+            ),
+            ...subtopic.formulas.map(
+              (value) =>
+                  _SearchField(section: 'Formula', text: value, weight: 720),
+            ),
+            ...subtopic.references.map(
+              (value) =>
+                  _SearchField(section: 'Reference', text: value, weight: 650),
+            ),
+            _SearchField(
+              section: 'Topic',
+              text: topic.title,
+              weight: 700,
+              contextual: true,
+            ),
+            _SearchField(
+              section: 'Competency',
+              text: content.title,
+              weight: 640,
+              contextual: true,
+            ),
+            _SearchField(
+              section: 'Competency',
+              text: content.competencyId,
+              weight: 620,
+              contextual: true,
+            ),
+            _SearchField(
+              section: 'Domain',
+              text: domainTitle,
+              weight: 580,
+              contextual: true,
+            ),
+            _SearchField(
+              section: 'Domain',
+              text: domainLabel,
+              weight: 560,
+              contextual: true,
             ),
           ].where((field) => field.text.trim().isNotEmpty).toList();
 
@@ -205,6 +249,31 @@ class StudyContentSearchService {
     }
 
     return List<_StudyContentSearchEntry>.unmodifiable(entries);
+  }
+
+  static List<StudyContentSearchResult> _applyResultDiversity(
+    List<StudyContentSearchResult> matches, {
+    required int limit,
+  }) {
+    final selected = <StudyContentSearchResult>[];
+    final contextualByCompetency = <String, int>{};
+
+    for (final match in matches) {
+      if (match.isContextMatch) {
+        final count = contextualByCompetency[match.competencyId] ?? 0;
+        if (count >= 2) {
+          continue;
+        }
+        contextualByCompetency[match.competencyId] = count + 1;
+      }
+
+      selected.add(match);
+      if (selected.length == limit) {
+        break;
+      }
+    }
+
+    return List<StudyContentSearchResult>.unmodifiable(selected);
   }
 
   static Iterable<String> _visibleBlockStrings(
@@ -273,6 +342,7 @@ class StudyContentSearchService {
         .replaceAll('₇', '7')
         .replaceAll('₈', '8')
         .replaceAll('₉', '9')
+        .replaceAll('&', ' and ')
         .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
@@ -320,18 +390,12 @@ class _StudyContentSearchEntry {
         continue;
       }
 
-      var score = -1;
-
-      if (normalized == query) {
-        score = field.weight + 500;
-      } else if (normalized.startsWith(query)) {
-        score = field.weight + 400;
-      } else if (normalized.contains(query)) {
-        score = field.weight + 300;
-      } else if (queryTokens.isNotEmpty &&
-          queryTokens.every(normalized.contains)) {
-        score = field.weight + 120 + queryTokens.length;
-      }
+      final score = _scoreField(
+        normalized: normalized,
+        query: query,
+        queryTokens: queryTokens,
+        weight: field.weight,
+      );
 
       if (score > bestScore) {
         bestScore = score;
@@ -339,7 +403,7 @@ class _StudyContentSearchEntry {
       }
     }
 
-    if (bestField == null) {
+    if (bestField == null || bestScore < 0) {
       return null;
     }
 
@@ -356,6 +420,61 @@ class _StudyContentSearchEntry {
       matchSection: bestField.section,
       snippet: _snippet(bestField.text, query),
       score: bestScore,
+    );
+  }
+
+  static int _scoreField({
+    required String normalized,
+    required String query,
+    required List<String> queryTokens,
+    required int weight,
+  }) {
+    if (normalized == query) {
+      return weight + 500;
+    }
+
+    if (_startsWithPhrase(normalized, query)) {
+      return weight + 420;
+    }
+
+    if (_containsWholePhrase(normalized, query)) {
+      return weight + 340;
+    }
+
+    if (queryTokens.isNotEmpty &&
+        _allTokensMatchPrefix(normalized, queryTokens)) {
+      return weight + 220 + queryTokens.length;
+    }
+
+    final compactQuery = query.replaceAll(' ', '');
+    final compactValue = normalized.replaceAll(' ', '');
+    if (compactQuery.length >= 4 && compactValue.contains(compactQuery)) {
+      return weight + 180;
+    }
+
+    return -1;
+  }
+
+  static bool _startsWithPhrase(String value, String query) {
+    if (!value.startsWith(query)) {
+      return false;
+    }
+    return value.length == query.length || value[query.length] == ' ';
+  }
+
+  static bool _containsWholePhrase(String value, String query) {
+    return ' $value '.contains(' $query ');
+  }
+
+  static bool _allTokensMatchPrefix(
+    String value,
+    List<String> queryTokens,
+  ) {
+    final valueTokens = value.split(' ').where((token) => token.isNotEmpty);
+    final tokens = valueTokens.toList(growable: false);
+
+    return queryTokens.every(
+      (queryToken) => tokens.any((token) => token.startsWith(queryToken)),
     );
   }
 
@@ -408,10 +527,12 @@ class _SearchField {
   final String section;
   final String text;
   final int weight;
+  final bool contextual;
 
   const _SearchField({
     required this.section,
     required this.text,
     required this.weight,
+    this.contextual = false,
   });
 }
