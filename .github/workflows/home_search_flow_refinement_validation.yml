@@ -1,0 +1,176 @@
+name: Home Search Flow Refinement Validation
+
+on:
+  push:
+    branches:
+      - phase-home-search-flow-refinement
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+  SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Format check
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/services/study_content_remote_search_service.dart
+
+      - name: Analyze refined search client
+        run: |
+          flutter analyze --no-fatal-infos \
+            lib/services/study_content_remote_search_service.dart \
+            lib/services/study_content_search_service.dart \
+            lib/widgets/csp/home/study_content_search_panel.dart \
+            lib/screens/home/home_screen.dart \
+            lib/screens/home/home_screen_dark.dart
+
+      - name: Search service regression
+        run: flutter test test/services/study_content_search_service_test.dart
+
+      - name: Search interaction regression
+        run: flutter test test/widgets/csp/home/study_content_search_panel_test.dart
+
+      - name: Home search route parity
+        run: flutter test test/screens/home/home_search_recalibration_contract_test.dart
+
+      - name: Study content navigation regression
+        run: flutter test test/services/study_content_loader_test.dart
+
+      - name: Require learner public configuration
+        shell: bash
+        run: |
+          test -n "${SUPABASE_PUBLISHABLE_KEY:-}"
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "Invalid Supabase publishable key."; exit 1 ;;
+          esac
+
+      - name: Live refined learner search smoke
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import secrets
+          import string
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
+          supabase_key = os.environ["SUPABASE_PUBLISHABLE_KEY"]
+          firebase_source = Path("lib/firebase_options.dart").read_text(encoding="utf-8")
+          match = re.search(
+              r"static const FirebaseOptions web = FirebaseOptions\(\s*apiKey: '([^']+)'",
+              firebase_source,
+          )
+          assert match, "Firebase web API key not found"
+          firebase_key = match.group(1)
+
+          def request_json(method, url, payload=None, headers=None):
+              data = None if payload is None else json.dumps(payload).encode()
+              merged = {"Content-Type": "application/json"}
+              if headers:
+                  merged.update(headers)
+              req = urllib.request.Request(url, data=data, method=method, headers=merged)
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read()
+                      return response.status, json.loads(raw.decode()) if raw else {}
+              except urllib.error.HTTPError as error:
+                  raw = error.read()
+                  return error.code, json.loads(raw.decode()) if raw else {}
+
+          alphabet = string.ascii_letters + string.digits
+          email = "home-search-refine-" + secrets.token_hex(8) + "@example.com"
+          password = "Csp11!" + "".join(secrets.choice(alphabet) for _ in range(24))
+          signup = (
+              "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="
+              + urllib.parse.quote(firebase_key)
+          )
+          delete = (
+              "https://identitytoolkit.googleapis.com/v1/accounts:delete?key="
+              + urllib.parse.quote(firebase_key)
+          )
+          endpoint = supabase_url + "/functions/v1/learner-content-search"
+
+          token = None
+          try:
+              auth_status, auth = request_json(
+                  "POST",
+                  signup,
+                  {"email": email, "password": password, "returnSecureToken": True},
+              )
+              assert auth_status == 200, auth
+              token = auth["idToken"]
+              headers = {
+                  "apikey": supabase_key,
+                  "Authorization": "Bearer " + token,
+              }
+
+              typo_status, typo_body = request_json(
+                  "POST", endpoint, {"query": "hierachy controls", "limit": 8}, headers
+              )
+              assert typo_status == 200, (typo_status, typo_body)
+              typo_results = typo_body.get("results")
+              assert isinstance(typo_results, list) and typo_results, typo_body
+              typo_text = " ".join(
+                  (item["subtopicTitle"] + " " + item["snippet"]).lower()
+                  for item in typo_results
+              )
+              assert "hierarchy" in typo_text and "control" in typo_text
+              print("HOME_SEARCH_TYPO_TOLERANCE=PASS")
+
+              route = "d03_c02_t04_s01"
+              route_status, route_body = request_json(
+                  "POST", endpoint, {"query": route, "limit": 8}, headers
+              )
+              assert route_status == 200, (route_status, route_body)
+              route_results = route_body.get("results")
+              assert isinstance(route_results, list) and route_results, route_body
+              assert route_results[0]["subtopicId"] == route, route_results[0]
+              assert route_results[0]["matchSection"] == "Subtopic ID", route_results[0]
+              print("HOME_SEARCH_ROUTE_ID=PASS")
+
+              normal_status, normal_body = request_json(
+                  "POST", endpoint, {"query": "lockout tagout", "limit": 8}, headers
+              )
+              assert normal_status == 200, (normal_status, normal_body)
+              normal_results = normal_body.get("results")
+              assert isinstance(normal_results, list) and normal_results, normal_body
+              assert any("lockout" in item["subtopicTitle"].lower() for item in normal_results)
+              print("HOME_SEARCH_NORMAL_RELEVANCE=PASS")
+              print("HOME_SEARCH_FLOW_REFINEMENT=SUCCESS")
+          finally:
+              if token:
+                  cleanup_status, cleanup_body = request_json(
+                      "POST", delete, {"idToken": token}
+                  )
+                  assert cleanup_status == 200, cleanup_body
+                  print("HOME_SEARCH_TEMP_LEARNER_CLEANUP=PASS")
+          PY
+
+      - name: Diff hygiene
+        run: git diff --check
