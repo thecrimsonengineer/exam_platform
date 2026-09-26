@@ -71,17 +71,14 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
       return existingRequest;
     }
 
-    final request = _performSearch(
-      query,
-      userId: userId,
-      limit: effectiveLimit,
-    ).timeout(
-      _requestTimeout,
-      onTimeout: () => throw TimeoutException(
-        'Protected learner content search timed out.',
-        _requestTimeout,
-      ),
-    );
+    final request = _performSearch(query, userId: userId, limit: effectiveLimit)
+        .timeout(
+          _requestTimeout,
+          onTimeout: () => throw TimeoutException(
+            'Protected learner content search timed out.',
+            _requestTimeout,
+          ),
+        );
 
     _inFlight[cacheKey] = request;
 
