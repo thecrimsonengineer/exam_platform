@@ -174,6 +174,69 @@ void main() {
     expect(find.text('Hierarchy of Controls'), findsOneWidget);
   });
 
+  testWidgets('result selection is single-flight while navigation is pending', (
+    tester,
+  ) async {
+    var selected = 0;
+    final navigation = Completer<void>();
+    final service = _FakeSearchService(
+      (query, limit) async => <StudyContentSearchResult>[
+        _result(id: 'd03_c02_t01_s01', title: 'Hierarchy of Controls'),
+      ],
+    );
+
+    await _pumpPanel(
+      tester,
+      service: service,
+      onSelected: (_) {
+        selected++;
+        return navigation.future;
+      },
+    );
+
+    final field = find.byKey(const ValueKey('home-study-search-field'));
+    await tester.tap(field);
+    await tester.enterText(field, 'hierarchy');
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump();
+
+    final result = find.byKey(
+      const ValueKey('home-study-search-result-d03_c02_t01_s01'),
+    );
+    await tester.tap(result);
+    await tester.tap(result);
+
+    expect(selected, 1);
+
+    navigation.complete();
+    await tester.pump();
+  });
+
+  testWidgets('timeout state explains delay and keeps retry available', (
+    tester,
+  ) async {
+    final service = _FakeSearchService((query, limit) async {
+      throw TimeoutException('slow');
+    });
+
+    await _pumpPanel(tester, service: service);
+
+    final field = find.byKey(const ValueKey('home-study-search-field'));
+    await tester.tap(field);
+    await tester.enterText(field, 'hierarchy');
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump();
+
+    expect(
+      find.text('Search is taking longer than expected. Try again.'),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('home-study-search-retry')),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('error state provides a working retry action', (tester) async {
     var calls = 0;
     final service = _FakeSearchService((query, limit) async {
