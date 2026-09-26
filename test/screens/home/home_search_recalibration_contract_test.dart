@@ -21,35 +21,41 @@ void main() {
     },
   );
 
-  test('light and dark search results preserve exact learner route identity', () {
-    for (final path in <String>[
-      'lib/screens/home/home_screen.dart',
-      'lib/screens/home/home_screen_dark.dart',
-    ]) {
-      final source = read(path);
-      final searchHandler = source.substring(
-        source.indexOf('Future<void> _openSearchResult'),
-        source.indexOf('void _openExamReadiness'),
+  test(
+    'light and dark search results preserve exact learner route identity',
+    () {
+      for (final path in <String>[
+        'lib/screens/home/home_screen.dart',
+        'lib/screens/home/home_screen_dark.dart',
+      ]) {
+        final source = read(path);
+        final searchHandler = source.substring(
+          source.indexOf('Future<void> _openSearchResult'),
+          source.indexOf('void _openExamReadiness'),
+        );
+
+        expect(searchHandler, contains('domainId: result.domainId'));
+        expect(searchHandler, contains('competencyId: result.competencyId'));
+        expect(searchHandler, contains('initialSubtopicId: result.subtopicId'));
+        expect(searchHandler, contains('await _refreshHome()'));
+      }
+
+      final lightSource = read('lib/screens/home/home_screen.dart');
+      final lightHandler = lightSource.substring(
+        lightSource.indexOf('Future<void> _openSearchResult'),
+        lightSource.indexOf('void _openExamReadiness'),
       );
+      expect(lightHandler, contains('initialTopicId: result.topicId'));
 
-      expect(searchHandler, contains('domainId: result.domainId'));
-      expect(searchHandler, contains('competencyId: result.competencyId'));
-      expect(searchHandler, contains('initialSubtopicId: result.subtopicId'));
-      expect(searchHandler, contains('await _refreshHome()'));
-    }
-
-    final lightSource = read('lib/screens/home/home_screen.dart');
-    final lightHandler = lightSource.substring(
-      lightSource.indexOf('Future<void> _openSearchResult'),
-      lightSource.indexOf('void _openExamReadiness'),
-    );
-    expect(lightHandler, contains('initialTopicId: result.topicId'));
-
-    final darkStudyScreen = read(
-      'lib/screens/courses/csp/study_content_screen_dark.dart',
-    );
-    expect(darkStudyScreen, contains('initialSubtopicId: widget.initialSubtopicId'));
-  });
+      final darkStudyScreen = read(
+        'lib/screens/courses/csp/study_content_screen_dark.dart',
+      );
+      expect(
+        darkStudyScreen,
+        contains('initialSubtopicId: widget.initialSubtopicId'),
+      );
+    },
+  );
 
   test(
     'search panel guards stale requests clear retry and preserved results',
