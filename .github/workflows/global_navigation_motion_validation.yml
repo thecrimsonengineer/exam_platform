@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: global-navigation-motion-${{ github.ref }}
@@ -17,7 +17,6 @@ env:
   FLUTTER_VERSION: '3.44.9'
   BASE_SHA: '675254a4b7825765102f22d9a1a0acbcbd30d395'
 
-# Phase-scoped gate for the app-wide navigation transition preference.
 jobs:
   validate:
     name: Validate global navigation motion
@@ -36,6 +35,31 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+
+      - name: Apply canonical Dart formatting
+        run: |
+          dart format \
+            lib/app/navigation_motion.dart \
+            lib/main.dart \
+            lib/services/settings/navigation_motion_service.dart \
+            lib/screens/settings/settings_screen.dart \
+            lib/screens/settings/settings_screen_dark.dart \
+            test/services/settings/navigation_motion_service_test.dart \
+            test/navigation/global_navigation_motion_contract_test.dart
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add \
+              lib/app/navigation_motion.dart \
+              lib/main.dart \
+              lib/services/settings/navigation_motion_service.dart \
+              lib/screens/settings/settings_screen.dart \
+              lib/screens/settings/settings_screen_dark.dart \
+              test/services/settings/navigation_motion_service_test.dart \
+              test/navigation/global_navigation_motion_contract_test.dart
+            git commit -m "Apply canonical Dart formatting"
+            git push
+          fi
 
       - name: Resolve packages
         run: flutter pub get
