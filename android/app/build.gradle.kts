@@ -13,6 +13,9 @@ val csp11AndroidKeyAlias = System.getenv("CSP11_ANDROID_KEY_ALIAS")
 val csp11AndroidKeyPassword = System.getenv("CSP11_ANDROID_KEY_PASSWORD")
 val useExplicitCsp11Signing = !csp11AndroidKeystorePath.isNullOrBlank()
 
+val csp11DebugKeystorePath = System.getenv("CSP11_DEBUG_KEYSTORE_PATH")
+val useExplicitCsp11DebugSigning = !csp11DebugKeystorePath.isNullOrBlank()
+
 android {
     namespace = "com.example.exam_platform"
     compileSdk = flutter.compileSdkVersion
@@ -52,9 +55,24 @@ android {
                     }
             }
         }
+
+        if (useExplicitCsp11DebugSigning) {
+            create("csp11ExistingDebug") {
+                storeFile = file(csp11DebugKeystorePath!!)
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
     }
 
     buildTypes {
+        debug {
+            if (useExplicitCsp11DebugSigning) {
+                signingConfig = signingConfigs.getByName("csp11ExistingDebug")
+            }
+        }
+
         release {
             signingConfig =
                 if (useExplicitCsp11Signing) {
