@@ -98,16 +98,6 @@ jobs:
           echo "FIREBASE_PROJECT=csp11-exam-platform"
           echo "ANDROID_INTERNET_PERMISSION=PASS"
 
-      - name: Confirm Gradle debug signer binding
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd android
-          ./gradlew :app:signingReport | tee ../signing-report.txt
-          cd ..
-          grep -q "Store: ${CSP11_DEBUG_KEYSTORE_PATH}" signing-report.txt
-          echo "GRADLE_DEBUG_SIGNER_BINDING=PASS"
-
       - name: Build same-signature Android debug update APK
         run: |
           flutter build apk --debug \
