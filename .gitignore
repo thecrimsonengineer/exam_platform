@@ -46,3 +46,6 @@ app.*.map.json
 
 # CSP11 source pipeline local Python environment
 tools/source_pipeline/.venv/
+
+# CSP11 adaptive test acceleration local plans, logs, and learned timings
+.csp11/

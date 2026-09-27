@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "include_smoke_in_impacted": true,
+  "full_triggers": [
+    "pubspec.yaml",
+    "pubspec.lock",
+    "analysis_options.yaml",
+    "lib/firebase_options.dart",
+    "android/**/build.gradle",
+    "android/**/build.gradle.kts",
+    "ios/Podfile",
+    "macos/Podfile",
+    "windows/**/CMakeLists.txt"
+  ],
+  "broad_triggers": [
+    "lib/main.dart",
+    "lib/app/**",
+    "lib/theme/**",
+    "lib/repositories/**",
+    "firestore.rules",
+    "storage.rules"
+  ],
+  "smoke_test_prefixes": [
+    "test/architecture/",
+    "test/navigation/"
+  ],
+  "broad_test_prefixes": [
+    "test/architecture/",
+    "test/navigation/",
+    "test/security/",
+    "test/integration/",
+    "test/services/"
+  ],
+  "path_mappings": [
+    {
+      "name": "micro-learning",
+      "source_prefixes": [
+        "content/micro_learning/",
+        "lib/features/micro_learning/"
+      ],
+      "test_prefixes": [
+        "test/micro_learning/"
+      ]
+    },
+    {
+      "name": "LAB",
+      "source_prefixes": [
+        "content/lab_population/",
+        "content/lab_population_batch2/",
+        "lib/features/lab/",
+        "lib/screens/lab/"
+      ],
+      "test_prefixes": [
+        "test/lab_quality/",
+        "test/integration/"
+      ]
+    },
+    {
+      "name": "flashcards",
+      "source_prefixes": [
+        "assets/flashcards/",
+        "lib/features/flashcards/",
+        "lib/screens/flashcards/"
+      ],
+      "test_prefixes": [
+        "test/production/",
+        "test/services/"
+      ]
+    },
+    {
+      "name": "startup",
+      "source_prefixes": [
+        "assets/startup/",
+        "lib/startup/",
+        "lib/screens/startup/"
+      ],
+      "test_prefixes": [
+        "test/startup/"
+      ]
+    },
+    {
+      "name": "settings",
+      "source_prefixes": [
+        "lib/screens/settings/",
+        "lib/services/settings/"
+      ],
+      "test_prefixes": [
+        "test/screens/settings/",
+        "test/services/settings/"
+      ]
+    },
+    {
+      "name": "home",
+      "source_prefixes": [
+        "lib/screens/home/",
+        "lib/widgets/csp/home/"
+      ],
+      "test_prefixes": [
+        "test/screens/home/",
+        "test/features/exam_readiness/home_r/"
+      ]
+    },
+    {
+      "name": "security",
+      "source_prefixes": [
+        "firestore.rules",
+        "storage.rules",
+        "lib/services/auth/"
+      ],
+      "test_prefixes": [
+        "test/security/",
+        "test/integration/"
+      ]
+    }
+  ]
+}

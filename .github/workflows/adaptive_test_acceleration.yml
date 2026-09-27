@@ -1,0 +1,241 @@
+name: CSP11 Adaptive Test Acceleration
+
+on:
+  push:
+    branches:
+      - phase-test-acceleration-engine
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Test scope
+        required: true
+        default: impacted
+        type: choice
+        options:
+          - impacted
+          - smoke
+          - full
+      base_ref:
+        description: Git base ref/SHA used for impact analysis
+        required: true
+        default: HEAD~1
+        type: string
+      shards:
+        description: auto or an integer shard count
+        required: true
+        default: auto
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: csp11-adaptive-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      selected_count: ${{ steps.plan.outputs.selected_count }}
+      mode_effective: ${{ steps.plan.outputs.mode_effective }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate accelerator algorithms
+        run: python tools/test_acceleration/test_csp11_test_accelerator.py
+
+      - name: Restore learned test timings
+        uses: actions/cache/restore@v4
+        with:
+          path: .csp11/test_timings.json
+          key: csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-
+            csp11-test-timings-${{ runner.os }}-
+
+      - name: Build adaptive test plan
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            MODE="${{ inputs.mode }}"
+            BASE="${{ inputs.base_ref }}"
+            SHARDS="${{ inputs.shards }}"
+          else
+            MODE="impacted"
+            BASE="${{ github.event.before }}"
+            SHARDS="auto"
+
+            if [[ -z "$BASE" || "$BASE" =~ ^0+$ ]] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+              BASE="HEAD~1"
+            fi
+          fi
+
+          python tools/test_acceleration/csp11_test_accelerator.py plan \
+            --base "$BASE" \
+            --head HEAD \
+            --mode "$MODE" \
+            --shards "$SHARDS" \
+            --output .csp11/test-plan.json \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Publish plan summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          plan = json.loads(Path('.csp11/test-plan.json').read_text())
+          summary = [
+              '## CSP11 adaptive test plan',
+              '',
+              f"- Mode: `{plan['mode_requested']}` → `{plan['mode_effective']}`",
+              f"- Selected: **{plan['selected_test_count']} / {plan['discovered_test_count']}** test files",
+              f"- Selection ratio: **{plan['selection_ratio'] * 100:.1f}%**",
+              f"- Predicted test work: **{plan.get('estimated_total_seconds', 0):.1f}s**",
+              f"- Shards: **{plan.get('shard_count', 0)}**",
+              '',
+              '### Why',
+          ]
+          summary.extend(f'- {reason}' for reason in plan.get('reasons', []))
+          Path(os.environ['GITHUB_STEP_SUMMARY']).write_text(
+              '\n'.join(summary) + '\n',
+              encoding='utf-8',
+          )
+          PY
+
+      - name: Upload adaptive test plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: adaptive-test-plan
+          path: .csp11/test-plan.json
+          retention-days: 7
+
+  test:
+    needs: plan
+    if: needs.plan.outputs.selected_count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.matrix) }}
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Download adaptive test plan
+        uses: actions/download-artifact@v4
+        with:
+          name: adaptive-test-plan
+          path: .csp11
+
+      - name: Run timing-aware shard ${{ matrix.shard }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/test_acceleration/csp11_test_accelerator.py run-shard \
+            --plan .csp11/test-plan.json \
+            --shard "${{ matrix.shard }}" \
+            --delta ".csp11/timing-delta-${{ matrix.shard }}.json" \
+            --concurrency 2 \
+            --max-files-per-process 96 \
+            --log-dir .csp11/test-logs
+
+      - name: Upload shard timing and diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timing-delta-${{ matrix.shard }}
+          path: |
+            .csp11/timing-delta-${{ matrix.shard }}.json
+            .csp11/test-logs/
+          if-no-files-found: warn
+          retention-days: 7
+
+  learn:
+    needs:
+      - plan
+      - test
+    if: always() && needs.plan.result == 'success' && needs.plan.outputs.selected_count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout accelerator
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Restore previous learned timings
+        uses: actions/cache/restore@v4
+        with:
+          path: .csp11/test_timings.json
+          key: csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-
+            csp11-test-timings-${{ runner.os }}-
+
+      - name: Download timing deltas
+        uses: actions/download-artifact@v4
+        with:
+          pattern: timing-delta-*
+          path: .csp11/deltas
+          merge-multiple: true
+
+      - name: Merge timing intelligence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/test_acceleration/csp11_test_accelerator.py merge-timings \
+            --previous .csp11/test_timings.json \
+            --delta ".csp11/deltas/**/*.json" \
+            --output .csp11/test_timings.json
+          python tools/test_acceleration/csp11_test_accelerator.py stats \
+            --timings .csp11/test_timings.json
+
+      - name: Save improved timing model
+        uses: actions/cache/save@v4
+        with:
+          path: .csp11/test_timings.json
+          key: csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
+
+      - name: Upload learned timing model
+        uses: actions/upload-artifact@v4
+        with:
+          name: learned-test-timings
+          path: .csp11/test_timings.json
+          retention-days: 14
