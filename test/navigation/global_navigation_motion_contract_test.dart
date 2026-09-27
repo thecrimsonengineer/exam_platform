@@ -8,14 +8,8 @@ void main() {
   test('navigation motion is initialized and applied at the app root', () {
     final mainSource = read('lib/main.dart');
 
-    expect(
-      mainSource,
-      contains('await NavigationMotionService.initialize();'),
-    );
-    expect(
-      mainSource,
-      contains('NavigationMotionService.isEnabled'),
-    );
+    expect(mainSource, contains('await NavigationMotionService.initialize();'));
+    expect(mainSource, contains('NavigationMotionService.isEnabled'));
     expect(mainSource, contains('AppNavigationMotion.apply('));
     expect(mainSource, contains('AppTheme.studentGlassLightTheme'));
     expect(mainSource, contains('AppTheme.studentGlassDarkTheme'));
@@ -49,14 +43,8 @@ void main() {
     for (final settingsSource in <String>[light, dark]) {
       expect(settingsSource, contains('settings-navigation-motion'));
       expect(settingsSource, contains("title: 'Navigation animation'"));
-      expect(
-        settingsSource,
-        contains('NavigationMotionService.isEnabled'),
-      );
-      expect(
-        settingsSource,
-        contains('NavigationMotionService.setEnabled'),
-      );
+      expect(settingsSource, contains('NavigationMotionService.isEnabled'));
+      expect(settingsSource, contains('NavigationMotionService.setEnabled'));
       expect(settingsSource, contains('NavigationMotionService.toggle'));
     }
   });

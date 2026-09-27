@@ -259,7 +259,9 @@ class SettingsScreen extends StatelessWidget {
                                 },
                               ),
                               _SettingsTile(
-                                key: const ValueKey('settings-navigation-motion'),
+                                key: const ValueKey(
+                                  'settings-navigation-motion',
+                                ),
                                 icon: Icons.animation_rounded,
                                 iconColor: _blue,
                                 iconBackground: const Color(0xFFEAF1FF),
