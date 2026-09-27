@@ -30,12 +30,12 @@ From the repository root:
 .\tools\test_acceleration\csp11_fast_test.ps1
 ```
 
-That runs the tests impacted by the previous commit.
+That runs the tests impacted by your current staged, unstaged, and untracked working-tree changes.
 
 Useful modes:
 
 ```powershell
-# Current change only, normal development default
+# Current working-tree changes, normal development default
 .\tools\test_acceleration\csp11_fast_test.ps1 -Mode impacted
 
 # Very small safety suite

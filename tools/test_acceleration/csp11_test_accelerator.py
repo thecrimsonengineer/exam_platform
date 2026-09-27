@@ -59,10 +59,23 @@ def _run_git(root: Path, args: list[str], *, check: bool = True) -> str:
 
 
 def resolve_ref(root: Path, ref: str) -> str:
+    if ref == "WORKTREE":
+        return _run_git(root, ["rev-parse", "HEAD"])
     return _run_git(root, ["rev-parse", ref])
 
 
 def changed_files(root: Path, base: str, head: str) -> list[str]:
+    if head == "WORKTREE":
+        tracked = _run_git(root, ["diff", "--name-only", base])
+        untracked = _run_git(root, ["ls-files", "--others", "--exclude-standard"])
+        return sorted(
+            {
+                _norm(line)
+                for line in (*tracked.splitlines(), *untracked.splitlines())
+                if line.strip()
+            }
+        )
+
     try:
         output = _run_git(root, ["diff", "--name-only", f"{base}...{head}"])
     except subprocess.CalledProcessError:
@@ -444,6 +457,7 @@ def _run_flutter_batch(
     command = [
         "flutter",
         "test",
+        "--no-pub",
         "--reporter",
         "json",
         "--concurrency",
@@ -724,8 +738,8 @@ def create_parser() -> argparse.ArgumentParser:
     merge.add_argument("--output", default=".csp11/test_timings.json")
 
     local = sub.add_parser("local", help="Plan and run adaptive tests locally.")
-    local.add_argument("--base", default="HEAD~1")
-    local.add_argument("--head", default="HEAD")
+    local.add_argument("--base", default="HEAD")
+    local.add_argument("--head", default="WORKTREE")
     local.add_argument("--mode", choices=("impacted", "smoke", "full"), default="impacted")
     local.add_argument("--shards", default="auto")
     local.add_argument("--workers", type=int, default=1)

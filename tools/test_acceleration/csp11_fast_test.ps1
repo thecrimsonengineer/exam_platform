@@ -2,9 +2,9 @@ param(
   [ValidateSet("impacted", "smoke", "full")]
   [string]$Mode = "impacted",
 
-  [string]$Base = "HEAD~1",
+  [string]$Base = "HEAD",
 
-  [string]$Head = "HEAD",
+  [string]$Head = "WORKTREE",
 
   [string]$Shards = "auto",
 

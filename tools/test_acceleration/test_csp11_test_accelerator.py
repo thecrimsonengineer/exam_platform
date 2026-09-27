@@ -133,6 +133,22 @@ class AcceleratorTests(unittest.TestCase):
         self.assertEqual("full", plan["mode_effective"])
         self.assertEqual(4, plan["selected_test_count"])
 
+    def test_worktree_mode_detects_tracked_and_untracked_edits(self) -> None:
+        temp, root = self._repo()
+        self.addCleanup(temp.cleanup)
+
+        self._write(root, "lib/a.dart", "const value = 1;\n")
+        _git(root, "add", ".")
+        _git(root, "commit", "-m", "base")
+
+        self._write(root, "lib/a.dart", "const value = 2;\n")
+        self._write(root, "lib/new_file.dart", "const fresh = true;\n")
+
+        changed = ACCEL.changed_files(root, "HEAD", "WORKTREE")
+
+        self.assertEqual(["lib/a.dart", "lib/new_file.dart"], changed)
+        self.assertEqual(_git(root, "rev-parse", "HEAD"), ACCEL.resolve_ref(root, "WORKTREE"))
+
     def test_lpt_sharding_balances_slowest_tests_first(self) -> None:
         plan = {
             "tests": ["a", "b", "c", "d"],
