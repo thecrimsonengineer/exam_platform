@@ -14,7 +14,7 @@ class LearningTwinCard extends StatelessWidget {
     this.actionLabel,
     this.onAction,
     this.onDismiss,
-    this.invertSurfaceContrast = false,
+    this.invertSurfaceContrast = true,
   });
 
   final String title;
