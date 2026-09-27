@@ -7,6 +7,7 @@ import '../../services/online_access/learner_online_access_runtime.dart';
 import '../../services/online_access/learner_online_access_session_controller.dart';
 import '../../services/online_access/learner_online_connectivity_coordinator.dart';
 import '../navigation/bottom_navigation.dart';
+import '../startup/startup_micro_learning_block.dart';
 
 class LearnerAuthorizedShell extends StatefulWidget {
   const LearnerAuthorizedShell({
@@ -180,6 +181,9 @@ class _LearnerAuthorizedShellState extends State<LearnerAuthorizedShell>
                     Text(
                       'Verifying secure online access...',
                       textAlign: TextAlign.center,
+                    ),
+                    StartupMicroLearningBlock(
+                      key: ValueKey('secure-access-micro-learning'),
                     ),
                   ],
                 )
