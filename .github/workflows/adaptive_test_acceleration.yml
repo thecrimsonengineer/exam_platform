@@ -57,17 +57,8 @@ jobs:
       - name: Validate accelerator algorithms
         run: python tools/test_acceleration/test_csp11_test_accelerator.py
 
-      - name: Restore learned test timings
-        uses: actions/cache/restore@v4
-        with:
-          path: .csp11/test_timings.json
-          key: csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
-          restore-keys: |
-            csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-
-            csp11-test-timings-${{ runner.os }}-
-
-      - name: Build adaptive test plan
-        id: plan
+      - name: Resolve adaptive scope and zero-Flutter fast path
+        id: scope
         shell: bash
         run: |
           set -euo pipefail
@@ -84,6 +75,102 @@ jobs:
             if [[ -z "$BASE" || "$BASE" =~ ^0+$ ]] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
               BASE="HEAD~1"
             fi
+          fi
+
+          INFRA_ONLY="false"
+          if [[ "$MODE" == "impacted" ]]; then
+            CHANGED="$(git diff --name-only "$BASE...HEAD" || git diff --name-only "$BASE" HEAD)"
+            if [[ -n "$CHANGED" ]]; then
+              INFRA_ONLY="true"
+              while IFS= read -r path; do
+                case "$path" in
+                  tools/test_acceleration/*|.github/workflows/adaptive_test_acceleration.yml|.gitignore)
+                    ;;
+                  *)
+                    INFRA_ONLY="false"
+                    break
+                    ;;
+                esac
+              done <<< "$CHANGED"
+            fi
+          fi
+
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "infra_only=$INFRA_ONLY" >> "$GITHUB_OUTPUT"
+
+          echo "Resolved mode: $MODE"
+          echo "Resolved base: $BASE"
+          echo "Zero-Flutter fast path: $INFRA_ONLY"
+
+      - name: Restore learned test timings
+        if: steps.scope.outputs.infra_only != 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: .csp11/test_timings.json
+          key: csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            csp11-test-timings-${{ runner.os }}-${{ github.ref_name }}-
+            csp11-test-timings-${{ runner.os }}-
+
+      - name: Build adaptive test plan
+        id: plan
+        shell: bash
+        env:
+          MODE: ${{ steps.scope.outputs.mode }}
+          BASE: ${{ steps.scope.outputs.base }}
+          SHARDS: ${{ steps.scope.outputs.shards }}
+          INFRA_ONLY: ${{ steps.scope.outputs.infra_only }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$INFRA_ONLY" == "true" ]]; then
+            mkdir -p .csp11
+            TOTAL="$(find test -type f -name '*_test.dart' | wc -l | tr -d ' ')"
+            BASE_SHA="$(git rev-parse "$BASE")"
+            HEAD_SHA="$(git rev-parse HEAD)"
+            CHANGED="$(git diff --name-only "$BASE...HEAD" || git diff --name-only "$BASE" HEAD)"
+
+            python - "$BASE_SHA" "$HEAD_SHA" "$TOTAL" "$CHANGED" <<'PY'
+          import json
+          import sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          base_sha, head_sha, total, changed_text = sys.argv[1:5]
+          plan = {
+              "schema_version": 1,
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+              "mode_requested": "impacted",
+              "mode_effective": "infra-only",
+              "base": base_sha,
+              "head": head_sha,
+              "changed_files": [line for line in changed_text.splitlines() if line],
+              "discovered_test_count": int(total),
+              "selected_test_count": 0,
+              "selection_ratio": 0.0,
+              "reasons": [
+                  "test-infrastructure-only change; accelerator self-tests passed, so Flutter setup and Flutter tests are skipped"
+              ],
+              "tests": [],
+              "estimates": {},
+              "estimated_total_seconds": 0.0,
+              "shard_count": 0,
+              "shards": [],
+          }
+          Path('.csp11/test-plan.json').write_text(
+              json.dumps(plan, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          PY
+
+            echo 'matrix=[]' >> "$GITHUB_OUTPUT"
+            echo 'selected_count=0' >> "$GITHUB_OUTPUT"
+            echo 'mode_effective=infra-only' >> "$GITHUB_OUTPUT"
+            echo 'shard_count=0' >> "$GITHUB_OUTPUT"
+            echo "Zero-Flutter fast path selected: no Flutter SDK setup required."
+            exit 0
           fi
 
           python tools/test_acceleration/csp11_test_accelerator.py plan \
@@ -103,12 +190,13 @@ jobs:
           from pathlib import Path
 
           plan = json.loads(Path('.csp11/test-plan.json').read_text())
+          skipped = max(0.0, 100.0 - plan['selection_ratio'] * 100.0)
           summary = [
               '## CSP11 adaptive test plan',
               '',
               f"- Mode: `{plan['mode_requested']}` → `{plan['mode_effective']}`",
               f"- Selected: **{plan['selected_test_count']} / {plan['discovered_test_count']}** test files",
-              f"- Selection ratio: **{plan['selection_ratio'] * 100:.1f}%**",
+              f"- Flutter tests avoided: **{skipped:.1f}%**",
               f"- Predicted test work: **{plan.get('estimated_total_seconds', 0):.1f}s**",
               f"- Shards: **{plan.get('shard_count', 0)}**",
               '',
