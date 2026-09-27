@@ -1,0 +1,99 @@
+name: Final exam_platform APK
+
+on:
+  push:
+    branches:
+      - build-final-exam-platform-apk
+    paths:
+      - '.github/workflows/final_exam_platform_apk.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: final-exam-platform-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  FROZEN_SHA: '9d4862ca3366a133e304781787998f7a038b11ac'
+
+jobs:
+  build-final-apk:
+    name: Build final exam_platform.apk
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout build branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove frozen source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "${FROZEN_SHA}"
+          CHANGED="$(git diff --name-only "${FROZEN_SHA}"..HEAD)"
+          printf '%s\n' "${CHANGED}"
+          test "${CHANGED}" = ".github/workflows/final_exam_platform_apk.yml"
+          git diff --check "${FROZEN_SHA}"..HEAD
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages once
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Build release APK
+        run: flutter build apk --release --no-pub
+
+      - name: Package final APK and evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          test -s "${APK}"
+          unzip -t "${APK}" >/dev/null
+          cp "${APK}" exam_platform.apk
+          {
+            echo "CSP11 final Android APK"
+            echo "FROZEN_BRANCH=phase-test-acceleration-engine-closed"
+            echo "FROZEN_SHA=${FROZEN_SHA}"
+            echo "BUILD_COMMIT=${GITHUB_SHA}"
+            echo "FLUTTER_VERSION=${FLUTTER_VERSION}"
+            sha256sum exam_platform.apk
+            ls -lh exam_platform.apk
+          } | tee exam_platform_apk_evidence.txt
+
+      - name: Upload final APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: exam_platform-final-apk
+          path: exam_platform.apk
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Upload build evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: exam_platform-final-apk-evidence
+          path: exam_platform_apk_evidence.txt
+          if-no-files-found: error
+          retention-days: 30
