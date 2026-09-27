@@ -14,7 +14,6 @@ Future<void> _pumpCard(
         body: LearningTwinCard(
           title: 'Study first, then test recall',
           message: 'Open one topic at a time.',
-          invertSurfaceContrast: true,
         ),
       ),
     ),
@@ -22,7 +21,7 @@ Future<void> _pumpCard(
 }
 
 void main() {
-  testWidgets('inverse guidance card is dark in light mode', (tester) async {
+  testWidgets('default guidance card is dark in light mode', (tester) async {
     await _pumpCard(tester, brightness: Brightness.light);
 
     final surface = tester.widget<StudentGlassSurface>(
@@ -37,7 +36,7 @@ void main() {
     expect(title.style?.color, const Color(0xFFF7F9FC));
   });
 
-  testWidgets('inverse guidance card is light in dark mode', (tester) async {
+  testWidgets('default guidance card is light in dark mode', (tester) async {
     await _pumpCard(tester, brightness: Brightness.dark);
 
     final surface = tester.widget<StudentGlassSurface>(
