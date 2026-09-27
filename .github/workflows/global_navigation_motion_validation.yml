@@ -1,0 +1,80 @@
+name: Global Navigation Motion Validation
+
+on:
+  push:
+    branches:
+      - phase-global-navigation-animation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: global-navigation-motion-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+  BASE_SHA: '675254a4b7825765102f22d9a1a0acbcbd30d395'
+
+jobs:
+  validate:
+    name: Validate global navigation motion
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Check phase diff hygiene
+        run: git diff --check $BASE_SHA HEAD
+
+      - name: Check formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/app/navigation_motion.dart \
+            lib/main.dart \
+            lib/services/settings/navigation_motion_service.dart \
+            lib/screens/settings/settings_screen.dart \
+            lib/screens/settings/settings_screen_dark.dart \
+            test/services/settings/navigation_motion_service_test.dart \
+            test/navigation/global_navigation_motion_contract_test.dart
+
+      - name: Analyze navigation motion implementation
+        run: |
+          flutter analyze \
+            lib/app/navigation_motion.dart \
+            lib/main.dart \
+            lib/services/settings/navigation_motion_service.dart \
+            lib/screens/settings/settings_screen.dart \
+            lib/screens/settings/settings_screen_dark.dart \
+            test/services/settings/navigation_motion_service_test.dart \
+            test/navigation/global_navigation_motion_contract_test.dart
+
+      - name: Test navigation motion persistence
+        run: flutter test test/services/settings/navigation_motion_service_test.dart
+
+      - name: Test global navigation motion contract
+        run: flutter test test/navigation/global_navigation_motion_contract_test.dart
+
+      - name: Replay settings dark-mode contract
+        run: flutter test test/screens/settings/csp11_settings_p6_dark_mode_contract_test.dart
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
