@@ -1,6 +1,9 @@
 name: Android Debug APK - Existing Install Update
 
 on:
+  push:
+    branches:
+      - phase-phone-test-build
   workflow_dispatch:
 
 permissions:
@@ -10,27 +13,38 @@ concurrency:
   group: android-debug-update-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+  SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+  ORIGINAL_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
+
 jobs:
   build-debug-update-apk:
     name: Build same-signature debug update APK
     runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      ORIGINAL_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
+    timeout-minutes: 40
 
     steps:
-      - name: Checkout glassmorphism branch
+      - name: Checkout phone-test branch
         uses: actions/checkout@v4
 
-      - name: Require original debug signing key
+      - name: Require original debug signing key and learner config
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "${ORIGINAL_DEBUG_KEYSTORE_BASE64}" ]; then
+          if [ -z "${ORIGINAL_DEBUG_KEYSTORE_BASE64:-}" ]; then
             echo "::error::Missing repository secret ANDROID_DEBUG_KEYSTORE_BASE64."
-            echo "::error::Do not uninstall the existing Android app. Add the Base64 form of the original computer's ~/.android/debug.keystore, then run this workflow again."
+            echo "::error::The update APK cannot be produced safely without the original debug keystore."
             exit 1
           fi
+          if [ -z "${SUPABASE_PUBLISHABLE_KEY:-}" ]; then
+            echo "::error::Missing SUPABASE_PUBLISHABLE_KEY."
+            exit 1
+          fi
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "::error::Invalid Supabase publishable key."; exit 1 ;;
+          esac
 
       - name: Restore original debug keystore
         shell: bash
@@ -39,8 +53,20 @@ jobs:
           mkdir -p "${HOME}/.android"
           printf '%s' "${ORIGINAL_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${HOME}/.android/debug.keystore"
           chmod 600 "${HOME}/.android/debug.keystore"
-          keytool -list             -keystore "${HOME}/.android/debug.keystore"             -storepass android             -alias androiddebugkey >/dev/null
+          keytool -list \
+            -keystore "${HOME}/.android/debug.keystore" \
+            -storepass android \
+            -alias androiddebugkey >/dev/null
+          KEYSTORE_CERT_SHA256=$( \
+            keytool -exportcert \
+              -keystore "${HOME}/.android/debug.keystore" \
+              -storepass android \
+              -alias androiddebugkey \
+            | sha256sum | awk '{print $1}' \
+          )
+          echo "KEYSTORE_CERT_SHA256=${KEYSTORE_CERT_SHA256}" >> "$GITHUB_ENV"
           echo "Original debug keystore restored and validated."
+          echo "Signing certificate SHA-256: ${KEYSTORE_CERT_SHA256}"
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -56,31 +82,68 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Flutter version
-        run: flutter --version
-
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Build Android debug update APK
-        run: flutter build apk --debug
+      - name: Verify Android update identity and network permission
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'applicationId = "com.example.exam_platform"' android/app/build.gradle.kts
+          grep -q 'android.permission.INTERNET' android/app/src/main/AndroidManifest.xml
+          grep -q "projectId: 'csp11-exam-platform'" lib/firebase_options.dart
+          echo "ANDROID_PACKAGE_ID=com.example.exam_platform"
+          echo "FIREBASE_PROJECT=csp11-exam-platform"
+          echo "ANDROID_INTERNET_PERMISSION=PASS"
+
+      - name: Build same-signature Android debug update APK
+        run: |
+          flutter build apk --debug \
+            --dart-define=SUPABASE_URL=${SUPABASE_URL} \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY}
+
+      - name: Verify APK signer matches restored keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=build/app/outputs/flutter-apk/app-debug.apk
+          test -s "$APK"
+          APKSIGNER=$(find "${ANDROID_HOME}/build-tools" -type f -name apksigner | sort -V | tail -n 1)
+          test -n "$APKSIGNER"
+          "$APKSIGNER" verify --print-certs "$APK"
+          APK_CERT_SHA256=$( \
+            "$APKSIGNER" verify --print-certs "$APK" \
+            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' \
+            | tr '[:upper:]' '[:lower:]' \
+          )
+          test -n "$APK_CERT_SHA256"
+          if [ "$APK_CERT_SHA256" != "$KEYSTORE_CERT_SHA256" ]; then
+            echo "::error::APK signer does not match restored original keystore."
+            exit 1
+          fi
+          echo "APK_SIGNER_MATCH=PASS"
+          echo "APK_CERT_SHA256=${APK_CERT_SHA256}"
 
       - name: Prepare update artifact
         shell: bash
         run: |
           set -euo pipefail
-          test -f build/app/outputs/flutter-apk/app-debug.apk
-          cp build/app/outputs/flutter-apk/app-debug.apk CSP11-glass-update-debug.apk
-          sha256sum CSP11-glass-update-debug.apk > CSP11-glass-update-debug.apk.sha256
-          ls -lh CSP11-glass-update-debug.apk CSP11-glass-update-debug.apk.sha256
+          cp build/app/outputs/flutter-apk/app-debug.apk CSP11-existing-install-update-debug.apk
+          sha256sum CSP11-existing-install-update-debug.apk > CSP11-existing-install-update-debug.apk.sha256
+          printf '%s\n' "$KEYSTORE_CERT_SHA256" > CSP11-existing-install-update-debug.signer-sha256.txt
+          ls -lh \
+            CSP11-existing-install-update-debug.apk \
+            CSP11-existing-install-update-debug.apk.sha256 \
+            CSP11-existing-install-update-debug.signer-sha256.txt
 
-      - name: Upload same-signature debug update APK
+      - name: Upload same-signature update APK
         uses: actions/upload-artifact@v4
         with:
-          name: CSP11-glass-update-debug-apk
+          name: CSP11-existing-install-update-apk
           path: |
-            CSP11-glass-update-debug.apk
-            CSP11-glass-update-debug.apk.sha256
+            CSP11-existing-install-update-debug.apk
+            CSP11-existing-install-update-debug.apk.sha256
+            CSP11-existing-install-update-debug.signer-sha256.txt
           if-no-files-found: error
           retention-days: 7
           compression-level: 0
