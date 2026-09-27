@@ -17,6 +17,7 @@ env:
   FLUTTER_VERSION: '3.44.9'
   BASE_SHA: '675254a4b7825765102f22d9a1a0acbcbd30d395'
 
+# Phase-scoped gate for the app-wide navigation transition preference.
 jobs:
   validate:
     name: Validate global navigation motion
