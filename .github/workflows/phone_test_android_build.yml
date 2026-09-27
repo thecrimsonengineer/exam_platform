@@ -49,6 +49,104 @@ jobs:
           echo "FIREBASE_PROJECT=csp11-exam-platform"
           echo "ANDROID_INTERNET_PERMISSION=PASS"
 
+      - name: Live Firebase Supabase Firestore access smoke
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import secrets
+          import string
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          supabase_url = os.environ["SUPABASE_URL"].rstrip("/")
+          supabase_key = os.environ["SUPABASE_PUBLISHABLE_KEY"]
+          source = Path("lib/firebase_options.dart").read_text(encoding="utf-8")
+          match = re.search(
+              r"static const FirebaseOptions android = FirebaseOptions\(\s*apiKey: '([^']+)'",
+              source,
+          )
+          assert match, "Firebase Android API key not found"
+          firebase_key = match.group(1)
+
+          def request_json(method, url, payload=None, headers=None):
+              data = None if payload is None else json.dumps(payload).encode()
+              merged = {"Content-Type": "application/json"}
+              if headers:
+                  merged.update(headers)
+              req = urllib.request.Request(url, data=data, method=method, headers=merged)
+              try:
+                  with urllib.request.urlopen(req, timeout=45) as response:
+                      raw = response.read()
+                      return response.status, json.loads(raw.decode()) if raw else {}
+              except urllib.error.HTTPError as error:
+                  raw = error.read()
+                  return error.code, json.loads(raw.decode()) if raw else {}
+
+          alphabet = string.ascii_letters + string.digits
+          email = "phone-build-" + secrets.token_hex(8) + "@example.com"
+          password = "Csp11!" + "".join(secrets.choice(alphabet) for _ in range(24))
+          signup = (
+              "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="
+              + urllib.parse.quote(firebase_key)
+          )
+          delete = (
+              "https://identitytoolkit.googleapis.com/v1/accounts:delete?key="
+              + urllib.parse.quote(firebase_key)
+          )
+
+          token = None
+          try:
+              auth_status, auth = request_json(
+                  "POST",
+                  signup,
+                  {"email": email, "password": password, "returnSecureToken": True},
+              )
+              assert auth_status == 200, (auth_status, auth)
+              token = auth["idToken"]
+              print("FIREBASE_AUTH=PASS")
+
+              headers = {
+                  "apikey": supabase_key,
+                  "Authorization": "Bearer " + token,
+              }
+              probe_status, probe = request_json(
+                  "POST",
+                  supabase_url + "/functions/v1/firebase-auth-probe",
+                  {},
+                  headers,
+              )
+              assert probe_status == 200, (probe_status, probe)
+              assert probe.get("authorized") is True, probe
+              print("SUPABASE_FIREBASE_PROBE=PASS")
+
+              firestore_url = (
+                  "https://firestore.googleapis.com/v1/projects/"
+                  "csp11-exam-platform/databases/(default)/documents/"
+                  "labLearnerReleaseExtensionState/"
+                  "phase_l_population_batch2_v1_q16_extension_v1"
+              )
+              fs_status, fs = request_json(
+                  "GET",
+                  firestore_url,
+                  headers={"Authorization": "Bearer " + token},
+              )
+              assert fs_status == 200, (fs_status, fs)
+              print("FIRESTORE_LEARNER_READ=PASS")
+              print("PHONE_TEST_BACKEND_ACCESS=SUCCESS")
+          finally:
+              if token:
+                  cleanup_status, cleanup = request_json(
+                      "POST", delete, {"idToken": token}
+                  )
+                  assert cleanup_status == 200, cleanup
+                  print("TEMP_LEARNER_CLEANUP=PASS")
+          PY
+
       - name: Build phone-test debug APK
         run: |
           flutter build apk --debug \
