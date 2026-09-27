@@ -17,6 +17,7 @@ env:
   SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
   SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
   ORIGINAL_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
+  CSP11_DEBUG_KEYSTORE_PATH: /home/runner/.android/debug.keystore
 
 jobs:
   build-debug-update-apk:
@@ -51,19 +52,20 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "${HOME}/.android"
-          printf '%s' "${ORIGINAL_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${HOME}/.android/debug.keystore"
-          chmod 600 "${HOME}/.android/debug.keystore"
+          printf '%s' "${ORIGINAL_DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${CSP11_DEBUG_KEYSTORE_PATH}"
+          chmod 600 "${CSP11_DEBUG_KEYSTORE_PATH}"
           keytool -list \
-            -keystore "${HOME}/.android/debug.keystore" \
+            -keystore "${CSP11_DEBUG_KEYSTORE_PATH}" \
             -storepass android \
             -alias androiddebugkey >/dev/null
           KEYSTORE_CERT_SHA256=$( \
-            keytool -exportcert \
-              -keystore "${HOME}/.android/debug.keystore" \
+            keytool -list -v \
+              -keystore "${CSP11_DEBUG_KEYSTORE_PATH}" \
               -storepass android \
               -alias androiddebugkey \
-            | sha256sum | awk '{print $1}' \
+            | awk -F': ' '/SHA256:/{gsub(":", "", $2); print tolower($2); exit}' \
           )
+          test -n "$KEYSTORE_CERT_SHA256"
           echo "KEYSTORE_CERT_SHA256=${KEYSTORE_CERT_SHA256}" >> "$GITHUB_ENV"
           echo "Original debug keystore restored and validated."
           echo "Signing certificate SHA-256: ${KEYSTORE_CERT_SHA256}"
@@ -96,6 +98,16 @@ jobs:
           echo "FIREBASE_PROJECT=csp11-exam-platform"
           echo "ANDROID_INTERNET_PERMISSION=PASS"
 
+      - name: Confirm Gradle debug signer binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd android
+          ./gradlew :app:signingReport | tee ../signing-report.txt
+          cd ..
+          grep -q "Store: ${CSP11_DEBUG_KEYSTORE_PATH}" signing-report.txt
+          echo "GRADLE_DEBUG_SIGNER_BINDING=PASS"
+
       - name: Build same-signature Android debug update APK
         run: |
           flutter build apk --debug \
@@ -113,12 +125,14 @@ jobs:
           "$APKSIGNER" verify --print-certs "$APK"
           APK_CERT_SHA256=$( \
             "$APKSIGNER" verify --print-certs "$APK" \
-            | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' \
+            | sed -n 's/^.*certificate SHA-256 digest: //p' \
+            | head -n 1 \
             | tr '[:upper:]' '[:lower:]' \
           )
           test -n "$APK_CERT_SHA256"
           if [ "$APK_CERT_SHA256" != "$KEYSTORE_CERT_SHA256" ]; then
             echo "::error::APK signer does not match restored original keystore."
+            echo "::error::Expected ${KEYSTORE_CERT_SHA256}, got ${APK_CERT_SHA256}."
             exit 1
           fi
           echo "APK_SIGNER_MATCH=PASS"
