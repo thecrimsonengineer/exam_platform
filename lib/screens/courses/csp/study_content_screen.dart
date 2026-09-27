@@ -9,6 +9,7 @@ import '../../../theme/study/study_radius.dart';
 import '../../../theme/study/study_spacing.dart';
 import '../../../theme/study/study_typography.dart';
 import '../../../widgets/csp/study_content/study_content_renderer.dart';
+import '../../startup/startup_micro_learning_block.dart';
 
 class StudyContentScreen extends StatefulWidget {
   final String domainId;
@@ -266,6 +267,9 @@ class _StudyContentScreenState extends State<StudyContentScreen> {
                       style: StudyTypography.bodySecondary.copyWith(
                         color: StudyColors.textSecondary,
                       ),
+                    ),
+                    const StartupMicroLearningBlock(
+                      key: ValueKey('study-content-micro-learning'),
                     ),
                   ],
                 ),
