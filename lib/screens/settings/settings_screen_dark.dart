@@ -8,6 +8,7 @@ import '../../services/auth/auth_state_service.dart';
 import '../../services/student_learning_position_service.dart';
 import '../../services/student_learning_progress_service.dart';
 import '../../services/student_question_progress_service.dart';
+import '../../services/settings/navigation_motion_service.dart';
 import '../../services/settings/settings_external_links.dart';
 import '../../services/settings/theme_mode_service.dart';
 import 'legal_document_screen.dart';
@@ -257,6 +258,25 @@ class DarkSettingsScreen extends StatelessWidget {
                                 onTap: () {
                                   ThemeModeService.toggle();
                                 },
+                              ),
+                              _SettingsTile(
+                                key: const ValueKey('settings-navigation-motion'),
+                                icon: Icons.animation_rounded,
+                                iconColor: _blue,
+                                iconBackground: const Color(0xFF14243B),
+                                title: 'Navigation animation',
+                                subtitle:
+                                    'Use a smooth, subtle transition when moving between CSP11 screens.',
+                                trailing: ValueListenableBuilder<bool>(
+                                  valueListenable:
+                                      NavigationMotionService.isEnabled,
+                                  builder: (context, enabled, _) => Switch(
+                                    value: enabled,
+                                    onChanged:
+                                        NavigationMotionService.setEnabled,
+                                  ),
+                                ),
+                                onTap: NavigationMotionService.toggle,
                               ),
                               _SettingsTile(
                                 key: const ValueKey('settings-rate-app'),
