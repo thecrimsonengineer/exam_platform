@@ -1,0 +1,71 @@
+name: Loading Micro-Learning Integration Validation
+
+on:
+  push:
+    branches:
+      - phase-loading-microlearning-integration
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: loading-microlearning-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.44.9'
+
+jobs:
+  validate:
+    name: Validate loading micro-learning integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify dependency graph stays stable
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Check diff hygiene
+        run: git diff --check HEAD^ HEAD
+
+      - name: Check formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/screens/startup/startup_micro_learning_block.dart \
+            lib/screens/auth/learner_authorized_shell.dart \
+            lib/screens/courses/csp/study_content_screen.dart
+
+      - name: Analyze changed Dart files
+        run: |
+          flutter analyze \
+            lib/screens/startup/startup_micro_learning_block.dart \
+            lib/screens/auth/learner_authorized_shell.dart \
+            lib/screens/courses/csp/study_content_screen.dart
+
+      - name: Replay micro-learning runtime tests
+        run: |
+          flutter test test/micro_learning/startup_micro_fact_service_test.dart
+          flutter test test/startup/startup_micro_fact_card_test.dart
+          flutter test test/startup/startup_micro_fact_integration_test.dart
+
+      - name: Replay secure authorization shell
+        run: flutter test test/screens/auth/learner_authorized_shell_test.dart
+
+      - name: Confirm repository remains clean
+        run: git diff --exit-code
