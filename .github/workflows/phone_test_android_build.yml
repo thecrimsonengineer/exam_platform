@@ -1,0 +1,71 @@
+name: Phone Test Android Build
+
+on:
+  push:
+    branches:
+      - phase-phone-test-build
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_URL: https://esfycnmfywxczfillioj.supabase.co
+  SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Require Supabase learner configuration
+        shell: bash
+        run: |
+          test -n "${SUPABASE_PUBLISHABLE_KEY:-}"
+          case "${SUPABASE_PUBLISHABLE_KEY}" in
+            sb_publishable_*) ;;
+            *) echo "Invalid Supabase publishable key."; exit 1 ;;
+          esac
+
+      - name: Verify Android update identity and network permission
+        shell: bash
+        run: |
+          grep -q 'applicationId = "com.example.exam_platform"' android/app/build.gradle.kts
+          grep -q 'android.permission.INTERNET' android/app/src/main/AndroidManifest.xml
+          grep -q "projectId: 'csp11-exam-platform'" lib/firebase_options.dart
+          echo "ANDROID_PACKAGE_ID=com.example.exam_platform"
+          echo "FIREBASE_PROJECT=csp11-exam-platform"
+          echo "ANDROID_INTERNET_PERMISSION=PASS"
+
+      - name: Build phone-test debug APK
+        run: |
+          flutter build apk --debug \
+            --dart-define=SUPABASE_URL=${SUPABASE_URL} \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY}
+
+      - name: Verify APK exists
+        shell: bash
+        run: |
+          test -s build/app/outputs/flutter-apk/app-debug.apk
+          ls -lh build/app/outputs/flutter-apk/app-debug.apk
+          echo "PHONE_TEST_APK_BUILD=SUCCESS"
+
+      - name: Upload validation APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: csp11-phone-test-debug-validation-only
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
