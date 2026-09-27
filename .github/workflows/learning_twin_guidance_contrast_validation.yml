@@ -1,0 +1,53 @@
+name: Learning Twin Guidance Contrast Validation
+
+on:
+  push:
+    branches:
+      - phase-learning-twin-guidance-contrast
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Format check
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/learning_twin/ui/learning_twin_card.dart \
+            lib/features/learning_twin/integration/learning_twin_competency_guidance.dart \
+            test/features/learning_twin/ui/learning_twin_card_contrast_test.dart
+
+      - name: Analyze Learning Twin contrast scope
+        run: |
+          flutter analyze --no-fatal-infos \
+            lib/features/learning_twin/ui/learning_twin_card.dart \
+            lib/features/learning_twin/integration/learning_twin_competency_guidance.dart \
+            test/features/learning_twin/ui/learning_twin_card_contrast_test.dart
+
+      - name: Guidance contrast regression
+        run: flutter test test/features/learning_twin/ui/learning_twin_card_contrast_test.dart
+
+      - name: Learning Twin UI regression
+        run: flutter test test/features/learning_twin/ui
+
+      - name: Competency guidance regression
+        run: flutter test test/features/learning_twin/integration/learning_twin_m4_2_guidance_test.dart
+
+      - name: Diff hygiene
+        run: git diff --check
