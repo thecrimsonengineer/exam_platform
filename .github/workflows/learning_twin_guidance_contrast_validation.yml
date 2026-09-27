@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - phase-learning-twin-guidance-contrast
+      - phase-phone-test-build
   workflow_dispatch:
 
 permissions:
