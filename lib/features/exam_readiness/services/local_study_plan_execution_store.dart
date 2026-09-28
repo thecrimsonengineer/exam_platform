@@ -79,7 +79,6 @@ class LocalStudyPlanExecutionStore implements StudyPlanExecutionStore {
   }
 
   @override
-  Future<void> persistNavigationFailure(
-    StudyPlanExecutionAttempt attempt,
-  ) => planRepository.saveExecutionAttempt(attempt);
+  Future<void> persistNavigationFailure(StudyPlanExecutionAttempt attempt) =>
+      planRepository.saveExecutionAttempt(attempt);
 }

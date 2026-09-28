@@ -208,12 +208,19 @@ void main() {
       );
       final at = DateTime.utc(2026, 9, 28, 9);
 
-      final result = await router.start(plan: plan, blockId: block.blockId, at: at);
+      final result = await router.start(
+        plan: plan,
+        blockId: block.blockId,
+        at: at,
+      );
 
       expect(events, <String>['resolve', 'commit', 'navigate']);
       expect(result.navigationSucceeded, isTrue);
       expect(result.startedPlan.planVersion, 2);
-      expect(result.startedPlan.blocks.single.status, StudyPlanBlockStatus.started);
+      expect(
+        result.startedPlan.blocks.single.status,
+        StudyPlanBlockStatus.started,
+      );
       expect(result.attempt.status, StudyPlanExecutionAttemptStatus.started);
     });
 
@@ -238,27 +245,30 @@ void main() {
       expect(navigator.openCalls, 0);
     });
 
-    test('target resolution failure performs no persistence or navigation', () async {
-      final block = _block();
-      final store = _FakeStore();
-      final navigator = _FakeNavigator();
-      final router = StudyPlanExecutionRouter(
-        resolveTarget: (_) => throw StateError('bad target'),
-        store: store,
-        navigator: navigator,
-      );
+    test(
+      'target resolution failure performs no persistence or navigation',
+      () async {
+        final block = _block();
+        final store = _FakeStore();
+        final navigator = _FakeNavigator();
+        final router = StudyPlanExecutionRouter(
+          resolveTarget: (_) => throw StateError('bad target'),
+          store: store,
+          navigator: navigator,
+        );
 
-      await expectLater(
-        router.start(
-          plan: _plan(block),
-          blockId: block.blockId,
-          at: DateTime.utc(2026, 9, 28, 9),
-        ),
-        throwsStateError,
-      );
-      expect(store.commitCalls, 0);
-      expect(navigator.openCalls, 0);
-    });
+        await expectLater(
+          router.start(
+            plan: _plan(block),
+            blockId: block.blockId,
+            at: DateTime.utc(2026, 9, 28, 9),
+          ),
+          throwsStateError,
+        );
+        expect(store.commitCalls, 0);
+        expect(navigator.openCalls, 0);
+      },
+    );
 
     test('terminal block cannot create a new execution attempt', () async {
       final block = _block(status: StudyPlanBlockStatus.completed);
@@ -308,32 +318,38 @@ void main() {
       expect(navigator.openCalls, 0);
     });
 
-    test('navigation failure retains started plan and recoverable attempt', () async {
-      final block = _block();
-      final store = _FakeStore();
-      final navigator = _FakeNavigator(fail: true);
-      final router = StudyPlanExecutionRouter(
-        resolveTarget: _target,
-        store: store,
-        navigator: navigator,
-      );
+    test(
+      'navigation failure retains started plan and recoverable attempt',
+      () async {
+        final block = _block();
+        final store = _FakeStore();
+        final navigator = _FakeNavigator(fail: true);
+        final router = StudyPlanExecutionRouter(
+          resolveTarget: _target,
+          store: store,
+          navigator: navigator,
+        );
 
-      final result = await router.start(
-        plan: _plan(block),
-        blockId: block.blockId,
-        at: DateTime.utc(2026, 9, 28, 9),
-      );
+        final result = await router.start(
+          plan: _plan(block),
+          blockId: block.blockId,
+          at: DateTime.utc(2026, 9, 28, 9),
+        );
 
-      expect(result.navigationSucceeded, isFalse);
-      expect(result.isRecoverableNavigationFailure, isTrue);
-      expect(result.startedPlan.blocks.single.status, StudyPlanBlockStatus.started);
-      expect(
-        result.attempt.status,
-        StudyPlanExecutionAttemptStatus.navigationFailed,
-      );
-      expect(result.navigationFailurePersisted, isTrue);
-      expect(store.navigationFailureCalls, 1);
-    });
+        expect(result.navigationSucceeded, isFalse);
+        expect(result.isRecoverableNavigationFailure, isTrue);
+        expect(
+          result.startedPlan.blocks.single.status,
+          StudyPlanBlockStatus.started,
+        );
+        expect(
+          result.attempt.status,
+          StudyPlanExecutionAttemptStatus.navigationFailed,
+        );
+        expect(result.navigationFailurePersisted, isTrue);
+        expect(store.navigationFailureCalls, 1);
+      },
+    );
 
     test('failed navigation marker does not invent a rollback', () async {
       final block = _block();
@@ -354,33 +370,42 @@ void main() {
       expect(result.navigationSucceeded, isFalse);
       expect(result.navigationFailurePersisted, isFalse);
       expect(result.startedPlan.planVersion, 2);
-      expect(result.startedPlan.blocks.single.status, StudyPlanBlockStatus.started);
-    });
-
-    test('resolved Flashcard target remains first-class through transaction', () async {
-      final block = _block(type: StudyPlanBlockType.spacedReview);
-      final store = _FakeStore();
-      final navigator = _FakeNavigator();
-      final router = StudyPlanExecutionRouter(
-        resolveTarget: (value) => _target(
-          value,
-          kind: StudyPlanExecutionTargetKind.flashcardReview,
-        ),
-        store: store,
-        navigator: navigator,
-      );
-
-      final result = await router.start(
-        plan: _plan(block),
-        blockId: block.blockId,
-        at: DateTime.utc(2026, 9, 28, 9),
-      );
-
-      expect(result.target.kind, StudyPlanExecutionTargetKind.flashcardReview);
       expect(
-        result.attempt.targetKind,
-        StudyPlanExecutionTargetKind.flashcardReview,
+        result.startedPlan.blocks.single.status,
+        StudyPlanBlockStatus.started,
       );
     });
+
+    test(
+      'resolved Flashcard target remains first-class through transaction',
+      () async {
+        final block = _block(type: StudyPlanBlockType.spacedReview);
+        final store = _FakeStore();
+        final navigator = _FakeNavigator();
+        final router = StudyPlanExecutionRouter(
+          resolveTarget: (value) => _target(
+            value,
+            kind: StudyPlanExecutionTargetKind.flashcardReview,
+          ),
+          store: store,
+          navigator: navigator,
+        );
+
+        final result = await router.start(
+          plan: _plan(block),
+          blockId: block.blockId,
+          at: DateTime.utc(2026, 9, 28, 9),
+        );
+
+        expect(
+          result.target.kind,
+          StudyPlanExecutionTargetKind.flashcardReview,
+        );
+        expect(
+          result.attempt.targetKind,
+          StudyPlanExecutionTargetKind.flashcardReview,
+        );
+      },
+    );
   });
 }

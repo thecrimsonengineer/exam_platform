@@ -3,9 +3,8 @@ import '../models/study_plan_block.dart';
 import '../models/study_plan_execution_attempt.dart';
 import '../models/study_plan_execution_target.dart';
 
-typedef StudyPlanExecutionTargetResolver = StudyPlanExecutionTarget Function(
-  StudyPlanBlock block,
-);
+typedef StudyPlanExecutionTargetResolver =
+    StudyPlanExecutionTarget Function(StudyPlanBlock block);
 
 /// Persistence boundary for the ERDP-4 start transaction.
 ///
@@ -157,10 +156,7 @@ class StudyPlanExecutionRouter {
     }
   }
 
-  void _validateTarget(
-    StudyPlanBlock block,
-    StudyPlanExecutionTarget target,
-  ) {
+  void _validateTarget(StudyPlanBlock block, StudyPlanExecutionTarget target) {
     if (target.blockId != block.blockId ||
         target.blockType != block.type ||
         target.competencyId != block.competencyId ||
@@ -182,7 +178,9 @@ class StudyPlanExecutionRouter {
     if (startedPlan.planId != sourcePlan.planId ||
         startedPlan.userId != sourcePlan.userId ||
         startedPlan.planVersion <= sourcePlan.planVersion) {
-      throw StateError('Execution start commit returned an invalid plan version.');
+      throw StateError(
+        'Execution start commit returned an invalid plan version.',
+      );
     }
 
     final startedBlock = _findBlock(startedPlan, block.blockId);

@@ -1,10 +1,6 @@
 import 'study_plan_execution_target.dart';
 
-enum StudyPlanExecutionAttemptStatus {
-  started,
-  navigationFailed,
-  completed,
-}
+enum StudyPlanExecutionAttemptStatus { started, navigationFailed, completed }
 
 class StudyPlanExecutionAttempt {
   const StudyPlanExecutionAttempt({
@@ -78,8 +74,8 @@ class StudyPlanExecutionAttempt {
     }
 
     final navigationFailedAtValue = json['navigationFailedAt']?.toString();
-    final navigationFailedAt = navigationFailedAtValue == null ||
-            navigationFailedAtValue.isEmpty
+    final navigationFailedAt =
+        navigationFailedAtValue == null || navigationFailedAtValue.isEmpty
         ? null
         : DateTime.tryParse(navigationFailedAtValue);
     if (navigationFailedAtValue != null &&
@@ -108,9 +104,8 @@ class StudyPlanExecutionAttempt {
       startedAt: startedAt,
       status: StudyPlanExecutionAttemptStatus.values.firstWhere(
         (value) => value.name == statusName,
-        orElse: () => throw const FormatException(
-          'Unknown execution attempt status.',
-        ),
+        orElse: () =>
+            throw const FormatException('Unknown execution attempt status.'),
       ),
       navigationFailedAt: navigationFailedAt,
       failureCode: json['failureCode']?.toString(),

@@ -4,11 +4,11 @@ import '../models/study_plan_execution_target.dart';
 import '../services/study_plan_execution_router.dart';
 import 'study_plan_block_launcher.dart';
 
-typedef PracticeCompletionCallback = Future<void> Function(
-  StudyPlanExecutionTarget target,
-);
+typedef PracticeCompletionCallback =
+    Future<void> Function(StudyPlanExecutionTarget target);
 
-class FlutterStudyPlanExecutionNavigator implements StudyPlanExecutionNavigator {
+class FlutterStudyPlanExecutionNavigator
+    implements StudyPlanExecutionNavigator {
   const FlutterStudyPlanExecutionNavigator({
     required this.context,
     required this.launcher,
@@ -31,7 +31,8 @@ class FlutterStudyPlanExecutionNavigator implements StudyPlanExecutionNavigator 
       context,
       target: target,
       isDarkMode: isDarkMode,
-      onPracticeSessionCompleted: isPractice && onPracticeSessionCompleted != null
+      onPracticeSessionCompleted:
+          isPractice && onPracticeSessionCompleted != null
           ? () => onPracticeSessionCompleted!(target)
           : null,
     );

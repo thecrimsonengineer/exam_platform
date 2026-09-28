@@ -266,8 +266,8 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
               ? () async {
                   await _complete(
                     block.blockId,
-                    source:
-                        StudyPlanCompletionEvidenceSource.plannedPracticeSession,
+                    source: StudyPlanCompletionEvidenceSource
+                        .plannedPracticeSession,
                     silentIfBlocked: true,
                   );
                 }

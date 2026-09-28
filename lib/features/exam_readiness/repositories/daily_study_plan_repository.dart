@@ -112,7 +112,9 @@ class DailyStudyPlanRepository {
   Future<List<StudyPlanExecutionAttempt>> loadExecutionAttempts() async {
     final userId = _requireUserId();
     final state = await _loadLocalState(userId);
-    return List<StudyPlanExecutionAttempt>.unmodifiable(state.executionAttempts);
+    return List<StudyPlanExecutionAttempt>.unmodifiable(
+      state.executionAttempts,
+    );
   }
 
   Future<StudyPlanExecutionAttempt?> loadExecutionAttempt(
@@ -259,10 +261,7 @@ class DailyStudyPlanRepository {
     ];
     await _saveLocalState(
       userId,
-      _LocalDailyPlanState(
-        plans: history,
-        executionAttempts: attempts,
-      ),
+      _LocalDailyPlanState(plans: history, executionAttempts: attempts),
     );
 
     return DailyStudyPlanExecutionCommit(
@@ -271,9 +270,7 @@ class DailyStudyPlanRepository {
     );
   }
 
-  Future<void> saveExecutionAttempt(
-    StudyPlanExecutionAttempt attempt,
-  ) async {
+  Future<void> saveExecutionAttempt(StudyPlanExecutionAttempt attempt) async {
     final userId = _requireUserId();
     final state = await _loadLocalState(userId);
     final attempts = state.executionAttempts.toList();
@@ -313,9 +310,7 @@ class DailyStudyPlanRepository {
     try {
       final decoded = jsonDecode(raw);
       if (decoded is Iterable) {
-        return _LocalDailyPlanState(
-          plans: _decodePlans(decoded, userId),
-        );
+        return _LocalDailyPlanState(plans: _decodePlans(decoded, userId));
       }
       if (decoded is! Map) return const _LocalDailyPlanState();
 
@@ -326,10 +321,7 @@ class DailyStudyPlanRepository {
       final attempts = map['executionAttempts'] is Iterable
           ? _decodeExecutionAttempts(map['executionAttempts'] as Iterable)
           : const <StudyPlanExecutionAttempt>[];
-      return _LocalDailyPlanState(
-        plans: plans,
-        executionAttempts: attempts,
-      );
+      return _LocalDailyPlanState(plans: plans, executionAttempts: attempts);
     } catch (_) {
       return const _LocalDailyPlanState();
     }
@@ -350,9 +342,7 @@ class DailyStudyPlanRepository {
     return plans;
   }
 
-  List<StudyPlanExecutionAttempt> _decodeExecutionAttempts(
-    Iterable decoded,
-  ) {
+  List<StudyPlanExecutionAttempt> _decodeExecutionAttempts(Iterable decoded) {
     final attempts = <StudyPlanExecutionAttempt>[];
     final ids = <String>{};
     for (final item in decoded) {
