@@ -5,6 +5,7 @@ import 'package:exam_platform/features/exam_readiness/models/evidence_confidence
 import 'package:exam_platform/features/exam_readiness/models/study_plan_block.dart';
 import 'package:exam_platform/features/exam_readiness/models/today_plan_task_category.dart';
 import 'package:exam_platform/features/exam_readiness/services/daily_study_plan_service.dart';
+import 'package:exam_platform/features/exam_readiness/services/phase_aware_daily_plan_service.dart';
 import 'package:exam_platform/features/exam_readiness/services/today_plan_task_category_policy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -76,6 +77,34 @@ void main() {
     test('balanced floor is visible in plan reasons', () {
       final plan = _generate(minutes: 60);
 
+      expect(
+        plan.blocks.where(
+          (block) => block.reasonCodes.contains('BALANCED_PORTFOLIO'),
+        ).length,
+        greaterThanOrEqualTo(3),
+      );
+    });
+
+    test('phase-aware readiness plan preserves all three categories', () {
+      const service = PhaseAwareDailyPlanService();
+      final date = DateTime(2026, 9, 28);
+      final plan = service.generate(
+        userId: 'erdp3-phase-user',
+        date: date,
+        generatedAt: DateTime(2026, 9, 28, 8),
+        examDate: date.add(const Duration(days: 7)),
+        availableMinutes: 60,
+        readinessProfiles: _stableProfiles(),
+      );
+
+      expect(
+        _categories(plan),
+        containsAll(<TodayPlanTaskCategory>{
+          TodayPlanTaskCategory.learn,
+          TodayPlanTaskCategory.practice,
+          TodayPlanTaskCategory.remember,
+        }),
+      );
       expect(
         plan.blocks.where(
           (block) => block.reasonCodes.contains('BALANCED_PORTFOLIO'),
