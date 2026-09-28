@@ -30,38 +30,8 @@ jobs:
 
       - name: Apply canonical ERDP-5 formatting and terminal contract once
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('test/features/exam_readiness/m7d/m7d_models_test.dart')
-          text = path.read_text()
-          old = """    test('skipped block remains editable history state', () {
-      expect(
-        block(status: StudyPlanBlockStatus.skipped).isFutureEditable,
-        isTrue,
-      );
-    });
-"""
-          new = """    test('skipped block is terminal non-editable history', () {
-      final skipped = block(status: StudyPlanBlockStatus.skipped);
-      expect(skipped.isFutureEditable, isFalse);
-      expect(skipped.consumesAllocation, isFalse);
-    });
-"""
-          if old not in text:
-              raise SystemExit('Expected legacy skipped-state assertion not found.')
-          path.write_text(text.replace(old, new, 1))
-          PY
-          FILES="\
-          lib/features/exam_readiness/models/daily_study_plan.dart \
-          lib/features/exam_readiness/models/study_plan_block.dart \
-          lib/features/exam_readiness/models/study_plan_carry_forward.dart \
-          lib/features/exam_readiness/models/study_plan_execution_target.dart \
-          lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
-          lib/features/exam_readiness/services/executable_daily_plan_action_service.dart \
-          lib/features/exam_readiness/services/study_plan_carry_forward_planner.dart \
-          lib/features/exam_readiness/screens/todays_plan_screen.dart \
-          test/features/exam_readiness/erdp/erdp5_executable_daily_plan_test.dart \
-          test/features/exam_readiness/m7d/m7d_models_test.dart"
+          python3 -c "from pathlib import Path; p=Path('test/features/exam_readiness/m7d/m7d_models_test.dart'); s=p.read_text(); old=\"    test('skipped block remains editable history state', () {\\n      expect(\\n        block(status: StudyPlanBlockStatus.skipped).isFutureEditable,\\n        isTrue,\\n      );\\n    });\"; new=\"    test('skipped block is terminal non-editable history', () {\\n      final skipped = block(status: StudyPlanBlockStatus.skipped);\\n      expect(skipped.isFutureEditable, isFalse);\\n      expect(skipped.consumesAllocation, isFalse);\\n    });\"; assert old in s, 'Expected legacy skipped-state assertion not found.'; p.write_text(s.replace(old,new,1))"
+          FILES="lib/features/exam_readiness/models/daily_study_plan.dart lib/features/exam_readiness/models/study_plan_block.dart lib/features/exam_readiness/models/study_plan_carry_forward.dart lib/features/exam_readiness/models/study_plan_execution_target.dart lib/features/exam_readiness/repositories/daily_study_plan_repository.dart lib/features/exam_readiness/services/executable_daily_plan_action_service.dart lib/features/exam_readiness/services/study_plan_carry_forward_planner.dart lib/features/exam_readiness/screens/todays_plan_screen.dart test/features/exam_readiness/erdp/erdp5_executable_daily_plan_test.dart test/features/exam_readiness/m7d/m7d_models_test.dart"
           dart format $FILES
           if ! git diff --quiet -- $FILES; then
             git config user.name "github-actions[bot]"
