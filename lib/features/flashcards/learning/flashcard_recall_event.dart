@@ -43,8 +43,7 @@ class FlashcardRecallEvent {
 
   bool get isFirstAttemptInSession => !sameSessionRepeat && attemptSequence == 1;
 
-  bool get isSpaced =>
-      !sameSessionRepeat && (spacingIntervalDays ?? 0) >= 1;
+  bool get isSpaced => !sameSessionRepeat && (spacingIntervalDays ?? 0) >= 1;
 
   bool get isSuccessfulRecall => rating == FlashcardRecallRating.gotIt;
 
@@ -53,7 +52,9 @@ class FlashcardRecallEvent {
         sessionId.trim().isEmpty ||
         cardId.trim().isEmpty ||
         conceptLabel.trim().isEmpty) {
-      throw StateError('Flashcard recall identifiers and concept cannot be blank.');
+      throw StateError(
+        'Flashcard recall identifiers and concept cannot be blank.',
+      );
     }
     if (!RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId)) {
       throw StateError('Flashcard recall competency ID is not canonical.');
