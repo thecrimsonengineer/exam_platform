@@ -4,6 +4,7 @@ import '../../../data/csp11_blueprint.dart';
 import '../../../screens/courses/csp/study_content_screen.dart';
 import '../../../screens/courses/csp/study_content_screen_dark.dart';
 import '../../../screens/flashcards/flashcard_competency_review_screen.dart';
+import '../../../screens/lab/lab_library_screen.dart';
 import '../models/study_plan_block.dart';
 import '../models/study_plan_execution_target.dart';
 import '../models/today_plan_task_category.dart';
@@ -47,15 +48,23 @@ class StudyPlanBlockLauncher {
     }
 
     final category = categoryPolicy.categoryFor(block);
-    final kind = switch (category) {
-      TodayPlanTaskCategory.learn => StudyPlanExecutionTargetKind.studyContent,
-      TodayPlanTaskCategory.remember =>
-        StudyPlanExecutionTargetKind.flashcardReview,
-      TodayPlanTaskCategory.practice =>
-        block.type == StudyPlanBlockType.examSimulation
-            ? StudyPlanExecutionTargetKind.examSimulation
-            : StudyPlanExecutionTargetKind.practiceSession,
-    };
+    final isApplicationLab =
+        block.type == StudyPlanBlockType.repair &&
+        block.reasonCodes.any(
+          (reason) => reason.trim().toUpperCase() == 'APPLICATION_GAP',
+        );
+    final kind = isApplicationLab
+        ? StudyPlanExecutionTargetKind.lab
+        : switch (category) {
+            TodayPlanTaskCategory.learn =>
+              StudyPlanExecutionTargetKind.studyContent,
+            TodayPlanTaskCategory.remember =>
+              StudyPlanExecutionTargetKind.flashcardReview,
+            TodayPlanTaskCategory.practice =>
+              block.type == StudyPlanBlockType.examSimulation
+                  ? StudyPlanExecutionTargetKind.examSimulation
+                  : StudyPlanExecutionTargetKind.practiceSession,
+          };
 
     if ((kind == StudyPlanExecutionTargetKind.practiceSession ||
             kind == StudyPlanExecutionTargetKind.examSimulation) &&
@@ -90,12 +99,14 @@ class StudyPlanBlockLauncher {
     required StudyPlanBlock block,
     required bool isDarkMode,
     Future<void> Function()? onPracticeSessionCompleted,
+    Future<void> Function(double applicationAccuracy)? onLabCompleted,
   }) {
     return launchTarget(
       context,
       target: resolve(block),
       isDarkMode: isDarkMode,
       onPracticeSessionCompleted: onPracticeSessionCompleted,
+      onLabCompleted: onLabCompleted,
     );
   }
 
@@ -104,6 +115,7 @@ class StudyPlanBlockLauncher {
     required StudyPlanExecutionTarget target,
     required bool isDarkMode,
     Future<void> Function()? onPracticeSessionCompleted,
+    Future<void> Function(double applicationAccuracy)? onLabCompleted,
   }) async {
     final destination = switch (target.kind) {
       StudyPlanExecutionTargetKind.studyContent ||
@@ -130,6 +142,9 @@ class StudyPlanBlockLauncher {
           competencyId: target.competencyId,
           isDarkMode: isDarkMode,
         ),
+      StudyPlanExecutionTargetKind.lab => LabLibraryScreen.persistent(
+        onScenarioCompleted: onLabCompleted,
+      ),
       StudyPlanExecutionTargetKind.practiceSession ||
       StudyPlanExecutionTargetKind.examSimulation =>
         StudyPlanPracticeSessionScreen(

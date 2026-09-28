@@ -310,6 +310,17 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                   );
                 }
               : null,
+          onLabCompleted: target.kind == StudyPlanExecutionTargetKind.lab
+              ? (applicationAccuracy) async {
+                  await _complete(
+                    block.blockId,
+                    source:
+                        StudyPlanCompletionEvidenceSource.labScenarioCompleted,
+                    applicationAccuracyOverride: applicationAccuracy,
+                    silentIfBlocked: true,
+                  );
+                }
+              : null,
         );
         if (!mounted) return;
         if (target.kind == StudyPlanExecutionTargetKind.studyContent ||
@@ -342,6 +353,14 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
             await _complete(
               target.blockId,
               source: StudyPlanCompletionEvidenceSource.plannedPracticeSession,
+              silentIfBlocked: true,
+            );
+          },
+          onLabCompleted: (target, applicationAccuracy) async {
+            await _complete(
+              target.blockId,
+              source: StudyPlanCompletionEvidenceSource.labScenarioCompleted,
+              applicationAccuracyOverride: applicationAccuracy,
               silentIfBlocked: true,
             );
           },
@@ -416,6 +435,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   Future<bool> _complete(
     String blockId, {
     required StudyPlanCompletionEvidenceSource source,
+    double? applicationAccuracyOverride,
     bool silentIfBlocked = false,
   }) async {
     if (!_completionInFlight.add(blockId)) {
@@ -452,6 +472,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
               source == StudyPlanCompletionEvidenceSource.plannedPracticeSession
               ? StudyPlanCompletionEvidenceService.sessionKindForBlock(blockId)
               : null,
+          applicationAccuracyOverride: applicationAccuracyOverride,
         );
         final loop = await _closedEvidenceLoopCoordinator.processCompletion(
           completedPlan: plan,
@@ -505,6 +526,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
             source == StudyPlanCompletionEvidenceSource.plannedPracticeSession
             ? StudyPlanCompletionEvidenceService.sessionKindForBlock(blockId)
             : null,
+        applicationAccuracyOverride: applicationAccuracyOverride,
       );
 
       final changed = widget.planService.completeBlock(plan, blockId, at: at);

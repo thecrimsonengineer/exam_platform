@@ -140,6 +140,15 @@ class PhaseAwareDailyPlanService {
       }
     }
 
+    if (!isPortfolioFloor &&
+        phase == ExamPreparationPhase.consolidation &&
+        block.reasonCodes.contains('ASSESSMENT_BALANCE') &&
+        (type == StudyPlanBlockType.standardPractice ||
+            type == StudyPlanBlockType.mixedRetrieval ||
+            type == StudyPlanBlockType.ultraHardPractice)) {
+      type = StudyPlanBlockType.examSimulation;
+    }
+
     final phaseCode = 'EXAM_PHASE_${phase.name.toUpperCase()}';
     final allocationCode =
         'PHASE_ALLOCATION_L${(allocation.learning * 100).round()}_'
@@ -185,6 +194,7 @@ class PhaseAwareDailyPlanService {
 
   int _questionCount(StudyPlanBlockType type, int minutes) {
     switch (type) {
+      case StudyPlanBlockType.repair:
       case StudyPlanBlockType.diagnostic:
       case StudyPlanBlockType.standardPractice:
       case StudyPlanBlockType.ultraHardPractice:

@@ -580,8 +580,9 @@ class DailyStudyPlanService {
     switch (type) {
       case StudyPlanBlockType.learn:
       case StudyPlanBlockType.continueLearning:
-      case StudyPlanBlockType.repair:
         return TodayPlanTaskCategory.learn;
+      case StudyPlanBlockType.repair:
+        return TodayPlanTaskCategory.practice;
       case StudyPlanBlockType.spacedReview:
       case StudyPlanBlockType.recovery:
         return TodayPlanTaskCategory.remember;
@@ -772,6 +773,7 @@ class DailyStudyPlanService {
 
   int _questionCount(StudyPlanBlockType type, int minutes) {
     switch (type) {
+      case StudyPlanBlockType.repair:
       case StudyPlanBlockType.diagnostic:
       case StudyPlanBlockType.standardPractice:
       case StudyPlanBlockType.ultraHardPractice:

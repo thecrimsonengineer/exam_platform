@@ -27,7 +27,9 @@ class LearningEvidenceNormalizer {
     };
 
     final overallAccuracy = outcome.overallAccuracy;
-    final applicationScore = sourceKind == LearningEvidenceSourceKind.simulation
+    final applicationScore =
+        sourceKind == LearningEvidenceSourceKind.simulation ||
+            sourceKind == LearningEvidenceSourceKind.lab
         ? outcome.applicationAccuracy ??
               outcome.analysisAccuracy ??
               overallAccuracy
@@ -87,6 +89,13 @@ class LearningEvidenceNormalizer {
     }
     if (block.type == StudyPlanBlockType.spacedReview) {
       return LearningEvidenceSourceKind.flashcard;
+    }
+    if (block.type == StudyPlanBlockType.repair &&
+        outcome.applicationAccuracy != null &&
+        block.reasonCodes.any(
+          (reason) => reason.trim().toUpperCase() == 'APPLICATION_GAP',
+        )) {
+      return LearningEvidenceSourceKind.lab;
     }
     if (outcome.questionsAttempted > 0) {
       return LearningEvidenceSourceKind.question;

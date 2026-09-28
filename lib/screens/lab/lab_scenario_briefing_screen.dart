@@ -11,10 +11,12 @@ class LabScenarioBriefingScreen extends StatelessWidget {
     super.key,
     required this.scenario,
     this.publishedPackage,
+    this.onScenarioCompleted,
   });
 
   final LabScenarioDefinition scenario;
   final LabPackage? publishedPackage;
+  final Future<void> Function(double applicationAccuracy)? onScenarioCompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +142,7 @@ class LabScenarioBriefingScreen extends StatelessWidget {
                     builder: (_) => LabPlayerShellScreen(
                       scenario: scenario,
                       publishedPackage: publishedPackage,
+                      onScenarioCompleted: onScenarioCompleted,
                     ),
                   ),
                 );

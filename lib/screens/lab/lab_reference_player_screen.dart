@@ -20,6 +20,7 @@ class LabReferencePlayerScreen extends StatefulWidget {
     this.assetPath,
     this.publishedPackage,
     this.learningEvidenceSink,
+    this.onScenarioCompleted,
   });
 
   final LabMode mode;
@@ -27,6 +28,7 @@ class LabReferencePlayerScreen extends StatefulWidget {
   final String? assetPath;
   final LabPackage? publishedPackage;
   final LabLearningEvidenceSink? learningEvidenceSink;
+  final Future<void> Function(double applicationAccuracy)? onScenarioCompleted;
 
   @override
   State<LabReferencePlayerScreen> createState() =>
@@ -46,6 +48,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
   String? _error;
   bool _busy = false;
   bool _statusExpanded = false;
+  bool _completionReported = false;
   DateTime _decisionStartedAt = DateTime.now();
 
   @override
@@ -77,6 +80,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         _selectedOptionId = null;
         _pendingConsequence = null;
         _statusExpanded = false;
+        _completionReported = false;
         _error = null;
         _decisionStartedAt = DateTime.now();
       });
@@ -148,6 +152,19 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
           sink: _learningEvidenceSink,
         ),
       );
+      if (updated.status == LabSessionStatus.completed &&
+          !_completionReported &&
+          widget.onScenarioCompleted != null) {
+        _completionReported = true;
+        try {
+          await widget.onScenarioCompleted!(
+            _applicationAccuracy(package, updated),
+          );
+        } catch (_) {
+          _completionReported = false;
+          rethrow;
+        }
+      }
       if (!mounted) return;
 
       final consequenceId =
@@ -179,6 +196,29 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
     });
   }
 
+  double _applicationAccuracy(LabPackage package, LabSession session) {
+    if (session.decisionHistory.isEmpty) return 0;
+    var total = 0.0;
+    var samples = 0;
+
+    for (final event in session.decisionHistory) {
+      for (final node in package.nodes) {
+        if (node.id != event.nodeId || node is! LabDecisionNode) continue;
+        final option = node.requireOption(event.selectedOptionId);
+        total += switch (option.quality) {
+          LabDecisionQuality.optimal => 1.0,
+          LabDecisionQuality.defensible => 0.75,
+          LabDecisionQuality.weak => 0.35,
+          LabDecisionQuality.critical => 0.0,
+        };
+        samples++;
+        break;
+      }
+    }
+
+    return samples == 0 ? 0.0 : (total / samples).clamp(0.0, 1.0).toDouble();
+  }
+
   Future<void> _replay() async {
     final package = _package;
     if (package == null || _busy) return;
@@ -197,6 +237,7 @@ class _LabReferencePlayerScreenState extends State<LabReferencePlayerScreen> {
         _selectedOptionId = null;
         _pendingConsequence = null;
         _statusExpanded = false;
+        _completionReported = false;
         _decisionStartedAt = DateTime.now();
         _busy = false;
         _error = null;

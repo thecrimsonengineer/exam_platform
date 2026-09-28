@@ -12,6 +12,7 @@ class StudyPlanOutcomeService {
     required Iterable<LearnerAssessmentAttempt> attempts,
     required DateTime completedAt,
     String? assessmentSessionKind,
+    double? applicationAccuracyOverride,
     int? learnerRating,
     bool abandoned = false,
   }) {
@@ -60,7 +61,8 @@ class StudyPlanOutcomeService {
       minutesSpent: minutesSpent,
       questionsAttempted: relevant.length,
       questionsCorrect: relevant.where((attempt) => attempt.correct).length,
-      applicationAccuracy: _accuracy(application),
+      applicationAccuracy:
+          applicationAccuracyOverride ?? _accuracy(application),
       analysisAccuracy: _accuracy(analysis),
       ultraHardAccuracy: _accuracy(ultraHard),
       confidenceSamples: relevant

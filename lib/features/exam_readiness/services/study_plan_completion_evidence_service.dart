@@ -6,6 +6,7 @@ import 'today_plan_task_category_policy.dart';
 
 enum StudyPlanCompletionEvidenceSource {
   plannedPracticeSession,
+  labScenarioCompleted,
   studyContent,
   explicitLearnerFinish,
 }
@@ -46,7 +47,14 @@ class StudyPlanCompletionEvidenceService {
       case TodayPlanTaskCategory.learn:
         return 'Complete study content or finish this planned learning task.';
       case TodayPlanTaskCategory.practice:
-        return 'Completes automatically when the planned quiz finishes.';
+        final applicationLab =
+            block.type == StudyPlanBlockType.repair &&
+            block.reasonCodes.any(
+              (reason) => reason.trim().toUpperCase() == 'APPLICATION_GAP',
+            );
+        return applicationLab
+            ? 'Completes automatically when the planned LAB scenario finishes.'
+            : 'Completes automatically when the planned quiz finishes.';
       case TodayPlanTaskCategory.remember:
         return 'Complete a reviewed subtopic to finish this review task.';
     }
@@ -83,6 +91,19 @@ class StudyPlanCompletionEvidenceService {
         }
         return const StudyPlanCompletionDecision.allowed(
           message: 'Learner explicitly finished the planned learning task.',
+        );
+
+      case StudyPlanCompletionEvidenceSource.labScenarioCompleted:
+        final applicationGap = block.reasonCodes.any(
+          (reason) => reason.trim().toUpperCase() == 'APPLICATION_GAP',
+        );
+        if (block.type != StudyPlanBlockType.repair || !applicationGap) {
+          return const StudyPlanCompletionDecision.blocked(
+            'LAB completion can complete only an application-gap repair task.',
+          );
+        }
+        return const StudyPlanCompletionDecision.allowed(
+          message: 'A terminal LAB scenario provides completion evidence.',
         );
 
       case StudyPlanCompletionEvidenceSource.plannedPracticeSession:

@@ -12,19 +12,23 @@ import 'lab_scenario_briefing_screen.dart';
 import 'lab_scenario_catalog.dart';
 
 class LabLibraryScreen extends StatefulWidget {
-  const LabLibraryScreen({super.key})
+  const LabLibraryScreen({super.key, this.onScenarioCompleted})
     : persistent = false,
       runtimeBinding = null;
 
-  const LabLibraryScreen.persistent({super.key})
+  const LabLibraryScreen.persistent({super.key, this.onScenarioCompleted})
     : persistent = true,
       runtimeBinding = null;
 
-  const LabLibraryScreen.withBinding({super.key, required this.runtimeBinding})
-    : persistent = true;
+  const LabLibraryScreen.withBinding({
+    super.key,
+    required this.runtimeBinding,
+    this.onScenarioCompleted,
+  }) : persistent = true;
 
   final bool persistent;
   final LabLearnerRuntimeBinding? runtimeBinding;
+  final Future<void> Function(double applicationAccuracy)? onScenarioCompleted;
 
   @override
   State<LabLibraryScreen> createState() => _LabLibraryScreenState();
@@ -143,7 +147,10 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
     if (binding == null || versionId == null) {
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => LabScenarioBriefingScreen(scenario: scenario),
+          builder: (_) => LabScenarioBriefingScreen(
+            scenario: scenario,
+            onScenarioCompleted: widget.onScenarioCompleted,
+          ),
         ),
       );
       return;
@@ -179,6 +186,7 @@ class _LabLibraryScreenState extends State<LabLibraryScreen> {
           builder: (_) => LabScenarioBriefingScreen(
             scenario: scenario,
             publishedPackage: delivery.package,
+            onScenarioCompleted: widget.onScenarioCompleted,
           ),
         ),
       );

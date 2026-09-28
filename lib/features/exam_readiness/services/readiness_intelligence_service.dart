@@ -1,6 +1,7 @@
 import '../models/advanced_readiness_snapshot.dart';
 import '../models/competency_readiness_profile.dart';
 import '../models/evidence_confidence.dart';
+import '../models/readiness_gap.dart';
 import '../models/readiness_intelligence_snapshot.dart';
 import '../models/readiness_index_snapshot.dart';
 
@@ -14,6 +15,7 @@ class ReadinessIntelligenceService {
     required ExamReadinessDashboard dashboard,
     required AdvancedReadinessSnapshot advanced,
     int dueFlashcards = 0,
+    int? daysUntilExam,
     DateTime? generatedAt,
   }) {
     final profiles = dashboard.profiles.values.toList(growable: false);
@@ -86,6 +88,7 @@ class ReadinessIntelligenceService {
       weakCompetencyIds: weak,
       evidenceGapCompetencyIds: evidenceGap,
       dueFlashcards: dueFlashcards,
+      daysUntilExam: daysUntilExam,
     );
 
     final reasons = <String>{
@@ -145,6 +148,7 @@ class ReadinessIntelligenceService {
     required List<String> weakCompetencyIds,
     required List<String> evidenceGapCompetencyIds,
     required int dueFlashcards,
+    required int? daysUntilExam,
   }) {
     if (evidenceGapCompetencyIds.isNotEmpty) {
       final competencyId = evidenceGapCompetencyIds.first;
@@ -158,41 +162,84 @@ class ReadinessIntelligenceService {
       );
     }
 
-    if (weakCompetencyIds.isNotEmpty) {
-      final competencyId = weakCompetencyIds.first;
-      final profile = profiles.firstWhere(
-        (item) => item.competencyId == competencyId,
+    final applicationGap = _firstWithGap(
+      profiles,
+      ReadinessGapType.applicationGap,
+    );
+    if (applicationGap != null) {
+      return ReadinessNextAction(
+        kind: ReadinessNextActionKind.lab,
+        competencyId: applicationGap.competencyId,
+        minutes: 15,
+        reasonCodes: const <String>['ERDP1_APPLICATION_GAP_APPLIED_PRACTICE'],
+        reasonText:
+            'Application evidence is the limiting factor, so use an applied LAB task.',
       );
+    }
 
-      if (_isRetentionPrimary(profile) && dueFlashcards > 0) {
-        return ReadinessNextAction(
-          kind: ReadinessNextActionKind.flashcardReview,
-          competencyId: competencyId,
-          minutes: 10,
-          reasonCodes: const <String>['ERDP1_RETENTION_GAP_FLASHCARD_REVIEW'],
-          reasonText:
-              'Retention is the limiting factor, so use a short spaced-recall intervention.',
-        );
-      }
+    final retentionGap = _firstWithGap(profiles, ReadinessGapType.retentionGap);
+    if (retentionGap != null &&
+        (retentionGap.retention.value != null || dueFlashcards > 0)) {
+      return ReadinessNextAction(
+        kind: ReadinessNextActionKind.flashcardReview,
+        competencyId: retentionGap.competencyId,
+        minutes: 10,
+        reasonCodes: const <String>['ERDP1_RETENTION_GAP_FLASHCARD_REVIEW'],
+        reasonText:
+            'Retention is the limiting factor, so use a short spaced-recall intervention.',
+      );
+    }
 
-      if (_isApplicationPrimary(profile)) {
-        return ReadinessNextAction(
-          kind: ReadinessNextActionKind.lab,
-          competencyId: competencyId,
-          minutes: 15,
-          reasonCodes: const <String>['ERDP1_APPLICATION_GAP_APPLIED_PRACTICE'],
-          reasonText:
-              'Application evidence is weaker than knowledge evidence, so use an applied task.',
-        );
-      }
+    final confidenceGap = _firstWithGap(
+      profiles,
+      ReadinessGapType.confidenceGap,
+    );
+    if (confidenceGap != null) {
+      return ReadinessNextAction(
+        kind: ReadinessNextActionKind.confidenceCalibration,
+        competencyId: confidenceGap.competencyId,
+        minutes: 10,
+        reasonCodes: const <String>['ERDP7_CONFIDENCE_CALIBRATION'],
+        reasonText:
+            'Confidence and demonstrated performance are misaligned, so recalibrate with targeted questions.',
+      );
+    }
 
+    final coverageGap = _firstWithGap(
+      profiles,
+      ReadinessGapType.coverageGap,
+      includeEvidenceLimited: true,
+    );
+    if (coverageGap != null) {
+      return ReadinessNextAction(
+        kind: ReadinessNextActionKind.studyReview,
+        competencyId: coverageGap.competencyId,
+        minutes: 15,
+        reasonCodes: const <String>['ERDP7_COVERAGE_GAP_STUDY'],
+        reasonText:
+            'Blueprint coverage is incomplete, so fill the missing learning coverage before adding more assessment.',
+      );
+    }
+
+    if (weakCompetencyIds.isNotEmpty) {
       return ReadinessNextAction(
         kind: ReadinessNextActionKind.targetedPractice,
-        competencyId: competencyId,
+        competencyId: weakCompetencyIds.first,
         minutes: 15,
         reasonCodes: const <String>['ERDP1_WEAK_COMPETENCY_TARGETED_PRACTICE'],
         reasonText:
             'Current evidence supports a genuine weakness that needs targeted practice.',
+      );
+    }
+
+    if (daysUntilExam != null && daysUntilExam >= 0 && daysUntilExam <= 14) {
+      return ReadinessNextAction(
+        kind: ReadinessNextActionKind.simulation,
+        competencyId: '',
+        minutes: 20,
+        reasonCodes: const <String>['ERDP7_EXAM_PROXIMITY_SIMULATION'],
+        reasonText:
+            'The exam is close and no larger gap is leading, so rehearse integrated performance with a simulation.',
       );
     }
 
@@ -210,18 +257,21 @@ class ReadinessIntelligenceService {
     return null;
   }
 
-  bool _isRetentionPrimary(CompetencyReadinessProfile profile) {
-    final retention = profile.retention.value;
-    final knowledge = profile.knowledgeMastery.value;
-    if (retention == null || knowledge == null) return false;
-    return retention + 0.12 < knowledge;
-  }
-
-  bool _isApplicationPrimary(CompetencyReadinessProfile profile) {
-    final application = profile.applicationAbility.value;
-    final knowledge = profile.knowledgeMastery.value;
-    if (application == null || knowledge == null) return false;
-    return application + 0.12 < knowledge;
+  CompetencyReadinessProfile? _firstWithGap(
+    Iterable<CompetencyReadinessProfile> profiles,
+    ReadinessGapType type, {
+    bool includeEvidenceLimited = false,
+  }) {
+    for (final profile in profiles) {
+      if (profile.gaps.any(
+        (gap) =>
+            gap.type == type &&
+            (includeEvidenceLimited || !gap.evidenceLimited),
+      )) {
+        return profile;
+      }
+    }
+    return null;
   }
 
   ReadinessDimension _averageDimension({

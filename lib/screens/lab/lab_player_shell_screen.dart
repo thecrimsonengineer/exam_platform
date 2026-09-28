@@ -7,10 +7,16 @@ import 'lab_reference_player_screen.dart';
 import 'lab_scenario_catalog.dart';
 
 class LabPlayerShellScreen extends StatelessWidget {
-  const LabPlayerShellScreen({super.key, this.scenario, this.publishedPackage});
+  const LabPlayerShellScreen({
+    super.key,
+    this.scenario,
+    this.publishedPackage,
+    this.onScenarioCompleted,
+  });
 
   final LabScenarioDefinition? scenario;
   final LabPackage? publishedPackage;
+  final Future<void> Function(double applicationAccuracy)? onScenarioCompleted;
 
   LabScenarioDefinition get _scenario =>
       scenario ?? LabScenarioCatalog.confinedSpaceH2s;
@@ -144,6 +150,7 @@ class LabPlayerShellScreen extends StatelessWidget {
           mode: mode,
           scenario: selectedScenario,
           publishedPackage: publishedPackage,
+          onScenarioCompleted: onScenarioCompleted,
         ),
       ),
     );

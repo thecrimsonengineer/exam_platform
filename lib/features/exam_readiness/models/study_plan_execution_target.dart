@@ -5,6 +5,7 @@ enum StudyPlanExecutionTargetKind {
   practiceSession,
   review,
   flashcardReview,
+  lab,
   examSimulation,
 }
 

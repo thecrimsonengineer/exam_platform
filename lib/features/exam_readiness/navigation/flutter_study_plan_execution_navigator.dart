@@ -6,6 +6,11 @@ import 'study_plan_block_launcher.dart';
 
 typedef PracticeCompletionCallback =
     Future<void> Function(StudyPlanExecutionTarget target);
+typedef LabCompletionCallback =
+    Future<void> Function(
+      StudyPlanExecutionTarget target,
+      double applicationAccuracy,
+    );
 
 class FlutterStudyPlanExecutionNavigator
     implements StudyPlanExecutionNavigator {
@@ -14,12 +19,14 @@ class FlutterStudyPlanExecutionNavigator
     required this.launcher,
     required this.isDarkMode,
     this.onPracticeSessionCompleted,
+    this.onLabCompleted,
   });
 
   final BuildContext context;
   final StudyPlanBlockLauncher launcher;
   final bool isDarkMode;
   final PracticeCompletionCallback? onPracticeSessionCompleted;
+  final LabCompletionCallback? onLabCompleted;
 
   @override
   Future<void> open(StudyPlanExecutionTarget target) {
@@ -34,6 +41,12 @@ class FlutterStudyPlanExecutionNavigator
       onPracticeSessionCompleted:
           isPractice && onPracticeSessionCompleted != null
           ? () => onPracticeSessionCompleted!(target)
+          : null,
+      onLabCompleted:
+          target.kind == StudyPlanExecutionTargetKind.lab &&
+              onLabCompleted != null
+          ? (applicationAccuracy) =>
+                onLabCompleted!(target, applicationAccuracy)
           : null,
     );
   }
