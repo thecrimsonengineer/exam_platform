@@ -1,4 +1,4 @@
-name: ERDP-9 Retention Intelligence Validation
+name: ERDP-9 Formatter Diagnostic
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  validate:
+  diagnose:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -28,55 +28,12 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Verify ERDP-9 formatting
+      - name: Print exact ERDP-9 formatter delta
         run: |
-          dart format --output=none --set-exit-if-changed \
+          dart format \
             lib/features/flashcards/learning/flashcard_recall_event.dart \
-            lib/features/flashcards/learning/flashcard_recall_event_repository.dart \
-            lib/features/flashcards/learning/flashcard_review_queue_service.dart \
-            lib/features/exam_readiness/models/learning_evidence_event.dart \
-            lib/features/exam_readiness/models/activity_evidence_stats.dart \
-            lib/features/exam_readiness/services/readiness_profile_service.dart \
-            lib/features/exam_readiness/services/learning_state_update_coordinator.dart \
-            lib/features/exam_readiness/services/flashcard_retention_evidence_service.dart \
-            lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart \
-            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
-            lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
-            lib/features/exam_readiness/screens/todays_plan_screen.dart \
-            lib/screens/flashcards/flashcard_competency_review_screen.dart \
-            lib/screens/flashcards/flashcards_catalog_view.dart \
-            test/features/exam_readiness/erdp/erdp9_retention_intelligence_test.dart
-
-      - name: Analyze ERDP-9 surface
-        run: |
-          dart analyze \
+            lib/features/flashcards/learning/flashcard_recall_event_repository.dart
+          git diff -- \
             lib/features/flashcards/learning/flashcard_recall_event.dart \
-            lib/features/flashcards/learning/flashcard_recall_event_repository.dart \
-            lib/features/flashcards/learning/flashcard_review_queue_service.dart \
-            lib/features/exam_readiness/models/learning_evidence_event.dart \
-            lib/features/exam_readiness/models/activity_evidence_stats.dart \
-            lib/features/exam_readiness/services/readiness_profile_service.dart \
-            lib/features/exam_readiness/services/learning_state_update_coordinator.dart \
-            lib/features/exam_readiness/services/flashcard_retention_evidence_service.dart \
-            lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart \
-            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
-            lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
-            lib/features/exam_readiness/screens/todays_plan_screen.dart \
-            lib/screens/flashcards/flashcard_competency_review_screen.dart \
-            lib/screens/flashcards/flashcards_catalog_view.dart \
-            test/features/exam_readiness/erdp/erdp9_retention_intelligence_test.dart
-
-      - name: Run ERDP-0 through ERDP-9 regressions
-        run: flutter test test/features/exam_readiness/erdp
-
-      - name: Run Flashcard cloud regressions
-        run: flutter test test/features/flashcards/cloud
-
-      - name: Run M7D Daily Plan regressions
-        run: flutter test test/features/exam_readiness/m7d
-
-      - name: Diff hygiene
-        run: git diff --check
-
-      - name: Verify validation did not mutate repository
-        run: test -z "$(git status --porcelain)"
+            lib/features/flashcards/learning/flashcard_recall_event_repository.dart
+          exit 1
