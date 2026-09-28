@@ -1,0 +1,1 @@
+The authoritative ERDP-3 frozen checkpoint is `206e9afff9ced98963067f001fa3b93e9a12aca6`, validated by GitHub Actions run `36391932421`. Commits after that SHA on the working branch are documentary only and are not part of the frozen checkpoint.
