@@ -90,9 +90,21 @@ class StudyPlanBlockLauncher {
     required StudyPlanBlock block,
     required bool isDarkMode,
     Future<void> Function()? onPracticeSessionCompleted,
-  }) async {
-    final target = resolve(block);
+  }) {
+    return launchTarget(
+      context,
+      target: resolve(block),
+      isDarkMode: isDarkMode,
+      onPracticeSessionCompleted: onPracticeSessionCompleted,
+    );
+  }
 
+  Future<void> launchTarget(
+    BuildContext context, {
+    required StudyPlanExecutionTarget target,
+    required bool isDarkMode,
+    Future<void> Function()? onPracticeSessionCompleted,
+  }) async {
     final destination = switch (target.kind) {
       StudyPlanExecutionTargetKind.studyContent ||
       StudyPlanExecutionTargetKind.review =>
