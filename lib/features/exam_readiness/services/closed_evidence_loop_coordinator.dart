@@ -13,6 +13,7 @@ import '../repositories/study_plan_block_outcome_repository.dart';
 import 'learning_evidence_normalizer.dart';
 import 'learning_state_update_coordinator.dart';
 import 'plan_replanning_service.dart';
+import 'study_plan_execution_attempt_lifecycle_service.dart';
 
 class ClosedEvidenceLoopResult {
   const ClosedEvidenceLoopResult({
@@ -20,12 +21,14 @@ class ClosedEvidenceLoopResult {
     required this.evidenceRecorded,
     required this.learningStateUpdate,
     required this.adaptedPlan,
+    this.executionAttemptsClosed = 0,
   });
 
   final LearningEvidenceEvent evidenceEvent;
   final bool evidenceRecorded;
   final LearningStateUpdateResult learningStateUpdate;
   final DailyStudyPlan? adaptedPlan;
+  final int executionAttemptsClosed;
 
   bool get replanned => adaptedPlan != null;
 }
@@ -34,11 +37,14 @@ class ClosedEvidenceLoopCoordinator {
   ClosedEvidenceLoopCoordinator({
     this.normalizer = const LearningEvidenceNormalizer(),
     this.stateCoordinator = const LearningStateUpdateCoordinator(),
+    this.executionAttemptLifecycle =
+        const StudyPlanExecutionAttemptLifecycleService(),
     PlanReplanningService? replanningService,
   }) : replanningService = replanningService ?? PlanReplanningService();
 
   final LearningEvidenceNormalizer normalizer;
   final LearningStateUpdateCoordinator stateCoordinator;
+  final StudyPlanExecutionAttemptLifecycleService executionAttemptLifecycle;
   final PlanReplanningService replanningService;
 
   Future<ClosedEvidenceLoopResult> processCompletion({
@@ -65,6 +71,13 @@ class ClosedEvidenceLoopCoordinator {
     )) {
       throw StateError('Completed block is not part of the supplied plan.');
     }
+
+    final executionAttemptsClosed = await executionAttemptLifecycle
+        .closeForCompletedBlock(
+          plan: completedPlan,
+          block: completedBlock,
+          repository: dailyPlanRepository,
+        );
 
     final event = normalizer.fromStudyPlanOutcome(
       block: completedBlock,
@@ -102,6 +115,7 @@ class ClosedEvidenceLoopCoordinator {
       evidenceRecorded: evidenceRecorded,
       learningStateUpdate: update,
       adaptedPlan: adaptedPlan,
+      executionAttemptsClosed: executionAttemptsClosed,
     );
   }
 }
