@@ -1,32 +1,77 @@
-name: ERDP-5 Canonical Formatter
+name: ERDP-5 Executable Daily Plan
 
 on:
   push:
     branches:
       - phase-erdp5-executable-daily-plan
-
-permissions:
-  contents: write
+  workflow_dispatch:
 
 jobs:
-  format:
-    if: github.actor != 'github-actions[bot]'
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: subosito/flutter-action@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.9'
           channel: stable
           cache: true
-      - name: Format repository source
-        run: dart format lib/features/exam_readiness/repositories/daily_study_plan_repository.dart
-      - name: Commit canonical formatting
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Enforce ERDP-5 formatting
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/features/exam_readiness/repositories/daily_study_plan_repository.dart
-          git commit -m "ERDP-5 canonicalize repository formatting"
-          git push origin HEAD:phase-erdp5-executable-daily-plan
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/models/daily_study_plan.dart \
+            lib/features/exam_readiness/models/study_plan_block.dart \
+            lib/features/exam_readiness/models/study_plan_carry_forward.dart \
+            lib/features/exam_readiness/models/study_plan_execution_target.dart \
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+            lib/features/exam_readiness/services/executable_daily_plan_action_service.dart \
+            lib/features/exam_readiness/services/study_plan_carry_forward_planner.dart \
+            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+            test/features/exam_readiness/erdp/erdp5_executable_daily_plan_test.dart \
+            test/features/exam_readiness/m7d/m7d_models_test.dart
+
+      - name: Analyze ERDP-5 integrated surface
+        run: |
+          dart analyze \
+            lib/features/exam_readiness/models/daily_study_plan.dart \
+            lib/features/exam_readiness/models/study_plan_block.dart \
+            lib/features/exam_readiness/models/study_plan_carry_forward.dart \
+            lib/features/exam_readiness/models/study_plan_execution_target.dart \
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+            lib/features/exam_readiness/services/executable_daily_plan_action_service.dart \
+            lib/features/exam_readiness/services/study_plan_carry_forward_planner.dart \
+            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+            test/features/exam_readiness/erdp/erdp5_executable_daily_plan_test.dart \
+            test/features/exam_readiness/m7d/m7d_models_test.dart
+
+      - name: Run ERDP-5 executable control tests
+        run: flutter test test/features/exam_readiness/erdp/erdp5_executable_daily_plan_test.dart
+
+      - name: Run ERDP-4 execution regressions
+        run: |
+          flutter test test/features/exam_readiness/erdp/erdp4_execution_router_test.dart
+          flutter test test/features/exam_readiness/erdp/erdp4_execution_store_test.dart
+
+      - name: Run M7D Daily Plan regression
+        run: flutter test test/features/exam_readiness/m7d
+
+      - name: Run ERDP-3 balanced planner regression
+        run: |
+          flutter test test/features/exam_readiness/erdp/erdp3_balanced_portfolio_policy_test.dart
+          flutter test test/features/exam_readiness/erdp/erdp3_balanced_planner_integration_test.dart
+          flutter test test/features/exam_readiness/erdp/erdp3_daily_constraints_test.dart
+
+      - name: Run ERDP-2 Flashcard regression
+        run: flutter test test/features/exam_readiness/erdp/erdp2_flashcard_execution_test.dart
+
+      - name: Diff hygiene
+        run: git diff --check
