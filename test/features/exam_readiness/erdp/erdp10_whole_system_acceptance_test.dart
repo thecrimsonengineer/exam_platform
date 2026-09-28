@@ -120,214 +120,228 @@ void main() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
-  test('started and completed task state survives repository reconstruction', () async {
-    final block = _block(
-      id: 'erdp10-20260928-learn',
-      type: StudyPlanBlockType.learn,
-      minutes: 15,
-    );
-    final source = _plan(
-      date: DateTime.utc(2026, 9, 28),
-      blocks: <StudyPlanBlock>[block],
-    );
-    final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
-    await repository.savePlan(source, syncRemote: false);
+  test(
+    'started and completed task state survives repository reconstruction',
+    () async {
+      final block = _block(
+        id: 'erdp10-20260928-learn',
+        type: StudyPlanBlockType.learn,
+        minutes: 15,
+      );
+      final source = _plan(
+        date: DateTime.utc(2026, 9, 28),
+        blocks: <StudyPlanBlock>[block],
+      );
+      final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
+      await repository.savePlan(source, syncRemote: false);
 
-    final store = LocalStudyPlanExecutionStore(
-      planRepository: repository,
-      planService: const DailyStudyPlanService(),
-    );
-    final start = await store.commitStart(
-      sourcePlan: source,
-      block: block,
-      target: _target(block),
-      at: DateTime.utc(2026, 9, 28, 9),
-    );
+      final store = LocalStudyPlanExecutionStore(
+        planRepository: repository,
+        planService: const DailyStudyPlanService(),
+      );
+      final start = await store.commitStart(
+        sourcePlan: source,
+        block: block,
+        target: _target(block),
+        at: DateTime.utc(2026, 9, 28, 9),
+      );
 
-    final restartedRepository = DailyStudyPlanRepository(
-      userIdOverride: 'learner-1',
-    );
-    final restarted = await restartedRepository.loadLatestForDate(source.date);
-    final attemptsAfterRestart =
-        await restartedRepository.loadExecutionAttempts();
+      final restartedRepository = DailyStudyPlanRepository(
+        userIdOverride: 'learner-1',
+      );
+      final restarted = await restartedRepository.loadLatestForDate(
+        source.date,
+      );
+      final attemptsAfterRestart = await restartedRepository
+          .loadExecutionAttempts();
 
-    expect(restarted, isNotNull);
-    expect(
-      restarted!.blocks.single.status,
-      StudyPlanBlockStatus.started,
-    );
-    expect(attemptsAfterRestart, hasLength(1));
-    expect(
-      attemptsAfterRestart.single.executionAttemptId,
-      start.attempt.executionAttemptId,
-    );
+      expect(restarted, isNotNull);
+      expect(restarted!.blocks.single.status, StudyPlanBlockStatus.started);
+      expect(attemptsAfterRestart, hasLength(1));
+      expect(
+        attemptsAfterRestart.single.executionAttemptId,
+        start.attempt.executionAttemptId,
+      );
 
-    final completed = const DailyStudyPlanService().completeBlock(
-      restarted,
-      block.blockId,
-      at: DateTime.utc(2026, 9, 28, 9, 20),
-    );
-    await restartedRepository.savePlan(completed, syncRemote: false);
-    final completedBlock = completed.blocks.single;
+      final completed = const DailyStudyPlanService().completeBlock(
+        restarted,
+        block.blockId,
+        at: DateTime.utc(2026, 9, 28, 9, 20),
+      );
+      await restartedRepository.savePlan(completed, syncRemote: false);
+      final completedBlock = completed.blocks.single;
 
-    final closed = await const StudyPlanExecutionAttemptLifecycleService()
-        .closeForCompletedBlock(
-          plan: completed,
-          block: completedBlock,
-          repository: restartedRepository,
-        );
-    final replay = await const StudyPlanExecutionAttemptLifecycleService()
-        .closeForCompletedBlock(
-          plan: completed,
-          block: completedBlock,
-          repository: restartedRepository,
-        );
+      final closed = await const StudyPlanExecutionAttemptLifecycleService()
+          .closeForCompletedBlock(
+            plan: completed,
+            block: completedBlock,
+            repository: restartedRepository,
+          );
+      final replay = await const StudyPlanExecutionAttemptLifecycleService()
+          .closeForCompletedBlock(
+            plan: completed,
+            block: completedBlock,
+            repository: restartedRepository,
+          );
 
-    expect(closed, 1);
-    expect(replay, 0);
+      expect(closed, 1);
+      expect(replay, 0);
 
-    final finalRepository = DailyStudyPlanRepository(
-      userIdOverride: 'learner-1',
-    );
-    final finalPlan = await finalRepository.loadLatestForDate(source.date);
-    final finalAttempts = await finalRepository.loadExecutionAttempts();
+      final finalRepository = DailyStudyPlanRepository(
+        userIdOverride: 'learner-1',
+      );
+      final finalPlan = await finalRepository.loadLatestForDate(source.date);
+      final finalAttempts = await finalRepository.loadExecutionAttempts();
 
-    expect(finalPlan!.blocks.single.status, StudyPlanBlockStatus.completed);
-    expect(finalAttempts, hasLength(1));
-    expect(
-      finalAttempts.single.status,
-      StudyPlanExecutionAttemptStatus.completed,
-    );
-  });
+      expect(finalPlan!.blocks.single.status, StudyPlanBlockStatus.completed);
+      expect(finalAttempts, hasLength(1));
+      expect(
+        finalAttempts.single.status,
+        StudyPlanExecutionAttemptStatus.completed,
+      );
+    },
+  );
 
-  test('navigation-failed attempt becomes completed after real task completion', () async {
-    final block = _block(
-      id: 'erdp10-20260928-navigation-recovery',
-      type: StudyPlanBlockType.learn,
-      minutes: 10,
-    );
-    final source = _plan(
-      date: DateTime.utc(2026, 9, 28),
-      blocks: <StudyPlanBlock>[block],
-    );
-    final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
-    await repository.savePlan(source, syncRemote: false);
-    final store = LocalStudyPlanExecutionStore(
-      planRepository: repository,
-      planService: const DailyStudyPlanService(),
-    );
-    final start = await store.commitStart(
-      sourcePlan: source,
-      block: block,
-      target: _target(block),
-      at: DateTime.utc(2026, 9, 28, 9),
-    );
-    await store.persistNavigationFailure(
-      start.attempt.markNavigationFailed(
-        at: DateTime.utc(2026, 9, 28, 9, 0, 5),
-        failureCode: 'NAVIGATION_StateError',
-      ),
-    );
+  test(
+    'navigation-failed attempt becomes completed after real task completion',
+    () async {
+      final block = _block(
+        id: 'erdp10-20260928-navigation-recovery',
+        type: StudyPlanBlockType.learn,
+        minutes: 10,
+      );
+      final source = _plan(
+        date: DateTime.utc(2026, 9, 28),
+        blocks: <StudyPlanBlock>[block],
+      );
+      final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
+      await repository.savePlan(source, syncRemote: false);
+      final store = LocalStudyPlanExecutionStore(
+        planRepository: repository,
+        planService: const DailyStudyPlanService(),
+      );
+      final start = await store.commitStart(
+        sourcePlan: source,
+        block: block,
+        target: _target(block),
+        at: DateTime.utc(2026, 9, 28, 9),
+      );
+      await store.persistNavigationFailure(
+        start.attempt.markNavigationFailed(
+          at: DateTime.utc(2026, 9, 28, 9, 0, 5),
+          failureCode: 'NAVIGATION_StateError',
+        ),
+      );
 
-    final completed = const DailyStudyPlanService().completeBlock(
-      start.startedPlan,
-      block.blockId,
-      at: DateTime.utc(2026, 9, 28, 9, 15),
-    );
-    await repository.savePlan(completed, syncRemote: false);
-    await const StudyPlanExecutionAttemptLifecycleService()
-        .closeForCompletedBlock(
-          plan: completed,
-          block: completed.blocks.single,
-          repository: repository,
-        );
+      final completed = const DailyStudyPlanService().completeBlock(
+        start.startedPlan,
+        block.blockId,
+        at: DateTime.utc(2026, 9, 28, 9, 15),
+      );
+      await repository.savePlan(completed, syncRemote: false);
+      await const StudyPlanExecutionAttemptLifecycleService()
+          .closeForCompletedBlock(
+            plan: completed,
+            block: completed.blocks.single,
+            repository: repository,
+          );
 
-    final attempts = await repository.loadExecutionAttempts();
-    expect(attempts, hasLength(1));
-    expect(attempts.single.status, StudyPlanExecutionAttemptStatus.completed);
-    expect(attempts.single.failureCode, 'NAVIGATION_StateError');
-  });
+      final attempts = await repository.loadExecutionAttempts();
+      expect(attempts, hasLength(1));
+      expect(attempts.single.status, StudyPlanExecutionAttemptStatus.completed);
+      expect(attempts.single.failureCode, 'NAVIGATION_StateError');
+    },
+  );
 
-  test('Skip Tomorrow Replace survive restart and Tomorrow stays deduplicated', () async {
-    final skipBlock = _block(
-      id: 'erdp10-skip',
-      type: StudyPlanBlockType.standardPractice,
-    );
-    final tomorrowBlock = _block(
-      id: 'erdp10-tomorrow',
-      type: StudyPlanBlockType.standardPractice,
-    );
-    final replaceBlock = _block(
-      id: 'erdp10-replace',
-      type: StudyPlanBlockType.learn,
-    );
-    final source = _plan(
-      date: DateTime.utc(2026, 9, 28),
-      blocks: <StudyPlanBlock>[skipBlock, tomorrowBlock, replaceBlock],
-    );
-    final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
-    await repository.savePlan(source, syncRemote: false);
-    final actions = ExecutableDailyPlanActionService(
-      repository: repository,
-      resolveTarget: _target,
-    );
+  test(
+    'Skip Tomorrow Replace survive restart and Tomorrow stays deduplicated',
+    () async {
+      final skipBlock = _block(
+        id: 'erdp10-skip',
+        type: StudyPlanBlockType.standardPractice,
+      );
+      final tomorrowBlock = _block(
+        id: 'erdp10-tomorrow',
+        type: StudyPlanBlockType.standardPractice,
+      );
+      final replaceBlock = _block(
+        id: 'erdp10-replace',
+        type: StudyPlanBlockType.learn,
+      );
+      final source = _plan(
+        date: DateTime.utc(2026, 9, 28),
+        blocks: <StudyPlanBlock>[skipBlock, tomorrowBlock, replaceBlock],
+      );
+      final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
+      await repository.savePlan(source, syncRemote: false);
+      final actions = ExecutableDailyPlanActionService(
+        repository: repository,
+        resolveTarget: _target,
+      );
 
-    final skipped = await actions.skip(
-      sourcePlan: source,
-      blockId: skipBlock.blockId,
-      at: DateTime.utc(2026, 9, 28, 9),
-    );
-    final moved = await actions.moveToTomorrow(
-      sourcePlan: skipped.plan,
-      blockId: tomorrowBlock.blockId,
-      at: DateTime.utc(2026, 9, 28, 9, 1),
-    );
-    final replaced = await actions.replace(
-      sourcePlan: moved.plan,
-      blockId: replaceBlock.blockId,
-      at: DateTime.utc(2026, 9, 28, 9, 2),
-    );
+      final skipped = await actions.skip(
+        sourcePlan: source,
+        blockId: skipBlock.blockId,
+        at: DateTime.utc(2026, 9, 28, 9),
+      );
+      final moved = await actions.moveToTomorrow(
+        sourcePlan: skipped.plan,
+        blockId: tomorrowBlock.blockId,
+        at: DateTime.utc(2026, 9, 28, 9, 1),
+      );
+      final replaced = await actions.replace(
+        sourcePlan: moved.plan,
+        blockId: replaceBlock.blockId,
+        at: DateTime.utc(2026, 9, 28, 9, 2),
+      );
 
-    final restartedRepository = DailyStudyPlanRepository(
-      userIdOverride: 'learner-1',
-    );
-    final persisted = await restartedRepository.loadLatestForDate(source.date);
-    final persistedCarry = await restartedRepository.loadCarryForwards();
+      final restartedRepository = DailyStudyPlanRepository(
+        userIdOverride: 'learner-1',
+      );
+      final persisted = await restartedRepository.loadLatestForDate(
+        source.date,
+      );
+      final persistedCarry = await restartedRepository.loadCarryForwards();
 
-    expect(persisted, isNotNull);
-    expect(
-      persisted!.blocks.firstWhere((b) => b.blockId == skipBlock.blockId).status,
-      StudyPlanBlockStatus.skipped,
-    );
-    expect(
-      persisted.blocks.firstWhere((b) => b.blockId == tomorrowBlock.blockId).status,
-      StudyPlanBlockStatus.movedToTomorrow,
-    );
-    final original = persisted.blocks.firstWhere(
-      (b) => b.blockId == replaceBlock.blockId,
-    );
-    final replacement = persisted.blocks.firstWhere(
-      (b) => b.replacesBlockId == replaceBlock.blockId,
-    );
-    expect(original.status, StudyPlanBlockStatus.replaced);
-    expect(original.replacedByBlockId, replacement.blockId);
-    expect(replacement.competencyId, original.competencyId);
-    expect(replacement.type, isNot(original.type));
-    expect(persistedCarry, hasLength(1));
+      expect(persisted, isNotNull);
+      expect(
+        persisted!.blocks
+            .firstWhere((b) => b.blockId == skipBlock.blockId)
+            .status,
+        StudyPlanBlockStatus.skipped,
+      );
+      expect(
+        persisted.blocks
+            .firstWhere((b) => b.blockId == tomorrowBlock.blockId)
+            .status,
+        StudyPlanBlockStatus.movedToTomorrow,
+      );
+      final original = persisted.blocks.firstWhere(
+        (b) => b.blockId == replaceBlock.blockId,
+      );
+      final replacement = persisted.blocks.firstWhere(
+        (b) => b.replacesBlockId == replaceBlock.blockId,
+      );
+      expect(original.status, StudyPlanBlockStatus.replaced);
+      expect(original.replacedByBlockId, replacement.blockId);
+      expect(replacement.competencyId, original.competencyId);
+      expect(replacement.type, isNot(original.type));
+      expect(persistedCarry, hasLength(1));
 
-    final restartedActions = ExecutableDailyPlanActionService(
-      repository: restartedRepository,
-      resolveTarget: _target,
-    );
-    final replay = await restartedActions.moveToTomorrow(
-      sourcePlan: persisted,
-      blockId: tomorrowBlock.blockId,
-      at: DateTime.utc(2026, 9, 28, 9, 3),
-    );
+      final restartedActions = ExecutableDailyPlanActionService(
+        repository: restartedRepository,
+        resolveTarget: _target,
+      );
+      final replay = await restartedActions.moveToTomorrow(
+        sourcePlan: persisted,
+        blockId: tomorrowBlock.blockId,
+        at: DateTime.utc(2026, 9, 28, 9, 3),
+      );
 
-    expect(replay.plan.planVersion, replaced.plan.planVersion);
-    expect(await restartedRepository.loadCarryForwards(), hasLength(1));
-  });
+      expect(replay.plan.planVersion, replaced.plan.planVersion);
+      expect(await restartedRepository.loadCarryForwards(), hasLength(1));
+    },
+  );
 
   test('carry-forward is consumed exactly once on the next day', () async {
     final block = _block(
@@ -393,10 +407,7 @@ void main() {
 
     expect(pendingAfterRestart, isEmpty);
     expect(allAfterRestart, hasLength(1));
-    expect(
-      allAfterRestart.single.status,
-      StudyPlanCarryForwardStatus.consumed,
-    );
+    expect(allAfterRestart.single.status, StudyPlanCarryForwardStatus.consumed);
 
     final secondPass = const StudyPlanCarryForwardPlanner().apply(
       basePlan: applied.plan,

@@ -93,58 +93,59 @@ StudyPlanExecutionTarget _target(StudyPlanBlock block) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  final cases = <({
-    String name,
-    StudyPlanBlockType source,
-    StudyPlanBlockType alternative,
-    StudyPlanExecutionTargetKind targetKind,
-  })>[
-    (
-      name: 'Learn to Practice',
-      source: StudyPlanBlockType.learn,
-      alternative: StudyPlanBlockType.standardPractice,
-      targetKind: StudyPlanExecutionTargetKind.practiceSession,
-    ),
-    (
-      name: 'Learn to Flashcards',
-      source: StudyPlanBlockType.learn,
-      alternative: StudyPlanBlockType.spacedReview,
-      targetKind: StudyPlanExecutionTargetKind.flashcardReview,
-    ),
-    (
-      name: 'Practice to Learn',
-      source: StudyPlanBlockType.standardPractice,
-      alternative: StudyPlanBlockType.continueLearning,
-      targetKind: StudyPlanExecutionTargetKind.studyContent,
-    ),
-    (
-      name: 'Practice to Flashcards',
-      source: StudyPlanBlockType.standardPractice,
-      alternative: StudyPlanBlockType.spacedReview,
-      targetKind: StudyPlanExecutionTargetKind.flashcardReview,
-    ),
-    (
-      name: 'Flashcards to Learn',
-      source: StudyPlanBlockType.spacedReview,
-      alternative: StudyPlanBlockType.continueLearning,
-      targetKind: StudyPlanExecutionTargetKind.studyContent,
-    ),
-    (
-      name: 'Flashcards to Practice',
-      source: StudyPlanBlockType.spacedReview,
-      alternative: StudyPlanBlockType.standardPractice,
-      targetKind: StudyPlanExecutionTargetKind.practiceSession,
-    ),
-  ];
+  final cases =
+      <
+        ({
+          String name,
+          StudyPlanBlockType source,
+          StudyPlanBlockType alternative,
+          StudyPlanExecutionTargetKind targetKind,
+        })
+      >[
+        (
+          name: 'Learn to Practice',
+          source: StudyPlanBlockType.learn,
+          alternative: StudyPlanBlockType.standardPractice,
+          targetKind: StudyPlanExecutionTargetKind.practiceSession,
+        ),
+        (
+          name: 'Learn to Flashcards',
+          source: StudyPlanBlockType.learn,
+          alternative: StudyPlanBlockType.spacedReview,
+          targetKind: StudyPlanExecutionTargetKind.flashcardReview,
+        ),
+        (
+          name: 'Practice to Learn',
+          source: StudyPlanBlockType.standardPractice,
+          alternative: StudyPlanBlockType.continueLearning,
+          targetKind: StudyPlanExecutionTargetKind.studyContent,
+        ),
+        (
+          name: 'Practice to Flashcards',
+          source: StudyPlanBlockType.standardPractice,
+          alternative: StudyPlanBlockType.spacedReview,
+          targetKind: StudyPlanExecutionTargetKind.flashcardReview,
+        ),
+        (
+          name: 'Flashcards to Learn',
+          source: StudyPlanBlockType.spacedReview,
+          alternative: StudyPlanBlockType.continueLearning,
+          targetKind: StudyPlanExecutionTargetKind.studyContent,
+        ),
+        (
+          name: 'Flashcards to Practice',
+          source: StudyPlanBlockType.spacedReview,
+          alternative: StudyPlanBlockType.standardPractice,
+          targetKind: StudyPlanExecutionTargetKind.practiceSession,
+        ),
+      ];
 
   for (final replacementCase in cases) {
     test(replacementCase.name, () async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
       final sourceBlock = _block(replacementCase.source);
       final sourcePlan = _plan(sourceBlock);
-      final repository = DailyStudyPlanRepository(
-        userIdOverride: 'learner-1',
-      );
+      final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
       await repository.savePlan(sourcePlan, syncRemote: false);
       final actions = ExecutableDailyPlanActionService(
         repository: repository,
@@ -177,29 +178,32 @@ void main() {
     });
   }
 
-  test('unsupported replacement method is rejected before persistence', () async {
-    SharedPreferences.setMockInitialValues(<String, Object>{});
-    final sourceBlock = _block(StudyPlanBlockType.learn);
-    final sourcePlan = _plan(sourceBlock);
-    final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
-    await repository.savePlan(sourcePlan, syncRemote: false);
-    final actions = ExecutableDailyPlanActionService(
-      repository: repository,
-      resolveTarget: _target,
-    );
+  test(
+    'unsupported replacement method is rejected before persistence',
+    () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      final sourceBlock = _block(StudyPlanBlockType.learn);
+      final sourcePlan = _plan(sourceBlock);
+      final repository = DailyStudyPlanRepository(userIdOverride: 'learner-1');
+      await repository.savePlan(sourcePlan, syncRemote: false);
+      final actions = ExecutableDailyPlanActionService(
+        repository: repository,
+        resolveTarget: _target,
+      );
 
-    await expectLater(
-      actions.replace(
-        sourcePlan: sourcePlan,
-        blockId: sourceBlock.blockId,
-        alternativeType: StudyPlanBlockType.examSimulation,
-        at: DateTime.utc(2026, 9, 28, 9),
-      ),
-      throwsStateError,
-    );
+      await expectLater(
+        actions.replace(
+          sourcePlan: sourcePlan,
+          blockId: sourceBlock.blockId,
+          alternativeType: StudyPlanBlockType.examSimulation,
+          at: DateTime.utc(2026, 9, 28, 9),
+        ),
+        throwsStateError,
+      );
 
-    final latest = await repository.loadLatestForDate(sourcePlan.date);
-    expect(latest!.planVersion, sourcePlan.planVersion);
-    expect(latest.blocks.single.status, StudyPlanBlockStatus.planned);
-  });
+      final latest = await repository.loadLatestForDate(sourcePlan.date);
+      expect(latest!.planVersion, sourcePlan.planVersion);
+      expect(latest.blocks.single.status, StudyPlanBlockStatus.planned);
+    },
+  );
 }
