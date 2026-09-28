@@ -189,9 +189,8 @@ class ActivityEvidenceStats {
   }
 }
 
-int _int(dynamic value) => value is num
-    ? value.toInt()
-    : int.tryParse(value?.toString() ?? '') ?? 0;
+int _int(dynamic value) =>
+    value is num ? value.toInt() : int.tryParse(value?.toString() ?? '') ?? 0;
 
 double? _nullableDouble(dynamic value) {
   if (value == null) return null;

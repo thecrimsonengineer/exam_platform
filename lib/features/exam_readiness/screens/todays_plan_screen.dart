@@ -13,6 +13,7 @@ import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/exam_study_plan_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
+import '../services/closed_evidence_loop_coordinator.dart';
 import '../services/daily_study_plan_service.dart';
 import '../services/executable_daily_plan_action_service.dart';
 import '../services/study_plan_carry_forward_planner.dart';
@@ -42,6 +43,7 @@ class TodaysPlanScreen extends StatefulWidget {
     this.attemptRepository,
     this.outcomeService = const StudyPlanOutcomeService(),
     this.learningStateCoordinator = const LearningStateUpdateCoordinator(),
+    this.closedEvidenceLoopCoordinator,
     this.completionEvidenceService = const StudyPlanCompletionEvidenceService(),
     this.presentationFilter = const TodayPlanPresentationFilter(),
     this.blockLauncher = const StudyPlanBlockLauncher(),
@@ -60,6 +62,7 @@ class TodaysPlanScreen extends StatefulWidget {
   final LearnerAssessmentAttemptRepository? attemptRepository;
   final StudyPlanOutcomeService outcomeService;
   final LearningStateUpdateCoordinator learningStateCoordinator;
+  final ClosedEvidenceLoopCoordinator? closedEvidenceLoopCoordinator;
   final StudyPlanCompletionEvidenceService completionEvidenceService;
   final TodayPlanPresentationFilter presentationFilter;
   final StudyPlanBlockLauncher blockLauncher;
@@ -108,6 +111,12 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
   UltraHardAvailabilityService get _ultraHardAvailabilityService =>
       widget.ultraHardAvailabilityService ?? UltraHardAvailabilityService();
+
+  ClosedEvidenceLoopCoordinator get _closedEvidenceLoopCoordinator =>
+      widget.closedEvidenceLoopCoordinator ??
+      ClosedEvidenceLoopCoordinator(
+        stateCoordinator: widget.learningStateCoordinator,
+      );
 
   DateTime get _now => widget.now?.call() ?? DateTime.now();
 
@@ -430,15 +439,45 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
         orElse: () => throw StateError('Study-plan block not found.'),
       );
 
+      final at = block.completedAt ?? _now;
+      final attempts = await _attemptRepository.loadAll();
+
       if (block.status == StudyPlanBlockStatus.completed) {
+        final outcome = widget.outcomeService.build(
+          plan: plan,
+          block: block,
+          attempts: attempts,
+          completedAt: at,
+          assessmentSessionKind:
+              source == StudyPlanCompletionEvidenceSource.plannedPracticeSession
+              ? StudyPlanCompletionEvidenceService.sessionKindForBlock(blockId)
+              : null,
+        );
+        final loop = await _closedEvidenceLoopCoordinator.processCompletion(
+          completedPlan: plan,
+          completedBlock: block,
+          outcome: outcome,
+          attemptRepository: _attemptRepository,
+          readinessRepository: _readinessRepository,
+          dailyPlanRepository: _dailyPlanRepository,
+          examPlanRepository: _examPlanRepository,
+        );
+        final latest = loop.adaptedPlan ?? plan;
+        if (mounted) {
+          setState(
+            () => _future = Future.value(
+              _TodayPlanViewData(
+                plan: latest,
+                hasExamPlan: true,
+                notice: 'Evidence loop verified and the plan is current.',
+              ),
+            ),
+          );
+        }
         return true;
       }
-      if (block.status != StudyPlanBlockStatus.started) {
-        return false;
-      }
+      if (block.status != StudyPlanBlockStatus.started) return false;
 
-      final at = _now;
-      final attempts = await _attemptRepository.loadAll();
       final progress = await _studyProgressService.loadAllProgress();
       final decision = widget.completionEvidenceService.evaluate(
         block: block,
@@ -468,32 +507,39 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
             : null,
       );
 
-      final update = await widget.learningStateCoordinator.processOutcome(
-        outcome: outcome,
-        now: at,
-        attemptRepository: _attemptRepository,
-        readinessRepository: _readinessRepository,
-        planRepository: _dailyPlanRepository,
-      );
-
       final changed = widget.planService.completeBlock(plan, blockId, at: at);
       await _dailyPlanRepository.savePlan(changed, syncRemote: false);
+      final completedBlock = changed.blocks.firstWhere(
+        (item) => item.blockId == blockId,
+      );
+
+      final loop = await _closedEvidenceLoopCoordinator.processCompletion(
+        completedPlan: changed,
+        completedBlock: completedBlock,
+        outcome: outcome,
+        attemptRepository: _attemptRepository,
+        readinessRepository: _readinessRepository,
+        dailyPlanRepository: _dailyPlanRepository,
+        examPlanRepository: _examPlanRepository,
+      );
+      final update = loop.learningStateUpdate;
+      final latest = loop.adaptedPlan ?? changed;
 
       final signalNotice = update.misconceptionSignals.isEmpty
           ? ''
           : ' A misconception or confidence pattern was detected.';
-      final staleNotice = update.stalePlanVersionsCreated == 0
-          ? ' Future planning will use the updated evidence.'
-          : ' ${update.stalePlanVersionsCreated} future plan version(s) were marked for adaptation.';
+      final adaptationNotice = loop.replanned
+          ? " Today's remaining plan was recalibrated."
+          : ' Updated evidence will shape the next plan.';
 
       if (!mounted) return true;
       setState(
         () => _future = Future.value(
           _TodayPlanViewData(
-            plan: changed,
+            plan: latest,
             hasExamPlan: true,
             notice:
-                'Readiness updated for ${block.competencyId.toUpperCase()}.$signalNotice$staleNotice',
+                'Readiness updated for ${block.competencyId.toUpperCase()}.$signalNotice$adaptationNotice',
           ),
         ),
       );

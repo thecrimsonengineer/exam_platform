@@ -38,8 +38,7 @@ class LearningEvidenceEventRepository {
           );
           if (normalizedCompetency != null &&
               normalizedCompetency.isNotEmpty &&
-              event.competencyId.trim().toLowerCase() !=
-                  normalizedCompetency) {
+              event.competencyId.trim().toLowerCase() != normalizedCompetency) {
             continue;
           }
           byId.putIfAbsent(event.evidenceEventId, () => event);

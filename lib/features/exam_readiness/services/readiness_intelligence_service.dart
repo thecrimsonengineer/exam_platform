@@ -7,7 +7,8 @@ import '../models/readiness_index_snapshot.dart';
 class ReadinessIntelligenceService {
   const ReadinessIntelligenceService();
 
-  static const String currentAlgorithmVersion = 'erdp1-readiness-intelligence-v1';
+  static const String currentAlgorithmVersion =
+      'erdp1-readiness-intelligence-v1';
 
   ReadinessIntelligenceSnapshot build({
     required ExamReadinessDashboard dashboard,
@@ -67,7 +68,8 @@ class ReadinessIntelligenceService {
                   .length /
               profiles.length;
 
-    final score = advanced.readinessIndex.availability ==
+    final score =
+        advanced.readinessIndex.availability ==
             ReadinessIndexAvailability.available
         ? advanced.readinessIndex.score
         : null;
@@ -238,7 +240,8 @@ class ReadinessIntelligenceService {
       );
     }
 
-    final average = available
+    final average =
+        available
             .map((item) => item.value!)
             .reduce((left, right) => left + right) /
         available.length;

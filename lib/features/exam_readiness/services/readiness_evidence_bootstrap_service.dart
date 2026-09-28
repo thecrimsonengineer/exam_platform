@@ -5,8 +5,10 @@ import '../../../services/student_question_progress_service.dart';
 import '../../../services/study_content/student_content_cache_repository.dart';
 import '../models/competency_evidence_snapshot.dart';
 import '../models/learner_assessment_attempt.dart';
+import '../models/learning_evidence_event.dart';
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
+import '../repositories/learning_evidence_event_repository.dart';
 import 'learner_evidence_aggregation_service.dart';
 
 class ReadinessEvidenceBootstrapResult {
@@ -45,6 +47,7 @@ class ReadinessEvidenceBootstrapService {
     required EvidenceSnapshotRepository evidenceRepository,
     required LearnerAssessmentAttemptRepository attemptRepository,
     StudentQuestionProgressService? questionProgressService,
+    LearningEvidenceEventRepository? learningEvidenceRepository,
     DateTime? now,
   }) async {
     final progressService =
@@ -56,12 +59,17 @@ class ReadinessEvidenceBootstrapService {
     );
 
     final attempts = await attemptRepository.loadAll();
+    final activityEvents =
+        await (learningEvidenceRepository ??
+                const LearningEvidenceEventRepository())
+            .loadAll();
     final effectiveNow = now ?? DateTime.now();
     final existingEvidence = await evidenceRepository.loadLocal();
 
     if (!_needsRebuild(
       importedLegacyQuestionCount: imported,
       attempts: attempts,
+      activityEvents: activityEvents,
       evidenceByCompetency: existingEvidence,
       now: effectiveNow,
     )) {
@@ -72,11 +80,12 @@ class ReadinessEvidenceBootstrapService {
       );
     }
 
-    final scopes = await _buildScopes(attempts);
+    final scopes = await _buildScopes(attempts, activityEvents);
     final snapshots = aggregationService.buildAllSnapshots(
       attempts: attempts,
       scopes: scopes,
       now: effectiveNow,
+      activityEvents: activityEvents,
     );
 
     await evidenceRepository.clearLocal();
@@ -94,6 +103,7 @@ class ReadinessEvidenceBootstrapService {
   bool _needsRebuild({
     required int importedLegacyQuestionCount,
     required List<LearnerAssessmentAttempt> attempts,
+    required List<LearningEvidenceEvent> activityEvents,
     required Map<String, CompetencyEvidenceSnapshot> evidenceByCompetency,
     required DateTime now,
   }) {
@@ -101,43 +111,37 @@ class ReadinessEvidenceBootstrapService {
       return true;
     }
 
-    final represented = <String, List<LearnerAssessmentAttempt>>{};
+    final represented = <String, List<DateTime>>{};
     for (final attempt in attempts) {
       if (!attempt.publishedAtAttempt || !attempt.hasCanonicalCompetencyId) {
         continue;
       }
-
       final competencyId = attempt.competencyId.trim().toLowerCase();
-      if (competencyForId(competencyId) == null) {
-        continue;
-      }
-
+      if (competencyForId(competencyId) == null) continue;
       represented
-          .putIfAbsent(competencyId, () => <LearnerAssessmentAttempt>[])
-          .add(attempt);
+          .putIfAbsent(competencyId, () => <DateTime>[])
+          .add(attempt.answeredAt);
+    }
+    for (final event in activityEvents) {
+      final competencyId = event.competencyId.trim().toLowerCase();
+      if (competencyForId(competencyId) == null) continue;
+      represented
+          .putIfAbsent(competencyId, () => <DateTime>[])
+          .add(event.occurredAt);
     }
 
-    if (represented.isEmpty) {
-      return false;
-    }
+    if (represented.isEmpty) return false;
 
     for (final entry in represented.entries) {
       final snapshot = evidenceByCompetency[entry.key];
-      if (snapshot == null) {
-        return true;
-      }
+      if (snapshot == null) return true;
 
-      final latestAttempt = entry.value
-          .map((attempt) => attempt.answeredAt)
-          .reduce((left, right) => left.isAfter(right) ? left : right);
+      final latestEvidence = entry.value.reduce(
+        (left, right) => left.isAfter(right) ? left : right,
+      );
+      if (latestEvidence.isAfter(snapshot.generatedAt)) return true;
 
-      if (latestAttempt.isAfter(snapshot.generatedAt)) {
-        return true;
-      }
-
-      if (now.difference(snapshot.generatedAt).inHours >= 24) {
-        return true;
-      }
+      if (now.difference(snapshot.generatedAt).inHours >= 24) return true;
     }
 
     return false;
@@ -204,15 +208,20 @@ class ReadinessEvidenceBootstrapService {
 
   Future<List<CompetencyEvidenceScope>> _buildScopes(
     List<LearnerAssessmentAttempt> attempts,
+    List<LearningEvidenceEvent> activityEvents,
   ) async {
-    final representedCompetencies = attempts
-        .where(
-          (attempt) =>
-              attempt.publishedAtAttempt && attempt.hasCanonicalCompetencyId,
-        )
-        .map((attempt) => attempt.competencyId.trim().toLowerCase())
-        .where((id) => competencyForId(id) != null)
-        .toSet();
+    final representedCompetencies = <String>{
+      ...attempts
+          .where(
+            (attempt) =>
+                attempt.publishedAtAttempt && attempt.hasCanonicalCompetencyId,
+          )
+          .map((attempt) => attempt.competencyId.trim().toLowerCase())
+          .where((id) => competencyForId(id) != null),
+      ...activityEvents
+          .map((event) => event.competencyId.trim().toLowerCase())
+          .where((id) => competencyForId(id) != null),
+    };
 
     if (representedCompetencies.isEmpty) {
       return const <CompetencyEvidenceScope>[];
@@ -249,6 +258,17 @@ class ReadinessEvidenceBootstrapService {
             subtopics[competencyId]!.add(subtopicId);
           }
         }
+      }
+    }
+
+    for (final event in activityEvents) {
+      final competencyId = event.competencyId.trim().toLowerCase();
+      if (!representedCompetencies.contains(competencyId)) continue;
+      if (event.topicId.trim().isNotEmpty) {
+        topics[competencyId]!.add(event.topicId.trim());
+      }
+      if (event.subtopicId.trim().isNotEmpty) {
+        subtopics[competencyId]!.add(event.subtopicId.trim());
       }
     }
 

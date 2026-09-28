@@ -87,7 +87,9 @@ class LearningEvidenceEvent {
     }
     for (final score in [performanceScore, applicationScore, retentionScore]) {
       if (score != null && (score < 0 || score > 1)) {
-        throw StateError('Learning evidence scores must be between zero and one.');
+        throw StateError(
+          'Learning evidence scores must be between zero and one.',
+        );
       }
     }
 
@@ -109,7 +111,9 @@ class LearningEvidenceEvent {
         (performanceScore != null ||
             applicationScore != null ||
             retentionScore != null)) {
-      throw StateError('Micro-learning exposure cannot carry readiness credit.');
+      throw StateError(
+        'Micro-learning exposure cannot carry readiness credit.',
+      );
     }
   }
 

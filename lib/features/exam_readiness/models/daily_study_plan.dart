@@ -34,6 +34,7 @@ class DailyStudyPlan {
     required this.schemaVersion,
     this.previousPlanId,
     this.inputSnapshotVersion = '',
+    this.adaptationEvidenceEventId,
   });
 
   static const int currentSchemaVersion = 1;
@@ -55,6 +56,7 @@ class DailyStudyPlan {
   final int schemaVersion;
   final String? previousPlanId;
   final String inputSnapshotVersion;
+  final String? adaptationEvidenceEventId;
 
   bool get hasStartedBlock => blocks.any((block) => block.isLocked);
 
@@ -76,6 +78,8 @@ class DailyStudyPlan {
     String? previousPlanId,
     bool clearPreviousPlanId = false,
     String? inputSnapshotVersion,
+    String? adaptationEvidenceEventId,
+    bool clearAdaptationEvidenceEventId = false,
   }) {
     return DailyStudyPlan(
       planId: planId ?? this.planId,
@@ -99,6 +103,9 @@ class DailyStudyPlan {
           ? null
           : (previousPlanId ?? this.previousPlanId),
       inputSnapshotVersion: inputSnapshotVersion ?? this.inputSnapshotVersion,
+      adaptationEvidenceEventId: clearAdaptationEvidenceEventId
+          ? null
+          : (adaptationEvidenceEventId ?? this.adaptationEvidenceEventId),
     );
   }
 
@@ -183,6 +190,7 @@ class DailyStudyPlan {
     'schemaVersion': schemaVersion,
     'previousPlanId': previousPlanId,
     'inputSnapshotVersion': inputSnapshotVersion,
+    'adaptationEvidenceEventId': adaptationEvidenceEventId,
   };
 
   factory DailyStudyPlan.fromJson(Map<String, dynamic> json) {
@@ -235,6 +243,7 @@ class DailyStudyPlan {
       schemaVersion: _int(json['schemaVersion'], currentSchemaVersion),
       previousPlanId: json['previousPlanId']?.toString(),
       inputSnapshotVersion: json['inputSnapshotVersion']?.toString() ?? '',
+      adaptationEvidenceEventId: json['adaptationEvidenceEventId']?.toString(),
     );
 
     plan.validate();

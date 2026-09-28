@@ -1,6 +1,8 @@
+import '../models/activity_evidence_stats.dart';
 import '../models/competency_evidence_snapshot.dart';
 import '../models/evidence_confidence.dart';
 import '../models/learner_assessment_attempt.dart';
+import '../models/learning_evidence_event.dart';
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
 import 'retention_evidence_service.dart';
@@ -29,8 +31,16 @@ class LearnerEvidenceAggregationService {
     required Iterable<LearnerAssessmentAttempt> attempts,
     required CompetencyEvidenceScope scope,
     required DateTime now,
+    Iterable<LearningEvidenceEvent> activityEvents =
+        const <LearningEvidenceEvent>[],
   }) {
     final normalizedCompetency = competencyId.trim().toLowerCase();
+    final activity = ActivityEvidenceStats.aggregate(
+      activityEvents.where(
+        (event) =>
+            event.competencyId.trim().toLowerCase() == normalizedCompetency,
+      ),
+    );
 
     final deduplicated = <String, LearnerAssessmentAttempt>{};
     for (final attempt in attempts) {
@@ -226,6 +236,7 @@ class LearnerEvidenceAggregationService {
       schemaVersion: CompetencyEvidenceSnapshot.currentSchemaVersion,
       algorithmVersion: CompetencyEvidenceSnapshot.currentAlgorithmVersion,
       sourceAttemptCount: evidence.length,
+      activity: activity,
       coverage: coverage,
       attempts: attemptStats,
       cognition: cognition,
@@ -234,15 +245,22 @@ class LearnerEvidenceAggregationService {
       confidence: confidence,
       recency: recency,
       evidenceQuality: quality,
-      traceability: _traceability(
-        attempts: attemptStats,
-        coverage: coverage,
-        cognition: cognition,
-        difficulty: difficulty,
-        retention: retention,
-        recency: recency,
-        confidence: confidence,
-      ),
+      traceability: <String>[
+        ..._traceability(
+          attempts: attemptStats,
+          coverage: coverage,
+          cognition: cognition,
+          difficulty: difficulty,
+          retention: retention,
+          recency: recency,
+          confidence: confidence,
+        ),
+        'ACTIVITY_EVENTS:${activity.totalEvents}',
+        'ACTIVITY_STRONG:${activity.strongEvents}',
+        'ACTIVITY_SUPPORTING:${activity.supportingEvents}',
+        'ACTIVITY_CONTEXT:${activity.contextEvents}',
+        'ACTIVITY_ZERO_CREDIT:${activity.zeroCreditEvents}',
+      ],
     );
   }
 
@@ -250,6 +268,8 @@ class LearnerEvidenceAggregationService {
     required Iterable<LearnerAssessmentAttempt> attempts,
     required Iterable<CompetencyEvidenceScope> scopes,
     required DateTime now,
+    Iterable<LearningEvidenceEvent> activityEvents =
+        const <LearningEvidenceEvent>[],
   }) {
     final result = <String, CompetencyEvidenceSnapshot>{};
 
@@ -264,6 +284,7 @@ class LearnerEvidenceAggregationService {
         attempts: attempts,
         scope: scope,
         now: now,
+        activityEvents: activityEvents,
       );
     }
 
@@ -275,12 +296,15 @@ class LearnerEvidenceAggregationService {
     required Iterable<LearnerAssessmentAttempt> attemptsForCompetency,
     required CompetencyEvidenceScope scope,
     required DateTime now,
+    Iterable<LearningEvidenceEvent> activityEvents =
+        const <LearningEvidenceEvent>[],
   }) {
     return buildSnapshot(
       competencyId: competencyId,
       attempts: attemptsForCompetency,
       scope: scope,
       now: now,
+      activityEvents: activityEvents,
     );
   }
 
@@ -291,6 +315,8 @@ class LearnerEvidenceAggregationService {
     EvidenceSnapshotRepository? snapshotRepository,
     DateTime? now,
     bool syncRemote = true,
+    Iterable<LearningEvidenceEvent> activityEvents =
+        const <LearningEvidenceEvent>[],
   }) async {
     final attempts =
         await (attemptRepository ?? const LearnerAssessmentAttemptRepository())
@@ -300,6 +326,7 @@ class LearnerEvidenceAggregationService {
       attempts: attempts,
       scope: scope,
       now: now ?? DateTime.now(),
+      activityEvents: activityEvents,
     );
 
     await (snapshotRepository ?? EvidenceSnapshotRepository()).save(
@@ -316,6 +343,8 @@ class LearnerEvidenceAggregationService {
     EvidenceSnapshotRepository? snapshotRepository,
     DateTime? now,
     bool syncRemote = true,
+    Iterable<LearningEvidenceEvent> activityEvents =
+        const <LearningEvidenceEvent>[],
   }) async {
     final attempts =
         await (attemptRepository ?? const LearnerAssessmentAttemptRepository())
@@ -324,6 +353,7 @@ class LearnerEvidenceAggregationService {
       attempts: attempts,
       scopes: scopes,
       now: now ?? DateTime.now(),
+      activityEvents: activityEvents,
     );
     final repository = snapshotRepository ?? EvidenceSnapshotRepository();
 

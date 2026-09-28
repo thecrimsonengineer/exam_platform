@@ -233,13 +233,12 @@ class ReadinessProfileService {
   }
 
   ReadinessDimension _applicationAbility(CompetencyEvidenceSnapshot evidence) {
-    final attempts =
+    final assessmentAttempts =
         evidence.cognition.applicationAttempts +
         evidence.cognition.analysisAttempts;
+    final activitySamples = evidence.activity.strongApplicationSamples;
 
-    if (attempts < 3 ||
-        evidence.evidenceQuality.confidenceLevel.rank <
-            EvidenceConfidence.low.rank) {
+    if (assessmentAttempts < 3 && activitySamples == 0) {
       return ReadinessDimension(
         code: 'APPLICATION_ABILITY',
         value: null,
@@ -248,15 +247,18 @@ class ReadinessProfileService {
       );
     }
 
-    final correct =
-        evidence.cognition.applicationCorrect +
-        evidence.cognition.analysisCorrect;
-    final baseAccuracy = correct / attempts;
-
-    final components = <(double, double)>[
-      (baseAccuracy, 0.75),
-      (evidence.coverage.coverageRatio, 0.15),
-    ];
+    final components = <(double, double)>[];
+    if (assessmentAttempts > 0) {
+      final correct =
+          evidence.cognition.applicationCorrect +
+          evidence.cognition.analysisCorrect;
+      components.add((correct / assessmentAttempts, 0.75));
+    }
+    if (activitySamples > 0 &&
+        evidence.activity.strongApplicationAccuracy != null) {
+      components.add((evidence.activity.strongApplicationAccuracy!, 0.55));
+    }
+    components.add((evidence.coverage.coverageRatio, 0.15));
 
     if (evidence.difficulty.ultraHardAttempts >= 2 &&
         evidence.difficulty.ultraHardAccuracy != null) {
@@ -271,19 +273,38 @@ class ReadinessProfileService {
     return ReadinessDimension(
       code: 'APPLICATION_ABILITY',
       value: _weighted(components),
-      evidenceConfidence: evidence.evidenceQuality.confidenceLevel,
-      reasonCodes: const ['APPLICATION_EVIDENCE_AVAILABLE'],
+      evidenceConfidence: _strongestConfidence(
+        evidence.evidenceQuality.confidenceLevel,
+        _sampleConfidence(assessmentAttempts + activitySamples),
+      ),
+      reasonCodes: <String>[
+        'APPLICATION_EVIDENCE_AVAILABLE',
+        if (activitySamples > 0) 'STRONG_APPLIED_ACTIVITY_EVIDENCE',
+      ],
     );
   }
 
   ReadinessDimension _retention(CompetencyEvidenceSnapshot evidence) {
     if (evidence.retention.delayedAttempts == 0 ||
         evidence.retention.delayedAccuracy == null) {
+      if (evidence.activity.supportingRetentionSamples > 0 &&
+          evidence.activity.supportingRetentionAccuracy != null) {
+        return ReadinessDimension(
+          code: 'RETENTION',
+          value: evidence.activity.supportingRetentionAccuracy,
+          evidenceConfidence: _sampleConfidence(
+            evidence.activity.supportingRetentionSamples,
+          ),
+          reasonCodes: const ['SPACED_FLASHCARD_RECALL_EVIDENCE'],
+        );
+      }
       return ReadinessDimension(
         code: 'RETENTION',
         value: null,
         evidenceConfidence: evidence.evidenceQuality.breakdown.retention,
-        reasonCodes: const ['RETENTION_EVIDENCE_MISSING'],
+        reasonCodes: evidence.activity.flashcardEvents > 0
+            ? const ['FLASHCARD_SUPPORTING_EVIDENCE_REQUIRES_RECALL_QUALITY']
+            : const ['RETENTION_EVIDENCE_MISSING'],
       );
     }
 
@@ -462,8 +483,11 @@ class ReadinessProfileService {
     required ReadinessDimension stability,
     required List<ReadinessGap> gaps,
   }) {
-    if (evidence.sourceAttemptCount == 0) {
-      return ReadinessState.unknown;
+    if (evidence.sourceAttemptCount == 0 &&
+        evidence.activity.performanceBearingEvents == 0) {
+      return evidence.activity.creditableEvents > 0
+          ? ReadinessState.insufficientEvidence
+          : ReadinessState.unknown;
     }
 
     if (evidence.evidenceQuality.state == EvidenceState.stale) {
@@ -531,6 +555,11 @@ class ReadinessProfileService {
         evidence.evidenceQuality.confidenceLevel.rank >=
             EvidenceConfidence.low.rank;
   }
+
+  EvidenceConfidence _strongestConfidence(
+    EvidenceConfidence left,
+    EvidenceConfidence right,
+  ) => left.rank >= right.rank ? left : right;
 
   EvidenceConfidence _sampleConfidence(int samples) {
     if (samples <= 0) return EvidenceConfidence.none;
@@ -640,7 +669,8 @@ class ReadinessProfileService {
         final evidence = evidenceByCompetency[competency.id];
         if (evidence == null) continue;
 
-        if (evidence.sourceAttemptCount > 0) {
+        if (evidence.sourceAttemptCount > 0 ||
+            evidence.activity.performanceBearingEvents > 0) {
           competenciesAssessed++;
         }
         topicsTotal += evidence.coverage.topicsAvailable;

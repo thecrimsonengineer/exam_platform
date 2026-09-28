@@ -24,6 +24,7 @@ class PlanReplanningService {
     DateTime? now,
     Set<String>? ultraHardAvailableCompetencyIds,
     Set<String> recentlyStudiedCompetencyIds = const <String>{},
+    String? triggerEvidenceEventId,
     ExamStudyPlanRepository? examPlanRepository,
     ReadinessSnapshotRepository? readinessRepository,
     DailyStudyPlanRepository? dailyPlanRepository,
@@ -41,6 +42,13 @@ class PlanReplanningService {
     );
     final readiness = await readinessRepo.loadLocal();
     final existing = await dailyRepo.loadLatestForDate(date);
+    final triggerId = triggerEvidenceEventId?.trim();
+    if (existing != null &&
+        triggerId != null &&
+        triggerId.isNotEmpty &&
+        existing.adaptationEvidenceEventId == triggerId) {
+      return existing;
+    }
 
     var ultraAvailable = ultraHardAvailableCompetencyIds;
     if (ultraAvailable == null) {
@@ -64,6 +72,7 @@ class PlanReplanningService {
       recentlyStudiedCompetencyIds: recentlyStudiedCompetencyIds,
       existingPlan: existing,
       generationReason: reason.dailyPlanReason,
+      adaptationEvidenceEventId: triggerId,
     );
 
     await dailyRepo.savePlan(generated, syncRemote: false);

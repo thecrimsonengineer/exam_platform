@@ -51,10 +51,7 @@ class BalancedPlanPortfolioPolicy {
     constraints.validate();
 
     final normalizedAvailable = availableMinutes.clamp(0, 1440).toInt();
-    final normalizedCommitted = committedMinutes.clamp(
-      0,
-      normalizedAvailable,
-    );
+    final normalizedCommitted = committedMinutes.clamp(0, normalizedAvailable);
     final openMinutes = normalizedAvailable - normalizedCommitted;
 
     final learn = representedCategories.contains(TodayPlanTaskCategory.learn)

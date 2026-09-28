@@ -45,8 +45,7 @@ class LearningEvidenceNormalizer {
         'FLASHCARD_SUPPORT_REQUIRES_RECALL_QUALITY',
       if (sourceKind == LearningEvidenceSourceKind.study)
         'STUDY_COMPLETION_CONTEXT_ONLY',
-    }.toList(growable: false)
-      ..sort();
+    }.toList(growable: false)..sort();
 
     final event = LearningEvidenceEvent(
       evidenceEventId: 'erdp6-${outcome.outcomeId}',
@@ -66,7 +65,8 @@ class LearningEvidenceNormalizer {
       confidenceSamples: outcome.confidenceSamples,
       contentCompleted: outcome.contentCompleted,
       abandoned: outcome.abandoned,
-      performanceScore: sourceKind == LearningEvidenceSourceKind.question ||
+      performanceScore:
+          sourceKind == LearningEvidenceSourceKind.question ||
               sourceKind == LearningEvidenceSourceKind.simulation
           ? overallAccuracy
           : null,

@@ -36,6 +36,7 @@ class DailyStudyPlanService {
     DailyStudyPlan? existingPlan,
     DailyStudyPlanGenerationReason generationReason =
         DailyStudyPlanGenerationReason.initial,
+    String? adaptationEvidenceEventId,
   }) {
     constraints.validate();
 
@@ -287,6 +288,7 @@ class DailyStudyPlanService {
       inputSnapshotVersion:
           'e:${_sourceEvidenceVersion(readinessProfiles)}|'
           'r:${_sourceReadinessVersion(readinessProfiles)}',
+      adaptationEvidenceEventId: adaptationEvidenceEventId,
       previousPlanId: existingPlan == null
           ? null
           : '${existingPlan.planId}:v${existingPlan.planVersion}',
@@ -549,7 +551,8 @@ class DailyStudyPlanService {
     }
 
     return selected.firstWhere(
-      (candidate) => _categoryForType(_primaryType(candidate.profile)) == category,
+      (candidate) =>
+          _categoryForType(_primaryType(candidate.profile)) == category,
       orElse: () => selected.first,
     );
   }
@@ -848,11 +851,12 @@ class DailyStudyPlanService {
   String _sourceReadinessVersion(
     Map<String, CompetencyReadinessProfile> profiles,
   ) {
-    final versions = profiles.values
-        .map((profile) => profile.readinessAlgorithmVersion)
-        .toSet()
-        .toList()
-      ..sort();
+    final versions =
+        profiles.values
+            .map((profile) => profile.readinessAlgorithmVersion)
+            .toSet()
+            .toList()
+          ..sort();
     return versions.isEmpty ? 'none' : versions.join('+');
   }
 

@@ -6,6 +6,7 @@ import '../models/study_plan_block_outcome.dart';
 import '../repositories/daily_study_plan_repository.dart';
 import '../repositories/evidence_snapshot_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
+import '../repositories/learning_evidence_event_repository.dart';
 import '../repositories/learning_state_audit_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
 import '../repositories/study_plan_block_outcome_repository.dart';
@@ -61,6 +62,7 @@ class LearningStateUpdateCoordinator {
     ReadinessSnapshotRepository? readinessRepository,
     DailyStudyPlanRepository? planRepository,
     LearningStateAuditRepository? auditRepository,
+    LearningEvidenceEventRepository? evidenceEventRepository,
   }) async {
     outcome.validate();
     final at = now ?? outcome.completedAt;
@@ -72,10 +74,15 @@ class LearningStateUpdateCoordinator {
     final readinessRepo = readinessRepository ?? ReadinessSnapshotRepository();
     final plansRepo = planRepository ?? DailyStudyPlanRepository();
     final audit = auditRepository ?? const LearningStateAuditRepository();
+    final evidenceEvents =
+        evidenceEventRepository ?? const LearningEvidenceEventRepository();
 
     final recorded = await outcomes.append(outcome);
     final previous = await readinessRepo.load(outcome.competencyId);
     final attempts = await attemptsRepo.loadAll();
+    final activityEvents = await evidenceEvents.loadAll(
+      competencyId: outcome.competencyId,
+    );
     final scope = await scopeService.resolve(
       competencyId: outcome.competencyId,
       attempts: attempts,
@@ -86,6 +93,7 @@ class LearningStateUpdateCoordinator {
       attemptsForCompetency: attempts,
       scope: scope,
       now: at,
+      activityEvents: activityEvents,
     );
     await evidenceRepo.save(evidence, syncRemote: false);
 

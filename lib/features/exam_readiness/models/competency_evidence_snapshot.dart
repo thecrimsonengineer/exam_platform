@@ -1,3 +1,4 @@
+import 'activity_evidence_stats.dart';
 import 'evidence_confidence.dart';
 
 class EvidenceCoverage {
@@ -346,6 +347,7 @@ class CompetencyEvidenceSnapshot {
     required this.schemaVersion,
     required this.algorithmVersion,
     required this.sourceAttemptCount,
+    this.activity = const ActivityEvidenceStats(),
     required this.coverage,
     required this.attempts,
     required this.cognition,
@@ -365,6 +367,7 @@ class CompetencyEvidenceSnapshot {
   final int schemaVersion;
   final String algorithmVersion;
   final int sourceAttemptCount;
+  final ActivityEvidenceStats activity;
   final EvidenceCoverage coverage;
   final AttemptEvidenceStats attempts;
   final CognitionEvidenceStats cognition;
@@ -381,6 +384,7 @@ class CompetencyEvidenceSnapshot {
     'schemaVersion': schemaVersion,
     'algorithmVersion': algorithmVersion,
     'sourceAttemptCount': sourceAttemptCount,
+    'activity': activity.toJson(),
     'coverage': coverage.toJson(),
     'attempts': attempts.toJson(),
     'cognition': cognition.toJson(),
@@ -410,6 +414,7 @@ class CompetencyEvidenceSnapshot {
       algorithmVersion:
           json['algorithmVersion']?.toString() ?? currentAlgorithmVersion,
       sourceAttemptCount: _int(json['sourceAttemptCount']),
+      activity: ActivityEvidenceStats.fromJson(_map(json['activity'])),
       coverage: EvidenceCoverage.fromJson(_map(json['coverage'])),
       attempts: AttemptEvidenceStats.fromJson(_map(json['attempts'])),
       cognition: CognitionEvidenceStats.fromJson(_map(json['cognition'])),
