@@ -125,21 +125,24 @@ void main() {
       expect(event.signalCodes, contains('LOW_PERFORMANCE_SIGNAL'));
     });
 
-    test('Remember completion is supporting evidence, not automatic retention', () {
-      final block = _block(type: StudyPlanBlockType.spacedReview);
-      final event = const LearningEvidenceNormalizer().fromStudyPlanOutcome(
-        block: block,
-        outcome: _outcome(block: block),
-      );
+    test(
+      'Remember completion is supporting evidence, not automatic retention',
+      () {
+        final block = _block(type: StudyPlanBlockType.spacedReview);
+        final event = const LearningEvidenceNormalizer().fromStudyPlanOutcome(
+          block: block,
+          outcome: _outcome(block: block),
+        );
 
-      expect(event.sourceKind, LearningEvidenceSourceKind.flashcard);
-      expect(event.strength, LearningEvidenceStrength.supporting);
-      expect(event.retentionScore, isNull);
-      expect(
-        event.signalCodes,
-        contains('FLASHCARD_SUPPORT_REQUIRES_RECALL_QUALITY'),
-      );
-    });
+        expect(event.sourceKind, LearningEvidenceSourceKind.flashcard);
+        expect(event.strength, LearningEvidenceStrength.supporting);
+        expect(event.retentionScore, isNull);
+        expect(
+          event.signalCodes,
+          contains('FLASHCARD_SUPPORT_REQUIRES_RECALL_QUALITY'),
+        );
+      },
+    );
 
     test('micro-learning cannot carry readiness scores', () {
       final invalid = _event(
@@ -281,60 +284,64 @@ void main() {
       expect(profile.readinessState, ReadinessState.insufficientEvidence);
     });
 
-    test('insufficient evidence is converted into a Diagnostic plan action', () {
-      final context = _event(
-        id: 'context-diagnostic',
-        source: LearningEvidenceSourceKind.study,
-        strength: LearningEvidenceStrength.context,
-      );
-      final evidence = const LearnerEvidenceAggregationService().buildSnapshot(
-        competencyId: 'd01_c01',
-        attempts: const [],
-        scope: const CompetencyEvidenceScope(competencyId: 'd01_c01'),
-        now: DateTime.utc(2026, 9, 28, 10),
-        activityEvents: <LearningEvidenceEvent>[context],
-      );
-      final targetProfile = const ReadinessProfileService()
-          .buildCompetencyProfile(
-            evidence: evidence,
-            now: DateTime.utc(2026, 9, 28, 10),
-          );
+    test(
+      'insufficient evidence is converted into a Diagnostic plan action',
+      () {
+        final context = _event(
+          id: 'context-diagnostic',
+          source: LearningEvidenceSourceKind.study,
+          strength: LearningEvidenceStrength.context,
+        );
+        final evidence = const LearnerEvidenceAggregationService()
+            .buildSnapshot(
+              competencyId: 'd01_c01',
+              attempts: const [],
+              scope: const CompetencyEvidenceScope(competencyId: 'd01_c01'),
+              now: DateTime.utc(2026, 9, 28, 10),
+              activityEvents: <LearningEvidenceEvent>[context],
+            );
+        final targetProfile = const ReadinessProfileService()
+            .buildCompetencyProfile(
+              evidence: evidence,
+              now: DateTime.utc(2026, 9, 28, 10),
+            );
 
-      final profiles = <String, CompetencyReadinessProfile>{};
-      for (final domain in csp11Domains) {
-        for (final competency in domain.competencies) {
-          profiles[competency.id] = m7dProfile(
-            competencyId: competency.id,
-            evidenceConfidence: EvidenceConfidence.veryHigh,
-            readinessState: ReadinessState.stable,
-            knowledge: 0.92,
-            application: 0.90,
-            retention: 0.90,
-            coverage: 0.95,
-            difficulty: 0.88,
-            calibration: 0.92,
-          );
+        final profiles = <String, CompetencyReadinessProfile>{};
+        for (final domain in csp11Domains) {
+          for (final competency in domain.competencies) {
+            profiles[competency.id] = m7dProfile(
+              competencyId: competency.id,
+              evidenceConfidence: EvidenceConfidence.veryHigh,
+              readinessState: ReadinessState.stable,
+              knowledge: 0.92,
+              application: 0.90,
+              retention: 0.90,
+              coverage: 0.95,
+              difficulty: 0.88,
+              calibration: 0.92,
+            );
+          }
         }
-      }
-      profiles['d01_c01'] = targetProfile;
+        profiles['d01_c01'] = targetProfile;
 
-      final plan = const DailyStudyPlanService().generate(
-        userId: 'learner-1',
-        date: DateTime(2026, 9, 28),
-        generatedAt: DateTime(2026, 9, 28, 10),
-        examDate: DateTime(2026, 11, 1),
-        availableMinutes: 60,
-        readinessProfiles: profiles,
-      );
+        final plan = const DailyStudyPlanService().generate(
+          userId: 'learner-1',
+          date: DateTime(2026, 9, 28),
+          generatedAt: DateTime(2026, 9, 28, 10),
+          examDate: DateTime(2026, 11, 1),
+          availableMinutes: 60,
+          readinessProfiles: profiles,
+        );
 
-      expect(
-        plan.blocks.any(
-          (block) =>
-              block.competencyId == 'd01_c01' &&
-              block.type == StudyPlanBlockType.diagnostic,
-        ),
-        isTrue,
-      );
-    });
+        expect(
+          plan.blocks.any(
+            (block) =>
+                block.competencyId == 'd01_c01' &&
+                block.type == StudyPlanBlockType.diagnostic,
+          ),
+          isTrue,
+        );
+      },
+    );
   });
 }
