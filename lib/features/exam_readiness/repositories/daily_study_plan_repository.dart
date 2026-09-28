@@ -219,7 +219,7 @@ class DailyStudyPlanRepository {
 
     final state = await _loadLocalState(userId);
     final history = state.plans.toList();
-    _appendPlanImmutable(history, plan);
+    final planWasAdded = _appendPlanImmutable(history, plan);
 
     final carryForwards = state.carryForwards.toList();
     for (final item in upsertCarryForwards) {
@@ -266,7 +266,7 @@ class DailyStudyPlanRepository {
       ),
     );
 
-    if (syncRemote && _remoteStore != null) {
+    if (syncRemote && _remoteStore != null && planWasAdded) {
       await _remoteStore.savePlan(plan);
     }
   }
@@ -369,7 +369,10 @@ class DailyStudyPlanRepository {
     }
   }
 
-  void _appendPlanImmutable(List<DailyStudyPlan> history, DailyStudyPlan plan) {
+  bool _appendPlanImmutable(
+    List<DailyStudyPlan> history,
+    DailyStudyPlan plan,
+  ) {
     final sameVersion = history.where(
       (item) =>
           item.planId == plan.planId && item.planVersion == plan.planVersion,
@@ -379,11 +382,12 @@ class DailyStudyPlanRepository {
       if (jsonEncode(sameVersion.first.toJson()) != jsonEncode(plan.toJson())) {
         throw StateError('Daily plan history is immutable.');
       }
-      return;
+      return false;
     }
 
     history.add(plan);
     history.sort(_newestFirst);
+    return true;
   }
 
   Future<_LocalDailyPlanState> _loadLocalState(String userId) async {
