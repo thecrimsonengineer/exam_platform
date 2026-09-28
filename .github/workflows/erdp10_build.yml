@@ -33,14 +33,18 @@ jobs:
           dart format --output=none --set-exit-if-changed \
             lib/features/exam_readiness/services/study_plan_execution_attempt_lifecycle_service.dart \
             lib/features/exam_readiness/services/closed_evidence_loop_coordinator.dart \
-            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart
+            lib/features/exam_readiness/services/executable_daily_plan_action_service.dart \
+            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart \
+            test/features/exam_readiness/erdp/erdp10_replacement_paths_test.dart
 
       - name: Analyze ERDP-10 surface
         run: |
           dart analyze \
             lib/features/exam_readiness/services/study_plan_execution_attempt_lifecycle_service.dart \
             lib/features/exam_readiness/services/closed_evidence_loop_coordinator.dart \
-            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart
+            lib/features/exam_readiness/services/executable_daily_plan_action_service.dart \
+            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart \
+            test/features/exam_readiness/erdp/erdp10_replacement_paths_test.dart
 
       - name: Run ERDP-0 through ERDP-10 regressions
         run: flutter test test/features/exam_readiness/erdp
