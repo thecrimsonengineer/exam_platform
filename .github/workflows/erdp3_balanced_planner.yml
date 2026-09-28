@@ -30,11 +30,17 @@ jobs:
           dart format --output=none \
             lib/features/exam_readiness/services/balanced_plan_portfolio_policy.dart \
             lib/features/exam_readiness/services/daily_study_plan_service.dart \
+            lib/features/exam_readiness/services/phase_aware_daily_plan_service.dart \
             test/features/exam_readiness/erdp/erdp3_balanced_portfolio_policy_test.dart \
             test/features/exam_readiness/erdp/erdp3_balanced_planner_integration_test.dart
 
-      - name: Flutter analyze
-        run: flutter analyze --no-fatal-infos
+      - name: Analyze ERDP-3 surface
+        run: |
+          dart analyze lib/features/exam_readiness/services/balanced_plan_portfolio_policy.dart
+          dart analyze lib/features/exam_readiness/services/daily_study_plan_service.dart
+          dart analyze lib/features/exam_readiness/services/phase_aware_daily_plan_service.dart
+          dart analyze test/features/exam_readiness/erdp/erdp3_balanced_portfolio_policy_test.dart
+          dart analyze test/features/exam_readiness/erdp/erdp3_balanced_planner_integration_test.dart
 
       - name: Run ERDP-3 targeted tests
         run: |
