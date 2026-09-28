@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/csp11_blueprint.dart';
 import '../../../screens/courses/csp/study_content_screen.dart';
 import '../../../screens/courses/csp/study_content_screen_dark.dart';
+import '../../../screens/flashcards/flashcard_competency_review_screen.dart';
 import '../models/study_plan_block.dart';
 import '../models/study_plan_execution_target.dart';
 import '../models/today_plan_task_category.dart';
@@ -48,7 +49,8 @@ class StudyPlanBlockLauncher {
     final category = categoryPolicy.categoryFor(block);
     final kind = switch (category) {
       TodayPlanTaskCategory.learn => StudyPlanExecutionTargetKind.studyContent,
-      TodayPlanTaskCategory.remember => StudyPlanExecutionTargetKind.review,
+      TodayPlanTaskCategory.remember =>
+        StudyPlanExecutionTargetKind.flashcardReview,
       TodayPlanTaskCategory.practice =>
         block.type == StudyPlanBlockType.examSimulation
             ? StudyPlanExecutionTargetKind.examSimulation
@@ -76,6 +78,10 @@ class StudyPlanBlockLauncher {
       subtopicId: _optionalId(block.subtopicId),
       plannedMinutes: block.plannedMinutes,
       questionCount: block.questionCount,
+      dueOnly: kind == StudyPlanExecutionTargetKind.flashcardReview,
+      reviewReason: kind == StudyPlanExecutionTargetKind.flashcardReview
+          ? block.reasonText
+          : null,
     );
   }
 
@@ -107,6 +113,11 @@ class StudyPlanBlockLauncher {
                 initialTopicId: target.topicId,
                 initialSubtopicId: target.subtopicId,
               ),
+      StudyPlanExecutionTargetKind.flashcardReview =>
+        FlashcardCompetencyReviewScreen(
+          competencyId: target.competencyId,
+          isDarkMode: isDarkMode,
+        ),
       StudyPlanExecutionTargetKind.practiceSession ||
       StudyPlanExecutionTargetKind.examSimulation =>
         StudyPlanPracticeSessionScreen(
