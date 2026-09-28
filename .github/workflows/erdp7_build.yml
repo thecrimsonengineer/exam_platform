@@ -1,14 +1,106 @@
-name: ERDP-7 Convergence Staging
+name: ERDP-7 Readiness Action Integration
 
 on:
+  push:
+    branches:
+      - phase-erdp7-readiness-action-integration
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  staged:
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "ERDP-7 convergence staging only"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Enforce ERDP-7 formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/models/study_plan_execution_target.dart \
+            lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
+            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
+            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+            lib/features/exam_readiness/services/daily_study_plan_service.dart \
+            lib/features/exam_readiness/services/learning_evidence_normalizer.dart \
+            lib/features/exam_readiness/services/phase_aware_daily_plan_service.dart \
+            lib/features/exam_readiness/services/readiness_action_integration_service.dart \
+            lib/features/exam_readiness/services/readiness_intelligence_service.dart \
+            lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart \
+            lib/features/exam_readiness/services/study_plan_outcome_service.dart \
+            lib/features/exam_readiness/services/today_plan_task_category_policy.dart \
+            lib/screens/lab/lab_library_screen.dart \
+            lib/screens/lab/lab_scenario_briefing_screen.dart \
+            lib/screens/lab/lab_player_shell_screen.dart \
+            lib/screens/lab/lab_reference_player_screen.dart \
+            test/features/exam_readiness/erdp/erdp7_readiness_action_integration_test.dart
+
+      - name: Analyze ERDP-7 integrated surface
+        run: |
+          dart analyze \
+            lib/features/exam_readiness/models/study_plan_execution_target.dart \
+            lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
+            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
+            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+            lib/features/exam_readiness/services/daily_study_plan_service.dart \
+            lib/features/exam_readiness/services/learning_evidence_normalizer.dart \
+            lib/features/exam_readiness/services/phase_aware_daily_plan_service.dart \
+            lib/features/exam_readiness/services/readiness_action_integration_service.dart \
+            lib/features/exam_readiness/services/readiness_intelligence_service.dart \
+            lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart \
+            lib/features/exam_readiness/services/study_plan_outcome_service.dart \
+            lib/features/exam_readiness/services/today_plan_task_category_policy.dart \
+            lib/screens/lab/lab_library_screen.dart \
+            lib/screens/lab/lab_scenario_briefing_screen.dart \
+            lib/screens/lab/lab_player_shell_screen.dart \
+            lib/screens/lab/lab_reference_player_screen.dart \
+            test/features/exam_readiness/erdp/erdp7_readiness_action_integration_test.dart
+
+      - name: Run ERDP-7 integration tests
+        run: flutter test test/features/exam_readiness/erdp/erdp7_readiness_action_integration_test.dart
+
+      - name: Run ERDP-6 evidence regression
+        run: flutter test test/features/exam_readiness/erdp/erdp6_closed_evidence_loop_test.dart
+
+      - name: Run ERDP-5 executable-control regression
+        run: flutter test test/features/exam_readiness/erdp/erdp5_executable_daily_plan_test.dart
+
+      - name: Run ERDP-4 execution regressions
+        run: |
+          flutter test test/features/exam_readiness/erdp/erdp4_execution_router_test.dart
+          flutter test test/features/exam_readiness/erdp/erdp4_execution_store_test.dart
+
+      - name: Run ERDP-3 planner regressions
+        run: |
+          flutter test test/features/exam_readiness/erdp/erdp3_balanced_portfolio_policy_test.dart
+          flutter test test/features/exam_readiness/erdp/erdp3_balanced_planner_integration_test.dart
+          flutter test test/features/exam_readiness/erdp/erdp3_daily_constraints_test.dart
+
+      - name: Run ERDP-2 Flashcard regression
+        run: flutter test test/features/exam_readiness/erdp/erdp2_flashcard_execution_test.dart
+
+      - name: Run M7D Daily Plan regression
+        run: flutter test test/features/exam_readiness/m7d
+
+      - name: Run LAB runtime regressions
+        run: |
+          flutter test test/features/lab/lab4_session_engine_test.dart
+          flutter test test/features/lab/lab7_learning_twin_bridge_test.dart
+          flutter test test/features/lab/lab9_reference_lab_e2e_test.dart
+
+      - name: Diff hygiene
+        run: git diff --check
