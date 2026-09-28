@@ -97,6 +97,8 @@ class StudyPlanBlock {
     required this.manualChanges,
     this.startedAt,
     this.completedAt,
+    this.replacesBlockId,
+    this.replacedByBlockId,
   });
 
   final String blockId;
@@ -116,12 +118,22 @@ class StudyPlanBlock {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final List<StudyPlanManualChange> manualChanges;
+  final String? replacesBlockId;
+  final String? replacedByBlockId;
 
   bool get isLocked =>
       status == StudyPlanBlockStatus.started ||
       status == StudyPlanBlockStatus.completed;
 
-  bool get isFutureEditable => !isLocked;
+  bool get isTerminalChange =>
+      status == StudyPlanBlockStatus.skipped ||
+      status == StudyPlanBlockStatus.movedToTomorrow ||
+      status == StudyPlanBlockStatus.replaced ||
+      status == StudyPlanBlockStatus.unavailable;
+
+  bool get consumesAllocation => !isTerminalChange;
+
+  bool get isFutureEditable => !isLocked && !isTerminalChange;
 
   StudyPlanBlock copyWith({
     String? blockId,
@@ -143,6 +155,10 @@ class StudyPlanBlock {
     DateTime? completedAt,
     bool clearCompletedAt = false,
     List<StudyPlanManualChange>? manualChanges,
+    String? replacesBlockId,
+    bool clearReplacesBlockId = false,
+    String? replacedByBlockId,
+    bool clearReplacedByBlockId = false,
   }) {
     return StudyPlanBlock(
       blockId: blockId ?? this.blockId,
@@ -164,6 +180,12 @@ class StudyPlanBlock {
       manualChanges: List<StudyPlanManualChange>.unmodifiable(
         manualChanges ?? this.manualChanges,
       ),
+      replacesBlockId: clearReplacesBlockId
+          ? null
+          : (replacesBlockId ?? this.replacesBlockId),
+      replacedByBlockId: clearReplacedByBlockId
+          ? null
+          : (replacedByBlockId ?? this.replacedByBlockId),
     );
   }
 
@@ -187,6 +209,8 @@ class StudyPlanBlock {
     'manualChanges': manualChanges
         .map((item) => item.toJson())
         .toList(growable: false),
+    'replacesBlockId': replacesBlockId,
+    'replacedByBlockId': replacedByBlockId,
   };
 
   factory StudyPlanBlock.fromJson(Map<String, dynamic> json) {
@@ -230,6 +254,8 @@ class StudyPlanBlock {
                 )
                 .toList(growable: false)
           : const <StudyPlanManualChange>[],
+      replacesBlockId: _nullableString(json['replacesBlockId']),
+      replacedByBlockId: _nullableString(json['replacedByBlockId']),
     );
   }
 }
@@ -251,6 +277,11 @@ int _int(dynamic value) =>
 int? _nullableInt(dynamic value) {
   if (value == null) return null;
   return _int(value);
+}
+
+String? _nullableString(dynamic value) {
+  final text = value?.toString().trim() ?? '';
+  return text.isEmpty ? null : text;
 }
 
 double _double(dynamic value) {
