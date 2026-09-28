@@ -6,6 +6,7 @@ import '../models/daily_study_plan.dart';
 import '../models/study_plan_block.dart';
 import '../models/study_plan_execution_target.dart';
 import '../models/today_plan_task_category.dart';
+import '../navigation/flutter_study_plan_execution_navigator.dart';
 import '../navigation/study_plan_block_launcher.dart';
 import '../repositories/daily_study_plan_repository.dart';
 import '../repositories/evidence_snapshot_repository.dart';
@@ -14,9 +15,11 @@ import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
 import '../services/daily_study_plan_service.dart';
 import '../services/learning_state_update_coordinator.dart';
+import '../services/local_study_plan_execution_store.dart';
 import '../services/phase_aware_daily_plan_service.dart';
 import '../services/today_plan_presentation_filter.dart';
 import '../services/readiness_evidence_bootstrap_service.dart';
+import '../services/study_plan_execution_router.dart';
 import '../services/study_plan_outcome_service.dart';
 import '../services/study_plan_completion_evidence_service.dart';
 import '../services/readiness_profile_service.dart';
@@ -40,6 +43,7 @@ class TodaysPlanScreen extends StatefulWidget {
     this.completionEvidenceService = const StudyPlanCompletionEvidenceService(),
     this.presentationFilter = const TodayPlanPresentationFilter(),
     this.blockLauncher = const StudyPlanBlockLauncher(),
+    this.executionStore,
     this.initialCategory,
     this.now,
   });
@@ -57,6 +61,7 @@ class TodaysPlanScreen extends StatefulWidget {
   final StudyPlanCompletionEvidenceService completionEvidenceService;
   final TodayPlanPresentationFilter presentationFilter;
   final StudyPlanBlockLauncher blockLauncher;
+  final StudyPlanExecutionStore? executionStore;
   final TodayPlanTaskCategory? initialCategory;
   final DateTime Function()? now;
 
@@ -68,6 +73,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   late Future<_TodayPlanViewData> _future;
   TodayPlanTaskCategory? _activeCategory;
   final Set<String> _completionInFlight = <String>{};
+  final Set<String> _launchInFlight = <String>{};
   final StudentLearningProgressService _studyProgressService =
       const StudentLearningProgressService();
 
@@ -79,6 +85,13 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
   DailyStudyPlanRepository get _dailyPlanRepository =>
       widget.dailyPlanRepository ?? DailyStudyPlanRepository();
+
+  StudyPlanExecutionStore get _executionStore =>
+      widget.executionStore ??
+      LocalStudyPlanExecutionStore(
+        planRepository: _dailyPlanRepository,
+        planService: widget.planService,
+      );
 
   LearnerAssessmentAttemptRepository get _attemptRepository =>
       widget.attemptRepository ?? const LearnerAssessmentAttemptRepository();
@@ -233,75 +246,113 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   }
 
   Future<void> _launchBlock(StudyPlanBlock block) async {
-    final data = await _future;
-    final plan = data.plan;
-    if (plan == null) return;
+    if (!_launchInFlight.add(block.blockId)) return;
 
-    // Resolve before mutating lifecycle state. A malformed or unavailable
-    // execution target must never turn a planned task into a started task.
-    final target = widget.blockLauncher.resolve(block);
+    try {
+      final data = await _future;
+      final plan = data.plan;
+      if (plan == null) return;
 
-    var activePlan = plan;
-    var activeBlock = block;
+      if (block.status == StudyPlanBlockStatus.started) {
+        final target = widget.blockLauncher.resolve(block);
+        if (!mounted) return;
+        await widget.blockLauncher.launchTarget(
+          context,
+          target: target,
+          isDarkMode: Theme.of(context).brightness == Brightness.dark,
+          onPracticeSessionCompleted:
+              target.kind == StudyPlanExecutionTargetKind.practiceSession ||
+                  target.kind == StudyPlanExecutionTargetKind.examSimulation
+              ? () async {
+                  await _complete(
+                    block.blockId,
+                    source:
+                        StudyPlanCompletionEvidenceSource.plannedPracticeSession,
+                    silentIfBlocked: true,
+                  );
+                }
+              : null,
+        );
+        if (!mounted) return;
+        if (target.kind == StudyPlanExecutionTargetKind.studyContent ||
+            target.kind == StudyPlanExecutionTargetKind.review) {
+          await _complete(
+            block.blockId,
+            source: StudyPlanCompletionEvidenceSource.studyContent,
+            silentIfBlocked: true,
+          );
+        }
+        return;
+      }
 
-    if (block.status == StudyPlanBlockStatus.planned ||
-        block.status == StudyPlanBlockStatus.shortened) {
-      activePlan = widget.planService.startBlock(plan, block.blockId, at: _now);
-      await _dailyPlanRepository.savePlan(activePlan, syncRemote: false);
-      activeBlock = activePlan.blocks.firstWhere(
-        (item) => item.blockId == block.blockId,
+      if (block.status != StudyPlanBlockStatus.planned &&
+          block.status != StudyPlanBlockStatus.shortened) {
+        throw StateError(
+          'Only planned, shortened, or started tasks can be launched.',
+        );
+      }
+
+      if (!mounted) return;
+      final router = StudyPlanExecutionRouter(
+        resolveTarget: widget.blockLauncher.resolve,
+        store: _executionStore,
+        navigator: FlutterStudyPlanExecutionNavigator(
+          context: context,
+          launcher: widget.blockLauncher,
+          isDarkMode: Theme.of(context).brightness == Brightness.dark,
+          onPracticeSessionCompleted: (target) async {
+            await _complete(
+              target.blockId,
+              source: StudyPlanCompletionEvidenceSource.plannedPracticeSession,
+              silentIfBlocked: true,
+            );
+          },
+        ),
       );
 
+      final result = await router.start(
+        plan: plan,
+        blockId: block.blockId,
+        at: _now,
+      );
+
+      final latest =
+          await _dailyPlanRepository.loadLatestForDate(plan.date) ??
+          result.startedPlan;
       if (mounted) {
         setState(
           () => _future = Future.value(
             _TodayPlanViewData(
-              plan: activePlan,
+              plan: latest,
               hasExamPlan: true,
               notice: data.notice,
             ),
           ),
         );
       }
-    } else if (block.status != StudyPlanBlockStatus.started) {
-      throw StateError(
-        'Only planned, shortened, or started tasks can be launched.',
-      );
-    }
 
-    if (!mounted) return;
+      if (!result.navigationSucceeded) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Task was started, but the activity could not open. Use Continue task to resume safely.',
+            ),
+          ),
+        );
+        return;
+      }
 
-    try {
-      await widget.blockLauncher.launch(
-        context,
-        block: activeBlock,
-        isDarkMode: Theme.of(context).brightness == Brightness.dark,
-        onPracticeSessionCompleted:
-            target.kind == StudyPlanExecutionTargetKind.practiceSession ||
-                target.kind == StudyPlanExecutionTargetKind.examSimulation
-            ? () async {
-                await _complete(
-                  activeBlock.blockId,
-                  source:
-                      StudyPlanCompletionEvidenceSource.plannedPracticeSession,
-                  silentIfBlocked: true,
-                );
-              }
-            : null,
-      );
-
-      if (!mounted) return;
-
-      if (target.kind == StudyPlanExecutionTargetKind.studyContent ||
-          target.kind == StudyPlanExecutionTargetKind.review) {
+      if (result.target.kind == StudyPlanExecutionTargetKind.studyContent ||
+          result.target.kind == StudyPlanExecutionTargetKind.review) {
         final completed = await _complete(
-          activeBlock.blockId,
+          block.blockId,
           source: StudyPlanCompletionEvidenceSource.studyContent,
           silentIfBlocked: true,
         );
 
         if (!completed &&
-            target.kind == StudyPlanExecutionTargetKind.review &&
+            result.target.kind == StudyPlanExecutionTargetKind.review &&
             mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -319,6 +370,8 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
           content: Text(error.toString().replaceFirst('Bad state: ', '')),
         ),
       );
+    } finally {
+      _launchInFlight.remove(block.blockId);
     }
   }
 
@@ -333,8 +386,15 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
 
     try {
       final data = await _future;
-      final plan = data.plan;
+      var plan = data.plan;
       if (plan == null) return false;
+
+      final persisted = await _dailyPlanRepository.loadLatestForDate(plan.date);
+      if (persisted != null &&
+          persisted.planId == plan.planId &&
+          persisted.planVersion >= plan.planVersion) {
+        plan = persisted;
+      }
 
       final block = plan.blocks.firstWhere(
         (item) => item.blockId == blockId,
