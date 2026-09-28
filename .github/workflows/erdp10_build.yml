@@ -58,6 +58,24 @@ jobs:
       - name: Run LAB regressions
         run: flutter test test/features/lab
 
+      - name: Run LAB quality regressions
+        run: flutter test test/lab_quality
+
+      - name: Run learner online-access regressions
+        run: flutter test test/services/online_access
+
+      - name: Run auth regressions
+        run: flutter test test/services/auth
+
+      - name: Run startup regressions
+        run: flutter test test/startup
+
+      - name: Run security contract regressions
+        run: flutter test test/security
+
+      - name: Run home-startup integration regressions
+        run: flutter test test/integration/home_startup
+
       - name: Diff hygiene
         run: git diff --check
 
