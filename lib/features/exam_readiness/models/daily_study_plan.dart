@@ -114,10 +114,7 @@ class DailyStudyPlan {
       generatedAt: generatedAt,
       planVersion: planVersion + 1,
       availableMinutes: availableMinutes,
-      allocatedMinutes: blocks.fold<int>(
-        0,
-        (sum, block) => sum + block.plannedMinutes,
-      ),
+      allocatedMinutes: _allocatedMinutesFor(blocks),
       generationReason: generationReason,
       sourceEvidenceVersion: sourceEvidenceVersion,
       sourceReadinessVersion: sourceReadinessVersion,
@@ -141,7 +138,6 @@ class DailyStudyPlan {
     }
 
     final ids = <String>{};
-    var sum = 0;
     for (final block in blocks) {
       if (!ids.add(block.blockId)) {
         throw StateError('Daily plan contains duplicate block IDs.');
@@ -152,11 +148,21 @@ class DailyStudyPlan {
       if (block.plannedMinutes <= 0) {
         throw StateError('Study-plan block minutes must be positive.');
       }
-      sum += block.plannedMinutes;
+      if (block.status == StudyPlanBlockStatus.replaced &&
+          (block.replacedByBlockId == null ||
+              block.replacedByBlockId!.trim().isEmpty)) {
+        throw StateError('Replaced block must link to its replacement.');
+      }
+      if (block.replacesBlockId != null &&
+          !ids.contains(block.replacesBlockId) &&
+          !blocks.any((item) => item.blockId == block.replacesBlockId)) {
+        throw StateError('Replacement block must link to an existing block.');
+      }
     }
 
+    final sum = _allocatedMinutesFor(blocks);
     if (sum != allocatedMinutes) {
-      throw StateError('Allocated minutes do not match block minutes.');
+      throw StateError('Allocated minutes do not match active block minutes.');
     }
   }
 
@@ -188,6 +194,21 @@ class DailyStudyPlan {
       throw const FormatException('Daily plan contains invalid timestamps.');
     }
 
+    final blocks = (json['blocks'] is Iterable)
+        ? (json['blocks'] as Iterable)
+              .whereType<Map>()
+              .map(
+                (item) => StudyPlanBlock.fromJson(
+                  Map<String, dynamic>.from(item),
+                ),
+              )
+              .toList(growable: false)
+        : const <StudyPlanBlock>[];
+
+    final serializedAllocated = _int(json['allocatedMinutes'], 0);
+    final activeAllocated = _allocatedMinutesFor(blocks);
+    final hasTerminalBlocks = blocks.any((block) => block.isTerminalChange);
+
     final plan = DailyStudyPlan(
       planId: json['planId']?.toString() ?? '',
       userId: json['userId']?.toString() ?? '',
@@ -198,22 +219,14 @@ class DailyStudyPlan {
           json['plannerAlgorithmVersion']?.toString() ??
           currentAlgorithmVersion,
       availableMinutes: _int(json['availableMinutes'], 0),
-      allocatedMinutes: _int(json['allocatedMinutes'], 0),
+      allocatedMinutes: hasTerminalBlocks ? activeAllocated : serializedAllocated,
       generationReason: DailyStudyPlanGenerationReason.values.firstWhere(
         (item) => item.name == json['generationReason']?.toString(),
         orElse: () => DailyStudyPlanGenerationReason.initial,
       ),
       sourceEvidenceVersion: json['sourceEvidenceVersion']?.toString() ?? '',
       sourceReadinessVersion: json['sourceReadinessVersion']?.toString() ?? '',
-      blocks: (json['blocks'] is Iterable)
-          ? (json['blocks'] as Iterable)
-                .whereType<Map>()
-                .map(
-                  (item) =>
-                      StudyPlanBlock.fromJson(Map<String, dynamic>.from(item)),
-                )
-                .toList(growable: false)
-          : const <StudyPlanBlock>[],
+      blocks: blocks,
       status: DailyStudyPlanStatus.values.firstWhere(
         (item) => item.name == json['status']?.toString(),
         orElse: () => DailyStudyPlanStatus.active,
@@ -227,6 +240,11 @@ class DailyStudyPlan {
     return plan;
   }
 }
+
+int _allocatedMinutesFor(Iterable<StudyPlanBlock> blocks) => blocks.fold<int>(
+  0,
+  (sum, block) => sum + (block.consumesAllocation ? block.plannedMinutes : 0),
+);
 
 DateTime _dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
