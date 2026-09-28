@@ -24,7 +24,12 @@ jobs:
           cache: true
 
       - name: Apply ERDP-6 wiring
-        run: python3 tool/erdp6_wire.py
+        run: |
+          python3 tool/erdp6_wire.py
+          sed -i "s/? ' Today's remaining plan was recalibrated.'/? \" Today's remaining plan was recalibrated.\"/" lib/features/exam_readiness/screens/todays_plan_screen.dart
+
+      - name: Resolve packages
+        run: flutter pub get
 
       - name: Format ERDP-6 source
         run: dart format lib/features/exam_readiness
