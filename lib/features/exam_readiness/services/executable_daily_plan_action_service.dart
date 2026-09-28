@@ -107,6 +107,7 @@ class ExecutableDailyPlanActionService {
     required DailyStudyPlan sourcePlan,
     required String blockId,
     required DateTime at,
+    StudyPlanBlockType? alternativeType,
   }) async {
     final current = await _currentPlan(sourcePlan);
     final block = _findBlock(current, blockId);
@@ -121,18 +122,20 @@ class ExecutableDailyPlanActionService {
     }
     _requireEditable(block, 'replace');
 
-    final alternativeType = _alternativeFor(block.type);
+    final selectedAlternative = alternativeType ?? _alternativeFor(block.type);
+    _requireAlternativeAllowed(block.type, selectedAlternative);
+
     final nextVersion = current.planVersion + 1;
     final replacementId = '${block.blockId}-replacement-v$nextVersion';
     final replacementMinutes = _replacementMinutes(
-      alternativeType,
+      selectedAlternative,
       block.plannedMinutes,
     );
 
     final change = StudyPlanManualChange(
       action: StudyPlanManualAction.replace,
       changedAt: at,
-      note: 'Learner replaced task with ${alternativeType.name}.',
+      note: 'Learner replaced task with ${selectedAlternative.name}.',
       previousMinutes: block.plannedMinutes,
       newMinutes: replacementMinutes,
     );
@@ -143,9 +146,9 @@ class ExecutableDailyPlanActionService {
     );
     final replacement = block.copyWith(
       blockId: replacementId,
-      type: alternativeType,
+      type: selectedAlternative,
       plannedMinutes: replacementMinutes,
-      questionCount: _questionCount(alternativeType, replacementMinutes),
+      questionCount: _questionCount(selectedAlternative, replacementMinutes),
       status: StudyPlanBlockStatus.planned,
       createdAt: at,
       clearStartedAt: true,
@@ -187,6 +190,9 @@ class ExecutableDailyPlanActionService {
     );
   }
 
+  List<StudyPlanBlockType> replacementOptionsFor(StudyPlanBlock block) =>
+      List<StudyPlanBlockType>.unmodifiable(_alternativesFor(block.type));
+
   Future<DailyStudyPlan> _currentPlan(DailyStudyPlan sourcePlan) async {
     final current = await repository.loadLatestForDate(sourcePlan.date);
     if (current == null) return sourcePlan;
@@ -211,28 +217,78 @@ class ExecutableDailyPlanActionService {
     }
   }
 
-  StudyPlanBlockType _alternativeFor(StudyPlanBlockType type) {
+  void _requireAlternativeAllowed(
+    StudyPlanBlockType source,
+    StudyPlanBlockType alternative,
+  ) {
+    if (!_alternativesFor(source).contains(alternative)) {
+      throw StateError(
+        '${alternative.name} is not a valid replacement for ${source.name}.',
+      );
+    }
+  }
+
+  StudyPlanBlockType _alternativeFor(StudyPlanBlockType type) =>
+      _alternativesFor(type).first;
+
+  List<StudyPlanBlockType> _alternativesFor(StudyPlanBlockType type) {
     switch (type) {
       case StudyPlanBlockType.learn:
       case StudyPlanBlockType.continueLearning:
-        return StudyPlanBlockType.standardPractice;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.standardPractice,
+          StudyPlanBlockType.spacedReview,
+        ];
       case StudyPlanBlockType.repair:
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.standardPractice,
+          StudyPlanBlockType.spacedReview,
+          StudyPlanBlockType.continueLearning,
+        ];
       case StudyPlanBlockType.diagnostic:
       case StudyPlanBlockType.confidenceCalibration:
-        return StudyPlanBlockType.standardPractice;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.standardPractice,
+          StudyPlanBlockType.continueLearning,
+          StudyPlanBlockType.spacedReview,
+        ];
       case StudyPlanBlockType.spacedReview:
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.standardPractice,
+          StudyPlanBlockType.continueLearning,
+        ];
       case StudyPlanBlockType.competencyRecheck:
-        return StudyPlanBlockType.standardPractice;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.standardPractice,
+          StudyPlanBlockType.spacedReview,
+          StudyPlanBlockType.continueLearning,
+        ];
       case StudyPlanBlockType.standardPractice:
-        return StudyPlanBlockType.spacedReview;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.spacedReview,
+          StudyPlanBlockType.continueLearning,
+        ];
       case StudyPlanBlockType.ultraHardPractice:
-        return StudyPlanBlockType.mixedRetrieval;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.mixedRetrieval,
+          StudyPlanBlockType.continueLearning,
+          StudyPlanBlockType.spacedReview,
+        ];
       case StudyPlanBlockType.mixedRetrieval:
-        return StudyPlanBlockType.spacedReview;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.spacedReview,
+          StudyPlanBlockType.continueLearning,
+        ];
       case StudyPlanBlockType.examSimulation:
-        return StudyPlanBlockType.mixedRetrieval;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.mixedRetrieval,
+          StudyPlanBlockType.continueLearning,
+        ];
       case StudyPlanBlockType.recovery:
-        return StudyPlanBlockType.continueLearning;
+        return const <StudyPlanBlockType>[
+          StudyPlanBlockType.continueLearning,
+          StudyPlanBlockType.standardPractice,
+        ];
     }
   }
 
