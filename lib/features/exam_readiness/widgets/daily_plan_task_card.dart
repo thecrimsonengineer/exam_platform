@@ -48,7 +48,8 @@ class DailyPlanTaskCard extends StatelessWidget {
         : block.competencyId.toUpperCase();
     final applicationLab = _isApplicationLab(block);
     final subdued =
-        block.status == StudyPlanBlockStatus.completed || block.isTerminalChange;
+        block.status == StudyPlanBlockStatus.completed ||
+        block.isTerminalChange;
 
     final card = StudentGlassSurface(
       key: ValueKey('m7d-block-$index'),
@@ -258,7 +259,11 @@ class DailyPlanTaskCard extends StatelessWidget {
       label:
           '${_categoryLabel(category)} task. ${block.competencyId.toUpperCase()}. '
           '$competencyTitle. ${state.label}. ${block.plannedMinutes} minutes.',
-      child: Opacity(opacity: subdued ? 0.72 : 1, child: card),
+      child: Opacity(
+        key: ValueKey('erdp8-card-opacity-$index'),
+        opacity: subdued ? 0.72 : 1.0,
+        child: card,
+      ),
     );
   }
 
@@ -307,48 +312,49 @@ class DailyPlanTaskCard extends StatelessWidget {
     StudyPlanBlockType.recovery => 'Recovery review',
   };
 
-  _TaskStatePresentation _stateFor(StudyPlanBlock block) => switch (block.status) {
-    StudyPlanBlockStatus.planned => const _TaskStatePresentation(
-      label: 'PLANNED',
-      icon: Icons.schedule_rounded,
-      tone: _TaskStateTone.neutral,
-    ),
-    StudyPlanBlockStatus.shortened => const _TaskStatePresentation(
-      label: 'PLANNED · SHORTENED',
-      icon: Icons.compress_rounded,
-      tone: _TaskStateTone.neutral,
-    ),
-    StudyPlanBlockStatus.started => const _TaskStatePresentation(
-      label: 'IN PROGRESS',
-      icon: Icons.play_circle_fill_rounded,
-      tone: _TaskStateTone.active,
-    ),
-    StudyPlanBlockStatus.completed => const _TaskStatePresentation(
-      label: 'COMPLETED',
-      icon: Icons.check_circle_rounded,
-      tone: _TaskStateTone.success,
-    ),
-    StudyPlanBlockStatus.skipped => const _TaskStatePresentation(
-      label: 'SKIPPED',
-      icon: Icons.skip_next_rounded,
-      tone: _TaskStateTone.history,
-    ),
-    StudyPlanBlockStatus.movedToTomorrow => const _TaskStatePresentation(
-      label: 'MOVED',
-      icon: Icons.event_repeat_rounded,
-      tone: _TaskStateTone.history,
-    ),
-    StudyPlanBlockStatus.replaced => const _TaskStatePresentation(
-      label: 'REPLACED',
-      icon: Icons.swap_horiz_rounded,
-      tone: _TaskStateTone.history,
-    ),
-    StudyPlanBlockStatus.unavailable => const _TaskStatePresentation(
-      label: 'UNAVAILABLE',
-      icon: Icons.block_rounded,
-      tone: _TaskStateTone.history,
-    ),
-  };
+  _TaskStatePresentation _stateFor(StudyPlanBlock block) =>
+      switch (block.status) {
+        StudyPlanBlockStatus.planned => const _TaskStatePresentation(
+          label: 'PLANNED',
+          icon: Icons.schedule_rounded,
+          tone: _TaskStateTone.neutral,
+        ),
+        StudyPlanBlockStatus.shortened => const _TaskStatePresentation(
+          label: 'PLANNED · SHORTENED',
+          icon: Icons.compress_rounded,
+          tone: _TaskStateTone.neutral,
+        ),
+        StudyPlanBlockStatus.started => const _TaskStatePresentation(
+          label: 'IN PROGRESS',
+          icon: Icons.play_circle_fill_rounded,
+          tone: _TaskStateTone.active,
+        ),
+        StudyPlanBlockStatus.completed => const _TaskStatePresentation(
+          label: 'COMPLETED',
+          icon: Icons.check_circle_rounded,
+          tone: _TaskStateTone.success,
+        ),
+        StudyPlanBlockStatus.skipped => const _TaskStatePresentation(
+          label: 'SKIPPED',
+          icon: Icons.skip_next_rounded,
+          tone: _TaskStateTone.history,
+        ),
+        StudyPlanBlockStatus.movedToTomorrow => const _TaskStatePresentation(
+          label: 'MOVED',
+          icon: Icons.event_repeat_rounded,
+          tone: _TaskStateTone.history,
+        ),
+        StudyPlanBlockStatus.replaced => const _TaskStatePresentation(
+          label: 'REPLACED',
+          icon: Icons.swap_horiz_rounded,
+          tone: _TaskStateTone.history,
+        ),
+        StudyPlanBlockStatus.unavailable => const _TaskStatePresentation(
+          label: 'UNAVAILABLE',
+          icon: Icons.block_rounded,
+          tone: _TaskStateTone.history,
+        ),
+      };
 }
 
 class _TaskPill extends StatelessWidget {
@@ -439,6 +445,8 @@ class _TaskStatePresentation {
     _TaskStateTone.neutral => scheme.surfaceContainerHighest,
     _TaskStateTone.active => scheme.primaryContainer.withValues(alpha: 0.62),
     _TaskStateTone.success => scheme.tertiaryContainer.withValues(alpha: 0.62),
-    _TaskStateTone.history => scheme.surfaceContainerHighest.withValues(alpha: 0.72),
+    _TaskStateTone.history => scheme.surfaceContainerHighest.withValues(
+      alpha: 0.72,
+    ),
   };
 }

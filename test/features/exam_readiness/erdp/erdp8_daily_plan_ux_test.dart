@@ -94,30 +94,30 @@ Future<void> _pumpCard(
 
 void main() {
   group('ERDP-8 Daily Plan task card', () {
-    testWidgets('planned task exposes category, competency title, why and controls', (
+    testWidgets(
+      'planned task exposes category, competency title, why and controls',
+      (tester) async {
+        final block = _block();
+        await _pumpCard(tester, block);
+
+        expect(find.text('PRACTICE'), findsOneWidget);
+        expect(find.text('PLANNED'), findsOneWidget);
+        expect(find.text('WHY THIS TASK'), findsOneWidget);
+        expect(find.text('Start task'), findsOneWidget);
+        expect(find.text('Skip'), findsOneWidget);
+        expect(find.text('Tomorrow'), findsOneWidget);
+        expect(find.text('Replace'), findsOneWidget);
+        expect(
+          find.text(competencyForId('d01_c01')!.statement),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets('started task is clearly in progress and resumes', (
       tester,
     ) async {
-      final block = _block();
-      await _pumpCard(tester, block);
-
-      expect(find.text('PRACTICE'), findsOneWidget);
-      expect(find.text('PLANNED'), findsOneWidget);
-      expect(find.text('WHY THIS TASK'), findsOneWidget);
-      expect(find.text('Start task'), findsOneWidget);
-      expect(find.text('Skip'), findsOneWidget);
-      expect(find.text('Tomorrow'), findsOneWidget);
-      expect(find.text('Replace'), findsOneWidget);
-      expect(
-        find.text(competencyForId('d01_c01')!.statement),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('started task is clearly in progress and resumes', (tester) async {
-      await _pumpCard(
-        tester,
-        _block(status: StudyPlanBlockStatus.started),
-      );
+      await _pumpCard(tester, _block(status: StudyPlanBlockStatus.started));
 
       expect(find.text('IN PROGRESS'), findsOneWidget);
       expect(find.text('Resume task'), findsOneWidget);
@@ -166,28 +166,36 @@ void main() {
 
         expect(find.text(entry.value), findsOneWidget, reason: entry.key.name);
         expect(find.text('Start task'), findsNothing, reason: entry.key.name);
-        final opacity = tester.widget<Opacity>(find.byType(Opacity).first);
+        final opacity = tester.widget<Opacity>(
+          find.byKey(const ValueKey('erdp8-card-opacity-0')),
+        );
         expect(opacity.opacity, 0.72, reason: entry.key.name);
       }
     });
 
-    testWidgets('small phone, large text and reduced motion remain overflow-safe', (
+    testWidgets(
+      'small phone, large text and reduced motion remain overflow-safe',
+      (tester) async {
+        await _pumpCard(
+          tester,
+          _block(),
+          size: const Size(320, 640),
+          textScale: 2,
+          disableAnimations: true,
+        );
+
+        expect(tester.takeException(), isNull);
+        expect(
+          find.byKey(const ValueKey('erdp8-task-semantics-0')),
+          findsOneWidget,
+        );
+        expect(find.text('Start task'), findsOneWidget);
+      },
+    );
+
+    testWidgets('dark mode preserves the same state information', (
       tester,
     ) async {
-      await _pumpCard(
-        tester,
-        _block(),
-        size: const Size(320, 640),
-        textScale: 2,
-        disableAnimations: true,
-      );
-
-      expect(tester.takeException(), isNull);
-      expect(find.byKey(const ValueKey('erdp8-task-semantics-0')), findsOneWidget);
-      expect(find.text('Start task'), findsOneWidget);
-    });
-
-    testWidgets('dark mode preserves the same state information', (tester) async {
       await _pumpCard(
         tester,
         _block(status: StudyPlanBlockStatus.started),
