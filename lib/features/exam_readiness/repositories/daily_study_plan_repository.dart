@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/auth/learner_local_identity.dart';
 import '../../../services/performance/firestore_read_audit.dart';
 import '../models/daily_study_plan.dart';
+import '../models/study_plan_carry_forward.dart';
 import '../models/study_plan_execution_attempt.dart';
 
 abstract interface class DailyStudyPlanRemoteStore {
@@ -95,7 +96,7 @@ class DailyStudyPlanRepository {
   final String? userIdOverride;
   final DailyStudyPlanRemoteStore? _remoteStore;
 
-  static const int _localStorageSchemaVersion = 2;
+  static const int _localStorageSchemaVersion = 3;
 
   static String storageKeyForUser(String userId) =>
       'csp11.student.$userId.exam_readiness.daily_study_plans.v1';
@@ -115,6 +116,37 @@ class DailyStudyPlanRepository {
     return List<StudyPlanExecutionAttempt>.unmodifiable(
       state.executionAttempts,
     );
+  }
+
+  Future<List<StudyPlanCarryForward>> loadCarryForwards({
+    DateTime? dueOnOrBefore,
+    bool pendingOnly = false,
+  }) async {
+    final userId = _requireUserId();
+    final state = await _loadLocalState(userId);
+    final cutoff = dueOnOrBefore == null
+        ? null
+        : DateTime(
+            dueOnOrBefore.year,
+            dueOnOrBefore.month,
+            dueOnOrBefore.day,
+          );
+
+    final values = state.carryForwards.where((item) {
+      if (pendingOnly && item.status != StudyPlanCarryForwardStatus.pending) {
+        return false;
+      }
+      if (cutoff == null) return true;
+      final due = DateTime(item.dueDate.year, item.dueDate.month, item.dueDate.day);
+      return !due.isAfter(cutoff);
+    }).toList(growable: false)
+      ..sort((left, right) {
+        final dueOrder = left.dueDate.compareTo(right.dueDate);
+        if (dueOrder != 0) return dueOrder;
+        return left.createdAt.compareTo(right.createdAt);
+      });
+
+    return List<StudyPlanCarryForward>.unmodifiable(values);
   }
 
   Future<StudyPlanExecutionAttempt?> loadExecutionAttempt(
@@ -156,12 +188,26 @@ class DailyStudyPlanRepository {
       _LocalDailyPlanState(
         plans: plans,
         executionAttempts: state.executionAttempts,
+        carryForwards: state.carryForwards,
       ),
     );
     return plans;
   }
 
   Future<void> savePlan(DailyStudyPlan plan, {bool syncRemote = true}) async {
+    await commitPlanMutation(plan: plan, syncRemote: syncRemote);
+  }
+
+  /// Atomically saves one immutable daily-plan version together with optional
+  /// ERDP-5 carry-forward mutations in the same local persistence envelope.
+  Future<void> commitPlanMutation({
+    required DailyStudyPlan plan,
+    List<StudyPlanCarryForward> upsertCarryForwards =
+        const <StudyPlanCarryForward>[],
+    Set<String> consumeCarryForwardIds = const <String>{},
+    DateTime? consumedAt,
+    bool syncRemote = false,
+  }) async {
     plan.validate();
 
     final userId = _requireUserId();
@@ -169,25 +215,46 @@ class DailyStudyPlanRepository {
 
     final state = await _loadLocalState(userId);
     final history = state.plans.toList();
-    final sameVersion = history.where(
-      (item) =>
-          item.planId == plan.planId && item.planVersion == plan.planVersion,
-    );
+    _appendPlanImmutable(history, plan);
 
-    if (sameVersion.isNotEmpty) {
-      if (jsonEncode(sameVersion.first.toJson()) != jsonEncode(plan.toJson())) {
-        throw StateError('Daily plan history is immutable.');
+    final carryForwards = state.carryForwards.toList();
+    for (final item in upsertCarryForwards) {
+      if (item.learnerId != userId) {
+        throw StateError('Carry-forward ownership does not match active learner.');
       }
-      return;
+      final index = carryForwards.indexWhere((value) => value.id == item.id);
+      if (index < 0) {
+        carryForwards.add(item);
+      } else if (jsonEncode(carryForwards[index].toJson()) !=
+          jsonEncode(item.toJson())) {
+        throw StateError('Carry-forward identity is immutable.');
+      }
     }
 
-    history.add(plan);
-    history.sort(_newestFirst);
+    if (consumeCarryForwardIds.isNotEmpty) {
+      if (consumedAt == null) {
+        throw ArgumentError('consumedAt is required when consuming carry-forward items.');
+      }
+      for (var index = 0; index < carryForwards.length; index++) {
+        final item = carryForwards[index];
+        if (!consumeCarryForwardIds.contains(item.id)) continue;
+        if (item.status == StudyPlanCarryForwardStatus.consumed) continue;
+        carryForwards[index] = item.markConsumed(consumedAt);
+      }
+    }
+
+    carryForwards.sort((left, right) {
+      final dueOrder = left.dueDate.compareTo(right.dueDate);
+      if (dueOrder != 0) return dueOrder;
+      return left.createdAt.compareTo(right.createdAt);
+    });
+
     await _saveLocalState(
       userId,
       _LocalDailyPlanState(
         plans: history,
         executionAttempts: state.executionAttempts,
+        carryForwards: carryForwards,
       ),
     );
 
@@ -240,20 +307,7 @@ class DailyStudyPlanRepository {
     }
 
     final history = state.plans.toList();
-    final sameVersion = history.where(
-      (item) =>
-          item.planId == startedPlan.planId &&
-          item.planVersion == startedPlan.planVersion,
-    );
-    if (sameVersion.isNotEmpty) {
-      if (jsonEncode(sameVersion.first.toJson()) !=
-          jsonEncode(startedPlan.toJson())) {
-        throw StateError('Daily plan history is immutable.');
-      }
-    } else {
-      history.add(startedPlan);
-      history.sort(_newestFirst);
-    }
+    _appendPlanImmutable(history, startedPlan);
 
     final attempts = <StudyPlanExecutionAttempt>[
       ...state.executionAttempts,
@@ -261,7 +315,11 @@ class DailyStudyPlanRepository {
     ];
     await _saveLocalState(
       userId,
-      _LocalDailyPlanState(plans: history, executionAttempts: attempts),
+      _LocalDailyPlanState(
+        plans: history,
+        executionAttempts: attempts,
+        carryForwards: state.carryForwards,
+      ),
     );
 
     return DailyStudyPlanExecutionCommit(
@@ -283,7 +341,11 @@ class DailyStudyPlanRepository {
     attempts[index] = attempt;
     await _saveLocalState(
       userId,
-      _LocalDailyPlanState(plans: state.plans, executionAttempts: attempts),
+      _LocalDailyPlanState(
+        plans: state.plans,
+        executionAttempts: attempts,
+        carryForwards: state.carryForwards,
+      ),
     );
   }
 
@@ -297,6 +359,23 @@ class DailyStudyPlanRepository {
     if (plan.userId != userId) {
       throw StateError('Daily plan ownership does not match active learner.');
     }
+  }
+
+  void _appendPlanImmutable(List<DailyStudyPlan> history, DailyStudyPlan plan) {
+    final sameVersion = history.where(
+      (item) =>
+          item.planId == plan.planId && item.planVersion == plan.planVersion,
+    );
+
+    if (sameVersion.isNotEmpty) {
+      if (jsonEncode(sameVersion.first.toJson()) != jsonEncode(plan.toJson())) {
+        throw StateError('Daily plan history is immutable.');
+      }
+      return;
+    }
+
+    history.add(plan);
+    history.sort(_newestFirst);
   }
 
   Future<_LocalDailyPlanState> _loadLocalState(String userId) async {
@@ -321,7 +400,14 @@ class DailyStudyPlanRepository {
       final attempts = map['executionAttempts'] is Iterable
           ? _decodeExecutionAttempts(map['executionAttempts'] as Iterable)
           : const <StudyPlanExecutionAttempt>[];
-      return _LocalDailyPlanState(plans: plans, executionAttempts: attempts);
+      final carryForwards = map['carryForwards'] is Iterable
+          ? _decodeCarryForwards(map['carryForwards'] as Iterable, userId)
+          : const <StudyPlanCarryForward>[];
+      return _LocalDailyPlanState(
+        plans: plans,
+        executionAttempts: attempts,
+        carryForwards: carryForwards,
+      );
     } catch (_) {
       return const _LocalDailyPlanState();
     }
@@ -359,6 +445,26 @@ class DailyStudyPlanRepository {
     return attempts;
   }
 
+  List<StudyPlanCarryForward> _decodeCarryForwards(
+    Iterable decoded,
+    String userId,
+  ) {
+    final items = <StudyPlanCarryForward>[];
+    final ids = <String>{};
+    for (final value in decoded) {
+      if (value is! Map) continue;
+      try {
+        final item = StudyPlanCarryForward.fromJson(
+          Map<String, dynamic>.from(value),
+        );
+        if (item.learnerId == userId && ids.add(item.id)) items.add(item);
+      } catch (_) {
+        // Preserve other valid carry-forward items.
+      }
+    }
+    return items;
+  }
+
   Future<void> _saveLocalState(
     String userId,
     _LocalDailyPlanState state,
@@ -372,6 +478,9 @@ class DailyStudyPlanRepository {
         'executionAttempts': state.executionAttempts
             .map((attempt) => attempt.toJson())
             .toList(),
+        'carryForwards': state.carryForwards
+            .map((item) => item.toJson())
+            .toList(),
       }),
     );
     if (!saved) {
@@ -384,10 +493,12 @@ class _LocalDailyPlanState {
   const _LocalDailyPlanState({
     this.plans = const <DailyStudyPlan>[],
     this.executionAttempts = const <StudyPlanExecutionAttempt>[],
+    this.carryForwards = const <StudyPlanCarryForward>[],
   });
 
   final List<DailyStudyPlan> plans;
   final List<StudyPlanExecutionAttempt> executionAttempts;
+  final List<StudyPlanCarryForward> carryForwards;
 }
 
 int _newestFirst(DailyStudyPlan a, DailyStudyPlan b) {
