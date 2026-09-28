@@ -57,7 +57,7 @@ void main() {
       expect(target.kind, StudyPlanExecutionTargetKind.examSimulation);
     });
 
-    test('Remember resolves to real review content and not Flashcards', () {
+    test('Remember resolves to targeted Flashcards', () {
       final target = launcher.resolve(
         _block(
           StudyPlanBlockType.spacedReview,
@@ -65,11 +65,15 @@ void main() {
         ),
       );
 
-      expect(target.kind, StudyPlanExecutionTargetKind.review);
+      expect(target.kind, StudyPlanExecutionTargetKind.flashcardReview);
       expect(target.competencyId, 'd04_c01');
+      expect(target.competencyIds, const <String>['d04_c01']);
+      expect(target.targetMinutes, 15);
+      expect(target.dueOnly, isTrue);
+      expect(target.reviewReason, 'HOME-R6 launcher test block.');
     });
 
-    test('review-oriented recovery follows shared category policy', () {
+    test('review-oriented recovery follows Flashcard execution path', () {
       final target = launcher.resolve(
         _block(
           StudyPlanBlockType.recovery,
@@ -77,7 +81,8 @@ void main() {
         ),
       );
 
-      expect(target.kind, StudyPlanExecutionTargetKind.review);
+      expect(target.kind, StudyPlanExecutionTargetKind.flashcardReview);
+      expect(target.dueOnly, isTrue);
     });
 
     test('ambiguous recovery fails closed', () {
