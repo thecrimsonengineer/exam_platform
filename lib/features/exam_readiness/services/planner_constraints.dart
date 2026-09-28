@@ -6,7 +6,7 @@ class DailyPlannerConstraints {
     this.reviewMaxMinutes = 15,
     this.practiceMinMinutes = 5,
     this.practiceMaxMinutes = 20,
-    this.maxCompetenciesPerDay = 3,
+    this.maxCompetenciesPerDay = 2,
     this.maxBlocksPerDay = 6,
     this.forwardLearningShare = 0.40,
     this.repairShare = 0.25,
