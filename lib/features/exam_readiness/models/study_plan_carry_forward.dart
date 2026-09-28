@@ -9,13 +9,8 @@ class StudyPlanCarryForward {
     required this.learnerId,
     required this.originalPlanId,
     required this.originalBlockId,
-    required this.domainId,
-    required this.competencyId,
-    required this.subtopicId,
-    required this.topicId,
-    required this.blockType,
+    required this.sourceBlock,
     required this.executionTarget,
-    required this.minutes,
     required this.reason,
     required this.createdAt,
     required this.dueDate,
@@ -27,18 +22,20 @@ class StudyPlanCarryForward {
   final String learnerId;
   final String originalPlanId;
   final String originalBlockId;
-  final String domainId;
-  final String competencyId;
-  final String subtopicId;
-  final String topicId;
-  final StudyPlanBlockType blockType;
+  final StudyPlanBlock sourceBlock;
   final StudyPlanExecutionTarget executionTarget;
-  final int minutes;
   final String reason;
   final DateTime createdAt;
   final DateTime dueDate;
   final StudyPlanCarryForwardStatus status;
   final DateTime? consumedAt;
+
+  String get domainId => sourceBlock.domainId;
+  String get competencyId => sourceBlock.competencyId;
+  String get subtopicId => sourceBlock.subtopicId;
+  String get topicId => sourceBlock.topicId;
+  StudyPlanBlockType get blockType => sourceBlock.type;
+  int get minutes => sourceBlock.plannedMinutes;
 
   static String deterministicId({
     required String planId,
@@ -56,13 +53,8 @@ class StudyPlanCarryForward {
     learnerId: learnerId,
     originalPlanId: originalPlanId,
     originalBlockId: originalBlockId,
-    domainId: domainId,
-    competencyId: competencyId,
-    subtopicId: subtopicId,
-    topicId: topicId,
-    blockType: blockType,
+    sourceBlock: sourceBlock,
     executionTarget: executionTarget,
-    minutes: minutes,
     reason: reason,
     createdAt: createdAt,
     dueDate: dueDate,
@@ -70,18 +62,13 @@ class StudyPlanCarryForward {
     consumedAt: at,
   );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
     'id': id,
     'learnerId': learnerId,
     'originalPlanId': originalPlanId,
     'originalBlockId': originalBlockId,
-    'domainId': domainId,
-    'competencyId': competencyId,
-    'subtopicId': subtopicId,
-    'topicId': topicId,
-    'blockType': blockType.name,
+    'sourceBlock': sourceBlock.toJson(),
     'executionTarget': executionTarget.toJson(),
-    'minutes': minutes,
     'reason': reason,
     'createdAt': createdAt.toIso8601String(),
     'dueDate': _dateOnly(dueDate).toIso8601String(),
@@ -96,9 +83,12 @@ class StudyPlanCarryForward {
       throw const FormatException('Invalid carry-forward timestamp.');
     }
 
+    final sourceRaw = json['sourceBlock'];
     final targetRaw = json['executionTarget'];
-    if (targetRaw is! Map) {
-      throw const FormatException('Carry-forward execution target is missing.');
+    if (sourceRaw is! Map || targetRaw is! Map) {
+      throw const FormatException(
+        'Carry-forward source or execution target is missing.',
+      );
     }
 
     return StudyPlanCarryForward(
@@ -106,20 +96,12 @@ class StudyPlanCarryForward {
       learnerId: json['learnerId']?.toString() ?? '',
       originalPlanId: json['originalPlanId']?.toString() ?? '',
       originalBlockId: json['originalBlockId']?.toString() ?? '',
-      domainId: json['domainId']?.toString() ?? '',
-      competencyId: json['competencyId']?.toString() ?? '',
-      subtopicId: json['subtopicId']?.toString() ?? '',
-      topicId: json['topicId']?.toString() ?? '',
-      blockType: StudyPlanBlockType.values.firstWhere(
-        (value) => value.name == json['blockType']?.toString(),
-        orElse: () => StudyPlanBlockType.recovery,
+      sourceBlock: StudyPlanBlock.fromJson(
+        Map<String, dynamic>.from(sourceRaw),
       ),
       executionTarget: StudyPlanExecutionTarget.fromJson(
         Map<String, dynamic>.from(targetRaw),
       ),
-      minutes: json['minutes'] is num
-          ? (json['minutes'] as num).toInt()
-          : int.tryParse(json['minutes']?.toString() ?? '') ?? 0,
       reason: json['reason']?.toString() ?? '',
       createdAt: createdAt,
       dueDate: _dateOnly(dueDate),
