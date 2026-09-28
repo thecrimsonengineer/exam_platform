@@ -5,17 +5,24 @@ import '../models/evidence_confidence.dart';
 import '../models/learning_priority_score.dart';
 import '../models/readiness_gap.dart';
 import '../models/study_plan_block.dart';
+import '../models/today_plan_task_category.dart';
+import 'balanced_plan_portfolio_policy.dart';
 import 'learning_priority_engine.dart';
 import 'planner_constraints.dart';
+import 'today_plan_task_category_policy.dart';
 
 class DailyStudyPlanService {
   const DailyStudyPlanService({
     this.priorityEngine = const LearningPriorityEngine(),
     this.constraints = const DailyPlannerConstraints(),
+    this.portfolioPolicy = const BalancedPlanPortfolioPolicy(),
+    this.categoryPolicy = const TodayPlanTaskCategoryPolicy(),
   });
 
   final LearningPriorityEngine priorityEngine;
   final DailyPlannerConstraints constraints;
+  final BalancedPlanPortfolioPolicy portfolioPolicy;
+  final TodayPlanTaskCategoryPolicy categoryPolicy;
 
   DailyStudyPlan generate({
     required String userId,
@@ -103,6 +110,56 @@ class DailyStudyPlanService {
     var slot = locked.length;
     final blocks = <StudyPlanBlock>[...locked];
 
+    final represented = _representedCategories(blocks);
+    final reservation = portfolioPolicy.reservationFor(
+      availableMinutes: normalizedAvailable,
+      committedMinutes: lockedMinutes,
+      representedCategories: represented,
+    );
+
+    if (reservation.isActive && selected.isNotEmpty) {
+      final requests = <_PortfolioRequest>[
+        if (reservation.learnMinutes > 0)
+          _PortfolioRequest(
+            TodayPlanTaskCategory.learn,
+            reservation.learnMinutes,
+          ),
+        if (reservation.practiceMinutes > 0)
+          _PortfolioRequest(
+            TodayPlanTaskCategory.practice,
+            reservation.practiceMinutes,
+          ),
+        if (reservation.rememberMinutes > 0)
+          _PortfolioRequest(
+            TodayPlanTaskCategory.remember,
+            reservation.rememberMinutes,
+          ),
+      ];
+
+      for (final request in requests) {
+        if (blocks.length >= constraints.maxBlocksPerDay) break;
+        final candidate = _portfolioCandidate(request.category, selected);
+        final type = _portfolioType(request.category, candidate);
+        final minimum = _minimumForType(type);
+        final minutes = request.minutes < minimum ? minimum : request.minutes;
+        if (remaining < minutes) continue;
+
+        blocks.add(
+          _buildBlock(
+            planId: planId,
+            version: nextVersion,
+            slot: slot++,
+            candidate: candidate,
+            type: type,
+            minutes: minutes,
+            generatedAt: generatedAt,
+            extraReason: 'BALANCED_PORTFOLIO',
+          ),
+        );
+        remaining -= minutes;
+      }
+    }
+
     for (final candidate in selected) {
       if (remaining < constraints.practiceMinMinutes ||
           blocks.length >= constraints.maxBlocksPerDay) {
@@ -129,7 +186,8 @@ class DailyStudyPlanService {
 
     if (remaining >= constraints.reviewMinMinutes &&
         blocks.length < constraints.maxBlocksPerDay &&
-        selected.isNotEmpty) {
+        selected.isNotEmpty &&
+        !_hasCategory(blocks, TodayPlanTaskCategory.remember)) {
       final retentionCandidate = selected.firstWhere(
         (candidate) => _needsRetention(candidate.profile),
         orElse: () => selected.first,
@@ -265,9 +323,7 @@ class DailyStudyPlanService {
   }) {
     final target = _findBlock(plan, blockId);
 
-    if (target.status == StudyPlanBlockStatus.completed) {
-      return plan;
-    }
+    if (target.status == StudyPlanBlockStatus.completed) return plan;
     if (target.status != StudyPlanBlockStatus.started) {
       throw StateError('A study-plan block must be started before completion.');
     }
@@ -291,7 +347,6 @@ class DailyStudyPlanService {
       for (final block in plan.blocks)
         if (block.blockId == blockId) changed else block,
     ];
-
     return _nextManualVersion(plan, blocks, at);
   }
 
@@ -299,46 +354,40 @@ class DailyStudyPlanService {
     DailyStudyPlan plan,
     String blockId, {
     required DateTime at,
-  }) {
-    return _manualChange(
-      plan,
-      blockId,
-      at: at,
-      status: StudyPlanBlockStatus.skipped,
-      action: StudyPlanManualAction.skip,
-      note: 'Learner skipped block.',
-    );
-  }
+  }) => _manualChange(
+    plan,
+    blockId,
+    at: at,
+    status: StudyPlanBlockStatus.skipped,
+    action: StudyPlanManualAction.skip,
+    note: 'Learner skipped block.',
+  );
 
   DailyStudyPlan moveToTomorrow(
     DailyStudyPlan plan,
     String blockId, {
     required DateTime at,
-  }) {
-    return _manualChange(
-      plan,
-      blockId,
-      at: at,
-      status: StudyPlanBlockStatus.movedToTomorrow,
-      action: StudyPlanManualAction.moveToTomorrow,
-      note: 'Learner moved block to tomorrow.',
-    );
-  }
+  }) => _manualChange(
+    plan,
+    blockId,
+    at: at,
+    status: StudyPlanBlockStatus.movedToTomorrow,
+    action: StudyPlanManualAction.moveToTomorrow,
+    note: 'Learner moved block to tomorrow.',
+  );
 
   DailyStudyPlan markUnavailable(
     DailyStudyPlan plan,
     String blockId, {
     required DateTime at,
-  }) {
-    return _manualChange(
-      plan,
-      blockId,
-      at: at,
-      status: StudyPlanBlockStatus.unavailable,
-      action: StudyPlanManualAction.markUnavailable,
-      note: 'Learner marked block unavailable.',
-    );
-  }
+  }) => _manualChange(
+    plan,
+    blockId,
+    at: at,
+    status: StudyPlanBlockStatus.unavailable,
+    action: StudyPlanManualAction.markUnavailable,
+    note: 'Learner marked block unavailable.',
+  );
 
   DailyStudyPlan shortenBlock(
     DailyStudyPlan plan,
@@ -349,7 +398,6 @@ class DailyStudyPlanService {
     if (newMinutes < constraints.practiceMinMinutes) {
       throw ArgumentError('Shortened block must retain at least 5 minutes.');
     }
-
     return _manualChange(
       plan,
       blockId,
@@ -374,7 +422,6 @@ class DailyStudyPlanService {
     final alternativeType = target.type == StudyPlanBlockType.standardPractice
         ? StudyPlanBlockType.mixedRetrieval
         : StudyPlanBlockType.standardPractice;
-
     final replacement = target.copyWith(
       blockId: '${target.blockId}-replacement-v${plan.planVersion + 1}',
       type: alternativeType,
@@ -402,7 +449,6 @@ class DailyStudyPlanService {
       for (final block in plan.blocks)
         if (block.blockId == blockId) replacement else block,
     ];
-
     return _nextManualVersion(plan, blocks, at);
   }
 
@@ -417,13 +463,10 @@ class DailyStudyPlanService {
     int? newMinutes,
   }) {
     final target = _findBlock(plan, blockId);
-
     if (target.isLocked && action != StudyPlanManualAction.start) {
       throw StateError('Started/completed blocks are locked.');
     }
-    if (action == StudyPlanManualAction.start && target.isLocked) {
-      return plan;
-    }
+    if (action == StudyPlanManualAction.start && target.isLocked) return plan;
     if (newMinutes != null && newMinutes > target.plannedMinutes) {
       throw StateError('Shorten cannot increase block minutes.');
     }
@@ -443,7 +486,6 @@ class DailyStudyPlanService {
         ),
       ],
     );
-
     final blocks = [
       for (final block in plan.blocks)
         if (block.blockId == blockId) changed else block,
@@ -475,6 +517,82 @@ class DailyStudyPlanService {
     throw StateError('Study-plan block not found.');
   }
 
+  Set<TodayPlanTaskCategory> _representedCategories(
+    Iterable<StudyPlanBlock> blocks,
+  ) {
+    final represented = <TodayPlanTaskCategory>{};
+    for (final block in blocks) {
+      try {
+        represented.add(categoryPolicy.categoryFor(block));
+      } on StateError {
+        // A legacy recovery block without an explicit review reason must not
+        // fabricate portfolio coverage.
+      }
+    }
+    return represented;
+  }
+
+  bool _hasCategory(
+    Iterable<StudyPlanBlock> blocks,
+    TodayPlanTaskCategory category,
+  ) => _representedCategories(blocks).contains(category);
+
+  _Candidate _portfolioCandidate(
+    TodayPlanTaskCategory category,
+    List<_Candidate> selected,
+  ) {
+    if (category == TodayPlanTaskCategory.remember) {
+      return selected.firstWhere(
+        (candidate) => _needsRetention(candidate.profile),
+        orElse: () => selected.first,
+      );
+    }
+
+    return selected.firstWhere(
+      (candidate) => _categoryForType(_primaryType(candidate.profile)) == category,
+      orElse: () => selected.first,
+    );
+  }
+
+  StudyPlanBlockType _portfolioType(
+    TodayPlanTaskCategory category,
+    _Candidate candidate,
+  ) {
+    final primary = _primaryType(candidate.profile);
+    switch (category) {
+      case TodayPlanTaskCategory.learn:
+        return _categoryForType(primary) == TodayPlanTaskCategory.learn
+            ? primary
+            : StudyPlanBlockType.learn;
+      case TodayPlanTaskCategory.practice:
+        return _categoryForType(primary) == TodayPlanTaskCategory.practice
+            ? primary
+            : StudyPlanBlockType.standardPractice;
+      case TodayPlanTaskCategory.remember:
+        return StudyPlanBlockType.spacedReview;
+    }
+  }
+
+  TodayPlanTaskCategory _categoryForType(StudyPlanBlockType type) {
+    switch (type) {
+      case StudyPlanBlockType.learn:
+      case StudyPlanBlockType.continueLearning:
+      case StudyPlanBlockType.repair:
+        return TodayPlanTaskCategory.learn;
+      case StudyPlanBlockType.spacedReview:
+      case StudyPlanBlockType.recovery:
+        return TodayPlanTaskCategory.remember;
+      case StudyPlanBlockType.diagnostic:
+      case StudyPlanBlockType.standardPractice:
+      case StudyPlanBlockType.ultraHardPractice:
+      case StudyPlanBlockType.mixedRetrieval:
+      case StudyPlanBlockType.competencyRecheck:
+      case StudyPlanBlockType.confidenceCalibration:
+      case StudyPlanBlockType.examSimulation:
+        return TodayPlanTaskCategory.practice;
+    }
+  }
+
   StudyPlanBlockType _primaryType(CompetencyReadinessProfile? profile) {
     if (profile == null ||
         profile.readinessState == ReadinessState.unknown ||
@@ -488,9 +606,7 @@ class DailyStudyPlanService {
     if (_hasConfidenceGap(profile)) {
       return StudyPlanBlockType.confidenceCalibration;
     }
-    if (_hasPerformanceGap(profile)) {
-      return StudyPlanBlockType.repair;
-    }
+    if (_hasPerformanceGap(profile)) return StudyPlanBlockType.repair;
     if (profile.blueprintCoverage.value == null ||
         profile.blueprintCoverage.value! < 0.70) {
       return StudyPlanBlockType.learn;
@@ -502,25 +618,23 @@ class DailyStudyPlanService {
     return StudyPlanBlockType.standardPractice;
   }
 
-  bool _hasConfidenceGap(CompetencyReadinessProfile profile) {
-    return profile.gaps.any(
-      (gap) =>
-          !gap.evidenceLimited &&
-          gap.type == ReadinessGapType.confidenceGap &&
-          (gap.severity == ReadinessGapSeverity.high ||
-              gap.severity == ReadinessGapSeverity.critical),
-    );
-  }
+  bool _hasConfidenceGap(CompetencyReadinessProfile profile) =>
+      profile.gaps.any(
+        (gap) =>
+            !gap.evidenceLimited &&
+            gap.type == ReadinessGapType.confidenceGap &&
+            (gap.severity == ReadinessGapSeverity.high ||
+                gap.severity == ReadinessGapSeverity.critical),
+      );
 
-  bool _hasPerformanceGap(CompetencyReadinessProfile profile) {
-    return profile.gaps.any(
-      (gap) =>
-          !gap.evidenceLimited &&
-          (gap.type == ReadinessGapType.masteryGap ||
-              gap.type == ReadinessGapType.applicationGap ||
-              gap.type == ReadinessGapType.difficultyGap),
-    );
-  }
+  bool _hasPerformanceGap(CompetencyReadinessProfile profile) =>
+      profile.gaps.any(
+        (gap) =>
+            !gap.evidenceLimited &&
+            (gap.type == ReadinessGapType.masteryGap ||
+                gap.type == ReadinessGapType.applicationGap ||
+                gap.type == ReadinessGapType.difficultyGap),
+      );
 
   bool _needsRetention(CompetencyReadinessProfile? profile) {
     if (profile == null) return false;
@@ -536,10 +650,8 @@ class DailyStudyPlanService {
         profile.evidenceConfidence.rank < EvidenceConfidence.moderate.rank) {
       return false;
     }
-
     final ultra = profile.difficultyPerformance.ultraHardAccuracy;
     final application = profile.applicationAbility.value;
-
     return ultra == null ||
         ultra < 0.70 ||
         (application != null && application < 0.70);
@@ -714,10 +826,12 @@ class DailyStudyPlanService {
         reasonCodes.contains('CONFIDENCE_CALIBRATION')) {
       parts.add('confidence and recent performance are misaligned');
     }
+    if (reasonCodes.contains('BALANCED_PORTFOLIO')) {
+      parts.add('the daily plan needs a balanced learning mix');
+    }
     if (parts.isEmpty) {
       parts.add('this is the highest current learning priority');
     }
-
     return '${candidate.competencyId.toUpperCase()} is scheduled because ${parts.join(', ')}.';
   }
 
@@ -734,12 +848,11 @@ class DailyStudyPlanService {
   String _sourceReadinessVersion(
     Map<String, CompetencyReadinessProfile> profiles,
   ) {
-    final versions =
-        profiles.values
-            .map((profile) => profile.readinessAlgorithmVersion)
-            .toSet()
-            .toList()
-          ..sort();
+    final versions = profiles.values
+        .map((profile) => profile.readinessAlgorithmVersion)
+        .toSet()
+        .toList()
+      ..sort();
     return versions.isEmpty ? 'none' : versions.join('+');
   }
 
@@ -749,7 +862,6 @@ class DailyStudyPlanService {
   ) {
     if (previous == null) return;
     final nextById = {for (final block in next.blocks) block.blockId: block};
-
     for (final block in previous.blocks.where((item) => item.isLocked)) {
       final retained = nextById[block.blockId];
       if (retained == null ||
@@ -761,6 +873,13 @@ class DailyStudyPlanService {
 
   String _safe(String value) =>
       value.trim().replaceAll(RegExp(r'[^A-Za-z0-9_-]+'), '_');
+}
+
+class _PortfolioRequest {
+  const _PortfolioRequest(this.category, this.minutes);
+
+  final TodayPlanTaskCategory category;
+  final int minutes;
 }
 
 class _Candidate {
