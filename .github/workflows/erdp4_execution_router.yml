@@ -27,17 +27,23 @@ jobs:
 
       - name: Check ERDP-4 source parse and formatting surface
         run: |
-          dart format --output=none --set-exit-if-changed \
-            lib/features/exam_readiness/models/study_plan_execution_attempt.dart \
-            lib/features/exam_readiness/models/study_plan_execution_target.dart \
-            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
-            lib/features/exam_readiness/services/study_plan_execution_router.dart \
-            lib/features/exam_readiness/services/local_study_plan_execution_store.dart \
-            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
-            lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
-            lib/features/exam_readiness/screens/todays_plan_screen.dart \
-            test/features/exam_readiness/erdp/erdp4_execution_router_test.dart \
-            test/features/exam_readiness/erdp/erdp4_execution_store_test.dart
+          FILES="\
+          lib/features/exam_readiness/models/study_plan_execution_attempt.dart \
+          lib/features/exam_readiness/models/study_plan_execution_target.dart \
+          lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+          lib/features/exam_readiness/services/study_plan_execution_router.dart \
+          lib/features/exam_readiness/services/local_study_plan_execution_store.dart \
+          lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
+          lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
+          lib/features/exam_readiness/screens/todays_plan_screen.dart \
+          test/features/exam_readiness/erdp/erdp4_execution_router_test.dart \
+          test/features/exam_readiness/erdp/erdp4_execution_store_test.dart"
+          dart format $FILES
+          if ! git diff --quiet -- $FILES; then
+            echo "ERDP-4 formatter drift detected. Canonical patch follows:"
+            git diff -- $FILES
+            exit 1
+          fi
 
       - name: Analyze ERDP-4 integrated surface
         run: |
