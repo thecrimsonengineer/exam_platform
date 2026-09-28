@@ -1,0 +1,58 @@
+name: ERDP-3 Balanced Planner
+
+on:
+  push:
+    branches:
+      - phase-erdp3-balanced-planner
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Check ERDP-3 formatting
+        run: |
+          targets=(
+            lib/features/exam_readiness/services/balanced_plan_portfolio_policy.dart
+            lib/features/exam_readiness/services/daily_study_plan_service.dart
+            test/features/exam_readiness/erdp/erdp3_balanced_portfolio_policy_test.dart
+            test/features/exam_readiness/erdp/erdp3_balanced_planner_integration_test.dart
+          )
+          dart format "${targets[@]}"
+          if ! git diff --quiet -- "${targets[@]}"; then
+            echo "ERDP-3 formatting drift detected"
+            git diff -- "${targets[@]}"
+            exit 1
+          fi
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run ERDP-3 targeted tests
+        run: |
+          flutter test test/features/exam_readiness/erdp/erdp3_balanced_portfolio_policy_test.dart
+          flutter test test/features/exam_readiness/erdp/erdp3_balanced_planner_integration_test.dart
+
+      - name: Run M7D planner regression
+        run: flutter test test/features/exam_readiness/m7d
+
+      - name: Run ERDP-2 regression
+        run: flutter test test/features/exam_readiness/erdp/erdp2_flashcard_execution_test.dart
+
+      - name: Diff hygiene
+        run: git diff --check
