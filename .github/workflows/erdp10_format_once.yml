@@ -1,0 +1,56 @@
+name: ERDP-10 One-Time Formatter
+
+on:
+  push:
+    branches:
+      - phase-erdp10-whole-system-acceptance
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.event.head_commit.message != 'format(erdp10): canonicalize acceptance surface'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: phase-erdp10-whole-system-acceptance
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Canonicalize ERDP-10 Dart files
+        run: |
+          dart format \
+            lib/features/exam_readiness/services/study_plan_execution_attempt_lifecycle_service.dart \
+            lib/features/exam_readiness/services/closed_evidence_loop_coordinator.dart \
+            lib/features/exam_readiness/services/executable_daily_plan_action_service.dart \
+            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart \
+            test/features/exam_readiness/erdp/erdp10_replacement_paths_test.dart
+
+      - name: Commit canonical formatting when needed
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No formatting changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            lib/features/exam_readiness/services/study_plan_execution_attempt_lifecycle_service.dart \
+            lib/features/exam_readiness/services/closed_evidence_loop_coordinator.dart \
+            lib/features/exam_readiness/services/executable_daily_plan_action_service.dart \
+            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart \
+            test/features/exam_readiness/erdp/erdp10_replacement_paths_test.dart
+          git commit -m "format(erdp10): canonicalize acceptance surface"
+          git push origin HEAD:phase-erdp10-whole-system-acceptance
