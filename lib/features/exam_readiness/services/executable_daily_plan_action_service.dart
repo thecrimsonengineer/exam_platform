@@ -5,9 +5,8 @@ import '../models/study_plan_execution_target.dart';
 import '../repositories/daily_study_plan_repository.dart';
 import 'daily_study_plan_service.dart';
 
-typedef ExecutablePlanTargetResolver = StudyPlanExecutionTarget Function(
-  StudyPlanBlock block,
-);
+typedef ExecutablePlanTargetResolver =
+    StudyPlanExecutionTarget Function(StudyPlanBlock block);
 
 class ExecutableDailyPlanActionResult {
   const ExecutableDailyPlanActionResult({
@@ -71,9 +70,11 @@ class ExecutableDailyPlanActionService {
     _requireEditable(block, 'move to tomorrow');
 
     final target = resolveTarget(block);
-    final dueDate = DateTime(at.year, at.month, at.day).add(
-      const Duration(days: 1),
-    );
+    final dueDate = DateTime(
+      at.year,
+      at.month,
+      at.day,
+    ).add(const Duration(days: 1));
     final carryForward = StudyPlanCarryForward(
       id: StudyPlanCarryForward.deterministicId(
         planId: current.planId,
@@ -206,9 +207,7 @@ class ExecutableDailyPlanActionService {
   void _requireEditable(StudyPlanBlock block, String action) {
     if (block.status != StudyPlanBlockStatus.planned &&
         block.status != StudyPlanBlockStatus.shortened) {
-      throw StateError(
-        'Only planned or shortened tasks can be $action.',
-      );
+      throw StateError('Only planned or shortened tasks can be $action.');
     }
   }
 

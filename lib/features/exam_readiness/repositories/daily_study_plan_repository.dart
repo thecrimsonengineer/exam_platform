@@ -126,25 +126,29 @@ class DailyStudyPlanRepository {
     final state = await _loadLocalState(userId);
     final cutoff = dueOnOrBefore == null
         ? null
-        : DateTime(
-            dueOnOrBefore.year,
-            dueOnOrBefore.month,
-            dueOnOrBefore.day,
-          );
+        : DateTime(dueOnOrBefore.year, dueOnOrBefore.month, dueOnOrBefore.day);
 
-    final values = state.carryForwards.where((item) {
-      if (pendingOnly && item.status != StudyPlanCarryForwardStatus.pending) {
-        return false;
-      }
-      if (cutoff == null) return true;
-      final due = DateTime(item.dueDate.year, item.dueDate.month, item.dueDate.day);
-      return !due.isAfter(cutoff);
-    }).toList(growable: false)
-      ..sort((left, right) {
-        final dueOrder = left.dueDate.compareTo(right.dueDate);
-        if (dueOrder != 0) return dueOrder;
-        return left.createdAt.compareTo(right.createdAt);
-      });
+    final values =
+        state.carryForwards
+            .where((item) {
+              if (pendingOnly &&
+                  item.status != StudyPlanCarryForwardStatus.pending) {
+                return false;
+              }
+              if (cutoff == null) return true;
+              final due = DateTime(
+                item.dueDate.year,
+                item.dueDate.month,
+                item.dueDate.day,
+              );
+              return !due.isAfter(cutoff);
+            })
+            .toList(growable: false)
+          ..sort((left, right) {
+            final dueOrder = left.dueDate.compareTo(right.dueDate);
+            if (dueOrder != 0) return dueOrder;
+            return left.createdAt.compareTo(right.createdAt);
+          });
 
     return List<StudyPlanCarryForward>.unmodifiable(values);
   }
@@ -220,7 +224,9 @@ class DailyStudyPlanRepository {
     final carryForwards = state.carryForwards.toList();
     for (final item in upsertCarryForwards) {
       if (item.learnerId != userId) {
-        throw StateError('Carry-forward ownership does not match active learner.');
+        throw StateError(
+          'Carry-forward ownership does not match active learner.',
+        );
       }
       final index = carryForwards.indexWhere((value) => value.id == item.id);
       if (index < 0) {
@@ -233,7 +239,9 @@ class DailyStudyPlanRepository {
 
     if (consumeCarryForwardIds.isNotEmpty) {
       if (consumedAt == null) {
-        throw ArgumentError('consumedAt is required when consuming carry-forward items.');
+        throw ArgumentError(
+          'consumedAt is required when consuming carry-forward items.',
+        );
       }
       for (var index = 0; index < carryForwards.length; index++) {
         final item = carryForwards[index];

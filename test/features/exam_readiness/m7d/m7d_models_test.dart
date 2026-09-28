@@ -125,11 +125,10 @@ void main() {
       expect(block(status: StudyPlanBlockStatus.completed).isLocked, isTrue);
     });
 
-    test('skipped block remains editable history state', () {
-      expect(
-        block(status: StudyPlanBlockStatus.skipped).isFutureEditable,
-        isTrue,
-      );
+    test('skipped block is terminal non-editable history', () {
+      final skipped = block(status: StudyPlanBlockStatus.skipped);
+      expect(skipped.isFutureEditable, isFalse);
+      expect(skipped.consumesAllocation, isFalse);
     });
 
     test('block round trips through JSON', () {

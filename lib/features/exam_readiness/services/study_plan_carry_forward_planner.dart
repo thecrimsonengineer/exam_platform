@@ -20,19 +20,20 @@ class StudyPlanCarryForwardPlanner {
     required Iterable<StudyPlanCarryForward> pendingCarryForwards,
     required DateTime at,
   }) {
-    final due = pendingCarryForwards
-        .where(
-          (item) =>
-              item.status == StudyPlanCarryForwardStatus.pending &&
-              item.learnerId == basePlan.userId &&
-              !_dateOnly(item.dueDate).isAfter(_dateOnly(basePlan.date)),
-        )
-        .toList(growable: false)
-      ..sort((left, right) {
-        final dueOrder = left.dueDate.compareTo(right.dueDate);
-        if (dueOrder != 0) return dueOrder;
-        return left.createdAt.compareTo(right.createdAt);
-      });
+    final due =
+        pendingCarryForwards
+            .where(
+              (item) =>
+                  item.status == StudyPlanCarryForwardStatus.pending &&
+                  item.learnerId == basePlan.userId &&
+                  !_dateOnly(item.dueDate).isAfter(_dateOnly(basePlan.date)),
+            )
+            .toList(growable: false)
+          ..sort((left, right) {
+            final dueOrder = left.dueDate.compareTo(right.dueDate);
+            if (dueOrder != 0) return dueOrder;
+            return left.createdAt.compareTo(right.createdAt);
+          });
 
     if (due.isEmpty) {
       return StudyPlanCarryForwardPlanningResult(

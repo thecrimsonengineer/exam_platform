@@ -198,9 +198,8 @@ class DailyStudyPlan {
         ? (json['blocks'] as Iterable)
               .whereType<Map>()
               .map(
-                (item) => StudyPlanBlock.fromJson(
-                  Map<String, dynamic>.from(item),
-                ),
+                (item) =>
+                    StudyPlanBlock.fromJson(Map<String, dynamic>.from(item)),
               )
               .toList(growable: false)
         : const <StudyPlanBlock>[];
@@ -219,7 +218,9 @@ class DailyStudyPlan {
           json['plannerAlgorithmVersion']?.toString() ??
           currentAlgorithmVersion,
       availableMinutes: _int(json['availableMinutes'], 0),
-      allocatedMinutes: hasTerminalBlocks ? activeAllocated : serializedAllocated,
+      allocatedMinutes: hasTerminalBlocks
+          ? activeAllocated
+          : serializedAllocated,
       generationReason: DailyStudyPlanGenerationReason.values.firstWhere(
         (item) => item.name == json['generationReason']?.toString(),
         orElse: () => DailyStudyPlanGenerationReason.initial,
