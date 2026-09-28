@@ -86,51 +86,58 @@ class PhaseAwareDailyPlanService {
     required bool ultraHardAvailable,
   }) {
     var type = block.type;
+    final isPortfolioFloor = block.reasonCodes.contains('BALANCED_PORTFOLIO');
 
-    switch (phase) {
-      case ExamPreparationPhase.foundation:
-        final coverage = profile?.blueprintCoverage.value;
-        if ((type == StudyPlanBlockType.standardPractice ||
-                type == StudyPlanBlockType.mixedRetrieval) &&
-            (coverage == null || coverage < 0.75)) {
-          type =
-              profile == null ||
-                  profile.evidenceConfidence.rank <= EvidenceConfidence.low.rank
-              ? StudyPlanBlockType.diagnostic
-              : StudyPlanBlockType.continueLearning;
-        }
-        break;
-      case ExamPreparationPhase.integration:
-        if (type == StudyPlanBlockType.continueLearning &&
-            profile != null &&
-            profile.evidenceConfidence.rank >=
-                EvidenceConfidence.moderate.rank) {
-          type = StudyPlanBlockType.mixedRetrieval;
-        }
-        break;
-      case ExamPreparationPhase.readiness:
-        if ((type == StudyPlanBlockType.learn ||
-                type == StudyPlanBlockType.continueLearning) &&
-            profile != null &&
-            profile.evidenceConfidence.rank >=
-                EvidenceConfidence.moderate.rank) {
-          type = StudyPlanBlockType.mixedRetrieval;
-        }
-        if (type == StudyPlanBlockType.standardPractice &&
-            ultraHardAvailable &&
-            _ultraHardJustified(profile)) {
-          type = StudyPlanBlockType.ultraHardPractice;
-        }
-        break;
-      case ExamPreparationPhase.consolidation:
-        if ((type == StudyPlanBlockType.learn ||
-                type == StudyPlanBlockType.continueLearning) &&
-            !_hasCriticalCoverageGap(profile)) {
-          type = StudyPlanBlockType.spacedReview;
-        } else if (type == StudyPlanBlockType.standardPractice) {
-          type = StudyPlanBlockType.mixedRetrieval;
-        }
-        break;
+    // ERDP-3 portfolio-floor blocks are deliberate category reservations.
+    // Phase adaptation may enrich them with phase context but must not rewrite
+    // them across Learn / Practice / Remember and silently destroy the daily mix.
+    if (!isPortfolioFloor) {
+      switch (phase) {
+        case ExamPreparationPhase.foundation:
+          final coverage = profile?.blueprintCoverage.value;
+          if ((type == StudyPlanBlockType.standardPractice ||
+                  type == StudyPlanBlockType.mixedRetrieval) &&
+              (coverage == null || coverage < 0.75)) {
+            type =
+                profile == null ||
+                    profile.evidenceConfidence.rank <=
+                        EvidenceConfidence.low.rank
+                ? StudyPlanBlockType.diagnostic
+                : StudyPlanBlockType.continueLearning;
+          }
+          break;
+        case ExamPreparationPhase.integration:
+          if (type == StudyPlanBlockType.continueLearning &&
+              profile != null &&
+              profile.evidenceConfidence.rank >=
+                  EvidenceConfidence.moderate.rank) {
+            type = StudyPlanBlockType.mixedRetrieval;
+          }
+          break;
+        case ExamPreparationPhase.readiness:
+          if ((type == StudyPlanBlockType.learn ||
+                  type == StudyPlanBlockType.continueLearning) &&
+              profile != null &&
+              profile.evidenceConfidence.rank >=
+                  EvidenceConfidence.moderate.rank) {
+            type = StudyPlanBlockType.mixedRetrieval;
+          }
+          if (type == StudyPlanBlockType.standardPractice &&
+              ultraHardAvailable &&
+              _ultraHardJustified(profile)) {
+            type = StudyPlanBlockType.ultraHardPractice;
+          }
+          break;
+        case ExamPreparationPhase.consolidation:
+          if ((type == StudyPlanBlockType.learn ||
+                  type == StudyPlanBlockType.continueLearning) &&
+              !_hasCriticalCoverageGap(profile)) {
+            type = StudyPlanBlockType.spacedReview;
+          } else if (type == StudyPlanBlockType.standardPractice) {
+            type = StudyPlanBlockType.mixedRetrieval;
+          }
+          break;
+      }
     }
 
     final phaseCode = 'EXAM_PHASE_${phase.name.toUpperCase()}';
