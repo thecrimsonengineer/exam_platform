@@ -1,0 +1,57 @@
+name: ERDP-2 Flashcard Execution Closure
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - phase-erdp2-flashcard-execution
+      - phase-erdp2-flashcard-execution-closed
+
+jobs:
+  verify-erdp2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: ERDP-2 formatting gate
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/models/study_plan_execution_target.dart \
+            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
+            lib/screens/flashcards/flashcard_competency_review_screen.dart \
+            test/features/exam_readiness/home_r/home_r6_study_plan_block_launcher_test.dart \
+            test/features/exam_readiness/erdp/erdp2_flashcard_execution_test.dart
+
+      - name: Flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: ERDP-2 launcher contract tests
+        run: flutter test test/features/exam_readiness/home_r/home_r6_study_plan_block_launcher_test.dart
+
+      - name: ERDP-2 direct Flashcard execution tests
+        run: flutter test test/features/exam_readiness/erdp/erdp2_flashcard_execution_test.dart
+
+      - name: Flashcard package regressions
+        run: flutter test test/features/flashcards/cloud
+
+      - name: Exam Readiness planner regression
+        run: flutter test test/features/exam_readiness/m7d
+
+      - name: Full repository regression
+        run: flutter test
+
+      - name: Diff hygiene
+        run: git diff --check
