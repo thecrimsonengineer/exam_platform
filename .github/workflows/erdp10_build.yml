@@ -1,0 +1,107 @@
+name: ERDP-10 Whole-System Acceptance
+
+on:
+  push:
+    branches:
+      - phase-erdp10-whole-system-acceptance
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Verify ERDP-10 formatting
+        run: |
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/services/study_plan_execution_attempt_lifecycle_service.dart \
+            lib/features/exam_readiness/services/closed_evidence_loop_coordinator.dart \
+            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart
+
+      - name: Analyze ERDP-10 surface
+        run: |
+          dart analyze \
+            lib/features/exam_readiness/services/study_plan_execution_attempt_lifecycle_service.dart \
+            lib/features/exam_readiness/services/closed_evidence_loop_coordinator.dart \
+            test/features/exam_readiness/erdp/erdp10_whole_system_acceptance_test.dart
+
+      - name: Run ERDP-0 through ERDP-10 regressions
+        run: flutter test test/features/exam_readiness/erdp
+
+      - name: Run Flashcard cloud regressions
+        run: flutter test test/features/flashcards/cloud
+
+      - name: Run M7D Daily Plan regressions
+        run: flutter test test/features/exam_readiness/m7d
+
+      - name: Run LAB regressions
+        run: flutter test test/features/lab
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Verify validation did not mutate repository
+        run: test -z "$(git status --porcelain)"
+
+  build-android-web:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Build Web release
+        run: flutter build web --release
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+
+  build-windows:
+    needs: validate
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Resolve packages
+        run: flutter pub get
+
+      - name: Build Windows debug
+        run: flutter build windows --debug
