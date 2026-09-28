@@ -8,6 +8,7 @@ import 'exam_study_capacity_service.dart';
 import 'ultra_hard_availability_service.dart';
 
 class PlanReplanningService {
+  // ignore: prefer_initializing_formals
   PlanReplanningService({
     this.planService = const DailyStudyPlanService(),
     this.capacityService = const ExamStudyCapacityService(),

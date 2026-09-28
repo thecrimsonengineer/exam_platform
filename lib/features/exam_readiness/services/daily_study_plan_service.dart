@@ -746,7 +746,7 @@ class DailyStudyPlanService {
     final reasonCodes = <String>{
       ...candidate.priority.reasonCodes,
       ...?candidate.profile?.gaps.map((gap) => gap.reasonCode),
-      if (extraReason != null) extraReason,
+      ?extraReason,
       _typeReason(type),
     }.toList(growable: false);
 

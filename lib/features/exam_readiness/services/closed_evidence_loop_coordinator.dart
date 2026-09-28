@@ -1,6 +1,5 @@
 import '../models/daily_study_plan.dart';
 import '../models/learning_evidence_event.dart';
-import '../models/learning_state_update_event.dart';
 import '../models/study_plan_block.dart';
 import '../models/study_plan_block_outcome.dart';
 import '../repositories/daily_study_plan_repository.dart';
