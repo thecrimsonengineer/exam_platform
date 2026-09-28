@@ -13,9 +13,8 @@ class FlashcardRecallEventRepository {
   static String storageKeyForUser(String userId) =>
       'csp11.student.$userId.flashcards.recall_events.v1';
 
-  String _requireUserId() => LearnerLocalIdentity.requireCurrentUserId(
-    userIdOverride: userIdOverride,
-  );
+  String _requireUserId() =>
+      LearnerLocalIdentity.requireCurrentUserId(userIdOverride: userIdOverride);
 
   Future<List<FlashcardRecallEvent>> loadAll({
     String? competencyId,
@@ -77,10 +76,7 @@ class FlashcardRecallEventRepository {
     required String competencyId,
     required String cardId,
   }) async {
-    final events = await loadAll(
-      competencyId: competencyId,
-      cardId: cardId,
-    );
+    final events = await loadAll(competencyId: competencyId, cardId: cardId);
     return events.isEmpty ? null : events.last;
   }
 
