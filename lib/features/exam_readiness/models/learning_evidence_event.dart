@@ -29,13 +29,18 @@ class LearningEvidenceEvent {
     required this.contentCompleted,
     required this.abandoned,
     required this.signalCodes,
+    this.evidenceUnitId,
+    this.sourceSessionId,
+    this.attemptSequence,
+    this.spacingIntervalDays,
+    this.sameSessionRepeat = false,
     this.performanceScore,
     this.applicationScore,
     this.retentionScore,
     this.schemaVersion = currentSchemaVersion,
   });
 
-  static const int currentSchemaVersion = 1;
+  static const int currentSchemaVersion = 2;
 
   final String evidenceEventId;
   final String sourceOutcomeId;
@@ -58,6 +63,11 @@ class LearningEvidenceEvent {
   final double? applicationScore;
   final double? retentionScore;
   final List<String> signalCodes;
+  final String? evidenceUnitId;
+  final String? sourceSessionId;
+  final int? attemptSequence;
+  final int? spacingIntervalDays;
+  final bool sameSessionRepeat;
   final int schemaVersion;
 
   bool get hasDirectMasteryCredit =>
@@ -69,21 +79,44 @@ class LearningEvidenceEvent {
   void validate() {
     if (evidenceEventId.trim().isEmpty ||
         sourceOutcomeId.trim().isEmpty ||
-        planId.trim().isEmpty ||
         blockId.trim().isEmpty) {
       throw StateError('Learning evidence identifiers cannot be blank.');
+    }
+    if (sourceKind != LearningEvidenceSourceKind.flashcard &&
+        planId.trim().isEmpty) {
+      throw StateError('Planned learning evidence requires a plan ID.');
     }
     if (!RegExp(r'^d\d{2}_c\d{2}$').hasMatch(competencyId)) {
       throw StateError('Learning evidence competency ID is not canonical.');
     }
-    if (planVersion < 1 ||
+    if (planVersion < 0 ||
         questionsAttempted < 0 ||
         questionsCorrect < 0 ||
         confidenceSamples < 0) {
       throw StateError('Learning evidence counts cannot be negative.');
     }
+    if (sourceKind != LearningEvidenceSourceKind.flashcard && planVersion < 1) {
+      throw StateError(
+        'Planned learning evidence requires plan version one or higher.',
+      );
+    }
     if (questionsCorrect > questionsAttempted) {
       throw StateError('Correct questions cannot exceed attempted questions.');
+    }
+    if (attemptSequence != null && attemptSequence! < 1) {
+      throw StateError('Evidence attempt sequence must start at one.');
+    }
+    if (spacingIntervalDays != null && spacingIntervalDays! < 0) {
+      throw StateError('Evidence spacing interval cannot be negative.');
+    }
+    if (sameSessionRepeat &&
+        (sourceKind != LearningEvidenceSourceKind.flashcard ||
+            attemptSequence == null ||
+            attemptSequence! < 2 ||
+            spacingIntervalDays != null)) {
+      throw StateError(
+        'Same-session Flashcard repeats cannot claim spaced credit.',
+      );
     }
     for (final score in [performanceScore, applicationScore, retentionScore]) {
       if (score != null && (score < 0 || score > 1)) {
@@ -141,6 +174,11 @@ class LearningEvidenceEvent {
       'applicationScore': applicationScore,
       'retentionScore': retentionScore,
       'signalCodes': signalCodes,
+      'evidenceUnitId': evidenceUnitId,
+      'sourceSessionId': sourceSessionId,
+      'attemptSequence': attemptSequence,
+      'spacingIntervalDays': spacingIntervalDays,
+      'sameSessionRepeat': sameSessionRepeat,
       'schemaVersion': schemaVersion,
     };
   }
@@ -179,6 +217,11 @@ class LearningEvidenceEvent {
       applicationScore: _nullableDouble(json['applicationScore']),
       retentionScore: _nullableDouble(json['retentionScore']),
       signalCodes: _strings(json['signalCodes']),
+      evidenceUnitId: _nullableString(json['evidenceUnitId']),
+      sourceSessionId: _nullableString(json['sourceSessionId']),
+      attemptSequence: _nullableInt(json['attemptSequence']),
+      spacingIntervalDays: _nullableInt(json['spacingIntervalDays']),
+      sameSessionRepeat: json['sameSessionRepeat'] == true,
       schemaVersion: _int(json['schemaVersion'], currentSchemaVersion),
     );
     event.validate();
@@ -202,4 +245,15 @@ List<String> _strings(dynamic value) {
       .map((item) => item?.toString() ?? '')
       .where((item) => item.trim().isNotEmpty)
       .toList(growable: false);
+}
+
+int? _nullableInt(dynamic value) {
+  if (value == null) return null;
+  if (value is num) return value.toInt();
+  return int.tryParse(value.toString());
+}
+
+String? _nullableString(dynamic value) {
+  final text = value?.toString().trim() ?? '';
+  return text.isEmpty ? null : text;
 }

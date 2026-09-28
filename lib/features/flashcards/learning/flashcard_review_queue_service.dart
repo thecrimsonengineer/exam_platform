@@ -56,11 +56,13 @@ class FlashcardReviewQueueService {
         return source.indexOf(left).compareTo(source.indexOf(right));
       });
 
-    var eligible = ranked.where((card) {
-      if (dueOnly && !due(card)) return false;
-      if (weakOnly && !weak(card)) return false;
-      return true;
-    }).toList(growable: false);
+    var eligible = ranked
+        .where((card) {
+          if (dueOnly && !due(card)) return false;
+          if (weakOnly && !weak(card)) return false;
+          return true;
+        })
+        .toList(growable: false);
 
     // Unseen cards are always considered due. If a strict filter returns no
     // cards because every learned card is still ahead of its interval, keep the
@@ -68,6 +70,8 @@ class FlashcardReviewQueueService {
     if (eligible.isEmpty && !dueOnly && !weakOnly) {
       eligible = ranked;
     }
+
+    if (eligible.isEmpty) return const <FlashcardCard>[];
 
     final requested = targetCardCount <= 0
         ? eligible.length

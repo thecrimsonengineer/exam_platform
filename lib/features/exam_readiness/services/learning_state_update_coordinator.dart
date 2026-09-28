@@ -1,4 +1,5 @@
 import '../models/competency_readiness_profile.dart';
+import '../models/learning_evidence_event.dart';
 import '../models/learning_state_update_event.dart';
 import '../models/misconception_signal.dart';
 import '../models/plan_regeneration_reason.dart';
@@ -156,6 +157,101 @@ class LearningStateUpdateCoordinator {
       misconceptionSignals: signals,
       stalePlanVersionsCreated: staleCount,
       auditEvent: event,
+    );
+  }
+
+  Future<LearningStateUpdateResult> processEvidenceEvent({
+    required LearningEvidenceEvent event,
+    bool markFuturePlansStale = false,
+    LearnerAssessmentAttemptRepository? attemptRepository,
+    EvidenceSnapshotRepository? evidenceRepository,
+    ReadinessSnapshotRepository? readinessRepository,
+    DailyStudyPlanRepository? planRepository,
+    LearningStateAuditRepository? auditRepository,
+    LearningEvidenceEventRepository? evidenceEventRepository,
+  }) async {
+    event.validate();
+    final attemptsRepo =
+        attemptRepository ?? const LearnerAssessmentAttemptRepository();
+    final evidenceRepo = evidenceRepository ?? EvidenceSnapshotRepository();
+    final readinessRepo = readinessRepository ?? ReadinessSnapshotRepository();
+    final plansRepo = planRepository ?? DailyStudyPlanRepository();
+    final audit = auditRepository ?? const LearningStateAuditRepository();
+    final evidenceEvents =
+        evidenceEventRepository ?? const LearningEvidenceEventRepository();
+
+    final recorded = await evidenceEvents.append(event);
+    final previous = await readinessRepo.load(event.competencyId);
+    final attempts = await attemptsRepo.loadAll();
+    final activityEvents = await evidenceEvents.loadAll(
+      competencyId: event.competencyId,
+    );
+    final scope = await scopeService.resolve(
+      competencyId: event.competencyId,
+      attempts: attempts,
+    );
+    final evidence = aggregationService.updateCompetencySnapshot(
+      competencyId: event.competencyId,
+      attemptsForCompetency: attempts,
+      scope: scope,
+      now: event.occurredAt,
+      activityEvents: activityEvents,
+    );
+    await evidenceRepo.save(evidence, syncRemote: false);
+
+    final profile = readinessService.buildCompetencyProfile(
+      evidence: evidence,
+      attempts: attempts,
+      now: event.occurredAt,
+    );
+    await readinessRepo.save(profile, syncRemote: false);
+
+    final reason = _reason(
+      previous: previous,
+      next: profile,
+      signals: const <MisconceptionSignal>[],
+    );
+    final staleCount = markFuturePlansStale
+        ? await stalenessService.markFuturePlansStale(
+            afterDate: event.occurredAt,
+            reason: reason,
+            at: event.occurredAt,
+            repository: plansRepo,
+          )
+        : 0;
+
+    final auditEvent = LearningStateUpdateEvent(
+      eventId: 'm7e-${event.evidenceEventId}',
+      outcomeId: event.sourceOutcomeId,
+      competencyId: profile.competencyId,
+      occurredAt: event.occurredAt,
+      regenerationReason: reason,
+      previousReadinessState: previous?.readinessState.name,
+      nextReadinessState: profile.readinessState.name,
+      previousKnowledge: previous?.knowledgeMastery.value,
+      nextKnowledge: profile.knowledgeMastery.value,
+      previousApplication: previous?.applicationAbility.value,
+      nextApplication: profile.applicationAbility.value,
+      previousRetention: previous?.retention.value,
+      nextRetention: profile.retention.value,
+      stalePlanVersionsCreated: staleCount,
+      misconceptionCodes: const <String>[],
+      reasonCodes: <String>{
+        ...profile.explanationCodes,
+        'FLASHCARD_RETENTION_EVIDENCE_REFRESH',
+        reason.name,
+      }.toList(growable: false),
+    );
+    await audit.append(auditEvent);
+
+    return LearningStateUpdateResult(
+      outcomeRecorded: recorded,
+      competencyId: profile.competencyId,
+      profile: profile,
+      regenerationReason: reason,
+      misconceptionSignals: const <MisconceptionSignal>[],
+      stalePlanVersionsCreated: staleCount,
+      auditEvent: auditEvent,
     );
   }
 

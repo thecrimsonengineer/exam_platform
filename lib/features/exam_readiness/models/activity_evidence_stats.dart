@@ -17,6 +17,8 @@ class ActivityEvidenceStats {
     this.strongApplicationAccuracy,
     this.supportingRetentionSamples = 0,
     this.supportingRetentionAccuracy,
+    this.supportingRetentionDistinctUnits = 0,
+    this.supportingRetentionSpacedSamples = 0,
     this.lastEvidenceAt,
   });
 
@@ -35,6 +37,8 @@ class ActivityEvidenceStats {
   final double? strongApplicationAccuracy;
   final int supportingRetentionSamples;
   final double? supportingRetentionAccuracy;
+  final int supportingRetentionDistinctUnits;
+  final int supportingRetentionSpacedSamples;
   final DateTime? lastEvidenceAt;
 
   int get creditableEvents => strongEvents + supportingEvents + contextEvents;
@@ -59,6 +63,8 @@ class ActivityEvidenceStats {
     'strongApplicationAccuracy': strongApplicationAccuracy,
     'supportingRetentionSamples': supportingRetentionSamples,
     'supportingRetentionAccuracy': supportingRetentionAccuracy,
+    'supportingRetentionDistinctUnits': supportingRetentionDistinctUnits,
+    'supportingRetentionSpacedSamples': supportingRetentionSpacedSamples,
     'lastEvidenceAt': lastEvidenceAt?.toIso8601String(),
   };
 
@@ -82,6 +88,12 @@ class ActivityEvidenceStats {
       supportingRetentionSamples: _int(json['supportingRetentionSamples']),
       supportingRetentionAccuracy: _nullableDouble(
         json['supportingRetentionAccuracy'],
+      ),
+      supportingRetentionDistinctUnits: _int(
+        json['supportingRetentionDistinctUnits'],
+      ),
+      supportingRetentionSpacedSamples: _int(
+        json['supportingRetentionSpacedSamples'],
       ),
       lastEvidenceAt: DateTime.tryParse(
         json['lastEvidenceAt']?.toString() ?? '',
@@ -110,6 +122,8 @@ class ActivityEvidenceStats {
     var microLearning = 0;
     final applicationScores = <double>[];
     final retentionScores = <double>[];
+    final retentionUnitIds = <String>{};
+    var spacedRetentionSamples = 0;
     DateTime? latest;
 
     for (final event in deduplicated.values) {
@@ -158,6 +172,9 @@ class ActivityEvidenceStats {
       if (event.sourceKind == LearningEvidenceSourceKind.flashcard &&
           event.retentionScore != null) {
         retentionScores.add(event.retentionScore!);
+        final unitId = event.evidenceUnitId?.trim() ?? '';
+        if (unitId.isNotEmpty) retentionUnitIds.add(unitId);
+        if ((event.spacingIntervalDays ?? 0) >= 1) spacedRetentionSamples++;
       }
       if (latest == null || event.occurredAt.isAfter(latest)) {
         latest = event.occurredAt;
@@ -184,6 +201,8 @@ class ActivityEvidenceStats {
       strongApplicationAccuracy: average(applicationScores),
       supportingRetentionSamples: retentionScores.length,
       supportingRetentionAccuracy: average(retentionScores),
+      supportingRetentionDistinctUnits: retentionUnitIds.length,
+      supportingRetentionSpacedSamples: spacedRetentionSamples,
       lastEvidenceAt: latest,
     );
   }

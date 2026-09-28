@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:exam_platform/theme/glass/student_glass.dart';
 
+import '../../flashcards/learning/flashcard_recall_event.dart';
+import '../../flashcards/learning/flashcard_recall_event_repository.dart';
+
 import '../models/daily_study_plan.dart';
 import '../models/study_plan_block.dart';
 import '../models/study_plan_execution_target.dart';
@@ -311,6 +314,17 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                   );
                 }
               : null,
+          onFlashcardReviewCompleted:
+              target.kind == StudyPlanExecutionTargetKind.flashcardReview
+              ? () async {
+                  await _complete(
+                    block.blockId,
+                    source: StudyPlanCompletionEvidenceSource
+                        .flashcardReviewSession,
+                    silentIfBlocked: true,
+                  );
+                }
+              : null,
           onLabCompleted: target.kind == StudyPlanExecutionTargetKind.lab
               ? (applicationAccuracy) async {
                   await _complete(
@@ -354,6 +368,13 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
             await _complete(
               target.blockId,
               source: StudyPlanCompletionEvidenceSource.plannedPracticeSession,
+              silentIfBlocked: true,
+            );
+          },
+          onFlashcardReviewCompleted: (target) async {
+            await _complete(
+              target.blockId,
+              source: StudyPlanCompletionEvidenceSource.flashcardReviewSession,
               silentIfBlocked: true,
             );
           },
@@ -501,11 +522,18 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
       if (block.status != StudyPlanBlockStatus.started) return false;
 
       final progress = await _studyProgressService.loadAllProgress();
+      final flashcardRecallEvents =
+          source == StudyPlanCompletionEvidenceSource.flashcardReviewSession
+          ? await const FlashcardRecallEventRepository().loadAll(
+              competencyId: block.competencyId,
+            )
+          : const <FlashcardRecallEvent>[];
       final decision = widget.completionEvidenceService.evaluate(
         block: block,
         source: source,
         attempts: attempts,
         studyProgress: progress.values,
+        flashcardRecallEvents: flashcardRecallEvents,
         completedAt: at,
       );
 

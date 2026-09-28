@@ -88,6 +88,14 @@ class StudyPlanBlockLauncher {
       plannedMinutes: block.plannedMinutes,
       questionCount: block.questionCount,
       dueOnly: kind == StudyPlanExecutionTargetKind.flashcardReview,
+      weakOnly:
+          kind == StudyPlanExecutionTargetKind.flashcardReview &&
+          block.reasonCodes.any(
+            (reason) => reason.trim().toUpperCase().contains('RETENTION'),
+          ),
+      targetCardCount: kind == StudyPlanExecutionTargetKind.flashcardReview
+          ? (block.plannedMinutes ~/ 2).clamp(3, 10).toInt()
+          : null,
       reviewReason: kind == StudyPlanExecutionTargetKind.flashcardReview
           ? block.reasonText
           : null,
@@ -99,6 +107,7 @@ class StudyPlanBlockLauncher {
     required StudyPlanBlock block,
     required bool isDarkMode,
     Future<void> Function()? onPracticeSessionCompleted,
+    Future<void> Function()? onFlashcardReviewCompleted,
     Future<void> Function(double applicationAccuracy)? onLabCompleted,
   }) {
     return launchTarget(
@@ -106,6 +115,7 @@ class StudyPlanBlockLauncher {
       target: resolve(block),
       isDarkMode: isDarkMode,
       onPracticeSessionCompleted: onPracticeSessionCompleted,
+      onFlashcardReviewCompleted: onFlashcardReviewCompleted,
       onLabCompleted: onLabCompleted,
     );
   }
@@ -115,6 +125,7 @@ class StudyPlanBlockLauncher {
     required StudyPlanExecutionTarget target,
     required bool isDarkMode,
     Future<void> Function()? onPracticeSessionCompleted,
+    Future<void> Function()? onFlashcardReviewCompleted,
     Future<void> Function(double applicationAccuracy)? onLabCompleted,
   }) async {
     final destination = switch (target.kind) {
@@ -141,6 +152,11 @@ class StudyPlanBlockLauncher {
         FlashcardCompetencyReviewScreen(
           competencyId: target.competencyId,
           isDarkMode: isDarkMode,
+          plannedBlockId: target.blockId,
+          targetCardCount: target.targetCardCount,
+          dueOnly: target.dueOnly,
+          weakOnly: target.weakOnly,
+          onReviewSessionCompleted: onFlashcardReviewCompleted,
         ),
       StudyPlanExecutionTargetKind.lab => LabLibraryScreen.persistent(
         onScenarioCompleted: onLabCompleted,

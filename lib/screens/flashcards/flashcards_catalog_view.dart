@@ -6,6 +6,9 @@ import '../../app/app_colors.dart';
 import '../../data/csp11_blueprint.dart';
 import '../../features/flashcards/cloud/flashcard_package_repository.dart';
 import '../../features/flashcards/cloud/published_flashcard_package.dart';
+import '../../features/flashcards/learning/flashcard_recall_event.dart';
+import '../../features/flashcards/learning/flashcard_review_queue_service.dart';
+import '../../features/exam_readiness/services/flashcard_retention_evidence_service.dart';
 
 class FlashcardsCatalogView extends StatefulWidget {
   const FlashcardsCatalogView({
@@ -394,28 +397,139 @@ class FlashcardDeckScreen extends StatefulWidget {
     super.key,
     required this.deck,
     required this.isDarkMode,
+    this.plannedBlockId,
+    this.targetCardCount,
+    this.dueOnly = false,
+    this.weakOnly = false,
+    this.onReviewSessionCompleted,
+    this.recallRuntime,
+    this.now,
   });
 
   final FlashcardDeckPackage deck;
   final bool isDarkMode;
+  final String? plannedBlockId;
+  final int? targetCardCount;
+  final bool dueOnly;
+  final bool weakOnly;
+  final Future<void> Function()? onReviewSessionCompleted;
+  final FlashcardRecallRuntime? recallRuntime;
+  final DateTime Function()? now;
 
   @override
   State<FlashcardDeckScreen> createState() => _FlashcardDeckScreenState();
 }
 
 class _FlashcardDeckScreenState extends State<FlashcardDeckScreen> {
+  late final FlashcardRecallRuntime _recallRuntime;
+  late final String _sessionId;
+  List<FlashcardCard> _queue = const <FlashcardCard>[];
   int _index = 0;
+  int _initialTargetCount = 0;
   bool _showBack = false;
+  bool _preparing = true;
+  bool _rating = false;
+  bool _finished = false;
+  bool _completionNotified = false;
+  final Set<String> _ratedInitialCards = <String>{};
 
-  FlashcardCard get _card => widget.deck.cards[_index];
+  DateTime get _now => widget.now?.call() ?? DateTime.now();
+  FlashcardCard get _card => _queue[_index];
 
-  void _move(int delta) {
-    final next = _index + delta;
-    if (next < 0 || next >= widget.deck.cards.length) return;
-    setState(() {
-      _index = next;
-      _showBack = false;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _recallRuntime =
+        widget.recallRuntime ?? const FlashcardRetentionEvidenceService();
+    _sessionId =
+        'fc_${widget.deck.competencyId}_${DateTime.now().microsecondsSinceEpoch}';
+    _prepareQueue();
+  }
+
+  Future<void> _prepareQueue() async {
+    final target = widget.targetCardCount ?? widget.deck.cards.length;
+    try {
+      final history = await _recallRuntime.loadHistory(
+        widget.deck.competencyId,
+      );
+      final queue = const FlashcardReviewQueueService().build(
+        cards: widget.deck.cards,
+        history: history,
+        now: _now,
+        targetCardCount: target,
+        dueOnly: widget.dueOnly,
+        weakOnly: widget.weakOnly,
+      );
+      if (!mounted) return;
+      setState(() {
+        _queue = queue;
+        _initialTargetCount = queue.length;
+        _preparing = false;
+      });
+    } catch (_) {
+      final cards = widget.deck.cards;
+      final fallbackCount = cards.isEmpty
+          ? 0
+          : target.clamp(1, cards.length).toInt();
+      if (!mounted) return;
+      setState(() {
+        _queue = List<FlashcardCard>.unmodifiable(cards.take(fallbackCount));
+        _initialTargetCount = fallbackCount;
+        _preparing = false;
+      });
+    }
+  }
+
+  Future<void> _rate(FlashcardRecallRating rating) async {
+    if (_rating || !_showBack || _finished || _queue.isEmpty) return;
+    final card = _card;
+    setState(() => _rating = true);
+
+    try {
+      final result = await _recallRuntime.record(
+        sessionId: _sessionId,
+        competencyId: widget.deck.competencyId,
+        card: card,
+        rating: rating,
+        occurredAt: _now,
+        source: widget.plannedBlockId == null
+            ? FlashcardReviewSource.catalog
+            : FlashcardReviewSource.dailyPlan,
+        blockId: widget.plannedBlockId,
+      );
+
+      if (result.recallEvent.isFirstAttemptInSession) {
+        _ratedInitialCards.add(card.id);
+      }
+      if (rating == FlashcardRecallRating.again &&
+          result.recallEvent.attemptSequence < 3) {
+        _queue = <FlashcardCard>[..._queue, card];
+      }
+
+      if (!_completionNotified &&
+          _initialTargetCount > 0 &&
+          _ratedInitialCards.length >= _initialTargetCount) {
+        _completionNotified = true;
+        await widget.onReviewSessionCompleted?.call();
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _rating = false;
+        _showBack = false;
+        if (_index + 1 < _queue.length) {
+          _index++;
+        } else {
+          _finished = true;
+        }
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _rating = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unable to save this recall rating. $error')),
+      );
+    }
   }
 
   @override
@@ -437,132 +551,245 @@ class _FlashcardDeckScreenState extends State<FlashcardDeckScreen> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Card ${_index + 1} of ${widget.deck.cards.length}',
-                  style: TextStyle(color: muted, fontWeight: FontWeight.w800),
-                ),
-                const Spacer(),
-                Text(
-                  widget.deck.competencyId.toUpperCase(),
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            GestureDetector(
-              key: const ValueKey('flashcard-study-card'),
-              onTap: () => setState(() => _showBack = !_showBack),
-              child: StudentGlassSurface(
-                constraints: const BoxConstraints(minHeight: 350),
-                padding: const EdgeInsets.all(25),
-                borderRadius: BorderRadius.circular(24),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 180),
-                  child: _showBack
-                      ? Column(
-                          key: ValueKey('flashcard-back-${_card.id}'),
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _card.frontLabel,
-                              style: TextStyle(
-                                color: muted,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 18),
-                            Text(
-                              _card.backDefinition,
-                              style: TextStyle(
-                                color: text,
-                                fontSize: 19,
-                                height: 1.45,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 22),
-                            _BackSection(
-                              title: 'Why it matters',
-                              body: _card.whyItMatters,
-                              text: text,
-                              muted: muted,
-                            ),
-                            const SizedBox(height: 18),
-                            _BackSection(
-                              title: 'Key point',
-                              body: _card.keyPoint,
-                              text: text,
-                              muted: muted,
-                            ),
-                          ],
-                        )
-                      : Center(
-                          key: ValueKey('flashcard-front-${_card.id}'),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.style_rounded,
-                                color: AppColors.primary,
-                                size: 38,
-                              ),
-                              const SizedBox(height: 22),
-                              Text(
-                                _card.frontLabel,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: text,
-                                  fontSize: 28,
-                                  height: 1.2,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              const SizedBox(height: 18),
-                              Text(
-                                'Tap to reveal',
-                                style: TextStyle(
-                                  color: muted,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
+        child: _preparing
+            ? const Center(child: CircularProgressIndicator())
+            : _queue.isEmpty
+            ? _buildNoCards(context, text, muted)
+            : _finished
+            ? _buildComplete(context, text, muted)
+            : ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Card ${_index + 1} of ${_queue.length}',
+                        style: TextStyle(
+                          color: muted,
+                          fontWeight: FontWeight.w800,
                         ),
-                ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        widget.deck.competencyId.toUpperCase(),
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  GestureDetector(
+                    key: const ValueKey('flashcard-study-card'),
+                    onTap: _rating
+                        ? null
+                        : () => setState(() => _showBack = !_showBack),
+                    child: StudentGlassSurface(
+                      constraints: const BoxConstraints(minHeight: 350),
+                      padding: const EdgeInsets.all(25),
+                      borderRadius: BorderRadius.circular(24),
+                      child: AnimatedSwitcher(
+                        duration: MediaQuery.disableAnimationsOf(context)
+                            ? Duration.zero
+                            : const Duration(milliseconds: 180),
+                        child: _showBack
+                            ? Column(
+                                key: ValueKey('flashcard-back-${_card.id}'),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _card.frontLabel,
+                                    style: TextStyle(
+                                      color: muted,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 18),
+                                  Text(
+                                    _card.backDefinition,
+                                    style: TextStyle(
+                                      color: text,
+                                      fontSize: 19,
+                                      height: 1.45,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 22),
+                                  _BackSection(
+                                    title: 'Why it matters',
+                                    body: _card.whyItMatters,
+                                    text: text,
+                                    muted: muted,
+                                  ),
+                                  const SizedBox(height: 18),
+                                  _BackSection(
+                                    title: 'Key point',
+                                    body: _card.keyPoint,
+                                    text: text,
+                                    muted: muted,
+                                  ),
+                                ],
+                              )
+                            : Center(
+                                key: ValueKey('flashcard-front-${_card.id}'),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.style_rounded,
+                                      color: AppColors.primary,
+                                      size: 38,
+                                    ),
+                                    const SizedBox(height: 22),
+                                    Text(
+                                      _card.frontLabel,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: text,
+                                        fontSize: 28,
+                                        height: 1.2,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 18),
+                                    Text(
+                                      'Recall the answer, then tap to reveal',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: muted,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  if (_showBack) ...[
+                    Text(
+                      'How well did you recall it?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: muted,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: [
+                        OutlinedButton(
+                          key: const ValueKey('flashcard-rating-again'),
+                          onPressed: _rating
+                              ? null
+                              : () => _rate(FlashcardRecallRating.again),
+                          child: const Text('Again'),
+                        ),
+                        OutlinedButton(
+                          key: const ValueKey('flashcard-rating-hard'),
+                          onPressed: _rating
+                              ? null
+                              : () => _rate(FlashcardRecallRating.hard),
+                          child: const Text('Hard'),
+                        ),
+                        FilledButton(
+                          key: const ValueKey('flashcard-rating-got-it'),
+                          onPressed: _rating
+                              ? null
+                              : () => _rate(FlashcardRecallRating.gotIt),
+                          child: const Text('Got It'),
+                        ),
+                      ],
+                    ),
+                  ] else
+                    Text(
+                      'A card is not evidence until you reveal it and rate your recall.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: muted, fontSize: 12.5),
+                    ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget _buildNoCards(BuildContext context, Color text, Color muted) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.event_available_rounded, size: 42),
+            const SizedBox(height: 12),
+            Text(
+              'No Flashcards are due in this review scope.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: text,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
               ),
             ),
-            const SizedBox(height: 18),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: _index == 0 ? null : () => _move(-1),
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    label: const Text('PREVIOUS'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: _index == widget.deck.cards.length - 1
-                        ? null
-                        : () => _move(1),
-                    icon: const Icon(Icons.arrow_forward_rounded),
-                    label: const Text('NEXT'),
-                  ),
-                ),
-              ],
+            const SizedBox(height: 8),
+            Text(
+              'Returning without rating cards creates no readiness evidence.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: muted, height: 1.4),
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('BACK TO PLAN'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildComplete(BuildContext context, Color text, Color muted) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: StudentGlassSurface(
+          padding: const EdgeInsets.all(24),
+          borderRadius: BorderRadius.circular(22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.check_circle_rounded, size: 42),
+              const SizedBox(height: 12),
+              Text(
+                'Flashcard review complete',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: text,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${_ratedInitialCards.length} distinct cards rated. '
+                'Same-session repeats remain practice only and do not add extra retention credit.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: muted, height: 1.45),
+              ),
+              const SizedBox(height: 16),
+              FilledButton(
+                key: const ValueKey('flashcard-review-done'),
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('DONE'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import '../../../models/student_learning_progress.dart';
+import '../../flashcards/learning/flashcard_recall_event.dart';
 import '../models/learner_assessment_attempt.dart';
 import '../models/study_plan_block.dart';
 import '../models/today_plan_task_category.dart';
@@ -6,6 +7,7 @@ import 'today_plan_task_category_policy.dart';
 
 enum StudyPlanCompletionEvidenceSource {
   plannedPracticeSession,
+  flashcardReviewSession,
   labScenarioCompleted,
   studyContent,
   explicitLearnerFinish,
@@ -56,7 +58,7 @@ class StudyPlanCompletionEvidenceService {
             ? 'Completes automatically when the planned LAB scenario finishes.'
             : 'Completes automatically when the planned quiz finishes.';
       case TodayPlanTaskCategory.remember:
-        return 'Complete a reviewed subtopic to finish this review task.';
+        return 'Rate the assigned Flashcards to finish this Remember task.';
     }
   }
 
@@ -65,6 +67,8 @@ class StudyPlanCompletionEvidenceService {
     required StudyPlanCompletionEvidenceSource source,
     required Iterable<LearnerAssessmentAttempt> attempts,
     required Iterable<StudentSubtopicProgress> studyProgress,
+    Iterable<FlashcardRecallEvent> flashcardRecallEvents =
+        const <FlashcardRecallEvent>[],
     required DateTime completedAt,
   }) {
     final startedAt = block.startedAt;
@@ -91,6 +95,19 @@ class StudyPlanCompletionEvidenceService {
         }
         return const StudyPlanCompletionDecision.allowed(
           message: 'Learner explicitly finished the planned learning task.',
+        );
+
+      case StudyPlanCompletionEvidenceSource.flashcardReviewSession:
+        if (category != TodayPlanTaskCategory.remember) {
+          return const StudyPlanCompletionDecision.blocked(
+            'Flashcard review evidence can complete only a Remember task.',
+          );
+        }
+        return _flashcardDecision(
+          block: block,
+          recallEvents: flashcardRecallEvents,
+          startedAt: startedAt,
+          completedAt: completedAt,
         );
 
       case StudyPlanCompletionEvidenceSource.labScenarioCompleted:
@@ -133,6 +150,41 @@ class StudyPlanCompletionEvidenceService {
           category: category,
         );
     }
+  }
+
+  StudyPlanCompletionDecision _flashcardDecision({
+    required StudyPlanBlock block,
+    required Iterable<FlashcardRecallEvent> recallEvents,
+    required DateTime startedAt,
+    required DateTime completedAt,
+  }) {
+    final competency = block.competencyId.trim().toLowerCase();
+    final reviewedCards = <String>{};
+    for (final event in recallEvents) {
+      if (event.source != FlashcardReviewSource.dailyPlan ||
+          event.blockId != block.blockId ||
+          event.competencyId != competency ||
+          event.sameSessionRepeat ||
+          event.attemptSequence != 1 ||
+          event.occurredAt.isBefore(startedAt) ||
+          event.occurredAt.isAfter(completedAt)) {
+        continue;
+      }
+      reviewedCards.add(event.cardId);
+    }
+
+    final requiredCards = (block.plannedMinutes ~/ 3).clamp(3, 8).toInt();
+    if (reviewedCards.length < requiredCards) {
+      return StudyPlanCompletionDecision.blocked(
+        'Rate at least $requiredCards assigned Flashcards first. '
+        '${reviewedCards.length} qualifying cards are recorded.',
+      );
+    }
+
+    return StudyPlanCompletionDecision.allowed(
+      message:
+          '${reviewedCards.length} distinct Flashcard ratings provide completion evidence.',
+    );
   }
 
   StudyPlanCompletionDecision _practiceDecision({

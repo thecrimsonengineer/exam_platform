@@ -287,15 +287,22 @@ class ReadinessProfileService {
   ReadinessDimension _retention(CompetencyEvidenceSnapshot evidence) {
     if (evidence.retention.delayedAttempts == 0 ||
         evidence.retention.delayedAccuracy == null) {
-      if (evidence.activity.supportingRetentionSamples > 0 &&
-          evidence.activity.supportingRetentionAccuracy != null) {
+      final samples = evidence.activity.supportingRetentionSamples;
+      final distinctUnits = evidence.activity.supportingRetentionDistinctUnits;
+      final spacedSamples = evidence.activity.supportingRetentionSpacedSamples;
+      final supportingAccuracy = evidence.activity.supportingRetentionAccuracy;
+      if (samples >= 3 && distinctUnits >= 2 && supportingAccuracy != null) {
+        final volumeFactor = (samples / 8).clamp(0.35, 1.0);
+        final spacingFactor = (spacedSamples / 3).clamp(0.0, 1.0);
+        final supportFactor = 0.75 + volumeFactor * 0.15 + spacingFactor * 0.10;
         return ReadinessDimension(
           code: 'RETENTION',
-          value: evidence.activity.supportingRetentionAccuracy,
-          evidenceConfidence: _sampleConfidence(
-            evidence.activity.supportingRetentionSamples,
-          ),
-          reasonCodes: const ['SPACED_FLASHCARD_RECALL_EVIDENCE'],
+          value: (supportingAccuracy * supportFactor).clamp(0.0, 1.0),
+          evidenceConfidence: _sampleConfidence(samples),
+          reasonCodes: const <String>[
+            'SPACED_FLASHCARD_RECALL_EVIDENCE',
+            'FLASHCARD_SUPPORTING_ONLY',
+          ],
         );
       }
       return ReadinessDimension(
@@ -303,7 +310,7 @@ class ReadinessProfileService {
         value: null,
         evidenceConfidence: evidence.evidenceQuality.breakdown.retention,
         reasonCodes: evidence.activity.flashcardEvents > 0
-            ? const ['FLASHCARD_SUPPORTING_EVIDENCE_REQUIRES_RECALL_QUALITY']
+            ? const ['FLASHCARD_RETENTION_EVIDENCE_BUILDING']
             : const ['RETENTION_EVIDENCE_MISSING'],
       );
     }

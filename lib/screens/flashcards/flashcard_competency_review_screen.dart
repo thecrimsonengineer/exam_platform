@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/flashcards/cloud/flashcard_package_repository.dart';
 import '../../features/flashcards/cloud/published_flashcard_package.dart';
+import '../../features/exam_readiness/services/flashcard_retention_evidence_service.dart';
 import 'flashcards_catalog_view.dart';
 
 /// Direct learner entry point for a DailyStudyPlan Flashcard review target.
@@ -14,11 +15,25 @@ class FlashcardCompetencyReviewScreen extends StatefulWidget {
     required this.competencyId,
     required this.isDarkMode,
     this.repository,
+    this.plannedBlockId,
+    this.targetCardCount,
+    this.dueOnly = true,
+    this.weakOnly = false,
+    this.onReviewSessionCompleted,
+    this.recallRuntime,
+    this.now,
   });
 
   final String competencyId;
   final bool isDarkMode;
   final FlashcardPackageRepository? repository;
+  final String? plannedBlockId;
+  final int? targetCardCount;
+  final bool dueOnly;
+  final bool weakOnly;
+  final Future<void> Function()? onReviewSessionCompleted;
+  final FlashcardRecallRuntime? recallRuntime;
+  final DateTime Function()? now;
 
   @override
   State<FlashcardCompetencyReviewScreen> createState() =>
@@ -96,6 +111,13 @@ class _FlashcardCompetencyReviewScreenState
         return FlashcardDeckScreen(
           deck: snapshot.requireData,
           isDarkMode: widget.isDarkMode,
+          plannedBlockId: widget.plannedBlockId,
+          targetCardCount: widget.targetCardCount,
+          dueOnly: widget.dueOnly,
+          weakOnly: widget.weakOnly,
+          onReviewSessionCompleted: widget.onReviewSessionCompleted,
+          recallRuntime: widget.recallRuntime,
+          now: widget.now,
         );
       },
     );

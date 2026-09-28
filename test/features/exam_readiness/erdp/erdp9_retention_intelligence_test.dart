@@ -1,3 +1,4 @@
+import 'package:exam_platform/features/exam_readiness/models/activity_evidence_stats.dart';
 import 'package:exam_platform/features/exam_readiness/models/learner_assessment_attempt.dart';
 import 'package:exam_platform/features/exam_readiness/models/learning_evidence_event.dart';
 import 'package:exam_platform/features/exam_readiness/models/study_plan_block.dart';
@@ -114,7 +115,9 @@ class _FakeRecallRuntime implements FlashcardRecallRuntime {
     String? blockId,
   }) async {
     final priorInSession = events
-        .where((event) => event.sessionId == sessionId && event.cardId == card.id)
+        .where(
+          (event) => event.sessionId == sessionId && event.cardId == card.id,
+        )
         .length;
     final recall = FlashcardRecallEvent(
       eventId: '$sessionId-${card.id}-${priorInSession + 1}',
@@ -131,9 +134,8 @@ class _FakeRecallRuntime implements FlashcardRecallRuntime {
       nextReviewAt: occurredAt.add(const Duration(days: 1)),
     );
     events.add(recall);
-    final evidence = const FlashcardRetentionEvidenceService().toLearningEvidence(
-      recall,
-    );
+    final evidence = const FlashcardRetentionEvidenceService()
+        .toLearningEvidence(recall);
     return FlashcardRecallRecordResult(
       recallEvent: recall,
       evidenceEvent: evidence,
@@ -240,41 +242,44 @@ void main() {
       );
     });
 
-    test('repeated spaced success across cards creates supporting retention', () {
-      final now = DateTime.utc(2026, 9, 28, 12);
-      final events = <LearningEvidenceEvent>[
-        for (var i = 0; i < 3; i++)
-          retentionService.toLearningEvidence(
-            _recall(
-              id: 'spaced-$i',
-              cardId: 'card-${i + 1}',
-              rating: FlashcardRecallRating.gotIt,
-              at: now.subtract(Duration(days: 3 + i)),
-              spacingDays: 3 + i,
+    test(
+      'repeated spaced success across cards creates supporting retention',
+      () {
+        final now = DateTime.utc(2026, 9, 28, 12);
+        final events = <LearningEvidenceEvent>[
+          for (var i = 0; i < 3; i++)
+            retentionService.toLearningEvidence(
+              _recall(
+                id: 'spaced-$i',
+                cardId: 'card-${i + 1}',
+                rating: FlashcardRecallRating.gotIt,
+                at: now.subtract(Duration(days: 3 + i)),
+                spacingDays: 3 + i,
+              ),
             ),
-          ),
-      ];
-      final evidence = aggregationService.buildSnapshot(
-        competencyId: 'd01_c01',
-        attempts: const <LearnerAssessmentAttempt>[],
-        scope: const CompetencyEvidenceScope(competencyId: 'd01_c01'),
-        now: now,
-        activityEvents: events,
-      );
-      final profile = readinessService.buildCompetencyProfile(
-        evidence: evidence,
-        now: now,
-      );
+        ];
+        final evidence = aggregationService.buildSnapshot(
+          competencyId: 'd01_c01',
+          attempts: const <LearnerAssessmentAttempt>[],
+          scope: const CompetencyEvidenceScope(competencyId: 'd01_c01'),
+          now: now,
+          activityEvents: events,
+        );
+        final profile = readinessService.buildCompetencyProfile(
+          evidence: evidence,
+          now: now,
+        );
 
-      expect(evidence.activity.supportingRetentionDistinctUnits, 3);
-      expect(evidence.activity.supportingRetentionSpacedSamples, 3);
-      expect(profile.retention.value, isNotNull);
-      expect(profile.retention.value!, greaterThan(0.70));
-      expect(
-        profile.retention.reasonCodes,
-        contains('FLASHCARD_SUPPORTING_ONLY'),
-      );
-    });
+        expect(evidence.activity.supportingRetentionDistinctUnits, 3);
+        expect(evidence.activity.supportingRetentionSpacedSamples, 3);
+        expect(profile.retention.value, isNotNull);
+        expect(profile.retention.value!, greaterThan(0.70));
+        expect(
+          profile.retention.reasonCodes,
+          contains('FLASHCARD_SUPPORTING_ONLY'),
+        );
+      },
+    );
 
     test('delayed question evidence remains authoritative over Flashcards', () {
       final now = DateTime.utc(2026, 9, 28, 12);
@@ -406,44 +411,47 @@ void main() {
       expect(queue, hasLength(2));
     });
 
-    test('planned Remember completion requires distinct first-session ratings', () {
-      final started = DateTime.utc(2026, 9, 28, 9);
-      final block = _rememberBlock(started);
-      final events = <FlashcardRecallEvent>[
-        for (var i = 0; i < 5; i++)
+    test(
+      'planned Remember completion requires distinct first-session ratings',
+      () {
+        final started = DateTime.utc(2026, 9, 28, 9);
+        final block = _rememberBlock(started);
+        final events = <FlashcardRecallEvent>[
+          for (var i = 0; i < 5; i++)
+            _recall(
+              id: 'planned-$i',
+              cardId: 'card-$i',
+              rating: i == 0
+                  ? FlashcardRecallRating.again
+                  : FlashcardRecallRating.gotIt,
+              at: started.add(Duration(minutes: i + 1)),
+              source: FlashcardReviewSource.dailyPlan,
+              blockId: block.blockId,
+            ),
           _recall(
-            id: 'planned-$i',
-            cardId: 'card-$i',
-            rating: i == 0
-                ? FlashcardRecallRating.again
-                : FlashcardRecallRating.gotIt,
-            at: started.add(Duration(minutes: i + 1)),
+            id: 'repeat-extra',
+            cardId: 'card-0',
+            rating: FlashcardRecallRating.gotIt,
+            at: started.add(const Duration(minutes: 8)),
+            attemptSequence: 2,
+            sameSessionRepeat: true,
             source: FlashcardReviewSource.dailyPlan,
             blockId: block.blockId,
           ),
-        _recall(
-          id: 'repeat-extra',
-          cardId: 'card-0',
-          rating: FlashcardRecallRating.gotIt,
-          at: started.add(const Duration(minutes: 8)),
-          attemptSequence: 2,
-          sameSessionRepeat: true,
-          source: FlashcardReviewSource.dailyPlan,
-          blockId: block.blockId,
-        ),
-      ];
+        ];
 
-      final decision = const StudyPlanCompletionEvidenceService().evaluate(
-        block: block,
-        source: StudyPlanCompletionEvidenceSource.flashcardReviewSession,
-        attempts: const <LearnerAssessmentAttempt>[],
-        studyProgress: const <StudentSubtopicProgress>[],
-        flashcardRecallEvents: events,
-        completedAt: started.add(const Duration(minutes: 10)),
-      );
+        final decision = const StudyPlanCompletionEvidenceService().evaluate(
+          block: block,
+          source: StudyPlanCompletionEvidenceSource.flashcardReviewSession,
+          attempts: const <LearnerAssessmentAttempt>[],
+          studyProgress: const <StudentSubtopicProgress>[],
+          flashcardRecallEvents: events,
+          completedAt: started.add(const Duration(minutes: 10)),
+        );
 
-      expect(decision.eligible, isTrue);
-    });
+        expect(decision.eligible, isTrue);
+      },
+    );
   });
 
   testWidgets('deck exposes Again, Hard and Got It only after reveal', (

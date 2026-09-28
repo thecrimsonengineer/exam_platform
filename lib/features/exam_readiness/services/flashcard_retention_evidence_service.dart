@@ -114,15 +114,18 @@ class FlashcardRetentionEvidenceService implements FlashcardRecallRuntime {
 
     final recallRecorded = await _recallRepository.append(recall);
     final evidence = toLearningEvidence(recall);
-    final evidenceRecorded = await _evidenceRepository.append(evidence);
 
     LearningStateUpdateResult? stateUpdate;
-    if (evidence.retentionScore != null && evidenceRecorded) {
+    late final bool evidenceRecorded;
+    if (evidence.retentionScore != null) {
       stateUpdate = await _stateCoordinator.processEvidenceEvent(
         event: evidence,
         markFuturePlansStale: false,
         evidenceEventRepository: _evidenceRepository,
       );
+      evidenceRecorded = stateUpdate.outcomeRecorded;
+    } else {
+      evidenceRecorded = await _evidenceRepository.append(evidence);
     }
 
     return FlashcardRecallRecordResult(
@@ -151,8 +154,7 @@ class FlashcardRetentionEvidenceService implements FlashcardRecallRuntime {
       if (recall.sameSessionRepeat)
         'FLASHCARD_SAME_SESSION_REPEAT_NO_EXTRA_CREDIT',
       if (score != null) 'FLASHCARD_RETENTION_SAMPLE',
-    }.toList(growable: false)
-      ..sort();
+    }.toList(growable: false)..sort();
 
     final event = LearningEvidenceEvent(
       evidenceEventId: 'erdp9-fc-${recall.eventId}',

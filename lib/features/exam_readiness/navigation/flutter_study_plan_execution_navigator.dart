@@ -6,6 +6,8 @@ import 'study_plan_block_launcher.dart';
 
 typedef PracticeCompletionCallback =
     Future<void> Function(StudyPlanExecutionTarget target);
+typedef FlashcardCompletionCallback =
+    Future<void> Function(StudyPlanExecutionTarget target);
 typedef LabCompletionCallback =
     Future<void> Function(
       StudyPlanExecutionTarget target,
@@ -19,6 +21,7 @@ class FlutterStudyPlanExecutionNavigator
     required this.launcher,
     required this.isDarkMode,
     this.onPracticeSessionCompleted,
+    this.onFlashcardReviewCompleted,
     this.onLabCompleted,
   });
 
@@ -26,6 +29,7 @@ class FlutterStudyPlanExecutionNavigator
   final StudyPlanBlockLauncher launcher;
   final bool isDarkMode;
   final PracticeCompletionCallback? onPracticeSessionCompleted;
+  final FlashcardCompletionCallback? onFlashcardReviewCompleted;
   final LabCompletionCallback? onLabCompleted;
 
   @override
@@ -41,6 +45,11 @@ class FlutterStudyPlanExecutionNavigator
       onPracticeSessionCompleted:
           isPractice && onPracticeSessionCompleted != null
           ? () => onPracticeSessionCompleted!(target)
+          : null,
+      onFlashcardReviewCompleted:
+          target.kind == StudyPlanExecutionTargetKind.flashcardReview &&
+              onFlashcardReviewCompleted != null
+          ? () => onFlashcardReviewCompleted!(target)
           : null,
       onLabCompleted:
           target.kind == StudyPlanExecutionTargetKind.lab &&
