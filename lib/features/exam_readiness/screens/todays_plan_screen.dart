@@ -14,6 +14,8 @@ import '../repositories/exam_study_plan_repository.dart';
 import '../repositories/learner_assessment_attempt_repository.dart';
 import '../repositories/readiness_snapshot_repository.dart';
 import '../services/daily_study_plan_service.dart';
+import '../services/executable_daily_plan_action_service.dart';
+import '../services/study_plan_carry_forward_planner.dart';
 import '../services/learning_state_update_coordinator.dart';
 import '../services/local_study_plan_execution_store.dart';
 import '../services/phase_aware_daily_plan_service.dart';
@@ -74,6 +76,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
   TodayPlanTaskCategory? _activeCategory;
   final Set<String> _completionInFlight = <String>{};
   final Set<String> _launchInFlight = <String>{};
+  final Set<String> _manualActionInFlight = <String>{};
   final StudentLearningProgressService _studyProgressService =
       const StudentLearningProgressService();
 
@@ -90,6 +93,13 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
       widget.executionStore ??
       LocalStudyPlanExecutionStore(
         planRepository: _dailyPlanRepository,
+        planService: widget.planService,
+      );
+
+  ExecutableDailyPlanActionService get _actionService =>
+      ExecutableDailyPlanActionService(
+        repository: _dailyPlanRepository,
+        resolveTarget: widget.blockLauncher.resolve,
         planService: widget.planService,
       );
 
@@ -156,7 +166,7 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
           'No new Ultra Hard block will be scheduled.';
     }
 
-    final plan = widget.phaseAwarePlanService.generate(
+    var plan = widget.phaseAwarePlanService.generate(
       userId: examPlan.userId,
       date: now,
       generatedAt: now,
@@ -176,7 +186,26 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
           : DailyStudyPlanGenerationReason.initial,
     );
 
-    await _dailyPlanRepository.savePlan(plan, syncRemote: false);
+    final dueCarryForwards = await _dailyPlanRepository.loadCarryForwards(
+      dueOnOrBefore: now,
+      pendingOnly: true,
+    );
+    final carryResult = const StudyPlanCarryForwardPlanner().apply(
+      basePlan: plan,
+      pendingCarryForwards: dueCarryForwards,
+      at: now,
+    );
+    plan = carryResult.plan;
+    await _dailyPlanRepository.commitPlanMutation(
+      plan: plan,
+      consumeCarryForwardIds: carryResult.consumedIds,
+      consumedAt: carryResult.consumedIds.isEmpty ? null : now,
+    );
+
+    if (carryResult.consumedIds.isNotEmpty) {
+      notice =
+          '${carryResult.consumedIds.length} carried task(s) were scheduled before ordinary recommendations.';
+    }
 
     return _TodayPlanViewData(plan: plan, hasExamPlan: true, notice: notice);
   }
@@ -474,6 +503,66 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
     }
   }
 
+  Future<void> _applyExecutableAction(
+    String blockId,
+    _ExecutablePlanAction action,
+  ) async {
+    final actionKey = '$blockId:${action.name}';
+    if (!_manualActionInFlight.add(actionKey)) return;
+
+    try {
+      final data = await _future;
+      final plan = data.plan;
+      if (plan == null) return;
+
+      final result = switch (action) {
+        _ExecutablePlanAction.skip => await _actionService.skip(
+          sourcePlan: plan,
+          blockId: blockId,
+          at: _now,
+        ),
+        _ExecutablePlanAction.tomorrow => await _actionService.moveToTomorrow(
+          sourcePlan: plan,
+          blockId: blockId,
+          at: _now,
+        ),
+        _ExecutablePlanAction.replace => await _actionService.replace(
+          sourcePlan: plan,
+          blockId: blockId,
+          at: _now,
+        ),
+      };
+
+      if (!mounted) return;
+      final actionNotice = switch (action) {
+        _ExecutablePlanAction.skip =>
+          'Task skipped. Its minutes are now free without changing readiness.',
+        _ExecutablePlanAction.tomorrow =>
+          'Task moved to tomorrow and queued ahead of ordinary recommendations.',
+        _ExecutablePlanAction.replace =>
+          'Task replaced with an executable alternative for the same competency.',
+      };
+      setState(
+        () => _future = Future.value(
+          _TodayPlanViewData(
+            plan: result.plan,
+            hasExamPlan: true,
+            notice: actionNotice,
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceFirst('Bad state: ', '')),
+        ),
+      );
+    } finally {
+      _manualActionInFlight.remove(actionKey);
+    }
+  }
+
   Future<void> _apply(
     DailyStudyPlan Function(DailyStudyPlan plan, DateTime at) transform,
   ) async {
@@ -605,28 +694,17 @@ class _TodaysPlanScreenState extends State<TodaysPlanScreen> {
                               source: StudyPlanCompletionEvidenceSource
                                   .explicitLearnerFinish,
                             ),
-                            onSkip: () => _apply(
-                              (current, at) => widget.planService.skipBlock(
-                                current,
-                                block.blockId,
-                                at: at,
-                              ),
+                            onSkip: () => _applyExecutableAction(
+                              block.blockId,
+                              _ExecutablePlanAction.skip,
                             ),
-                            onMove: () => _apply(
-                              (current, at) =>
-                                  widget.planService.moveToTomorrow(
-                                    current,
-                                    block.blockId,
-                                    at: at,
-                                  ),
+                            onMove: () => _applyExecutableAction(
+                              block.blockId,
+                              _ExecutablePlanAction.tomorrow,
                             ),
-                            onReplace: () => _apply(
-                              (current, at) =>
-                                  widget.planService.replaceWithAlternative(
-                                    current,
-                                    block.blockId,
-                                    at: at,
-                                  ),
+                            onReplace: () => _applyExecutableAction(
+                              block.blockId,
+                              _ExecutablePlanAction.replace,
                             ),
                             onShorten: () => _apply(
                               (current, at) => widget.planService.shortenBlock(
@@ -820,6 +898,15 @@ class _PlanBlockCard extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             )
+          else if (block.isTerminalChange)
+            Text(
+              _terminalStatusText(block),
+              key: ValueKey('erdp5-terminal-$index'),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+              ),
+            )
           else if (block.status == StudyPlanBlockStatus.started)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -902,6 +989,24 @@ class _PlanBlockCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _terminalStatusText(StudyPlanBlock block) {
+    switch (block.status) {
+      case StudyPlanBlockStatus.skipped:
+        return 'Skipped. No readiness evidence was created.';
+      case StudyPlanBlockStatus.movedToTomorrow:
+        return 'Moved to tomorrow. This task remains as plan history.';
+      case StudyPlanBlockStatus.replaced:
+        return 'Replaced by ${block.replacedByBlockId ?? 'an alternative task'}.';
+      case StudyPlanBlockStatus.unavailable:
+        return 'Unavailable. No readiness evidence was created.';
+      case StudyPlanBlockStatus.planned:
+      case StudyPlanBlockStatus.started:
+      case StudyPlanBlockStatus.completed:
+      case StudyPlanBlockStatus.shortened:
+        return block.status.name;
+    }
   }
 
   String _typeLabel(StudyPlanBlockType type) {
@@ -1193,6 +1298,8 @@ class _ErrorState extends StatelessWidget {
     );
   }
 }
+
+enum _ExecutablePlanAction { skip, tomorrow, replace }
 
 class _TodayPlanViewData {
   const _TodayPlanViewData({
