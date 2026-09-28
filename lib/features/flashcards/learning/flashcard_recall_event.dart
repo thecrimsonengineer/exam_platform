@@ -41,7 +41,8 @@ class FlashcardRecallEvent {
   final DateTime nextReviewAt;
   final int schemaVersion;
 
-  bool get isFirstAttemptInSession => !sameSessionRepeat && attemptSequence == 1;
+  bool get isFirstAttemptInSession =>
+      !sameSessionRepeat && attemptSequence == 1;
 
   bool get isSpaced => !sameSessionRepeat && (spacingIntervalDays ?? 0) >= 1;
 
@@ -69,10 +70,14 @@ class FlashcardRecallEvent {
       throw StateError('Flashcard spacing interval cannot be negative.');
     }
     if (sameSessionRepeat && spacingIntervalDays != null) {
-      throw StateError('Same-session repeats cannot claim spaced-recall credit.');
+      throw StateError(
+        'Same-session repeats cannot claim spaced-recall credit.',
+      );
     }
     if (nextReviewAt.isBefore(occurredAt)) {
-      throw StateError('Next Flashcard review cannot precede the recall event.');
+      throw StateError(
+        'Next Flashcard review cannot precede the recall event.',
+      );
     }
     if (source == FlashcardReviewSource.dailyPlan &&
         (blockId == null || blockId!.trim().isEmpty)) {
