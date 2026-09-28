@@ -1,4 +1,4 @@
-name: ERDP-8 Daily Plan UX Build
+name: ERDP-8 Daily Plan UX
 
 on:
   push:
@@ -7,11 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build:
-    if: github.actor != 'github-actions[bot]'
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,15 +25,12 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Apply ERDP-8 UX wiring
-        run: python3 tool/erdp8_wire.py
-
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Format ERDP-8 surface
+      - name: Enforce ERDP-8 formatting
         run: |
-          dart format \
+          dart format --output=none --set-exit-if-changed \
             lib/features/exam_readiness/screens/todays_plan_screen.dart \
             lib/features/exam_readiness/widgets/daily_plan_task_card.dart \
             test/features/exam_readiness/erdp/erdp8_daily_plan_ux_test.dart
@@ -60,14 +56,3 @@ jobs:
 
       - name: Diff hygiene
         run: git diff --check
-
-      - name: Commit ERDP-8 UX pass
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            lib/features/exam_readiness/screens/todays_plan_screen.dart \
-            lib/features/exam_readiness/widgets/daily_plan_task_card.dart \
-            test/features/exam_readiness/erdp/erdp8_daily_plan_ux_test.dart
-          git commit -m "ERDP-8 refine Daily Plan task UX"
-          git push origin HEAD:phase-erdp8-daily-plan-ux
