@@ -369,10 +369,7 @@ class DailyStudyPlanRepository {
     }
   }
 
-  bool _appendPlanImmutable(
-    List<DailyStudyPlan> history,
-    DailyStudyPlan plan,
-  ) {
+  bool _appendPlanImmutable(List<DailyStudyPlan> history, DailyStudyPlan plan) {
     final sameVersion = history.where(
       (item) =>
           item.planId == plan.planId && item.planVersion == plan.planVersion,
