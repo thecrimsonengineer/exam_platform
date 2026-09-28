@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate:
@@ -28,27 +28,19 @@ jobs:
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Apply canonical ERDP-4 formatting once
+      - name: Enforce canonical ERDP-4 formatting
         run: |
-          FILES="\
-          lib/features/exam_readiness/models/study_plan_execution_attempt.dart \
-          lib/features/exam_readiness/models/study_plan_execution_target.dart \
-          lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
-          lib/features/exam_readiness/services/study_plan_execution_router.dart \
-          lib/features/exam_readiness/services/local_study_plan_execution_store.dart \
-          lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
-          lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
-          lib/features/exam_readiness/screens/todays_plan_screen.dart \
-          test/features/exam_readiness/erdp/erdp4_execution_router_test.dart \
-          test/features/exam_readiness/erdp/erdp4_execution_store_test.dart"
-          dart format $FILES
-          if ! git diff --quiet -- $FILES; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add $FILES
-            git commit -m "ERDP-4 apply canonical Dart formatting"
-            git push origin HEAD:phase-erdp4-universal-execution-router
-          fi
+          dart format --output=none --set-exit-if-changed \
+            lib/features/exam_readiness/models/study_plan_execution_attempt.dart \
+            lib/features/exam_readiness/models/study_plan_execution_target.dart \
+            lib/features/exam_readiness/repositories/daily_study_plan_repository.dart \
+            lib/features/exam_readiness/services/study_plan_execution_router.dart \
+            lib/features/exam_readiness/services/local_study_plan_execution_store.dart \
+            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
+            lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
+            lib/features/exam_readiness/screens/todays_plan_screen.dart \
+            test/features/exam_readiness/erdp/erdp4_execution_router_test.dart \
+            test/features/exam_readiness/erdp/erdp4_execution_store_test.dart
 
       - name: Analyze ERDP-4 integrated surface
         run: |
