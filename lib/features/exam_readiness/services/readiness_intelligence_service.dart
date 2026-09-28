@@ -1,5 +1,6 @@
 import '../models/advanced_readiness_snapshot.dart';
 import '../models/competency_readiness_profile.dart';
+import '../models/evidence_confidence.dart';
 import '../models/readiness_intelligence_snapshot.dart';
 import '../models/readiness_index_snapshot.dart';
 
@@ -150,7 +151,8 @@ class ReadinessIntelligenceService {
         competencyId: competencyId,
         minutes: 15,
         reasonCodes: const <String>['ERDP1_INSUFFICIENT_EVIDENCE_DIAGNOSTIC'],
-        reasonText: 'Build enough evidence to distinguish a true weakness from an evidence gap.',
+        reasonText:
+            'Build enough evidence to distinguish a true weakness from an evidence gap.',
       );
     }
 
@@ -166,7 +168,8 @@ class ReadinessIntelligenceService {
           competencyId: competencyId,
           minutes: 10,
           reasonCodes: const <String>['ERDP1_RETENTION_GAP_FLASHCARD_REVIEW'],
-          reasonText: 'Retention is the limiting factor, so use a short spaced-recall intervention.',
+          reasonText:
+              'Retention is the limiting factor, so use a short spaced-recall intervention.',
         );
       }
 
@@ -176,7 +179,8 @@ class ReadinessIntelligenceService {
           competencyId: competencyId,
           minutes: 15,
           reasonCodes: const <String>['ERDP1_APPLICATION_GAP_APPLIED_PRACTICE'],
-          reasonText: 'Application evidence is weaker than knowledge evidence, so use an applied task.',
+          reasonText:
+              'Application evidence is weaker than knowledge evidence, so use an applied task.',
         );
       }
 
@@ -185,7 +189,8 @@ class ReadinessIntelligenceService {
         competencyId: competencyId,
         minutes: 15,
         reasonCodes: const <String>['ERDP1_WEAK_COMPETENCY_TARGETED_PRACTICE'],
-        reasonText: 'Current evidence supports a genuine weakness that needs targeted practice.',
+        reasonText:
+            'Current evidence supports a genuine weakness that needs targeted practice.',
       );
     }
 
@@ -195,7 +200,8 @@ class ReadinessIntelligenceService {
         competencyId: '',
         minutes: 10,
         reasonCodes: const <String>['ERDP1_RETENTION_MAINTENANCE_DUE'],
-        reasonText: 'No major weakness is leading, but spaced recall is due for retention maintenance.',
+        reasonText:
+            'No major weakness is leading, but spaced recall is due for retention maintenance.',
       );
     }
 
@@ -227,8 +233,7 @@ class ReadinessIntelligenceService {
       return ReadinessDimension(
         code: code,
         value: null,
-        evidenceConfidence: const CompetencyReadinessProfilePlaceholder()
-            .noneConfidence,
+        evidenceConfidence: EvidenceConfidence.none,
         reasonCodes: const <String>['ERDP1_DIMENSION_UNAVAILABLE'],
       );
     }
@@ -248,11 +253,4 @@ class ReadinessIntelligenceService {
       reasonCodes: const <String>['ERDP1_AGGREGATED_RECENCY'],
     );
   }
-}
-
-class CompetencyReadinessProfilePlaceholder {
-  const CompetencyReadinessProfilePlaceholder();
-
-  // Kept local so the projection does not fabricate readiness evidence.
-  dynamic get noneConfidence => throw UnimplementedError();
 }
