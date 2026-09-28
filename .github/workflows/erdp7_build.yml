@@ -42,6 +42,18 @@ jobs:
                   raise SystemExit(f'ERDP-7 hardening anchor missing in {path}: {old[:100]!r}')
               p.write_text(source.replace(old, new, count))
 
+          path = 'lib/features/exam_readiness/services/daily_study_plan_service.dart'
+          replace(
+              path,
+              "      case StudyPlanBlockType.spacedReview:\n      case StudyPlanBlockType.recovery:\n        return TodayPlanTaskCategory.remember;\n      case StudyPlanBlockType.repair:\n      case StudyPlanBlockType.diagnostic:\n",
+              "      case StudyPlanBlockType.spacedReview:\n      case StudyPlanBlockType.recovery:\n        return TodayPlanTaskCategory.remember;\n      case StudyPlanBlockType.diagnostic:\n",
+          )
+          replace(
+              path,
+              "  int _questionCount(StudyPlanBlockType type, int minutes) {\n    switch (type) {\n      case StudyPlanBlockType.diagnostic:\n",
+              "  int _questionCount(StudyPlanBlockType type, int minutes) {\n    switch (type) {\n      case StudyPlanBlockType.repair:\n      case StudyPlanBlockType.diagnostic:\n",
+          )
+
           path = 'lib/screens/lab/lab_reference_player_screen.dart'
           replace(
               path,
