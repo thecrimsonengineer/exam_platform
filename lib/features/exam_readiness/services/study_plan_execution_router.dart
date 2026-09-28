@@ -204,7 +204,8 @@ class StudyPlanExecutionRouter {
         attempt.blockId != block.blockId ||
         attempt.targetKind != target.kind ||
         attempt.status != StudyPlanExecutionAttemptStatus.started ||
-        attempt.startedAt != at) {
+        startedBlock.startedAt != attempt.startedAt ||
+        attempt.startedAt.isAfter(at)) {
       throw StateError('Execution start commit returned an invalid attempt.');
     }
   }
