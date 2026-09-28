@@ -1,4 +1,4 @@
-name: ERDP-9 Retention Intelligence Build
+name: ERDP-9 Retention Intelligence Validation
 
 on:
   push:
@@ -7,11 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build:
-    if: github.actor != 'github-actions[bot]'
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,15 +25,12 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Apply ERDP-9 wiring
-        run: python3 tool/erdp9_wire.py
-
       - name: Resolve packages
         run: flutter pub get
 
-      - name: Format ERDP-9 surface
+      - name: Verify ERDP-9 formatting
         run: |
-          dart format \
+          dart format --output=none --set-exit-if-changed \
             lib/features/flashcards/learning/flashcard_recall_event.dart \
             lib/features/flashcards/learning/flashcard_recall_event_repository.dart \
             lib/features/flashcards/learning/flashcard_review_queue_service.dart \
@@ -70,47 +66,17 @@ jobs:
             lib/screens/flashcards/flashcards_catalog_view.dart \
             test/features/exam_readiness/erdp/erdp9_retention_intelligence_test.dart
 
-      - name: Run ERDP-9 retention intelligence tests
-        run: flutter test test/features/exam_readiness/erdp/erdp9_retention_intelligence_test.dart
-
-      - name: Run ERDP-8 UX regression
-        run: flutter test test/features/exam_readiness/erdp/erdp8_daily_plan_ux_test.dart
-
-      - name: Run ERDP-7 integration regression
-        run: flutter test test/features/exam_readiness/erdp/erdp7_readiness_action_integration_test.dart
-
-      - name: Run ERDP-6 evidence regression
-        run: flutter test test/features/exam_readiness/erdp/erdp6_closed_evidence_loop_test.dart
-
-      - name: Run ERDP-2 Flashcard execution regression
-        run: flutter test test/features/exam_readiness/erdp/erdp2_flashcard_execution_test.dart
+      - name: Run ERDP-0 through ERDP-9 regressions
+        run: flutter test test/features/exam_readiness/erdp
 
       - name: Run Flashcard cloud regressions
         run: flutter test test/features/flashcards/cloud
 
-      - name: Run M7D Daily Plan regression
+      - name: Run M7D Daily Plan regressions
         run: flutter test test/features/exam_readiness/m7d
 
       - name: Diff hygiene
         run: git diff --check
 
-      - name: Commit ERDP-9 retention intelligence
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            lib/features/flashcards/learning/flashcard_review_queue_service.dart \
-            lib/features/exam_readiness/models/learning_evidence_event.dart \
-            lib/features/exam_readiness/models/activity_evidence_stats.dart \
-            lib/features/exam_readiness/services/readiness_profile_service.dart \
-            lib/features/exam_readiness/services/learning_state_update_coordinator.dart \
-            lib/features/exam_readiness/services/flashcard_retention_evidence_service.dart \
-            lib/features/exam_readiness/services/study_plan_completion_evidence_service.dart \
-            lib/features/exam_readiness/navigation/study_plan_block_launcher.dart \
-            lib/features/exam_readiness/navigation/flutter_study_plan_execution_navigator.dart \
-            lib/features/exam_readiness/screens/todays_plan_screen.dart \
-            lib/screens/flashcards/flashcard_competency_review_screen.dart \
-            lib/screens/flashcards/flashcards_catalog_view.dart \
-            test/features/exam_readiness/erdp/erdp9_retention_intelligence_test.dart
-          git commit -m "ERDP-9 close loop on Flashcard retention evidence"
-          git push origin HEAD:phase-erdp9-closed-loop-retention-intelligence
+      - name: Verify validation did not mutate repository
+        run: test -z "$(git status --porcelain)"
