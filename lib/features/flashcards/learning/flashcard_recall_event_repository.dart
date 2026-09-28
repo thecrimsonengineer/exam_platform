@@ -13,8 +13,9 @@ class FlashcardRecallEventRepository {
   static String storageKeyForUser(String userId) =>
       'csp11.student.$userId.flashcards.recall_events.v1';
 
-  String _requireUserId() =>
-      LearnerLocalIdentity.requireCurrentUserId(userIdOverride: userIdOverride);
+  String _requireUserId() => LearnerLocalIdentity.requireCurrentUserId(
+    userIdOverride: userIdOverride,
+  );
 
   Future<List<FlashcardRecallEvent>> loadAll({
     String? competencyId,
