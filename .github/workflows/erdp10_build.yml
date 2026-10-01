@@ -55,6 +55,24 @@ jobs:
       - name: Run M7D Daily Plan regressions
         run: flutter test test/features/exam_readiness/m7d
 
+      - name: Run home-startup INT-R3 regressions
+        run: flutter test test/integration/home_startup/int_r3_bootstrap_app_root_integration_test.dart
+
+      - name: Run home-startup INT-R4 regressions
+        run: flutter test test/integration/home_startup/int_r4_dependencies_assets_platform_test.dart
+
+      - name: Run home-startup INT-R5 regressions
+        run: flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
+
+      - name: Run home-startup INT-R7 regressions
+        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
+
+      - name: Run home-startup INT-R9A3 regressions
+        run: flutter test test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
+
+      - name: Run home-startup INT-R9A4 regressions
+        run: flutter test test/integration/home_startup/int_r9a4_authorization_chain_regression_test.dart
+
       - name: Run LAB regressions
         run: flutter test test/features/lab
 
@@ -72,9 +90,6 @@ jobs:
 
       - name: Run security contract regressions
         run: flutter test test/security
-
-      - name: Run home-startup integration regressions
-        run: flutter test test/integration/home_startup
 
       - name: Diff hygiene
         run: git diff --check
