@@ -103,6 +103,83 @@ void main() {
 
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('INT-R7 diagnostic G exact split timing keeps shell and light Home', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+
+    expect(find.byType(BottomNavigationScreen), findsOneWidget);
+    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(DarkHomeScreen), findsNothing);
+  });
+
+  testWidgets('INT-R7 diagnostic H exact split timing keeps Home R surfaces', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+
+    expect(
+      find.byKey(const ValueKey('home-study-content-search')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('home-continue-card')), findsOneWidget);
+    expect(find.byKey(const ValueKey('home-continue')), findsOneWidget);
+    expect(find.byKey(const ValueKey('home-progress-panel')), findsOneWidget);
+    expect(find.byKey(const ValueKey('home-exam-readiness')), findsOneWidget);
+  });
+
+  testWidgets('INT-R7 diagnostic I Home label occurs exactly once', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+    expect(find.text('Home'), findsOneWidget);
+  });
+
+  testWidgets('INT-R7 diagnostic J Learn label occurs exactly once', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+    expect(find.text('Learn'), findsOneWidget);
+  });
+
+  testWidgets('INT-R7 diagnostic K Practice label occurs exactly once', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+    expect(find.text('Practice'), findsOneWidget);
+  });
+
+  testWidgets('INT-R7 diagnostic L LAB label occurs exactly once', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+    expect(find.text('LAB'), findsOneWidget);
+  });
+
+  testWidgets('INT-R7 diagnostic M Flashcards label occurs exactly once', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+    expect(find.text('Flashcards'), findsOneWidget);
+  });
+
+  testWidgets('INT-R7 diagnostic N exact split timing has no render exception', (
+    tester,
+  ) async {
+    await _pumpOriginalHandoff(tester, userId);
+    expect(tester.takeException(), isNull);
+  });
+}
+
+Future<void> _pumpOriginalHandoff(WidgetTester tester, String userId) async {
+  _configurePhoneViewport(tester);
+  await tester.pumpWidget(_integratedApp(userId));
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 350));
+  await tester.pump(const Duration(milliseconds: 100));
+  await tester.pump(const Duration(milliseconds: 200));
 }
 
 void _configurePhoneViewport(WidgetTester tester) {
