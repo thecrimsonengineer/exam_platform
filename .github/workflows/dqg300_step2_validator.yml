@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - phase-q-dqg300-step2-validator
-      - content/nebosh-lo9-12-vibration-dqg300-006-010
   workflow_dispatch:
 
 jobs:
