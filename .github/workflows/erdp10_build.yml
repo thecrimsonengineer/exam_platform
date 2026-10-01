@@ -64,20 +64,32 @@ jobs:
       - name: Run home-startup INT-R5 regressions
         run: flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
 
-      - name: INT-R7 startup handoff contract
-        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart --plain-name "reduced Startup hands off once to the authorized learner shell and Home R"
+      - name: INT-R7 diagnostic A initial overlay
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic A overlay is present on first frame"
 
-      - name: INT-R7 bottom navigation contract
-        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart --plain-name "bottom navigation renders each learner destination exactly once"
+      - name: INT-R7 diagnostic B overlay dismissal
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic B reduced overlay dismisses by 450 ms"
 
-      - name: INT-R7 theme switch contract
-        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart --plain-name "theme switch replaces Home presentation without duplicating shell"
+      - name: INT-R7 diagnostic C authorized shell
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic C authorized shell is present after handoff"
 
-      - name: INT-R7 Today Plan navigation contract
-        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart --plain-name "Home opens authoritative Today Plan after Startup handoff"
+      - name: INT-R7 diagnostic D light Home
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic D light Home is selected after handoff"
 
-      - name: INT-R7 repeat launch contract
-        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart --plain-name "repeat app launch creates one fresh Startup overlay and one shell"
+      - name: INT-R7 diagnostic E Home R surfaces
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic E Home R core surfaces render"
+
+      - name: INT-R7 diagnostic F render exceptions
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic F Home handoff has no render exception"
+
+      - name: Run home-startup INT-R7 regressions
+        run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
 
       - name: Run home-startup INT-R9A3 regressions
         run: flutter test test/integration/home_startup/int_r9a3_supabase_bootstrap_verification_test.dart
