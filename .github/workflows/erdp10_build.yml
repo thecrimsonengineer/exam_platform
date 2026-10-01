@@ -88,6 +88,38 @@ jobs:
         continue-on-error: true
         run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic F Home handoff has no render exception"
 
+      - name: INT-R7 diagnostic G exact split shell and Home
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic G exact split timing keeps shell and light Home"
+
+      - name: INT-R7 diagnostic H exact split Home R surfaces
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic H exact split timing keeps Home R surfaces"
+
+      - name: INT-R7 diagnostic I Home label
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic I Home label occurs exactly once"
+
+      - name: INT-R7 diagnostic J Learn label
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic J Learn label occurs exactly once"
+
+      - name: INT-R7 diagnostic K Practice label
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic K Practice label occurs exactly once"
+
+      - name: INT-R7 diagnostic L LAB label
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic L LAB label occurs exactly once"
+
+      - name: INT-R7 diagnostic M Flashcards label
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic M Flashcards label occurs exactly once"
+
+      - name: INT-R7 diagnostic N exact split render exception
+        continue-on-error: true
+        run: flutter test test/integration/home_startup/int_r7_startup_handoff_diagnostic_test.dart --plain-name "INT-R7 diagnostic N exact split timing has no render exception"
+
       - name: Run home-startup INT-R7 regressions
         run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
 
