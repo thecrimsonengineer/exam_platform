@@ -64,30 +64,6 @@ jobs:
       - name: Run home-startup INT-R5 regressions
         run: flutter test test/integration/home_startup/int_r5_behavioral_seam_contract_test.dart
 
-      - name: INT-R7 first three cumulative
-        continue-on-error: true
-        run: >-
-          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
-          --plain-name "^(reduced Startup hands off once to the authorized learner shell and Home R|bottom navigation renders each learner destination exactly once|theme switch replaces Home presentation without duplicating shell)$"
-
-      - name: INT-R7 first four cumulative
-        continue-on-error: true
-        run: >-
-          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
-          --plain-name "^(reduced Startup hands off once to the authorized learner shell and Home R|bottom navigation renders each learner destination exactly once|theme switch replaces Home presentation without duplicating shell|Home opens authoritative Today Plan after Startup handoff)$"
-
-      - name: INT-R7 last three cumulative
-        continue-on-error: true
-        run: >-
-          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
-          --plain-name "^(theme switch replaces Home presentation without duplicating shell|Home opens authoritative Today Plan after Startup handoff|repeat app launch creates one fresh Startup overlay and one shell)$"
-
-      - name: INT-R7 last four cumulative
-        continue-on-error: true
-        run: >-
-          flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
-          --plain-name "^(bottom navigation renders each learner destination exactly once|theme switch replaces Home presentation without duplicating shell|Home opens authoritative Today Plan after Startup handoff|repeat app launch creates one fresh Startup overlay and one shell)$"
-
       - name: Run home-startup INT-R7 regressions
         run: flutter test test/integration/home_startup/int_r7_integrated_render_navigation_test.dart
 
