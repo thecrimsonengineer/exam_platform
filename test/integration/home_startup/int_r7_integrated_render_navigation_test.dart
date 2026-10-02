@@ -6,6 +6,7 @@ import 'package:exam_platform/screens/navigation/bottom_navigation.dart';
 import 'package:exam_platform/screens/startup/csp11_startup_screen.dart';
 import 'package:exam_platform/screens/startup/startup_motion_policy.dart';
 import 'package:exam_platform/services/auth/learner_local_identity.dart';
+import 'package:exam_platform/services/learning_activity_tracker.dart';
 import 'package:exam_platform/services/online_access/learner_connectivity_signal_source.dart';
 import 'package:exam_platform/services/online_access/learner_online_access_gate.dart';
 import 'package:exam_platform/services/online_access/learner_online_access_session_controller.dart';
@@ -20,13 +21,15 @@ void main() {
 
   const userId = 'int-r7-learner';
 
-  setUp(() {
+  setUp(() async {
+    await LearningActivityTracker.instance.dispose();
     SharedPreferences.setMockInitialValues(_savedLearnerState(userId));
     LearnerLocalIdentity.activate(userId);
     ThemeModeService.isDarkMode.value = false;
   });
 
-  tearDown(() {
+  tearDown(() async {
+    await LearningActivityTracker.instance.dispose();
     LearnerLocalIdentity.clear();
     ThemeModeService.isDarkMode.value = true;
   });
