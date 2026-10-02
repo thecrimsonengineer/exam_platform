@@ -205,6 +205,7 @@ void main() {
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
+      await LearningActivityTracker.instance.dispose();
 
       await tester.pumpWidget(_integratedApp(userId));
       await tester.pump();
@@ -220,6 +221,10 @@ void main() {
       expect(find.byType(BottomNavigationScreen), findsOneWidget);
       expect(find.byType(NavigationBar), findsOneWidget);
       expect(tester.takeException(), isNull);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+      await LearningActivityTracker.instance.dispose();
     },
   );
 }
