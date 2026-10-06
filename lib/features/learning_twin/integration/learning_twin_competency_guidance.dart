@@ -120,6 +120,7 @@ class _LearningTwinCompetencyGuidanceState
       message: message.body,
       asset: LearningTwinAsset.explain,
       onDismiss: _dismiss,
+      invertSurfaceContrast: true,
     );
   }
 }
