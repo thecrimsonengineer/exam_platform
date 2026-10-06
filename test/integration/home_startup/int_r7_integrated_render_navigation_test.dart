@@ -22,22 +22,16 @@ void main() {
   const userId = 'int-r7-learner';
 
   setUp(() async {
-    _trace('setUp: tracker dispose begin');
     await LearningActivityTracker.instance.dispose();
-    _trace('setUp: tracker dispose end');
     SharedPreferences.setMockInitialValues(_savedLearnerState(userId));
     LearnerLocalIdentity.activate(userId);
     ThemeModeService.isDarkMode.value = false;
-    _trace('setUp: complete');
   });
 
   tearDown(() async {
-    _trace('tearDown: tracker dispose begin');
     await LearningActivityTracker.instance.dispose();
-    _trace('tearDown: tracker dispose end');
     LearnerLocalIdentity.clear();
     ThemeModeService.isDarkMode.value = true;
-    _trace('tearDown: complete');
   });
 
   testWidgets(
@@ -197,67 +191,37 @@ void main() {
   testWidgets(
     'repeat app launch creates one fresh Startup overlay and one shell',
     (tester) async {
-      _trace('repeat: first pumpWidget begin');
       await tester.pumpWidget(_integratedApp(userId));
-      _trace('repeat: first pumpWidget end');
       await tester.pump();
-      _trace('repeat: first pump end');
 
       expect(
         find.byKey(const ValueKey('csp11-startup-overlay')),
         findsOneWidget,
       );
 
-      _trace('repeat: first 450ms pump begin');
       await tester.pump(const Duration(milliseconds: 450));
-      _trace('repeat: first 450ms pump end');
       expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
       expect(find.byType(BottomNavigationScreen), findsOneWidget);
 
-      _trace('repeat: first unmount begin');
       await tester.pumpWidget(const SizedBox.shrink());
-      _trace('repeat: first unmount end');
       await tester.pump();
-      _trace('repeat: post-unmount pump end');
-      _trace('repeat: middle tracker dispose begin');
-      await LearningActivityTracker.instance.dispose();
-      _trace('repeat: middle tracker dispose end');
 
-      _trace('repeat: second pumpWidget begin');
       await tester.pumpWidget(_integratedApp(userId));
-      _trace('repeat: second pumpWidget end');
       await tester.pump();
-      _trace('repeat: second pump end');
 
       expect(
         find.byKey(const ValueKey('csp11-startup-overlay')),
         findsOneWidget,
       );
 
-      _trace('repeat: second 450ms pump begin');
       await tester.pump(const Duration(milliseconds: 450));
-      _trace('repeat: second 450ms pump end');
 
       expect(find.byKey(const ValueKey('csp11-startup-overlay')), findsNothing);
       expect(find.byType(BottomNavigationScreen), findsOneWidget);
       expect(find.byType(NavigationBar), findsOneWidget);
       expect(tester.takeException(), isNull);
-
-      _trace('repeat: final unmount begin');
-      await tester.pumpWidget(const SizedBox.shrink());
-      _trace('repeat: final unmount end');
-      await tester.pump();
-      _trace('repeat: final post-unmount pump end');
-      _trace('repeat: final tracker dispose begin');
-      await LearningActivityTracker.instance.dispose();
-      _trace('repeat: final tracker dispose end');
-      _trace('repeat: body complete');
     },
   );
-}
-
-void _trace(String message) {
-  debugPrint('[INT-R7 TRACE] $message');
 }
 
 Widget _integratedApp(String userId) {
