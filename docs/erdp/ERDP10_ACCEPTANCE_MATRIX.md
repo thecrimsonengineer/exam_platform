@@ -1,8 +1,10 @@
 # ERDP-10 Whole-System Acceptance Matrix
 
-Status: ACTIVE
+Status: CLOSED
 Phase: ERDP-10
 Required base: `phase-erdp9-closed-loop-retention-intelligence-closed@a2b4b2289e5a932d1a478c129e30b7816022119b`
+Validated implementation head: `4725c4bf5648a1765e19df30a181da80c0f5de43`
+Successful whole-system acceptance run: `37429778541`
 
 ## Primary journey
 
