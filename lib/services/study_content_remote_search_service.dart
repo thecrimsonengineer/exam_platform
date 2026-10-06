@@ -15,7 +15,7 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
     SupabaseClient? client,
     FirebaseLearnerAccessTokenProvider? tokenProvider,
   }) : _client = client,
-       _tokenProvider = tokenProvider ?? FirebaseLearnerAccessTokenProvider(),
+       _tokenProvider = tokenProvider,
        super(loadPublishedContent: () async => const []);
 
   static const _requestTimeout = Duration(seconds: 8);
@@ -23,7 +23,7 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
   static const _maxCacheEntries = 24;
 
   final SupabaseClient? _client;
-  final FirebaseLearnerAccessTokenProvider _tokenProvider;
+  FirebaseLearnerAccessTokenProvider? _tokenProvider;
   final LinkedHashMap<String, _CachedRemoteSearch> _cache = LinkedHashMap();
   final Map<String, Future<List<StudyContentSearchResult>>> _inFlight = {};
 
@@ -105,7 +105,9 @@ class RemoteStudyContentSearchService extends StudyContentSearchService {
   }) async {
     _requireSameAuthorizedUser(userId);
 
-    final token = await _tokenProvider.currentToken();
+    final tokenProvider =
+        _tokenProvider ??= FirebaseLearnerAccessTokenProvider();
+    final token = await tokenProvider.currentToken();
     if (token == null || token.trim().isEmpty) {
       throw StateError(
         'A current Firebase ID token is required for protected learner search.',
