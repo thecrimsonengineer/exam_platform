@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - phase-rel-gov-release-governance
+      - phase-post-erdp-rel-gov-integration
     paths:
       - 'tool/release_governance/**'
       - 'test/release_governance/**'
