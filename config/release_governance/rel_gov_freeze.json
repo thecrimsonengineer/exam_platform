@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "phase": "REL-GOV-0",
+  "status": "frozen",
+  "repository": "thecrimsonengineer/exam_platform",
+  "workingBranch": "phase-rel-gov-release-governance",
+  "frozenAt": "2026-09-24",
+  "base": {
+    "branch": "main",
+    "commitSha": "a464db00967aa6822c142268e8e6b2161af966f7",
+    "treeSha": "67f505d1986813dbc3d86feebf811486814b819c"
+  },
+  "plannedRuns": 12,
+  "finalClosureCheckpoint": "phase-rel-gov-closed",
+  "releaseStates": [
+    "development",
+    "candidate",
+    "validated",
+    "frozen",
+    "released",
+    "withdrawn",
+    "superseded"
+  ],
+  "allowedTransitions": [
+    ["development", "candidate"],
+    ["candidate", "validated"],
+    ["validated", "frozen"],
+    ["frozen", "released"],
+    ["released", "withdrawn"],
+    ["released", "superseded"],
+    ["frozen", "superseded"]
+  ],
+  "requiredIdentityFields": [
+    "releaseId",
+    "versionName",
+    "buildNumber",
+    "releaseStatus",
+    "repository",
+    "branchOrRef",
+    "commitSha",
+    "treeSha",
+    "manifestSchemaVersion",
+    "manifestSha256",
+    "createdAt"
+  ],
+  "validationFamilies": [
+    "repository",
+    "version",
+    "dependencies",
+    "environment",
+    "formatting",
+    "analysis",
+    "tests",
+    "schemas",
+    "components",
+    "artifacts",
+    "hashes",
+    "provenance",
+    "releaseState",
+    "evidenceCompleteness"
+  ],
+  "artifactHashAlgorithm": "SHA-256",
+  "failClosed": true,
+  "publicationInScope": false,
+  "productionSigningInScope": false,
+  "syntheticSelfValidationAllowed": true,
+  "invariants": [
+    {"id":"RG-INV-001","name":"reality_over_declaration","blocking":true},
+    {"id":"RG-INV-002","name":"fail_closed","blocking":true},
+    {"id":"RG-INV-003","name":"blocking_failures_block","blocking":true},
+    {"id":"RG-INV-004","name":"frozen_release_immutability","blocking":true},
+    {"id":"RG-INV-005","name":"cryptographic_artifact_identity","blocking":true},
+    {"id":"RG-INV-006","name":"exact_git_provenance","blocking":true},
+    {"id":"RG-INV-007","name":"publication_separation","blocking":true},
+    {"id":"RG-INV-008","name":"secret_separation","blocking":true},
+    {"id":"RG-INV-009","name":"parallel_phase_independence","blocking":true},
+    {"id":"RG-INV-010","name":"synthetic_self_validation","blocking":true},
+    {"id":"RG-INV-011","name":"evidence_ownership","blocking":true},
+    {"id":"RG-INV-012","name":"state_machine_enforcement","blocking":true},
+    {"id":"RG-INV-013","name":"no_silent_scope_expansion","blocking":true},
+    {"id":"RG-INV-014","name":"non_publishing_ci","blocking":true},
+    {"id":"RG-INV-015","name":"component_independence","blocking":true}
+  ],
+  "ownedPaths": [
+    "docs/release_governance/",
+    "tool/release_governance/",
+    "test/release_governance/",
+    "config/release_governance/",
+    "schemas/release_governance/",
+    ".github/workflows/csp11_release_candidate.yml"
+  ],
+  "nextAction": "REL-GOV-1: Versioning and Release Identity Contract"
+}
