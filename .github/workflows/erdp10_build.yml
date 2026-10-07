@@ -5,6 +5,7 @@ on:
     branches:
       - phase-erdp10-whole-system-acceptance
       - phase-post-erdp-learning-twin-card-sync
+      - phase-post-erdp-rel-gov-integration
   workflow_dispatch:
 
 permissions:
