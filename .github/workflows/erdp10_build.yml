@@ -6,6 +6,7 @@ on:
       - phase-erdp10-whole-system-acceptance
       - phase-post-erdp-learning-twin-card-sync
       - phase-post-erdp-rel-gov-integration
+      - phase-post-rel-gov-global-navigation-motion-integration
   workflow_dispatch:
 
 permissions:
