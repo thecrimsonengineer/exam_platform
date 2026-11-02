@@ -41,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           git merge-base --is-ancestor 156ea074e1f420672490511a01117804dc22ce74 HEAD
-          python tools/security/sec01b_android_identity.py --mode registered
+          python tools/security/sec01b_android_identity.py --mode release
           git diff --check
 
       - name: Require public Supabase client configuration
@@ -110,7 +110,7 @@ jobs:
             echo "SHA=${GITHUB_SHA}"
             echo "PACKAGE=com.csp11.examplatform"
             echo "FIREBASE_ANDROID_APP_ID=1:984608502679:android:99d154c5e5f6d083ca0ad2"
-            echo "GOOGLE_SIGN_IN_SHA=NOT_YET_REGISTERED"
+            echo "GOOGLE_SIGN_IN_ANDROID_SHA1=REGISTERED; PLAY_CERT=NOT_YET_VERIFIED"
             sha256sum "$APK"
           } > sec01b-nova-debug-evidence.txt
 
