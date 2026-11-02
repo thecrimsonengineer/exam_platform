@@ -18,13 +18,6 @@ def write(root: Path, name: str, content: str) -> None:
 def fixture(root: Path, package: str, *, oauth: bool = True) -> None:
     app_id = "1:123456789:android:abcdef"
     write(root, "android/app/build.gradle.kts", (
-        'android {\n'
-        f'    namespace = "{package}"\n'
-        f'    defaultConfig {{ applicationId = "{package}" }}\n'
-        '}\n'
-    ))
-    # Use a literal app ID line as the actual repo does; no alternate Gradle syntax.
-    write(root, "android/app/build.gradle.kts", (
         f'    namespace = "{package}"\n'
         '    defaultConfig {\n'
         f'        applicationId = "{package}"\n'
