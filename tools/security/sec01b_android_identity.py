@@ -2,9 +2,10 @@
 """SEC-01B: verify CSP11 Android/Firebase identity before a Play build.
 
 This checker is read-only. It never registers Firebase or Play apps.
-Two modes:
-  baseline : existing debug installation/configuration must remain consistent.
-  release  : selected Play package and Firebase registration must agree.
+Three modes:
+  baseline   : existing debug installation/configuration remains consistent.
+  registered : new Android package and Firebase registration match, signing SHA pending.
+  release    : new package, Firebase, web OAuth, and signing SHA all present.
 
 Example:
   python tools/security/sec01b_android_identity.py --mode baseline
@@ -36,7 +37,7 @@ def _json(root: Path, relative: str) -> dict:
 
 def inspect(root: Path, mode: str) -> list[str]:
     errors: list[str] = []
-    expected = PLAY_ID if mode == "release" else BASELINE_ID
+    expected = PLAY_ID if mode != "baseline" else BASELINE_ID
     if not PACKAGE_PATTERN.fullmatch(PLAY_ID):
         errors.append(f"Proposed Play application ID has invalid syntax: {PLAY_ID}")
 
@@ -86,10 +87,10 @@ def inspect(root: Path, mode: str) -> list[str]:
         if not firebase_app_id or ":android:" not in firebase_app_id:
             errors.append("Matching Google Services client is missing its Android Firebase app ID")
         oauth = matches[0].get("oauth_client", [])
-        if mode == "release":
+        if mode in ("registered", "release"):
             if not any(isinstance(c, dict) and c.get("client_type") == 3 for c in oauth):
                 errors.append("Google Sign-In web OAuth client (client_type=3) missing")
-            if not any(
+            if mode == "release" and not any(
                 isinstance(c, dict) and c.get("client_type") == 1
                 and c.get("android_info", {}).get("package_name") == app_id
                 and c.get("android_info", {}).get("certificate_hash")
@@ -133,7 +134,7 @@ def inspect(root: Path, mode: str) -> list[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("baseline", "release"), required=True)
+    parser.add_argument("--mode", choices=("baseline", "registered", "release"), required=True)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     args = parser.parse_args()
     try:
@@ -146,9 +147,11 @@ def main() -> int:
             print(f"  - {error}")
         return 1
     print(f"SEC-01B {args.mode.upper()}: IDENTITY FILES CONSISTENT")
-    print(f"Application ID: {PLAY_ID if args.mode == 'release' else BASELINE_ID}")
+    print(f"Application ID: {PLAY_ID if args.mode != 'baseline' else BASELINE_ID}")
+    if args.mode == "registered":
+        print("NOTE: Android SHA fingerprints are not yet registered; Play Google sign-in remains pending.")
     if args.mode == "release":
-        print("NOTE: Play Console package reservation and live sign-in must still be verified.")
+        print("NOTE: Live Play-installed Google sign-in is not yet verified.")
     return 0
 
 
