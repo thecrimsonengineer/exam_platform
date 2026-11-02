@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCawHUhwPkeb31XutbaewEA8AeGF89cG_c',
-    appId: '1:984608502679:android:80cbdc69e27a54e5ca0ad2',
+    appId: '1:984608502679:android:99d154c5e5f6d083ca0ad2',
     messagingSenderId: '984608502679',
     projectId: 'csp11-exam-platform',
     storageBucket: 'csp11-exam-platform.firebasestorage.app',
