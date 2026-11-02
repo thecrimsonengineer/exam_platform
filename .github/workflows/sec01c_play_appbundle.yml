@@ -1,0 +1,224 @@
+name: SEC-01C Controlled Google Play App Bundle
+
+on:
+  push:
+    branches:
+      - phase-sec01-play-release-foundation
+    paths:
+      - 'android/app/build.gradle.kts'
+      - 'tools/security/sec01c_play_release_preflight.py'
+      - 'tools/security/test_sec01c_play_release_preflight.py'
+      - '.github/workflows/sec01c_play_appbundle.yml'
+  workflow_dispatch:
+    inputs:
+      confirm_play_registration:
+        description: 'I have confirmed com.csp11.examplatform in my Play Console'
+        type: boolean
+        required: true
+        default: false
+      confirm_firebase_registration:
+        description: 'I have registered the new Android app in the existing CSP11 Firebase project'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sec01c-play-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  security-guard-tests:
+    name: Test release safeguards (no keystore required)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout isolated SEC-01 branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify unchanged frozen ancestry
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "phase-sec01-play-release-foundation"
+          git merge-base --is-ancestor 156ea074e1f420672490511a01117804dc22ce74 HEAD
+          git diff --check
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run Android identity and signing rejection tests
+        run: python -m unittest discover -s tools/security -p 'test_sec01*.py' -v
+      - name: Confirm legacy development identity still matches
+        # Before SEC-01B final Firebase migration, only baseline may pass.
+        run: python tools/security/sec01b_android_identity.py --mode baseline
+
+  signed-play-aab:
+    name: Build controlled, signed Play AAB (manual, gated)
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_play_registration == true && inputs.confirm_firebase_registration == true }}
+    needs: security-guard-tests
+    runs-on: ubuntu-latest
+    environment: play-release
+    timeout-minutes: 70
+    env:
+      CSP11_PLAY_RELEASE: 'true'
+      SUPABASE_URL: 'https://esfycnmfywxczfillioj.supabase.co'
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+      CSP11_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.CSP11_PLAY_STORE_PASSWORD }}
+      CSP11_ANDROID_KEY_ALIAS: ${{ secrets.CSP11_PLAY_KEY_ALIAS }}
+      CSP11_ANDROID_KEY_PASSWORD: ${{ secrets.CSP11_PLAY_KEY_PASSWORD }}
+      CSP11_PLAY_UPLOAD_CERT_SHA256: ${{ vars.CSP11_PLAY_UPLOAD_CERT_SHA256 }}
+
+    steps:
+      - name: Checkout current isolated SEC-01 branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify source ancestry and workflow branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "phase-sec01-play-release-foundation"
+          git merge-base --is-ancestor 156ea074e1f420672490511a01117804dc22ce74 HEAD
+          git diff --check
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Decode Play upload key into temporary runner storage
+        shell: bash
+        env:
+          CSP11_PLAY_KEYSTORE_BASE64: ${{ secrets.CSP11_PLAY_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          test -n "${CSP11_PLAY_KEYSTORE_BASE64:-}"
+          umask 077
+          KEYSTORE="${RUNNER_TEMP}/csp11-play-upload.jks"
+          printf '%s' "$CSP11_PLAY_KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE"
+          test -s "$KEYSTORE"
+          printf 'CSP11_ANDROID_KEYSTORE_PATH=%s\n' "$KEYSTORE" >> "$GITHUB_ENV"
+          echo "Temporary upload keystore restored. Secret bytes not logged."
+
+      - name: Prove final package registration, Firebase config and secret preflight
+        run: python tools/security/sec01c_play_release_preflight.py
+
+      - name: Independently verify the upload certificate and reject Android Debug
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEY_INFO="${RUNNER_TEMP}/upload-cert.txt"
+          keytool -list -v \
+            -keystore "$CSP11_ANDROID_KEYSTORE_PATH" \
+            -alias "$CSP11_ANDROID_KEY_ALIAS" \
+            -storepass:env CSP11_ANDROID_KEYSTORE_PASSWORD \
+            > "$KEY_INFO"
+          if grep -qi 'CN=Android Debug' "$KEY_INFO"; then
+            echo "::error::Android Debug certificate is forbidden for Play"
+            exit 1
+          fi
+          CERT_SHA256="$(sed -n 's/.*SHA256: //p' "$KEY_INFO" | head -n 1 | tr -d ':' | tr '[:lower:]' '[:upper:]')"
+          EXPECTED="$(printf '%s' "$CSP11_PLAY_UPLOAD_CERT_SHA256" | tr -d ':' | tr '[:lower:]' '[:upper:]')"
+          test "${#CERT_SHA256}" -eq 64
+          test "$CERT_SHA256" = "$EXPECTED"
+          echo "Upload certificate matches the independently configured public fingerprint."
+
+      - name: Resolve and analyze Flutter source
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter pub get
+          git diff --exit-code -- pubspec.lock
+          flutter analyze --no-fatal-infos
+
+      - name: Replay protected content and learner authorisation regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter test test/services/online_access
+          flutter test test/services/supabase
+          flutter test test/screens/auth
+          flutter test test/architecture/phase_fr8_online_authorized_cache_security_test.dart
+          flutter test test/architecture/phase_fr9_edge_gateway_test.dart
+          flutter test test/architecture/phase_fr10_content_gateway_test.dart
+
+      - name: Produce signed Google Play Android App Bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter build appbundle --release \
+            --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY"
+          test -s build/app/outputs/bundle/release/app-release.aab
+
+      - name: Verify AAB signature, manifest identity, target API and artifact hash
+        shell: bash
+        run: |
+          set -euo pipefail
+          AAB=build/app/outputs/bundle/release/app-release.aab
+          jarsigner -verify "$AAB" > "${RUNNER_TEMP}/jarsigner-check.txt"
+          grep -q 'jar verified.' "${RUNNER_TEMP}/jarsigner-check.txt"
+          CERT_SHA256="$(keytool -printcert -jarfile "$AAB" |
+            sed -n 's/.*SHA256: //p' | head -n 1 | tr -d ':' | tr '[:lower:]' '[:upper:]')"
+          EXPECTED="$(printf '%s' "$CSP11_PLAY_UPLOAD_CERT_SHA256" |
+            tr -d ':' | tr '[:lower:]' '[:upper:]')"
+          test -n "$CERT_SHA256"
+          test "$CERT_SHA256" = "$EXPECTED"
+
+          BUNDLETOOL="${RUNNER_TEMP}/bundletool-1.18.3.jar"
+          curl --fail --location --silent --show-error --retry 3 \
+            "https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar" \
+            --output "$BUNDLETOOL"
+          echo "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  $BUNDLETOOL" | sha256sum --check
+          java -jar "$BUNDLETOOL" validate --bundle="$AAB"
+          PACKAGE="$(java -jar "$BUNDLETOOL" dump manifest --bundle="$AAB" --xpath=/manifest/@package | tr -d '\r\n')"
+          TARGET="$(java -jar "$BUNDLETOOL" dump manifest --bundle="$AAB" --xpath=/manifest/uses-sdk/@android:targetSdkVersion | tr -d '\r\n')"
+          VERSION_CODE="$(java -jar "$BUNDLETOOL" dump manifest --bundle="$AAB" --xpath=/manifest/@android:versionCode | tr -d '\r\n')"
+          test "$PACKAGE" = "com.csp11.examplatform"
+          [[ "$TARGET" =~ ^[0-9]+$ ]]
+          test "$TARGET" -ge 36
+          [[ "$VERSION_CODE" =~ ^[0-9]+$ ]]
+          test "$VERSION_CODE" -gt 0
+
+          {
+            echo "SEC01C_CONTROLLED_PLAY_AAB=VERIFIED"
+            echo "COMMIT=$GITHUB_SHA"
+            echo "ANDROID_PACKAGE=$PACKAGE"
+            echo "TARGET_SDK=$TARGET"
+            echo "VERSION_CODE=$VERSION_CODE"
+            echo "UPLOAD_CERT_SHA256=$CERT_SHA256"
+            sha256sum "$AAB"
+          } > "${RUNNER_TEMP}/sec01c-release-evidence.txt"
+
+      - name: Upload signed bundle and non-secret verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: CSP11-SEC01C-signed-play-appbundle
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+            ${{ runner.temp }}/sec01c-release-evidence.txt
+          retention-days: 10
+          if-no-files-found: error
+
+      - name: Clean temporary signing material
+        if: always()
+        shell: bash
+        run: |
+          rm -f "${RUNNER_TEMP}/csp11-play-upload.jks"
