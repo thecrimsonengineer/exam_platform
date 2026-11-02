@@ -37,7 +37,7 @@ class ExamPlatformApp extends StatelessWidget {
           builder: (context, navigationMotionEnabled, _) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
-              title: 'CSP11 Learning Platform',
+              title: 'CSP 11 Nova: CSP Exam Prep.',
               theme: AppNavigationMotion.apply(
                 AppTheme.studentGlassLightTheme,
                 enabled: navigationMotionEnabled,
