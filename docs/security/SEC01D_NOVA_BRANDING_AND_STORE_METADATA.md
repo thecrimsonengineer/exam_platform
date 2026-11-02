@@ -1,7 +1,7 @@
 # SEC-01D — CSP 11 Nova app identity and store metadata
 
 **Approved display name:** `CSP 11 Nova: CSP Exam Prep.`  
-**Character count:** 28 (Google Play maximum: 30).  
+**Character count:** 27 (Google Play maximum: 30).  
 **Android package candidate:** `com.csp11.examplatform` (NOT registered/verified in Play Console yet).  
 **Business model:** Completely free; do not introduce in-app billing or premium entitlements.  
 **Firebase:** existing project `csp11-exam-platform`; authentication must stay intact.  
