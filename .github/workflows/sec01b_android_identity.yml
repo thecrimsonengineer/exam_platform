@@ -39,8 +39,7 @@ jobs:
           python-version: '3.12'
       - name: Run SEC-01B fail-closed unit tests
         run: python -m unittest discover -s tools/security -p 'test_sec01b_android_identity.py' -v
-      - name: Verify current Firebase identity remains consistent
-        # Until Play Console reserves the final package name and Firebase
-        # registration is complete, the working APK keeps its current identity.
-        # At migration, replace baseline with release and require a green gate.
-        run: python tools/security/sec01b_android_identity.py --mode baseline
+      - name: Verify registered Nova Firebase identity and Google web OAuth client
+        # Nova Firebase Android app is registered; upload/Play signing SHA remains
+        # pending. Signed release preflight still requires --mode release.
+        run: python tools/security/sec01b_android_identity.py --mode registered
