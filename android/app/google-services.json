@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "984608502679-r7lqjh0l3nt44bdfkmhoevvp83asiv0g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.csp11.examplatform",
+            "certificate_hash": "b4a0b1b13b673177e072c4bacd01e7614c60e41f"
+          }
+        },
+        {
           "client_id": "984608502679-b82tj73tj9i5do6uiskgqh6mosctdq1k.apps.googleusercontent.com",
           "client_type": 3
         }
