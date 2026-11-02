@@ -77,6 +77,25 @@ class IdentityTests(unittest.TestCase):
             fixture(root, PLAY_ID)
             self.assertEqual(inspect(root, "release"), [])
 
+    def test_registered_mode_accepts_web_oauth_without_android_sha(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            fixture(root, PLAY_ID)
+            config = root / "android/app/google-services.json"
+            data = json.loads(config.read_text(encoding="utf-8"))
+            data["client"][0]["oauth_client"] = [
+                {"client_type": 3, "client_id": "web.example.apps.googleusercontent.com"}
+            ]
+            config.write_text(json.dumps(data), encoding="utf-8")
+            self.assertEqual(inspect(root, "registered"), [])
+            self.assertTrue(any("SHA-1" in e for e in inspect(root, "release")))
+
+    def test_registered_mode_rejects_missing_web_oauth(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            fixture(root, PLAY_ID, oauth=False)
+            self.assertTrue(any("web OAuth client" in e for e in inspect(root, "registered")))
+
     def test_wrong_firebase_project_fails_closed(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
