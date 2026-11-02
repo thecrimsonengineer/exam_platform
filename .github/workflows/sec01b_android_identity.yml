@@ -1,0 +1,46 @@
+name: SEC-01B Android and Firebase identity preflight
+
+on:
+  push:
+    branches:
+      - phase-sec01-play-release-foundation
+    paths:
+      - 'tools/security/sec01b_android_identity.py'
+      - 'tools/security/test_sec01b_android_identity.py'
+      - 'android/app/build.gradle.kts'
+      - 'android/app/google-services.json'
+      - 'android/app/src/main/**'
+      - 'firebase.json'
+      - 'lib/firebase_options.dart'
+      - '.github/workflows/sec01b_android_identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  identity-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout SEC-01 branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen baseline is an ancestor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 156ea074e1f420672490511a01117804dc22ce74 HEAD
+          git diff --check
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run SEC-01B fail-closed unit tests
+        run: python -m unittest discover -s tools/security -p 'test_sec01b_android_identity.py' -v
+      - name: Verify current Firebase identity remains consistent
+        # Until Play Console reserves the final package name and Firebase
+        # registration is complete, the working APK keeps its current identity.
+        # At migration, replace baseline with release and require a green gate.
+        run: python tools/security/sec01b_android_identity.py --mode baseline
