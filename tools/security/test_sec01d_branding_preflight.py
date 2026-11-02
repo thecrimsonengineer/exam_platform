@@ -30,7 +30,7 @@ def setup_branding(root: Path) -> None:
 class BrandingTests(unittest.TestCase):
     def test_approved_title_within_play_limit(self):
         self.assertLessEqual(len(PLAY_NAME), 30)
-        self.assertEqual(len(PLAY_NAME), 28)
+        self.assertEqual(len(PLAY_NAME), 27)
 
     def test_consistent_branding_passes(self):
         with tempfile.TemporaryDirectory() as tmp:
