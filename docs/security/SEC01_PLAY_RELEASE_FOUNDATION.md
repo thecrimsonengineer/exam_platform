@@ -1,7 +1,9 @@
 # SEC-01 — CSP11 Google Play Release Foundation
 
 **Status:** IN PROGRESS — baseline verified, Play upload BLOCKED until release gates pass  
-**Business model:** Completely free app (no in-app billing, premium entitlements, or subscription enforcement)  
+**Business model:** Completely free app (no in-app billing, premium entitlements, or subscription enforcement)
+**Approved user-facing name:** `CSP 11 Nova: CSP Exam Prep.` (28 characters; package ID still unregistered)
+  
 **Source repository:** `thecrimsonengineer/exam_platform`  
 **Immutable source checkpoint:** `phase-post-rel-gov-global-navigation-motion-integration-closed@156ea074e1f420672490511a01117804dc22ce74`  
 **Working branch:** `phase-sec01-play-release-foundation`  
@@ -27,6 +29,17 @@
 | Flutter app version is `1.0.0+1` | `pubspec.yaml` | Choose initial version and monotonically increasing versionCode. |
 | Gradle target uses `flutter.targetSdkVersion` | `android/app/build.gradle.kts` | Verify the *resolved* target API is at least 36 in the final Android App Bundle. |
 | Android signing secrets are not covered by all usual filename patterns in `.gitignore` | `.gitignore` | Add explicit ignores for keystore and local key properties. |
+
+## SEC-01D branding checkpoint (02 Nov 2026)
+- [x] Approved name: `CSP 11 Nova: CSP Exam Prep.` (28/30 Play title characters).
+- [x] Added Android `@string/app_name`, Flutter `MaterialApp.title`, and Web/PWA name metadata.
+- [x] Added brand-consistency preflight and self-contained regression tests to SEC-01C guard suite.
+- [ ] Verify Google Play accepts title and `com.csp11.examplatform` registration under developer account.
+- [ ] Complete production package/Firebase identity migration and test Play-installed sign-in.
+- [ ] Check original icon and any certification trademark usage against Play impersonation policy.
+- [ ] Validate device launcher display and actual Play listing before public release.
+
+See `docs/security/SEC01D_NOVA_BRANDING_AND_STORE_METADATA.md`.
 
 ## Implementation order and gates
 
