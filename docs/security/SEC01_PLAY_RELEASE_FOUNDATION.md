@@ -40,14 +40,14 @@
 **Acceptance A:** frozen SHA unchanged; SEC-01 branch has verified ancestry; change list contains only explicitly approved SEC-01 files.
 
 ### SEC-01B. Production package name and Firebase identity
-- [ ] Owner selects final unique reverse-domain package ID and checks it is not already reserved in their Play Console.
+- [x] Owner selected candidate `com.csp11.examplatform`; syntax verified. Play Console reservation remains unverified.\n- [ ] Owner confirms `com.csp11.examplatform` is reserved and eligible in their Play Console.
 - [ ] Decide whether historical sideloaded debug installations must be separately uninstallable: changing the package ID creates a different Android app.
 - [ ] Update `applicationId` and appropriate Android Kotlin/namespace/component paths while preserving functionality.
 - [ ] Register final Android app in Firebase project `csp11-exam-platform`; replace `google-services.json` for final package. Verify any `firebase_options.dart` changes are limited to Android config.
 - [ ] Configure Google sign-in certificate SHA-1/SHA-256 for the **upload** certificate and the **Play app-signing** certificate, as appropriate.
 - [ ] Run email/password and Google sign-in tests on Play-installed build after internal release.
 
-**Acceptance B:** bundle application ID equals Play Console application ID and Firebase Android registration; sign-in tests pass; package identity fixed for future updates.
+**Acceptance B:** bundle application ID equals Play Console application ID and Firebase Android registration; sign-in tests pass; package identity fixed for future updates.\n\n**SEC-01B implementation checkpoint (02 Nov 2026):** Added a read-only consistency checker, mismatch unit tests, and scoped GitHub Actions preflight. Working Android ID remains the original until Play Console reservation and new Firebase registration. See `docs/security/SEC01B_ANDROID_IDENTITY_MIGRATION.md`.
 
 ### SEC-01C. Protected production signing
 - [ ] Generate a **new** Play upload key privately and keep encrypted backups outside the repository. Use Play App Signing for the distribution certificate.
