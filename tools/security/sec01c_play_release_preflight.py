@@ -10,6 +10,7 @@ keytool, and the signed AAB is verified independently in CI.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 from pathlib import Path
@@ -52,6 +53,28 @@ def check(root: Path, env: Mapping[str, str]) -> list[str]:
     expected_fingerprint = env.get("CSP11_PLAY_UPLOAD_CERT_SHA256", "").replace(":", "")
     if not FINGERPRINT.fullmatch(expected_fingerprint):
         errors.append("Expected SHA-256 upload certificate fingerprint is missing/invalid.")
+
+    # A local debug SHA-1 is NOT enough to authorise a Play release.
+    play_sha1 = env.get("CSP11_PLAY_APP_SIGNING_SHA1", "").replace(":", "").strip().lower()
+    if not re.fullmatch(r"[a-f0-9]{40}", play_sha1):
+        errors.append("Expected Play app-signing SHA-1 is missing or invalid.")
+    else:
+        firebase_cfg = json.loads(
+            (root / "android/app/google-services.json").read_text(encoding="utf-8")
+        )
+        nova_clients = [
+            client for client in firebase_cfg.get("client", [])
+            if client.get("client_info", {}).get("android_client_info", {}).get("package_name")
+            == "com.csp11.examplatform"
+        ]
+        configured = {
+            item.get("android_info", {}).get("certificate_hash", "").lower()
+            for client in nova_clients
+            for item in client.get("oauth_client", [])
+            if item.get("client_type") == 1
+        }
+        if play_sha1 not in configured:
+            errors.append("Play app-signing SHA-1 is not registered for Nova in Firebase.")
 
     gradle = (root / "android/app/build.gradle.kts").read_text(encoding="utf-8")
     for fragment in (
