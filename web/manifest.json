@@ -1,11 +1,11 @@
 {
-    "name": "exam_platform",
-    "short_name": "exam_platform",
+    "name": "CSP 11 Nova: CSP Exam Prep.",
+    "short_name": "CSP 11 Nova",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#080B10",
     "theme_color": "#080B10",
-    "description": "A new Flutter project.",
+    "description": "Independent CSP exam preparation with study content, practice questions and progress tools.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
