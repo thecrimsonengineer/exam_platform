@@ -2,7 +2,7 @@
 
 **Status:** IN PROGRESS — baseline verified, Play upload BLOCKED until release gates pass  
 **Business model:** Completely free app (no in-app billing, premium entitlements, or subscription enforcement)
-**Approved user-facing name:** `CSP 11 Nova: CSP Exam Prep.` (28 characters; package ID still unregistered)
+**Approved user-facing name:** `CSP 11 Nova: CSP Exam Prep.` (27 characters; package ID still unregistered)
   
 **Source repository:** `thecrimsonengineer/exam_platform`  
 **Immutable source checkpoint:** `phase-post-rel-gov-global-navigation-motion-integration-closed@156ea074e1f420672490511a01117804dc22ce74`  
@@ -31,7 +31,7 @@
 | Android signing secrets are not covered by all usual filename patterns in `.gitignore` | `.gitignore` | Add explicit ignores for keystore and local key properties. |
 
 ## SEC-01D branding checkpoint (02 Nov 2026)
-- [x] Approved name: `CSP 11 Nova: CSP Exam Prep.` (28/30 Play title characters).
+- [x] Approved name: `CSP 11 Nova: CSP Exam Prep.` (27/30 Play title characters).
 - [x] Added Android `@string/app_name`, Flutter `MaterialApp.title`, and Web/PWA name metadata.
 - [x] Added brand-consistency preflight and self-contained regression tests to SEC-01C guard suite.
 - [ ] Verify Google Play accepts title and `com.csp11.examplatform` registration under developer account.
