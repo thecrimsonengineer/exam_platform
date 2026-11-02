@@ -39,7 +39,7 @@ jobs:
           python-version: '3.12'
       - name: Run SEC-01B fail-closed unit tests
         run: python -m unittest discover -s tools/security -p 'test_sec01b_android_identity.py' -v
-      - name: Verify registered Nova Firebase identity and Google web OAuth client
-        # Nova Firebase Android app is registered; upload/Play signing SHA remains
-        # pending. Signed release preflight still requires --mode release.
-        run: python tools/security/sec01b_android_identity.py --mode registered
+      - name: Verify Nova Firebase Android OAuth client and signing SHA-1
+        # Nova Firebase Android app is registered; Android OAuth SHA-1 now present. Distinct Play app-signing SHA must
+        # still pass SEC-01C signed-bundle preflight.
+        run: python tools/security/sec01b_android_identity.py --mode release
