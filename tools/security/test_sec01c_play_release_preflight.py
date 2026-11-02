@@ -34,6 +34,7 @@ def make_ready(root: Path) -> dict[str, str]:
         "CSP11_ANDROID_KEY_ALIAS": "csp11-upload",
         "CSP11_ANDROID_KEY_PASSWORD": "fixture password",
         "CSP11_PLAY_UPLOAD_CERT_SHA256": "1" * 64,
+        "CSP11_PLAY_APP_SIGNING_SHA1": "aa" * 20,
     }
 
 
@@ -95,6 +96,20 @@ class ReleasePreflightTests(unittest.TestCase):
             env = make_ready(root)
             env["CSP11_PLAY_UPLOAD_CERT_SHA256"] = "abc"
             self.assertTrue(any("fingerprint" in x for x in check(root, env)))
+
+    def test_missing_play_signing_sha1_blocks(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            env = make_ready(root)
+            env.pop("CSP11_PLAY_APP_SIGNING_SHA1")
+            self.assertTrue(any("Play app-signing SHA-1" in x for x in check(root, env)))
+
+    def test_unregistered_play_sha1_blocks(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            env = make_ready(root)
+            env["CSP11_PLAY_APP_SIGNING_SHA1"] = "bb" * 20
+            self.assertTrue(any("not registered for Nova" in x for x in check(root, env)))
 
     def test_absent_gradle_guard_blocks(self):
         with tempfile.TemporaryDirectory() as temp:
