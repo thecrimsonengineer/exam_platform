@@ -1,10 +1,19 @@
 # SEC-01B — Android package ID reservation and Firebase identity migration
 
-**Candidate:** `com.csp11.examplatform`  
-**Decision:** APPROVED AS CANDIDATE, **NOT YET RESERVED OR RELEASE-READY**  
+**Registered Android package:** `com.csp11.examplatform`  
+**Decision:** REGISTERED IN PLAY (per developer confirmation) + FIREBASE CONFIG RECEIVED; **GOOGLE SIGN-IN SHA / PLAY RELEASE STILL PENDING**  
 **Working branch:** `phase-sec01-play-release-foundation`  
 **Frozen baseline:** `phase-post-rel-gov-global-navigation-motion-integration-closed@156ea074e1f420672490511a01117804dc22ce74`  
 **Business model:** Completely free, no billing or premium entitlements.
+
+## 2026-11-02 actual registration and migration evidence
+
+- **Play Console:** developer confirmed package `com.csp11.examplatform` registered.
+- **Firebase:** downloaded `google-services.json` from the existing `csp11-exam-platform` project, with new Android `mobilesdk_app_id` `1:984608502679:android:99d154c5e5f6d083ca0ad2`. The same file retains the legacy Android client `com.example.exam_platform`.
+- **SEC-01 branch migrated:** Gradle namespace/applicationId, Kotlin activity package/path, `android/app/google-services.json`, `firebase.json`, and `FirebaseOptions.android` now reference the registered Android app. Flutter Web/Windows configuration, existing Firebase users and Supabase protected-content services remain unchanged.
+- **CI checks:** `python tools/security/sec01b_android_identity.py --mode registered` passed on GitHub Actions run [41424752853](https://github.com/thecrimsonengineer/exam_platform/actions/runs/41424752853). The separate signed Play AAB job remains skipped at [41424760821](https://github.com/thecrimsonengineer/exam_platform/actions/runs/41424760821).
+- **Google sign-in SHA remains pending:** new Android client has a web OAuth client, but **no Android OAuth client certificate hash** yet. Add production upload and Play app-signing SHA-1/SHA-256 fingerprints in Firebase, redownload `google-services.json`, and commit it before switching the production gate to `--mode release`.
+- **Historical text below describes the initial migration plan**, not outstanding source changes. The actual current state is recorded here.
 
 ## 1. Evidence and availability status (02 Nov 2026)
 
