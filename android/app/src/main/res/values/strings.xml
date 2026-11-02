@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SEC-01D: approved CSP11 Nova display name. Android package ID remains gated. -->
+    <string name="app_name">CSP 11 Nova: CSP Exam Prep.</string>
+</resources>
