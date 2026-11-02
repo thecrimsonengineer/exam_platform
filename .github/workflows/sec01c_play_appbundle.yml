@@ -79,6 +79,7 @@ jobs:
       CSP11_ANDROID_KEY_ALIAS: ${{ secrets.CSP11_PLAY_KEY_ALIAS }}
       CSP11_ANDROID_KEY_PASSWORD: ${{ secrets.CSP11_PLAY_KEY_PASSWORD }}
       CSP11_PLAY_UPLOAD_CERT_SHA256: ${{ vars.CSP11_PLAY_UPLOAD_CERT_SHA256 }}
+      CSP11_PLAY_APP_SIGNING_SHA1: ${{ vars.CSP11_PLAY_APP_SIGNING_SHA1 }}
 
     steps:
       - name: Checkout current isolated SEC-01 branch
