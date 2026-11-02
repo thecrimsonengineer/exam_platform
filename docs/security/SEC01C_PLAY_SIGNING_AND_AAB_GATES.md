@@ -15,6 +15,16 @@
 5. `.github/workflows/sec01c_play_appbundle.yml` runs guard tests on branch changes and has a **manual-only** production AAB job. The AAB job requires two explicit user attestation inputs and the `play-release` environment.
 6. In the manual AAB job, the key is decoded only to temporary runner storage; `keytool` compares the actual upload certificate with the separately configured SHA-256, rejects an Android Debug subject, Flutter runs analysis and auth/content regression tests, Flutter builds an AAB, `jarsigner` checks it, and a hash-pinned bundletool 1.18.3 validates the package, version code, and API target (36+). Only a signed AAB and non-secret evidence are uploaded as build artifacts.
 
+## Updated 02 Nov 2026: Play distribution certificate is independently checked
+
+The refreshed Nova Firebase configuration includes an Android OAuth SHA-1 for a previously known certificate. That may be a local debug/development signing identity. **It must not be mistaken for Google's Play app-signing certificate.**
+
+- Add GitHub Actions variable `CSP11_PLAY_APP_SIGNING_SHA1` containing the **public** SHA-1 of the **App signing key certificate** shown in **Play Console → App integrity**, once available.
+- Register that Play app-signing SHA-1 **and SHA-256** in the existing Firebase project under `com.csp11.examplatform`, then redownload and commit `google-services.json`.
+- The SEC-01C Play preflight now rejects any bundle whose expected Play app-signing SHA-1 does not appear under the **new Nova Android package's** OAuth clients, including a release that has only a debug SHA.
+- The upload key is separately validated against `CSP11_PLAY_UPLOAD_CERT_SHA256` and must be safeguarded as private key material. Neither certificate alone proves the other.
+- The Firebase JSON OAuth client contains SHA-1 hashes, not SHA-256; separately verify SHA-256 fingerprints in the Firebase Console.
+
 ## Verified CI evidence
 
 - SEC-01B identity workflow: successful at https://github.com/thecrimsonengineer/exam_platform/actions/runs/41418874881
