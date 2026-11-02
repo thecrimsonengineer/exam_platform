@@ -58,9 +58,9 @@ jobs:
           python-version: '3.12'
       - name: Run Android identity and signing rejection tests
         run: python -m unittest discover -s tools/security -p 'test_sec01*.py' -v
-      - name: Confirm Nova Firebase registration matches Android package
-        # Nova Android registration is in place; certificate SHA is still pending.
-        run: python tools/security/sec01b_android_identity.py --mode registered
+      - name: Confirm Nova Firebase Android OAuth SHA-1 registration
+        # Nova Android registration is in place; Android OAuth SHA-1 now registered; Play distribution SHA remains gated.
+        run: python tools/security/sec01b_android_identity.py --mode release
       - name: Verify CSP 11 Nova branding
         run: python tools/security/sec01d_branding_preflight.py
 
