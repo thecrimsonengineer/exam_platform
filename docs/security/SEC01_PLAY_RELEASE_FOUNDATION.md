@@ -54,16 +54,16 @@ See `docs/security/SEC01D_NOVA_BRANDING_AND_STORE_METADATA.md`.
 
 ### SEC-01B. Production package name and Firebase identity
 - [x] Owner selected candidate `com.csp11.examplatform`; syntax verified. Play Console reservation remains unverified.
-- [ ] Owner confirms `com.csp11.examplatform` is reserved and eligible in their Play Console.
+- [x] Developer confirmed `com.csp11.examplatform` registered in Play Console (2026-11-02).
 - [ ] Decide whether historical sideloaded debug installations must be separately uninstallable: changing the package ID creates a different Android app.
-- [ ] Update `applicationId` and appropriate Android Kotlin/namespace/component paths while preserving functionality.
-- [ ] Register final Android app in Firebase project `csp11-exam-platform`; replace `google-services.json` for final package. Verify any `firebase_options.dart` changes are limited to Android config.
+- [x] Updated `applicationId`, Gradle namespace, and Kotlin MainActivity package/path on isolated SEC-01 branch.
+- [x] Registered Firebase Android app ID `1:984608502679:android:99d154c5e5f6d083ca0ad2`, integrated uploaded Google Services file, and updated Android FlutterFire mappings; old Firebase client and Web/Windows options retained.
 - [ ] Configure Google sign-in certificate SHA-1/SHA-256 for the **upload** certificate and the **Play app-signing** certificate, as appropriate.
 - [ ] Run email/password and Google sign-in tests on Play-installed build after internal release.
 
 **Acceptance B:** bundle application ID equals Play Console application ID and Firebase Android registration; sign-in tests pass; package identity fixed for future updates.
 
-**SEC-01B implementation checkpoint (02 Nov 2026):** Added a read-only consistency checker, mismatch unit tests, and scoped GitHub Actions preflight. Working Android ID remains the original until Play Console reservation and new Firebase registration. See `docs/security/SEC01B_ANDROID_IDENTITY_MIGRATION.md`.
+**SEC-01B registration + migration checkpoint (02 Nov 2026):** Play package registration confirmed by developer. Integrated the newly downloaded Firebase Android client into SEC-01 branch and switched the Android package, Kotlin activity, and FlutterFire Android mapping. `--mode registered` preflight passed (GitHub Actions run 41424752853). The new package still lacks signing certificate SHA-1/SHA-256, so `--mode release`, Google sign-in verification, and signed AAB acceptance remain pending. See `docs/security/SEC01B_ANDROID_IDENTITY_MIGRATION.md`.
 
 ### SEC-01C. Protected production signing
 - [ ] Generate a **new** Play upload key privately and keep encrypted backups outside the repository. Use Play App Signing for the distribution certificate.
