@@ -6,6 +6,18 @@
 **Frozen baseline:** `phase-post-rel-gov-global-navigation-motion-integration-closed@156ea074e1f420672490511a01117804dc22ce74`  
 **Business model:** Completely free, no billing or premium entitlements.
 
+## 2026-11-02 refreshed Android OAuth certificate evidence
+
+- User provided a refreshed `google-services.json` for `com.csp11.examplatform`; it now includes an Android OAuth `client_type=1` for the Nova package with SHA-1 certificate hash `b4a0b1b13b673177e072c4bacd01e7614c60e41f`.
+- Refreshed file was committed to the isolated SEC-01 development branch; the legacy Android client and the existing Firebase project were retained.
+- The hash is **also present for the legacy app**. This verifies an already-known signing certificate was registered for Nova; do not assume it is Google Play's **app-signing** certificate or the eventual upload certificate.
+- The Google Services JSON includes **SHA-1**, not SHA-256 fingerprint fields. Confirm SHA-256 registration separately in Firebase settings.
+- Updated SEC-01B CI checks to require an Android OAuth SHA-1 for Nova. Existing Android build/regression tests remain required.
+- Strengthened SEC-01C signed Play App Bundle preflight: a distinct expected Play app-signing SHA-1 (from GitHub Actions variable `CSP11_PLAY_APP_SIGNING_SHA1`) must match an Android OAuth entry in the Nova Firebase client. An ordinary debug certificate can no longer satisfy this separate production gate by itself.
+- To complete signing: in **Google Play Console → App integrity**, obtain the **App signing key certificate** SHA-1 and SHA-256 once available. Add both under the **new** Firebase Android app `com.csp11.examplatform`; redownload `google-services.json`, commit it, set `CSP11_PLAY_APP_SIGNING_SHA1` to the exact public SHA-1 in GitHub Actions variable settings and test Play-installed Google sign-in.
+- Keep the Play upload-key certificate distinct and private. SHA fingerprints are public; keystores, store passwords, and signing private keys are not.
+- **SEC-01B static registration is complete, but full Google sign-in acceptance is incomplete until signed test-device verification.**
+
 ## 2026-11-02 actual registration and migration evidence
 
 - **Play Console:** developer confirmed package `com.csp11.examplatform` registered.
