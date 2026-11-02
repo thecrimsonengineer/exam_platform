@@ -55,8 +55,14 @@
 ### SEC-01C. Protected production signing
 - [ ] Generate a **new** Play upload key privately and keep encrypted backups outside the repository. Use Play App Signing for the distribution certificate.
 - [ ] Add GitHub Actions secrets: `CSP11_PLAY_KEYSTORE_BASE64`, `CSP11_PLAY_STORE_PASSWORD`, `CSP11_PLAY_KEY_ALIAS`, `CSP11_PLAY_KEY_PASSWORD`; do not check in key bytes or passwords.
-- [ ] Make the dedicated Play build fail closed if any signing secret is absent, if the signing alias/certificate is the Android debug identity, or if Gradle would fall back to debug signing.
-- [ ] Retain pre-existing test/debug build workflows; place any Play-specific Gradle gating behind an explicit build intent flag if necessary.
+- [x] Implement explicit Play signing guards in Gradle; fail closed on absent keystore/password/alias, debug alias, or wrong package ID.
+- [x] Add production-signing configuration preflight, regression tests, and a manual-only signed AAB workflow.
+- [x] Retain existing APK/test workflows and historical non-Play signing behaviour.
+- [x] Verify GitHub Actions guard unit tests green (run 41419134078); signed Play AAB job correctly skipped.
+- [ ] Run the **actual** signing and AAB verification job after Play/Firebase registration and protected key configuration.
+- [ ] Independently verify the upload certificate and Google Play's final installed app signing certificate, then confirm Google sign-in.
+
+**SEC-01C implementation detail:** `docs/security/SEC01C_PLAY_SIGNING_AND_AAB_GATES.md`. Unit-test success does not prove the Android Gradle release build is working.
 
 **Acceptance C:** missing/invalid signing configuration **fails** the Play build; the AAB is signed by the intended new upload certificate (fingerprint independently verified); debug key is never accepted for store upload.
 
@@ -70,7 +76,8 @@
 **Acceptance D:** secret scan clean; public config present and valid; no server secrets in repository, bundle, symbols, logs, or CI artifacts; existing learner authorization tests unchanged and green.
 
 ### SEC-01E. Play-ready Android App Bundle pipeline
-- [ ] Configure separate manual release CI: preflight -> analyze/tests -> signed `flutter build appbundle --release` -> bundle validation -> evidence/artifacts.
+- [x] Add separate manual CI definition: preflight -> analyze/tests -> signed `flutter build appbundle --release` -> bundle validation -> evidence/artifacts.
+- [ ] Execute manual release CI after external Play/Firebase registration and signing key setup.
 - [ ] Verify resolved bundle `targetSdkVersion >= 36` (Google Play requirement effective 31 Aug 2026 for standard Android apps).
 - [ ] Confirm release versionName/versionCode; increment versionCode for every new Play upload.
 - [ ] Validate the package ID, Firebase configuration, launcher name/icon, app initialization, signing fingerprint, bundle integrity, and ABI compatibility.
