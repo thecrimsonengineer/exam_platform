@@ -46,3 +46,12 @@ app.*.map.json
 
 # CSP11 source pipeline local Python environment
 tools/source_pipeline/.venv/
+
+# SEC-01: Android and Play upload-signing material must stay private.
+# Public signing certificate fingerprints can be documented separately.
+*.jks
+*.keystore
+*.p12
+*.pfx
+android/key.properties
+**/key.properties
