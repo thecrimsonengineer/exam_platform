@@ -2,6 +2,8 @@
 """SEC-01C fail-closed preflight for CSP11 Google Play signing.
 
 This script never prints credential values or creates a keystore.
+The first_upload stage skips only the not-yet-generated Play distribution
+certificate; upload-key signing and all other release gates are mandatory.
 It verifies that the repository is configured for the *new* Android ID,
 that only public Supabase client settings are included, and that expected
 signing metadata is present. The actual certificate is verified using
@@ -54,27 +56,33 @@ def check(root: Path, env: Mapping[str, str]) -> list[str]:
     if not FINGERPRINT.fullmatch(expected_fingerprint):
         errors.append("Expected SHA-256 upload certificate fingerprint is missing/invalid.")
 
-    # A local debug SHA-1 is NOT enough to authorise a Play release.
-    play_sha1 = env.get("CSP11_PLAY_APP_SIGNING_SHA1", "").replace(":", "").strip().lower()
-    if not re.fullmatch(r"[a-f0-9]{40}", play_sha1):
-        errors.append("Expected Play app-signing SHA-1 is missing or invalid.")
-    else:
-        firebase_cfg = json.loads(
-            (root / "android/app/google-services.json").read_text(encoding="utf-8")
-        )
-        nova_clients = [
-            client for client in firebase_cfg.get("client", [])
-            if client.get("client_info", {}).get("android_client_info", {}).get("package_name")
-            == "com.csp11.examplatform"
-        ]
-        configured = {
-            item.get("android_info", {}).get("certificate_hash", "").lower()
-            for client in nova_clients
-            for item in client.get("oauth_client", [])
-            if item.get("client_type") == 1
-        }
-        if play_sha1 not in configured:
-            errors.append("Play app-signing SHA-1 is not registered for Nova in Firebase.")
+    # The initial upload key is independently verified in the CI signature step.
+    # Google Play generates a separate distribution signing certificate at setup,
+    # which cannot be required before the very first bundle upload.
+    release_stage = env.get("CSP11_RELEASE_STAGE", "")
+    if release_stage not in ("first_upload", "post_play_signing"):
+        errors.append("CSP11_RELEASE_STAGE must be first_upload or post_play_signing.")
+    elif release_stage == "post_play_signing":
+        play_sha1 = env.get("CSP11_PLAY_APP_SIGNING_SHA1", "").replace(":", "").strip().lower()
+        if not re.fullmatch(r"[a-f0-9]{40}", play_sha1):
+            errors.append("Expected Play app-signing SHA-1 is missing or invalid.")
+        else:
+            firebase_cfg = json.loads(
+                (root / "android/app/google-services.json").read_text(encoding="utf-8")
+            )
+            nova_clients = [
+                client for client in firebase_cfg.get("client", [])
+                if client.get("client_info", {}).get("android_client_info", {}).get("package_name")
+                == "com.csp11.examplatform"
+            ]
+            configured = {
+                item.get("android_info", {}).get("certificate_hash", "").lower()
+                for client in nova_clients
+                for item in client.get("oauth_client", [])
+                if item.get("client_type") == 1
+            }
+            if play_sha1 not in configured:
+                errors.append("Play app-signing SHA-1 is not registered for Nova in Firebase.")
 
     gradle = (root / "android/app/build.gradle.kts").read_text(encoding="utf-8")
     for fragment in (
