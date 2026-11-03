@@ -28,6 +28,14 @@ on:
         type: boolean
         required: true
         default: false
+      release_stage:
+        description: 'First Play upload or later Play signing verification'
+        type: choice
+        required: true
+        default: first_upload
+        options:
+          - first_upload
+          - post_play_signing
 
 permissions:
   contents: read
@@ -73,6 +81,7 @@ jobs:
     timeout-minutes: 70
     env:
       CSP11_PLAY_RELEASE: 'true'
+      CSP11_RELEASE_STAGE: ${{ inputs.release_stage }}
       SUPABASE_URL: 'https://esfycnmfywxczfillioj.supabase.co'
       SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
       CSP11_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.CSP11_PLAY_STORE_PASSWORD }}
@@ -185,7 +194,7 @@ jobs:
         run: |
           set -euo pipefail
           AAB=build/app/outputs/bundle/release/app-release.aab
-          jarsigner -verify "$AAB" > "${RUNNER_TEMP}/jarsigner-check.txt"
+          jarsigner -verify -strict "$AAB" > "${RUNNER_TEMP}/jarsigner-check.txt"
           grep -q 'jar verified.' "${RUNNER_TEMP}/jarsigner-check.txt"
           CERT_SHA256="$(keytool -printcert -jarfile "$AAB" |
             sed -n 's/.*SHA256: //p' | head -n 1 | tr -d ':' | tr '[:lower:]' '[:upper:]')"
@@ -211,6 +220,7 @@ jobs:
 
           {
             echo "SEC01C_CONTROLLED_PLAY_AAB=VERIFIED"
+            echo "RELEASE_STAGE=$CSP11_RELEASE_STAGE"
             echo "COMMIT=$GITHUB_SHA"
             echo "ANDROID_PACKAGE=$PACKAGE"
             echo "TARGET_SDK=$TARGET"
