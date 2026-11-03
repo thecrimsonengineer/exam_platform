@@ -54,7 +54,7 @@ if (Test-Path $keystore) { throw 'Keystore already exists: do not overwrite an e
 
 Record all prompted passwords in a password manager. Back up the private keystore securely. **Never share the keystore, its Base64, or its passwords in ChatGPT, GitHub, or an ordinary message.**
 
-4. Read public upload-certificate SHA-1 and SHA-256 values, and register the upload certificate fingerprints in Firebase for local validation where applicable:
+4. Read the **new upload-key certificate** SHA-1 and SHA-256 values. You have already entered SHA-1/SHA-256 in Firebase for Nova, but check whether they belong to this *new* upload key. You do **not** need Play's future app-signing certificate for the first upload:
 
 ```powershell
 & $kt -list -v -keystore $keystore -alias csp11-upload
