@@ -91,6 +91,7 @@ def check(root: Path, env: Mapping[str, str]) -> list[str]:
         'csp11AndroidKeyAlias.equals("androiddebugkey"',
         'require(defaultConfig.applicationId == "com.csp11.examplatform")',
         'require(namespace == "com.csp11.examplatform")',
+        "targetSdk = 36",
     ):
         if fragment not in gradle:
             errors.append("Gradle Play guard is missing an expected release protection.")
