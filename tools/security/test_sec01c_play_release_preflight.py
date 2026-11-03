@@ -35,6 +35,7 @@ def make_ready(root: Path) -> dict[str, str]:
         "CSP11_ANDROID_KEY_PASSWORD": "fixture password",
         "CSP11_PLAY_UPLOAD_CERT_SHA256": "1" * 64,
         "CSP11_PLAY_APP_SIGNING_SHA1": "aa" * 20,
+        "CSP11_RELEASE_STAGE": "post_play_signing",
     }
 
 
@@ -110,6 +111,36 @@ class ReleasePreflightTests(unittest.TestCase):
             env = make_ready(root)
             env["CSP11_PLAY_APP_SIGNING_SHA1"] = "bb" * 20
             self.assertTrue(any("not registered for Nova" in x for x in check(root, env)))
+
+    def test_first_upload_does_not_need_play_generated_cert(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            env = make_ready(root)
+            env["CSP11_RELEASE_STAGE"] = "first_upload"
+            env.pop("CSP11_PLAY_APP_SIGNING_SHA1")
+            self.assertEqual(check(root, env), [])
+
+    def test_first_upload_still_needs_upload_key_fingerprint(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            env = make_ready(root)
+            env["CSP11_RELEASE_STAGE"] = "first_upload"
+            env.pop("CSP11_PLAY_UPLOAD_CERT_SHA256")
+            self.assertTrue(any("upload certificate fingerprint" in x for x in check(root, env)))
+
+    def test_unknown_release_stage_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            env = make_ready(root)
+            env["CSP11_RELEASE_STAGE"] = "anything"
+            self.assertTrue(any("CSP11_RELEASE_STAGE" in x for x in check(root, env)))
+
+    def test_no_stage_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            env = make_ready(root)
+            env.pop("CSP11_RELEASE_STAGE")
+            self.assertTrue(any("CSP11_RELEASE_STAGE" in x for x in check(root, env)))
 
     def test_absent_gradle_guard_blocks(self):
         with tempfile.TemporaryDirectory() as temp:
