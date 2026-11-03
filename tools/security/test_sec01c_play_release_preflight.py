@@ -16,6 +16,7 @@ if (csp11ReleaseBundleRequested && !csp11PlayRelease) {}
 if (csp11AndroidKeyAlias.equals("androiddebugkey", ignoreCase = true)) {}
 require(defaultConfig.applicationId == "com.csp11.examplatform")
 require(namespace == "com.csp11.examplatform")
+targetSdk = 36
 '''
 
 
