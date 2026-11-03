@@ -59,7 +59,9 @@ android {
         applicationId = "com.csp11.examplatform"
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        // Google Play requires target API 36+ for standard apps submitted after 31 Aug 2026.
+        // Lock SEC-01E at API 36; on-device compatibility must be tested before upload.
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
