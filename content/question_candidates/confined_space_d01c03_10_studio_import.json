@@ -1,0 +1,232 @@
+{
+  "packageId": "csp11-confined-space-d01c03-20261110-v1",
+  "status": "draft_candidate_not_published",
+  "blueprint": {
+    "domain": "domain_01",
+    "competencyId": "d01_c03",
+    "topic": "confined-space hazard evaluation"
+  },
+  "sourceScope": "General industry OSHA 1910.146; question 7 construction 1926 Subpart AA",
+  "questions": [
+    {
+      "question": "A drained process tank retains a vapor source. Continuous clean-air ventilation controls the only identified hazard, and monitoring data support that finding. Management wants to reclassify the tank as non-permit. What is the soundest entry approach?",
+      "options": [
+        "Reclassify the tank after documenting acceptable levels while ventilation is running.",
+        "Use alternative procedures with documented ventilation evidence and one entry-time check.",
+        "Use alternative procedures with documented ventilation evidence and ongoing atmosphere checks.",
+        "Use alternative procedures with periodic testing but stop ventilation once entry begins."
+      ],
+      "correctAnswer": "C",
+      "explanation": "1910.146(c)(5) permits alternative entry when the sole hazard is atmospheric, continuous forced-air ventilation alone controls it, and data, monitoring and certification support entry. Controlling a persistent vapor hazard does not eliminate it for non-permit reclassification under (c)(7).",
+      "bestAnswerRationale": "Alternative procedures retain required ventilation and tests without incorrectly treating the vapor hazard as eliminated.",
+      "reference": "29 CFR 1910.146(c)(5), (c)(7): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "application",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "alternative-entry",
+        "hazard-classification"
+      ]
+    },
+    {
+      "question": "Before entry to a blending vessel, the agitator is locked out but a feed line can still introduce liquid. The crew proposes relying on the closed upstream valve. Which isolation arrangement best addresses both hazards?",
+      "options": [
+        "Verify agitator zero energy and rely on the upstream shutoff valve.",
+        "Verify agitator zero energy and blind the feed line.",
+        "Blind the feed line and leave the agitator locally stopped.",
+        "Verify agitator zero energy and use a tagged single block valve."
+      ],
+      "correctAnswer": "B",
+      "explanation": "Mechanical energy and independent liquid introduction must both be isolated. Verified agitator isolation prevents unexpected rotation; a suitable blind prevents feed-line ingress. A locally stopped agitator or a single closed/tagged valve cannot establish the same combined isolation.",
+      "bestAnswerRationale": "The key isolates both the motor and feed route instead of relying on a potentially leaking valve or a local stop.",
+      "reference": "29 CFR 1910.146(b), (d)(3)(iii); 29 CFR 1910.147: https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "analysis",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "positive-isolation",
+        "stored-energy"
+      ]
+    },
+    {
+      "question": "A six-meter wastewater pit has acceptable multigas readings at its opening. The pit may stratify gases, and workers will disturb sludge at the bottom. Which testing strategy gives the strongest basis for authorizing and managing entry?",
+      "options": [
+        "Sample at the pit opening before entry and monitor exposures during the work.",
+        "Sample across the pit's depths before entry and repeat readings after the work.",
+        "Sample across the pit's depths before entry and continuously track oxygen alone.",
+        "Sample across the pit's depths before entry and monitor exposures during the work."
+      ],
+      "correctAnswer": "D",
+      "explanation": "Pre-entry testing needs representative sampling where stratification may occur. Disturbing sludge can alter atmospheric conditions while workers remain inside, so testing or monitoring must continue as necessary. Opening-only sampling, post-entry checks or oxygen-only monitoring omit material risks.",
+      "bestAnswerRationale": "The key combines representative depth sampling and monitoring while exposure conditions are changing.",
+      "reference": "29 CFR 1910.146(d)(5) and Appendix B: https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "analysis",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "gas-testing",
+        "atmospheric-stratification"
+      ]
+    },
+    {
+      "question": "One attendant can continuously contact two entrants working in a tank. The supervisor proposes assigning that attendant to a second tank outside radio range, with no relief person. What is the most defensible decision before both entries proceed?",
+      "options": [
+        "Assign another competent attendant to the second tank before simultaneous entries proceed.",
+        "Assign the same attendant to both tanks and arrange periodic radio contact.",
+        "Assign the same attendant to both tanks and install CCTV at the second opening.",
+        "Assign a rover to relay messages while the same attendant monitors both tanks."
+      ],
+      "correctAnswer": "A",
+      "explanation": "One attendant may monitor multiple spaces only when all protective monitoring, communication and emergency responsibilities can be performed effectively without distraction. With a second space outside radio range and no relief, a separate appropriately trained attendant is needed.",
+      "bestAnswerRationale": "The first option preserves continuous attendant capability; intermittent relays or video do not correct the stated communication gap.",
+      "reference": "29 CFR 1910.146(d)(6), (i)(3)-(6), (i)(10): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "application",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "attendant-duties",
+        "simultaneous-entry"
+      ]
+    },
+    {
+      "question": "A seven-foot vertical permit space has an unobstructed retrieval path. Entrants can wear harnesses, but the named rescue provider has not assessed this space and may arrive after 30 minutes. Which pre-entry revision best addresses the rescue gap?",
+      "options": [
+        "Provide mechanical retrieval and retain the provider based on its general response contract.",
+        "Verify rescue-provider capability and rely on manual hauling of the retrieval line.",
+        "Provide mechanical retrieval and verify suitably capable rescuers for these hazards.",
+        "Provide mechanical retrieval and rely on the provider's generic annual training records."
+      ],
+      "correctAnswer": "C",
+      "explanation": "Where non-entry retrieval does not increase risk, vertical spaces deeper than five feet require a mechanical retrieval device. The employer also must evaluate the rescue service's proficiency, ability to access the specific space and capacity to respond within a time appropriate to its hazards.",
+      "bestAnswerRationale": "The key integrates both the required mechanical retrieval equipment and verified site-specific rescue capability.",
+      "reference": "29 CFR 1910.146(k)(1), (k)(3): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "analysis",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "retrieval",
+        "rescue-capability"
+      ]
+    },
+    {
+      "question": "During hot work in a vessel, an oxygen-supply hose leaks and an entrant's monitor reads 24.0% oxygen. Flammable gas is below its alarm level. The crew suggests increasing exhaust and continuing the weld. What action is best?",
+      "options": [
+        "Stop hot work, increase exhaust, and verify oxygen before continuing the weld.",
+        "Stop hot work, evacuate, isolate the oxygen leak, ventilate and verify conditions.",
+        "Stop hot work, isolate the oxygen leak, and resume using the last safe test.",
+        "Stop hot work, evacuate, and allow re-entry after the oxygen alarm clears."
+      ],
+      "correctAnswer": "B",
+      "explanation": "OSHA defines oxygen concentration above 23.5% as a hazardous oxygen-enriched atmosphere. Withdraw entrants, isolate the leak and verify acceptable conditions before renewed authorization. A low flammable-gas reading does not remove the oxygen-related fire risk.",
+      "bestAnswerRationale": "The key removes people, stops the source and verifies safe conditions rather than relying on an old reading or alarm reset.",
+      "reference": "29 CFR 1910.146(b), (d)(5), (h)(5), (e)(5): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "analysis",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "oxygen-enrichment",
+        "hot-work"
+      ]
+    },
+    {
+      "question": "A contractor works in a manhole under an active entry permit. Another contractor places a gasoline generator beside its opening, and the entrant's carbon-monoxide monitor rises. Which coordinated response should the controlling team require?",
+      "options": [
+        "Evacuate, retain the generator position, and increase the extraction airflow.",
+        "Evacuate, move the generator away, and resume under the unchanged entry assessment.",
+        "Evacuate, retest for carbon monoxide, and resume if the next reading is acceptable.",
+        "Evacuate, remove the exhaust source, reassess conditions and revise entry controls."
+      ],
+      "correctAnswer": "D",
+      "explanation": "Outside work can introduce carbon monoxide into a confined space. The employer should evacuate workers, remove the exhaust hazard, coordinate between contractors and reassess entry conditions before recommencing. One acceptable gas reading does not control an ongoing external emission.",
+      "bestAnswerRationale": "The key corrects the exposure source and recognizes the need for renewed coordinated hazard assessment.",
+      "reference": "29 CFR 1926.1203(h), 1926.1204; OSHA FAQ: https://www.osha.gov/confined-spaces-construction/faq",
+      "difficulty": "Hard",
+      "cognitiveLevel": "application",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "contractor-coordination",
+        "carbon-monoxide"
+      ]
+    },
+    {
+      "question": "At a general-industry plant, an unplanned release during permitted tank cleaning triggers the evacuation alarm. Everyone exits safely, and later ventilation restores normal air readings. What must happen before workers re-enter under OSHA 1910.146?",
+      "options": [
+        "Cancel the affected permit, reassess the release, and authorize a new compliant entry.",
+        "Suspend the permit, document clean air, and resume under its original authorization.",
+        "Retain the permit, replace monitor logs, and resume after another pre-entry test.",
+        "Cancel the permit, retain the old assessment, and authorize entry on the same basis."
+      ],
+      "correctAnswer": "A",
+      "explanation": "Under OSHA 1910.146(e)(5), entry must terminate and the permit be canceled when a condition not allowed under the permit arises. Investigate the release, reevaluate hazards and provide a valid authorization for subsequent entry. Normal air measurements alone do not restore the original permit.",
+      "bestAnswerRationale": "The key includes required cancellation, reassessment and fresh authorization rather than reliance on the old permit.",
+      "reference": "29 CFR 1910.146(e)(5), (d)(5), (f): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "analysis",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "permit-cancellation",
+        "abnormal-release"
+      ]
+    },
+    {
+      "question": "A crew must enter a long storm sewer that cannot be fully isolated. Air tests are acceptable, but upstream rain may cause sudden flooding while sewer deposits may release gas. Which safeguards best cover both dynamic hazards during entry?",
+      "options": [
+        "Monitor work-zone atmosphere and rely on the morning forecast for flooding.",
+        "Monitor work-zone atmosphere and upstream flow with a defined evacuation trigger.",
+        "Monitor upstream flow and use only entry-time gas tests for the sewer atmosphere.",
+        "Monitor work-zone atmosphere and add ventilation without checking upstream flow."
+      ],
+      "correctAnswer": "B",
+      "explanation": "Partially isolated sewers may have evolving gas and engulfment hazards. Appropriate testing or monitoring in the work zone addresses atmospheric change, while upstream flow surveillance and a practicable evacuation trigger address rapid flooding. Forecasts or initial checks alone do not control both.",
+      "bestAnswerRationale": "The key integrates live indicators for both atmospheric and flooding hazards, tied to an evacuation decision.",
+      "reference": "29 CFR 1910.146(d)(5)(i), Appendix E; 29 CFR 1926.1204: https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "analysis",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "sewer-entry",
+        "engulfment"
+      ]
+    },
+    {
+      "question": "A service vault was classified non-permit. Maintenance now introduces solvent cleaning that may generate a hazardous vapor, although the entry dimensions and access are unchanged. Which action is required before the next entry?",
+      "options": [
+        "Keep its non-permit classification unless physical access or geometry changes.",
+        "Keep its non-permit status but test the atmosphere once before each shift.",
+        "Reevaluate the vault's hazards and implement a permit-space program if warranted.",
+        "Reevaluate the vault after cleaning ends unless an exposure occurs sooner."
+      ],
+      "correctAnswer": "C",
+      "explanation": "OSHA 1910.146(c)(6) requires reevaluation of a non-permit confined space when a change in use or configuration might increase hazards. Solvent cleaning can create an atmospheric permit-space hazard despite unchanged dimensions. The change must be evaluated before entry.",
+      "bestAnswerRationale": "The key anticipates a change in hazard classification before exposing personnel to newly introduced vapor.",
+      "reference": "29 CFR 1910.146(c)(6), (b), (d): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "difficulty": "Hard",
+      "cognitiveLevel": "application",
+      "questionType": "scenario_mcq",
+      "version": 1,
+      "tags": [
+        "confined-spaces",
+        "change-in-use",
+        "classification"
+      ]
+    }
+  ]
+}

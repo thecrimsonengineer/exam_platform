@@ -1,0 +1,127 @@
+{
+  "status": "DQG300_REVIEW_PENDING",
+  "note": "This is not a DQG300 certificate. Structured DQG300 evidence for each of the 299 atomic gates, independent SME judgments and source-review signoff must be completed before a PASS can be asserted.",
+  "ruleMatrix": "docs/quiz_engine/DQG_300_RULE_MATRIX.md",
+  "review": [
+    {
+      "number": 1,
+      "key": "C",
+      "bestAnswerProof": "Alternative procedures retain required ventilation and tests without incorrectly treating the vapor hazard as eliminated.",
+      "decisiveDistractorFlaws": {
+        "A": "Ventilation controls but has not eliminated the atmospheric hazard.",
+        "B": "One initial test is insufficient to establish safe conditions throughout entry.",
+        "D": "Ventilation must continue until every entrant has left."
+      },
+      "source": "29 CFR 1910.146(c)(5), (c)(7): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 2,
+      "key": "B",
+      "bestAnswerProof": "The key isolates both the motor and feed route instead of relying on a potentially leaking valve or a local stop.",
+      "decisiveDistractorFlaws": {
+        "A": "A shutoff valve can leak into the vessel despite the agitator lockout.",
+        "C": "A local stop is not verified isolation of the agitator.",
+        "D": "A tagged single block valve may still leak."
+      },
+      "source": "29 CFR 1910.146(b), (d)(3)(iii); 29 CFR 1910.147: https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 3,
+      "key": "D",
+      "bestAnswerProof": "The key combines representative depth sampling and monitoring while exposure conditions are changing.",
+      "decisiveDistractorFlaws": {
+        "A": "Opening readings may miss heavier gases near the work position.",
+        "B": "Post-work tests cannot protect workers from changing conditions during entry.",
+        "C": "Oxygen-only checks omit anticipated toxic or flammable gases."
+      },
+      "source": "29 CFR 1910.146(d)(5) and Appendix B: https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 4,
+      "key": "A",
+      "bestAnswerProof": "The first option preserves continuous attendant capability; intermittent relays or video do not correct the stated communication gap.",
+      "decisiveDistractorFlaws": {
+        "B": "Scheduled radio contact leaves periods without reliable entrant communication.",
+        "C": "CCTV alone does not restore effective two-way entrant communication.",
+        "D": "Rover relay does not solve the absent dedicated attendant coverage."
+      },
+      "source": "29 CFR 1910.146(d)(6), (i)(3)-(6), (i)(10): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 5,
+      "key": "C",
+      "bestAnswerProof": "The key integrates both the required mechanical retrieval equipment and verified site-specific rescue capability.",
+      "decisiveDistractorFlaws": {
+        "A": "A general service contract does not establish timely competence for this space.",
+        "B": "Manual hauling overlooks the mechanical retrieval device required at this depth.",
+        "D": "Generic training records do not establish proficiency for the particular geometry."
+      },
+      "source": "29 CFR 1910.146(k)(1), (k)(3): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 6,
+      "key": "B",
+      "bestAnswerProof": "The key removes people, stops the source and verifies safe conditions rather than relying on an old reading or alarm reset.",
+      "decisiveDistractorFlaws": {
+        "A": "Increased exhaust leaves the oxygen supply leak uncontrolled.",
+        "C": "A prior test is invalid after the new oxygen release.",
+        "D": "Alarm clearance alone does not ensure source control or safe reauthorization."
+      },
+      "source": "29 CFR 1910.146(b), (d)(5), (h)(5), (e)(5): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 7,
+      "key": "D",
+      "bestAnswerProof": "The key corrects the exposure source and recognizes the need for renewed coordinated hazard assessment.",
+      "decisiveDistractorFlaws": {
+        "A": "Extraction cannot substitute for controlling an avoidable exhaust source.",
+        "B": "Moving the source does not validate an unchanged entry assessment.",
+        "C": "One clean reading cannot establish future protection from ongoing emissions."
+      },
+      "source": "29 CFR 1926.1203(h), 1926.1204; OSHA FAQ: https://www.osha.gov/confined-spaces-construction/faq",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 8,
+      "key": "A",
+      "bestAnswerProof": "The key includes required cancellation, reassessment and fresh authorization rather than reliance on the old permit.",
+      "decisiveDistractorFlaws": {
+        "B": "The original permit cannot merely be suspended for an unauthorized condition.",
+        "C": "Replacing monitoring records cannot restore invalid entry authorization.",
+        "D": "The cause and implications of the release must be reassessed."
+      },
+      "source": "29 CFR 1910.146(e)(5), (d)(5), (f): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 9,
+      "key": "B",
+      "bestAnswerProof": "The key integrates live indicators for both atmospheric and flooding hazards, tied to an evacuation decision.",
+      "decisiveDistractorFlaws": {
+        "A": "A forecast does not monitor sudden changes in upstream water flow.",
+        "C": "An entry-time gas check cannot reveal gas liberated later by disturbed deposits.",
+        "D": "Ventilation cannot detect or prevent the rising-water engulfment hazard."
+      },
+      "source": "29 CFR 1910.146(d)(5)(i), Appendix E; 29 CFR 1926.1204: https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    },
+    {
+      "number": 10,
+      "key": "C",
+      "bestAnswerProof": "The key anticipates a change in hazard classification before exposing personnel to newly introduced vapor.",
+      "decisiveDistractorFlaws": {
+        "A": "Geometry is not the only factor that determines permit classification.",
+        "B": "One check does not resolve a foreseeable vapor-generation hazard.",
+        "D": "Post-work evaluation happens after possible hazardous exposure."
+      },
+      "source": "29 CFR 1910.146(c)(6), (b), (d): https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.146",
+      "reviewStatus": "author_assessed_requires_SME_independent_review"
+    }
+  ]
+}

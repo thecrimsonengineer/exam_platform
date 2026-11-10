@@ -1,0 +1,33 @@
+name: Confined Space D01-C03 Candidate Gate
+
+on:
+  push:
+    branches:
+      - content/confined-space-d01c03-dqg300-review-20261110
+  pull_request:
+    paths:
+      - 'content/question_candidates/confined_space_d01c03_*'
+      - 'test/services/confined_space_d01c03_candidate_gate_test.dart'
+      - '.github/workflows/confined_space_d01c03_candidate_gate.yml'
+  workflow_dispatch:
+
+jobs:
+  h03-candidate-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.9'
+          channel: stable
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Verify regression test formatting
+        run: dart format --output=none --set-exit-if-changed test/services/confined_space_d01c03_candidate_gate_test.dart
+      - name: Validate confined-space candidate batch against real H0.3 rules
+        run: flutter test test/services/confined_space_d01c03_candidate_gate_test.dart
+      - name: Run H0.3 and canonical parser regressions
+        run: |
+          flutter test test/services/question_quality_validator_test.dart
+          flutter test test/services/questions/canonical_question_parser_test.dart
